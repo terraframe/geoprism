@@ -203,6 +203,17 @@
       link: function (scope, element, attrs) {
       }
     }   
+  }
+  
+  function SummaryPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/summary-page.jsp',
+      scope: true,
+      link: function (scope, element, attrs) {
+      }
+    }   
   }  
 
   function UploaderDialogController($scope, $rootScope) {
@@ -222,10 +233,7 @@
       $scope.errors = null;
       
       // Stack of state snapshots captured when the user clicks next
-      $scope.snapshots = null;      
-      $scope.currentPage = null;
-      $scope.pageCount = null;
-
+      $scope.page = null;
       
       $scope.options = null;      
       $scope.sheet = null;      
@@ -267,35 +275,108 @@
       
       $scope.sheet = sheets[0];      
       $scope.show = true;
-
-      $scope.currentPage = 1;
-      $scope.pageCount = 3;
       
-      $scope.snapshots = [];
+      $scope.page = {
+        snapshots : [],     
+        current : 'INITIAL',
+      };
       
       $scope.$apply();
     }
     
     controller.next = function() {
-      if($scope.currentPage < $scope.pageCount) {
-        $scope.$broadcast('pageNext', {});                
-    	  
-        // Snapshot the current state
-        $scope.snapshots.push(angular.copy($scope.sheet));
+      // State machine
+      if($scope.page.current == 'INITIAL') {
+        // Go to fields page  
+        $scope.page.current = 'FIELDS';      
         
-        $scope.currentPage = $scope.currentPage + 1;        
+        var snapshot = {
+          page : 'INITIAL',
+          sheet : angular.copy($scope.sheet)        
+        };
+        $scope.page.snapshots.push(snapshot);
+      }
+      else if($scope.page.current == 'FIELDS') {
+        if(controller.hasLocationField()) {
+          // Go to location attribute page
+          $scope.page.current = 'LOCATION';      
+        }
+        else if (controller.hasCoordinateField()) {
+          // Go to coordinate page
+          $scope.page.current = 'COORDINATE';      
+        }
+        else {
+          // Go to summary page
+          $scope.page.current = 'SUMMARY';      
+        }{}
+        
+        var snapshot = {
+          page : 'FIELDS',
+          sheet : angular.copy($scope.sheet)        
+        };
+        $scope.page.snapshots.push(snapshot);
+      }
+      else if($scope.page.current == 'LOCATION') {
+        if (controller.hasCoordinateField()) {
+          // Go to coordinate page
+          $scope.page.current = 'COORDINATE';      
+        }
+        else {
+          // Go to summary page
+          $scope.page.current = 'SUMMARY';      
+        }
+        
+        var snapshot = {
+          page : 'LOCATION',
+          sheet : angular.copy($scope.sheet)        
+        };        
+        $scope.page.snapshots.push(snapshot);
+      }
+      else if($scope.page.current == 'COORDINATE') {
+        // Go to summary page
+        $scope.page.current = 'SUMMARY';      
+        
+        var snapshot = {
+          page : 'COORDINATE',
+          sheet : angular.copy($scope.sheet)        
+        };        
+        $scope.page.snapshots.push(snapshot);
       }
     }
     
     controller.prev = function() {
-      if($scope.currentPage > 1) {          
+      if($scope.page.snapshots.length > 0) {          
         $scope.$broadcast('pagePrev', {});
+        
+        var snapshot = $scope.page.snapshots.pop();
     	  
-        $scope.currentPage = $scope.currentPage - 1;
-          
-        // Revert back to a previous snapshot
-        $scope.sheet = $scope.snapshots.pop();
+        $scope.page.current = snapshot.page;          
+        $scope.sheet = snapshot.sheet;
       }        
+    }
+    
+    controller.hasLocationField = function() {
+      for(var i = 0; i < $scope.sheet.fields.length; i++) {     
+        var field = $scope.sheet.fields[i]
+          
+        if(field.type == 'LOCATION') {
+          return true;
+        }
+      }        
+      
+      return false;
+    }
+    
+    controller.hasCoordinateField = function() {
+      for(var i = 0; i < $scope.sheet.fields.length; i++) {     
+        var field = $scope.sheet.fields[i]
+              
+        if(field.type == 'LONGITUDE' || field.type == 'LATITUDE' ) {
+          return true;
+        }
+      }        
+          
+      return false;    	
     }
     
     $rootScope.$on('dataUpload', function(event, data){
@@ -359,6 +440,7 @@
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)
+   .directive('summaryPage', SummaryPage)
    .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
    .directive('uploaderDialog', UploaderDialog);

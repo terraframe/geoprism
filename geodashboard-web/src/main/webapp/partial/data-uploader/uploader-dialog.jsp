@@ -41,9 +41,10 @@
         <div class="" style="">
           <fieldset class="">
             <section class="form-container">
-              <name-page ng-if="currentPage == 1"></name-page>
-              <attributes-page ng-if="currentPage == 2"></attributes-page>
-              <location-page ng-if="currentPage == 3"></location-page>
+              <name-page ng-if="page.current == 'INITIAL'"></name-page>
+              <attributes-page ng-if="page.current == 'FIELDS'"></attributes-page>
+              <location-page ng-if="page.current == 'LOCATION'"></location-page>
+              <summary-page ng-if="page.current == 'SUMMARY'"></summary-page>
             </section>            
           </fieldset>
           <div class="row-holder">
@@ -51,7 +52,7 @@
             <div class="holder">
               <div class="button-holder">
                 <input
-                  ng-if="currentPage > 1"      
+                  ng-if="page.current != 'INITIAL'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.previous"/>"
                   class="btn btn-primary" 
@@ -59,7 +60,7 @@
                   ng-disabled="busy"
                 />
                 <input
-                  ng-if="currentPage < pageCount"      
+                  ng-if="page.current != 'SUMMARY'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.next"/>"
                   class="btn btn-primary" 
@@ -67,7 +68,7 @@
                   ng-disabled="form.$invalid || busy"
                 />
                 <input 
-                  ng-if="currentPage == pageCount"
+                  ng-if="page.current == 'SUMMARY'"
                   type="button"
                   value="<gdb:localize key="dashboard.Ok"/>"
                   class="btn btn-primary" 
