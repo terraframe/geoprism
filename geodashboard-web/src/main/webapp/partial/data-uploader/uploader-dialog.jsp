@@ -44,6 +44,7 @@
               <name-page ng-if="page.current == 'INITIAL'"></name-page>
               <attributes-page ng-if="page.current == 'FIELDS'"></attributes-page>
               <location-page ng-if="page.current == 'LOCATION'"></location-page>
+              <coordinate-page ng-if="page.current == 'COORDINATE'"></coordinate-page>
               <summary-page ng-if="page.current == 'SUMMARY'"></summary-page>
             </section>            
           </fieldset>

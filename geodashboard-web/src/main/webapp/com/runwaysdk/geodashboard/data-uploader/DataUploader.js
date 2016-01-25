@@ -79,7 +79,6 @@
       fields : {},
       id : -1
     };      
-    $scope.sheet.attributes = {ids:[], values : {}};  
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
@@ -205,6 +204,156 @@
     }   
   }
   
+  function CoordinatePageController($scope) {
+    var controller = this;
+    
+    controller.initialize = function() {        
+      $scope.count = 0;
+      $scope.coordinate = {
+        label : "Test",
+        latitude : "",
+        longitude : "",
+        featureLabel : "",
+        location : "",
+        featureId : "",
+        id : -1
+      };      
+      
+      $scope.latitudes = [];
+      $scope.longitudes = [];
+      $scope.featureLabels = [];
+      $scope.locations = [];
+      $scope.featureIds = [];
+      
+      for(var i = 0; i < $scope.sheet.fields.length; i++) {
+        var field = $scope.sheet.fields[i];
+        
+        if(field.type == 'LATITUDE') {
+          $scope.latitudes.push(field);          
+        }
+        else if(field.type == 'LONGITUDE') {
+          $scope.longitudes.push(field);          
+        }
+        else if(field.type == 'TEXT') {
+          $scope.featureLabels.push(field);          
+        }
+        else if(controller.isBasic(field)) {
+          $scope.featureIds.push(field);          
+        }
+      }
+      
+      if($scope.sheet.attributes != null) {
+        for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
+          var id = $scope.sheet.attributes.ids[i];
+          var attribute = $scope.sheet.attributes.values[id];          
+        
+          $scope.locations.push({
+            label : attribute.label
+          });
+        }
+      }
+    }
+    
+    controller.isBasic = function(field) {
+      return (field.type == 'TEXT' || field.type == 'LONG' || field.type == 'DOUBLE');	
+    }
+    
+    controller.edit = function(coordinate) {
+      $scope.coordinate = angular.copy(coordinate);
+    }
+    
+    controller.remove = function(coordinate) {
+      if($scope.sheet.coordinates.values[coordinate.id] != null) {
+        
+        delete $scope.sheet.coordinates.values[coordinate.id];        
+        $scope.sheet.coordinates.ids.splice( $.inArray(coordinate.id, $scope.sheet.coordinates.ids), 1 );
+        
+        // Update the field.selected status
+        controller.setFieldSelected();
+      }
+    }
+    
+    controller.newCoordinate = function() {
+      if($scope.coordinate.id == -1) {
+        $scope.coordinate.id = ($scope.count++);      
+        $scope.sheet.coordinates.ids.push($scope.coordinate.id);
+        $scope.sheet.coordinates.values[$scope.coordinate.id] = {};              
+      }     
+      
+      var coordinate = $scope.sheet.coordinates.values[$scope.coordinate.id];      
+      angular.copy($scope.coordinate, coordinate);              
+      
+      $scope.coordinate = {
+        label : "",
+        latitude : "",
+        longitude : "",
+        featureLabel : "",
+        location : "",
+        featureId : "",
+        id : -1
+      };  
+      
+      // Update the field.selected status
+      controller.setFieldSelected();
+    }
+    
+    controller.isUniqueLabel = function(label) {
+      if($scope.sheet != null) {
+        var count = 0;
+        
+        for(var i = 0; i < $scope.sheet.fields.length; i++) {
+          var field = $scope.sheet.fields[i];
+          
+          if(field.label == label) {
+            count++;
+          }            
+        }
+        
+        if($scope.sheet.attributes != null) {
+          for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
+            var id = $scope.sheet.attributes.ids[i];
+            var attribute = $scope.sheet.attributes.values[id];          
+            
+            if(attribute.label == label) {
+              count++;
+            }            
+          }          
+        }
+        
+        for(var i = 0; i < $scope.sheet.coordinates.ids.length; i++) {
+          var id = $scope.sheet.coordinates.ids[i];
+          var coordinate = $scope.sheet.coordinates.values[id];          
+          
+          if(coordinate.label == label) {
+            count++;
+          }            
+        }
+        
+        if(count > 0) {
+          return false;
+        }
+      }  
+      
+      return true;
+    }
+    
+    // Initialize the scope
+    controller.initialize();
+  }
+  
+  function CoordinatePage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/coordinate-page.jsp',
+      scope: true,
+      controller : CoordinatePageController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }
+  
   function SummaryPage() {
     return {
       restrict: 'E',
@@ -274,6 +423,8 @@
       $scope.options = options;
       
       $scope.sheet = sheets[0];      
+      $scope.sheet.attributes = {ids:[], values : {}};    
+      $scope.sheet.coordinates = {ids:[], values : {}};    
       $scope.show = true;
       
       $scope.page = {
@@ -308,7 +459,7 @@
         else {
           // Go to summary page
           $scope.page.current = 'SUMMARY';      
-        }{}
+        }
         
         var snapshot = {
           page : 'FIELDS',
@@ -440,6 +591,7 @@
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)
+   .directive('coordinatePage', CoordinatePage)
    .directive('summaryPage', SummaryPage)
    .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
