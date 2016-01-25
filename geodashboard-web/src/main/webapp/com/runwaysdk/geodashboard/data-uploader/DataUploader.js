@@ -75,7 +75,7 @@
     // Initialize the scope
     $scope.count = 0;
     $scope.attribute = {
-      label : "Test",
+      label : "",
       fields : {},
       id : -1
     };      
@@ -210,7 +210,7 @@
     controller.initialize = function() {        
       $scope.count = 0;
       $scope.coordinate = {
-        label : "Test",
+        label : "",
         latitude : "",
         longitude : "",
         featureLabel : "",
