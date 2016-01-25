@@ -354,12 +354,22 @@
     }   
   }
   
+  function SummaryPageController($scope) {
+    var controller = this;
+    
+    controller.isValid = function(field) {
+      return !(field.type == 'LOCATION' || field.type == 'LONGITUDE' || field.type == 'LATITUDE' || field.type == 'IGNORE'  || field.type == ''); 
+    }
+  }
+  
   function SummaryPage() {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/data-uploader/summary-page.jsp',
       scope: true,
+      controller : SummaryPageController,
+      controllerAs : 'ctrl',            
       link: function (scope, element, attrs) {
       }
     }   

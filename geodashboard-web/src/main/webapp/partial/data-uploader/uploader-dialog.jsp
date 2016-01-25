@@ -71,7 +71,7 @@
                 <input 
                   ng-if="page.current == 'SUMMARY'"
                   type="button"
-                  value="<gdb:localize key="dashboard.Ok"/>"
+                  value="<gdb:localize key="dataUploader.import"/>"
                   class="btn btn-primary" 
                   ng-click="ctrl.persist()"
                   ng-disabled="form.$invalid || busy"

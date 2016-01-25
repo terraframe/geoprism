@@ -22,11 +22,41 @@
 
 <div>
   <div class="label-holder">
-    <strong>Summary</strong>
+    <strong><gdb:localize key="dataUploader.summary"/></strong>
   </div>
   <div class="holder">
     <div class="row-holder">
-      <p>Finished</p>
+      <ul>
+        <li ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field)">
+          {{field.label}} :
+          <span ng-switch on="field.type">
+            <span ng-switch-when="CATEGORY"><gdb:localize key="dataUploader.category"/></span>
+            <span ng-switch-when="TEXT"><gdb:localize key="dataUploader.text"/></span>
+            <span ng-switch-when="LONG"><gdb:localize key="dataUploader.long"/></span>
+            <span ng-switch-when="DOUBLE"><gdb:localize key="dataUploader.double"/></span>
+            <span ng-switch-when="DATE"><gdb:localize key="dataUploader.date"/></span>
+            <span ng-switch-when="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></span>
+          </span>          
+        </li>
+        <li ng-repeat="id in sheet.attributes.ids" ng-init="attribute = sheet.attributes.values[id]">
+          {{attribute.label}}   
+          <ul>
+            <li ng-repeat="universal in universals" ng-if="attribute.fields[universal.value] != null">
+              {{attribute.fields[universal.value].label}}            
+            </li>
+          </ul>       
+        </li>    
+        <li ng-repeat="id in sheet.coordinates.ids" ng-init="coordinate = sheet.coordinates.values[id]">
+          {{coordinate.label}}   
+          <ul>
+            <li><gdb:localize key="dataUploader.latitude"/> : {{coordinate.latitude}}</li>
+            <li><gdb:localize key="dataUploader.longitude"/> : {{coordinate.longitude}}</li>
+            <li><gdb:localize key="dataUploader.featureLabel"/> : {{coordinate.featureLabel}}</li>
+            <li ng-if="coordinate.location != ''"><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
+            <li><gdb:localize key="dataUploader.featureId"/> : {{coordinate.featureId}}</li>
+          </ul>
+        </li>        
+      </ul>
     <div>
   </div>
 </div>
