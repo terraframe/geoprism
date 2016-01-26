@@ -758,7 +758,7 @@
     });        
   }
   
-  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-builder", "dashboard-layer-form"]);
+  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-layer-form", "dashboard-builder", "data-uploader"]);
   angular.module("dashboard")
    .controller('DashboardController', DashboardController)
 })();

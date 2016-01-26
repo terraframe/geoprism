@@ -270,8 +270,7 @@
      };    
    };
   
-   
-  function LayerTypes($timeout) {
+   function LayerTypes($timeout) {
       return {
         restrict: 'E',
         replace: true,
@@ -280,12 +279,12 @@
         link: function (scope, element, attrs) {
           element.ready(function(){
             $timeout(function(){
-              jcf.customForms.replaceAll(element[0]);
+              jcf.customForms.replaceAll(element[0], scope);
             }, 100);          
           });
         }
       };    
-  };
+   };
   
   
   function BasicPoint($timeout) {
@@ -313,6 +312,10 @@
   function LayerTypesStyleController($scope, $timeout, $compile, layerFormService, localizationService) {
     var controller = this;  
     controller.ready = true;
+    
+    // TODO Change this to use the localizationService
+    controller._formatter = Globalize.numberFormatter();
+    controller._parser = Globalize.numberParser();    
     
     /**
      * Setter for dynamic secondary aggregation methods which are updated on
@@ -394,7 +397,7 @@
         if(categoryType == 'number') {
           for(var i = 0; i < results.length; i++) {
             var number = parseFloat(results[i]);
-            var localized = localizationService.formatNumber(number);
+            var localized = controller._formatter(number);
             results[i] = localized;
           }
         }
@@ -409,7 +412,7 @@
       var text = request.term;
       
       if(categoryType == 'number') {
-        var parsed = localizationService.parseNumber(text);
+        var parsed = controller._parser(text);
         
         if($.isNumeric(parsed)) {
           text = parsed;

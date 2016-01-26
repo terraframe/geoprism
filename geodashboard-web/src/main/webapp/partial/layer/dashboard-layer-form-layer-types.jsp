@@ -32,8 +32,7 @@
         <!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
         <a href="#" data-gdb-tab-type="{{type}}"> 
       
-          <!-- ng-checked="'{{type}}' == '{{layerModel.layerType}}'"  NG-CHECKED NOT INTENDED TO BE USED WITH NG-MODEL-->
-          <input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="layerModel.layerType"></input>
+          <input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="layerModel.layerType" ng-change="ctrl.onChange()"></input>
           <label for="radio{{$index}}">{{dynamicDataModel.layerTypeLabels[$index]}}</label>
         </a>
       </li>
