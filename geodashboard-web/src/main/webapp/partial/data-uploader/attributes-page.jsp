@@ -28,11 +28,11 @@
     <div class="row-holder" ng-repeat="field in sheet.fields">
       <div class="inline-text">
         <label><gdb:localize key="dataUploader.label"/></label>
-        <input ng-model="field.label" name="{{::$index + '-name'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
+        <input ng-model="field.label" name="{{::$index + '-name'}}" ng-class="{textInputDisabled : field.type == 'IGNORE'}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
       </div>
       <div class="inline-box" ng-if="field.columnType == 'TEXT'">
         <label><gdb:localize key="dataUploader.type"/></label>
-        <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
+        <select class="select-area" ng-model="field.type" ng-class="{selectInputDisabled : field.type == 'IGNORE'}" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="LOCATION"><gdb:localize key="dataUploader.location"/></option>
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>

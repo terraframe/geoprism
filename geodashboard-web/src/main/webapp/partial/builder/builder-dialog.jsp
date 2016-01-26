@@ -122,8 +122,14 @@
                       <h4 class="user-notice"><gdb:localize key='dashboard.noDataSetsMsg'/></h4>
                     </div>
                     
-                    <div style="padding-left: 20px;" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
-                      <gdb:localize key="dashboardbuilder.uploadDataSet"/>
+                    <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
+						<div class="drop-box">
+	                		<div class="inner-drop-box">
+	                  			<i class="fa fa-cloud-upload">
+	                  				<p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
+	                  			</i>
+	                		</div>
+	              		</div>
                     </div>
                  </div>
                  

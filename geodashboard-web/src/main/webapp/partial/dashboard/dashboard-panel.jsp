@@ -43,7 +43,7 @@
 		 	
    			<li class="dropdown navigation-dropdown">      
    				<a href="#" class="fa fa-bars opener-drop dropdown-toggle dropdown-toggle-compact pull-right" ></a>
-	    			<ul class="dropdown-menu navigation-menu pull-right">
+	    		<ul class="dropdown-menu navigation-menu pull-right">
        				<li>
        					<i class="fa fa-home"></i> 
        					<a href="/menu"><gdb:localize key="dashboardViewer.userMenuLinkLabel"/></a>

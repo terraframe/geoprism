@@ -2984,8 +2984,7 @@ span.select-area span.center {
 	}
 	
 	div.builder-data-set {
-    border-right: 1px solid rgb(211, 211, 211);
-    padding-right: 25px;	
+    	width: 75%;
 	}
 
 /** 
@@ -3736,7 +3735,7 @@ div.secondary-box label {
 	.modal-form .inline-text {
     float: left;
     position: relative;
-    width: 150px;
+    min-width: 150px;
     padding-right: 5px;
     padding-top: 1px;
   }
@@ -3818,6 +3817,86 @@ div.secondary-box label {
     white-space: nowrap;
     width: 100%;
   }
+  
+  .textInputDisabled{
+    color: lightgrey !important;
+    border: 1px solid lightgrey !important;
+  }
+  
+  .selectInputDisabled{
+    border: 1px solid lightgrey !important;
+  }
+  
+    
+    i.fa.fa-cloud-upload{
+      font-size: 70px;
+        padding: 40px;
+        font-weight: normal;
+        color: darkgrey;
+        
+        width: 100%;
+    	text-align: center;
+    	top: 50%;
+    	-ms-transform: translateY(-50%);
+    	-webkit-transform: translateY(-50%);
+    	transform: translateY(-50%);
+    	position: relative;
+    	
+    }
+    
+	/* Hack to override firefox transform setting */
+    @-moz-document url-prefix() { 
+    	i.fa.fa-cloud-upload{
+    		transform: translateY(0);
+    	}
+    }
+    
+    .upload-text{
+    	font-size: 18px;
+    	color: grey;
+		padding: 0;
+    	bottom: 0;
+    	text-align: center;
+    	left: 0;
+    	right: 0;
+    	margin: 0 auto;
+    }
+    
+    .drop-box:hover i,
+    .drop-box:hover::before, 
+    .drop-box:hover::after, 
+    .drop-box:hover>:first-child::before, 
+    .drop-box:hover>:first-child::after,
+    .drop-box:hover p{
+    	color: #00bfff;
+    	border-color:#00bfff;
+    	opacity: 1;
+    	cursor: pointer;
+    }
+    
+    .drop-box-container{
+        left: 0;
+    	right: 0;
+    	margin: 0 auto;
+    	height: 50%;
+    	border: 3px grey dashed;
+    	border-radius: 5px;
+/*     	max-height: 250px; */
+    }
+    
+    .inner-drop-box{
+    	height: 100%;
+    }
+    
+    .drop-box {
+      	position:relative;
+      	height: 100%;
+    }
+    
+    .drop-active{
+    	border: 3px #00bfff dashed;
+    }
+    
 
 /*
 * Scroll bar styling
