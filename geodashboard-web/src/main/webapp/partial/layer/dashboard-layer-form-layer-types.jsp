@@ -31,7 +31,7 @@
     
         <!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
         
-        <a href="#" data-gdb-tab-type="{{type}}" ng-click="layerModel.layerType = type"> 
+        <a href="#" data-gdb-tab-type="{{type}}" ng-click="ctrl.setLayerType(type)"> 
 
           <div class="rad-area" ng-class="{'rad-checked' : (layerModel.layerType == type)}">
             <span></span>

@@ -269,6 +269,14 @@
        }
      };    
    };
+   
+   function LayerTypesController($scope) {
+     var controller = this;
+     
+     controller.setLayerType = function(type) {
+       $scope.layerModel.layerType = type;
+     }
+   }     
   
    function LayerTypes($timeout) {
       return {
@@ -276,12 +284,9 @@
         replace: true,
         templateUrl: '/partial/layer/dashboard-layer-form-layer-types.jsp',    
         scope: true,
+        controller : LayerTypesController,
+        controllerAs : 'ctrl',
         link: function (scope, element, attrs) {
-          element.ready(function(){
-            $timeout(function(){
-              jcf.customForms.replaceAll(element[0], scope);
-            }, 100);          
-          });
         }
       };    
    };

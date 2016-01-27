@@ -219,7 +219,7 @@ jcf = {
 				}
 			}
 		},
-		replaceAll: function(context, scope) {
+		replaceAll: function(context) {
 			for(var k in jcf.modules) {
 				var els = jcf.lib.queryBySelector(jcf.modules[k].prototype.selector, context);
 				for(var i = 0; i<els.length; i++) {
@@ -230,8 +230,7 @@ jcf = {
 						// replace form element
 						if(!jcf.lib.hasClass(els[i], 'default') && jcf.modules[k].prototype.checkElement(els[i])) {
 							new jcf.modules[k]({
-								replaces:els[i],
-								scope:scope,
+								replaces:els[i]
 							});
 						}
 					}
@@ -1404,12 +1403,6 @@ jcf.addModule({
 		if(!this.realElement.disabled && !this.realElement.checked) {
 			this.realElement.checked = true;
 			jcf.lib.fireEvent(this.realElement, 'change');
-			
-			// This is a hack
-			if(this.options.scope != null) {
-			  this.options.scope.layerModel.layerType = this.realElement.value;
-			  this.options.scope.$apply();
-			}
 		}
 		this.refreshState();
 	},

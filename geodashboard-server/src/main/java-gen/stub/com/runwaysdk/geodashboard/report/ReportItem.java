@@ -136,13 +136,13 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
      */
     if (this.getDesign() != null && this.getDesign().length() > 0)
     {
-      VaultFile file = VaultFile.lock(this.getDesign());
+      VaultFile file = VaultFile.get(this.getDesign());
       file.delete();
     }
 
     if (this.getDocument() != null && this.getDocument().length() > 0)
     {
-      VaultFile file = VaultFile.lock(this.getDocument());
+      VaultFile file = VaultFile.get(this.getDocument());
       file.delete();
     }
   }
