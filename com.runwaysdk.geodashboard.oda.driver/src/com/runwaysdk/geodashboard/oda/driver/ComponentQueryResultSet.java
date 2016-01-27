@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,35 +32,35 @@ import org.eclipse.datatools.connectivity.oda.IResultSet;
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
-import com.runwaysdk.business.ComponentDTOIF;
-import com.runwaysdk.business.ComponentQueryDTO;
 import com.runwaysdk.constants.MdAttributeDateTimeUtil;
 import com.runwaysdk.constants.MdAttributeDateUtil;
 import com.runwaysdk.constants.MdAttributeDoubleUtil;
 import com.runwaysdk.constants.MdAttributeIntegerUtil;
 import com.runwaysdk.constants.MdAttributeTimeUtil;
+import com.runwaysdk.geodashboard.report.RemoteQueryIF;
+import com.runwaysdk.geodashboard.report.RemoteResultIF;
 
 public class ComponentQueryResultSet implements IResultSet
 {
   /**
    * Query containing the results and the metadata of the results
    */
-  private ComponentQueryDTO                  query;
+  private RemoteQueryIF                      query;
 
   /**
    * Result set of the query
    */
-  private List<? extends ComponentDTOIF>     resultSet;
+  private List<? extends RemoteResultIF>     resultSet;
 
   /**
    * Result set iterator
    */
-  private Iterator<? extends ComponentDTOIF> iterator;
+  private Iterator<? extends RemoteResultIF> iterator;
 
   /**
    * The current row
    */
-  private ComponentDTOIF                     current;
+  private RemoteResultIF                     current;
 
   /**
    * Row number of the current row
@@ -68,12 +69,12 @@ public class ComponentQueryResultSet implements IResultSet
 
   private List<String>                       attributeNames;
 
-  public ComponentQueryResultSet(ComponentQueryDTO query)
+  public ComponentQueryResultSet(RemoteQueryIF query)
   {
     this.query = query;
     this.resultSet = this.query.getResultSet();
     this.iterator = this.resultSet.iterator();
-    this.attributeNames = this.query.getAttributeNames();
+    this.attributeNames = new ArrayList<String>(this.query.getAttributeNames());
 
     this.current = null;
     this.rowNumber = -1;
