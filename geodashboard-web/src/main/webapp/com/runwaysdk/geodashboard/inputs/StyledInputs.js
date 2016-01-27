@@ -123,8 +123,35 @@
         }
       }
     }    
-  }  
+  }
   
+  function StyledRadioController($scope) {
+    var controller = this;
+      
+    controller.click = function($event) {
+      $scope.model = $scope.value;  
+    }
+    
+    controller.keydown = function($event) {
+    }
+  }
+  
+  function StyledRadio() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/inputs/styled-radio.jsp',    
+      scope: {
+        model:'=',
+        value:'=',
+      },
+      controller : StyledRadioController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }  
+	  
   function NumberController($scope, localizationService) {
     var controller = this;
     
@@ -479,6 +506,7 @@
     .directive('styledCheckBox', StyledCheckBox)
     .directive('styledBasicSelect', StyledBasicSelect)
     .directive('styledSelect', StyledSelect)
+    .directive('styledRadio', StyledRadio)
     .directive('styledColorPicker', StyledColorPicker)
     .directive('simpleColorPicker', SimpleColorPicker)
     .directive('convertToPercent', ConvertToPercent)

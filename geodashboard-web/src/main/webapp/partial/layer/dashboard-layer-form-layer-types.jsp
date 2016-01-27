@@ -30,9 +30,13 @@
       <li id={{type}} class={{type}} ng-repeat="type in dynamicDataModel.layerTypeNames" ng-class="{ 'active' : '{{type}}' == '{{layerModel.layerType}}' }">
     
         <!-- data-toggle="tab" REMOVED FROM A ELEMENT BECAUSE OF CONFLICT BETWEEN BOOTSTRAP AND ANGULAR -->
-        <a href="#" data-gdb-tab-type="{{type}}"> 
-      
-          <input id="radio{{$index}}" name="layer.layerType" value="{{type}}" type="radio" ng-model="layerModel.layerType" ng-change="ctrl.onChange()"></input>
+        
+        <a href="#" data-gdb-tab-type="{{type}}" ng-click="layerModel.layerType = type"> 
+
+          <div class="rad-area" ng-class="{'rad-checked' : (layerModel.layerType == type)}">
+            <span></span>
+          </div> 
+
           <label for="radio{{$index}}">{{dynamicDataModel.layerTypeLabels[$index]}}</label>
         </a>
       </li>
