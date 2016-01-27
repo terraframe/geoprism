@@ -2984,7 +2984,7 @@ span.select-area span.center {
 	}
 	
 	div.builder-data-set {
-    	width: 75%;
+/*     	width: 75%; */
 	}
 
 /** 
@@ -3844,13 +3844,6 @@ div.secondary-box label {
     	
     }
     
-	/* Hack to override firefox transform setting */
-    @-moz-document url-prefix() { 
-    	i.fa.fa-cloud-upload{
-    		transform: translateY(0);
-    	}
-    }
-    
     .upload-text{
     	font-size: 18px;
     	color: grey;
@@ -3875,13 +3868,10 @@ div.secondary-box label {
     }
     
     .drop-box-container{
-        left: 0;
-    	right: 0;
-    	margin: 0 auto;
-    	height: 50%;
+		height: 200px;
+		margin-top: 25px;
     	border: 3px grey dashed;
     	border-radius: 5px;
-/*     	max-height: 250px; */
     }
     
     .inner-drop-box{
