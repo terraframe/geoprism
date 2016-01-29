@@ -343,6 +343,13 @@
     }, true);
         
     $scope.$watch('type.value', function() {
+      ///////
+      ////
+      //// NOTE: This logic to handle checkbox behavior is a temporary solution and is hard to follow. 
+      //// This will all be re-placed when we re-design the data set/attribute selection widget.
+      ////
+      ///////
+    	
       // if parent type is un-selected clear the srcToggledElType because we 
       // only want to know if the user toggled an ATTRIBUTE
       if(!$scope.type.value){
