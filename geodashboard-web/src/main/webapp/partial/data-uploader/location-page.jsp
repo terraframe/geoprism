@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 <div>
-  <ng-form name="ctrl.attributeForm" isolate-form>
+  <ng-form name="ctrl.attributeForm" isolate-form ng-if="attribute != null">
     <div class="label-holder">
       <strong><gdb:localize key="dataUploader.locationFieldBuilder"/></strong>
     </div>
@@ -35,47 +35,26 @@
         <p ng-show="ctrl.attributeForm.label.$error.unique">
           <gdb:localize key="dataUploader.unique"/>
         </p>    
-      </div>    
-      <div class="row-holder">
-        <ul>
-          <li ng-repeat="universal in universals" ng-if="attribute.fields[universal.value] != null">
-            {{attribute.fields[universal.value].label}}            
-          </li>
-        </ul>       
-        <div class="error-message">
-          <p ng-show="ctrl.attributeForm.$error.size"><gdb:localize key="dataUploader.notEnoughFields"/></p>    
-        </div>          
+      </div>
+    </div>
+    <div class="label-holder">
+      <strong><gdb:localize key="dataUploader.contextColumns"/></strong>
+    </div>    
+    <div class="holder">
+      <div class="row-holder" ng-repeat="universal in universalOptions">
+        <div class="inline-box">
+          <select class="select-area" ng-model="attribute.fields[universal.value]" name="{{::$index + '-universal'}}" ng-required="true">
+            <option value=""><gdb:localize key="dataUploader.select"/> {{universal.label}}</option>          
+            <option value="EXCLUDE"><gdb:localize key="dataUploader.exclude"/></option>
+            <option ng-repeat="field in locationFields[universal.value]" value="{{field.label}}">{{field.label}}</option>          
+          </select>
+        </div>      
       </div>
       <div class="row-holder">
         <div class="button-holder">
           <input type="button" value="+" class="btn btn-primary"  ng-click="ctrl.newAttribute()" ng-disabled="ctrl.attributeForm.$invalid" />
         </div>
       </div>    
-    </div>
-    <div>
-      <div class="label-holder">
-        <strong><gdb:localize key="dataUploader.locationFieldAssignment"/></strong>
-      </div>
-      <div class="holder">
-        <div class="row-holder" style="padding-top: 15px;">
-          <ul style="list-style: none;">
-            <li ng-repeat="universal in universals">
-              {{universal.label}}
-              <ul style="list-style: none;">
-                <li ng-repeat="field in sheet.fields" ng-if="field.type == 'LOCATION' && field.universal == universal.value">
-                  <div class="inline-check-block">
-                    <div ng-click="ctrl.toggleField(universal, field)" ng-class="{'chk-checked' : (attribute.fields[universal.value] != null && attribute.fields[universal.value].name == field.name)}" class="jcf-unselectable chk-area">
-                      <span></span>
-                    </div>
-                    <label>{{field.label}}</label>
-                    <span ng-if="!field.selected">(Not in use)</span>                  
-                  </div>            
-                </li>
-              </ul>       
-            </li>    
-          </ul>
-        </div>
-      </div>
     </div>
   </ng-form>  
 
@@ -93,8 +72,8 @@
               <a href="#" ng-click="ctrl.edit(attribute)">Edit</a>
             </span>          
             <ul>
-              <li ng-repeat="universal in universals" ng-if="attribute.fields[universal.value] != null">
-                {{attribute.fields[universal.value].label}}            
+              <li ng-repeat="universal in universals" ng-if="attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE'">
+                {{attribute.fields[universal.value]}}            
               </li>
             </ul>       
           </li>    

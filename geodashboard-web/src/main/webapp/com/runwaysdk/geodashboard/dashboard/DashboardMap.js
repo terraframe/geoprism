@@ -52,6 +52,7 @@
     }
     
     controller.addOverlay = function(element, coordinate) {
+      mapService.clearOverlays();    	
       mapService.addOverlay(element, coordinate);    	
     }
   }
@@ -69,9 +70,10 @@
       link: function (scope, element, attrs, ctrl) {
         scope.$watch('feature', function(){
           if(scope.feature != null) {
-            element.ready(function() {
+//            element.ready(function() {
+        	  
               ctrl.addOverlay(element[0], scope.feature.coordinate);
-            });
+//            });
           }	
         }, true);
       }

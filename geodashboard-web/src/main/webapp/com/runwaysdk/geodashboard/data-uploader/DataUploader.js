@@ -91,24 +91,54 @@
         
     controller.initialize = function() {
       $scope.count = 0;
-      $scope.attribute = {
-          label : "",
-          fields : {},
-          id : -1
-      };
 
       // Initialize the universal options
-      if($scope.options != null) {
-        var countries = $scope.options.countries;
+      var countries = $scope.options.countries;
             
-        for(var i = 0; i < countries.length; i++) {
-          var country = countries[i];
+      for(var i = 0; i < countries.length; i++) {
+        var country = countries[i];
                
-          if(country.value == $scope.sheet.country) {
-            $scope.universals = country.options;
-          }
+        if(country.value == $scope.sheet.country) {
+          $scope.universals = country.options;
         }
       }
+        
+      // Create a map of possible location fields
+      $scope.locationFields = {};
+        
+      for(var j = 0; j < $scope.sheet.fields.length; j++) {
+        var field = $scope.sheet.fields[j];
+            
+        if(field.type == 'LOCATION') {
+          if($scope.locationFields[field.universal]  == null) {
+            $scope.locationFields[field.universal] = [];
+          }
+            
+          $scope.locationFields[field.universal].push(field);            
+        }
+      }
+      
+      controller.newAttribute();
+    }
+    
+    controller.getNextLocationField = function() {
+      for(var i = ($scope.universals.length - 1); i >= 0; i--) {
+        var universal = $scope.universals[i];
+        
+        if($scope.locationFields[universal.value] != null) {
+          var fields = $scope.locationFields[universal.value];
+          
+          for(var j = 0; j < fields.length; j++) {
+            var field = fields[j];
+            
+            if(!field.selected) {            	
+              return field;
+            }
+          }
+        }        
+      }  
+      
+      return null;
     }
     
     controller.edit = function(attribute) {
@@ -126,33 +156,53 @@
       }
     }
     
-    controller.toggleField = function(universal, field) {
-      if($scope.attribute.fields[universal.value] != null && $scope.attribute.fields[universal.value].name == field.name){
-        delete $scope.attribute.fields[universal.value];
+    controller.newAttribute = function() {
+      if($scope.attribute != null) {      
+        if($scope.attribute.id == -1) {
+          $scope.attribute.id = ($scope.count++);      
+          $scope.sheet.attributes.ids.push($scope.attribute.id);
+          $scope.sheet.attributes.values[$scope.attribute.id] = {};              
+        }     
+        
+        var attribute = $scope.sheet.attributes.values[$scope.attribute.id];      
+        angular.copy($scope.attribute, attribute);              
+        
+        // Update the field.selected status
+        controller.setFieldSelected();
       }
-      else {        
-        $scope.attribute.fields[universal.value] = field;      
+      
+      var field = controller.getNextLocationField();      
+      
+      if(field != null) {
+        $scope.attribute = {
+          label : field.label,
+          fields : {},
+          id : -1
+        };
+
+        $scope.attribute.fields[field.universal] = field.label;
+      
+        controller.setUniversalOptions(field);
+      }
+      else {
+        $scope.attribute = null;
       }
     }
+    
+    controller.setUniversalOptions = function(field) {
+      $scope.universalOptions = [];
+      var valid = true;
       
-    controller.newAttribute = function() {
-      if($scope.attribute.id == -1) {
-        $scope.attribute.id = ($scope.count++);      
-        $scope.sheet.attributes.ids.push($scope.attribute.id);
-        $scope.sheet.attributes.values[$scope.attribute.id] = {};              
-      }     
-      
-      var attribute = $scope.sheet.attributes.values[$scope.attribute.id];      
-      angular.copy($scope.attribute, attribute);              
-        
-      $scope.attribute = {
-        label : "",
-        fields : {},
-        id : -1
-      };  
-      
-      // Update the field.selected status
-      controller.setFieldSelected();
+      for(var i = 0; i < $scope.universals.length; i++) {
+        var universal = $scope.universals[i];
+              
+        if(universal.value == field.universal) {
+          valid = false;              
+        }
+        else if(valid && $scope.locationFields[universal.value] != null) {
+          $scope.universalOptions.push(universal);
+        }
+      }
     }
     
     controller.setFieldSelected = function() {
@@ -175,7 +225,7 @@
                   
         for (var key in attribute.fields) {
           if (attribute.fields.hasOwnProperty(key)) {
-            if(attribute.fields[key].name == field.name) {
+            if(attribute.fields[key] == field.label) {
               return true;
             }
           }
@@ -192,7 +242,7 @@
         for(var i = 0; i < $scope.sheet.fields.length; i++) {
           var field = $scope.sheet.fields[i];
                 
-          if(field.label == label) {
+          if(field.type != 'LOCATION' && field.label == label) {
             count++;
           }            
         }
@@ -218,7 +268,7 @@
       var length = Object.keys($scope.attribute.fields).length;
       var valid = (length > 1);
         
-      controller.attributeForm.$setValidity("size",  valid);
+//      controller.attributeForm.$setValidity("size",  valid);
     }, true);   
     
     // Initialize the scope

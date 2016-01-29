@@ -41,8 +41,8 @@
         <li ng-repeat="id in sheet.attributes.ids" ng-init="attribute = sheet.attributes.values[id]">
           {{attribute.label}}   
           <ul>
-            <li ng-repeat="universal in universals" ng-if="attribute.fields[universal.value] != null">
-              {{attribute.fields[universal.value].label}}            
+            <li ng-repeat="universal in universals" ng-if="attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE'">
+              {{attribute.fields[universal.value]}}            
             </li>
           </ul>       
         </li>    
