@@ -343,9 +343,6 @@
     }, true);
         
     $scope.$watch('type.value', function() {
-//      if(!$scope.type.value && $scope.attribute.selected){
-//        $scope.attribute.selected = false;          
-//      }
       // if parent type is un-selected clear the srcToggledElType because we 
       // only want to know if the user toggled an ATTRIBUTE
       if(!$scope.type.value){
