@@ -318,14 +318,87 @@
   
   function TypeAttributeController($scope) {
     $scope.$watch('attribute.selected', function() {
+      // if an attribute is selected with the parent type not yet checked
       if($scope.attribute.selected && !$scope.type.value){
-        $scope.type.value = true;          
+    	// set flag property when we know the user selected an attribute
+    	$scope.srcToggledElType = "ATTRIBUTE";
+        $scope.type.value = true;       
+      }
+      // else if an attribute is un-selected and the parent type is checked
+      else if(!$scope.attribute.selected && $scope.type.value){
+    	var othersSelected = false;
+    	for(var i=0; i<$scope.type.attributes.length; i++){
+    		var attr = $scope.type.attributes[i];
+    		if(attr.selected){
+    			othersSelected = true;
+    		}
+    	}
+    	
+    	// if no other children attributes are selected un-select the parent type
+    	if(!othersSelected){
+    		$scope.srcToggledElType = "ATTRIBUTE";
+    		$scope.type.value = false;     
+    	}
       }
     }, true);
         
     $scope.$watch('type.value', function() {
-      if(!$scope.type.value && $scope.attribute.selected){
-        $scope.attribute.selected = false;          
+      ///////
+      ////
+      //// NOTE: This logic to handle checkbox behavior is a temporary solution and is hard to follow. 
+      //// This will all be re-placed when we re-design the data set/attribute selection widget.
+      ////
+      ///////
+    	
+      // if parent type is un-selected clear the srcToggledElType because we 
+      // only want to know if the user toggled an ATTRIBUTE
+      if(!$scope.type.value){
+    	  if($scope.srcToggledElType === "ATTRIBUTE"){
+    		  $scope.srcToggledElType = "";
+    	  }
+      }
+      
+      // if parent type is selected because the user selected one of its child attributes 
+      // before any others
+      if($scope.type.value && $scope.srcToggledElType === "ATTRIBUTE"){
+        $scope.attribute.selected = true;          
+      }
+      // else if parent type is selected and the parent type was not triggered by an attribute selection
+      else if($scope.type.value && $scope.srcToggledElType !== "ATTRIBUTE"){
+    	// are there any selected attributes under the parent type?
+    	// selected attributes would occur when a parent type is selected after a user selects an attribute
+    	// when no other attributes are selected yet
+    	var selectedAttrId;
+    	var lastAttrId;
+      	for(var i=0; i<$scope.type.attributes.length; i++){
+    		var attr = $scope.type.attributes[i];
+    		if(attr.selected){
+    			selectedAttrId = attr.id;
+    		}
+    		
+    		if(i === $scope.type.attributes.length - 1){
+    			lastAttrId = attr.id;
+    		}
+    	}
+      	
+      	// re-select the previously selected attribute (there must be only one at this point) when the parent 
+      	// type is selected after a user selected a child attribute
+      	if(selectedAttrId && selectedAttrId === $scope.attribute.id){
+      		$scope.attribute.selected = true;   
+      	}
+      	// else if this attribute is the last attribute for the parent type and there is still no
+      	// selected attribute
+      	else if(lastAttrId === $scope.attribute.id && !selectedAttrId){
+      		// select all the attributes under the parent because the parent type must have been 
+      		// selected due to the lack of child attributes being selected up to this point
+          	for(var i=0; i<$scope.type.attributes.length; i++){
+        		var attr = $scope.type.attributes[i];
+        		attr.selected = true;
+        	}
+      	}
+      }
+      else{
+    	  $scope.attribute.selected = false;  
       }
     }, true);              
   }
