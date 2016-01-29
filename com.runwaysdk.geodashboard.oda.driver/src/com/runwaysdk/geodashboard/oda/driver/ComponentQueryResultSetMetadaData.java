@@ -18,38 +18,27 @@
  */
 package com.runwaysdk.geodashboard.oda.driver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
-import com.runwaysdk.business.ComponentQueryDTO;
-import com.runwaysdk.transport.attributes.AttributeDTO;
-import com.runwaysdk.transport.metadata.AttributeBooleanMdDTO;
-import com.runwaysdk.transport.metadata.AttributeCharacterMdDTO;
-import com.runwaysdk.transport.metadata.AttributeDateMdDTO;
-import com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO;
-import com.runwaysdk.transport.metadata.AttributeDecMdDTO;
-import com.runwaysdk.transport.metadata.AttributeDecimalMdDTO;
-import com.runwaysdk.transport.metadata.AttributeDoubleMdDTO;
-import com.runwaysdk.transport.metadata.AttributeFloatMdDTO;
-import com.runwaysdk.transport.metadata.AttributeIntegerMdDTO;
-import com.runwaysdk.transport.metadata.AttributeLongMdDTO;
-import com.runwaysdk.transport.metadata.AttributeMdDTO;
-import com.runwaysdk.transport.metadata.AttributeTextMdDTO;
-import com.runwaysdk.transport.metadata.AttributeTimeMdDTO;
+import com.runwaysdk.geodashboard.report.AttributeCharacterMetadataIF;
+import com.runwaysdk.geodashboard.report.AttributeDecMetadataIF;
+import com.runwaysdk.geodashboard.report.AttributeMetadataIF;
+import com.runwaysdk.geodashboard.report.RemoteQueryIF;
 
 public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
 {
+  private RemoteQueryIF query;
 
-  private ComponentQueryDTO query;
+  private List<String>  attributeNames;
 
-  private List<String>      attributeNames;
-
-  public ComponentQueryResultSetMetadaData(ComponentQueryDTO query)
+  public ComponentQueryResultSetMetadaData(RemoteQueryIF query)
   {
     this.query = query;
-    this.attributeNames = this.query.getAttributeNames();
+    this.attributeNames = new ArrayList<String>(this.query.getAttributeNames());
   }
 
   private String getAttributeName(int index)
@@ -57,11 +46,10 @@ public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
     return this.attributeNames.get( ( index - 1 ));
   }
 
-  private AttributeMdDTO getAttributeMdDTO(int index)
+  private AttributeMetadataIF getAttributeMetadata(int index)
   {
-    AttributeDTO attributeDTO = this.query.getAttributeDTO(this.getAttributeName(index));
-    AttributeMdDTO attributeMdDTO = attributeDTO.getAttributeMdDTO();
-    return attributeMdDTO;
+    AttributeMetadataIF attribute = this.query.getAttributeMetadata(this.getAttributeName(index));
+    return attribute;
   }
 
   @Override
@@ -73,11 +61,11 @@ public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
   @Override
   public int getColumnDisplayLength(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    if (attributeMdDTO instanceof AttributeCharacterMdDTO)
+    if (attributeMetadata instanceof AttributeCharacterMetadataIF)
     {
-      return ( (AttributeCharacterMdDTO) attributeMdDTO ).getSize();
+      return ( (AttributeCharacterMetadataIF) attributeMetadata ).getSize();
     }
 
     return -1;
@@ -86,74 +74,76 @@ public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
   @Override
   public String getColumnLabel(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    return attributeMdDTO.getDisplayLabel();
+    return attributeMetadata.getDisplayLabel();
   }
 
   @Override
   public String getColumnName(int index) throws OdaException
   {
-    return this.getAttributeMdDTO(index).getName();
+    return this.getAttributeMetadata(index).getName();
   }
 
   @Override
   public int getColumnType(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    if (attributeMdDTO instanceof AttributeCharacterMdDTO || attributeMdDTO instanceof AttributeTextMdDTO)
-    {
-      return MetaDataTypeInfo.STRING_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeIntegerMdDTO || attributeMdDTO instanceof AttributeLongMdDTO)
-    {
-      return MetaDataTypeInfo.INTEGER_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeFloatMdDTO || attributeMdDTO instanceof AttributeDoubleMdDTO)
-    {
-      return MetaDataTypeInfo.DOUBLE_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeDecimalMdDTO)
-    {
-      return MetaDataTypeInfo.DECIMAL_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeDateMdDTO)
-    {
-      return MetaDataTypeInfo.DATE_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeTimeMdDTO)
-    {
-      return MetaDataTypeInfo.TIME_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeDateTimeMdDTO)
-    {
-      return MetaDataTypeInfo.TIMESTAMP_PARAMETER;
-    }
-    else if (attributeMdDTO instanceof AttributeBooleanMdDTO)
-    {
-      return MetaDataTypeInfo.BOOLEAN_PARAMETER;
-    }
+    return attributeMetadata.getColumnType();
 
-    return 0;
+    // if (attributeMetadata instanceof AttributeCharacterMetadataIF)
+    // {
+    // return MetaDataTypeInfo.STRING_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeLongMetadataIF)
+    // {
+    // return MetaDataTypeInfo.INTEGER_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeDoubleMetadataIF)
+    // {
+    // return MetaDataTypeInfo.DOUBLE_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeDecimalMetadataIF)
+    // {
+    // return MetaDataTypeInfo.DECIMAL_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeDateMetadataIF)
+    // {
+    // return MetaDataTypeInfo.DATE_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeTimeMetadataIF)
+    // {
+    // return MetaDataTypeInfo.TIME_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeDateTimeMetadataIF)
+    // {
+    // return MetaDataTypeInfo.TIMESTAMP_PARAMETER;
+    // }
+    // else if (attributeMetadata instanceof AttributeBooleanMetadataIF)
+    // {
+    // return MetaDataTypeInfo.BOOLEAN_PARAMETER;
+    // }
+    //
+    // return 0;
   }
 
   @Override
   public String getColumnTypeName(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    return attributeMdDTO.getClass().getSimpleName();
+    return attributeMetadata.getClass().getSimpleName();
   }
 
   @Override
   public int getPrecision(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    if (attributeMdDTO instanceof AttributeDecMdDTO)
+    if (attributeMetadata instanceof AttributeDecMetadataIF)
     {
-      return ( (AttributeDecMdDTO) attributeMdDTO ).getDecimalLength();
+      return ( (AttributeDecMetadataIF) attributeMetadata ).getPrecision();
     }
 
     return -1;
@@ -162,11 +152,11 @@ public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
   @Override
   public int getScale(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    if (attributeMdDTO instanceof AttributeDecMdDTO)
+    if (attributeMetadata instanceof AttributeDecMetadataIF)
     {
-      return ( (AttributeDecMdDTO) attributeMdDTO ).getTotalLength();
+      return ( (AttributeDecMetadataIF) attributeMetadata ).getScale();
     }
 
     return -1;
@@ -175,9 +165,9 @@ public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
   @Override
   public int isNullable(int index) throws OdaException
   {
-    AttributeMdDTO attributeMdDTO = this.getAttributeMdDTO(index);
+    AttributeMetadataIF attributeMetadata = this.getAttributeMetadata(index);
 
-    return ( attributeMdDTO.isRequired() ? IResultSetMetaData.columnNoNulls : IResultSetMetaData.columnNullable );
+    return ( attributeMetadata.isRequired() ? IResultSetMetaData.columnNoNulls : IResultSetMetaData.columnNullable );
   }
 
 }

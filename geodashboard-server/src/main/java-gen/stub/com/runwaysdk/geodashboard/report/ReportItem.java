@@ -924,7 +924,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Transaction
-  public static ValueQuery getValuesForReporting(String queryId, String context, Integer pageSize, Integer pageNumber)
+  public static String getValuesForReporting(String queryId, String context, Integer pageSize, Integer pageNumber)
   {
     ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, context);
 
@@ -933,7 +933,10 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       query.restrictRows(pageSize, pageNumber);
     }
 
-    return query;
+    RemoteQueryBuilder builder = new RemoteQueryBuilder(query, true);
+    RemoteQuery q = builder.build();
+
+    return q.serialize();
   }
 
   @Transaction
@@ -951,12 +954,15 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   }
 
   @Transaction
-  public static ValueQuery getMetadataForReporting(String queryId, String context)
+  public static String getMetadataForReporting(String queryId, String context)
   {
     ValueQuery query = ReportProviderBridge.getValuesForReporting(queryId, context);
     query.restrictRows(1, 1);
 
-    return query;
+    RemoteQueryBuilder builder = new RemoteQueryBuilder(query, false);
+    RemoteQuery q = builder.build();
+
+    return q.serialize();
   }
 
   public static PairView[] getQueriesForReporting()

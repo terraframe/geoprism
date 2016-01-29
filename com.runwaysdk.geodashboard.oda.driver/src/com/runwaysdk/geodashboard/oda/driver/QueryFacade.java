@@ -27,10 +27,11 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.geodashboard.report.BirtConstants;
 import com.runwaysdk.geodashboard.report.PairViewDTO;
+import com.runwaysdk.geodashboard.report.RemoteQuery;
+import com.runwaysdk.geodashboard.report.RemoteQueryIF;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
 
 public class QueryFacade
@@ -192,7 +193,8 @@ public class QueryFacade
   {
     if (queryMetadata)
     {
-      ValueQueryDTO results = ReportItemDTO.getMetadataForReporting(request, queryId, context.toString());
+      String json = ReportItemDTO.getMetadataForReporting(request, queryId, context.toString());
+      RemoteQueryIF results = RemoteQuery.deserialize(json);
 
       return new ComponentQueryResultSet(results);
     }

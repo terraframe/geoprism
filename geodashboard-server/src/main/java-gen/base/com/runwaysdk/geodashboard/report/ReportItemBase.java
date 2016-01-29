@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -2146840609)
+@com.runwaysdk.business.ClassSignature(hash = 1977027519)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -49,7 +49,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -2146840609;
+  private static final long serialVersionUID = 1977027519;
   
   public ReportItemBase()
   {
@@ -577,7 +577,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static com.runwaysdk.query.ValueQuery getMetadataForReporting(java.lang.String queryId, java.lang.String context)
+  public static java.lang.String getMetadataForReporting(java.lang.String queryId, java.lang.String context)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -637,7 +637,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return _instance.getURL();
   }
   
-  public static com.runwaysdk.query.ValueQuery getValuesForReporting(java.lang.String queryId, java.lang.String context, java.lang.Integer pageSize, java.lang.Integer pageNumber)
+  public static java.lang.String getValuesForReporting(java.lang.String queryId, java.lang.String context, java.lang.Integer pageSize, java.lang.Integer pageNumber)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

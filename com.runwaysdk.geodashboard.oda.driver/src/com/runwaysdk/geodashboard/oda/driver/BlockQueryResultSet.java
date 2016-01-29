@@ -29,8 +29,9 @@ import org.eclipse.datatools.connectivity.oda.IResultSet;
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
-import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.geodashboard.report.RemoteQuery;
+import com.runwaysdk.geodashboard.report.RemoteQueryIF;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
 
 public class BlockQueryResultSet implements IResultSet
@@ -74,7 +75,8 @@ public class BlockQueryResultSet implements IResultSet
   {
     this.currentPage = this.currentPage + 1;
 
-    ValueQueryDTO values = ReportItemDTO.getValuesForReporting(this.request, this.queryId, this.context, this.pageSize, this.currentPage);
+    String json = ReportItemDTO.getValuesForReporting(this.request, this.queryId, this.context, this.pageSize, this.currentPage);
+    RemoteQueryIF values = RemoteQuery.deserialize(json);
 
     this.query = new ComponentQueryResultSet(values);
   }

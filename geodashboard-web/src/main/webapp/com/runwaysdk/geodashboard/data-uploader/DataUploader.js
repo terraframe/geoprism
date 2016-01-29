@@ -30,6 +30,21 @@
   
   function AttributesPageController($scope) {
     var controller = this;
+    
+    controller.initialize = function() {
+      // Initialize the universal options
+      if($scope.options != null) {
+        var countries = $scope.options.countries;
+              
+        for(var i = 0; i < countries.length; i++) {
+          var country = countries[i];
+                 
+          if(country.value == $scope.sheet.country) {
+            $scope.universals = country.options;
+          }
+        }
+      }
+    }    
   
     controller.isUniqueLabel = function(label) {
       if($scope.sheet != null) {
@@ -54,6 +69,8 @@
     controller.accept = function(field) {
       field.accepted = true;
     }
+    
+    controller.initialize();
   }
   
   function AttributesPage() {
@@ -72,13 +89,27 @@
   function LocationPageController($scope, $rootScope) {
     var controller = this;
         
-    // Initialize the scope
-    $scope.count = 0;
-    $scope.attribute = {
-      label : "",
-      fields : {},
-      id : -1
-    };      
+    controller.initialize = function() {
+      $scope.count = 0;
+      $scope.attribute = {
+          label : "",
+          fields : {},
+          id : -1
+      };
+
+      // Initialize the universal options
+      if($scope.options != null) {
+        var countries = $scope.options.countries;
+            
+        for(var i = 0; i < countries.length; i++) {
+          var country = countries[i];
+               
+          if(country.value == $scope.sheet.country) {
+            $scope.universals = country.options;
+          }
+        }
+      }
+    }
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
@@ -148,7 +179,7 @@
               return true;
             }
           }
-        }        
+        }
       }
       
       return false;
@@ -188,7 +219,10 @@
       var valid = (length > 1);
         
       controller.attributeForm.$setValidity("size",  valid);
-    }, true);    
+    }, true);   
+    
+    // Initialize the scope
+    controller.initialize();
   }
   
   function LocationPage() {
@@ -357,9 +391,26 @@
   function SummaryPageController($scope) {
     var controller = this;
     
+    controller.initialize = function() {
+      // Initialize the universal options
+      if($scope.options != null) {
+        var countries = $scope.options.countries;
+                
+        for(var i = 0; i < countries.length; i++) {
+          var country = countries[i];
+                   
+          if(country.value == $scope.sheet.country) {
+            $scope.universals = country.options;
+          }
+        }
+      }
+    }      
+    
     controller.isValid = function(field) {
       return !(field.type == 'LOCATION' || field.type == 'LONGITUDE' || field.type == 'LATITUDE' || field.type == 'IGNORE'  || field.type == ''); 
     }
+    
+    controller.initialize();
   }
   
   function SummaryPage() {
@@ -402,20 +453,6 @@
     controller.setCountry = function(country) {
       $scope.sheet.country = country;
     }
-        
-    controller.updateUniversalOptions = function() {
-      if($scope.options != null) {
-        var countries = $scope.options.countries;
-          
-        for(var i = 0; i < countries.length; i++) {
-          var country = countries[i];
-             
-          if(country.value == $scope.sheet.country) {
-            $scope.universals = country.options;
-          }
-        }
-      }
-    }    
     
     controller.persist = function() {
       controller.clear();
@@ -456,6 +493,8 @@
           sheet : angular.copy($scope.sheet)        
         };
         $scope.page.snapshots.push(snapshot);
+        
+        $scope.$broadcast('nextPage', {});
       }
       else if($scope.page.current == 'FIELDS') {
         if(controller.hasLocationField()) {
