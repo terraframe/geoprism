@@ -56,7 +56,7 @@ public class BlockQueryResultSet implements IResultSet
     this.queryId = queryId;
     this.context = context;
 
-    this.pageSize = 4000;
+    this.pageSize = 40000;
   }
 
   private synchronized ComponentQueryResultSet getQuery()
