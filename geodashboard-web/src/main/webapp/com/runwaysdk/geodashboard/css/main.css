@@ -1934,7 +1934,7 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 .modal-form .text input[type="textarea"]{
 	background:#eee;
 	border:1px solid #aaa;
-	width:100%;
+	width:99%;
 	padding:5px 10px;
 	margin:0;
 	float:left;
