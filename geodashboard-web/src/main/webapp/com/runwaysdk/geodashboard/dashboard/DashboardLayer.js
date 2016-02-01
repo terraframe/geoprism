@@ -178,7 +178,7 @@
     }    
   }
     
-  function ThematicPanel() {
+  function ThematicPanel($timeout) {
     return {
       restrict: 'E',
       replace: true,
@@ -199,14 +199,14 @@
         }, true);
         
         /* Hook-up drag and drop */
-        element.ready(function(){
+        $timeout(function(){
           var el = $(element).find('.holder');
           
           el.sortable({
             update: ctrl.move
           });
           el.disableSelection();            
-        });
+        }, 0);
       }
     }    
   }
@@ -281,7 +281,7 @@
     }
   }
     
-  function ReferencePanel() {
+  function ReferencePanel($timeout) {
     return {
       restrict: 'E',
       replace: true,
@@ -295,13 +295,13 @@
           
         // open the overlay panel if there are cache and it is collapsed        
         scope.$watch('cache', function(newVal, oldVal){
-          element.ready(function() {
+          $timeout(function() {
             if(oldVal == null || (newVal != null && newVal.ids.length > 0 && newVal.ids.length != oldVal.ids.length)) {
               if(!$(element).find("#collapse-ref-layer").hasClass("in") && ctrl.hasValues()) {
                 $(element).find("#ref-layer-opener-button").click();
               }
             }            
-          });
+          }, 0);
         }, true);
       }
     }    
@@ -446,7 +446,7 @@
     }
   }
   
-  function LegendDrag() {
+  function LegendDrag($timeout) {
     return {
       restrict:'A',
       scope: {
@@ -455,7 +455,7 @@
       controller : LegendDragController,
       controllerAs : 'ctrl',      
       link: function(scope, element, attrs, ctrl) {
-        element.ready(function(){
+        $timeout(function(){
           $(element).draggable({
             containment: "body", 
             snap: true, 
@@ -471,7 +471,7 @@
             
             ctrl.move(newPosition);
           }); 
-        });
+        }, 0);
       }
     }
   }

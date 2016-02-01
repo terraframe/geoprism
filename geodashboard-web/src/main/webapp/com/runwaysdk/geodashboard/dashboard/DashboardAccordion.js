@@ -199,7 +199,7 @@
     
   }
   
-  function AccordionAttribute(dashboardService) {
+  function AccordionAttribute($timeout, dashboardService) {
     return {
       restrict: 'E',
       replace: true,
@@ -213,11 +213,11 @@
       link: function (scope, element, attrs, ctrl) {
       
         // Don't collapse the element if there are filtering values            
-        element.ready(function(){        
+        $timeout(function(){        
           if(!dashboardService.isEmptyFilter(scope.attribute.filter)) {
             ctrl.expand(element);
           }      
-        });
+        }, 0);
       }
     }    
   }
@@ -420,7 +420,7 @@
     }    
   }
   
-  function OntologyType() {
+  function OntologyType($timeout) {
     return {
       restrict: 'E',
       replace: true,
@@ -435,9 +435,9 @@
         scope.form = ctrls[0];
         scope.attribute.filter.type = "CLASSIFIER_CONDITION";
         
-        element.ready(function(){
+        $timeout(function(){
           ctrls[1].renderTree(element[0]);
-        });
+        }, 0);
       }
     }    
   }

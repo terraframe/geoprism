@@ -26,11 +26,9 @@
     }
     
     service.sortable = function(element, update) {
-      element.ready(function(){
-        element.sortable({
-          update: update
-        });
-      });                
+      element.sortable({
+        update: update
+      });
     }
     
     return service;

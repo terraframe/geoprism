@@ -287,13 +287,6 @@
     }    
   }
   
-  function SelectFieldController($scope, $timeout) {
-    var controller = this;
-
-    controller.init = function(element) {
-    }    
-  }
-  
   function SelectField() {
     return {
       restrict: 'E',
@@ -304,14 +297,8 @@
         model:'='
       },
       require: ['^form', 'selectField'],            
-      controller : SelectFieldController,
-      controllerAs : 'ctrl',
       link: function (scope, element, attrs, ctrls) {
         scope.form = ctrls[0];
-    
-        element.ready(function(){
-          ctrls[1].init(element);        
-        });
       }
     }    
   }
