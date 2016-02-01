@@ -26,11 +26,9 @@
       <strong><gdb:localize key="dataUploader.locationFieldBuilder"/></strong>
     </div>
     <div class="holder">
-      <div class="row-holder">
-        <div class="text">
-          <input ng-model="attribute.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
-        </div>
-      </div>
+      <span class="text">
+        <input ng-model="attribute.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
+      </span>
       <div class="error-message">
         <p ng-show="ctrl.attributeForm.label.$error.unique">
           <gdb:localize key="dataUploader.unique"/>
@@ -42,7 +40,7 @@
     </div>    
     <div class="holder">
       <div class="row-holder" ng-repeat="universal in universalOptions">
-        <div class="inline-box">
+        <div class="box">
           <select class="select-area" ng-model="attribute.fields[universal.value]" name="{{::$index + '-universal'}}" ng-required="true">
             <option value=""><gdb:localize key="dataUploader.select"/> {{universal.label}}</option>          
             <option value="EXCLUDE"><gdb:localize key="dataUploader.exclude"/></option>

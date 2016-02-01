@@ -26,11 +26,9 @@
       <strong><gdb:localize key="dataUploader.label"/></strong>
     </div>
     <div class="holder">
-      <div class="row-holder">
-        <div class="text">
-          <input ng-model="coordinate.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
-        </div>
-      </div>
+      <span class="text">
+        <input ng-model="coordinate.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
+      </span>
       <div class="error-message">
         <p ng-show="ctrl.coordinateForm.label.$error.unique">
           <gdb:localize key="dataUploader.unique"/>
@@ -42,7 +40,7 @@
     </div>
     <div class="holder">
       <div class="row-holder">
-        <div class="inline-box">
+        <div class="box">
           <select class="select-area"  name="latitude" ng-model="coordinate.latitude" ng-required="true" ng-options="opt.label as opt.label for opt in latitudes">
             <option value=""></option>
           </select>
@@ -54,7 +52,7 @@
     </div>
     <div class="holder">
       <div class="row-holder">
-        <div class="inline-box">
+        <div class="box">
           <select class="select-area"  name="longitude" ng-model="coordinate.longitude" ng-required="true" ng-options="opt.label as opt.label for opt in longitudes">
             <option value=""></option>
           </select>
@@ -66,7 +64,7 @@
     </div>
     <div class="holder">
       <div class="row-holder">
-        <div class="inline-box">
+        <div class="box">
           <select class="select-area"  name="featureLabel" ng-model="coordinate.featureLabel" ng-required="true" ng-options="opt.label as opt.label for opt in featureLabels">
             <option value=""></option>
           </select>
@@ -79,7 +77,7 @@
       </div>
       <div class="holder">
         <div class="row-holder">
-          <div class="inline-box">
+          <div class="box">
             <select class="select-area"  name="location" ng-model="coordinate.location" ng-required="true" ng-options="opt.label as opt.label for opt in locations">
               <option value=""></option>
             </select>
@@ -92,7 +90,7 @@
     </div>
     <div class="holder">
       <div class="row-holder">
-        <div class="inline-box">
+        <div class="box">
           <select class="select-area" name="featureId" ng-model="coordinate.featureId" ng-required="true" ng-options="opt.label as opt.label for opt in featureIds">
             <option value=""></option>
           </select>

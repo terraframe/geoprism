@@ -425,6 +425,14 @@
           scope.dialogStyle.height = attrs.height;        
         }
         
+        if (attrs.modal) {
+          scope.modal = attrs.modal;        
+        }
+        
+        if (attrs.overlay) {
+          scope.overlay = attrs.overlay;        
+        }
+        
         scope.hideModal = function() {
           scope.show = false;
         };

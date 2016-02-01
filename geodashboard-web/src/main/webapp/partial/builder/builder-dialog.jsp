@@ -22,8 +22,8 @@
 
 
 <div>
-  <modal-dialog ng-if="show" ng-show="!hidden">
-    <div id="builder-div" role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
+  <modal-dialog modal="builder-div" overlay="ng-modal-overlay" ng-if="show" ng-show="!hidden">
+    <div role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dashboardbuilder.title"/></h1>
       </div>
@@ -53,9 +53,7 @@
                   </div>
                   <select-field ng-switch-when="select" field="field" model="dashboard"></select-field>
                   <div class="holder">
-                    <div class="row-holder">
-                      <text-field ng-switch-when="text" field="field" maxlength="255" model="dashboard"></text-field>
-                    </div>
+                    <text-field ng-switch-when="text" field="field" maxlength="255" model="dashboard"></text-field>
                   </div>
                 </div>          
               </div>

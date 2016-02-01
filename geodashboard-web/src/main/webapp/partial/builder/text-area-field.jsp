@@ -20,11 +20,11 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<div class="row-holder">
+<div>
   <div ng-if="field.writable">
-    	<div class="text">
+    	<span class="text">
     		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" placeholder="{{field.placeholdertext}}" name="{{field.name}}" class="" type="textarea">
-    	</div>
+    	</span>
     	<div class="error-message">
       		<p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
       		<p ng-show="form[field.name].$error.maxlength"><gdb:localize key="dashboard.TextInputExceedMaxLimit"/></p>
@@ -32,8 +32,8 @@
     	</div>
   </div>
   <div ng-if="!field.writable && field.readable">
-    	<div class="text">
+    	<span class="text">
     		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" name="{{field.name}}" class="" type="textarea" ng-disabled="true">
-    	</div>
+    	</span>
   </div>
 </div>

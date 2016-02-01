@@ -23,7 +23,7 @@
 
 <div>
   <modal-dialog ng-if="show">
-    <div id="builder-div" role="dialog" class="ng-modal-content modal-content">
+    <div id="builder-div" role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dataUploader.title"/></h1>
       </div>
@@ -48,10 +48,10 @@
               <summary-page ng-if="page.current == 'SUMMARY'"></summary-page>
             </section>            
           </fieldset>
-          <div class="row-holder">
+          <div class="row-holder" >
             <div class="label-holder"></div>
             <div class="holder">
-              <div class="button-holder">
+              <div class="button-holder" fire-on-ready>
                 <input
                   ng-if="page.current != 'INITIAL'"      
                   type="button"

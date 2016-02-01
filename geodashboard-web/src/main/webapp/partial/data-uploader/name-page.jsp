@@ -26,14 +26,9 @@
     <strong><gdb:localize key="dataUploader.label"/></strong>
   </div>
   <div class="holder">
-    <div class="row-holder">
-      <div class="text">
-        <input ng-model="sheet.label" name="label" ng-required="true" type="text"></input>
-      </div>
-      <div class="error-message">
-        <p ng-show="form.label.$error.required"><gdb:localize key="dashboard.Required"/></p>    
-      </div>
-    </div>
+    <span class="text">
+      <input ng-model="sheet.label" name="label" ng-required="true" type="text"></input>
+    </span>
   </div> 
   <div class="label-holder">
     <strong><gdb:localize key="dataUploader.country"/></strong>
@@ -42,9 +37,6 @@
     <div class="row-holder">
       <div class="box">
         <select class="select-area" ng-model="sheet.country" name="country" ng-options="opt.value as opt.label for opt in options.countries" ng-required="true"></select>      
-      </div>
-      <div class="error-message">
-        <p ng-show="form.country.$error.required"><gdb:localize key="dashboard.Required"/></p>    
       </div>
     </div>
   </div> 
