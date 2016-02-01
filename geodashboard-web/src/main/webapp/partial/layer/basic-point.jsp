@@ -35,7 +35,7 @@
       <div class="cell">
         <label for="basic-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
         <div class="text">
-          <input id="basic-point-radius-select" name="style.basicPointSize" type="text" ng-model="styleModel.basicPointSize" placeholder="{{styleModel.basicPointSize}}"></input>
+          <input id="basic-point-radius-select" name="style.basicPointSize" type="text" ng-model="styleModel.basicPointSize" placeholder="{{styleModel.basicPointSize}}" required integer-only></input>
         </div>
       </div>
     </div>

@@ -24,16 +24,15 @@
 <div class="row-holder">
 	<div class="label-holder"></div>
 	<div class="holder">
-		<div class="button-holder">		
+		<div class="button-holder">
 			<input
-				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.create.button"
 				type="button"
 				value="<gdb:localize key="dashboardViewer.mapItButton"/>"
 				class="btn btn-primary" 
 				ng-click="persist()()"
+        ng-disabled="form.$invalid"
 				/>
 			<input
-				name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.cancel.button"
 				type="button"
 				value="<gdb:localize key="dashboardViewer.cancel"/>"
 				class="btn btn-default" 

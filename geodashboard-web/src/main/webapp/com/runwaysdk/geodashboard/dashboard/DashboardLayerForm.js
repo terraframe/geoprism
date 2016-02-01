@@ -209,8 +209,6 @@
     };    
   };
   
-  
-  
   function LayerNameInput($timeout) {
       return {
         restrict: 'E',
@@ -220,7 +218,9 @@
           layerModel : '=',
           disabled : '&'
         },
-        link: function (scope, element, attrs) {
+        require : '^form',
+        link: function (scope, element, attrs, form) {
+          scope.form = form;
         }
       };    
    };
@@ -496,7 +496,9 @@
          persist : '&',
          cancel : '&'
        },
-       link: function (scope, element, attrs) {
+       require : '^form',
+       link: function (scope, element, attrs, form) {
+         scope.form = form;
        }
      };    
    };
@@ -703,7 +705,7 @@
       // Clear all the errors
       $scope.errors = [];
              
-      layerFormService.apply($scope.layerModel, $scope.styleModel, $scope.dynamicDataModel, $scope.categoryWidget, $scope.state, '#modal01', onSuccess, onFailure);
+      layerFormService.apply($scope.layerModel, $scope.styleModel, $scope.dynamicDataModel, $scope.categoryWidget, $scope.state, '#layer-modal', onSuccess, onFailure);
     };
            
     /**
@@ -715,7 +717,7 @@
         $scope.$apply();
       }
                  
-      layerFormService.unlock($scope.layerModel, '#thematic-modal', onSuccess);
+      layerFormService.unlock($scope.layerModel, '#layer-modal', onSuccess);
     };
     
          
@@ -866,7 +868,7 @@
       
       controller.setLayerName();
       
-      referenceLayerFormService.apply($scope.layerModel, $scope.styleModel, $scope.state, '#reference-modal', onSuccess, onFailure);      
+      referenceLayerFormService.apply($scope.layerModel, $scope.styleModel, $scope.state, '#layer-modal', onSuccess, onFailure);      
     }
     
     controller.cancel = function() {
@@ -875,7 +877,7 @@
         $scope.$apply();
       }
       
-      referenceLayerFormService.unlock($scope.layer, '#reference-modal', onSuccess);      
+      referenceLayerFormService.unlock($scope.layer, '#layer-modal', onSuccess);      
     }
     
     controller.load = function(response) {

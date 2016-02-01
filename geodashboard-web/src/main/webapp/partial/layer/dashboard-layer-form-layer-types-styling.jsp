@@ -48,7 +48,7 @@
             <div class="cell">
               <label for="gradient-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
               <div class="text">
-                <input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" ng-model="styleModel.gradientPointSize"></input>
+                <input id="gradient-point-radius-select" name="style.gradientPointSize" type="text" ng-model="styleModel.gradientPointSize" required integer-only></input>
               </div>
             </div>
           </div>
@@ -90,7 +90,7 @@
               <div class="cell">
                 <label for="category-point-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
                 <div class="text">
-                  <input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="styleModel.categoryPointSize"></input>
+                  <input id="category-point-radius-select" name="style.categoryPointSize" type="text" ng-model="styleModel.categoryPointSize" required integer-only></input>
                 </div>
               </div>
               <div class="cell">

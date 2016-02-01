@@ -300,11 +300,9 @@
     return {
       restrict: "A",
       link: function (scope, element, attr, ngModel) {
-        element.ready(function(){
-          $timeout(function(){
-            scope.$emit('angular-ready', {});            
-          }, 0);          
-        });
+        $timeout(function(){
+          scope.$emit('angular-ready', {});            
+        }, 0);
       }
     };
   };

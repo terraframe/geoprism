@@ -155,7 +155,12 @@
           if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeLocalCharacterDTO) {
             var struct = attributeDTO.getStructDTO();
            
-            struct.localizedValue = value;
+            if(value != null) {
+              struct.localizedValue = value;              
+            }
+            else {
+              struct.localizedValue = '';
+            }
           }
           else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeEnumerationDTO) {
         	attributeDTO.clear();

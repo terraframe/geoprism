@@ -123,15 +123,15 @@
                     </div>
                  </div>
                  <div ng-show="showWidgetType == 'DATASETS'" class="row-holder">
-                    <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
-						<div class="drop-box">
-	                		<div class="inner-drop-box">
-	                  			<i class="fa fa-cloud-upload">
-	                  				<p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
-	                  			</i>
-	                		</div>
-	              		</div>
-                    </div>
+                   <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
+                     <div class="drop-box">
+                       <div class="inner-drop-box">
+                         <i class="fa fa-cloud-upload">
+                           <p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
+                         </i>
+                       </div>
+                     </div>
+                   </div>
                  </div>
                  
               </div> <!-- end widget container -->
