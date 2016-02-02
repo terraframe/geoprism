@@ -487,7 +487,7 @@
         this._span.appendChild(this._widget);
 //        this._span.appendChild(this._a);
         
-        this._label = new com.runwaysdk.ui.factory.runway.Label(label, this._widget.getId());
+        this._label = new com.runwaysdk.ui.factory.runway.Label(label);
         this._label.setAttribute('for', this._widget.getName());
         
         this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
@@ -587,7 +587,7 @@
         this._hidden = new com.runwaysdk.ui.factory.runway.HiddenInput(name, {attributes:{type:'hidden'}});
         this._hidden.setValue(value);
         
-        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel);
         this._label.setAttribute('for', this._widget.getName());
         
         this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
@@ -764,7 +764,7 @@
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
     Instance : {
-      initialize : function(displayLabel, widget)
+      initialize : function(displayLabel, widget, tooltip)
       {
         this.$initialize();
       
@@ -773,7 +773,14 @@
         this._div = this.getFactory().newElement('div');
         this._div.setAttribute('class', 'field-row clearfix');
         
-        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, this._widget.getId());
+        if (tooltip == null)
+        {
+          this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel);
+        }
+        else
+        {
+          this._label = new com.runwaysdk.ui.factory.runway.TooltipLabel(displayLabel, tooltip);
+        }
         this._label.setAttribute('for', this._widget.getName());
         
         this._error = this.getFactory().newElement('div', {class:"error-message", id:this._widget.getId() + "-error"});
@@ -825,6 +832,11 @@
             that.removeInlineError();
           }
         });        
+      },
+      render : function(parent)
+      {
+        this.$render(parent);
+        this._label.render(parent);
       }
     },
     Static : {
@@ -866,13 +878,13 @@
         this._div = this.getFactory().newElement('div');
         this._div.setAttribute('class', 'field-row clearfix');
         
-        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, id);
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel);
         this._label.setAttribute('for', id);
         
         this._error = this.getFactory().newElement('div', {class:"error-message", id:id + "-error"});
         
         this._div.appendChild(this._label);
-        this._div.appendChild(new com.runwaysdk.ui.factory.runway.Label(value, id));
+        this._div.appendChild(new com.runwaysdk.ui.factory.runway.Label(value));
         this._div.appendChild(this._error);        
         
         this.setId(id);
@@ -924,7 +936,7 @@
         this._div = this.getFactory().newElement('div');
         this._div.setAttribute('class', 'field-row clearfix');
           
-        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel, id);
+        this._label = new com.runwaysdk.ui.factory.runway.Label(displayLabel);
         this._label.setAttribute('for', id);
         
         this._text = new com.runwaysdk.ui.factory.runway.TextArea(id);
@@ -1083,14 +1095,14 @@
       {
         this._formList.addEntry(entry);
       },
-      addFormEntry : function(attributeMdDTO, input) {
+      addFormEntry : function(attributeMdDTO, input, tooltipText) {
         var label = attributeMdDTO.getDisplayLabel();
          
         if(attributeMdDTO.isRequired()) {
           label += " *";
         }
         
-        var entry = new com.runwaysdk.geodashboard.FormEntry(label, input);
+        var entry = new com.runwaysdk.geodashboard.FormEntry(label, input, tooltipText);
         this.addEntry(entry);        
         
         return entry;

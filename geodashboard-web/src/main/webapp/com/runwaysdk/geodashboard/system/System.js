@@ -30,34 +30,6 @@
   
   var systemFormName = "com.runwaysdk.geodashboard.system.SystemForm";
   
-  /**
-   * LANGUAGE
-   */
-  com.runwaysdk.Localize.defineLanguage(systemFormName, {
-    "newUser" : "New",
-    "editUser" : "Edit",
-    "deleteUser" : "Delete",
-    "dialogEditUserTitle" : "Edit User",
-    "dialogViewUserTitle" : "View User",
-    "submit" : "Submit",
-    "cancel" : "Cancel",
-    "close" : "Close",
-    "dialogNewUserTitle" : "New User",
-    "dialogDeleteUserTitle" : "Confirm Delete",
-    "delete" : "Delete",
-    "edit" : "Edit",
-    "deleteText" : "Are you sure you want to delete user ",
-    "confirmPassword" : "Confirm password",
-    "confirmRequired" : "Password confirmation is required",
-    "passwordMismatch" : "Passwords do not match",
-    "invalidEmail" : "Invalid email address format",
-    "admin" : "Admin",
-    "accountInfo" : "Account information",
-    "emailSettingsSectionHeader" : "Email Settings",
-    "allow" : "allow",
-    "notAllowed" : "Not allowed to create a new user",
-  });
-  
   var SystemFormEvent = ClassFramework.newClass('com.runwaysdk.geodashboard.system.SystemFormBuilderEvent', {
     Constants : {
       APPLY_SUCCESS : 0,
@@ -95,10 +67,7 @@
         this._factory = factory;
         this._emailSetting = emailSetting;
         this._user = user;
-        this._roleMd = new com.runwaysdk.system.Roles();
-        this._rolesMap = rolesMap;
         this._listeners = [];
-        this._hasRoles = (this._roleMd.isWritable() && rolesMap != null);
       },
       
       addListener : function (listener)
@@ -131,50 +100,45 @@
       render : function(container, readOnly) {
         var form = this._build(readOnly);
         var that = this;
-      
+        
         container.appendContent(form);
-      
-        if(this._emailSetting.isWritable())
+        
+        // Add some cancel/edit/submit buttons
+        if (this._emailSetting.isWritable())
         {
-          if(!readOnly)
+          if (!readOnly)
           {          
             var submitCallback = function() {
               // Disable the buttons to prevent multiple submits
               document.getElementById('user-submit').disabled = true;
               document.getElementById('user-cancel').disabled = true;
-        
+              
               // Clear any existing error messages
               form.removeErrorMessages();
-        
+              
               var values = form.getValues();
-         
-              var roles = that._getRoles(values);
+              
               that._populateComponent(values);
-        
+              
               var applyCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
                 onSuccess : function(user) {
                   container.close();
-                
+                  
                   that.fireEvent(SystemFormEvent.APPLY_SUCCESS, user, container);
                 },
                 onFailure : function(ex) {
                   form.handleException(ex);
-            
+                  
                   document.getElementById('user-submit').disabled = false;
                   document.getElementById('user-cancel').disabled = false;
-                 
+                  
                   that.fireEvent(SystemFormEvent.APPLY_FAILURE, null, container);
                 }
               }, container.getParentNode());
 
-              if(that._hasRoles) {
-                that._emailSetting.applyWithRoles(applyCallback, roles);            
-              }
-              else {
-                that._emailSetting.apply(applyCallback);
-              }
+              that._emailSetting.apply(applyCallback);
             };
-      
+            
             var cancelCallback = function() {
               if(!that._emailSetting.isNewInstance())
               {                
@@ -221,57 +185,60 @@
         var form = new Form();
         var that = this;
         var errors = new com.runwaysdk.structure.HashSet();
-          
-        // Build the admin role section
-        form.appendElement(this._newHeader(this.localize('emailSettingsSectionHeader')));
         
-        if(!readOnly && this._emailSetting.isServerWritable())
+        // Section Header
+        form.appendElement(this._newHeader(this.localize('sectionHeader')));
+        
+        // Cool description
+        form.appendElement(this.getFactory().newElement("div", {innerHTML: this.localize("description")}));
+        
+        if (!readOnly && this._emailSetting.isServerWritable())
         {
           var serverInput = FormEntry.newInput('text', 'server', {attributes:{type:'text', id:'server'}});
           serverInput.setValue(this._emailSetting ? this._emailSetting.getServer() : "");
-          form.addFormEntry(this._emailSetting.getServerMd(), serverInput);
+          form.addFormEntry(this._emailSetting.getServerMd(), serverInput, this.localize("serverTooltip"));
           
           var requiredField = function() { that._requiredField(serverInput.getValue(), serverInput.getId(), form, errors); };
           serverInput.addEventListener('blur', requiredField);
         }
-        else if(this._emailSetting.isServerReadable())
+        else if (this._emailSetting.isServerReadable())
         {
           var label = this._emailSetting.getServerMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
           form.addEntry(entry);
         }
         
-        if(!readOnly && this._emailSetting.isUsernameWritable())
+        if (!readOnly && this._emailSetting.isUsernameWritable())
         {
           var userNameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
           userNameInput.setValue(this._emailSetting ? this._emailSetting.getUsername() : "");
-          form.addFormEntry(this._emailSetting.getUsernameMd(), userNameInput);
+          form.addFormEntry(this._emailSetting.getUsernameMd(), userNameInput, this.localize("usernameTooltip"));
           
           var requiredField = function() { that._requiredField(userNameInput.getValue(), userNameInput.getId(), form, errors); };
           userNameInput.addEventListener('blur', requiredField);
         }
-        else if(this._emailSetting.isUsernameReadable())
+        else if (this._emailSetting.isUsernameReadable())
         {
           var label = this._emailSetting.getUsernameMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
           form.addEntry(entry);
         }
           
-        if(!readOnly && this._emailSetting.isPasswordWritable())
+        if (!readOnly && this._emailSetting.isPasswordWritable())
         {
           var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
           passwordInput.setValue(this._emailSetting ? this._emailSetting.getPassword() : "");
-          form.addFormEntry(this._emailSetting.getPasswordMd(), passwordInput);
+          form.addFormEntry(this._emailSetting.getPasswordMd(), passwordInput, this.localize("passwordTooltip"));
           
           var requiredField = function() { that._requiredField(passwordInput.getValue(), passwordInput.getId(), form, errors); };
           passwordInput.addEventListener('blur', requiredField);
         }
         
-        if(!readOnly && this._emailSetting.isPortWritable())
+        if (!readOnly && this._emailSetting.isPortWritable())
         {
           var portInput = FormEntry.newInput('text', 'port', {attributes:{type:'text', id:'port'}});
           portInput.setValue(this._emailSetting ? this._emailSetting.getPort() : "");
-          form.addFormEntry(this._emailSetting.getPortMd(), portInput);
+          form.addFormEntry(this._emailSetting.getPortMd(), portInput, this.localize("portTooltip"));
           
           var requiredField = function() {
           	document.getElementById('user-submit').disabled = true;
@@ -295,24 +262,24 @@
           };
           portInput.addEventListener('blur', requiredField);
         }
-        else if(this._emailSetting.isPortReadable())
+        else if (this._emailSetting.isPortReadable())
         {
           var label = this._emailSetting.getPortMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
           form.addEntry(entry);                  
         }
         
-        if(!readOnly && this._emailSetting.isFromWritable())
+        if (!readOnly && this._emailSetting.isFromWritable())
         {
           var fromInput = FormEntry.newInput('text', 'from', {attributes:{type:'text', id:'from'}});
           fromInput.setValue(this._emailSetting ? this._emailSetting.getFrom() : "");
-          form.addFormEntry(this._emailSetting.getFromMd(), fromInput);
+          form.addFormEntry(this._emailSetting.getFromMd(), fromInput, this.localize("fromTooltip"));
           
           var validateEmail = Mojo.Util.bind(this, function()
           {
             document.getElementById('user-submit').disabled = true;
-
-            if(!this._isValidEmail(fromInput.getValue()))              
+            
+            if (!this._isValidEmail(fromInput.getValue()))              
             {
               form.getEntry(fromInput.getId()).addInlineError(this.localize('invalidEmail'));          
               errors.add(fromInput.getId());
@@ -330,19 +297,18 @@
                 
           fromInput.addEventListener('blur', validateEmail);
         }
-        else if(this._emailSetting.isFromReadable())
+        else if (this._emailSetting.isFromReadable())
         {
           var label = this._emailSetting.getFromMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
           form.addEntry(entry);
         }
         
-        if(!readOnly && this._emailSetting.isToWritable())
+        if (!readOnly && this._emailSetting.isToWritable())
         {
           var toInput = FormEntry.newInput('text', 'to', {attributes:{type:'text', id:'to'}});
           toInput.setValue(this._emailSetting ? this._emailSetting.getTo() : "");
-          var formEntry = form.addFormEntry(this._emailSetting.getToMd(), toInput);
-          formEntry.getLabel().setTitle(this.localize("toTooltip"));
+          form.addFormEntry(this._emailSetting.getToMd(), toInput, this.localize("toTooltip"));
           
           var validateEmail = Mojo.Util.bind(this, function()
           {
@@ -369,45 +335,17 @@
             
           toInput.addEventListener('blur', validateEmail);
         }
-        else if(this._emailSetting.isToReadable())
+        else if (this._emailSetting.isToReadable())
         {
           var label = this._emailSetting.getToMd().getDisplayLabel();        
           var entry = new com.runwaysdk.geodashboard.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
           form.addEntry(entry);                  
         }
         
-        // Check if the this._emailSetting has role permssions
-        if(!readOnly && this._hasRoles)
-        {
-          this.buildRoles(form);	        	
-        }
-                  
         return form;
-      },
-      
-      buildRoles : function(form) {
-        for (var k in this._rolesMap)
-        {
-          if (this._rolesMap.hasOwnProperty(k))
-          {
-            var roles = this._rolesMap[k];
-              
-            // Build the admin role section
-            form.appendElement(this._newHeader(this.localize(k)));
-                
-            for (var i = 0; i < roles.length; ++i) {
-              var role = roles[i];
-              var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
-                  
-              var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
-              form.addEntry(entry);
-            }
-          }
-        }    	  
       },
         
       _newHeader : function(displayLabel) {
-        // Build the admin role section
         var header = this.getFactory().newElement('h2');
         header.setInnerHTML(displayLabel);
 

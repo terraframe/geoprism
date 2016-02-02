@@ -256,6 +256,16 @@ form legend{
 		color:#333;
 		width: 225px;
 	}
+	.submit-form div.com-runwaysdk-ui-factory-runway-TooltipLabel
+	{
+	  float:left;
+	}
+	.submit-form .com-runwaysdk-ui-factory-runway-TooltipLabel label {
+    float:none;
+  }
+  .submit-form .com-runwaysdk-ui-factory-runway-TooltipLabel i {
+    padding-right:10px;
+  }
 	.submit-form input[type="text"]{
 		float:left;
 		width:269px;
