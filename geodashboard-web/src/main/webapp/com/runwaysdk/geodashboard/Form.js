@@ -117,6 +117,30 @@
     }
   });
   
+  var TooltipLabel = Mojo.Meta.newClass('com.runwaysdk.geodashboard.form.TooltipLabel', {
+    Extends : com.runwaysdk.ui.factory.runway.Label,
+    Instance : {
+      initialize : function(labelText, tooltipText)
+      {
+        this.$initialize("", "div");
+        
+        this._icon = this.getFactory().newElement("i", {title:tooltipText});
+        this._icon.addClassNames(["fa", "fa-info-circle"]);
+        this.appendChild(this._icon);
+        
+        this._label = this.getFactory().newElement("label", {innerHTML:labelText});
+        this.appendChild(this._label);
+      },
+      getText : function() {
+        return this._text;
+      },
+      toString : function()
+      {
+        return this.$toString() + " [" + this.getText() + "]";
+      }
+    }
+  });
+  
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.ListFormEntry', {
     Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
     Instance : {
@@ -779,7 +803,7 @@
         }
         else
         {
-          this._label = new com.runwaysdk.ui.factory.runway.TooltipLabel(displayLabel, tooltip);
+          this._label = new TooltipLabel(displayLabel, tooltip);
         }
         this._label.setAttribute('for', this._widget.getName());
         

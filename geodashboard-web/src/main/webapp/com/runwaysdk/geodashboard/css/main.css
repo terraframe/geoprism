@@ -256,14 +256,14 @@ form legend{
 		color:#333;
 		width: 225px;
 	}
-	.submit-form div.com-runwaysdk-ui-factory-runway-TooltipLabel
+	.submit-form div.com-runwaysdk-geodashboard-form-TooltipLabel
 	{
 	  float:left;
 	}
-	.submit-form .com-runwaysdk-ui-factory-runway-TooltipLabel label {
+	.submit-form .com-runwaysdk-geodashboard-form-TooltipLabel label {
     float:none;
   }
-  .submit-form .com-runwaysdk-ui-factory-runway-TooltipLabel i {
+  .submit-form .com-runwaysdk-geodashboard-form-TooltipLabel i {
     padding-right:10px;
   }
 	.submit-form input[type="text"]{
