@@ -153,6 +153,8 @@
         
         // Update the field.selected status
         controller.setFieldSelected();
+        
+        controller.newAttribute();
       }
     }
     
