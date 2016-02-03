@@ -20,7 +20,6 @@ package com.runwaysdk.geodashboard;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -79,6 +78,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       JSONObject object = new JSONObject();
       object.put("sheets", handler.getSheets());
       object.put("directory", directory.getName());
+      object.put("filename", fileName);
 
       return object.toString();
     }
@@ -165,18 +165,16 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     {
       JSONObject object = new JSONObject(configuration);
       String name = object.getString("directory");
+      String fileName = object.getString("filename");
 
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+      File file = new File(directory, fileName);
 
-      FileUtils.deleteDirectory(directory);
+      FileUtils.deleteQuietly(file);
 
       return "";
     }
     catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-    catch (IOException e)
     {
       throw new ProgrammingErrorException(e);
     }
