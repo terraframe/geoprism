@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -176921565)
+@com.runwaysdk.business.ClassSignature(hash = -2075666042)
 public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.DataUploader";
-  private static final long serialVersionUID = -176921565;
+  private static final long serialVersionUID = -2075666042;
   
   protected DataUploaderDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -48,6 +48,14 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DataUploaderDTO.CLASS, "getOptionsJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String importData(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String configuration)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{configuration};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.DataUploaderDTO.CLASS, "importData", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

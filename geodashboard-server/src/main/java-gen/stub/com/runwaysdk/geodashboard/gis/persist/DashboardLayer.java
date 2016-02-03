@@ -38,23 +38,19 @@ import com.runwaysdk.geodashboard.SessionParameterFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverBatch;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
+import com.runwaysdk.geodashboard.gis.geoserver.SessionPredicate;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
 import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.geodashboard.gis.model.Layer;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Session;
-import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwaysdk.util.IDGenerator;
 
 public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
   private static final long        serialVersionUID = 1992575686;
-
-  public static final String       DB_VIEW_PREFIX   = "lv_";
 
   public static final Log          log              = LogFactory.getLog(DashboardLayer.class);
 
@@ -77,12 +73,12 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   {
     return this.conditions;
   }
-  
+
   public String getName()
   {
     return this.getNameLabel().getValue();
   }
-  
+
   public void setName(String val)
   {
     this.getNameLabel().setValue(val);
@@ -93,7 +89,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   {
     AllLayerType type = null;
     List<AllLayerType> types = this.getLayerType();
-    if(types.size() < 1)
+    if (types.size() < 1)
     {
       // This will occur for new layers where layer types don't exist yet
       type = AllLayerType.getDefault();
@@ -112,22 +108,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
 
   public String generateViewName()
   {
-    SessionIF session = Session.getCurrentSession();
-
-    if (session != null)
-    {
-      String sessionId = session.getId();
-
-      // The max length for a postgres table name is 63 characters, and as a
-      // result our metadata is set at max length 63
-      // as well.
-
-      String vn = DB_VIEW_PREFIX + sessionId + "_" + IDGenerator.nextID().substring(0, 10);
-
-      return vn;
-    }
-
-    return DB_VIEW_PREFIX + IDGenerator.nextID().substring(0, 10);
+    return SessionPredicate.generateId();
   }
 
   @Override
@@ -412,20 +393,6 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     this.getDashboardLegend().setLegendYPosition(legendYPosition);
     this.getDashboardLegend().setGroupedInLegend(groupedInLegend);
     this.apply();
-  }
-
-  public static String getSessionId(String viewName)
-  {
-    String[] split = viewName.split("_");
-
-    if (split != null && split.length == 3)
-    {
-      String sessionId = split[1];
-
-      return sessionId;
-    }
-
-    return null;
   }
 
   @Override

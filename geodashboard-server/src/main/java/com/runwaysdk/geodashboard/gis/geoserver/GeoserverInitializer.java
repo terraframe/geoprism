@@ -27,9 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
-import com.runwaysdk.geodashboard.util.Predicate;
-import com.runwaysdk.session.SessionFacade;
 
 public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadable
 {
@@ -42,27 +39,6 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
   private static final CleanupRunnable cleanup     = new CleanupRunnable();
 
   // private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-  public static class SessionPredicate implements Predicate<String>, Reloadable
-  {
-
-    @Override
-    public boolean evaulate(String viewName)
-    {
-      // We must remove the viewName from the list if the session is still active.
-      // Thus it will not be in the list of views to delete.
-      String sessionId = DashboardLayer.getSessionId(viewName);
-
-      if (sessionId != null)
-      {
-        return SessionFacade.containsSession(sessionId);
-      }
-
-      // By default remove all viewName
-      return true;
-    }
-
-  }
 
   public static class CheckThread implements Runnable, Reloadable
   {

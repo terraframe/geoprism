@@ -22,8 +22,8 @@
 
 
 <div>
-  <modal-dialog ng-if="show">
-    <div id="builder-div" role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
+  <modal-dialog modal="uploader-div" ng-if="show">
+    <div role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dataUploader.title"/></h1>
       </div>

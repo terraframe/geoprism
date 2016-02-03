@@ -64,7 +64,8 @@ public class CleanupRunnable implements Runnable, Reloadable
 
       try
       {
-        LayerFacade.cleanupUnusedLayers();
+        CleanupFacade.cleanupUnusedLayers();
+        CleanupFacade.cleanupUnusedFiles();
       }
       catch (Exception e)
       {
