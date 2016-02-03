@@ -55,7 +55,7 @@
       </div>    
     </div>
   </ng-form>  
-
+  
   <div ng-if="sheet.attributes.ids.length > 0">
     <div class="label-holder">
       <strong><gdb:localize key="dataUploader.attributes"/></strong>
@@ -79,4 +79,10 @@
       </div>
     </div>    
   </div>
+  <div class="label-holder"></div>
+  <div class="holder">
+    <div class="error-message">
+      <p ng-show="form.$error.size"><gdb:localize key="dataUploader.unassignedLocationFields"/></p>
+    </div>          
+  </div>  
 </div>

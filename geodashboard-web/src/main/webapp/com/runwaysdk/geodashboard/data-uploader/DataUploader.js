@@ -268,11 +268,8 @@
       return true;
     }
       
-    $scope.$watch('attribute.fields', function(){
-      var length = Object.keys($scope.attribute.fields).length;
-      var valid = (length > 1);
-        
-//      controller.attributeForm.$setValidity("size",  valid);
+    $scope.$watch('attribute', function(){
+      $scope.form.$setValidity("size",  ($scope.attribute == null));
     }, true);   
     
     // Initialize the scope
