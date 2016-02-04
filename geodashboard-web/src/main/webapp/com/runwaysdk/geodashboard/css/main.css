@@ -354,7 +354,7 @@ form legend{
 	cursor:pointer;
 	height:32px;
 	float:left;
-	margin:0 11px 0 0;
+	margin:0 20px 0 0;
 	font-size:14px;
 	line-height:18px;
 	color:#333;
@@ -1100,6 +1100,13 @@ a.fa.fa-times.ico-remove{
   cursor: pointer;
 }
 
+a.fa.fa-trash-o.ico-remove{
+  font-size: 16px;
+  margin: 0px;
+  color: #bababa;
+  cursor: pointer;
+}
+
 a.fa.fa-plus.ico-dashboard{
   font-size: 15px;
   margin: 0px;
@@ -1123,6 +1130,10 @@ a.fa.fa-times.ico-remove:focus{
 }
 a.fa.fa-plus.ico-dashboard:hover,
 a.fa.fa-plus.ico-dashboard:focus{
+	color: #00bfff;
+}
+a.fa.fa-trash-o.ico-remove:hover,
+a.fa.fa-trash-o.ico-remove:focus{
 	color: #00bfff;
 }
 
@@ -2562,6 +2573,65 @@ option[selected]{ font-weight:bold}
 	outline:none;
 	border-width:1px;
 }
+
+
+
+.modal-form .button-holder .btn.btn-primary.set-location-btn{
+	min-width: 25px;
+    font-size: 31px;
+    font-weight: bold;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.location-field-info-card {
+    border: solid 2px lightgrey;
+    border-radius: 3px;
+    padding: 10px;
+    min-height: 150px;
+}
+
+.location-field-info-card-title {
+	width: 70%;
+    margin-top: 0;
+    left: 0;
+    display: inline-block;
+}
+
+.location-field-info-card > .cell {
+	display: inline-block;
+    float: right;
+    width: initial;
+}
+
+.location-field-info-card .cell .fa.fa-pencil.ico-edit,
+.location-field-info-card .cell .fa.fa-trash-o.ico-remove{
+	font-size: 20px;
+}
+
+
+.location-field-list-display{
+    list-style: none;
+    padding: 0;
+    font-size: 15px;
+}
+
+.location-field-info-card > .location-field-list-display i {
+    font-size: 20px;
+    vertical-align: middle;
+    color: grey;
+}
+
+.modal-form .holder .location-selector-container{
+/* 	width: 50%; */
+	border: solid 2px lightgrey;
+    padding: 5px;
+}
+
+.modal-form .holder .location-selector-container > .text {
+	margin-bottom: 10px;
+}
+
 .modal-form .color-section{
 	width:312px;
 	float:left;
