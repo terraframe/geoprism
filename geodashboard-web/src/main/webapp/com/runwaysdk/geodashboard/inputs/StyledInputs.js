@@ -199,23 +199,25 @@
       controllerAs : 'ctrl',      
       require: ['ngModel', 'numberOnly'],
       link: function (scope, element, attrs, ctrls) {
-        var ngModel = ctrls[0];
-        var ctrl = ctrls[1];
-      
-        ngModel.$parsers.push(ctrl.parseNumber);
-        ngModel.$formatters.push(ctrl.formatNumber);
+        if(attrs.enforce == null || attrs.enforce == 'true') {
+          var ngModel = ctrls[0];
+          var ctrl = ctrls[1];
+          
+          ngModel.$parsers.push(ctrl.parseNumber);
+          ngModel.$formatters.push(ctrl.formatNumber);
 
-      
-        ngModel.$validators.integer = function(modelValue, viewValue) {
-          if (ngModel.$isEmpty(viewValue)) {
-            // consider empty models to be valid
-            return true;
-          }
           
-          var number = ctrl.parseNumber( viewValue );
-          
-          return $.isNumeric(number);        
-        }
+          ngModel.$validators.integer = function(modelValue, viewValue) {
+            if (ngModel.$isEmpty(viewValue)) {
+              // consider empty models to be valid
+              return true;
+            }
+              
+            var number = ctrl.parseNumber( viewValue );
+              
+            return $.isNumeric(number);        
+          }        
+        }      
       }
     }    
   }

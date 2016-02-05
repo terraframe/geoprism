@@ -67,23 +67,17 @@
     }
     
     service.getCategoryValues = function(categories, categoryType) {
-      var _parser = Globalize.numberParser();
-               
       var array = [];
                              
       for(var i = 0; i < categories.catLiElems.length; i++) {
         var category = categories.catLiElems[i];
                  
         // Only send back categories which have values
-        if(category.val != null && category.val.length > 0) {
+        if(category.val != null && (typeof category.val !== 'string' || category.val.length > 0)) {        	
           var object = {};
           angular.copy(category, object);
                  
           object.otherEnabled = categories.otherEnabled;
-                   
-          if(categoryType == 'number') {
-            object.val = _parser(object.val);  
-          }
                    
           array.push(object);            
         }
@@ -386,22 +380,22 @@
           otherEnabled : true,      
           other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems : [
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
           ]
         },
         polygonCatOptionsObj : {
           otherEnabled : true,
           other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems:[
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
           ]
         }
       };
@@ -466,8 +460,6 @@
     }
       
     service.loadCategoryValues = function(model, json, categoryType) {
-      var _formatter = Globalize.numberFormatter();
-        
       if(json != null && json != '') {
         var categories = JSON.parse(json);
         
@@ -479,9 +471,6 @@
           var category = categories.catLiElems[i];
               
           if(!category.otherCat) {
-            if(categoryType == 'number') {
-              category.val = _formatter(category.val);  
-            }
                 
             if(i < model.catLiElems.length ) {            	
               model.catLiElems[i] = category;                          	

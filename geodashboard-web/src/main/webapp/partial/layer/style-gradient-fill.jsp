@@ -38,8 +38,7 @@
       <div class="text">
         <select class="tab-select" ng-model="opacity" convert-to-number>
           <c:forEach step="5" begin="0" end="100" var="size">
-            <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>                              
-            <option value="${potentialValue}">${size}</option>
+            <option value="${size/100}">${size}</option>
           </c:forEach>        
         </select>        
       </div>

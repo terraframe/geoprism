@@ -28,7 +28,7 @@
           
           <div class="category-container">
             <div class="text category-input-container">
-              <input class="category-input" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()"></input>
+              <input class="category-input" type="text" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
             </div>
             <div class="cell">
               <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>             
