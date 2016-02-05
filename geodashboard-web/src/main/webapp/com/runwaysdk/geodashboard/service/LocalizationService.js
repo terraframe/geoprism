@@ -39,7 +39,12 @@
         var number = value;
             
         if(typeof number === 'string') {
-          number = parseInt(value);
+          if(number.length > 0) {
+            number = parseInt(value);        	  
+          }
+          else {
+            return "";
+          }
         }
             
         //convert data from model format to view format

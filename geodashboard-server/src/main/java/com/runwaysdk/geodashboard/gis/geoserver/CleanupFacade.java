@@ -77,21 +77,26 @@ public class CleanupFacade implements Reloadable
 
     if (!root.exists())
     {
-      LinkedList<String> names = new LinkedList<String>(Arrays.asList(root.list()));
+      String[] list = root.list();
 
-      new Iterables<String>().remove(names, new SessionPredicate());
-
-      for (String name : names)
+      if (list != null && list.length > 0)
       {
-        File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+        LinkedList<String> names = new LinkedList<String>(Arrays.asList(list));
 
-        try
+        new Iterables<String>().remove(names, new SessionPredicate());
+
+        for (String name : names)
         {
-          FileUtils.deleteDirectory(directory);
-        }
-        catch (IOException e)
-        {
-          throw new ProgrammingErrorException(e);
+          File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+
+          try
+          {
+            FileUtils.deleteDirectory(directory);
+          }
+          catch (IOException e)
+          {
+            throw new ProgrammingErrorException(e);
+          }
         }
       }
     }

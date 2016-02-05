@@ -76,7 +76,7 @@
             <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
             
             <!-- RENDER BASIC CATEGORIES -->
-            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource"></style-category-list>
+            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
           </div>
         </div>
         
@@ -99,8 +99,7 @@
                   <select id="category-point-fill-opacity-select" class="tab-select" name="style.categoryPointFillOpacity"
                     ng-model="styleModel.categoryPointFillOpacity" convert-to-number>
                     <c:forEach step="5" begin="0" end="100" var="size">
-                      <fmt:formatNumber value="${size/100}" maxFractionDigits="2" type="number" var="potentialValue"/>
-                      <option value="${potentialValue}">${size}</option>
+                      <option value="${size/100}">${size}</option>
                     </c:forEach>                    
                   </select>
                 </div>
@@ -182,7 +181,7 @@
                   <style-category-ontology ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" nodes="styleModel.secondaryAggregation.attribute.nodes" show-other="false"></style-category-ontology>
                   
                   <!-- RENDER SECONDARY CATEGORIES -->
-                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false"></style-category-list>
+                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false" type="{{styleModel.secondaryAggregation.attribute.categoryType}}"></style-category-list>
                 </div>
               </div>
             </div>
@@ -219,7 +218,7 @@
             <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
                     
             <!-- RENDER BASIC CATEGORIES -->
-            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource"></style-category-list>
+            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
           </div>
         </div>
       

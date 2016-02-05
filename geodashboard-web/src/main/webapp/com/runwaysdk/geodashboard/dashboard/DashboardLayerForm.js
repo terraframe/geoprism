@@ -26,7 +26,8 @@
       scope: {
         categories : '=',
         autoComplete : '&',
-        showOther : '@'
+        showOther : '@',
+        type : '@'
       },
       link: function (scope, element, attrs) {
         if(scope.showOther == null) {
@@ -38,6 +39,47 @@
   
   function StyleCategoryOntologyController($scope) {
     var controller = this;
+    controller.count = 0;
+    
+    controller.randomColor = function(){
+//      var c = '';
+//      
+//      while (c.length < 6) {
+//        c += (Math.random()).toString(16).substr(-6).substr(-1);
+//      }
+//      
+//      return '#'+c;
+      var nodes = $scope.nodes();
+    	
+      return controller.rainbow(nodes.length, controller.count++);
+    }  
+    
+    controller.rainbow = function(numOfSteps, step) {
+      /*
+       * This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal
+       * for creating easily distinguishable vibrant markers in Google Maps and other apps.
+       * 
+       * Adam Cole, 2011-Sept-14
+       * 
+       * HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+       */ 
+      var r, g, b;
+      var h = (step % numOfSteps) / numOfSteps;
+      var i = ~~(h * 6);
+      var f = h * 6 - i;
+      var q = 1 - f;
+      switch(i % 6){
+        case 0: r = 1; g = f; b = 0; break;
+        case 1: r = q; g = 1; b = 0; break;
+        case 2: r = 0; g = 1; b = f; break;
+        case 3: r = 0; g = q; b = 1; break;
+        case 4: r = f; g = 0; b = 1; break;
+        case 5: r = 1; g = 0; b = q; break;
+      }
+      
+      var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
+      return (c);
+    }
     
     controller.getCategory = function(node) {
       var termId = node.runwayId;
@@ -59,8 +101,10 @@
         }
       }
       
+      var color = controller.randomColor();
+      
       // Category doesn't exist.  Create one.
-      var category = {"id":termId, "val":node.name,"color":"#00bfff","isOntologyCat":true,"otherEnabled":false,"otherCat":false};
+      var category = {"id":termId, "val":node.name,"color":color,"isOntologyCat":true,"otherEnabled":false,"otherCat":false};
       $scope.categories.catLiElems.push(category);  
       
       return category;
@@ -74,7 +118,7 @@
       replace: true,
       templateUrl : '/partial/layer/style-category-ontology.jsp',    
       scope: {
-      nodes : '&',
+        nodes : '&',
         categories : '=',
         showOther : '@'        
       },
@@ -318,10 +362,6 @@
     var controller = this;  
     controller.ready = true;
     
-    // TODO Change this to use the localizationService
-    controller._formatter = Globalize.numberFormatter();
-    controller._parser = Globalize.numberParser();    
-    
     /**
      * Setter for dynamic secondary aggregation methods which are updated on
      * selection of secondary attributes by the user.
@@ -348,11 +388,11 @@
         $scope.styleModel.secondaryAggregation.otherEnabled = false;
         $scope.styleModel.secondaryAggregation.other = {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true};
         $scope.styleModel.secondaryAggregation.catLiElems = [
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false}          
+           {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+           {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+           {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+           {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
+           {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
         ];        
             
         controller.setSecondaryAggregationMethods(attribute.type);
@@ -402,7 +442,7 @@
         if(categoryType == 'number') {
           for(var i = 0; i < results.length; i++) {
             var number = parseFloat(results[i]);
-            var localized = controller._formatter(number);
+            var localized = localizationService.formatNumber(number);
             results[i] = localized;
           }
         }
@@ -417,7 +457,7 @@
       var text = request.term;
       
       if(categoryType == 'number') {
-        var parsed = controller._parser(text);
+        var parsed = localizationService.parseNumber(text);
         
         if($.isNumeric(parsed)) {
           text = parsed;
@@ -469,7 +509,8 @@
       scope: true,
       controller : LayerTypesStyleController,
       controllerAs : 'ctrl',
-      link: function (scope, element, attrs) {
+      link: function (scope, element, attrs, ctrl) {
+        scope.ctrl = ctrl;
       }
     };    
   };
