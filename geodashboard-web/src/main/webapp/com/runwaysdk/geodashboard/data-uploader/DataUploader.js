@@ -323,6 +323,13 @@
                
         if(country.value == $scope.sheet.country) {
           $scope.universals = country.options;
+          $scope.labels = {};
+          
+          for(var j = 0; j < country.options.length; j++) {
+            var universal = country.options[j];
+            
+            $scope.labels[universal.value] = universal.label;
+          }
         }
       }      
       
@@ -463,14 +470,21 @@
       // Initialize the universal options
       if($scope.options != null) {
         var countries = $scope.options.countries;
-                
+          
         for(var i = 0; i < countries.length; i++) {
           var country = countries[i];
                    
           if(country.value == $scope.sheet.country) {
             $scope.universals = country.options;
+            $scope.labels = {};
+              
+            for(var j = 0; j < country.options.length; j++) {
+              var universal = country.options[j];
+                
+              $scope.labels[universal.value] = universal.label;
+            }
           }
-        }
+        }      
       }
     }      
     
