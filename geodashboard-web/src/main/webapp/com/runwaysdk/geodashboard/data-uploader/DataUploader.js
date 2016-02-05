@@ -132,7 +132,7 @@
             var field = fields[j];
             
             if(!field.selected) {            	
-              return field;
+              return {field:field, universal:universal};
             }
           }
         }        
@@ -173,11 +173,15 @@
         controller.setFieldSelected();
       }
       
-      var field = controller.getNextLocationField();      
+      var location = controller.getNextLocationField();      
       
-      if(field != null) {
+      if(location != null) {
+        var field = location.field;
+        var universal = location.universal;
+        
         $scope.attribute = {
           label : field.label,
+          universal : universal.value,
           fields : {},
           id : -1
         };
@@ -312,6 +316,16 @@
       $scope.locations = [];
       $scope.featureIds = [];
       
+      var countries = $scope.options.countries;
+      
+      for(var i = 0; i < countries.length; i++) {
+        var country = countries[i];
+               
+        if(country.value == $scope.sheet.country) {
+          $scope.universals = country.options;
+        }
+      }      
+      
       for(var i = 0; i < $scope.sheet.fields.length; i++) {
         var field = $scope.sheet.fields[i];
         
@@ -335,7 +349,8 @@
           var attribute = $scope.sheet.attributes.values[id];          
         
           $scope.locations.push({
-            label : attribute.label
+            label : attribute.label,
+            universal : attribute.universal
           });
         }
       }

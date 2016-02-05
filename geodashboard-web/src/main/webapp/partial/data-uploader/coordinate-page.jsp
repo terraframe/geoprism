@@ -71,30 +71,30 @@
         </div>  
       </div>
     </div>
-    <div ng-if="locations.length > 0">
-      <div class="label-holder">
-        <strong><gdb:localize key="dataUploader.locationAttribute"/></strong>
-      </div>
-      <div class="holder">
-        <div class="row-holder">
-          <div class="box">
-            <select class="select-area"  name="location" ng-model="coordinate.location" ng-required="true" ng-options="opt.label as opt.label for opt in locations">
-              <option value=""></option>
-            </select>
-          </div>  
-        </div>
-      </div>
-    </div>
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.featureId"/></strong>
+      <strong><gdb:localize key="dataUploader.associatedUniversal"/></strong>
     </div>
     <div class="holder">
       <div class="row-holder">
         <div class="box">
-          <select class="select-area" name="featureId" ng-model="coordinate.featureId" ng-required="true" ng-options="opt.label as opt.label for opt in featureIds">
-            <option value=""></option>
+          <select class="select-area" ng-model="coordinate.universal" name="universal" ng-options="opt.value as opt.label for opt in universals" ng-change="coordinate.location = null" ng-required="true">
+            <option value=""></option>          
           </select>
-        </div>  
+        </div>      
+      </div>
+    </div>
+    <div class="label-holder">
+      <strong><gdb:localize key="dataUploader.locationAttribute"/></strong>
+    </div>
+    <div class="holder">
+      <div class="row-holder">
+        <div class="box">
+          <select class="select-area" ng-model="coordinate.location" name="location" ng-required="true">
+            <option value=""></option>          
+            <option value="DERIVE"><gdb:localize key="dataUploader.deriveLocation"/></option>
+            <option ng-repeat="location in locations" ng-if="location.universal == coordinate.universal" value="{{location.label}}">{{location.label}}</option>          
+          </select>          
+        </div>      
       </div>
     </div>
     <div class="label-holder"></div>
@@ -104,7 +104,7 @@
           <input type="button" value="+" class="btn btn-primary"  ng-click="ctrl.newCoordinate()" ng-disabled="ctrl.coordinateForm.$invalid" />
         </div>
       </div>        
-    </div>
+    </div>    
   </ng-form>  
 
   <div ng-if="sheet.coordinates.ids.length > 0">
@@ -124,8 +124,7 @@
               <li><gdb:localize key="dataUploader.latitude"/> : {{coordinate.latitude}}</li>
               <li><gdb:localize key="dataUploader.longitude"/> : {{coordinate.longitude}}</li>
               <li><gdb:localize key="dataUploader.featureLabel"/> : {{coordinate.featureLabel}}</li>
-              <li ng-if="coordinate.location != ''"><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
-              <li><gdb:localize key="dataUploader.featureId"/> : {{coordinate.featureId}}</li>
+              <li><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
             </ul>       
           </li>    
         </ul>

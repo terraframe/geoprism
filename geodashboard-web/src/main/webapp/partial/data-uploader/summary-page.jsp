@@ -52,8 +52,7 @@
             <li><gdb:localize key="dataUploader.latitude"/> : {{coordinate.latitude}}</li>
             <li><gdb:localize key="dataUploader.longitude"/> : {{coordinate.longitude}}</li>
             <li><gdb:localize key="dataUploader.featureLabel"/> : {{coordinate.featureLabel}}</li>
-            <li ng-if="coordinate.location != ''"><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
-            <li><gdb:localize key="dataUploader.featureId"/> : {{coordinate.featureId}}</li>
+            <li><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
           </ul>
         </li>        
       </ul>
