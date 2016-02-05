@@ -139,7 +139,7 @@
     controller.uploadFile = function(files) {
       var onSuccess = function(result) {
         
-        $scope.$emit('dataUpload', {sheets:result.information, options:result.options});            
+        $scope.$emit('dataUpload', {information:result.information, options:result.options});            
         
         // Hide modal, but preserve the elements and values        
         $scope.hidden = true;

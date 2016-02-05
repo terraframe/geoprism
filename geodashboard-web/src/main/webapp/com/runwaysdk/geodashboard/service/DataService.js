@@ -42,6 +42,12 @@
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('com.runwaysdk.geodashboard.DataUploaderController.getAttributeInformation.mojax', request, params);
     }
     
+    service.importData = function(configuration, element, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      
+      com.runwaysdk.geodashboard.DataUploaderController.importData(request, JSON.stringify(configuration));
+    }
+    
     return service;  
   }
   

@@ -155,7 +155,7 @@ public class FieldInfoContentsHandler implements SheetHandler
     return this.map.get(column);
   }
 
-  public JSONArray getFields()
+  public JSONArray getSheets()
   {
     return this.information;
   }

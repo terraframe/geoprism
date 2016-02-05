@@ -153,6 +153,8 @@
         
         // Update the field.selected status
         controller.setFieldSelected();
+        
+        controller.newAttribute();
       }
     }
     
@@ -180,13 +182,17 @@
           id : -1
         };
 
-        $scope.attribute.fields[field.universal] = field.label;
+        controller.addField(field);
       
         controller.setUniversalOptions(field);
       }
       else {
         $scope.attribute = null;
       }
+    }
+    
+    controller.addField = function(field) {
+      $scope.attribute.fields[field.universal] = field.label;
     }
     
     controller.setUniversalOptions = function(field) {
@@ -264,11 +270,8 @@
       return true;
     }
       
-    $scope.$watch('attribute.fields', function(){
-      var length = Object.keys($scope.attribute.fields).length;
-      var valid = (length > 1);
-        
-//      controller.attributeForm.$setValidity("size",  valid);
+    $scope.$watch('attribute', function(){
+      $scope.form.$setValidity("size",  ($scope.attribute == null));
     }, true);   
     
     // Initialize the scope
@@ -476,7 +479,7 @@
     }   
   }  
 
-  function UploaderDialogController($scope, $rootScope) {
+  function UploaderDialogController($scope, $rootScope, dataService) {
     var controller = this;
     
     // Flag indicating if the modal and all of its elements should be destroyed
@@ -490,14 +493,14 @@
       $scope.busy = false;   
       
       // List of errors
-      $scope.errors = null;
+      $scope.errors = undefined;
       
       // Stack of state snapshots captured when the user clicks next
-      $scope.page = null;
+      $scope.page = undefined;
       
-      $scope.options = null;      
-      $scope.sheet = null;      
-      $scope.universals = null;
+      $scope.options = undefined;      
+      $scope.sheet = undefined;      
+      $scope.universals = undefined;
     }
 
     controller.setCountry = function(country) {
@@ -505,9 +508,20 @@
     }
     
     controller.persist = function() {
-      controller.clear();
-    
-      $scope.$emit('closeUploader', {});                    
+      var onSuccess = function(result) {
+        controller.clear();
+          
+        $scope.$emit('closeUploader', {});
+      }
+        
+      var onFailure = function(e){
+        $scope.errors.push(e.message);
+      };             
+
+      // Reset the file Errors
+      $scope.errors = [];
+      
+      dataService.importData($scope.configuration, '#uploader-div', onSuccess, onFailure);      
     }
     
     controller.cancel = function() {
@@ -516,10 +530,11 @@
       $scope.$emit('closeUploader', {});                
     }
     
-    controller.load = function(sheets, options) {
+    controller.load = function(information, options) {
       $scope.options = options;
       
-      $scope.sheet = sheets[0];      
+      $scope.configuration = information;
+      $scope.sheet = $scope.configuration.sheets[0];
       $scope.sheet.attributes = {ids:[], values : {}};    
       $scope.sheet.coordinates = {ids:[], values : {}};    
       $scope.show = true;
@@ -630,8 +645,8 @@
     }
     
     $rootScope.$on('dataUpload', function(event, data){
-      if(data.sheets != null && data.sheets.length > 0) {
-        controller.load(data.sheets, data.options);
+      if(data.information != null && data.information.sheets.length > 0) {
+        controller.load(data.information, data.options);
       }
     });    
   } 

@@ -2576,6 +2576,40 @@ option[selected]{ font-weight:bold}
 
 
 
+.fa.fa-question-circle.help-info-ico{
+	font-size: 20px;
+    color: #02789E;
+    vertical-align: middle;
+    margin-left: -20px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+.select-label{
+	float: left;
+    vertical-align: middle;
+    margin: 0;
+    margin-right: 10px;
+    font-size: 15px;
+    margin-top: 5px;
+    width: 40%;
+}
+
+.location-select-container-heading-text{
+    width: 90%;
+    float: left;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+/* .location-selector-box-left{ */
+/* 	width: 40%; */
+/* } */
+
+
 .modal-form .button-holder .btn.btn-primary.set-location-btn{
 	min-width: 25px;
     font-size: 31px;
@@ -2589,6 +2623,7 @@ option[selected]{ font-weight:bold}
     border-radius: 3px;
     padding: 10px;
     min-height: 150px;
+    width: 50%;
 }
 
 .location-field-info-card-title {
@@ -2596,6 +2631,7 @@ option[selected]{ font-weight:bold}
     margin-top: 0;
     left: 0;
     display: inline-block;
+    color: grey;
 }
 
 .location-field-info-card > .cell {
@@ -2614,18 +2650,20 @@ option[selected]{ font-weight:bold}
     list-style: none;
     padding: 0;
     font-size: 15px;
+    color: grey;
 }
 
 .location-field-info-card > .location-field-list-display i {
     font-size: 20px;
     vertical-align: middle;
     color: grey;
+    margin-right: 5px;
 }
 
 .modal-form .holder .location-selector-container{
 /* 	width: 50%; */
 	border: solid 2px lightgrey;
-    padding: 5px;
+    padding: 10px;
 }
 
 .modal-form .holder .location-selector-container > .text {

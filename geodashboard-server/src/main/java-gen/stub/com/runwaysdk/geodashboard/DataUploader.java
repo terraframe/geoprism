@@ -18,9 +18,12 @@
  */
 package com.runwaysdk.geodashboard;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,17 +32,19 @@ import org.json.JSONObject;
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
+import com.runwaysdk.geodashboard.gis.geoserver.SessionPredicate;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
-import com.runwayskd.geodashboard.excel.FieldInfoContentsHandler;
 import com.runwayskd.geodashboard.excel.ExcelDataFormatter;
 import com.runwayskd.geodashboard.excel.ExcelSheetReader;
+import com.runwayskd.geodashboard.excel.FieldInfoContentsHandler;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -52,17 +57,30 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)
   {
+    // Save the file to the file system
     try
     {
+      String name = SessionPredicate.generateId();
+
+      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+      directory.mkdirs();
+
+      File file = new File(directory, fileName);
+
+      FileUtils.copyInputStreamToFile(fileStream, file);
+
       FieldInfoContentsHandler handler = new FieldInfoContentsHandler();
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(fileStream);
+      reader.process(new FileInputStream(file));
 
-      JSONArray information = handler.getFields();
+      JSONObject object = new JSONObject();
+      object.put("sheets", handler.getSheets());
+      object.put("directory", directory.getName());
+      object.put("filename", fileName);
 
-      return information.toString();
+      return object.toString();
     }
     catch (InvalidFormatException e)
     {
@@ -134,6 +152,27 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       options.put("countries", countries);
 
       return options.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static String importData(String configuration)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(configuration);
+      String name = object.getString("directory");
+      String fileName = object.getString("filename");
+
+      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+      File file = new File(directory, fileName);
+
+      FileUtils.deleteQuietly(file);
+
+      return "";
     }
     catch (JSONException e)
     {

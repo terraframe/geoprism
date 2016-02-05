@@ -18,18 +18,24 @@
  */
 package com.runwaysdk.geodashboard.gis.geoserver;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
+import com.runwaysdk.constants.VaultProperties;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.SessionParameterFacade;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverInitializer.SessionPredicate;
-import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
 import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.session.Request;
 
-public class LayerFacade implements Reloadable
+public class CleanupFacade implements Reloadable
 {
   @Request
   public static void cleanupUnusedLayers()
@@ -40,7 +46,7 @@ public class LayerFacade implements Reloadable
   @Transaction
   private static void cleanupUnusedLayers_Transaction()
   {
-    List<String> viewNames = Database.getViewsByPrefix(DashboardLayer.DB_VIEW_PREFIX);
+    List<String> viewNames = Database.getViewsByPrefix(SessionPredicate.PREFIX);
 
     new Iterables<String>().remove(viewNames, new SessionPredicate());
 
@@ -50,7 +56,7 @@ public class LayerFacade implements Reloadable
       GeoserverFacade.removeLayer(viewName);
 
       // Clear the session map
-      String sessionId = DashboardLayer.getSessionId(viewName);
+      String sessionId = SessionPredicate.getSessionId(viewName);
       SessionParameterFacade.clear(sessionId);
     }
 
@@ -58,4 +64,36 @@ public class LayerFacade implements Reloadable
     Database.dropViews(viewNames);
   }
 
+  @Request
+  public static void cleanupUnusedFiles()
+  {
+    cleanupUnusedFiles_Transaction();
+  }
+
+  @Transaction
+  private static void cleanupUnusedFiles_Transaction()
+  {
+    File root = new File(new File(VaultProperties.getPath("vault.default")), "files");
+
+    if (!root.exists())
+    {
+      LinkedList<String> names = new LinkedList<String>(Arrays.asList(root.list()));
+
+      new Iterables<String>().remove(names, new SessionPredicate());
+
+      for (String name : names)
+      {
+        File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+
+        try
+        {
+          FileUtils.deleteDirectory(directory);
+        }
+        catch (IOException e)
+        {
+          throw new ProgrammingErrorException(e);
+        }
+      }
+    }
+  }
 }
