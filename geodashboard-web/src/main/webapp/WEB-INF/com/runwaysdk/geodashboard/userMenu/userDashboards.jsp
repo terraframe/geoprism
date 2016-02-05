@@ -262,10 +262,6 @@
     	opacity: 1;
     }
     
-    .fa-pencil:before {
-    	margin-right: 5px;
-    	color: white;
-	}
     
     .frame-box {
       position:relative;
