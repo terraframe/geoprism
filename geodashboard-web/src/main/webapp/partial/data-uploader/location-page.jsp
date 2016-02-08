@@ -23,7 +23,7 @@
 <div>
   <ng-form name="ctrl.attributeForm" isolate-form ng-if="attribute != null">
     <div class="label-holder">
-      <strong>Text Location Field Creator</strong>
+      <strong><gdb:localize key="dataUploader.locationCreatorWidgetLabel"/></strong>
     </div>    
     <div class="holder">
       <div class="location-selector-container">
