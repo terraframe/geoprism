@@ -103,7 +103,6 @@
     </div>
     <div class="holder">
       <div class="row-holder">
-      
          <div ng-repeat="id in sheet.coordinates.ids" ng-init="coordinate = sheet.coordinates.values[id]" class="location-field-info-card">
             <h3 class="location-field-info-card-title">{{coordinate.label}}</h3>
             <div class="cell">            
@@ -116,11 +115,12 @@
               <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.longitude"/> : {{coordinate.longitude}}</li>
               <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.featureLabel"/> : {{coordinate.featureLabel}}</li>
               <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
+              <li ng-if="coordinate.location != 'DERIVE'"><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
+              <li ng-if="coordinate.location == 'DERIVE'"><gdb:localize key="dataUploader.locationAttribute"/> : <gdb:localize key="dataUploader.deriveLocation"/></li>
             </ul>   
         </div>
       
       </div>  <!-- end row-holder   -->
     </div>  <!-- end holder   -->
   </div>  <!-- end ng-if   -->
-  
 </div>
