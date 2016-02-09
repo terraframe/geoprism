@@ -2623,7 +2623,10 @@ option[selected]{ font-weight:bold}
     border-radius: 3px;
     padding: 10px;
     min-height: 150px;
-    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+    width: 48%;
+    margin: 1%;
 }
 
 .location-field-info-card-title {

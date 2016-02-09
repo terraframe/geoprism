@@ -35,6 +35,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
 import com.runwaysdk.geodashboard.gis.geoserver.SessionPredicate;
+import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -123,9 +124,14 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
           Universal universal = it.next();
 
           List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
-          children.add(0, universal);
+          //children.add(0, universal);
 
           JSONArray options = new JSONArray();
+          
+          JSONObject root = new JSONObject();
+          root.put("value", universal.getId());
+          root.put("label", LocalizationFacade.getFromBundles("country"));
+          options.put(root);
 
           for (Term child : children)
           {
