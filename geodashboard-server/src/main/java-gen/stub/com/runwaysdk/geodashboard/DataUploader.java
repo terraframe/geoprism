@@ -3,24 +3,21 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -35,6 +32,7 @@ import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
 import com.runwaysdk.geodashboard.gis.geoserver.SessionPredicate;
 import com.runwaysdk.query.OIterator;
@@ -46,6 +44,8 @@ import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwayskd.geodashboard.excel.ExcelDataFormatter;
 import com.runwayskd.geodashboard.excel.ExcelSheetReader;
 import com.runwayskd.geodashboard.excel.FieldInfoContentsHandler;
+import com.runwayskd.geodashboard.excel.ViewContentHandler;
+import com.runwayskd.geodashboard.excel.ViewContext;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -79,6 +79,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       JSONObject object = new JSONObject();
       object.put("sheets", handler.getSheets());
       object.put("directory", directory.getName());
+      object.put("filename", fileName);
 
       return object.toString();
     }
@@ -159,24 +160,50 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
   }
 
+  @Transaction
   public static String importData(String configuration)
   {
     try
     {
-      JSONObject object = new JSONObject(configuration);
-      String name = object.getString("directory");
+      /*
+       * First create the data types from the configuration
+       */
+
+      /*
+       * Create and import the view objects from the configuration
+       */
+      ViewContext context = new ViewContext(configuration);
+
+      String name = context.getDirectory();
+      String filename = context.getFilename();
 
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+      File file = new File(directory, filename);
+
+      FileInputStream istream = new FileInputStream(file);
+
+      try
+      {
+        ViewContentHandler handler = new ViewContentHandler(context);
+        ExcelDataFormatter formatter = new ExcelDataFormatter();
+
+        ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
+        reader.process(istream);
+      }
+      finally
+      {
+        istream.close();
+      }
 
       FileUtils.deleteDirectory(directory);
 
       return "";
     }
-    catch (JSONException e)
+    catch (RunwayException | SmartException e)
     {
-      throw new ProgrammingErrorException(e);
+      throw e;
     }
-    catch (IOException e)
+    catch (Exception e)
     {
       throw new ProgrammingErrorException(e);
     }
