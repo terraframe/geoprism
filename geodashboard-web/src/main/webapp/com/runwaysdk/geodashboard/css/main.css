@@ -2673,6 +2673,17 @@ option[selected]{ font-weight:bold}
 	margin-bottom: 10px;
 }
 
+h4.location-summary-sub-table-heading{
+	text-align: center;
+    color: inherit;
+}
+
+.table.table-bordered.location-summary-sub-table{
+	font-size: inherit;
+    background: transparent;
+    margin-bottom: 0;
+}
+
 .modal-form .color-section{
 	width:312px;
 	float:left;
