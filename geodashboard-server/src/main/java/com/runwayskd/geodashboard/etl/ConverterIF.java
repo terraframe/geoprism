@@ -18,6 +18,8 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.business.Transient;
+
 public interface ConverterIF
 {
   public void create(Transient source);

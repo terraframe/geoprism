@@ -3,6 +3,7 @@ package com.runwayskd.geodashboard.etl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;

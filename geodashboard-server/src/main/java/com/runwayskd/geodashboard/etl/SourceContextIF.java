@@ -16,6 +16,8 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.business.Transient;
+
 public interface SourceContextIF
 {
   public Transient newView(String sheetName);

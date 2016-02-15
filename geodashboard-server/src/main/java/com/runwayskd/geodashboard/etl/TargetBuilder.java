@@ -18,6 +18,7 @@ import com.runwaysdk.constants.MdAttributeReferenceInfo;
 import com.runwaysdk.constants.MdAttributeTextInfo;
 import com.runwaysdk.constants.MdBusinessInfo;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeBooleanDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
@@ -55,6 +56,8 @@ public class TargetBuilder
   public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.business";
 
   public static final String EXLUDE       = "EXCLUDE";
+
+  public static final String DERIVED      = "DERIVED";
 
   private JSONObject         configuration;
 
@@ -172,7 +175,7 @@ public class TargetBuilder
       TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
       TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
       TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
-      TargetFieldIF location = definition.getFieldByLabel(cField.getString("location"));
+      TargetFieldIF location = this.createLocationField(mdBusiness, sheetName, cField, country, definition);
       TargetFieldIF featureLabel = definition.getFieldByLabel(cField.getString("featureLabel"));
 
       definition.addField(point);
@@ -208,6 +211,41 @@ public class TargetBuilder
     }
 
     return definition;
+  }
+
+  private TargetFieldIF createLocationField(MdClassDAOIF mdClass, String sheetName, JSONObject cCoordinate, GeoEntity country, TargetDefinition definition) throws JSONException
+  {
+    String location = cCoordinate.getString("location");
+
+    if (location.equals(DERIVED))
+    {
+      String label = cCoordinate.getString("label");
+      String latitude = cCoordinate.getString("latitude");
+      String longitude = cCoordinate.getString("longitude");
+      String universalId = cCoordinate.getString("universal");
+
+      String attributeName = this.generateAttributeName(label, "Entity");
+
+      MdAttributeReferenceDAO mdAttribute = MdAttributeReferenceDAO.newInstance();
+      mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
+      mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+      mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS).getId());
+      mdAttribute.apply();
+
+      TargetFieldDerived field = new TargetFieldDerived();
+      field.setName(attributeName);
+      field.setLabel(label);
+      field.setKey(mdClass.definesType() + "." + attributeName);
+      field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
+      field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
+      field.setUniversal(Universal.get(universalId));
+      field.setCountry(country);
+
+      return field;
+    }
+
+    return definition.getFieldByLabel(location);
   }
 
   private boolean isValid(JSONObject cField) throws JSONException
@@ -326,7 +364,6 @@ public class TargetBuilder
     field.setKey(mdClass.definesType() + "." + attributeName);
     field.setSourceAttributeName(sourceAttributeName);
 
-
     return field;
   }
 
@@ -351,7 +388,7 @@ public class TargetBuilder
     TargetFieldGeoEntity field = new TargetFieldGeoEntity();
     field.setName(attributeName);
     field.setLabel(label);
-    field.setKey(mdClass.definesType() + "." + attributeName);    
+    field.setKey(mdClass.definesType() + "." + attributeName);
     field.setRoot(country);
 
     JSONObject fields = cAttribute.getJSONObject("fields");
@@ -393,7 +430,7 @@ public class TargetBuilder
     TargetFieldMultiPolygon field = new TargetFieldMultiPolygon();
     field.setName(attributeName);
     field.setLabel(label);
-    field.setKey(mdClass.definesType() + "." + attributeName);    
+    field.setKey(mdClass.definesType() + "." + attributeName);
     field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
     field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
 
@@ -419,7 +456,7 @@ public class TargetBuilder
     TargetFieldMultiPolygon field = new TargetFieldMultiPolygon();
     field.setName(attributeName);
     field.setLabel(label);
-    field.setKey(mdClass.definesType() + "." + attributeName);    
+    field.setKey(mdClass.definesType() + "." + attributeName);
     field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
     field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
 
@@ -443,7 +480,7 @@ public class TargetBuilder
     field.setName(attributeName);
     field.setLabel(label);
     field.setKey(mdClass.definesType() + "." + attributeName);
-    
+
     return field;
   }
 

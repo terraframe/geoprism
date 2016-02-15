@@ -1,5 +1,6 @@
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.geodashboard.ontology.Classifier;

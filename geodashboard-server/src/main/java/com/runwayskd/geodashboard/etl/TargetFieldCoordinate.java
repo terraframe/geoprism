@@ -1,6 +1,9 @@
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.business.Transient;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.gis.geometry.GeometryHelper;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 public abstract class TargetFieldCoordinate extends TargetField implements TargetFieldIF
@@ -47,6 +50,19 @@ public abstract class TargetFieldCoordinate extends TargetField implements Targe
   public GeometryHelper getGeometryHelper()
   {
     return geometryHelper;
+  }
+
+  protected Coordinate getCoordinate(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  {
+    Double latitude = new Double(source.getValue(this.getLatitudeSourceAttributeName()));
+    Double longitude = new Double(source.getValue(this.getLongitudeSourceAttributeName()));
+
+    if (latitude != null && longitude != null)
+    {
+      return new Coordinate(longitude, latitude);
+    }
+
+    return null;
   }
 
 }

@@ -19,6 +19,10 @@ package com.runwayskd.geodashboard.etl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.Transient;
+import com.runwaysdk.business.View;
+
 public class SourceContext implements SourceContextIF
 {
   private Map<String, SourceDefinitionIF> sheets;
@@ -51,7 +55,7 @@ public class SourceContext implements SourceContextIF
     {
       String type = sheet.getType();
 
-      View view = new View(type);
+      View view = (View) BusinessFacade.newSessionComponent(type);
 
       return view;
     }

@@ -19,6 +19,7 @@ package com.runwayskd.geodashboard.etl;
 import java.util.List;
 
 import com.runwaysdk.business.Business;
+import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 
 public class Converter implements ConverterIF

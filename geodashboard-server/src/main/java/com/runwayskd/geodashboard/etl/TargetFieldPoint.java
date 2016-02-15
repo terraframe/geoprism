@@ -1,5 +1,6 @@
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
@@ -9,12 +10,10 @@ public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFie
   @Override
   public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
-    Double latitude = new Double(source.getValue(this.getLatitudeSourceAttributeName()));
-    Double longitude = new Double(source.getValue(this.getLongitudeSourceAttributeName()));
+    Coordinate coord = super.getCoordinate(mdAttribute, source);
 
-    if (latitude != null && longitude != null)
+    if (coord != null)
     {
-      Coordinate coord = new Coordinate(longitude, latitude);
       Point point = this.getGeometryFactory().createPoint(coord);
 
       return this.getGeometryHelper().getGeoPoint(point);
