@@ -22,7 +22,7 @@ import java.io.InvalidClassException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import net.sf.ehcache.CacheException;
+import javax.cache.CacheException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ActionContributionItem;

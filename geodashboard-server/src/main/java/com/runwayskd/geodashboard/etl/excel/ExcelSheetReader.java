@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.excel;
+package com.runwayskd.geodashboard.etl.excel;
 
 import java.io.InputStream;
 

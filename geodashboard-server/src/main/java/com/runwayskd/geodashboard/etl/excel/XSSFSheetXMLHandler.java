@@ -16,21 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * ==================================================================== Licensed to the Apache Software Foundation (ASF)
- * under one or more contributor license agreements. See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the
- * License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- * ====================================================================
- */
-package com.runwayskd.geodashboard.excel;
+package com.runwayskd.geodashboard.etl.excel;
 
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -43,19 +29,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.runwayskd.geodashboard.etl.ColumnType;
+
 /**
  * This class handles the processing of a sheet#.xml sheet part of a XSSF .xlsx file, and generates row and cell events
  * for it.
  */
 public class XSSFSheetXMLHandler extends DefaultHandler
 {
-  /**
-   * These are the different kinds of cells we support. We keep track of the current one between the start and end.
-   */
-  public static enum DataType {
-    BOOLEAN, ERROR, FORMULA, INLINE_STRING, TEXT, NUMBER, UNDEFINED, DATE, LONG, DOUBLE
-  }
-
   /**
    * Table with the styles used for formatting
    */
@@ -82,7 +63,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
 
   // Set when cell start element is seen;
   // used when cell close element is seen.
-  private DataType                   nextDataType;
+  private ColumnType                   nextDataType;
 
   // Used to format numeric cell values.
   private short                      formatIndex;
@@ -116,7 +97,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
     this.sharedStringsTable = strings;
     this.output = sheetContentsHandler;
     this.formulasNotResults = formulasNotResults;
-    this.nextDataType = DataType.NUMBER;
+    this.nextDataType = ColumnType.NUMBER;
     this.formatter = dataFormatter;
   }
 
@@ -174,9 +155,9 @@ public class XSSFSheetXMLHandler extends DefaultHandler
       formula.setLength(0);
 
       // Mark us as being a formula if not already
-      if (nextDataType == DataType.NUMBER)
+      if (nextDataType == ColumnType.NUMBER)
       {
-        nextDataType = DataType.FORMULA;
+        nextDataType = ColumnType.FORMULA;
       }
 
       // Decide where to get the formula string from
@@ -229,22 +210,22 @@ public class XSSFSheetXMLHandler extends DefaultHandler
     else if ("c".equals(name))
     {
       // Set up defaults.
-      this.nextDataType = DataType.NUMBER;
+      this.nextDataType = ColumnType.NUMBER;
       this.formatIndex = -1;
       this.formatString = null;
       cellRef = attributes.getValue("r");
       String cellType = attributes.getValue("t");
       String cellStyleStr = attributes.getValue("s");
       if ("b".equals(cellType))
-        nextDataType = DataType.BOOLEAN;
+        nextDataType = ColumnType.BOOLEAN;
       else if ("e".equals(cellType))
-        nextDataType = DataType.ERROR;
+        nextDataType = ColumnType.ERROR;
       else if ("inlineStr".equals(cellType))
-        nextDataType = DataType.INLINE_STRING;
+        nextDataType = ColumnType.INLINE_STRING;
       else if ("s".equals(cellType))
-        nextDataType = DataType.TEXT;
+        nextDataType = ColumnType.TEXT;
       else if ("str".equals(cellType))
-        nextDataType = DataType.FORMULA;
+        nextDataType = ColumnType.FORMULA;
       else if (cellStyleStr != null)
       {
         // Number, but almost certainly with a special style or format
@@ -345,7 +326,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
 
       if (DateUtil.isADateFormat(this.formatIndex, this.formatString))
       {
-        output.cell(cellRef, thisStr, DataType.DATE);
+        output.cell(cellRef, thisStr, ColumnType.DATE);
       }
       else
       {

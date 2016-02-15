@@ -1,21 +1,45 @@
-package com.runwayskd.geodashboard.excel;
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+package com.runwayskd.geodashboard.etl.excel;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.ss.util.CellReference;
 
-import com.runwaysdk.business.Transient;
 import com.runwaysdk.geodashboard.excel.ExcelFormulaException;
 import com.runwaysdk.geodashboard.excel.InvalidHeaderRowException;
-import com.runwayskd.geodashboard.excel.XSSFSheetXMLHandler.DataType;
+import com.runwayskd.geodashboard.etl.ColumnType;
+import com.runwayskd.geodashboard.etl.ConverterIF;
+import com.runwayskd.geodashboard.etl.SourceContextIF;
+import com.runwayskd.geodashboard.etl.SourceFieldIF;
+import com.runwayskd.geodashboard.etl.Transient;
 
-public class ViewContentHandler implements SheetHandler
+public class SourceContentHandler implements SheetHandler
 {
+  /**
+   * Handler which handles the view object once they have been created.
+   */
+  private ConverterIF          converter;
+
   /**
    * View import context
    */
-  private ViewContextIF        context;
+  private SourceContextIF      context;
 
   /**
    * Current sheet name
@@ -37,9 +61,11 @@ public class ViewContentHandler implements SheetHandler
    */
   private Transient            view;
 
-  public ViewContentHandler(ViewContextIF context)
+  public SourceContentHandler(ConverterIF converter, SourceContextIF context)
   {
+    this.converter = converter;
     this.context = context;
+
     this.map = new HashMap<Integer, String>();
   }
 
@@ -68,6 +94,12 @@ public class ViewContentHandler implements SheetHandler
   @Override
   public void endRow()
   {
+    if (this.view != null)
+    {
+      this.converter.create(this.view);
+
+      this.view = null;
+    }
   }
 
   private String setColumnName(String cellReference, String columnName)
@@ -87,16 +119,16 @@ public class ViewContentHandler implements SheetHandler
   }
 
   @Override
-  public void cell(String cellReference, String formattedValue, DataType cellType)
+  public void cell(String cellReference, String formattedValue, ColumnType cellType)
   {
-    if (cellType.equals(DataType.FORMULA))
+    if (cellType.equals(ColumnType.FORMULA))
     {
       throw new ExcelFormulaException();
     }
 
     if (this.rowNum == 0)
     {
-      if (!cellType.equals(DataType.TEXT))
+      if (!cellType.equals(ColumnType.TEXT))
       {
         throw new InvalidHeaderRowException();
       }
@@ -106,7 +138,8 @@ public class ViewContentHandler implements SheetHandler
     else if (this.view != null)
     {
       String columnName = this.getColumnName(cellReference);
-      String attributeName = this.context.getAttributeName(this.sheetName, columnName);
+      SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
+      String attributeName = field.getAttributeName();
 
       this.view.setValue(attributeName, formattedValue);
     }

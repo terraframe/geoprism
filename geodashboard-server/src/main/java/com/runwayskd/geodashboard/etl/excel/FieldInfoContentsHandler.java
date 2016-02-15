@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.excel;
+package com.runwayskd.geodashboard.etl.excel;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -32,23 +32,23 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.ExcelFormulaException;
 import com.runwaysdk.geodashboard.excel.InvalidHeaderRowException;
-import com.runwayskd.geodashboard.excel.XSSFSheetXMLHandler.DataType;
+import com.runwayskd.geodashboard.etl.ColumnType;
 
 public class FieldInfoContentsHandler implements SheetHandler
 {
   private static class Field
   {
-    private String        name;
+    private String          name;
 
-    private Set<DataType> dataTypes;
+    private Set<ColumnType> dataTypes;
 
-    private int           precision;
+    private int             precision;
 
-    private int           scale;
+    private int             scale;
 
     public Field()
     {
-      this.dataTypes = new TreeSet<DataType>();
+      this.dataTypes = new TreeSet<ColumnType>();
       this.precision = 0;
       this.scale = 0;
     }
@@ -58,7 +58,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       this.name = name;
     }
 
-    public void addDataType(DataType dataType)
+    public void addDataType(ColumnType dataType)
     {
       this.dataTypes.add(dataType);
     }
@@ -81,30 +81,30 @@ public class FieldInfoContentsHandler implements SheetHandler
 
       if (this.dataTypes.size() == 1)
       {
-        DataType type = this.dataTypes.iterator().next();
+        ColumnType type = this.dataTypes.iterator().next();
 
         object.put("type", type.name());
         object.put("columnType", type.name());
         object.put("accepted", false);
 
-        if (type.equals(DataType.NUMBER))
+        if (type.equals(ColumnType.NUMBER))
         {
           if (this.scale > 0)
           {
             object.put("precision", this.precision);
             object.put("scale", this.scale);
-            object.put("type", DataType.DOUBLE.name());
+            object.put("type", ColumnType.DOUBLE.name());
           }
           else
           {
-            object.put("type", DataType.LONG.name());
+            object.put("type", ColumnType.LONG.name());
           }
         }
       }
       else
       {
         object.put("type", "");
-        object.put("columnType", "");        
+        object.put("columnType", "");
         object.put("accepted", true);
       }
 
@@ -115,12 +115,12 @@ public class FieldInfoContentsHandler implements SheetHandler
   /**
    * Current row number
    */
-  private int                  rowNum;
+  private int                 rowNum;
 
   /**
    * Current sheet name
    */
-  private String               sheetName;
+  private String              sheetName;
 
   /**
    * Column-Attribute Map for the current sheet
@@ -130,12 +130,12 @@ public class FieldInfoContentsHandler implements SheetHandler
   /**
    * Set of the attributes names in the current sheet
    */
-  private Set<String>          attributeNames;
+  private Set<String>         attributeNames;
 
   /**
    * JSONArray containing attribute information for all of the sheets.
    */
-  private JSONArray            information;
+  private JSONArray           information;
 
   public FieldInfoContentsHandler()
   {
@@ -184,6 +184,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       }
 
       JSONObject sheet = new JSONObject();
+      sheet.put("name", this.sheetName);
       sheet.put("label", this.sheetName);
       sheet.put("fields", fields);
 
@@ -207,16 +208,16 @@ public class FieldInfoContentsHandler implements SheetHandler
   }
 
   @Override
-  public void cell(String cellReference, String formattedValue, DataType cellType)
+  public void cell(String cellReference, String formattedValue, ColumnType cellType)
   {
-    if (cellType.equals(DataType.FORMULA))
+    if (cellType.equals(ColumnType.FORMULA))
     {
       throw new ExcelFormulaException();
     }
 
     if (this.rowNum == 0)
     {
-      if (!cellType.equals(DataType.TEXT) || !this.attributeNames.add(formattedValue))
+      if (!cellType.equals(ColumnType.TEXT) || !this.attributeNames.add(formattedValue))
       {
         throw new InvalidHeaderRowException();
       }
@@ -229,7 +230,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       Field attribute = this.getField(cellReference);
       attribute.addDataType(cellType);
 
-      if (cellType.equals(DataType.NUMBER))
+      if (cellType.equals(ColumnType.NUMBER))
       {
         BigDecimal value = new BigDecimal(formattedValue);
         value = value.stripTrailingZeros();

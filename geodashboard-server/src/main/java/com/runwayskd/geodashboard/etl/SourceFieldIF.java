@@ -16,26 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.excel;
+package com.runwayskd.geodashboard.etl;
 
-import com.runwayskd.geodashboard.excel.XSSFSheetXMLHandler.DataType;
-
-
-public interface SheetHandler
+public interface SourceFieldIF
 {
-  public void startSheet(String sheetName);
+  public String getColumnName();
 
-  public void endSheet();
+  public String getAttributeName();
 
-  /** A row with the (zero based) row number has started */
-  public void startRow(int rowNum);
-
-  /** A row with the (zero based) row number has ended */
-  public void endRow();
-
-  /** A cell, with the given formatted value, was encountered */
-  public void cell(String cellReference, String formattedValue, DataType cellType);
-
-  /** A header or footer has been encountered */
-  public void headerFooter(String text, boolean isHeader, String tagName);
+  public String getLabel();
 }
