@@ -16,14 +16,10 @@
  */
 package com.runwayskd.geodashboard.etl;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.metadata.MdViewQuery;
 
 public class DataSetBuilder implements DataSetBuilderIF
 {
@@ -51,16 +47,11 @@ public class DataSetBuilder implements DataSetBuilderIF
   @Override
   public void build()
   {
-    // TODO create the MdView, MdBusiness, Mappable Class, and mapping data
-    new MdViewBuilder(this.configuration, this.source).build();
+    new SourceBuilder(this.configuration, this.source).build();
 
-    this.createMdBusiness();
-  }
+    new TargetBuilder(this.configuration, this.source, this.target).build();
 
-  private void createMdBusiness()
-  {
-    // TODO Auto-generated method stub
-
+    // TODO Persist the mapping configuration
   }
 
   @Override

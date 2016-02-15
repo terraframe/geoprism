@@ -15,6 +15,7 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.util.IDGenerator;
 
 public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
 {
@@ -148,7 +149,8 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
 
   private String generateGeoId()
   {
-    return null;
+    // TODO Use a different geo id generator
+    return IDGenerator.nextID();
   }
 
   private GeoEntity findGeoEntity(GeoEntity parent, Universal universal, String label)
@@ -177,7 +179,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
         if (iterator.hasNext())
         {
           // TODO Give a better error message
-          
+
           throw new RuntimeException("Ambigious entity with the label [" + label + "] and universal [" + universal + "]");
         }
 

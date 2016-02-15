@@ -1,10 +1,23 @@
 package com.runwayskd.geodashboard.etl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TargetDefinition implements TargetDefinitionIF
 {
-  private String sourceType;
+  private String                         sourceType;
 
-  private String targetType;
+  private String                         targetType;
+
+  private Map<String, TargetFieldIF>     fieldMap;
+
+  private HashMap<String, TargetFieldIF> labelMap;
+
+  public TargetDefinition()
+  {
+    this.fieldMap = new HashMap<String, TargetFieldIF>();
+    this.labelMap = new HashMap<String, TargetFieldIF>();
+  }
 
   public String getSourceType()
   {
@@ -28,7 +41,19 @@ public class TargetDefinition implements TargetDefinitionIF
 
   public void addField(TargetFieldIF field)
   {
-    // TODO Auto-generated method stub
+    this.fieldMap.put(field.getName(), field);
+    this.labelMap.put(field.getLabel(), field);
+  }
 
+  @Override
+  public TargetFieldIF getFieldByName(String name)
+  {
+    return this.fieldMap.get(name);
+  }
+
+  @Override
+  public TargetFieldIF getFieldByLabel(String label)
+  {
+    return this.labelMap.get(label);
   }
 }

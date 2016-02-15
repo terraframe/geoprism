@@ -4,18 +4,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.constants.MdAttributeLocalInfo;
+import com.runwaysdk.constants.MdAttributeTextInfo;
+import com.runwaysdk.constants.MdViewInfo;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.metadata.MdViewDAO;
+import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdViewQuery;
 
-public class MdViewBuilder
+public class SourceBuilder
 {
-  private JSONObject    configuration;
+  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.view";
 
-  private SourceContext source;
+  private JSONObject         configuration;
 
-  public MdViewBuilder(JSONObject configuration, SourceContext source)
+  private SourceContext      source;
+
+  public SourceBuilder(JSONObject configuration, SourceContext source)
   {
     this.configuration = configuration;
     this.source = source;
@@ -53,19 +61,28 @@ public class MdViewBuilder
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
 
-    String type = this.generateViewType(label);
+    String typeName = this.generateViewType(label);
+
+    /*
+     * Define the new MdBussiness and Mappable class
+     */
+    MdViewDAO mdView = MdViewDAO.newInstance();
+    mdView.setValue(MdViewInfo.PACKAGE, PACKAGE_NAME);
+    mdView.setValue(MdViewInfo.NAME, typeName);
+    mdView.setStructValue(MdViewInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdView.apply();
 
     JSONArray cFields = cSheet.getJSONArray("fields");
 
     SourceDefinition definition = new SourceDefinition();
-    definition.setType(type);
+    definition.setType(typeName);
     definition.setSheetName(sheetName);
 
     for (int i = 0; i < cFields.length(); i++)
     {
       JSONObject cField = cFields.getJSONObject(i);
 
-      SourceFieldIF field = this.createMdAttribute(null, cField);
+      SourceFieldIF field = this.createMdAttribute(mdView, cField);
 
       definition.addField(field);
     }
@@ -79,6 +96,12 @@ public class MdViewBuilder
     String label = cField.getString("label");
     String attributeName = this.generateAttributeName(label);
 
+    MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
+    mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
+    mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setStructValue(MdAttributeTextInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdAttribute.apply();
+
     SourceField field = new SourceField();
     field.setColumnName(columnName);
     field.setAttributeName(attributeName);
@@ -89,9 +112,12 @@ public class MdViewBuilder
 
   private String generateAttributeName(String label)
   {
-    // TODO Come up with naming schema
-    String name = label.replaceAll("\\s", "");
-    name = name.substring(0, 1).toLowerCase() + name.substring(1);
+    return this.generateAttributeName(label, "");
+  }
+
+  private String generateAttributeName(String label, String suffix)
+  {
+    String name = DataUploader.getSystemName(label, suffix, false);
 
     return name;
   }
@@ -99,28 +125,21 @@ public class MdViewBuilder
   private String generateViewType(String label)
   {
     // Create a unique name for the view type based upon the name of the sheet
-    String packageName = "com.runwaysdk.geodashboard.data.view";
-
-    // TODO Come up with naming schema
-    String typeName = label.replaceAll("\\s", "");
-    typeName = typeName.replaceAll("\\(", "");
-    typeName = typeName.replaceAll("\\)", "");
-    typeName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1);
-    typeName = typeName + "View";
+    String typeName = DataUploader.getSystemName(label, "View", true);
 
     Integer suffix = 0;
 
-    while (!this.isUnique(packageName, typeName, suffix))
+    while (!this.isUnique(PACKAGE_NAME, typeName, suffix))
     {
       suffix += 1;
     }
 
     if (suffix > 0)
     {
-      return packageName + "." + typeName + suffix;
+      return PACKAGE_NAME + "." + typeName + suffix;
     }
 
-    return packageName + "." + typeName;
+    return PACKAGE_NAME + "." + typeName;
   }
 
   private boolean isUnique(String packageName, String typeName, Integer suffix)

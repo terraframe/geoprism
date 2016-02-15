@@ -6,6 +6,10 @@ public interface TargetFieldIF
 {
   public String getName();
 
+  public String getKey();
+
+  public String getLabel();
+
   /**
    * 
    * @param mdAttribute

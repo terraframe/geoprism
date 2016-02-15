@@ -30,6 +30,7 @@ import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
+import com.runwaysdk.geodashboard.MappableClass;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
@@ -38,10 +39,18 @@ import com.runwaysdk.gis.dataaccess.metadata.MdAttributePointDAO;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeEntity;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
+import com.runwaysdk.system.gis.metadata.MdAttributePoint;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeReference;
+import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdViewQuery;
 
-public class MdBusinessBuilder
+public class TargetBuilder
 {
   public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.business";
 
@@ -53,7 +62,7 @@ public class MdBusinessBuilder
 
   private TargetContext      target;
 
-  public MdBusinessBuilder(JSONObject configuration, SourceContextIF source, TargetContext target)
+  public TargetBuilder(JSONObject configuration, SourceContextIF source, TargetContext target)
   {
     this.configuration = configuration;
     this.source = source;
@@ -86,11 +95,12 @@ public class MdBusinessBuilder
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
     String countryId = cSheet.getString("country");
+    List<GeoNode> nodes = new LinkedList<GeoNode>();
 
     GeoEntity country = GeoEntityUtil.getCountryByUniversal(countryId);
 
     String sourceType = this.source.getType(sheetName);
-    String typeName = this.generateBusinessType(label);
+    String typeName = this.generateBusinessTypeName(label);
 
     TargetDefinition definition = new TargetDefinition();
     definition.setSourceType(sourceType);
@@ -106,11 +116,13 @@ public class MdBusinessBuilder
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
 
+    JSONArray cFields = cSheet.getJSONArray("fields");
+    JSONArray cAttributes = cSheet.getJSONArray("attributes");
+    JSONArray cCoordinates = cSheet.getJSONArray("coordinates");
+
     /*
      * Add all of the basic fields
      */
-    JSONArray cFields = cSheet.getJSONArray("fields");
-
     for (int i = 0; i < cFields.length(); i++)
     {
       JSONObject cField = cFields.getJSONObject(i);
@@ -126,7 +138,6 @@ public class MdBusinessBuilder
     /*
      * Add all of the text location fields
      */
-    JSONArray cAttributes = cSheet.getJSONArray("attributes");
 
     for (int i = 0; i < cAttributes.length(); i++)
     {
@@ -135,22 +146,65 @@ public class MdBusinessBuilder
       TargetFieldIF field = this.createMdGeoEntity(mdBusiness, sheetName, country, cField);
 
       definition.addField(field);
+
+      // Create the geoNode
+      if (cCoordinates.length() == 0)
+      {
+        String key = field.getKey();
+
+        GeoNodeEntity node = new GeoNodeEntity();
+        node.setKeyName(key);
+        node.setGeoEntityAttribute(MdAttributeReference.getByKey(key));
+        node.apply();
+
+        nodes.add(node);
+      }
     }
 
     /*
      * Add all of the coordinate fields
      */
-    JSONArray cCoordinates = cSheet.getJSONArray("coordinates");
 
     for (int i = 0; i < cCoordinates.length(); i++)
     {
       JSONObject cField = cCoordinates.getJSONObject(i);
 
-      definition.addField(this.createMdPoint(mdBusiness, sheetName, cField));
-      definition.addField(this.createMdMultiPolygon(mdBusiness, sheetName, cField));
-      definition.addField(this.createFeatureId(mdBusiness, sheetName, cField));
+      TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
+      TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
+      TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
+      TargetFieldIF location = definition.getFieldByLabel(cField.getString("location"));
+      TargetFieldIF featureLabel = definition.getFieldByLabel(cField.getString("featureLabel"));
+
+      definition.addField(point);
+      definition.addField(multiPolygon);
+      definition.addField(featureId);
 
       // Create the geoNode
+      GeoNodeGeometry node = new GeoNodeGeometry();
+      node.setKeyName(point.getKey());
+      node.setGeoEntityAttribute(MdAttributeReference.getByKey(location.getKey()));
+      node.setIdentifierAttribute(MdAttribute.getByKey(featureId.getKey()));
+      node.setDisplayLabelAttribute(MdAttribute.getByKey(featureLabel.getKey()));
+      node.setGeometryAttribute(MdAttribute.getByKey(point.getKey()));
+      node.setMultiPolygonAttribute(MdAttributeMultiPolygon.getByKey(multiPolygon.getKey()));
+      node.setPointAttribute(MdAttributePoint.getByKey(point.getKey()));
+      node.apply();
+
+      nodes.add(node);
+    }
+
+    /*
+     * Create the MappableClass
+     */
+    MappableClass mClass = new MappableClass();
+    mClass.setWrappedMdClass(MdClass.getMdClass(mdBusiness.definesType()));
+    mClass.apply();
+
+    mClass.addUniversal(country.getUniversal()).apply();
+
+    for (GeoNode node : nodes)
+    {
+      mClass.addGeoNode(node).apply();
     }
 
     return definition;
@@ -210,6 +264,8 @@ public class MdBusinessBuilder
 
       TargetFieldClassifier field = new TargetFieldClassifier();
       field.setName(attributeName);
+      field.setLabel(label);
+      field.setKey(mdClass.definesType() + "." + attributeName);
       field.setSourceAttributeName(sourceAttributeName);
       field.setPackageName(mdClass.definesType() + "." + attributeName);
 
@@ -266,7 +322,10 @@ public class MdBusinessBuilder
     // Create the target field
     TargetFieldBasic field = new TargetFieldBasic();
     field.setName(attributeName);
+    field.setLabel(label);
+    field.setKey(mdClass.definesType() + "." + attributeName);
     field.setSourceAttributeName(sourceAttributeName);
+
 
     return field;
   }
@@ -291,6 +350,8 @@ public class MdBusinessBuilder
 
     TargetFieldGeoEntity field = new TargetFieldGeoEntity();
     field.setName(attributeName);
+    field.setLabel(label);
+    field.setKey(mdClass.definesType() + "." + attributeName);    
     field.setRoot(country);
 
     JSONObject fields = cAttribute.getJSONObject("fields");
@@ -331,6 +392,8 @@ public class MdBusinessBuilder
 
     TargetFieldMultiPolygon field = new TargetFieldMultiPolygon();
     field.setName(attributeName);
+    field.setLabel(label);
+    field.setKey(mdClass.definesType() + "." + attributeName);    
     field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
     field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
 
@@ -355,6 +418,8 @@ public class MdBusinessBuilder
 
     TargetFieldMultiPolygon field = new TargetFieldMultiPolygon();
     field.setName(attributeName);
+    field.setLabel(label);
+    field.setKey(mdClass.definesType() + "." + attributeName);    
     field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
     field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
 
@@ -376,7 +441,9 @@ public class MdBusinessBuilder
 
     TargetFieldGenerated field = new TargetFieldGenerated();
     field.setName(attributeName);
-
+    field.setLabel(label);
+    field.setKey(mdClass.definesType() + "." + attributeName);
+    
     return field;
   }
 
@@ -392,7 +459,7 @@ public class MdBusinessBuilder
     return name;
   }
 
-  private String generateBusinessType(String label)
+  private String generateBusinessTypeName(String label)
   {
     // Create a unique name for the view type based upon the name of the sheet
     String typeName = DataUploader.getSystemName(label);
