@@ -3138,6 +3138,10 @@ span.select-area span.center {
   		margin-top: 12px;
 	}
 	
+	.modal-form .check-block label[for=basic-cat-point-range-categories] {
+    	margin-top: 12px;
+	}
+	
 	#gradient-point-fill-opacity-cell{
 	  margin-left: 0;
   	  margin-top: 10px;
@@ -3434,6 +3438,17 @@ span.select-area span.center {
 	
 	div.text.category-input-container {
 		width: 225px;
+	}
+	
+	.modal-form .text input[type="text"]{
+	}
+	
+	.modal-form .text .category-input.category-range-input{
+		width: 49%;
+	}
+	
+	#cat-range-max-val{
+		margin-left: 2%;
 	}
 	
 	span.icon-color.category-icon {

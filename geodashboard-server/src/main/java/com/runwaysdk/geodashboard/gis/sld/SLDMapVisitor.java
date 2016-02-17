@@ -309,11 +309,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.BASICPOINT)
       {
-//        ThematicLayer tLayer = (ThematicLayer) layer;
-//        ThematicStyle tStyle = (ThematicStyle) style;
-
-        // attribute must be lowercase to work with postgres
-//        String attribute = tLayer.getAttribute().toLowerCase();
 
         int radius = style.getBasicPointSize();
 
@@ -544,6 +539,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         boolean catOtherCat = false;
         boolean catOtherEnabled = true;
         boolean isOntologyCat;
+        boolean isRangeCat = false;
+        String catMaxVal = null;
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicLayer tLayer = (ThematicLayer) layer;
@@ -584,6 +581,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   // 'other' attributes only relevant for non-ontology categories
                   catOtherCat = thisObj.getBoolean("otherCat");
                   catOtherEnabled = thisObj.getBoolean("otherEnabled");
+                  
+                  if(catOtherCat == false)
+                  {
+                    isRangeCat = thisObj.getBoolean("isRangeCat");
+                    if (isRangeCat)
+                    {
+                      catMaxVal = thisObj.getString("valMax");
+                    }
+                  }
                 }
               }
               catch (JSONException e)
@@ -592,91 +598,181 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 throw new ProgrammingErrorException(msg, e);
               }
 
-              // If not the 'OTHER' category
+              // If this category is a defined category (i.e. not the other category)
               if (catOtherCat == false)
               {
                 if (tLayer.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
                 {
-                  try
+                  if(isRangeCat == true)
                   {
-                    catTitle = formatter.format(new Double(catVal));
+                    if(catMaxVal != null && catMaxVal.length() > 0)
+                    {
+                      try
+                      {
+                        String catMin = formatter.format(new Double(catVal));
+                        String catMax = formatter.format(new Double(catMaxVal));
+                        catTitle = catMin.concat(" - ").concat(catMax);
+                      }
+                      catch (Exception e)
+                      {
+                        // The category isn't actually a number so it can't be localized
+                      }
+                    }
                   }
-                  catch (Exception e)
+                  else
                   {
-                    // The category isn't actually a number so it can't be localized
+                    try
+                    {
+                      catTitle = formatter.format(new Double(catVal));
+                    }
+                    catch (Exception e)
+                    {
+                      // The category isn't actually a number so it can't be localized
+                    }
                   }
                 }
-
-                Node ruleNode = node("Rule").child(
-                    node("Name").text(catVal),
-                    node("Title").text(catTitle),
-                    node(OGC, "Filter").child(
-                        node(OGC, "And").child(
-                            node(OGC, "PropertyIsEqualTo").child(
-                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                
+                Node ruleNode = null;
+                if(isRangeCat == true)
+                {
+                  ruleNode = node("Rule").child(
+                      node("Name").text(catVal + " - " + catMaxVal),
+                      node("Title").text(catVal + " - " + catMaxVal),
+                      node(OGC, "Filter").child(
+                          node(OGC, "And").child(
+                              node(OGC, "Not").child(
+                                  node(OGC, "And").child(
+                                      node(OGC, "PropertyIsEqualTo").child(
+                                          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                                      node(OGC, "Or").child(
+                                          node(OGC, "PropertyIsNull").child(
+                                              node(OGC, "PropertyName").text(attribute)),
+                                          node(OGC, "PropertyIsEqualTo").child(
+                                              node(OGC, "Literal").text("NEVER"),
+                                              node(OGC, "Literal").text("TRUE"))))),
+                              node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
+                                  node(OGC, "LowerBoundary").child(node("Literal").text(catVal)),
+                                  node(OGC, "UpperBoundary").child(node("Literal").text(catMaxVal))))),
+                                  this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)
+                                  
+                      ).build(root);
+                }
+                else
+                {
+                    ruleNode = node("Rule").child(
+                        node("Name").text(catVal),
+                        node("Title").text(catTitle),
+                        node(OGC, "Filter").child(
                             node(OGC, "And").child(
-                                node(OGC, "Not").child(
-                                    node(OGC, "Or").child(
-                                        node(OGC, "PropertyIsNull").child(
-                                            node(OGC, "PropertyName").text(attribute)),
-                                        node(OGC, "PropertyIsEqualTo").child(
-                                            node(OGC, "Literal").text("NEVER"),
-                                            node(OGC, "Literal").text("TRUE")
-                                            )
-                                        )
-                                    ),
                                 node(OGC, "PropertyIsEqualTo").child(
-                                    node(OGC, "PropertyName").text(attribute),
-                                    node(OGC, "Literal").text(catVal)
+                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
+                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
+                                node(OGC, "And").child(
+                                    node(OGC, "Not").child(
+                                        node(OGC, "Or").child(
+                                            node(OGC, "PropertyIsNull").child(
+                                                node(OGC, "PropertyName").text(attribute)),
+                                            node(OGC, "PropertyIsEqualTo").child(
+                                                node(OGC, "Literal").text("NEVER"),
+                                                node(OGC, "Literal").text("TRUE")
+                                                )
+                                            )
+                                        ),
+                                    node(OGC, "PropertyIsEqualTo").child(
+                                        node(OGC, "PropertyName").text(attribute),
+                                        node(OGC, "Literal").text(catVal)
+                                        )
                                     )
                                 )
-                            )
-                        ),
-                        this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                            ),
+                            this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                }
                 
                 //
                 // Adding labels
                 //
                 this.addLabelSymbolizer(ruleNode);
 
-                catValTracking.add(catVal);
+                if(isRangeCat == true)
+                {
+                  String combined = catVal.concat("::").concat(catMaxVal);
+                  catValTracking.add(combined);
+                }
+                else
+                {
+                  catValTracking.add(catVal);  
+                }
               }
               else
               {
                 // 'OTHER' Point styles
                 if (catOtherEnabled == true)
                 {
-                     NodeBuilder otherOrNode = node(OGC, "Or");
-
-                     // Build 'OTHER' exclusion fragments
-                     for (String otherCatVal : catValTracking)
-                     {
-                       otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(
-                           node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
-                     }
+                     NodeBuilder otherNotNode = node(OGC, "Not");
 
                      String label = LocalizationFacade.getFromBundles("Other");
-
-                     node("Rule").child(
-                         node("Name").text(label), 
-                         node("Title").text(label), 
-                                     node(OGC, "Filter").child(
-                                         node(OGC, "And").child(
-                                         node(OGC, "PropertyIsEqualTo").child(
-                                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-                                             node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
-                                             node(OGC, "Not").child(
-                                                 otherOrNode.child(
-                                                 node(OGC, "Or").child(
-                                                 node(OGC, "PropertyIsNull").child(
-                                                     node(OGC, "PropertyName").text(attribute)))
-                                                     
-                                                 )
-                                             )
-                                         )
-                                     ),
-                                     this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                     
+                     if(isRangeCat == true)
+                     {
+                       // Build 'OTHER' exclusion fragments
+                       for (String otherCatVal : catValTracking)
+                       {
+                         String[] rangeVals = otherCatVal.split("::");
+                         String minVal = rangeVals[0];
+                         String maxVal = rangeVals[1];
+                         otherNotNode.child(
+                             node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
+                                 node(OGC, "LowerBoundary").child(node("Literal").text(minVal)),
+                                 node(OGC, "UpperBoundary").child(node("Literal").text(maxVal))
+                             )
+                         );
+                       }
+                       
+                       node("Rule").child(
+                           node("Name").text(label), 
+                           node("Title").text(label), 
+                                       node(OGC, "Filter").child(
+                                           node(OGC, "And").child(
+                                           node(OGC, "PropertyIsEqualTo").child(
+                                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                                               otherNotNode
+                                           )
+                                       ),
+                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                     }
+                     else
+                     {
+                       NodeBuilder otherOrNode = node(OGC, "Or");
+                       
+                       // Build 'OTHER' exclusion fragments
+                       for (String otherCatVal : catValTracking)
+                       {
+                         otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(
+                             node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
+                       }
+                       
+                       node("Rule").child(
+                           node("Name").text(label), 
+                           node("Title").text(label), 
+                                       node(OGC, "Filter").child(
+                                           node(OGC, "And").child(
+                                           node(OGC, "PropertyIsEqualTo").child(
+                                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                                               node(OGC, "Not").child(
+                                                   otherOrNode.child(
+                                                   node(OGC, "Or").child(
+                                                   node(OGC, "PropertyIsNull").child(
+                                                       node(OGC, "PropertyName").text(attribute)))
+                                                       
+                                                   )
+                                               )
+                                           )
+                                       ),
+                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                     }
                    
                 }
               }
@@ -1163,6 +1259,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         boolean catOtherCat = false;
         boolean catOtherEnabled = true;
         boolean isOntologyCat;
+        boolean isRangeCat = false;
+        String catMaxVal = null;
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicLayer tLayer = (ThematicLayer) layer;
@@ -1201,6 +1299,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   // 'other' attributes only relevant for non-ontology categories
                   catOtherCat = thisObj.getBoolean("otherCat");
                   catOtherEnabled = thisObj.getBoolean("otherEnabled");
+                  
+                  if(catOtherCat == false)
+                  {
+                    isRangeCat = thisObj.getBoolean("isRangeCat");
+                    if (isRangeCat)
+                    {
+                      catMaxVal = thisObj.getString("valMax");
+                    }
+                  }
                 }
               }
               catch (JSONException e)
@@ -1209,37 +1316,155 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 throw new ProgrammingErrorException(msg, e);
               }
 
-              // If not the 'OTHER' category
+              // If this category is a defined category (i.e. not the other category)
               if (catOtherCat == false)
               {
                 if (tLayer.getAttributeType().equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
                 {
-                  try
+                  if(isRangeCat == true)
                   {
-                    catTitle = formatter.format(new Double(catVal));
+                    if(catMaxVal != null && catMaxVal.length() > 0)
+                    {
+                      try
+                      {
+                        String catMin = formatter.format(new Double(catVal));
+                        String catMax = formatter.format(new Double(catMaxVal));
+                        catTitle = catMin.concat(" - ").concat(catMax);
+                      }
+                      catch (Exception e)
+                      {
+                        // The category isn't actually a number so it can't be localized
+                      }
+                    }
                   }
-                  catch (Exception e)
+                  else
                   {
-                    // The category isn't actually a number so it can't be localized
+                    try
+                    {
+                      catTitle = formatter.format(new Double(catVal));
+                    }
+                    catch (Exception e)
+                    {
+                      // The category isn't actually a number so it can't be localized
+                    }
                   }
                 }
 
-                Node ruleNode = node("Rule").child(node("Name").text(catVal), node("Title").text(catTitle), node(OGC, "Filter").child(node(OGC, "And").child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attribute)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE")))), node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(catVal))))),
-                    node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", catColor), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)))).build(root);
+                Node ruleNode = null;
+                if(isRangeCat == true)
+                {
+                  ruleNode = node("Rule").child(
+                      node("Name").text(catVal), 
+                      node("Title").text(catTitle), 
+                      node(OGC, "Filter").child(
+                          node(OGC, "And").child(
+                              node(OGC, "PropertyIsEqualTo").child(
+                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                              ), 
+                              node(OGC, "And").child(
+                                  node(OGC, "Not").child(
+                                      node(OGC, "Or").child(
+                                          node(OGC, "PropertyIsNull").child(
+                                              node(OGC, "PropertyName").text(attribute)
+                                          ), 
+                                          node(OGC, "PropertyIsEqualTo").child(
+                                              node(OGC, "Literal").text("NEVER"), 
+                                              node(OGC, "Literal").text("TRUE")
+                                          )
+                                      )
+                                  ), 
+                                  node(OGC, "PropertyIsBetween").child(
+                                      node(OGC, "PropertyName").text(attribute),
+                                      node(OGC, "LowerBoundary").child(
+                                          node("Literal").text(catVal)),
+                                      node(OGC, "UpperBoundary").child(
+                                          node("Literal").text(catMaxVal)
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                      node("PolygonSymbolizer").child(
+                          node("Geometry").child(
+                              node(OGC, "PropertyName").text("geom")), 
+                              node("Fill").child(
+                                  css("fill", catColor), 
+                                  css("fill-opacity", fillOpacity)), 
+                                  node("Stroke").child(
+                                      css("stroke", stroke), 
+                                      css("stroke-width", width), 
+                                      css("stroke-opacity", strokeOpacity)))
+                      ).build(root);
+                }
+                else
+                {
+                  ruleNode = node("Rule").child(
+                      node("Name").text(catVal), 
+                      node("Title").text(catTitle), 
+                      node(OGC, "Filter").child(
+                          node(OGC, "And").child(
+                              node(OGC, "PropertyIsEqualTo").child(
+                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                  node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
+                                  node(OGC, "And").child(
+                                      node(OGC, "Not").child(
+                                          node(OGC, "Or").child(
+                                              node(OGC, "PropertyIsNull").child(
+                                                  node(OGC, "PropertyName").text(attribute)), 
+                                                  node(OGC, "PropertyIsEqualTo").child(
+                                                      node(OGC, "Literal").text("NEVER"), 
+                                                      node(OGC, "Literal").text("TRUE")))), 
+                                                      node(OGC, "PropertyIsEqualTo").child(
+                                                          node(OGC, "PropertyName").text(attribute), 
+                                                          node(OGC, "Literal").text(catVal))))),
+                      node("PolygonSymbolizer").child(
+                          node("Geometry").child(
+                              node(OGC, "PropertyName").text("geom")), 
+                              node("Fill").child(
+                                  css("fill", catColor), 
+                                  css("fill-opacity", fillOpacity)), 
+                                  node("Stroke").child(
+                                      css("stroke", stroke), 
+                                      css("stroke-width", width), 
+                                      css("stroke-opacity", strokeOpacity)))
+                      ).build(root);
+                }
 
                 //
                 // Adding labels
                 //
                 this.addLabelSymbolizer(ruleNode);
 
-                catValTracking.add(catVal);
+                if(isRangeCat == true)
+                {
+                  String combined = catVal.concat("::").concat(catMaxVal);
+                  catValTracking.add(combined);
+                }
+                else
+                {
+                  catValTracking.add(catVal);  
+                }
               }
               else
               {
                 // 'OTHER' Polygon styles
                 if (catOtherEnabled == true)
                 {
-                  otherPolySymbolNode.child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", catColor), css("fill-opacity", fillOpacity)), node("Stroke").child(css("stroke", stroke), css("stroke-width", width), css("stroke-opacity", strokeOpacity)));
+                  otherPolySymbolNode.child(
+                      node("Geometry").child(
+                          node(OGC, "PropertyName").text("geom")
+                      ), 
+                      node("Fill").child(
+                          css("fill", catColor), 
+                          css("fill-opacity", fillOpacity)
+                      ), 
+                      node("Stroke").child(
+                          css("stroke", stroke), 
+                          css("stroke-width", width), 
+                          css("stroke-opacity", strokeOpacity)
+                      )
+                  );
                 }
               }
             }
@@ -1249,32 +1474,95 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             //
             if (catOtherEnabled == true)
             {
-              NodeBuilder otherOrNode = node(OGC, "Or");
-
-              // Build 'OTHER' exclusion fragments
-              for (String otherCatVal : catValTracking)
-              {
-                otherOrNode.child(node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attribute), node(OGC, "Literal").text(otherCatVal)));
-              }
-
               String label = LocalizationFacade.getFromBundles("Other");
-
-              node("Rule").child(
-                  node("Name").text(label), 
-                  node("Title").text(label), 
-                  otherPolySymbolNode.child(
-                      node("Stroke").child(
-                          css("stroke", stroke), 
-                          css("stroke-width", width), 
-                          css("stroke-opacity", 
-                              strokeOpacity))), 
-                              node(OGC, "Filter").child(node(OGC, "And").child(
-                                  node(OGC, "PropertyIsEqualTo").child(
-                                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-                                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
-                                      node(OGC, "Not").child(otherOrNode.child(node(OGC, "Or").child(
-                                          node(OGC, "PropertyIsNull").child(
-                                              node(OGC, "PropertyName").text(attribute)))))))).build(root);
+              
+              if(isRangeCat == true)
+              {
+                NodeBuilder otherNotNode = node(OGC, "Not");
+                
+                // Build 'OTHER' exclusion fragments
+                for (String otherCatVal : catValTracking)
+                {
+                  String[] rangeVals = otherCatVal.split("::");
+                  String minVal = rangeVals[0];
+                  String maxVal = rangeVals[1];
+                  otherNotNode.child(
+                      node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
+                          node(OGC, "LowerBoundary").child(node("Literal").text(minVal)),
+                          node(OGC, "UpperBoundary").child(node("Literal").text(maxVal))
+                      )
+                  );
+                }
+                
+                node("Rule").child(
+                    node("Name").text(label), 
+                    node("Title").text(label), 
+                    otherPolySymbolNode.child(
+                        node("Stroke").child(
+                            css("stroke", stroke), 
+                            css("stroke-width", width), 
+                            css("stroke-opacity", strokeOpacity)
+                        )
+                    ), 
+                    node(OGC, "Filter").child(
+                        node(OGC, "And").child(
+                            node(OGC, "PropertyIsEqualTo").child(
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                            ), 
+                            otherNotNode
+                        )
+                    )
+                ).build(root);
+              }
+              else
+              {
+                NodeBuilder otherOrNode = node(OGC, "Or");
+                
+                // Build 'OTHER' exclusion fragments
+                for (String otherCatVal : catValTracking)
+                {
+                  otherOrNode.child(
+                      node(OGC, "PropertyIsEqualTo").child(
+                          node(OGC, "PropertyName").text(attribute), 
+                          node(OGC, "Literal").text(otherCatVal)
+                      )
+                  );
+                }
+                
+                node("Rule").child(
+                    node("Name").text(label), 
+                    node("Title").text(label), 
+                    otherPolySymbolNode.child(
+                        node("Stroke").child(
+                            css("stroke", stroke), 
+                            css("stroke-width", width), 
+                            css("stroke-opacity", strokeOpacity)
+                        )
+                    ), 
+                    node(OGC, "Filter").child(
+                        node(OGC, "And").child(
+                            node(OGC, "PropertyIsEqualTo").child(
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                            ), 
+                            node(OGC, "Not").child(
+                                otherOrNode.child(
+                                    node(OGC, "Or").child(
+                                        node(OGC, "PropertyIsNull").child(
+                                            node(OGC, "PropertyName").text(attribute)
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ).build(root);
+                
+                
+                
+                
+              }
             }
           }
           else

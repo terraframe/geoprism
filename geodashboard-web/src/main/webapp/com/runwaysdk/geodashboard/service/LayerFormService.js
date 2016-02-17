@@ -340,6 +340,7 @@
           attribute : {label : 'None', id : 'NONE'},
           method : {},
           otherEnabled : false,
+          rangeCategoriesEnabled : false,
           other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":false,"otherCat":true},
           catLiElems : [
                   {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":false,"otherCat":false},
@@ -378,24 +379,26 @@
       var categoryWidget = {
         basicPointCatOptionsObj : {
           otherEnabled : true,      
+          rangeCategoriesEnabled : false,
           other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems : [
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
           ]
         },
         polygonCatOptionsObj : {
           otherEnabled : true,
+          rangeCategoriesEnabled : false,
           other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems:[
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
           ]
         }
       };
@@ -413,13 +416,14 @@
         attribute : {label : 'None', id : 'NONE'},
         method : {},
         otherEnabled : false,
+        rangeCategoriesEnabled : false,
         other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
         catLiElems : [
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false}          
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}          
         ]
       };
       
@@ -478,6 +482,8 @@
             else {
               model.catLiElems.push(category);
             }
+            
+            model.rangeCategoriesEnabled = category.isRangeCat;
           }
           else {
             model.other = category;

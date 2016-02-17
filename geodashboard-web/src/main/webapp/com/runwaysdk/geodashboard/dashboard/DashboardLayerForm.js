@@ -27,12 +27,27 @@
         categories : '=',
         autoComplete : '&',
         showOther : '@',
+        rangeCategoriesEnabled : '@',
         type : '@'
       },
       link: function (scope, element, attrs) {
         if(scope.showOther == null) {
           scope.showOther = 'true';
         }
+        
+        scope.$watch("categories.rangeCategoriesEnabled", function(newValue, oldValue) {
+        	var scopeRef = scope;
+        	var cats = scopeRef.categories.catLiElems;
+    		for(var i=0; i<cats.length; i++){
+    			var cat = cats[0];
+    			if(newValue){
+    				cat.isRangeCat = true;
+        		}
+    			else{
+        			cat.isRangeCat = false;
+        		}
+        	}
+        }); 
       }
     };    
   };
