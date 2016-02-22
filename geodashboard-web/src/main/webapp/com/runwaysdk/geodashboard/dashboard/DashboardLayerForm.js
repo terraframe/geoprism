@@ -38,6 +38,16 @@
         scope.$watch("categories.rangeCategoriesEnabled", function(newValue, oldValue) {
         	var scopeRef = scope;
         	var cats = scopeRef.categories.catLiElems;
+        	
+        	// update the other category
+        	if(newValue){
+        		scopeRef.categories.other.isRangeCat = true;
+        	}
+        	else{
+        		scopeRef.categories.other.isRangeCat = false;
+        	}
+        	
+        	// update the value categories
     		for(var i=0; i<cats.length; i++){
     			var cat = cats[0];
     			if(newValue){
@@ -48,6 +58,7 @@
         		}
         	}
         }); 
+        
       }
     };    
   };

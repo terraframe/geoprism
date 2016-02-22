@@ -456,8 +456,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                         node(OGC, "Literal").text("NEVER"),
                                         node(OGC, "Literal").text("TRUE"))))),
                         node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
-                            node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)),
-                            node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax))))),
+                            node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(currentCatMin)),
+                            node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(currentCatMax))))),
                             this.getSymbolNode(wkn, currentColorHex, fillOpacity, stroke, width, strokeOpacity, radius)
                             
                 ).build(root);
@@ -581,14 +581,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   // 'other' attributes only relevant for non-ontology categories
                   catOtherCat = thisObj.getBoolean("otherCat");
                   catOtherEnabled = thisObj.getBoolean("otherEnabled");
+                  isRangeCat = thisObj.getBoolean("isRangeCat");
                   
-                  if(catOtherCat == false)
+                  if(catOtherCat == false && isRangeCat == true)
                   {
-                    isRangeCat = thisObj.getBoolean("isRangeCat");
-                    if (isRangeCat)
-                    {
-                      catMaxVal = thisObj.getString("valMax");
-                    }
+                    catMaxVal = thisObj.getString("valMax");
                   }
                 }
               }
@@ -652,8 +649,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                               node(OGC, "Literal").text("NEVER"),
                                               node(OGC, "Literal").text("TRUE"))))),
                               node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
-                                  node(OGC, "LowerBoundary").child(node("Literal").text(catVal)),
-                                  node(OGC, "UpperBoundary").child(node("Literal").text(catMaxVal))))),
+                                  node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(catVal)),
+                                  node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(catMaxVal))))),
                                   this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)
                                   
                       ).build(root);
@@ -709,8 +706,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 // 'OTHER' Point styles
                 if (catOtherEnabled == true)
                 {
-                     NodeBuilder otherNotNode = node(OGC, "Not");
-
+                  
+                     NodeBuilder wrapperAndNode = node(OGC, "And");
+                  
                      String label = LocalizationFacade.getFromBundles("Other");
                      
                      if(isRangeCat == true)
@@ -718,29 +716,34 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                        // Build 'OTHER' exclusion fragments
                        for (String otherCatVal : catValTracking)
                        {
+                         NodeBuilder otherNotNode = node(OGC, "Not");
+                         
                          String[] rangeVals = otherCatVal.split("::");
                          String minVal = rangeVals[0];
                          String maxVal = rangeVals[1];
                          otherNotNode.child(
                              node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
-                                 node(OGC, "LowerBoundary").child(node("Literal").text(minVal)),
-                                 node(OGC, "UpperBoundary").child(node("Literal").text(maxVal))
+                                 node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(minVal)),
+                                 node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(maxVal))
                              )
                          );
+                         
+                         wrapperAndNode.child(otherNotNode);
                        }
                        
                        node("Rule").child(
                            node("Name").text(label), 
                            node("Title").text(label), 
-                                       node(OGC, "Filter").child(
-                                           node(OGC, "And").child(
-                                           node(OGC, "PropertyIsEqualTo").child(
-                                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-                                               node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
-                                               otherNotNode
-                                           )
-                                       ),
-                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                               node(OGC, "Filter").child(
+                                   node(OGC, "And").child(
+                                       node(OGC, "PropertyIsEqualTo").child(
+                                           node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                                           node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                                       ), 
+                                       wrapperAndNode
+                                   )
+                               ),
+                               this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
                      }
                      else
                      {
@@ -995,8 +998,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
           Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
           node(OGC, "PropertyName").text(attribute).build(propIsBetween);
-          node(OGC, "LowerBoundary").child(node("Literal").text(currentCatMin)).build(propIsBetween);
-          node(OGC, "UpperBoundary").child(node("Literal").text(currentCatMax)).build(propIsBetween);
+          node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(currentCatMin)).build(propIsBetween);
+          node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(currentCatMax)).build(propIsBetween);
 
           // Point styles
           Node pointSymbolNode = node("PointSymbolizer").build(ruleNode);
@@ -1233,9 +1236,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                         node(OGC, "PropertyIsBetween").child(
                                             node(OGC, "PropertyName").text(attribute), 
                                             node(OGC, "LowerBoundary").child(
-                                                node("Literal").text(currentCatMin)), 
+                                                node(OGC, "Literal").text(currentCatMin)), 
                                             node(OGC, "UpperBoundary").child(
-                                                node("Literal").text(currentCatMax))))),
+                                                node(OGC, "Literal").text(currentCatMax))))),
                 node("PolygonSymbolizer").child(node("Geometry").child(
                     node(OGC, "PropertyName").text("geom")), 
                     node("Fill").child(
@@ -1377,9 +1380,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                   node(OGC, "PropertyIsBetween").child(
                                       node(OGC, "PropertyName").text(attribute),
                                       node(OGC, "LowerBoundary").child(
-                                          node("Literal").text(catVal)),
+                                          node(OGC, "Literal").text(catVal)),
                                       node(OGC, "UpperBoundary").child(
-                                          node("Literal").text(catMaxVal)
+                                          node(OGC, "Literal").text(catMaxVal)
                                       )
                                   )
                               )
@@ -1474,24 +1477,35 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             //
             if (catOtherEnabled == true)
             {
+              
+              NodeBuilder wrapperAndNode = node(OGC, "And");
+              
               String label = LocalizationFacade.getFromBundles("Other");
               
               if(isRangeCat == true)
               {
-                NodeBuilder otherNotNode = node(OGC, "Not");
                 
                 // Build 'OTHER' exclusion fragments
                 for (String otherCatVal : catValTracking)
                 {
+                  NodeBuilder otherNotNode = node(OGC, "Not");
+                  
                   String[] rangeVals = otherCatVal.split("::");
                   String minVal = rangeVals[0];
                   String maxVal = rangeVals[1];
                   otherNotNode.child(
-                      node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
-                          node(OGC, "LowerBoundary").child(node("Literal").text(minVal)),
-                          node(OGC, "UpperBoundary").child(node("Literal").text(maxVal))
+                      node(OGC, "PropertyIsBetween").child(
+                          node(OGC, "PropertyName").text(attribute),
+                          node(OGC, "LowerBoundary").child(
+                              node(OGC, "Literal").text(minVal)
+                          ),
+                          node(OGC, "UpperBoundary").child(
+                              node(OGC, "Literal").text(maxVal)
+                          )
                       )
                   );
+                  
+                  wrapperAndNode.child(otherNotNode);
                 }
                 
                 node("Rule").child(
@@ -1510,7 +1524,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                 node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
                                 node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
                             ), 
-                            otherNotNode
+                            wrapperAndNode
                         )
                     )
                 ).build(root);
@@ -1533,13 +1547,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 node("Rule").child(
                     node("Name").text(label), 
                     node("Title").text(label), 
-                    otherPolySymbolNode.child(
-                        node("Stroke").child(
-                            css("stroke", stroke), 
-                            css("stroke-width", width), 
-                            css("stroke-opacity", strokeOpacity)
-                        )
-                    ), 
                     node(OGC, "Filter").child(
                         node(OGC, "And").child(
                             node(OGC, "PropertyIsEqualTo").child(
@@ -1555,6 +1562,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                     )
                                 )
                             )
+                        )
+                    ),
+                    otherPolySymbolNode.child(
+                        node("Stroke").child(
+                            css("stroke", stroke), 
+                            css("stroke-width", width), 
+                            css("stroke-opacity", strokeOpacity)
                         )
                     )
                 ).build(root);
@@ -1572,8 +1586,22 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             // and prevent the user from fixing the issue without help from a developer we will render basic polygons.
             // This isn't the prettiest ways to handle this but helps to maintain app uptime in obscure situations.
             //
-            node("Rule").child(node("Name").text(currentLayerName), node("Title").text(currentLayerName), node("PolygonSymbolizer").child(node("Geometry").child(node(OGC, "PropertyName").text("geom")), node("Fill").child(css("fill", "#E60000"), css("fill-opacity", "0.6")), node("Stroke").child(css("stroke", "#8A0000"), css("stroke-width", "1"), css("stroke-opacity", "0.6")))).build(root);
-
+            node("Rule").child(
+                node("Name").text(currentLayerName), 
+                node("Title").text(currentLayerName), 
+                node("PolygonSymbolizer").child(
+                    node("Geometry").child(
+                        node(OGC, "PropertyName").text("geom")
+                    ), node("Fill").child(
+                        css("fill", "#E60000"), 
+                        css("fill-opacity", "0.6")
+                    ), node("Stroke").child(
+                        css("stroke", "#8A0000"), 
+                        css("stroke-width", "1"), 
+                        css("stroke-opacity", "0.6")
+                    )
+                )
+            ).build(root);
           }
         }
       }
@@ -2023,9 +2051,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       throw new ProgrammingErrorException("Geometry type [" + this.featureType + "] is not supported for SLD generation.");
     }
 
-//    rule.appendChild(symbolizer.getSLD());
-
-//    this.parents.pop().appendChild(rulesFragment);
     this.parents.pop().appendChild(symbolizer.getSLD());
   }
 
