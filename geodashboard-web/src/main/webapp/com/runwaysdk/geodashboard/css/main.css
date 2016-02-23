@@ -3138,7 +3138,7 @@ span.select-area span.center {
   		margin-top: 12px;
 	}
 	
-	.modal-form .check-block label[for=basic-cat-point-range-categories] {
+	.modal-form .check-block label[for=cat-range-categories] {
     	margin-top: 12px;
 	}
 	
@@ -3447,8 +3447,8 @@ span.select-area span.center {
 		width: 49%;
 	}
 	
-	#cat-range-max-val{
-		margin-left: 2%;
+	.cat-range-max-val{
+		margin-left: 2% !important;
 	}
 	
 	span.icon-color.category-icon {

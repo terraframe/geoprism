@@ -28,7 +28,7 @@
           <div class="category-container">
             <div class="text category-input-container">
               <input class="category-input" type="text" ng-class="{'category-range-input' : (categories.rangeCategoriesEnabled)}" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
-              <input id="cat-range-max-val" class="category-input category-range-input" type="text" ng-model="category.valMax" ng-show="(categories.rangeCategoriesEnabled)" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
+              <input class="category-input category-range-input cat-range-max-val" type="text" ng-model="category.valMax" ng-show="(categories.rangeCategoriesEnabled)" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
             </div>
             <div class="cell">
               <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>             
@@ -58,7 +58,7 @@
   
   <!-- enable/disable range categories -->
   <div class="style-options-block" ng-if="type === 'number'">    
-    <styled-check-box id="basic-cat-point-range-categories" model="categories.rangeCategoriesEnabled" label="<gdb:localize key="DashboardThematicLayer.form.categoryRangeCategoriesLabel"/>"></styled-check-box>
+    <styled-check-box id="cat-range-categories" model="categories.rangeCategoriesEnabled" label="<gdb:localize key="DashboardThematicLayer.form.categoryRangeCategoriesLabel"/>"></styled-check-box>
   </div>
 </div>
 
