@@ -22,6 +22,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
+import com.runwaysdk.query.AttributeText;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.ValueQuery;
@@ -52,6 +53,10 @@ public class DashboardNotEqualCondition extends DashboardPrimitiveCondition impl
     else if (attr instanceof AttributeCharacter)
     {
       query.AND( ( (AttributeCharacter) attr ).NE(this.getComparisonValue()));
+    }
+    else if (attr instanceof AttributeText)
+    {
+      query.AND( ( (AttributeText) attr ).NE(this.getComparisonValue()));
     }
     else
     {

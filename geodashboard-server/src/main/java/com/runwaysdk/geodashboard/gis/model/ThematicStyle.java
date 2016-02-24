@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 
 public interface ThematicStyle extends Style
@@ -30,8 +29,6 @@ public interface ThematicStyle extends Style
   public static final String VAL   = "val";
 
   public static final String COLOR = "color";
-
-  public Condition getCondition();
 
   public Integer getBubbleMinSize();
   public void setBubbleMinSize(Integer size);

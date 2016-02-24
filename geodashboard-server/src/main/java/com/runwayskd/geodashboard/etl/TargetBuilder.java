@@ -439,11 +439,11 @@ public class TargetBuilder
     }
     else if (columnType.equals(ColumnType.TEXT.name()))
     {
-      MdAttributeCharacterDAO mdAttribute = MdAttributeCharacterDAO.newInstance();
-      mdAttribute.setValue(MdAttributeCharacterInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeCharacterInfo.DEFINING_MD_CLASS, mdClass.getId());
-      mdAttribute.setStructValue(MdAttributeCharacterInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-      mdAttribute.setValue(MdAttributeCharacterInfo.SIZE, "6000");
+      MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
+      mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
+      mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setStructValue(MdAttributeTextInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+//      mdAttribute.setValue(MdAttributeTextInfo.SIZE, "6000");
       mdAttribute.apply();
     }
 

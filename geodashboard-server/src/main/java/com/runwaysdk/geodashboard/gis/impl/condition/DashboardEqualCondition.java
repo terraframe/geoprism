@@ -25,6 +25,7 @@ import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
+import com.runwaysdk.query.AttributeText;
 import com.runwaysdk.query.ValueQuery;
 
 public class DashboardEqualCondition extends DashboardPrimitiveCondition implements Reloadable
@@ -58,6 +59,10 @@ public class DashboardEqualCondition extends DashboardPrimitiveCondition impleme
     else if (attr instanceof AttributeCharacter)
     {
       query.AND( ( (AttributeCharacter) attr ).EQ(this.getComparisonValue()));
+    }
+    else if (attr instanceof AttributeText)
+    {
+      query.AND( ( (AttributeText) attr ).EQ(this.getComparisonValue()));
     }
     else
     {

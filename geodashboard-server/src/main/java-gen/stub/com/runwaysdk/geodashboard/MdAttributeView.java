@@ -22,9 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdAttributeCharDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeMomentDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeNumberDAO;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;

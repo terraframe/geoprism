@@ -42,6 +42,7 @@
           <number-type whole="false" attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeDecimal"></number-type>
           <number-type whole="false" attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeDouble"></number-type>
           <date-type attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeDate"></date-type>
+          <character-type attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeText"></character-type>
           <character-type attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeCharacter"></character-type>
           <ontology-type attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeTerm"></ontology-type>
           <boolean-type attribute="attribute" ng-switch-when="com.runwaysdk.system.metadata.MdAttributeBoolean"></boolean-type>

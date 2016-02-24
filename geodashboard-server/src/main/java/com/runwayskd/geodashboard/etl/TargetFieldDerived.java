@@ -20,14 +20,8 @@ package com.runwayskd.geodashboard.etl;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
-import com.runwaysdk.geodashboard.gis.geoserver.MapLayerException;
-import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Coordinate;
 
