@@ -1,9 +1,28 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwayskd.geodashboard.etl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.MdAttributeTextInfo;
 import com.runwaysdk.constants.MdViewInfo;
@@ -70,12 +89,13 @@ public class SourceBuilder
     mdView.setValue(MdViewInfo.PACKAGE, PACKAGE_NAME);
     mdView.setValue(MdViewInfo.NAME, typeName);
     mdView.setStructValue(MdViewInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdView.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdView.apply();
 
     JSONArray cFields = cSheet.getJSONArray("fields");
 
     SourceDefinition definition = new SourceDefinition();
-    definition.setType(typeName);
+    definition.setType(PACKAGE_NAME + "." + typeName);
     definition.setSheetName(sheetName);
 
     for (int i = 0; i < cFields.length(); i++)
@@ -95,6 +115,7 @@ public class SourceBuilder
     String columnName = cField.getString("name");
     String label = cField.getString("label");
     String attributeName = this.generateAttributeName(label);
+    String type = cField.getString("type");
 
     MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
     mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
@@ -106,6 +127,7 @@ public class SourceBuilder
     field.setColumnName(columnName);
     field.setAttributeName(attributeName);
     field.setLabel(label);
+    field.setType(ColumnType.valueOf(type));
 
     return field;
   }
@@ -125,7 +147,7 @@ public class SourceBuilder
   private String generateViewType(String label)
   {
     // Create a unique name for the view type based upon the name of the sheet
-    String typeName = DataUploader.getSystemName(label, "View", true);
+    String typeName = DataUploader.getSystemName(label, "", true) + "View";
 
     Integer suffix = 0;
 
@@ -136,19 +158,26 @@ public class SourceBuilder
 
     if (suffix > 0)
     {
-      return PACKAGE_NAME + "." + typeName + suffix;
+      return typeName + suffix;
     }
 
-    return PACKAGE_NAME + "." + typeName;
+    return typeName;
   }
 
   private boolean isUnique(String packageName, String typeName, Integer suffix)
   {
+    if (suffix > 0)
+    {
+      typeName = typeName + suffix;
+    }
+
     MdViewQuery query = new MdViewQuery(new QueryFactory());
-    query.WHERE(query.getTypeName().EQ(typeName + suffix));
+    query.WHERE(query.getTypeName().EQ(typeName));
     query.AND(query.getPackageName().EQ(packageName));
 
-    return ( query.getCount() == 0 );
+    long count = query.getCount();
+
+    return ( count == 0 );
   }
 
 }

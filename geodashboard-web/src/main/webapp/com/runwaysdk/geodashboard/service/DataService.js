@@ -43,7 +43,13 @@
     }
     
     service.importData = function(configuration, element, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      var success = function(response) {
+        var result = JSON.parse(response);
+      	
+        onSuccess(result);
+      };
+    	
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
       
       com.runwaysdk.geodashboard.DataUploaderController.importData(request, JSON.stringify(configuration));
     }

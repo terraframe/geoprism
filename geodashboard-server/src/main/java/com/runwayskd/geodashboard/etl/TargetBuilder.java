@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwayskd.geodashboard.etl;
 
 import java.util.LinkedList;
@@ -17,22 +35,29 @@ import com.runwaysdk.constants.MdAttributeLongInfo;
 import com.runwaysdk.constants.MdAttributeReferenceInfo;
 import com.runwaysdk.constants.MdAttributeTextInfo;
 import com.runwaysdk.constants.MdBusinessInfo;
+import com.runwaysdk.constants.MdViewInfo;
+import com.runwaysdk.constants.RelationshipInfo;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.RelationshipDAO;
+import com.runwaysdk.dataaccess.TermAttributeDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeBooleanDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDateDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDoubleDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
 import com.runwaysdk.geodashboard.MappableClass;
 import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
@@ -48,8 +73,8 @@ import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
 import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeReference;
+import com.runwaysdk.system.metadata.MdBusinessQuery;
 import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdViewQuery;
 
 public class TargetBuilder
 {
@@ -84,7 +109,7 @@ public class TargetBuilder
 
         TargetDefinitionIF definition = this.createMdBusiness(sheet);
 
-        this.target.addSheetDefinition(definition);
+        this.target.addDefinition(definition);
       }
     }
     catch (JSONException e)
@@ -101,6 +126,7 @@ public class TargetBuilder
     List<GeoNode> nodes = new LinkedList<GeoNode>();
 
     GeoEntity country = GeoEntityUtil.getCountryByUniversal(countryId);
+    Universal lowest = country.getUniversal();
 
     String sourceType = this.source.getType(sheetName);
     String typeName = this.generateBusinessTypeName(label);
@@ -116,84 +142,109 @@ public class TargetBuilder
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
     mdBusiness.setValue(MdBusinessInfo.NAME, typeName);
     mdBusiness.setStructValue(MdBusinessInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
-
-    JSONArray cFields = cSheet.getJSONArray("fields");
-    JSONArray cAttributes = cSheet.getJSONArray("attributes");
-    JSONArray cCoordinates = cSheet.getJSONArray("coordinates");
 
     /*
      * Add all of the basic fields
      */
-    for (int i = 0; i < cFields.length(); i++)
+    if (cSheet.has("fields"))
     {
-      JSONObject cField = cFields.getJSONObject(i);
+      JSONArray cFields = cSheet.getJSONArray("fields");
 
-      if (this.isValid(cField))
+      for (int i = 0; i < cFields.length(); i++)
       {
-        TargetFieldIF field = this.createMdAttribute(mdBusiness, sheetName, cField);
+        JSONObject cField = cFields.getJSONObject(i);
 
-        definition.addField(field);
+        if (this.isValid(cField))
+        {
+          TargetFieldIF field = this.createMdAttribute(mdBusiness, sheetName, cField);
+
+          definition.addField(field);
+        }
       }
     }
 
     /*
      * Add all of the text location fields
      */
-
-    for (int i = 0; i < cAttributes.length(); i++)
+    if (cSheet.has("attributes"))
     {
-      JSONObject cField = cAttributes.getJSONObject(i);
+      JSONObject cAttributes = cSheet.getJSONObject("attributes");
+      JSONObject values = cAttributes.getJSONObject("values");
+      JSONArray ids = cAttributes.getJSONArray("ids");
 
-      TargetFieldIF field = this.createMdGeoEntity(mdBusiness, sheetName, country, cField);
+      boolean createNode = ( !cSheet.has("coordinates") || cSheet.getJSONObject("coordinates").getJSONArray("ids").length() == 0 );
 
-      definition.addField(field);
-
-      // Create the geoNode
-      if (cCoordinates.length() == 0)
+      for (int i = 0; i < ids.length(); i++)
       {
-        String key = field.getKey();
+        String id = ids.getString(i);
+        JSONObject cField = values.getJSONObject(id);
+        String universalId = cField.getString("universal");
 
-        GeoNodeEntity node = new GeoNodeEntity();
-        node.setKeyName(key);
-        node.setGeoEntityAttribute(MdAttributeReference.getByKey(key));
-        node.apply();
+        lowest = this.setLowest(lowest, universalId);
 
-        nodes.add(node);
+        TargetFieldIF field = this.createMdGeoEntity(mdBusiness, sheetName, country, cField);
+
+        definition.addField(field);
+
+        // Create the geoNode
+        if (createNode)
+        {
+          String key = field.getKey();
+
+          GeoNodeEntity node = new GeoNodeEntity();
+          node.setKeyName(key);
+          node.setGeoEntityAttribute(MdAttributeReference.getByKey(key));
+          node.apply();
+
+          nodes.add(node);
+        }
       }
     }
 
     /*
      * Add all of the coordinate fields
      */
-
-    for (int i = 0; i < cCoordinates.length(); i++)
+    if (cSheet.has("coordinates"))
     {
-      JSONObject cField = cCoordinates.getJSONObject(i);
+      JSONObject cCoordinates = cSheet.getJSONObject("coordinates");
+      JSONObject values = cCoordinates.getJSONObject("values");
+      JSONArray ids = cCoordinates.getJSONArray("ids");
 
-      TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
-      TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
-      TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
-      TargetFieldIF location = this.createLocationField(mdBusiness, sheetName, cField, country, definition);
-      TargetFieldIF featureLabel = definition.getFieldByLabel(cField.getString("featureLabel"));
+      for (int i = 0; i < ids.length(); i++)
+      {
+        String id = ids.getString(i);
+        JSONObject cField = values.getJSONObject(id);
+        String universalId = cField.getString("universal");
 
-      definition.addField(point);
-      definition.addField(multiPolygon);
-      definition.addField(featureId);
+        lowest = this.setLowest(lowest, universalId);
 
-      // Create the geoNode
-      GeoNodeGeometry node = new GeoNodeGeometry();
-      node.setKeyName(point.getKey());
-      node.setGeoEntityAttribute(MdAttributeReference.getByKey(location.getKey()));
-      node.setIdentifierAttribute(MdAttribute.getByKey(featureId.getKey()));
-      node.setDisplayLabelAttribute(MdAttribute.getByKey(featureLabel.getKey()));
-      node.setGeometryAttribute(MdAttribute.getByKey(point.getKey()));
-      node.setMultiPolygonAttribute(MdAttributeMultiPolygon.getByKey(multiPolygon.getKey()));
-      node.setPointAttribute(MdAttributePoint.getByKey(point.getKey()));
-      node.apply();
 
-      nodes.add(node);
+        TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
+        TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
+        TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
+        TargetFieldIF location = this.createLocationField(mdBusiness, sheetName, cField, country, definition);
+        TargetFieldIF featureLabel = definition.getFieldByLabel(cField.getString("featureLabel"));
+
+        definition.addField(point);
+        definition.addField(multiPolygon);
+        definition.addField(featureId);
+
+        // Create the geoNode
+        GeoNodeGeometry node = new GeoNodeGeometry();
+        node.setKeyName(point.getKey());
+        node.setGeoEntityAttribute(MdAttributeReference.getByKey(location.getKey()));
+        node.setIdentifierAttribute(MdAttribute.getByKey(featureId.getKey()));
+        node.setDisplayLabelAttribute(MdAttribute.getByKey(featureLabel.getKey()));
+        node.setGeometryAttribute(MdAttribute.getByKey(point.getKey()));
+        node.setMultiPolygonAttribute(MdAttributeMultiPolygon.getByKey(multiPolygon.getKey()));
+        node.setPointAttribute(MdAttributePoint.getByKey(point.getKey()));
+        node.apply();
+
+        nodes.add(node);
+      }
     }
 
     /*
@@ -203,7 +254,7 @@ public class TargetBuilder
     mClass.setWrappedMdClass(MdClass.getMdClass(mdBusiness.definesType()));
     mClass.apply();
 
-    mClass.addUniversal(country.getUniversal()).apply();
+    mClass.addUniversal(lowest).apply();
 
     for (GeoNode node : nodes)
     {
@@ -211,6 +262,22 @@ public class TargetBuilder
     }
 
     return definition;
+  }
+
+  private Universal setLowest(Universal current, String universalId)
+  {
+    Universal universal = Universal.get(universalId);
+
+    UniversalAllPathsTableQuery query = new UniversalAllPathsTableQuery(new QueryFactory());
+    query.WHERE(query.getParentTerm().EQ(current));
+    query.AND(query.getChildTerm().EQ(universal));
+
+    if (query.getCount() > 0)
+    {
+      return universal;
+    }
+
+    return current;
   }
 
   private TargetFieldIF createLocationField(MdClassDAOIF mdClass, String sheetName, JSONObject cCoordinate, GeoEntity country, TargetDefinition definition) throws JSONException
@@ -250,29 +317,29 @@ public class TargetBuilder
 
   private boolean isValid(JSONObject cField) throws JSONException
   {
-    String type = cField.getString("columnType");
+    String type = cField.getString("type");
 
-    if (type.equals(ColumnType.BOOLEAN))
+    if (type.equals(ColumnType.BOOLEAN.name()))
     {
       return true;
     }
-    else if (type.equals(ColumnType.DATE))
+    else if (type.equals(ColumnType.DATE.name()))
     {
       return true;
     }
-    else if (type.equals(ColumnType.DOUBLE))
+    else if (type.equals(ColumnType.DOUBLE.name()))
     {
       return true;
     }
-    else if (type.equals(ColumnType.LONG))
+    else if (type.equals(ColumnType.LONG.name()))
     {
       return true;
     }
-    else if (type.equals(ColumnType.TEXT))
+    else if (type.equals(ColumnType.TEXT.name()))
     {
       return true;
     }
-    else if (type.equals(ColumnType.CATEGORY))
+    else if (type.equals(ColumnType.CATEGORY.name()))
     {
       return true;
     }
@@ -282,34 +349,56 @@ public class TargetBuilder
 
   private TargetFieldIF createMdAttribute(MdClassDAO mdClass, String sheetName, JSONObject cField) throws JSONException
   {
-    String columnType = cField.getString("columnType");
+    String columnType = cField.getString("type");
     String columnName = cField.getString("name");
     String label = cField.getString("label");
     String attributeName = this.generateAttributeName(label);
     String sourceAttributeName = this.source.getFieldByName(sheetName, columnName).getAttributeName();
+    String key = mdClass.definesType() + "." + attributeName;
 
     // Create the attribute
-    if (columnType.equals(ColumnType.CATEGORY))
+    if (columnType.equals(ColumnType.CATEGORY.name()))
     {
       MdBusinessDAOIF referenceMdBusiness = MdBusinessDAO.getMdBusinessDAO(Classifier.CLASS);
 
-      MdAttributeReferenceDAO mdAttribute = MdAttributeReferenceDAO.newInstance();
+      MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
       mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
       mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
       mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getId());
       mdAttribute.apply();
 
+      /*
+       * Create the root term for the options
+       */
+      Classifier classifier = new Classifier();
+      classifier.setClassifierId(attributeName);
+      classifier.setClassifierPackage(mdClass.definesType());
+      classifier.setKeyName(key);
+      classifier.getDisplayLabel().setValue(label);
+      classifier.apply();
+
+      classifier.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+
+      /*
+       * Add the root as an option to the MdAttributeTerm
+       */
+      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+
+      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+      relationship.apply();
+
       TargetFieldClassifier field = new TargetFieldClassifier();
       field.setName(attributeName);
       field.setLabel(label);
-      field.setKey(mdClass.definesType() + "." + attributeName);
+      field.setKey(key);
       field.setSourceAttributeName(sourceAttributeName);
-      field.setPackageName(mdClass.definesType() + "." + attributeName);
+      field.setPackageName(key);
 
       return field;
     }
-    else if (columnType.equals(ColumnType.BOOLEAN))
+    else if (columnType.equals(ColumnType.BOOLEAN.name()))
     {
       MdAttributeBooleanDAO mdAttribute = MdAttributeBooleanDAO.newInstance();
       mdAttribute.setValue(MdAttributeBooleanInfo.NAME, attributeName);
@@ -319,7 +408,7 @@ public class TargetBuilder
       mdAttribute.setStructValue(MdAttributeBooleanInfo.POSITIVE_DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "True");
       mdAttribute.apply();
     }
-    else if (columnType.equals(ColumnType.DATE))
+    else if (columnType.equals(ColumnType.DATE.name()))
     {
       MdAttributeDateDAO mdAttribute = MdAttributeDateDAO.newInstance();
       mdAttribute.setValue(MdAttributeDateInfo.NAME, attributeName);
@@ -327,7 +416,7 @@ public class TargetBuilder
       mdAttribute.setStructValue(MdAttributeDateInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.apply();
     }
-    else if (columnType.equals(ColumnType.DOUBLE))
+    else if (columnType.equals(ColumnType.DOUBLE.name()))
     {
       int length = cField.getInt("precision");
       int decimal = cField.getInt("scale");
@@ -336,11 +425,11 @@ public class TargetBuilder
       mdAttribute.setValue(MdAttributeDoubleInfo.NAME, attributeName);
       mdAttribute.setValue(MdAttributeDoubleInfo.DEFINING_MD_CLASS, mdClass.getId());
       mdAttribute.setStructValue(MdAttributeDoubleInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, length);
-      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, decimal);
+      mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, new Integer(length).toString());
+      mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, new Integer(decimal).toString());
       mdAttribute.apply();
     }
-    else if (columnType.equals(ColumnType.LONG))
+    else if (columnType.equals(ColumnType.LONG.name()))
     {
       MdAttributeLongDAO mdAttribute = MdAttributeLongDAO.newInstance();
       mdAttribute.setValue(MdAttributeLongInfo.NAME, attributeName);
@@ -348,12 +437,13 @@ public class TargetBuilder
       mdAttribute.setStructValue(MdAttributeLongInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.apply();
     }
-    else if (columnType.equals(ColumnType.TEXT))
+    else if (columnType.equals(ColumnType.TEXT.name()))
     {
-      MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
-      mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
-      mdAttribute.setStructValue(MdAttributeTextInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+      MdAttributeCharacterDAO mdAttribute = MdAttributeCharacterDAO.newInstance();
+      mdAttribute.setValue(MdAttributeCharacterInfo.NAME, attributeName);
+      mdAttribute.setValue(MdAttributeCharacterInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setStructValue(MdAttributeCharacterInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+      mdAttribute.setValue(MdAttributeCharacterInfo.SIZE, "6000");
       mdAttribute.apply();
     }
 
@@ -361,7 +451,7 @@ public class TargetBuilder
     TargetFieldBasic field = new TargetFieldBasic();
     field.setName(attributeName);
     field.setLabel(label);
-    field.setKey(mdClass.definesType() + "." + attributeName);
+    field.setKey(key);
     field.setSourceAttributeName(sourceAttributeName);
 
     return field;
@@ -373,9 +463,10 @@ public class TargetBuilder
     String universalId = cAttribute.getString("universal");
     String attributeName = this.generateAttributeName(label);
 
-    MdAttributeReferenceDAO mdAttribute = MdAttributeReferenceDAO.newInstance();
+    MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
     mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
     mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS).getId());
     mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdAttribute.apply();
 
@@ -417,7 +508,7 @@ public class TargetBuilder
     String latitude = cCoordinate.getString("latitude");
     String longitude = cCoordinate.getString("longitude");
 
-    String attributeName = this.generateAttributeName(label, "MultiPolygon");
+    String attributeName = this.generateAttributeName(label, "") + "MultiPolygon";
 
     MdAttributeMultiPolygonDAO mdAttribute = MdAttributeMultiPolygonDAO.newInstance();
     mdAttribute.setValue(MdAttributeMultiPolygonInfo.NAME, attributeName);
@@ -443,7 +534,7 @@ public class TargetBuilder
     String latitude = cCoordinate.getString("latitude");
     String longitude = cCoordinate.getString("longitude");
 
-    String attributeName = this.generateAttributeName(label, "Point");
+    String attributeName = this.generateAttributeName(label, "") + "Point";
 
     MdAttributePointDAO mdAttribute = MdAttributePointDAO.newInstance();
     mdAttribute.setValue(MdAttributePointInfo.NAME, attributeName);
@@ -518,8 +609,13 @@ public class TargetBuilder
 
   private boolean isUnique(String packageName, String typeName, Integer suffix)
   {
-    MdViewQuery query = new MdViewQuery(new QueryFactory());
-    query.WHERE(query.getTypeName().EQ(typeName + suffix));
+    if (suffix > 0)
+    {
+      typeName = typeName + suffix;
+    }
+
+    MdBusinessQuery query = new MdBusinessQuery(new QueryFactory());
+    query.WHERE(query.getTypeName().EQ(typeName));
     query.AND(query.getPackageName().EQ(packageName));
 
     return ( query.getCount() == 0 );

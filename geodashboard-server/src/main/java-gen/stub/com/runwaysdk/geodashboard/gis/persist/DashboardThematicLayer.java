@@ -83,12 +83,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     super();
   }
-  
-//  @Override
-//  public String getName()
-//  {
-//    return this.getNameLabel().getValue();
-//  }
+
+  // @Override
+  // public String getName()
+  // {
+  // return this.getNameLabel().getValue();
+  // }
 
   @Transaction
   public void applyAll(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)
@@ -368,6 +368,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     {
       throw new ProgrammingErrorException(e);
     }
+
+    if (aggStrategiesJSON.length() == 0)
+    {
+      throw new MissingLocationAttributeException();
+    }
+
     return json.toString();
   }
 

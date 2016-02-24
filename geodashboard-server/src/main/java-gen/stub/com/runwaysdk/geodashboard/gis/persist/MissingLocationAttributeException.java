@@ -16,46 +16,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.etl;
+package com.runwaysdk.geodashboard.gis.persist;
 
-public abstract class TargetField implements TargetFieldIF
+public class MissingLocationAttributeException extends MissingLocationAttributeExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private String name;
-
-  private String label;
-
-  private String key;
-
-  @Override
-  public String getKey()
+  private static final long serialVersionUID = 347060361;
+  
+  public MissingLocationAttributeException()
   {
-    return this.key;
+    super();
   }
-
-  public void setKey(String key)
+  
+  public MissingLocationAttributeException(java.lang.String developerMessage)
   {
-    this.key = key;
+    super(developerMessage);
   }
-
-  @Override
-  public String getLabel()
+  
+  public MissingLocationAttributeException(java.lang.String developerMessage, java.lang.Throwable cause)
   {
-    return this.label;
+    super(developerMessage, cause);
   }
-
-  public void setLabel(String label)
+  
+  public MissingLocationAttributeException(java.lang.Throwable cause)
   {
-    this.label = label;
+    super(cause);
   }
-
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  @Override
-  public String getName()
-  {
-    return this.name;
-  }
+  
 }

@@ -23,11 +23,13 @@ import java.lang.reflect.Constructor;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.GenericBusinessQuery;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -38,19 +40,30 @@ public class QueryUtil implements Reloadable
   public static GeneratedComponentQuery getQuery(MdClassDAOIF mdClass, QueryFactory factory)
   {
     // Use reflection to generate the view query
-    String queryClassName = mdClass.definesType() + "Query";
-
-    try
+    if (mdClass.isGenerateSource())
     {
-      Class<GeneratedComponentQuery> clazz = (Class<GeneratedComponentQuery>) LoaderDecorator.loadClass(queryClassName);
-      Constructor<GeneratedComponentQuery> constructor = clazz.getConstructor(factory.getClass());
-      GeneratedComponentQuery query = constructor.newInstance(factory);
+      String queryClassName = mdClass.definesType() + "Query";
 
-      return query;
+      try
+      {
+        Class<GeneratedComponentQuery> clazz = (Class<GeneratedComponentQuery>) LoaderDecorator.loadClass(queryClassName);
+        Constructor<GeneratedComponentQuery> constructor = clazz.getConstructor(factory.getClass());
+        GeneratedComponentQuery query = constructor.newInstance(factory);
+
+        return query;
+      }
+      catch (Exception e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
-    catch (Exception e)
+    else if (mdClass instanceof MdBusinessDAOIF)
     {
-      throw new ProgrammingErrorException(e);
+      return new GenericBusinessQuery((MdBusinessDAOIF) mdClass, factory);
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Unsupported generated query type [" + mdClass.definesType() + "]");
     }
   }
 
@@ -58,19 +71,31 @@ public class QueryUtil implements Reloadable
   public static GeneratedComponentQuery getQuery(MdClassDAOIF mdClass, ValueQuery vQuery)
   {
     // Use reflection to generate the view query
-    String queryClassName = mdClass.definesType() + "Query";
-
-    try
+    if (mdClass.isGenerateSource())
     {
-      Class<GeneratedComponentQuery> clazz = (Class<GeneratedComponentQuery>) LoaderDecorator.loadClass(queryClassName);
-      Constructor<GeneratedComponentQuery> constructor = clazz.getConstructor(vQuery.getClass());
-      GeneratedComponentQuery query = constructor.newInstance(vQuery);
+      // Use reflection to generate the view query
+      String queryClassName = mdClass.definesType() + "Query";
 
-      return query;
+      try
+      {
+        Class<GeneratedComponentQuery> clazz = (Class<GeneratedComponentQuery>) LoaderDecorator.loadClass(queryClassName);
+        Constructor<GeneratedComponentQuery> constructor = clazz.getConstructor(vQuery.getClass());
+        GeneratedComponentQuery query = constructor.newInstance(vQuery);
+
+        return query;
+      }
+      catch (Exception e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
-    catch (Exception e)
+    else if (mdClass instanceof MdBusinessDAOIF)
     {
-      throw new ProgrammingErrorException(e);
+      return new GenericBusinessQuery((MdBusinessDAOIF) mdClass, vQuery);
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Unsupported generated query type [" + mdClass.definesType() + "]");
     }
   }
 

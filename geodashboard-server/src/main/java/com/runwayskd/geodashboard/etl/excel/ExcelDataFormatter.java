@@ -23,7 +23,11 @@ import org.apache.poi.ss.usermodel.DateUtil;
 
 public class ExcelDataFormatter extends DataFormatter
 {
-  private static final String DATE_TIME_FORMAT = "YYYY-MM-DD HH:MM:SS";
+  public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+  public static final String DATE_FORMAT      = "yyyy-MM-dd";
+
+  public static final String TIME_FORMAT      = "HH:mm:ss";
 
   @Override
   public String formatRawCellContents(double value, int formatIndex, String formatString)

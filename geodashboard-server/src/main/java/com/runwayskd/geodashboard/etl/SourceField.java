@@ -3,26 +3,30 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.runwayskd.geodashboard.etl;
 
 public class SourceField implements SourceFieldIF
 {
-  private String columnName;
+  private String     columnName;
 
-  private String attributeName;
+  private String     attributeName;
 
-  private String label;
+  private String     label;
+
+  private ColumnType type;
 
   public String getColumnName()
   {
@@ -53,5 +57,16 @@ public class SourceField implements SourceFieldIF
   public void setLabel(String label)
   {
     this.label = label;
+  }
+
+  @Override
+  public ColumnType getType()
+  {
+    return this.type;
+  }
+
+  public void setType(ColumnType type)
+  {
+    this.type = type;
   }
 }

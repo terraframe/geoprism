@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard;
 
@@ -31,7 +33,9 @@ import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.VaultProperties;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.ReservedWords;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.excel.InvalidExcelFileException;
@@ -49,6 +53,7 @@ import com.runwayskd.geodashboard.etl.DataSetBuilder;
 import com.runwayskd.geodashboard.etl.DataSetBuilderIF;
 import com.runwayskd.geodashboard.etl.SourceContextIF;
 import com.runwayskd.geodashboard.etl.TargetContextIF;
+import com.runwayskd.geodashboard.etl.TargetDefinitionIF;
 import com.runwayskd.geodashboard.etl.excel.ExcelDataFormatter;
 import com.runwayskd.geodashboard.etl.excel.ExcelSheetReader;
 import com.runwayskd.geodashboard.etl.excel.FieldInfoContentsHandler;
@@ -177,8 +182,6 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   {
     try
     {
-      System.out.println(configuration);
-
       /*
        * First create the data types from the configuration
        */
@@ -214,10 +217,29 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
         istream.close();
       }
 
-      FileUtils.deleteDirectory(directory);
+      JSONArray datasets = new JSONArray();
 
-      // Return the new data set definition
-      return "";
+      List<TargetDefinitionIF> definitions = tContext.getDefinitions();
+
+      for (TargetDefinitionIF definition : definitions)
+      {
+        String type = definition.getTargetType();
+
+        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
+        MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
+
+        datasets.put(mClass.toJSON());
+      }
+
+      try
+      {
+        // Return the new data set definition
+        return datasets.toString();
+      }
+      finally
+      {
+        FileUtils.deleteDirectory(directory);
+      }
     }
     catch (RunwayException | SmartException e)
     {

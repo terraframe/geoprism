@@ -25,4 +25,6 @@ public interface SourceFieldIF
   public String getAttributeName();
 
   public String getLabel();
+
+  public ColumnType getType();
 }

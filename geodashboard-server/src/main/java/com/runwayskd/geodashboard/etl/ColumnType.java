@@ -22,5 +22,5 @@ package com.runwayskd.geodashboard.etl;
  * These are the different kinds of cells we support. We keep track of the current one between the start and end.
  */
 public enum ColumnType {
-  BOOLEAN, ERROR, FORMULA, INLINE_STRING, TEXT, NUMBER, UNDEFINED, DATE, LONG, DOUBLE, CATEGORY 
+  BOOLEAN, ERROR, FORMULA, INLINE_STRING, TEXT, NUMBER, UNDEFINED, DATE, LONG, DOUBLE, CATEGORY, LOCATION, IGNORE
 }

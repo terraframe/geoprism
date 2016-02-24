@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
@@ -77,9 +78,12 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      DataUploaderDTO.importData(request, configuration);
+      String datasets = DataUploaderDTO.importData(request, configuration);
 
-      JSONControllerUtil.writeReponse(this.resp, "");
+      JSONObject object = new JSONObject();
+      object.put("datasets", new JSONArray(datasets));
+
+      JSONControllerUtil.writeReponse(this.resp, object.toString());
     }
     catch (Throwable t)
     {

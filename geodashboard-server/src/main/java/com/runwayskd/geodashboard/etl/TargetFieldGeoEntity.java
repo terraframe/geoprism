@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.runwayskd.geodashboard.etl;
 
 import java.util.ArrayList;
@@ -92,9 +110,9 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
       labels.add(source.getValue(attribute.getAttributeName()));
     }
 
-    this.getOrCreateLocation(this.root, labels);
+    GeoEntity entity = this.getOrCreateLocation(this.root, labels);
 
-    return null;
+    return entity.getId();
   }
 
   /**
@@ -118,7 +136,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
       {
         Universal universal = attribute.getUniversal();
 
-        if (rootUniversal.getKey().equals(universal))
+        if (rootUniversal.getKey().equals(universal.getKey()))
         {
           parent = root;
         }
