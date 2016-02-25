@@ -772,7 +772,7 @@
                
       var onFailure = function(e){
         $scope.errors = [];
-        $scope.errors.push(e.message);
+        $scope.errors.push(e.localizedMessage);
                  
         $scope.$apply();
       };             

@@ -47,6 +47,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.Dashboard;
 import com.runwaysdk.geodashboard.MdAttributeView;
 import com.runwaysdk.geodashboard.QueryUtil;
+import com.runwaysdk.geodashboard.gis.DuplicateLayerException;
 import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
 import com.runwaysdk.geodashboard.gis.model.AttributeType;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
@@ -113,7 +114,14 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
     DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
 
-    this.applyAll(style, mapId, strategy, conditions);
+    try
+    {
+      this.applyAll(style, mapId, strategy, conditions);
+    }
+    catch(com.runwaysdk.dataaccess.database.DuplicateDataDatabaseException e)
+    {
+      throw new DuplicateLayerException(e);
+    }
 
     return this.publish();
   }
