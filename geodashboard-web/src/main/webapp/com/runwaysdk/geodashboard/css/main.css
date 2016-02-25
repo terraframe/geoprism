@@ -2673,6 +2673,17 @@ option[selected]{ font-weight:bold}
 	margin-bottom: 10px;
 }
 
+h4.location-summary-sub-table-heading{
+	text-align: center;
+    color: inherit;
+}
+
+.table.table-bordered.location-summary-sub-table{
+	font-size: inherit;
+    background: transparent;
+    margin-bottom: 0;
+}
+
 .modal-form .color-section{
 	width:312px;
 	float:left;
@@ -3127,6 +3138,10 @@ span.select-area span.center {
   		margin-top: 12px;
 	}
 	
+	.modal-form .check-block label[for=cat-range-categories] {
+    	margin-top: 12px;
+	}
+	
 	#gradient-point-fill-opacity-cell{
 	  margin-left: 0;
   	  margin-top: 10px;
@@ -3423,6 +3438,17 @@ span.select-area span.center {
 	
 	div.text.category-input-container {
 		width: 225px;
+	}
+	
+	.modal-form .text input[type="text"]{
+	}
+	
+	.modal-form .text .category-input.category-range-input{
+		width: 49%;
+	}
+	
+	.cat-range-max-val{
+		margin-left: 2% !important;
 	}
 	
 	span.icon-color.category-icon {

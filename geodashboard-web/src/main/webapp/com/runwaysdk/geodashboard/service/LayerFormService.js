@@ -340,13 +340,14 @@
           attribute : {label : 'None', id : 'NONE'},
           method : {},
           otherEnabled : false,
-          other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":false,"otherCat":true},
+          rangeCategoriesEnabled : false,
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":true},
           catLiElems : [
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":false,"otherCat":false}]        
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false}]        
           
         },
         styleCondition : ''
@@ -378,24 +379,26 @@
       var categoryWidget = {
         basicPointCatOptionsObj : {
           otherEnabled : true,      
-          other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
+          rangeCategoriesEnabled : false,
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems : [
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
           ]
         },
         polygonCatOptionsObj : {
           otherEnabled : true,
-          other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
+          rangeCategoriesEnabled : false,
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems:[
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
           ]
         }
       };
@@ -413,13 +416,14 @@
         attribute : {label : 'None', id : 'NONE'},
         method : {},
         otherEnabled : false,
-        other : {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true},
+        rangeCategoriesEnabled : false,
+        other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
         catLiElems : [
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"otherEnabled":true,"otherCat":false}          
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}          
         ]
       };
       
@@ -458,20 +462,44 @@
         
       return aggregation;
     }
-      
+     
+    /**
+     * Copies categories to the model from a json object (usually a server response)
+     * 
+     */
     service.loadCategoryValues = function(model, json, categoryType) {
+      var otherEnabledFlag = true;
+      var rangeCategoriesEnabledFlag = false;
+      
       if(json != null && json != '') {
         var categories = JSON.parse(json);
         
         if($.isArray(categories)) {
           categories = {catLiElems:categories};
         }
+        
+        for(var i = 0; i < categories.catLiElems.length; i++) {
+        	 var category = categories.catLiElems[i];
+        	 
+            // all categories should have the same flag values so a single occurance should describe all
+            if(!category.otherEnabled){
+          	  otherEnabledFlag = false;
+            }
+            
+            // all categories should have the same flag values so a single occurance should describe all
+            if(category.isRangeCat){
+          	  rangeCategoriesEnabledFlag = true;
+            }
+        }
             
         for(var i = 0; i < categories.catLiElems.length; i++) {
           var category = categories.catLiElems[i];
+          
+          if(!category.isRangeCat && rangeCategoriesEnabledFlag){
+        	  category.isRangeCat = true;
+          }
               
           if(!category.otherCat) {
-                
             if(i < model.catLiElems.length ) {            	
               model.catLiElems[i] = category;                          	
             }
@@ -482,10 +510,18 @@
           else {
             model.other = category;
           }
-              
-          model.otherEnabled = category.otherEnabled;
         }          
       }
+      
+      // update all the model categories to account for empty categories that are not updated from the back-end
+      for(var i = 0; i < model.catLiElems.length; i++) {
+          var modelCat = model.catLiElems[i];
+          modelCat.isRangeCat = rangeCategoriesEnabledFlag;
+      }
+      
+      // keep model updates outside of a loop to prevent angular from un-needed processing
+      model.rangeCategoriesEnabled = rangeCategoriesEnabledFlag;
+      model.otherEnabled = otherEnabledFlag;
     }
     
       
