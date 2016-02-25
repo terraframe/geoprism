@@ -24,70 +24,83 @@ import org.json.JSONException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
-import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 
 public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
 {
-  private Condition          condition;
-
   private String             gradientPolygonMinFill;
+
   private String             gradientPolygonMaxFill;
+
   private String             gradientPolygonStroke;
+
   private Double             gradientPolygonFillOpacity;
+
   private Integer            gradientPolygonStrokeWidth;
+
   private Double             gradientPolygonStrokeOpacity;
-  
+
   private Integer            pointMinSize;
+
   private Integer            pointMaxSize;
-  
+
   private Integer            gradientPointSize;
+
   private String             gradientPointMinFill;
+
   private String             gradientPointMaxFill;
+
   private Double             gradientPointFillOpacity;
+
   private String             gradientPointStroke;
+
   private Integer            gradientPointStrokeWidth;
+
   private Double             gradientPointStrokeOpacity;
+
   private String             gradientPointWellKnownName;
-  
+
   private Integer            categoryPointSize;
+
   private String             categoryPolygonStyles;
+
   private String             categoryPolygonStroke;
+
   private Double             categoryPolygonFillOpacity;
+
   private Integer            categoryPolygonStrokeWidth;
+
   private Double             categoryPolygonStrokeOpacity;
+
   private String             categoryPointWellKnownName;
 
   private Boolean            bubbleContinuousSize;
+
   private String             bubbleStroke;
+
   private Integer            bubbleStrokeWidth;
+
   private Integer            bubbleSize;
+
   private String             bubbleWellKnownName;
+
   private String             bubbleFill;
+
   private Double             bubbleOpacity;
+
   private Integer            bubbleRotation;
+
   private Double             bubbleStrokeOpacity;
 
   private MdAttributeDAOIF   secondaryAttribute;
+
   private AllAggregationType secondaryAttributeAggregationMethod;
+
   private JSONArray          secondaryAttributeCategories;
 
   public ThematicStyleImpl()
   {
     super();
-
-    this.condition = null;
-  }
-
-  @Override
-  public Condition getCondition()
-  {
-    return this.condition;
-  }
-
-  public void setCondition(Condition condition)
-  {
-    this.condition = condition;
   }
 
   @Override
@@ -101,66 +114,66 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   {
     return pointMinSize;
   }
-  
+
   @Override
   public Double getBubbleStrokeOpacity()
   {
     return this.bubbleStrokeOpacity;
   }
-  
+
   public void setBubbleStrokeOpacity(Double bubbleStrokeOpacity)
   {
     this.bubbleStrokeOpacity = bubbleStrokeOpacity;
   }
-  
+
   public void setBubbleSize(Integer bubbleSize)
   {
     this.bubbleSize = bubbleSize;
   }
-  
+
   public void setBubbleStroke(String bubbleStroke)
   {
     this.bubbleStroke = bubbleStroke;
   }
-  
+
   public void setBubbleStrokeWidth(Integer bubbleStrokeWidth)
   {
     this.bubbleStrokeWidth = bubbleStrokeWidth;
   }
-  
+
   public void setBubbleWellKnownName(String bubbleWellKnownName)
   {
     this.bubbleWellKnownName = bubbleWellKnownName;
   }
-  
+
   @Override
   public Integer getBubbleSize()
   {
     return bubbleSize;
   }
-  
+
   @Override
   public String getBubbleStroke()
   {
     return bubbleStroke;
   }
-  
+
   @Override
   public Integer getBubbleStrokeWidth()
   {
     return bubbleStrokeWidth;
   }
-  
+
   @Override
   public String getBubbleWellKnownName()
   {
     return bubbleWellKnownName;
   }
-  
+
   @Override
   public void setBubbleFill(String fill)
   {
-    this.bubbleFill = fill;    
+    this.bubbleFill = fill;
   }
 
   @Override
@@ -172,7 +185,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   @Override
   public void setBubbleOpacity(Double opacity)
   {
-    this.bubbleOpacity = opacity;    
+    this.bubbleOpacity = opacity;
   }
 
   @Override
@@ -184,7 +197,7 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
   @Override
   public void setBubbleRotation(Integer rotation)
   {
-    this.bubbleRotation = rotation;    
+    this.bubbleRotation = rotation;
   }
 
   @Override
@@ -222,7 +235,6 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
     this.gradientPolygonMinFill = gradientPolygonMinFill;
   }
 
-  
   public String getGradientPolygonMaxFill()
   {
     return gradientPolygonMaxFill;
@@ -244,11 +256,11 @@ public class ThematicStyleImpl extends StyleImpl implements ThematicStyle
     return this.bubbleContinuousSize;
   }
 
-//  @Override
-//  public Integer getPointRadius()
-//  {
-//    return this.pointRadius;
-//  }
+  // @Override
+  // public Integer getPointRadius()
+  // {
+  // return this.pointRadius;
+  // }
 
   @Override
   public MdAttributeDAOIF getSecondaryAttributeDAO()

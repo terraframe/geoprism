@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard;
 
@@ -40,6 +38,7 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -85,6 +84,28 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     return super.buildKey();
+  }
+
+  @Override
+  @Transaction
+  public void delete()
+  {
+    OIterator<? extends GeoNode> nodes = this.getAllGeoNode();
+
+    try
+    {
+      while (nodes.hasNext())
+      {
+        GeoNode node = nodes.next();
+        node.delete();
+      }
+    }
+    finally
+    {
+      nodes.close();
+    }
+
+    super.delete();
   }
 
   public static MappableClass getMappableClass(String type)
@@ -138,6 +159,11 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
+  public JSONObject toJSON() throws JSONException
+  {
+    return this.toJSON(null, new LinkedList<MetadataWrapper>());
+  }
+
   public JSONObject toJSON(Dashboard dashboard) throws JSONException
   {
     List<? extends MetadataWrapper> wrappers = dashboard.getAllMetadata().getAll();
@@ -160,11 +186,14 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
     LinkedList<AttributeWrapper> attributes = new LinkedList<AttributeWrapper>();
 
-    MetadataWrapper wrapper = dashboard.getMetadataWrapper(mdClass);
-
-    if (wrapper != null)
+    if (dashboard != null)
     {
-      attributes.addAll(wrapper.getAllAttributeWrapper().getAll());
+      MetadataWrapper wrapper = dashboard.getMetadataWrapper(mdClass);
+
+      if (wrapper != null)
+      {
+        attributes.addAll(wrapper.getAllAttributeWrapper().getAll());
+      }
     }
 
     object.put("attributes", this.getAttributeJSON(mdClass, attributes));
@@ -435,9 +464,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       MdAttributeReferenceDAOIF mdAttributeReference = (MdAttributeReferenceDAOIF) mdAttributeConcrete;
 
       MdBusinessDAOIF referenceMdBusiness = mdAttributeReference.getReferenceMdBusinessDAO();
-      boolean isClassifier = referenceMdBusiness.definesType().equals(Classifier.CLASS);
 
-      return isClassifier;
+      if (referenceMdBusiness != null)
+      {
+        boolean isClassifier = referenceMdBusiness.definesType().equals(Classifier.CLASS);
+
+        return isClassifier;
+      }
+
+      return false;
     }
 
     return !mdAttributeConcrete.isSystem() && !mdAttributeConcrete.definesAttribute().equals(BusinessInfo.KEY) && ( mdAttributeConcrete instanceof MdAttributePrimitiveDAOIF ) && !ids.contains(mdAttributeConcrete.getId());

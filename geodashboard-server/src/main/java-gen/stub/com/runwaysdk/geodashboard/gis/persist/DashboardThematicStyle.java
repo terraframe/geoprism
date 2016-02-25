@@ -31,7 +31,6 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.geodashboard.gis.model.MapVisitor;
 import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
-import com.runwaysdk.geodashboard.gis.model.condition.Condition;
 import com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;
 
 public class DashboardThematicStyle extends DashboardThematicStyleBase implements Reloadable, ThematicStyle
@@ -50,21 +49,15 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
   }
 
   @Override
-  public Condition getCondition()
-  {
-    return this.getStyleCondition();
-  }
-
-  @Override
   public JSONObject toJSON()
   {
     try
     {
       JSONObject json = new JSONObject();
       json.put("bubbleContinuousSize", this.getBubbleContinuousSize());
-      
+
       JSONObject dashboardLayerJSON = super.toJSON();
-      for(String key : JSONObject.getNames(dashboardLayerJSON))
+      for (String key : JSONObject.getNames(dashboardLayerJSON))
       {
         json.put(key, dashboardLayerJSON.get(key));
       }
@@ -109,9 +102,8 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       json.put("secondaryAttribute", this.getSecondaryAttributeId());
       json.put("secondaryCategories", this.getSecondaryCategories());
       json.put("styleCondition", this.getStyleCondition());
-      
+
       json.put("aggregationMap", DashboardStyle.getAggregationJSON());
-      
 
       return json;
     }
@@ -204,7 +196,7 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       this.setBubbleStrokeOpacity(tSource.getBubbleStrokeOpacity());
       this.setBubbleStrokeWidth(tSource.getBubbleStrokeWidth());
       this.setBubbleWellKnownName(tSource.getBubbleWellKnownName());
-      
+
       // Category Point
       this.setCategoryPointFillOpacity(tSource.getCategoryPointFillOpacity());
       this.setCategoryPointSize(tSource.getCategoryPointSize());
@@ -213,14 +205,14 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       this.setCategoryPointStrokeWidth(tSource.getCategoryPointStrokeWidth());
       this.setCategoryPointStyles(tSource.getCategoryPointStyles());
       this.setCategoryPointWellKnownName(tSource.getCategoryPointWellKnownName());
-      
+
       // Category Polygon
       this.setCategoryPolygonFillOpacity(tSource.getCategoryPolygonFillOpacity());
       this.setCategoryPolygonStroke(tSource.getCategoryPolygonStroke());
       this.setCategoryPolygonStrokeOpacity(tSource.getCategoryPolygonStrokeOpacity());
       this.setCategoryPolygonStrokeWidth(tSource.getCategoryPolygonStrokeWidth());
       this.setCategoryPolygonStyles(tSource.getCategoryPolygonStyles());
-      
+
       // Gradient Point
       this.setGradientPointSize(tSource.getGradientPointSize());
       this.setGradientPointWellKnownName(tSource.getGradientPointWellKnownName());
@@ -230,7 +222,7 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       this.setGradientPointStroke(tSource.getGradientPointStroke());
       this.setGradientPointStrokeOpacity(tSource.getGradientPointStrokeOpacity());
       this.setGradientPointStrokeWidth(tSource.getGradientPointStrokeWidth());
-      
+
       // Gradient Polygon
       this.setGradientPolygonFillOpacity(tSource.getGradientPolygonFillOpacity());
       this.setGradientPolygonStroke(tSource.getGradientPolygonStroke());
@@ -238,15 +230,15 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       this.setGradientPolygonMinFill(tSource.getGradientPolygonMinFill());
       this.setGradientPolygonStrokeOpacity(tSource.getGradientPolygonStrokeOpacity());
       this.setGradientPolygonStrokeWidth(tSource.getGradientPolygonStrokeWidth());
-      
-      //this.setPointRadius(tSource.getPointRadius());
+
+      // this.setPointRadius(tSource.getPointRadius());
       this.setBasicPointSize(tSource.getBasicPointSize());
-    
+
       // Secondary attributes
       this.addSecondaryAggregationType(tSource.getSecondaryAttributeAggregationMethod());
       this.setSecondaryAttribute(tSource.getSecondaryAttribute());
       this.setSecondaryCategories(tSource.getSecondaryCategories());
-      
+
       this.setStyleCondition(tSource.getStyleCondition());
     }
   }

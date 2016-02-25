@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything">
+      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything" generateController="true">
         <attributes>
           <localChar name="displayLabel" label="Label" required="true" />
           <reference name="country" label="Country" type="com.runwaysdk.system.gis.geo.GeoEntity" required="true" />
@@ -98,7 +98,6 @@
       </mdException>
       <mdException name="com.runwaysdk.geodashboard.gis.DashboardHasNoMapException" label="Dashboard Has No Map Exception" description="Thrown when a user tries to render a dashboard that has no map." message="This Dashboard has no map to display.">
       </mdException>
-
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Condition" isAbstract="true" generateController="false">
         <attributes>
           <reference name="geodashboardUser" required="false" label="User" description="User of the condition" type="com.runwaysdk.geodashboard.GeodashboardUser" />
@@ -106,6 +105,7 @@
         </attributes>
       </mdBusiness>
 
+<!-- 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAttributeCondition" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" label="Attribute condition" isAbstract="true" generateController="false">
         <attributes>
           <reference name="definingMdAttribute" required="true" label="Defining MdAttribute" description="Attribute of the condition" type="com.runwaysdk.system.metadata.MdAttribute" />
@@ -133,6 +133,7 @@
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Greater Than Or Equal" generateController="false" />
 
       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardLessThanOrEqual" extends="com.runwaysdk.geodashboard.gis.persist.condition.DashboardPrimitive" label="Less Than Or Equal" generateController="false" />
+ -->
     </create>
   </doIt>
   <undoIt>

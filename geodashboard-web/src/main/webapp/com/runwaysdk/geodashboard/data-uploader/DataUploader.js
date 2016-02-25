@@ -540,14 +540,18 @@
       var onSuccess = function(result) {
         controller.clear();
           
-        $scope.$emit('closeUploader', {});
+        $scope.$emit('closeUploader', {datasets:result.datasets});
       }
         
       var onFailure = function(e){
         $scope.errors.push(e.message);
+        
+        $scope.$apply();
       };             
 
       // Reset the file Errors
+      $scope.configuration.sheets[0] = $scope.sheet;
+      
       $scope.errors = [];
       
       dataService.importData($scope.configuration, '#uploader-div', onSuccess, onFailure);      
@@ -566,6 +570,7 @@
       $scope.sheet = $scope.configuration.sheets[0];
       $scope.sheet.attributes = {ids:[], values : {}};    
       $scope.sheet.coordinates = {ids:[], values : {}};    
+      $scope.errors = [];      
       $scope.show = true;
       
       $scope.page = {

@@ -100,6 +100,7 @@
       var i = ~~(h * 6);
       var f = h * 6 - i;
       var q = 1 - f;
+      
       switch(i % 6){
         case 0: r = 1; g = f; b = 0; break;
         case 1: r = q; g = 1; b = 0; break;

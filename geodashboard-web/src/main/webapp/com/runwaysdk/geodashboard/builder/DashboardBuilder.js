@@ -121,7 +121,7 @@
         
       var onSuccess = function(result) {
         
-      controller.init(result);
+        controller.init(result);
       
         $scope.$apply();
       }
@@ -131,6 +131,14 @@
     
     controller.setCategoryWidgetType = function(typeName) {
       $scope.showWidgetType = typeName;
+    }
+    
+    controller.addTypes = function(types) {
+      if($scope.dashboard != null) {
+        for(var i = 0; i < types.length; i++) {
+          $scope.dashboard.options.types.push(types[i]);
+        }
+      }
     }
     
     /*
@@ -171,6 +179,11 @@
     });
     
     $rootScope.$on('closeUploader', function(event, data){
+    	
+      if(data.datasets != null) {
+        controller.addTypes(data.datasets);    	  
+      }
+      
       $scope.hidden = false;
       $scope.$apply();
     }); 

@@ -51,6 +51,7 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -80,7 +81,7 @@ import com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRootQuery;
 import com.runwaysdk.geodashboard.report.ReportItem;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.geodashboard.service.SeedKeyGenerator;
-import com.runwaysdk.query.AttributeCharacter;
+import com.runwaysdk.query.AttributeChar;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.Condition;
@@ -542,7 +543,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     QueryFactory factory = new QueryFactory();
 
     BusinessQuery bQuery = factory.businessQuery(mdClass.definesType());
-    AttributeCharacter selectable = bQuery.aCharacter(mdAttributeConcrete.definesAttribute());
+    AttributeChar selectable = null;
+    
+    if(mdAttributeConcrete instanceof MdAttributeCharacterDAOIF)
+    {
+      selectable = bQuery.aCharacter(mdAttributeConcrete.definesAttribute());
+    }
+    else
+    {
+      selectable = bQuery.aText(mdAttributeConcrete.definesAttribute());      
+    }
 
     ValueQuery query = new ValueQuery(factory);
     query.SELECT_DISTINCT(selectable);

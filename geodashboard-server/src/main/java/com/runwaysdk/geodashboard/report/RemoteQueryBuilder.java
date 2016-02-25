@@ -39,8 +39,6 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.query.sql.MdAttributeCharacter_SQL;
-import com.runwaysdk.query.sql.MdAttributeDec_SQL;
 import com.runwaysdk.query.sql.MdAttributePrimitive_SQL;
 import com.runwaysdk.session.Session;
 

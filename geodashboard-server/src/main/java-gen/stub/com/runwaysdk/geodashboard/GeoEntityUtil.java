@@ -450,4 +450,27 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     return buffer.toString();
   }
 
+  public static GeoEntity getCountryByUniversal(String universalId)
+  {
+    GeoEntityQuery query = new GeoEntityQuery(new QueryFactory());
+    query.WHERE(query.getUniversal().EQ(universalId));
+
+    if (query.getCount() == 1)
+    {
+      OIterator<? extends GeoEntity> iterator = query.getIterator();
+
+      try
+      {
+        GeoEntity entity = iterator.next();
+
+        return entity;
+      }
+      finally
+      {
+        iterator.close();
+      }
+    }
+
+    throw new ProgrammingErrorException("Country universal has more than one corresponding geo entity");
+  }
 }
