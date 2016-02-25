@@ -18,6 +18,8 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.system.metadata.MdAttribute;
+
 public class SourceField implements SourceFieldIF
 {
   private String     columnName;
@@ -68,5 +70,20 @@ public class SourceField implements SourceFieldIF
   public void setType(ColumnType type)
   {
     this.type = type;
+  }
+
+  @Override
+  public void persist(ExcelSourceBinding source)
+  {
+    String type = source.getMdView().definesType();
+    MdAttribute mdAttribute = MdAttribute.getByKey(type + "." + this.attributeName);
+
+    ExcelFieldBinding field = new ExcelFieldBinding();
+    field.setColumnHeader(this.columnName);
+    field.setColumnLabel(this.label);
+    field.setColumnType(this.type.name());
+    field.setMdAttribute(mdAttribute);
+    field.setSourceDefinition(source);
+    field.apply();
   }
 }

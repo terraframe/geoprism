@@ -82,7 +82,6 @@ import com.runwaysdk.geodashboard.report.ReportItem;
 import com.runwaysdk.geodashboard.report.ReportItemQuery;
 import com.runwaysdk.geodashboard.service.SeedKeyGenerator;
 import com.runwaysdk.query.AttributeChar;
-import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.Condition;

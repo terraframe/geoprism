@@ -57,7 +57,8 @@ public class DataSetBuilder implements DataSetBuilderIF
 
     new TargetBuilder(this.configuration, this.source, this.target).build();
 
-    // TODO Persist the mapping configuration
+    this.source.persist();    
+    this.target.persist();    
   }
 
   @Override

@@ -31,4 +31,6 @@ public interface TargetDefinitionIF
   public TargetFieldIF getFieldByLabel(String label);
 
   public List<TargetFieldIF> getFields();
+
+  public void persist();
 }

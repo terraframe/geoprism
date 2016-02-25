@@ -83,4 +83,14 @@ public class TargetContext implements TargetContextIF
   {
     return new LinkedList<TargetDefinitionIF>(this.definitions.values());
   }
+
+  public void persist()
+  {
+    List<TargetDefinitionIF> definitions = this.getDefinitions();
+
+    for (TargetDefinitionIF definition : definitions)
+    {
+      definition.persist();
+    }
+  }
 }

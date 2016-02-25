@@ -23,6 +23,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.vividsolutions.jts.geom.Coordinate;
 
 public class TargetFieldDerived extends TargetFieldCoordinate implements TargetFieldIF
@@ -75,5 +76,22 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
 
     return this.country.getId();
   }
+  
+  @Override
+  public void persist(TargetBinding binding)
+  {
+    MdAttribute latitudeAttribute = MdAttribute.getByKey(binding.getSourceView().definesType() + "." + this.getLatitudeSourceAttributeName());
+    MdAttribute longitudeAttribute = MdAttribute.getByKey(binding.getSourceView().definesType() + "." + this.getLongitudeSourceAttributeName());
+    MdAttribute targetAttribute = MdAttribute.getByKey(this.getKey());
 
+    TargetFieldDerivedBinding field = new TargetFieldDerivedBinding();
+    field.setTarget(binding);
+    field.setTargetAttribute(targetAttribute);
+    field.setLatitudeAttribute(latitudeAttribute);
+    field.setLongitudeAttribute(longitudeAttribute);
+    field.setGeoEntity(this.country);
+    field.setUniversal(this.getUniversal());
+    field.setColumnLabel(this.getLabel());
+    field.apply();
+  }
 }

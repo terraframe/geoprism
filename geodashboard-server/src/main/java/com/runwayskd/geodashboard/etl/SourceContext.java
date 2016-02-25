@@ -18,6 +18,7 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,6 +106,16 @@ public class SourceContext implements SourceContextIF
   public void setFilename(String filename)
   {
     this.filename = filename;
+  }
+
+  public void persist()
+  {
+    Collection<SourceDefinitionIF> definitions = this.sheets.values();
+
+    for (SourceDefinitionIF definition : definitions)
+    {
+      definition.persist();
+    }
   }
 
 }

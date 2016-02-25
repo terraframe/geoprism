@@ -82,5 +82,4 @@ public abstract class TargetFieldCoordinate extends TargetField implements Targe
 
     return null;
   }
-
 }

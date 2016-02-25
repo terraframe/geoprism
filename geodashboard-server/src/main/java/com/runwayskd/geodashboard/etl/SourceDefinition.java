@@ -18,8 +18,11 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.runwaysdk.system.metadata.MdView;
 
 public class SourceDefinition implements SourceDefinitionIF
 {
@@ -75,5 +78,21 @@ public class SourceDefinition implements SourceDefinitionIF
   public SourceFieldIF getFieldByLabel(String label)
   {
     return this.labelMap.get(label);
+  }
+
+  @Override
+  public void persist()
+  {
+    ExcelSourceBinding source = new ExcelSourceBinding();
+    source.setSheetName(this.sheetName);
+    source.setMdView(MdView.getMdView(this.type));
+    source.apply();
+    
+    Collection<SourceFieldIF> fields = this.fieldMap.values();
+
+    for (SourceFieldIF field : fields)
+    {
+      field.persist(source);
+    }
   }
 }

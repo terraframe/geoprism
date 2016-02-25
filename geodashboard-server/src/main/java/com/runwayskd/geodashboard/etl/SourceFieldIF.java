@@ -27,4 +27,6 @@ public interface SourceFieldIF
   public String getLabel();
 
   public ColumnType getType();
+
+  public void persist(ExcelSourceBinding source);
 }

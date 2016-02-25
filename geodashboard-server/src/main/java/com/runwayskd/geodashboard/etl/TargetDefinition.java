@@ -18,10 +18,14 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdView;
 
 public class TargetDefinition implements TargetDefinitionIF
 {
@@ -81,5 +85,21 @@ public class TargetDefinition implements TargetDefinitionIF
   public List<TargetFieldIF> getFields()
   {
     return new LinkedList<TargetFieldIF>(this.fieldMap.values());
+  }
+
+  @Override
+  public void persist()
+  {
+    TargetBinding binding = new TargetBinding();
+    binding.setSourceView(MdView.getMdView(this.sourceType));
+    binding.setTargetBusiness(MdBusiness.getMdBusiness(this.targetType));
+    binding.apply();
+    
+    Collection<TargetFieldIF> fields = this.fieldMap.values();
+
+    for (TargetFieldIF field : fields)
+    {
+      field.persist(binding);
+    }
   }
 }

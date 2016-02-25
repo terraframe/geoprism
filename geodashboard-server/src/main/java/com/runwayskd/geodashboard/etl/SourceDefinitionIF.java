@@ -27,4 +27,6 @@ public interface SourceDefinitionIF
   public SourceFieldIF getFieldByLabel(String label);
 
   public String getName();
+
+  public void persist();
 }
