@@ -88,10 +88,16 @@
   
   function LocationPageController($scope, $rootScope) {
     var controller = this;
+    
+    controller.generateId = function() {
+      var S4 = function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+      };
+          
+      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }    
         
     controller.initialize = function() {
-      $scope.count = 0;
-
       // Initialize the universal options
       var countries = $scope.options.countries;
             
@@ -143,6 +149,23 @@
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
+            
+      var fieldLabel = $scope.attribute.fields[attribute.universal];      
+      var field = controller.getField(fieldLabel);
+
+      controller.setUniversalOptions(field);      
+    }
+    
+    controller.getField = function(label) {
+      for(var j = 0; j < $scope.sheet.fields.length; j++) {
+        var field = $scope.sheet.fields[j];
+                
+        if(field.label === label) {
+          return field;
+        }      
+      }
+      
+      return null;
     }
       
     controller.remove = function(attribute) {
@@ -161,7 +184,7 @@
     controller.newAttribute = function() {
       if($scope.attribute != null) {      
         if($scope.attribute.id == -1) {
-          $scope.attribute.id = ($scope.count++);      
+          $scope.attribute.id = controller.generateId();
           $scope.sheet.attributes.ids.push($scope.attribute.id);
           $scope.sheet.attributes.values[$scope.attribute.id] = {};              
         }     
@@ -278,6 +301,12 @@
       $scope.form.$setValidity("size",  ($scope.attribute == null));
     }, true);   
     
+
+    // Remove the global validation on the form
+    $scope.$on('pagePrev', function(event, data){
+      $scope.form.$setValidity("size",  true);
+    });   
+    
     // Initialize the scope
     controller.initialize();
   }
@@ -299,7 +328,6 @@
     var controller = this;
     
     controller.initialize = function() {        
-      $scope.count = 0;
       $scope.coordinate = {
         label : "",
         latitude : "",
@@ -363,6 +391,14 @@
       }
     }
     
+    controller.generateId = function() {
+      var S4 = function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+      };
+            
+      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }        
+    
     controller.isBasic = function(field) {
       return (field.type == 'TEXT' || field.type == 'LONG' || field.type == 'DOUBLE');	
     }
@@ -384,7 +420,7 @@
     
     controller.newCoordinate = function() {
       if($scope.coordinate.id == -1) {
-        $scope.coordinate.id = ($scope.count++);      
+        $scope.coordinate.id = controller.generateId();      
         $scope.sheet.coordinates.ids.push($scope.coordinate.id);
         $scope.sheet.coordinates.values[$scope.coordinate.id] = {};              
       }     

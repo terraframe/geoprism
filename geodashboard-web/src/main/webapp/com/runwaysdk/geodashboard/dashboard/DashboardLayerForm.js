@@ -738,13 +738,13 @@
              
              for(var i=0; i<geomTypes.length; i++){
                var geomType = geomTypes[i];
-               if(geomType.indexOf("Point") != -1){
+               if(geomType.indexOf("MdAttributePoint") != -1){
                  $(".BUBBLE").show();
                  $(".BASICPOINT").show();
                  $(".GRADIENTPOINT").show();
                  $(".CATEGORYPOINT").show();
                }
-               else if(geomType.indexOf("MultiPolygon") != -1){
+               else if(geomType.indexOf("MdAttributeMultiPolygon") != -1){
                  $(".BASICPOLYGON").show();
                  $(".CATEGORYPOLYGON").show();
                  $(".GRADIENTPOLYGON").show();

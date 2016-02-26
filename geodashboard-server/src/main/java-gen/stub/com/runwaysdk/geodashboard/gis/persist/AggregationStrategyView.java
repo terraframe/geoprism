@@ -110,19 +110,19 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
       MdAttribute geomAttr = node.getGeometryAttribute();
       if (geomAttr != null)
       {
-        geomTypesJSONArr.put(geomAttr.getAttributeName());
+        geomTypesJSONArr.put(geomAttr.getClass().getName());
       }
 
       MdAttributePoint pointAttr = node.getPointAttribute();
       if (pointAttr != null)
       {
-        geomTypesJSONArr.put(pointAttr.getAttributeName());
+        geomTypesJSONArr.put(pointAttr.getClass().getName());
       }
 
       MdAttributeMultiPolygon polyAttr = node.getMultiPolygonAttribute();
       if (polyAttr != null)
       {
-        geomTypesJSONArr.put(polyAttr.getAttributeName());
+        geomTypesJSONArr.put(polyAttr.getClass().getName());
       }
 
       view.setAvailableGeometryTypes(geomTypesJSONArr.toString());
