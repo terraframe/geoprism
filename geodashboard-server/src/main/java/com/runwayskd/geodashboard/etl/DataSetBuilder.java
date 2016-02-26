@@ -48,6 +48,13 @@ public class DataSetBuilder implements DataSetBuilderIF
     }
   }
 
+  public DataSetBuilder(JSONObject _configuration)
+  {
+    this.configuration = _configuration;
+    this.source = new SourceContext();
+    this.target = new TargetContext();
+  }
+
   @Override
   @Transaction
   @AbortIfProblem
@@ -57,8 +64,8 @@ public class DataSetBuilder implements DataSetBuilderIF
 
     new TargetBuilder(this.configuration, this.source, this.target).build();
 
-    this.source.persist();    
-    this.target.persist();    
+    this.source.persist();
+    this.target.persist();
   }
 
   @Override

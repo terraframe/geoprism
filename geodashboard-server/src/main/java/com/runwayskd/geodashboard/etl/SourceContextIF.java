@@ -29,8 +29,4 @@ public interface SourceContextIF
   public SourceFieldIF getFieldByName(String sheetName, String columnName);
 
   public SourceFieldIF getFieldByLabel(String sheetName, String label);
-
-  public String getDirectory();
-
-  public String getFilename();
 }

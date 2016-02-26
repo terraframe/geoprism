@@ -221,7 +221,6 @@ public class TargetBuilder
 
         lowest = this.setLowest(lowest, universalId);
 
-
         TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
         TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
         TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
@@ -291,7 +290,7 @@ public class TargetBuilder
       String longitude = cCoordinate.getString("longitude");
       String universalId = cCoordinate.getString("universal");
 
-      String attributeName = this.generateAttributeName(label, "Entity");
+      String attributeName = this.generateAttributeName(label) + "Entity";
 
       MdAttributeReferenceDAO mdAttribute = MdAttributeReferenceDAO.newInstance();
       mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
@@ -443,7 +442,7 @@ public class TargetBuilder
       mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
       mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
       mdAttribute.setStructValue(MdAttributeTextInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-//      mdAttribute.setValue(MdAttributeTextInfo.SIZE, "6000");
+      // mdAttribute.setValue(MdAttributeTextInfo.SIZE, "6000");
       mdAttribute.apply();
     }
 
@@ -508,7 +507,7 @@ public class TargetBuilder
     String latitude = cCoordinate.getString("latitude");
     String longitude = cCoordinate.getString("longitude");
 
-    String attributeName = this.generateAttributeName(label, "") + "MultiPolygon";
+    String attributeName = this.generateAttributeName(label) + "MultiPolygon";
 
     MdAttributeMultiPolygonDAO mdAttribute = MdAttributeMultiPolygonDAO.newInstance();
     mdAttribute.setValue(MdAttributeMultiPolygonInfo.NAME, attributeName);
@@ -534,7 +533,7 @@ public class TargetBuilder
     String latitude = cCoordinate.getString("latitude");
     String longitude = cCoordinate.getString("longitude");
 
-    String attributeName = this.generateAttributeName(label, "") + "Point";
+    String attributeName = this.generateAttributeName(label) + "Point";
 
     MdAttributePointDAO mdAttribute = MdAttributePointDAO.newInstance();
     mdAttribute.setValue(MdAttributePointInfo.NAME, attributeName);
@@ -558,7 +557,7 @@ public class TargetBuilder
   {
     String label = cCoordinate.getString("label");
 
-    String attributeName = this.generateAttributeName(label, "FeatureId");
+    String attributeName = this.generateAttributeName(label) + "FeatureId";
 
     MdAttributeCharacterDAO mdAttribute = MdAttributeCharacterDAO.newInstance();
     mdAttribute.setValue(MdAttributeCharacterInfo.NAME, attributeName);
@@ -577,12 +576,7 @@ public class TargetBuilder
 
   private String generateAttributeName(String label)
   {
-    return this.generateAttributeName(label, "Attribute");
-  }
-
-  private String generateAttributeName(String label, String suffix)
-  {
-    String name = DataUploader.getSystemName(label, suffix, false);
+    String name = DataUploader.getSystemName(label, "Attribute", false);
 
     return name;
   }

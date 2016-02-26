@@ -20,6 +20,7 @@ package com.runwaysdk.geodashboard;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -177,8 +178,36 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
   }
 
-  @Transaction
   public static String importData(String configuration)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(configuration);
+
+      String name = object.getString("directory");
+      String filename = object.getString("filename");
+
+      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+      File file = new File(directory, filename);
+
+      String result = DataUploader.importData(configuration, file);
+
+      FileUtils.deleteDirectory(directory);
+
+      return result;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    catch (IOException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  private static String importData(String configuration, File file)
   {
     try
     {
@@ -195,12 +224,6 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       TargetContextIF tContext = builder.getTargetContext();
 
       ConverterIF converter = new Converter(tContext);
-
-      String name = sContext.getDirectory();
-      String filename = sContext.getFilename();
-
-      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
-      File file = new File(directory, filename);
 
       FileInputStream istream = new FileInputStream(file);
 
@@ -231,15 +254,8 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
         datasets.put(mClass.toJSON());
       }
 
-      try
-      {
-        // Return the new data set definition
-        return datasets.toString();
-      }
-      finally
-      {
-        FileUtils.deleteDirectory(directory);
-      }
+      // Return the new data set definition
+      return datasets.toString();
     }
     catch (RunwayException | SmartException e)
     {
