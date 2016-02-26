@@ -544,7 +544,7 @@ public class TargetBuilder
     mdAttribute.setValue(MdAttributePointInfo.SRID, "4326");
     mdAttribute.apply();
 
-    TargetFieldMultiPolygon field = new TargetFieldMultiPolygon();
+    TargetFieldPoint field = new TargetFieldPoint();
     field.setName(attributeName);
     field.setLabel(label);
     field.setKey(mdClass.definesType() + "." + attributeName);
@@ -577,7 +577,7 @@ public class TargetBuilder
 
   private String generateAttributeName(String label)
   {
-    return this.generateAttributeName(label, "");
+    return this.generateAttributeName(label, "Attribute");
   }
 
   private String generateAttributeName(String label, String suffix)
@@ -590,7 +590,7 @@ public class TargetBuilder
   private String generateBusinessTypeName(String label)
   {
     // Create a unique name for the view type based upon the name of the sheet
-    String typeName = DataUploader.getSystemName(label);
+    String typeName = DataUploader.getSystemName(label, "Type", true);
 
     Integer suffix = 0;
 

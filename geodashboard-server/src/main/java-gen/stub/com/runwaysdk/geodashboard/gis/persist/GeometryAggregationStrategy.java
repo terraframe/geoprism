@@ -31,6 +31,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.geodashboard.QueryUtil;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
+import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeLocal;
@@ -56,6 +57,20 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
   public GeometryAggregationStrategy()
   {
     super();
+  }
+
+  public String getGeometryColumn(DashboardThematicLayer layer)
+  {
+    GeoNode geoNode = layer.getGeoNode();
+
+    if (layer.getFeatureType().equals(FeatureType.POINT))
+    {
+      return geoNode.getPointAttribute().getAttributeName();
+    }
+    else
+    {
+      return geoNode.getMultiPolygonAttribute().getAttributeName();
+    }
   }
 
   @Override

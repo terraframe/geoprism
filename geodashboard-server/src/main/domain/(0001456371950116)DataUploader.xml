@@ -65,7 +65,7 @@
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding" label="Target Field Coordinate Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBasicBinding" isAbstract="true">
+      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding" label="Target Field Coordinate Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBinding" isAbstract="true">
         <attributes>
           <reference name="latitudeAttribute" label="Latitude Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
           <reference name="longitudeAttribute" label="Longitude Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />

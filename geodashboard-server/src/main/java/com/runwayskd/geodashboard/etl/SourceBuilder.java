@@ -134,7 +134,7 @@ public class SourceBuilder
 
   private String generateAttributeName(String label)
   {
-    return this.generateAttributeName(label, "");
+    return this.generateAttributeName(label, "Attribute");
   }
 
   private String generateAttributeName(String label, String suffix)
@@ -147,9 +147,9 @@ public class SourceBuilder
   private String generateViewType(String label)
   {
     // Create a unique name for the view type based upon the name of the sheet
-    String typeName = DataUploader.getSystemName(label, "", true) + "View";
-
     Integer suffix = 0;
+
+    String typeName = DataUploader.getSystemName(label, "Type", true) + "View";
 
     while (!this.isUnique(PACKAGE_NAME, typeName, suffix))
     {

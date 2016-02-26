@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.gis.EmptyLayerInformation;
 import com.runwaysdk.geodashboard.gis.geoserver.GeoserverFacade;
+import com.runwaysdk.geodashboard.gis.model.FeatureType;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
@@ -43,6 +44,18 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
   public UniversalAggregationStrategy()
   {
     super();
+  }
+
+  public String getGeometryColumn(DashboardThematicLayer layer)
+  {
+    if (layer.getFeatureType().equals(FeatureType.POINT))
+    {
+      return GeoEntity.GEOPOINT;
+    }
+    else
+    {
+      return GeoEntity.GEOMULTIPOLYGON;
+    }
   }
 
   @Override
