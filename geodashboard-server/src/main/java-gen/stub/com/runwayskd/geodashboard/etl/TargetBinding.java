@@ -3,30 +3,27 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwayskd.geodashboard.etl;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.geodashboard.MappableClass;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdView;
 
 public class TargetBinding extends TargetBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -50,12 +47,10 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
 
     super.delete();
 
-    MdBusiness targetBusiness = this.getTargetBusiness();
+    MdView mdView = this.getSourceView();
 
-    MappableClass mClass = MappableClass.getMappableClass(MdClassDAO.getMdClassDAO(targetBusiness.definesType()));
-    mClass.delete();
-
-    targetBusiness.delete();
+    ExcelSourceBinding source = ExcelSourceBinding.getBinding(mdView.definesType());
+    source.delete();
   }
 
   public List<TargetFieldBinding> getFields()

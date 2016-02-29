@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard;
 
@@ -49,6 +47,7 @@ import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwayskd.geodashboard.etl.TargetBinding;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -92,6 +91,11 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   @Transaction
   public void delete()
   {
+    MdClass mdClass = this.getWrappedMdClass();
+
+    TargetBinding binding = TargetBinding.getBinding(mdClass.definesType());
+    binding.delete();
+
     OIterator<? extends GeoNode> nodes = this.getAllGeoNode();
 
     try
@@ -108,6 +112,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     super.delete();
+
+    mdClass.delete();
   }
 
   public static MappableClass getMappableClass(String type)
@@ -609,4 +615,24 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
+  public static String getAllAsJSON()
+  {
+    try
+    {
+      JSONArray array = new JSONArray();
+
+      MappableClass[] mClasses = MappableClass.getAll();
+
+      for (MappableClass mClass : mClasses)
+      {
+        array.put(mClass.toJSON());
+      }
+
+      return array.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
 }

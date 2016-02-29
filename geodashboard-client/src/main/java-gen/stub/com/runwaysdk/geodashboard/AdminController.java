@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard;
 
@@ -134,7 +132,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String sessionId = this.getClientSession().getSessionId();
     String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
-    
+
     this.req.setAttribute("response", response);
     this.req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
@@ -182,7 +180,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
-  
+
   @Override
   public void system() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -190,11 +188,11 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String metadataES = "{className:" + EmailSettingDTO.CLASS + ", methodName:'getDefault', declaredTypes: []}";
     String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
     this.req.setAttribute("emailSetting", serializedES);
-    
+
     String metadataUsr = "{className:" + GeodashboardUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
     String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
     this.req.setAttribute("user", serializedUsr);
-    
+
     JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
 
     render("system.jsp");
@@ -202,6 +200,20 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
 
   @Override
   public void failSystem() throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }
+
+  @Override
+  public void datasets() throws IOException, ServletException
+  {
+    JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
+
+    render("datasets.jsp");
+  }
+
+  @Override
+  public void failDatasets() throws IOException, ServletException
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }

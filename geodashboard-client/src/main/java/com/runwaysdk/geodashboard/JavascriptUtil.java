@@ -264,4 +264,12 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
+    
+  public static void loadDatasets(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DataSetController.CLASS);
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
 }
