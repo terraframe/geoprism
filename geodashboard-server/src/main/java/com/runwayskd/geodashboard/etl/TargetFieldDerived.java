@@ -29,6 +29,7 @@ import com.runwaysdk.query.Join;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableGeometry;
+import com.runwaysdk.query.StatementPrimitive;
 import com.runwaysdk.query.Visitor;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -41,22 +42,78 @@ import com.vividsolutions.jts.io.WKTWriter;
 
 public class TargetFieldDerived extends TargetFieldCoordinate implements TargetFieldIF
 {
+  public static class StatementGeometry extends StatementPrimitive
+  {
+    private Geometry  geometry;
+
+    private int       srid;
+
+    private WKTWriter writer;
+
+    public StatementGeometry(Geometry geometry)
+    {
+      this(geometry, geometry.getSRID());
+    }
+
+    public StatementGeometry(Geometry geometry, int srid)
+    {
+      super("");
+
+      this.geometry = geometry;
+      this.srid = srid;
+      this.writer = new WKTWriter();
+    }
+
+    public String getSQL()
+    {
+      return "ST_GeomFromText('SRID=" + this.srid + ";" + this.writer.write(this.geometry) + "')";
+    }
+
+    /**
+     * Returns a Set of TableJoin objects that represent joins statements that are required for this expression.
+     * 
+     * @return Set of TableJoin objects that represent joins statements that are required for this expression, or null
+     *         of there are none.
+     */
+    public Set<Join> getJoinStatements()
+    {
+      return null;
+    }
+
+    /**
+     * Returns a Map representing tables that should be included in the from clause, where the key is the table alias
+     * and the value is the name of the table.
+     * 
+     * @return Map representing tables that should be included in the from clause, where the key is the table alias and
+     *         the value is the name of the table.
+     */
+    public Map<String, String> getFromTableMap()
+    {
+      return null;
+    }
+
+    /**
+     * Visitor to traverse the query object structure.
+     * 
+     * @param visitor
+     */
+    public void accept(Visitor visitor)
+    {
+      visitor.visit(this);
+    }
+
+  }
+
   public static class ST_WITHIN extends Condition
   {
-    private Geometry           geometry;
+    private StatementGeometry  statement;
 
     private SelectableGeometry selectable;
 
-    private WKTWriter          writer;
-
-    private int                srid;
-
     public ST_WITHIN(Geometry geometry, SelectableGeometry selectable)
     {
-      this.geometry = geometry;
+      this.statement = new StatementGeometry(geometry, ( (MdAttributeGeometryDAOIF) selectable.getMdAttributeIF() ).getSRID());
       this.selectable = selectable;
-      this.writer = new WKTWriter();
-      this.srid = ( (MdAttributeGeometryDAOIF) this.selectable.getMdAttributeIF() ).getSRID();
     }
 
     @Override
@@ -79,6 +136,8 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
     public void accept(Visitor visitor)
     {
       visitor.visit(this);
+
+      this.statement.accept(visitor);
     }
 
     /**
@@ -88,7 +147,7 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
      */
     public String getSQL()
     {
-      String statementSQL1 = "ST_GeomFromText('SRID=" + this.srid + ";" + this.writer.write(this.geometry) + "')";
+      String statementSQL1 = this.statement.getSQL();
       String statementSQL2 = this.selectable.getSQL();
 
       return "ST_Within(" + statementSQL1 + ", " + statementSQL2 + ")";
