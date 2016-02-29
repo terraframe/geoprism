@@ -3,157 +3,33 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwayskd.geodashboard.etl;
 
-import java.util.Map;
-import java.util.Set;
-
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
-import com.runwaysdk.query.Condition;
-import com.runwaysdk.query.Join;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.SelectableGeometry;
-import com.runwaysdk.query.StatementPrimitive;
-import com.runwaysdk.query.Visitor;
+import com.runwaysdk.query.ST_WITHIN;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.WKTWriter;
 
 public class TargetFieldDerived extends TargetFieldCoordinate implements TargetFieldIF
 {
-  public static class StatementGeometry extends StatementPrimitive
-  {
-    private Geometry  geometry;
-
-    private int       srid;
-
-    private WKTWriter writer;
-
-    public StatementGeometry(Geometry geometry)
-    {
-      this(geometry, geometry.getSRID());
-    }
-
-    public StatementGeometry(Geometry geometry, int srid)
-    {
-      super("");
-
-      this.geometry = geometry;
-      this.srid = srid;
-      this.writer = new WKTWriter();
-    }
-
-    public String getSQL()
-    {
-      return "ST_GeomFromText('SRID=" + this.srid + ";" + this.writer.write(this.geometry) + "')";
-    }
-
-    /**
-     * Returns a Set of TableJoin objects that represent joins statements that are required for this expression.
-     * 
-     * @return Set of TableJoin objects that represent joins statements that are required for this expression, or null
-     *         of there are none.
-     */
-    public Set<Join> getJoinStatements()
-    {
-      return null;
-    }
-
-    /**
-     * Returns a Map representing tables that should be included in the from clause, where the key is the table alias
-     * and the value is the name of the table.
-     * 
-     * @return Map representing tables that should be included in the from clause, where the key is the table alias and
-     *         the value is the name of the table.
-     */
-    public Map<String, String> getFromTableMap()
-    {
-      return null;
-    }
-
-    /**
-     * Visitor to traverse the query object structure.
-     * 
-     * @param visitor
-     */
-    public void accept(Visitor visitor)
-    {
-      visitor.visit(this);
-    }
-
-  }
-
-  public static class ST_WITHIN extends Condition
-  {
-    private StatementGeometry  statement;
-
-    private SelectableGeometry selectable;
-
-    public ST_WITHIN(Geometry geometry, SelectableGeometry selectable)
-    {
-      this.statement = new StatementGeometry(geometry, ( (MdAttributeGeometryDAOIF) selectable.getMdAttributeIF() ).getSRID());
-      this.selectable = selectable;
-    }
-
-    @Override
-    public Set<Join> getJoinStatements()
-    {
-      return null;
-    }
-
-    @Override
-    public Map<String, String> getFromTableMap()
-    {
-      return null;
-    }
-
-    /**
-     * Visitor to traverse the query object structure.
-     * 
-     * @param visitor
-     */
-    public void accept(Visitor visitor)
-    {
-      visitor.visit(this);
-
-      this.statement.accept(visitor);
-    }
-
-    /**
-     * Returns the SQL representation of this condition.
-     *
-     * @return SQL representation of this condition.
-     */
-    public String getSQL()
-    {
-      String statementSQL1 = this.statement.getSQL();
-      String statementSQL2 = this.selectable.getSQL();
-
-      return "ST_Within(" + statementSQL1 + ", " + statementSQL2 + ")";
-    }
-  }
-
   private GeoEntity country;
 
   private Universal universal;
