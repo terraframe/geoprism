@@ -1,0 +1,34 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdController name="com.runwaysdk.geodashboard.DataSetController" label="Data Set Controller">
+        <mdAction name="getAll" label="Get all data sets" isPost="true" isQuery="false"></mdAction>
+        <mdAction name="remove" label="Remove" isPost="true" isQuery="false">
+          <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+        </mdAction>
+      </mdController>
+    </create>
+    <update>
+      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
+        <create>
+          <mdMethod name="getAllAsJSON" label="Get all as JSON" static="true" returnType="java.lang.String" />
+          <mdMethod name="remove" label="Remove" static="true">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+      <mdController name="com.runwaysdk.geodashboard.AdminController">
+        <create>
+          <mdAction name="datasets" label="Data sets" isPost="false" isQuery="false"></mdAction>
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="com.runwaysdk.geodashboard.AdminController.datasets" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="com.runwaysdk.geodashboard.MappableClass.getAllAsJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="com.runwaysdk.geodashboard.DataSetController" type="com.runwaysdk.system.metadata.MdController" />
+    </delete>
+  </undoIt>
+</version>
