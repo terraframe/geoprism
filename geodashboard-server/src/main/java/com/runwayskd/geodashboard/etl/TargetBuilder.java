@@ -82,7 +82,7 @@ public class TargetBuilder
 
   public static final String EXLUDE       = "EXCLUDE";
 
-  public static final String DERIVED      = "DERIVED";
+  public static final String DERIVE       = "DERIVE";
 
   private JSONObject         configuration;
 
@@ -230,6 +230,8 @@ public class TargetBuilder
         definition.addField(point);
         definition.addField(multiPolygon);
         definition.addField(featureId);
+        definition.addField(location);
+        
 
         // Create the geoNode
         GeoNodeGeometry node = new GeoNodeGeometry();
@@ -283,7 +285,7 @@ public class TargetBuilder
   {
     String location = cCoordinate.getString("location");
 
-    if (location.equals(DERIVED))
+    if (location.equals(DERIVE))
     {
       String label = cCoordinate.getString("label");
       String latitude = cCoordinate.getString("latitude");

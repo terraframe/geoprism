@@ -65,8 +65,11 @@ public class TargetDefinition implements TargetDefinitionIF
 
   public void addField(TargetFieldIF field)
   {
-    this.fieldMap.put(field.getName(), field);
-    this.labelMap.put(field.getLabel(), field);
+    if (!this.fieldMap.containsKey(field.getName()))
+    {
+      this.fieldMap.put(field.getName(), field);
+      this.labelMap.put(field.getLabel(), field);
+    }
   }
 
   @Override
@@ -94,7 +97,7 @@ public class TargetDefinition implements TargetDefinitionIF
     binding.setSourceView(MdView.getMdView(this.sourceType));
     binding.setTargetBusiness(MdBusiness.getMdBusiness(this.targetType));
     binding.apply();
-    
+
     Collection<TargetFieldIF> fields = this.fieldMap.values();
 
     for (TargetFieldIF field : fields)

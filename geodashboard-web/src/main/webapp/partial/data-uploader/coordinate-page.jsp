@@ -114,9 +114,8 @@
               <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.latitude"/> : {{coordinate.latitude}}</li>
               <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.longitude"/> : {{coordinate.longitude}}</li>
               <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.featureLabel"/> : {{coordinate.featureLabel}}</li>
-              <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
-              <li ng-if="coordinate.location != 'DERIVE'"><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
-              <li ng-if="coordinate.location == 'DERIVE'"><gdb:localize key="dataUploader.locationAttribute"/> : <gdb:localize key="dataUploader.deriveLocation"/></li>
+              <li ng-if="coordinate.location != 'DERIVE'"><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
+              <li ng-if="coordinate.location == 'DERIVE'"><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.locationAttribute"/> : <gdb:localize key="dataUploader.deriveLocation"/></li>
             </ul>   
         </div>
       
