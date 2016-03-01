@@ -52,6 +52,10 @@ import com.runwaysdk.geodashboard.ontology.ClassifierController;
 import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabelDTO;
 import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierProblemDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierProblemViewDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelDTO;
 import com.runwaysdk.geodashboard.report.PairViewDTO;
 import com.runwaysdk.geodashboard.report.ReportItemController;
 import com.runwaysdk.geodashboard.report.ReportItemDTO;
@@ -201,7 +205,11 @@ public class JavascriptUtil implements Reloadable
     types.add(ClassifierDisplayLabelDTO.CLASS);
     types.add(ClassifierController.CLASS);
     types.add(TermUtilDTO.CLASS);
+    types.add(ClassifierSynonymDTO.CLASS);
+    types.add(ClassifierSynonymDisplayLabelDTO.CLASS);    
     types.add(ClassifierExportMenuDTO.CLASS);
+    types.add(ClassifierProblemViewDTO.CLASS);
+    types.add(ClassifierProblemDTO.CLASS);
 
     return types;
   }

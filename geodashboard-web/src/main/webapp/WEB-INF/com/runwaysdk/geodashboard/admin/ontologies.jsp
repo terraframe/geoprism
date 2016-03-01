@@ -38,29 +38,46 @@
 
 </head>
 
-<div id="ontologies"></div>
+<div id="tree-container">
+  <div id="tree"></div>
+  <div id="problem-panel">
+    <h4 id="problem-panel-heading"><gdb:localize key="geoEntity.problems.header"/></h4>
+    <ul id="problems-list">
+      <h4 id="problem-panel-noissue-msg" style="display:none;"><gdb:localize key="geoEntity.problems.noproblems-msg"/></h4>
+    </ul>
+  </div>
+</div>
 
 <script type="text/javascript">
-// var $tree = document.getElementById('main-content-frame').contentWindow.document.universaltree.getImpl();
 
-  com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
-    com.runwaysdk.ui.Manager.setFactory("JQuery");
-    
-    document.universaltree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-	  termType : "${type}",
-	  relationshipTypes : [ "${relationshipType}" ],
-      rootTerms : [ {termId : "${rootId}"} ],
-      editable : true,
-      /* checkable: true, */
-      crud: {
-        create: { // This configuration gets merged into the jquery create dialog.
-          height: 290
-        },
-        update: {
-          height: 290
+com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
+  com.runwaysdk.ui.Manager.setFactory("JQuery");
+  
+  var request = new Mojo.ClientRequest({
+    onSuccess: function(views){    
+      var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
+	    termType : "${type}",
+	    relationshipTypes : [ "${relationshipType}" ],
+        rootTerms : [ {termId : "${rootId}"} ],
+        editable : true,
+        /* checkable: true, */
+        crud: {
+          create: { // This configuration gets merged into the jquery create dialog.
+            height: 290
+          },
+          update: {
+            height: 290
+          }
         }
-      }
-    });
-    document.universaltree.render("#ontologies");
+      });
+      tree.renderWithProblems("#tree", views);
+    },
+    onFailure : function(ex) {
+      // TODO fix this to use standard error popup
+      alert("Error reading classifier problems");
+    }
   });
+    
+  com.runwaysdk.geodashboard.ontology.Classifier.getAllProblems(request);      
+});
 </script>

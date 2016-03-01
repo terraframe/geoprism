@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1470642837)
+@com.runwaysdk.business.ClassSignature(hash = 162908360)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -50,7 +50,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1470642837;
+  private static final long serialVersionUID = 162908360;
   
   public ClassifierSynonymBase()
   {
@@ -529,6 +529,12 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   }
   
   public static com.runwaysdk.geodashboard.ontology.ClassifierSynonym create(com.runwaysdk.geodashboard.ontology.Classifier classifier, com.runwaysdk.geodashboard.ontology.ClassifierSynonym synonym)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonym.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.business.ontology.TermAndRel createSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonym synonym, java.lang.String classifierId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonym.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

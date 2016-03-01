@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1487910635)
+@com.runwaysdk.business.ClassSignature(hash = -1028343992)
 public abstract class ClassifierSynonymDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonym";
-  private static final long serialVersionUID = -1487910635;
+  private static final long serialVersionUID = -1028343992;
   
   protected ClassifierSynonymDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -485,6 +485,14 @@ public abstract class ClassifierSynonymDTOBase extends com.runwaysdk.business.on
     Object[] _parameters = new Object[]{classifier, synonym};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO.CLASS, "create", _declaredTypes);
     return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final com.runwaysdk.business.ontology.TermAndRelDTO createSynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO synonym, java.lang.String classifierId)
+  {
+    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.ontology.ClassifierSynonym", "java.lang.String"};
+    Object[] _parameters = new Object[]{synonym, classifierId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO.CLASS, "createSynonym", _declaredTypes);
+    return (com.runwaysdk.business.ontology.TermAndRelDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   @SuppressWarnings("unchecked")

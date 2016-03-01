@@ -47,8 +47,7 @@
     "cancel" : "Cancel",
     "mergeTitle" : "Merge confirmation",
     "accept" : "Confirm as new location",
-    "noproblems-msg" : "There are no known geoentity issues"
-    	
+    "noproblems-msg" : "There are no known geoentity issues"    	
   });
   
   Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.RefreshQueue', {
@@ -198,17 +197,20 @@
           }
         }).render();
       },
+      
       __onHideSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
         this.getImpl().tree("removeNode", targetNode.data.synonymNode);
         targetNode.data.synonymNode = null;
       },
+      
       __onRefreshSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
         this.refreshTerm(this.__getRunwayIdFromNode(targetNode));
       },
+      
       __onUpdateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
         var targetNode = contextMenu.getTarget();
@@ -241,6 +243,7 @@
           }
         }).render();
       },
+      
       __onDeleteSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
         var targetNode = contextMenu.getTarget();
@@ -265,6 +268,7 @@
           }
         }).render();
       },
+      
       /**
        * Creates the "Synonyms" node and then loads the synonyms under it.
        */
@@ -504,23 +508,22 @@
       __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
        
         var problemId = "";
-       var hasProblem = this.hasProblem(childId);
+        var hasProblem = this.hasProblem(childId);
         if(hasProblem){
          problemId = $(".geoent-problem-error-li[data-entity='"+childId+"']").data("id");
-       }
+        }
         
-       if(config){
+        if(config){
          config.hasProblem = hasProblem;
          config.problemId = problemId
-       }
-       else{
-         var config = {};
-         config.hasProblem = hasProblem;
-         config.problemId = problemId
-       }
+        }
+        else{
+          var config = {};
+          config.hasProblem = hasProblem;
+          config.problemId = problemId
+        }
        
         var node = this.$__createTreeNode(childId, parentNode, hasFetched, config, hide);
-
       },
       
       _refreshProblems : function(termId) {
@@ -578,6 +581,9 @@
         return (problem.length > 0);
       },
       
+      /**
+       * OVERRIDE
+       */
       _handleUpdateTerm : function (termId, responseObj) {
         var that = this;
           
@@ -590,7 +596,10 @@
           
         this.refreshEntityProblems(callback);
       },
-      
+
+      /**
+       * OVERRIDE
+       */
       _handleCreateTerm : function (parentId, parentNodes, responseObj) {
         var that = this;
         
@@ -601,7 +610,10 @@
         
         this.refreshEntityProblems(callback);
       },
-      
+
+      /**
+       * OVERRIDE
+       */
       refreshTreeAfterDeleteTerm : function(termId) {
         var that = this;
         

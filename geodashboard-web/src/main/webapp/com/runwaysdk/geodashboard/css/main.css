@@ -3752,6 +3752,58 @@ div.secondary-box label {
 	background: rgb(244, 244, 184);
 }
 
+.classifier-problem-msg-icon{
+	font-size: 15px;
+}
+
+.classifierity-problem-tooltip{
+	background: rgb(254, 236, 239) !important;
+}
+
+.classifier-problem-msg{
+	display: inline-block;
+	margin: 0;
+}
+
+.classifier-problem-error::before{
+	color: red;
+}
+
+.classifier-problem-warn::before{
+	color: orange;
+}
+
+.classifier-problem-error-li{
+	background: rgb(254, 236, 239);
+	cursor: pointer;
+}
+
+.classifier-problem-error-li:hover{
+	background: rgb(245, 171, 184);
+}
+
+.classifier-problem-error-li > a:hover{
+	color: red;
+}
+
+.classifier-problem-error-li > a:focus{
+	color: red;
+}
+
+.classifier-problem-warn-li{
+	background: lightyellow;
+	cursor: pointer;
+}
+
+.classifier-problem-warn-li:hover{
+	background: rgb(244, 244, 184);
+}
+
+.fa.fa-times-circle.classifier-problem-msg-icon.classifier-problem-error{
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
 #category-point-radius-block{
   margin-top: 30px;
   margin-left: 0px;
