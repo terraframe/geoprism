@@ -83,7 +83,6 @@
         this._config = config;
         
         config.exportMenuType = "com.runwaysdk.geodashboard.gis.ClassifierExportMenu";
-        config.onCreateLi = Mojo.Util.bind(this, this.__onCreateLi);        
         
         this.$initialize(config);
         
@@ -132,7 +131,7 @@
               
           if(problem.length > 0) {
             var problemId = problem.data('id');
-            var termId = problem.data('entity');
+            var termId = problem.data('classifier');
               
             items.push({label:this.localize("accept"), id:"accept", handler:function(){that.deleteProblem(termId, problemId);}}); 
           }
@@ -470,7 +469,7 @@
        *
        **/      
       hasProblem : function(termId) {
-        var problem = $(".geoent-problem-error-li[data-entity='"+termId+"']");
+        var problem = $(".classifier-problem-error-li[data-classifier='"+termId+"']");
             
         return (problem.length > 0);
       },
@@ -481,7 +480,7 @@
         var hasProblem = this.hasProblem(childId);
         
         if(hasProblem){
-         problemId = $(".classifier-problem-error-li[data-entity='"+childId+"']").data("id");
+         problemId = $(".classifier-problem-error-li[data-classifier='"+childId+"']").data("id");
         }
         
         if(config){
@@ -583,28 +582,6 @@
           that.focusTerm(classifierId);
         });        
       },      
-      
-      __onCreateLi : function(node, $li) {
-        if (!node.phantom) {
-          if(node.hasProblem){
-            var msg = "";
-            var msgEls = $("#problems-list").find('[data-classifier="'+node.runwayId+'"]');
-            for(var i=0; i<msgEls.length; i++){
-              var msgEl = msgEls[i];
-              msg +=  i+1 + "." + "&nbsp;&nbsp;" + $(msgEl).find(".classifier-problem-msg").text(); // gets the message from the problems panel
-              if(i < msgEls.length - 1){
-                msg += "<br/><br/>";
-              }
-            }
-            $li.find("span").parent().append("<i data-problemid='"+ node.problemId +"' data-classifier='"+ node.runwayId +"' class='fa fa-times-circle classifier-problem-msg-icon classifier-problem-error'></i>");
-            $li.find("i").tooltip({
-              items: "i",
-              content: msg,
-              tooltipClass: "geoentity-problem-tooltip"
-            });
-          }
-        }
-      },
       
       focusTerm : function(termId) {
         var that = this;

@@ -56,8 +56,8 @@ com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
   var request = new Mojo.ClientRequest({
     onSuccess: function(views){    
       var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-	    termType : "${type}",
-	    relationshipTypes : [ "${relationshipType}" ],
+  	    termType : "${type}",
+	      relationshipTypes : [ "${relationshipType}" ],
         rootTerms : [ {termId : "${rootId}"} ],
         editable : true,
         /* checkable: true, */
@@ -67,6 +67,28 @@ com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
           },
           update: {
             height: 290
+          }
+        },
+        onCreateLi : function(node, $li) {
+          if (!node.phantom) {
+            if(node.hasProblem){
+              var msg = "";
+              var msgEls = $("#problems-list").find('[data-classifier="'+node.runwayId+'"]');
+              
+              for(var i=0; i<msgEls.length; i++){
+                var msgEl = msgEls[i];
+                msg +=  i+1 + "." + "&nbsp;&nbsp;" + $(msgEl).find(".classifier-problem-msg").text(); // gets the message from the problems panel
+                if(i < msgEls.length - 1){
+                  msg += "<br/><br/>";
+                }
+              }
+              $li.find("span").parent().append("<i data-problemid='"+ node.problemId +"' data-classifier='"+ node.runwayId +"' class='fa fa-times-circle classifier-problem-msg-icon classifier-problem-error'></i>");
+              $li.find("i").tooltip({
+                items: "i",
+                content: msg,
+                tooltipClass: "geoentity-problem-tooltip"
+              });
+            }
           }
         }
       });
