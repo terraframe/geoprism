@@ -46,7 +46,7 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
     {
       MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
 
-      Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm);
+      Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm, true);
 
       return classifier.getId();
     }

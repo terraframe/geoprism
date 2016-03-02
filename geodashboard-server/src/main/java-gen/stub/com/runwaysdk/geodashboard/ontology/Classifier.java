@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package com.runwaysdk.geodashboard.ontology;
 
@@ -45,7 +43,6 @@ import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -92,7 +89,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   {
     return Classifier.buildKey(this.getClassifierPackage(), this.getClassifierId());
   }
-  
+
   @Override
   @Transaction
   public void delete()
@@ -249,6 +246,23 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   @Transaction
   public static Classifier findClassifierAddIfNotExist(String packageString, String classifierLabel, MdAttributeTermDAOIF mdAttributeTermDAO)
   {
+    return Classifier.findClassifierAddIfNotExist(packageString, classifierLabel, mdAttributeTermDAO, false);
+  }
+
+  /**
+   * Finds the classifier with the given label for the given term attribute. If the classifier does not exist, then it
+   * is created.
+   * 
+   * @param packageString
+   * @param classifierLabel
+   * @param mdAttributeTermDAO
+   * @param createProblem
+   *          Flag indicating if a ClassifierProblem should be created when a new classifier is created
+   * @return
+   */
+  @Transaction
+  public static Classifier findClassifierAddIfNotExist(String packageString, String classifierLabel, MdAttributeTermDAOIF mdAttributeTermDAO, boolean createProblem)
+  {
     Classifier classifier = findMatchingTerm(classifierLabel, mdAttributeTermDAO);
 
     if (classifier == null)
@@ -258,9 +272,12 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       classifier.setClassifierId(classifierLabel);
       classifier.setClassifierPackage(packageString);
       classifier.apply();
-      
+
       // Create a new Classifier problem
-      ClassifierProblem.createProblems(classifier, ClassifierProblemType.UNMATCHED);
+      if (createProblem)
+      {
+        ClassifierProblem.createProblems(classifier, ClassifierProblemType.UNMATCHED);
+      }
 
       QueryFactory qf = new QueryFactory();
 
