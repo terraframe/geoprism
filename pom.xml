@@ -25,19 +25,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.runwaysdk</groupId>
-  <artifactId>geodashboard</artifactId>
+  <artifactId>geoprism</artifactId>
   <version>1.01.0005</version>
   <packaging>pom</packaging>
 
   <name>Geo dashboard</name>
-  <description>The root pom for geodashboard.</description>
+  <description>The root pom for geoprism.</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
 
   <modules>
-    <module>geodashboard-server</module>
-    <module>geodashboard-common</module>
-    <module>geodashboard-client</module>
-    <module>geodashboard-web</module>
+    <module>geoprism-server</module>
+    <module>geoprism-common</module>
+    <module>geoprism-client</module>
+    <module>geoprism-web</module>
   </modules>
 
   <properties>

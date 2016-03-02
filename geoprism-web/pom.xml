@@ -1,0 +1,402 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.runwaysdk</groupId>
+    <artifactId>geoprism</artifactId>
+    <version>1.01.0005</version>
+  </parent>
+  <artifactId>geoprism-web</artifactId>
+  <packaging>war</packaging>
+
+  <name>Geo dashboard Web</name>
+  <description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
+
+  <properties>
+    <geoserver.version>2.5.0.1</geoserver.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>geoprism-common</artifactId>
+      <version>1.01.0005</version>
+    </dependency>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>geoprism-client</artifactId>
+      <version>1.01.0005</version>
+    </dependency>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>geoprism-server</artifactId>
+      <version>1.01.0005</version>
+    </dependency>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>runwaysdk-gis-web</artifactId>
+      <version>2.0.8</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>net.jawr</groupId>
+      <artifactId>jawr-core</artifactId>
+      <version>3.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.asual.lesscss</groupId>
+      <artifactId>lesscss-engine</artifactId>
+      <version>1.3.3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>rhino</artifactId>
+          <groupId>org.mozilla</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+      <version>2.1</version>
+      <scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>geoserver</artifactId>
+      <version>${geoserver.version}</version>
+      <type>war</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>package-deployable</id>
+      <activation>
+        <property>
+          <name>package-deployable</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+              <packagingExcludes>
+                <!-- Source/class project jars must be excluded for reloaded to work -->
+                **/*geoprism-common*.jar,
+                **/*geoprism-client*.jar,
+                **/*geoprism-server*.jar,
+                <!-- Exclude all jars provided by tomcat -->
+                **/*catalina*.jar,
+                **/*servlet-api*.jar,
+                **/*annotations-api*.jar
+              </packagingExcludes>
+              <webResources>
+                <resource>
+                  <directory>src/deployed/resources</directory>
+                  <targetPath>WEB-INF/classes</targetPath>
+                  <filtering>true</filtering>
+                </resource>
+                <resource>
+                  <directory>src/deployed/ebextensions</directory>
+                  <targetPath>.ebextensions</targetPath>
+                  <filtering>false</filtering>
+                </resource>
+                <!-- <resource> <directory>src/main/resources</directory> </resource> -->
+              </webResources>              
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>geodash-cargo-run</id>
+      <activation>
+        <property>
+          <name>geodash-cargo-run</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.4.15</version>
+            <executions>
+              <execution>
+                <id>geodash-cargo-run</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <container>
+                <timeout>480000</timeout>
+                <containerId>tomcat8x</containerId>
+                <zipUrlInstaller>
+                  <url>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.zip</url>
+                </zipUrlInstaller>
+              </container>
+              <configuration>
+                <properties>
+                  <cargo.servlet.port>8443</cargo.servlet.port>
+                  <cargo.protocol>https</cargo.protocol>
+                  <cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
+                  <cargo.tomcat.connector.sslProtocol>TLSv1,TLSv1.1,TLSv1.2</cargo.tomcat.connector.sslProtocol>
+                  <cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
+                  <cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
+                  <cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
+                  <cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
+                  <cargo.jvmargs>
+                    -Xmx5120M
+                    -server
+                    -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
+                    -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
+                    -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
+                    -Djavax.net.ssl.trustStore=/${project.basedir}/src/test/resources/tomcat.truststore
+                    -Djavax.net.ssl.trustStorePassword=2v8hVW2rPFncN6m
+                    -Djava.rmi.server.hostname=127.0.0.1                    
+                  </cargo.jvmargs>
+                </properties>
+              </configuration>
+              <deployables>
+                <deployable>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-web</artifactId>
+                  <type>war</type>
+                  <properties>
+                    <context>geoprism</context>
+                  </properties>
+                </deployable>
+                <deployable>
+                  <groupId>org.geoserver</groupId>
+                  <artifactId>geoserver</artifactId>
+                  <type>war</type>
+                  <properties>
+                    <context>geoserver</context>
+                  </properties>
+                </deployable>
+              </deployables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <!-- Just for convenience, this stops us from having to add the version when we hit our webapp. -->
+    <finalName>geoprism</finalName>
+
+    <!-- This tells maven to resolve variables in our properties files. -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <!-- Weave Aspects -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>${aspectj.plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <aspectLibraries>
+            <aspectLibrary>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-common</artifactId>
+            </aspectLibrary>
+            <aspectLibrary>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-server</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <complianceLevel>${maven.compiler.target}</complianceLevel>
+          <fork>true</fork>
+          <meminitial>512m</meminitial>
+          <maxmem>1024m</maxmem>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <complianceLevel>${maven.compiler.target}</complianceLevel>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <packagingExcludes>
+            <!-- Source/class project jars must be excluded for reloaded to work -->
+            **/*geoprism-common*.jar,
+            **/*geoprism-client*.jar,
+            **/*geoprism-server*.jar,
+            <!-- Exclude all jars provided by tomcat -->
+            **/*catalina*.jar,
+            **/*servlet-api*.jar,
+            **/*annotations-api*.jar
+          </packagingExcludes>
+          <webResources>
+            <resource>
+              <directory>src/main/resources</directory>
+            </resource>
+          </webResources>
+          <overlays>
+            <overlay>
+              <!-- empty groupId/artifactId represents the current build -->
+            </overlay>
+            <overlay>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-gis-web</artifactId>
+            </overlay>
+          </overlays>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.8</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-common</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <excludes>**/*.java,**/*.properties</excludes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-client</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <excludes>**/*.java,**/*.properties</excludes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-server</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <excludes>**/*.java,**/*.properties</excludes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-common</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+                  <includes>**/*.java</includes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-client</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+                  <includes>**/*.java</includes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-server</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
+                  <includes>**/*.java</includes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.runwaysdk</groupId>
+                  <artifactId>geoprism-server</artifactId>
+                  <version>1.01.0005</version>
+                  <type>jar</type>
+                  <includes>**/messages*.properties,**/geoserver*.properties</includes>
+                </artifactItem>
+              </artifactItems>
+              <includes>**/*</includes>
+              <excludes></excludes>
+              <outputDirectory>${project.build.directory}/classes</outputDirectory>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/webapp/WEB-INF/source</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
