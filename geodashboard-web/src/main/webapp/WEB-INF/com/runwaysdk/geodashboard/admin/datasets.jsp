@@ -18,22 +18,70 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <head>
 
-<gdb:localize var="page_title" key="datasets.title"/>
+  <gdb:localize var="page_title" key="dataset.title"/>
 
-  <!-- Ontologies CSS -->
-  <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
-
-  <!-- Ontologies Javascript -->
-  <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-  <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
-  <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
+  <!-- Datasets Javascript -->
+  <jwr:script src="/bundles/datasets.js" useRandomParam="false"/>
 
   <script type="text/javascript">${js}</script>
-
+  
 </head>
+
+
+<div id="app-container" class="container" ng-app="data-set" ng-controller="DatasetController as ctrl">
+
+  <h2> <gdb:localize key="dataset.title"/> </h2>
+  
+  <div ng-if="errors.length > 0" class="error-container">
+    <div class="label-holder">
+      <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
+    </div>
+    <div class="holder">
+      <div ng-repeat="error in errors">
+        <p class="error-message">{{error}}</p>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-bordered table-striped">    
+    <thead>
+      <tr>
+        <td>
+        </td>      
+        <td>
+          <gdb:localize key="dataset.label"/>
+        </td>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <tr ng-repeat="dataset in datasets">
+        <td>
+          <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
+        </td>
+        <td>{{ dataset.label }}</td>
+      </tr>
+    </tbody>    
+  </table>
+  
+  <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
+    <div class="drop-box">
+      <div class="inner-drop-box">
+        <i class="fa fa-cloud-upload">
+          <p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
+        </i>
+      </div>
+    </div>
+  </div>
+  
+  <uploader-dialog></uploader-dialog>  
+</div>
+
+<script type="text/javascript">
+  com.runwaysdk.ui.Manager.setFactory("JQuery");
+</script>

@@ -43,6 +43,11 @@
         </create>
       </mdController>
     </update>
+    <permissions>
+      <method methodName="remove" type="com.runwaysdk.geodashboard.MappableClass">
+        <assignedRole roleName="Administrator"/>
+      </method>    
+    </permissions>    
   </doIt>
   <undoIt>
     <delete>

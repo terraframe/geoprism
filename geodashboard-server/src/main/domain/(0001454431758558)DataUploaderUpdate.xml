@@ -37,6 +37,11 @@
         </create>
       </mdController>
     </update>
+    <permissions>    
+      <method methodName="importData" type="com.runwaysdk.geodashboard.DataUploader">
+        <assignedRole roleName="Administrator"/>
+      </method>    
+    </permissions>
   </doIt>
   <undoIt>
     <delete>

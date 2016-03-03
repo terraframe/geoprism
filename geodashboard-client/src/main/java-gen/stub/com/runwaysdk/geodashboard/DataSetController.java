@@ -53,4 +53,21 @@ public class DataSetController extends DataSetControllerBase implements com.runw
       JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
     }
   }
+
+  @Override
+  public void remove(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      MappableClassDTO.remove(request, id);
+      
+      JSONControllerUtil.writeReponse(this.resp, "");
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
 }

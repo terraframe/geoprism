@@ -209,7 +209,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void datasets() throws IOException, ServletException
   {
-    JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
+    JavascriptUtil.loadDatasets(this.getClientRequest(), this.req);
 
     render("datasets.jsp");
   }

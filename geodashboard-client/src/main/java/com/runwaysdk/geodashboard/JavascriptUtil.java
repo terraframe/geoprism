@@ -277,6 +277,7 @@ public class JavascriptUtil implements Reloadable
   {
     Set<String> types = new HashSet<String>();
     types.add(DataSetController.CLASS);
+    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.BusinessInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -636,5 +637,13 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void remove(String id)
+  {
+    MappableClass mClass = MappableClass.get(id);
+    mClass.delete();
   }
 }

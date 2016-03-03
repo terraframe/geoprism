@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function DataService(runwayService) {
+  function DatasetService(runwayService) {
     var service = {};
     
     service.uploadSpreadsheet = function(file, element, onSuccess, onFailure) {      
@@ -54,10 +54,22 @@
       com.runwaysdk.geodashboard.DataUploaderController.importData(request, JSON.stringify(configuration));
     }
     
+    service.getAll = function(onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+    
+      com.runwaysdk.geodashboard.DataSetController.getAll(request);
+    }
+    
+    service.remove = function(id, element, success, onFailure) {
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
+      
+      com.runwaysdk.geodashboard.DataSetController.remove(request, id);
+    }
+    
     return service;  
   }
   
-  angular.module("data-service", ["runway-service"]);
-  angular.module("data-service")
-    .factory('dataService', DataService)
+  angular.module("dataset-service", ["runway-service"]);
+  angular.module("dataset-service")
+    .factory('datasetService', DatasetService)
 })();
