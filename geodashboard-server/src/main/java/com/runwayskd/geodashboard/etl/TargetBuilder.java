@@ -53,6 +53,8 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.geodashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.geodashboard.GeoEntityUtil;
 import com.runwaysdk.geodashboard.MappableClass;
@@ -260,6 +262,17 @@ public class TargetBuilder
     for (GeoNode node : nodes)
     {
       mClass.addGeoNode(node).apply();
+    }
+    
+
+    /*
+     * Assign permissions
+     */
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.configurePermissions(mdBusiness);
     }
 
     return definition;

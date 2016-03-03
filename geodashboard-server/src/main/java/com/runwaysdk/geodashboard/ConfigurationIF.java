@@ -21,6 +21,7 @@ package com.runwaysdk.geodashboard;
 import java.util.Collection;
 import java.util.Set;
 
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.generation.loader.Reloadable;
 
 /**
@@ -53,6 +54,13 @@ public interface ConfigurationIF extends Reloadable
    * @param roleIds
    */
   public void configureUserRoles(Set<String> roleIds);
+
+  /**
+   * Configures the permissions given to a MdClass on generation
+   * 
+   * @param mdClass
+   */
+  public void configurePermissions(MdClassDAOIF mdClass);
 
   /**
    * Check is the user has access to some system functionality

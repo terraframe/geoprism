@@ -18,6 +18,8 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +32,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdViewDAO;
+import com.runwaysdk.geodashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.ConfigurationService;
 import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdViewQuery;
@@ -105,6 +109,16 @@ public class SourceBuilder
       SourceFieldIF field = this.createMdAttribute(mdView, cField);
 
       definition.addField(field);
+    }
+
+    /*
+     * Assign permissions
+     */
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.configurePermissions(mdView);
     }
 
     return definition;
