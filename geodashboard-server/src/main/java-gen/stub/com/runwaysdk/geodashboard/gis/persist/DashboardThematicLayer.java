@@ -107,6 +107,9 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     {
       existing.delete();
     }
+    
+    // Validate thtat the style is able to generate its SLD correctly
+    style.generateSLD();
   }
 
   @Override
