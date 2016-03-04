@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1487910635)
+@com.runwaysdk.business.ClassSignature(hash = 1395507552)
 public abstract class ClassifierSynonymDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonym";
-  private static final long serialVersionUID = -1487910635;
+  public final static String CLASS = "net.geoprism.ontology.ClassifierSynonym";
+  private static final long serialVersionUID = 1395507552;
   
   protected ClassifierSynonymDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -481,7 +481,7 @@ public abstract class ClassifierSynonymDTOBase extends com.runwaysdk.business.on
   
   public static final net.geoprism.ontology.ClassifierSynonymDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.ontology.ClassifierDTO classifier, net.geoprism.ontology.ClassifierSynonymDTO synonym)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.ontology.Classifier", "com.runwaysdk.geodashboard.ontology.ClassifierSynonym"};
+    String[] _declaredTypes = new String[]{"net.geoprism.ontology.Classifier", "net.geoprism.ontology.ClassifierSynonym"};
     Object[] _parameters = new Object[]{classifier, synonym};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierSynonymDTO.CLASS, "create", _declaredTypes);
     return (net.geoprism.ontology.ClassifierSynonymDTO) clientRequest.invokeMethod(_metadata, null, _parameters);

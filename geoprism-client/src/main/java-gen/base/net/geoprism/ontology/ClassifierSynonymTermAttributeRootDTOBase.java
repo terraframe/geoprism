@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1256389901)
+@com.runwaysdk.business.ClassSignature(hash = 1877683091)
 public abstract class ClassifierSynonymTermAttributeRootDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot";
-  private static final long serialVersionUID = -1256389901;
+  public final static String CLASS = "net.geoprism.ontology.ClassifierSynonymTermAttributeRoot";
+  private static final long serialVersionUID = 1877683091;
   
   public ClassifierSynonymTermAttributeRootDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

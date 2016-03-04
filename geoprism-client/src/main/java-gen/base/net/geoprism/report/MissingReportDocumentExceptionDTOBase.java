@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1587435101)
+@com.runwaysdk.business.ClassSignature(hash = 928678268)
 public abstract class MissingReportDocumentExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.MissingReportDocumentException";
-  private static final long serialVersionUID = -1587435101;
+  public final static String CLASS = "net.geoprism.report.MissingReportDocumentException";
+  private static final long serialVersionUID = 928678268;
   
   public MissingReportDocumentExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

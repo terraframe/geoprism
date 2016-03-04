@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.GeometryAggregationStrategy;
-
-@com.runwaysdk.business.ClassSignature(hash = -250280)
+@com.runwaysdk.business.ClassSignature(hash = -1568076446)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,8 +28,8 @@ import net.geoprism.dashboard.GeometryAggregationStrategy;
  */
 public abstract class GeometryAggregationStrategyBase extends net.geoprism.dashboard.AggregationStrategy implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy";
-  private static final long serialVersionUID = -250280;
+  public final static String CLASS = "net.geoprism.dashboard.GeometryAggregationStrategy";
+  private static final long serialVersionUID = -1568076446;
   
   public GeometryAggregationStrategyBase()
   {

@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1324690889)
+@com.runwaysdk.business.ClassSignature(hash = 538458238)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.report;
  */
 public abstract class ReportRenderExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportRenderException";
+  public final static String CLASS = "net.geoprism.report.ReportRenderException";
   public static java.lang.String ERRORMESSAGE = "errorMessage";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1324690889;
+  private static final long serialVersionUID = 538458238;
   
   public ReportRenderExceptionBase()
   {
@@ -63,10 +63,10 @@ public abstract class ReportRenderExceptionBase extends com.runwaysdk.business.S
     this.validateAttribute(ERRORMESSAGE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getErrorMessageMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getErrorMessageMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportRenderException.CLASS);
-    return mdClassIF.definesAttribute(ERRORMESSAGE);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(ERRORMESSAGE);
   }
   
   public void setErrorMessage(String value)
@@ -91,10 +91,10 @@ public abstract class ReportRenderExceptionBase extends com.runwaysdk.business.S
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportRenderException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()

@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 915769137)
+@com.runwaysdk.business.ClassSignature(hash = 1974838112)
 public abstract class DashboardStateDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.DashboardState";
-  private static final long serialVersionUID = 915769137;
+  public final static String CLASS = "net.geoprism.DashboardState";
+  private static final long serialVersionUID = 1974838112;
   
   protected DashboardStateDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -45,12 +45,12 @@ public abstract class DashboardStateDTOBase extends com.runwaysdk.business.Busin
     return CLASS;
   }
   
+  public static java.lang.String GEOPRISMUSER = "GeoprismUser";
   public static java.lang.String CONDITIONS = "conditions";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String GEOPRISMUSER = "geodashboardUser";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -61,6 +61,55 @@ public abstract class DashboardStateDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
+  public net.geoprism.GeoprismUserDTO getGeoprismUser()
+  {
+    if(getValue(GEOPRISMUSER) == null || getValue(GEOPRISMUSER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return net.geoprism.GeoprismUserDTO.get(getRequest(), getValue(GEOPRISMUSER));
+    }
+  }
+  
+  public String getGeoprismUserId()
+  {
+    return getValue(GEOPRISMUSER);
+  }
+  
+  public void setGeoprismUser(net.geoprism.GeoprismUserDTO value)
+  {
+    if(value == null)
+    {
+      setValue(GEOPRISMUSER, "");
+    }
+    else
+    {
+      setValue(GEOPRISMUSER, value.getId());
+    }
+  }
+  
+  public boolean isGeoprismUserWritable()
+  {
+    return isWritable(GEOPRISMUSER);
+  }
+  
+  public boolean isGeoprismUserReadable()
+  {
+    return isReadable(GEOPRISMUSER);
+  }
+  
+  public boolean isGeoprismUserModified()
+  {
+    return isModified(GEOPRISMUSER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeoprismUserMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEOPRISMUSER).getAttributeMdDTO();
+  }
+  
   public String getConditions()
   {
     return getValue(CONDITIONS);
@@ -256,55 +305,6 @@ public abstract class DashboardStateDTOBase extends com.runwaysdk.business.Busin
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getEntityDomainMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
-  }
-  
-  public net.geoprism.GeoprismUserDTO getGeoprismUser()
-  {
-    if(getValue(GEOPRISMUSER) == null || getValue(GEOPRISMUSER).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return net.geoprism.GeoprismUserDTO.get(getRequest(), getValue(GEOPRISMUSER));
-    }
-  }
-  
-  public String getGeoprismUserId()
-  {
-    return getValue(GEOPRISMUSER);
-  }
-  
-  public void setGeoprismUser(net.geoprism.GeoprismUserDTO value)
-  {
-    if(value == null)
-    {
-      setValue(GEOPRISMUSER, "");
-    }
-    else
-    {
-      setValue(GEOPRISMUSER, value.getId());
-    }
-  }
-  
-  public boolean isGeoprismUserWritable()
-  {
-    return isWritable(GEOPRISMUSER);
-  }
-  
-  public boolean isGeoprismUserReadable()
-  {
-    return isReadable(GEOPRISMUSER);
-  }
-  
-  public boolean isGeoprismUserModified()
-  {
-    return isModified(GEOPRISMUSER);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeoprismUserMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEOPRISMUSER).getAttributeMdDTO();
   }
   
   public String getKeyName()

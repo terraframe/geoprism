@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardReferenceLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = -1328161896)
+@com.runwaysdk.business.ClassSignature(hash = -807912030)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,9 +28,9 @@ import net.geoprism.dashboard.DashboardReferenceLayer;
  */
 public abstract class DashboardReferenceLayerBase extends net.geoprism.dashboard.DashboardLayer implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardReferenceLayer";
   public static java.lang.String UNIVERSAL = "universal";
-  private static final long serialVersionUID = -1328161896;
+  private static final long serialVersionUID = -807912030;
   
   public DashboardReferenceLayerBase()
   {
@@ -103,7 +101,7 @@ public abstract class DashboardReferenceLayerBase extends net.geoprism.dashboard
   
   public static java.lang.String getOptionsJSON(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardReferenceLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

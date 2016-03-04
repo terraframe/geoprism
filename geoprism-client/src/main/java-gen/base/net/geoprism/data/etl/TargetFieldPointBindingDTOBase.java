@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -564263639)
+@com.runwaysdk.business.ClassSignature(hash = -1461162586)
 public abstract class TargetFieldPointBindingDTOBase extends net.geoprism.data.etl.TargetFieldCoordinateBindingDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldPointBinding";
-  private static final long serialVersionUID = -564263639;
+  public final static String CLASS = "net.geoprism.data.etl.TargetFieldPointBinding";
+  private static final long serialVersionUID = -1461162586;
   
   protected TargetFieldPointBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

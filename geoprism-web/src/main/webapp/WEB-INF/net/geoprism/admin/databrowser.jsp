@@ -29,7 +29,7 @@
 <!-- Databrowser CSS -->
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/databrowser/databrowser.css" useRandomParam="false"/>  
+<jwr:style src="/net/geoprism/data/browser/databrowser.css" useRandomParam="false"/>  
 <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
 
 <!-- Databrowser Javascript -->

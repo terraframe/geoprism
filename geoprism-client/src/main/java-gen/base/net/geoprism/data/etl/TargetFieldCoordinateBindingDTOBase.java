@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -372760436)
-public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.data.etl.TargetFieldBasicBindingDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = 1115048969)
+public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.data.etl.TargetFieldBindingDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding";
-  private static final long serialVersionUID = -372760436;
+  public final static String CLASS = "net.geoprism.data.etl.TargetFieldCoordinateBinding";
+  private static final long serialVersionUID = 1115048969;
   
   protected TargetFieldCoordinateBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

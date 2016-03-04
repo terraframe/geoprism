@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 544730401)
+@com.runwaysdk.business.ClassSignature(hash = 75223378)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.data.etl;
 public class TargetFieldMultiPolygonBindingQueryDTO extends net.geoprism.data.etl.TargetFieldCoordinateBindingQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 544730401;
+private static final long serialVersionUID = 75223378;
 
   protected TargetFieldMultiPolygonBindingQueryDTO(String type)
   {

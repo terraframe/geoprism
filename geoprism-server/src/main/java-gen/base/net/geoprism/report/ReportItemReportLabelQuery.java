@@ -18,9 +18,7 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportItemReportLabel;
-
-@com.runwaysdk.business.ClassSignature(hash = 1848180739)
+@com.runwaysdk.business.ClassSignature(hash = 1627236700)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

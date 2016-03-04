@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.DataUploader;
-
-@com.runwaysdk.business.ClassSignature(hash = -1474209786)
+@com.runwaysdk.business.ClassSignature(hash = -284480929)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,9 +28,9 @@ import net.geoprism.DataUploader;
  */
 public abstract class DataUploaderBase extends com.runwaysdk.business.Util implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.DataUploader";
+  public final static String CLASS = "net.geoprism.DataUploader";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1474209786;
+  private static final long serialVersionUID = -284480929;
   
   public DataUploaderBase()
   {
@@ -67,19 +65,19 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
   
   public static java.lang.String getAttributeInformation(java.lang.String fileName, java.io.InputStream fileStream)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploader.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getOptionsJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploader.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String importData(java.lang.String configuration)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploader.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

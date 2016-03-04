@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -334821747)
+@com.runwaysdk.business.ClassSignature(hash = -419070479)
 public abstract class UniversalAttributeBindingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.UniversalAttributeBinding";
-  private static final long serialVersionUID = -334821747;
+  public final static String CLASS = "net.geoprism.data.etl.UniversalAttributeBinding";
+  private static final long serialVersionUID = -419070479;
   
   protected UniversalAttributeBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

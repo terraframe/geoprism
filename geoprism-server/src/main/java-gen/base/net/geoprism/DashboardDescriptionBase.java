@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.DashboardDescription;
-
-@com.runwaysdk.business.ClassSignature(hash = -180198557)
+@com.runwaysdk.business.ClassSignature(hash = -1068172932)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,12 +28,12 @@ import net.geoprism.DashboardDescription;
  */
 public abstract class DashboardDescriptionBase extends com.runwaysdk.business.LocalStruct implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.DashboardDescription";
+  public final static String CLASS = "net.geoprism.DashboardDescription";
   public static java.lang.String DEFAULTLOCALE = "defaultLocale";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String SITEMASTER = "siteMaster";
-  private static final long serialVersionUID = -180198557;
+  private static final long serialVersionUID = -1068172932;
   
   public DashboardDescriptionBase()
   {

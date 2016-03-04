@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1277186906)
+@com.runwaysdk.business.ClassSignature(hash = 2080360694)
 public abstract class SessionMapLimitExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.SessionMapLimitException";
-  private static final long serialVersionUID = 1277186906;
+  public final static String CLASS = "net.geoprism.dashboard.SessionMapLimitException";
+  private static final long serialVersionUID = 2080360694;
   
   public SessionMapLimitExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.GeoEntityUtil;
-
-@com.runwaysdk.business.ClassSignature(hash = -238508601)
+@com.runwaysdk.business.ClassSignature(hash = 1788243104)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,9 +28,9 @@ import net.geoprism.GeoEntityUtil;
  */
 public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.GeoEntityUtil";
+  public final static String CLASS = "net.geoprism.GeoEntityUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -238508601;
+  private static final long serialVersionUID = 1788243104;
   
   public GeoEntityUtilBase()
   {
@@ -67,31 +65,31 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
   
   public static void deleteEntityProblem(java.lang.String problemId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static com.runwaysdk.system.gis.geo.GeoEntityProblemView[] getAllProblems()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getEntityLabel(java.lang.String entityId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getGeoEntityTree(java.lang.String geoEntityId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String[] makeSynonym(java.lang.String sourceId, java.lang.String destinationId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoEntityUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

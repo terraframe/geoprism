@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1632585153)
+@com.runwaysdk.business.ClassSignature(hash = -773277967)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
-  private static final long serialVersionUID = -1632585153;
+  public final static String CLASS = "net.geoprism.report.ReportItem";
+  private static final long serialVersionUID = -773277967;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -785,7 +785,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   
   public final java.lang.Long render(java.io.OutputStream outputStream, net.geoprism.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)
   {
-    String[] _declaredTypes = new String[]{"java.io.OutputStream", "[Lcom.runwaysdk.geodashboard.report.ReportParameter;", "java.lang.String", "java.lang.String"};
+    String[] _declaredTypes = new String[]{"java.io.OutputStream", "[Lnet.geoprism.report.ReportParameter;", "java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{outputStream, parameters, baseURL, reportURL};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "render", _declaredTypes);
     return (java.lang.Long) getRequest().invokeMethod(_metadata, this, _parameters);
@@ -793,7 +793,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   
   public static final java.lang.Long render(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.io.OutputStream outputStream, net.geoprism.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.io.OutputStream", "[Lcom.runwaysdk.geodashboard.report.ReportParameter;", "java.lang.String", "java.lang.String"};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.io.OutputStream", "[Lnet.geoprism.report.ReportParameter;", "java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{id, outputStream, parameters, baseURL, reportURL};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "render", _declaredTypes);
     return (java.lang.Long) clientRequest.invokeMethod(_metadata, null, _parameters);

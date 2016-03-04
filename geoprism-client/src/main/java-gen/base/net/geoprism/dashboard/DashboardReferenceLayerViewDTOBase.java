@@ -18,13 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardReferenceLayerViewDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = -1670497427)
+@com.runwaysdk.business.ClassSignature(hash = 867713783)
 public abstract class DashboardReferenceLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView";
-  private static final long serialVersionUID = -1670497427;
+  public final static String CLASS = "net.geoprism.dashboard.DashboardReferenceLayerView";
+  private static final long serialVersionUID = 867713783;
   
   protected DashboardReferenceLayerViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

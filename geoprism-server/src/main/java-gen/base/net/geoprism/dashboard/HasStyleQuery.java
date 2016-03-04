@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.HasStyle;
-
-@com.runwaysdk.business.ClassSignature(hash = 1784968047)
+@com.runwaysdk.business.ClassSignature(hash = 1284137657)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.SessionEntry;
-
-@com.runwaysdk.business.ClassSignature(hash = -1499308995)
+@com.runwaysdk.business.ClassSignature(hash = -1817639210)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.SessionEntry;
  */
 public abstract class SessionEntryBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.SessionEntry";
+  public final static String CLASS = "net.geoprism.SessionEntry";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -45,7 +43,7 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
   public static java.lang.String SESSIONUSER = "sessionUser";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1499308995;
+  private static final long serialVersionUID = -1817639210;
   
   public SessionEntryBase()
   {
@@ -460,49 +458,49 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
   
   public static net.geoprism.dashboard.DashboardMap createMapForSession()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteAll()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteByCurrentSession()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteByCurrentUser()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteBySession(java.lang.String sessionId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteByUser(com.runwaysdk.system.Users user)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteMapForSession(java.lang.String mapId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static void deleteMapsForSession()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.SessionEntry.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SessionEntry.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

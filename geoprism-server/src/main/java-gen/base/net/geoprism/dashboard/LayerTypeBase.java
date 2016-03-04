@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.LayerType;
-
-@com.runwaysdk.business.ClassSignature(hash = -414224769)
+@com.runwaysdk.business.ClassSignature(hash = 56288713)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,8 +28,8 @@ import net.geoprism.dashboard.LayerType;
  */
 public abstract class LayerTypeBase extends com.runwaysdk.system.EnumerationMaster implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.LayerType";
-  private static final long serialVersionUID = -414224769;
+  public final static String CLASS = "net.geoprism.dashboard.LayerType";
+  private static final long serialVersionUID = 56288713;
   
   public LayerTypeBase()
   {

@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1514921405)
+@com.runwaysdk.business.ClassSignature(hash = 1901144150)
 public abstract class SessionEntryDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.SessionEntry";
-  private static final long serialVersionUID = 1514921405;
+  public final static String CLASS = "net.geoprism.SessionEntry";
+  private static final long serialVersionUID = 1901144150;
   
   protected SessionEntryDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

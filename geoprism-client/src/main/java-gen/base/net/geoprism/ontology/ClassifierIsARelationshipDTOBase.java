@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -766379505)
-public abstract class ClassifierIsARelationshipDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = -406357240)
+public abstract class ClassifierIsARelationshipDTOBase extends com.runwaysdk.business.ontology.TermRelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship";
-  private static final long serialVersionUID = -766379505;
+  public final static String CLASS = "net.geoprism.ontology.ClassifierIsARelationship";
+  private static final long serialVersionUID = -406357240;
   
   public ClassifierIsARelationshipDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

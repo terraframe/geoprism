@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 1798211627)
+@com.runwaysdk.business.ClassSignature(hash = -416260860)
 public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnknownReportException";
-  private static final long serialVersionUID = 1798211627;
+  public final static String CLASS = "net.geoprism.report.UnknownReportException";
+  private static final long serialVersionUID = -416260860;
   
   public UnknownReportExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

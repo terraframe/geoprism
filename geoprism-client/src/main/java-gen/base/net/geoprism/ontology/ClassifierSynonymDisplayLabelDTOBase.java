@@ -18,13 +18,11 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierSynonymDisplayLabelDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 1506327454)
+@com.runwaysdk.business.ClassSignature(hash = -800195209)
 public abstract class ClassifierSynonymDisplayLabelDTOBase extends com.runwaysdk.business.LocalStructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabel";
-  private static final long serialVersionUID = 1506327454;
+  public final static String CLASS = "net.geoprism.ontology.ClassifierSynonymDisplayLabel";
+  private static final long serialVersionUID = -800195209;
   
   protected ClassifierSynonymDisplayLabelDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

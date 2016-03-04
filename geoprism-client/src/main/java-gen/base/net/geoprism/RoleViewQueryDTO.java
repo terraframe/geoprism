@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 2057552201)
+@com.runwaysdk.business.ClassSignature(hash = -1791692931)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism;
 public class RoleViewQueryDTO extends com.runwaysdk.business.ViewQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 2057552201;
+private static final long serialVersionUID = -1791692931;
 
   protected RoleViewQueryDTO(String type)
   {

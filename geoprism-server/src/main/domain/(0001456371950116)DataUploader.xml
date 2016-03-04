@@ -21,16 +21,16 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="com.runwayskd.geodashboard.etl.ExcelSourceBinding" label="Excel source binding">
+      <mdBusiness name="net.geoprism.data.etl.ExcelSourceBinding" label="Excel source binding">
         <attributes>
           <char name="sheetName" label="Sheet name" required="true" size="255" />
           <reference name="mdView" label="MdView" type="com.runwaysdk.system.metadata.MdView" required="true" indexType="non-unique index" />
         </attributes>
       </mdBusiness>
 
-      <mdBusiness name="com.runwayskd.geodashboard.etl.ExcelFieldBinding" label="Excel field binding">
+      <mdBusiness name="net.geoprism.data.etl.ExcelFieldBinding" label="Excel field binding">
         <attributes>
-          <reference name="sourceDefinition" label="Source Definition" type="com.runwayskd.geodashboard.etl.ExcelSourceBinding" required="true" indexType="non-unique index" />
+          <reference name="sourceDefinition" label="Source Definition" type="net.geoprism.data.etl.ExcelSourceBinding" required="true" indexType="non-unique index" />
           <reference name="mdAttribute" label="MdAttribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
           <char name="columnHeader" label="Column header" required="true" size="255" />
           <char name="columnLabel" label="Label" required="true" size="255" />
@@ -38,63 +38,63 @@
         </attributes>
       </mdBusiness>
 
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetBinding" label="Target Binding">
+      <mdBusiness name="net.geoprism.data.etl.TargetBinding" label="Target Binding">
         <attributes>
           <reference name="sourceView" label="Source Type" type="com.runwaysdk.system.metadata.MdView" required="true" indexType="non-unique index" />
           <reference name="targetBusiness" label="Target Type" type="com.runwaysdk.system.metadata.MdBusiness" required="true" indexType="non-unique index" />
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldBinding" label="Target Field Binding" isAbstract="true">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldBinding" label="Target Field Binding" isAbstract="true">
         <attributes>
-          <reference name="target" label="Attribute" type="com.runwayskd.geodashboard.etl.TargetBinding" required="true" indexType="non-unique index" />
+          <reference name="target" label="Attribute" type="net.geoprism.data.etl.TargetBinding" required="true" indexType="non-unique index" />
           <reference name="targetAttribute" label="Target Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
           <char name="columnLabel" label="Label" required="true" size="255" />          
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldBasicBinding" label="Target Field Basic Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBinding">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldBasicBinding" label="Target Field Basic Binding" extends="net.geoprism.data.etl.TargetFieldBinding">
         <attributes>
           <reference name="sourceAttribute" label="Source Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldClassifierBinding" label="Target Field Classifier Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBasicBinding">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldClassifierBinding" label="Target Field Classifier Binding" extends="net.geoprism.data.etl.TargetFieldBasicBinding">
         <attributes>
           <char name="packageName" label="Package name" required="true" size="255" />        
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding" label="Target Field Coordinate Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBinding" isAbstract="true">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldCoordinateBinding" label="Target Field Coordinate Binding" extends="net.geoprism.data.etl.TargetFieldBinding" isAbstract="true">
         <attributes>
           <reference name="latitudeAttribute" label="Latitude Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
           <reference name="longitudeAttribute" label="Longitude Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldMultiPolygonBinding" label="Target Field Multi Polygon Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding"/>
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldMultiPolygonBinding" label="Target Field Multi Polygon Binding" extends="net.geoprism.data.etl.TargetFieldCoordinateBinding"/>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldPointBinding" label="Target Field Point Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding"/>
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldPointBinding" label="Target Field Point Binding" extends="net.geoprism.data.etl.TargetFieldCoordinateBinding"/>
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldDerivedBinding" label="Target Field Derived Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldDerivedBinding" label="Target Field Derived Binding" extends="net.geoprism.data.etl.TargetFieldCoordinateBinding">
         <attributes>
           <reference name="geoEntity" label="Geo Entity" type="com.runwaysdk.system.gis.geo.GeoEntity" required="true" indexType="non-unique index" />
           <reference name="universal" label="Universal" type="com.runwaysdk.system.gis.geo.Universal" required="true" indexType="non-unique index" />
         </attributes>
       </mdBusiness>      
             
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldGeneratedBinding" label="Target Field Generated Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBinding">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldGeneratedBinding" label="Target Field Generated Binding" extends="net.geoprism.data.etl.TargetFieldBinding">
       </mdBusiness>      
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.TargetFieldGeoEntityBinding" label="Target Field Geo Entity Binding" extends="com.runwayskd.geodashboard.etl.TargetFieldBinding">
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldGeoEntityBinding" label="Target Field Geo Entity Binding" extends="net.geoprism.data.etl.TargetFieldBinding">
         <attributes>
           <reference name="geoEntity" label="Geo Entity" type="com.runwaysdk.system.gis.geo.GeoEntity" required="true" indexType="non-unique index" />
         </attributes>      
       </mdBusiness>      
       
-      <mdBusiness name="com.runwayskd.geodashboard.etl.UniversalAttributeBinding" label="Universal Attribute Binding">
+      <mdBusiness name="net.geoprism.data.etl.UniversalAttributeBinding" label="Universal Attribute Binding">
         <attributes>
-          <reference name="field" label="Field" type="com.runwayskd.geodashboard.etl.TargetFieldGeoEntityBinding" required="true" indexType="non-unique index" />
+          <reference name="field" label="Field" type="net.geoprism.data.etl.TargetFieldGeoEntityBinding" required="true" indexType="non-unique index" />
           <reference name="sourceAttribute" label="Source Attribute" type="com.runwaysdk.system.metadata.MdAttribute" required="true" indexType="non-unique index" />
           <reference name="universal" label="Universal" type="com.runwaysdk.system.gis.geo.Universal" required="true" indexType="non-unique index" />          
         </attributes>      
@@ -104,19 +104,19 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwayskd.geodashboard.etl.UniversalAttributeBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldGeoEntityBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldGeneratedBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldDerivedBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldPointBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldMultiPolygonBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldClassifierBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldBasicBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetFieldBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.TargetBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.ExcelFieldBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwayskd.geodashboard.etl.ExcelSourceBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.UniversalAttributeBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldGeoEntityBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldGeneratedBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldDerivedBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldPointBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldMultiPolygonBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldCoordinateBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldClassifierBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldBasicBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetFieldBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.TargetBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.ExcelFieldBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.ExcelSourceBinding" type="com.runwaysdk.system.metadata.MdBusiness"/>
     </delete>
   </undoIt>
 </version>

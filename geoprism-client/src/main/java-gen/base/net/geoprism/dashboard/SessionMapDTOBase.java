@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 40057436)
+@com.runwaysdk.business.ClassSignature(hash = 1935931491)
 public abstract class SessionMapDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.SessionMap";
-  private static final long serialVersionUID = 40057436;
+  public final static String CLASS = "net.geoprism.dashboard.SessionMap";
+  private static final long serialVersionUID = 1935931491;
   
   public SessionMapDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

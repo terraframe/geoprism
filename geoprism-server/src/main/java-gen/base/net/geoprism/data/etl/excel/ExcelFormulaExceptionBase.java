@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = 2071575544)
+@com.runwaysdk.business.ClassSignature(hash = 533539320)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.data.etl.excel;
  */
 public abstract class ExcelFormulaExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.excel.ExcelFormulaException";
+  public final static String CLASS = "net.geoprism.data.etl.excel.ExcelFormulaException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 2071575544;
+  private static final long serialVersionUID = 533539320;
   
   public ExcelFormulaExceptionBase()
   {

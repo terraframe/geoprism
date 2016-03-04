@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldDerivedBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = -296319181)
+@com.runwaysdk.business.ClassSignature(hash = 451193214)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

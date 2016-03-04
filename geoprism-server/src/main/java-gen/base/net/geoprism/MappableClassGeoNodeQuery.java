@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.MappableClassGeoNode;
-
-@com.runwaysdk.business.ClassSignature(hash = 2076743399)
+@com.runwaysdk.business.ClassSignature(hash = 996303367)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

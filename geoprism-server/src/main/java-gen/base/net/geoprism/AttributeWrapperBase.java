@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.AttributeWrapper;
-
-@com.runwaysdk.business.ClassSignature(hash = -169546043)
+@com.runwaysdk.business.ClassSignature(hash = 1451028133)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.AttributeWrapper;
  */
 public abstract class AttributeWrapperBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.AttributeWrapper";
+  public final static String CLASS = "net.geoprism.AttributeWrapper";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -44,7 +42,7 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDATTRIBUTE = "wrappedMdAttribute";
-  private static final long serialVersionUID = -169546043;
+  private static final long serialVersionUID = 1451028133;
   
   public AttributeWrapperBase()
   {
@@ -61,10 +59,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(CREATEDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCreateDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getCreateDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(CREATEDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(CREATEDATE);
   }
   
   public com.runwaysdk.system.SingleActor getCreatedBy()
@@ -89,10 +87,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(CREATEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getCreatedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCreatedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(CREATEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()
@@ -117,10 +115,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(ENTITYDOMAIN);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getEntityDomainMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getEntityDomainMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(ENTITYDOMAIN);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ENTITYDOMAIN);
   }
   
   public void setEntityDomain(com.runwaysdk.system.metadata.MdDomain value)
@@ -145,10 +143,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getKeyName()
@@ -161,10 +159,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(KEYNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getKeyNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(KEYNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
   public void setKeyName(String value)
@@ -189,10 +187,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(LASTUPDATEDATE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastUpdateDateMd()
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastUpdateDateMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(LASTUPDATEDATE);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTUPDATEDATE);
   }
   
   public com.runwaysdk.system.SingleActor getLastUpdatedBy()
@@ -217,10 +215,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(LASTUPDATEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLastUpdatedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLastUpdatedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(LASTUPDATEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
   public com.runwaysdk.system.Users getLockedBy()
@@ -245,10 +243,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(LOCKEDBY);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLockedByMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLockedByMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(LOCKEDBY);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
   public com.runwaysdk.system.Actor getOwner()
@@ -273,10 +271,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(OWNER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getOwnerMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOwnerMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(OWNER);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(OWNER);
   }
   
   public void setOwner(com.runwaysdk.system.Actor value)
@@ -301,10 +299,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(SEQ);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSeqMd()
+  public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(SEQ);
+    return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
   }
   
   public String getSiteMaster()
@@ -317,10 +315,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(SITEMASTER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSiteMasterMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(SITEMASTER);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
   public String getType()
@@ -333,10 +331,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(TYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(TYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   
   public com.runwaysdk.system.metadata.MdAttribute getWrappedMdAttribute()
@@ -361,10 +359,10 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     this.validateAttribute(WRAPPEDMDATTRIBUTE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getWrappedMdAttributeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getWrappedMdAttributeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.AttributeWrapper.CLASS);
-    return mdClassIF.definesAttribute(WRAPPEDMDATTRIBUTE);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(WRAPPEDMDATTRIBUTE);
   }
   
   public void setWrappedMdAttribute(com.runwaysdk.system.metadata.MdAttribute value)

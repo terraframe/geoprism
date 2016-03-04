@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -633474170)
+@com.runwaysdk.business.ClassSignature(hash = 1255390268)
 public abstract class MissingLocationAttributeExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.MissingLocationAttributeException";
-  private static final long serialVersionUID = -633474170;
+  public final static String CLASS = "net.geoprism.dashboard.MissingLocationAttributeException";
+  private static final long serialVersionUID = 1255390268;
   
   public MissingLocationAttributeExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

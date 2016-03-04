@@ -18,9 +18,7 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportParameter;
-
-@com.runwaysdk.business.ClassSignature(hash = 1276596212)
+@com.runwaysdk.business.ClassSignature(hash = 487299277)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,11 +28,11 @@ import net.geoprism.report.ReportParameter;
  */
 public abstract class ReportParameterBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportParameter";
+  public final static String CLASS = "net.geoprism.report.ReportParameter";
   public static java.lang.String ID = "id";
   public static java.lang.String PARAMETERNAME = "parameterName";
   public static java.lang.String PARAMETERVALUE = "parameterValue";
-  private static final long serialVersionUID = 1276596212;
+  private static final long serialVersionUID = 487299277;
   
   public ReportParameterBase()
   {
@@ -51,10 +49,10 @@ public abstract class ReportParameterBase extends com.runwaysdk.business.View im
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportParameter.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getParameterName()
@@ -67,10 +65,10 @@ public abstract class ReportParameterBase extends com.runwaysdk.business.View im
     this.validateAttribute(PARAMETERNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getParameterNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getParameterNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportParameter.CLASS);
-    return mdClassIF.definesAttribute(PARAMETERNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(PARAMETERNAME);
   }
   
   public void setParameterName(String value)
@@ -95,10 +93,10 @@ public abstract class ReportParameterBase extends com.runwaysdk.business.View im
     this.validateAttribute(PARAMETERVALUE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getParameterValueMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getParameterValueMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportParameter.CLASS);
-    return mdClassIF.definesAttribute(PARAMETERVALUE);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(PARAMETERVALUE);
   }
   
   public void setParameterValue(String value)

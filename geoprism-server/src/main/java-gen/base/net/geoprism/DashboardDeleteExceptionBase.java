@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -946094811)
+@com.runwaysdk.business.ClassSignature(hash = 1057979710)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism;
  */
 public abstract class DashboardDeleteExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.DashboardDeleteException";
+  public final static String CLASS = "net.geoprism.DashboardDeleteException";
   public static java.lang.String ID = "id";
   public static java.lang.String LABEL = "label";
-  private static final long serialVersionUID = -946094811;
+  private static final long serialVersionUID = 1057979710;
   
   public DashboardDeleteExceptionBase()
   {

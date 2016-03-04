@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.EmailSetting;
-
-@com.runwaysdk.business.ClassSignature(hash = 1104368907)
+@com.runwaysdk.business.ClassSignature(hash = 434527193)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.EmailSetting;
  */
 public abstract class EmailSettingBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.EmailSetting";
+  public final static String CLASS = "net.geoprism.EmailSetting";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -49,7 +47,7 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
   public static java.lang.String TO = "to";
   public static java.lang.String TYPE = "type";
   public static java.lang.String USERNAME = "username";
-  private static final long serialVersionUID = 1104368907;
+  private static final long serialVersionUID = 434527193;
   
   public EmailSettingBase()
   {
@@ -536,7 +534,7 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
   
   public static net.geoprism.EmailSetting getDefault()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.EmailSetting.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSetting.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

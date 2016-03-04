@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.GeoprismUser;
-
-@com.runwaysdk.business.ClassSignature(hash = 209786546)
+@com.runwaysdk.business.ClassSignature(hash = 1879029478)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,12 +28,12 @@ import net.geoprism.GeoprismUser;
  */
 public abstract class GeoprismUserBase extends com.runwaysdk.system.Users implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.GeoprismUser";
+  public final static String CLASS = "net.geoprism.GeoprismUser";
   public static java.lang.String EMAIL = "email";
   public static java.lang.String FIRSTNAME = "firstName";
   public static java.lang.String LASTNAME = "lastName";
   public static java.lang.String PHONENUMBER = "phoneNumber";
-  private static final long serialVersionUID = 209786546;
+  private static final long serialVersionUID = 1879029478;
   
   public GeoprismUserBase()
   {
@@ -178,7 +176,7 @@ public abstract class GeoprismUserBase extends com.runwaysdk.system.Users implem
   
   public void applyWithRoles(java.lang.String[] roleIds)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoprismUser.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -190,25 +188,25 @@ public abstract class GeoprismUserBase extends com.runwaysdk.system.Users implem
   
   public static net.geoprism.GeoprismUser[] getAllUsers()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoprismUser.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.GeoprismUser getCurrentUser()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoprismUser.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.Boolean hasAccess(java.lang.String functionality)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoprismUser.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.Boolean isRoleMemeber(java.lang.String roles)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.GeoprismUser.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

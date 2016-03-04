@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardLegend;
-
-@com.runwaysdk.business.ClassSignature(hash = 652990850)
+@com.runwaysdk.business.ClassSignature(hash = 1488949388)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,14 +28,14 @@ import net.geoprism.dashboard.DashboardLegend;
  */
 public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLegend";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardLegend";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SITEMASTER = "siteMaster";
-  private static final long serialVersionUID = 652990850;
+  private static final long serialVersionUID = 1488949388;
   
   public DashboardLegendBase()
   {
@@ -69,10 +67,10 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
     this.validateAttribute(GROUPEDINLEGEND);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGroupedInLegendMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getGroupedInLegendMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
-    return mdClassIF.definesAttribute(GROUPEDINLEGEND);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(GROUPEDINLEGEND);
   }
   
   public void setGroupedInLegend(Boolean value)
@@ -97,10 +95,10 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getKeyName()
@@ -113,10 +111,10 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
     this.validateAttribute(KEYNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getKeyNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
-    return mdClassIF.definesAttribute(KEYNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
   public void setKeyName(String value)
@@ -141,10 +139,10 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
     this.validateAttribute(LEGENDXPOSITION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLegendXPositionMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getLegendXPositionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
-    return mdClassIF.definesAttribute(LEGENDXPOSITION);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(LEGENDXPOSITION);
   }
   
   public void setLegendXPosition(Integer value)
@@ -169,10 +167,10 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
     this.validateAttribute(LEGENDYPOSITION);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLegendYPositionMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getLegendYPositionMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
-    return mdClassIF.definesAttribute(LEGENDYPOSITION);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(LEGENDYPOSITION);
   }
   
   public void setLegendYPosition(Integer value)
@@ -197,10 +195,10 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
     this.validateAttribute(SITEMASTER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSiteMasterMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
-    return mdClassIF.definesAttribute(SITEMASTER);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
   protected String getDeclaredType()

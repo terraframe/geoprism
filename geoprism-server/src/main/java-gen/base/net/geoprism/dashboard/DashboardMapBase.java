@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardMap;
-
-@com.runwaysdk.business.ClassSignature(hash = 1821848842)
+@com.runwaysdk.business.ClassSignature(hash = 451060803)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.dashboard.DashboardMap;
  */
 public abstract class DashboardMapBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardMap";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardMap";
   public static java.lang.String ACTIVEBASEMAP = "activeBaseMap";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
@@ -46,7 +44,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1821848842;
+  private static final long serialVersionUID = 451060803;
   
   public DashboardMapBase()
   {
@@ -517,7 +515,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   
   public java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize, java.lang.String activeBaseMap)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -529,7 +527,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   
   public java.lang.String getMapJSON(java.lang.String config)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -541,13 +539,13 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   
   public static net.geoprism.MdAttributeView[] getSecondaryAttributes(java.lang.String mapId, java.lang.String mdAttributeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public com.runwaysdk.system.gis.geo.Universal[] getUniversalAggregations(java.lang.String mdAttributeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -559,7 +557,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   
   public java.lang.String orderLayers(java.lang.String[] layerIds)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -571,7 +569,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   
   public java.lang.String refresh(java.lang.String state)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardMap.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

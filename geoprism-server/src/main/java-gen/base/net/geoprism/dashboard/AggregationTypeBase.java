@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationType;
-
-@com.runwaysdk.business.ClassSignature(hash = -519321217)
+@com.runwaysdk.business.ClassSignature(hash = -1048083767)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,8 +28,8 @@ import net.geoprism.dashboard.AggregationType;
  */
 public abstract class AggregationTypeBase extends com.runwaysdk.system.EnumerationMaster implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.AggregationType";
-  private static final long serialVersionUID = -519321217;
+  public final static String CLASS = "net.geoprism.dashboard.AggregationType";
+  private static final long serialVersionUID = -1048083767;
   
   public AggregationTypeBase()
   {

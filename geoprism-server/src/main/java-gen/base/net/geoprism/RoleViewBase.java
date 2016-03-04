@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.RoleView;
-
-@com.runwaysdk.business.ClassSignature(hash = -283334720)
+@com.runwaysdk.business.ClassSignature(hash = -1768540620)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,13 +28,13 @@ import net.geoprism.RoleView;
  */
 public abstract class RoleViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.RoleView";
+  public final static String CLASS = "net.geoprism.RoleView";
   public static java.lang.String ASSIGNED = "assigned";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String GROUPNAME = "groupName";
   public static java.lang.String ID = "id";
   public static java.lang.String ROLEID = "roleId";
-  private static final long serialVersionUID = -283334720;
+  private static final long serialVersionUID = -1768540620;
   
   public RoleViewBase()
   {
@@ -53,10 +51,10 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
     this.validateAttribute(ASSIGNED);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAssignedMd()
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getAssignedMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RoleView.CLASS);
-    return mdClassIF.definesAttribute(ASSIGNED);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(ASSIGNED);
   }
   
   public void setAssigned(Boolean value)
@@ -81,10 +79,10 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
     this.validateAttribute(DISPLAYLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getDisplayLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RoleView.CLASS);
-    return mdClassIF.definesAttribute(DISPLAYLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
   }
   
   public void setDisplayLabel(String value)
@@ -109,10 +107,10 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
     this.validateAttribute(GROUPNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getGroupNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getGroupNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RoleView.CLASS);
-    return mdClassIF.definesAttribute(GROUPNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(GROUPNAME);
   }
   
   public void setGroupName(String value)
@@ -137,10 +135,10 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RoleView.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getRoleId()
@@ -153,10 +151,10 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
     this.validateAttribute(ROLEID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getRoleIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getRoleIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RoleView.CLASS);
-    return mdClassIF.definesAttribute(ROLEID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ROLEID);
   }
   
   public void setRoleId(String value)
@@ -183,19 +181,19 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
   
   public static net.geoprism.RoleView[] getAdminRoles(net.geoprism.GeoprismUser user)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.RoleView.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.RoleView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.RoleView[] getDashboardRoles(net.geoprism.GeoprismUser user)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.RoleView.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.RoleView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.RoleView[] getRoles(net.geoprism.GeoprismUser user)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.RoleView.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.RoleView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

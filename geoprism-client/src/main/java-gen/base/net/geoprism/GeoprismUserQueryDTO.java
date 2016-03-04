@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1685176699)
+@com.runwaysdk.business.ClassSignature(hash = -694877585)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism;
 public class GeoprismUserQueryDTO extends com.runwaysdk.system.UsersQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1685176699;
+private static final long serialVersionUID = -694877585;
 
   protected GeoprismUserQueryDTO(String type)
   {

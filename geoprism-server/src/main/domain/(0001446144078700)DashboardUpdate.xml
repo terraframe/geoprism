@@ -41,34 +41,36 @@
         </create>
       </mdBusiness>
       <mdBusiness name="net.geoprism.dashboard.DashboardLayer">
-        <mdMethod name="applyWithStyle">
-          <create>
-            <mdParameter name="state" label="State" order="5" type="java.lang.String" />
-          </create>
+        <create>
+        <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="java.lang.String">
+          <mdParameter name="style" label="Style" order="0" type="net.geoprism.dashboard.DashboardStyle" />
+          <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
+          <mdParameter name="state" label="State" order="2" type="java.lang.String" />
         </mdMethod>
+        </create>
       </mdBusiness>
       <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
-        <mdMethod name="applyWithStyleAndStrategy">
-          <create>
-            <mdParameter name="state" label="State" order="5" type="java.lang.String" />
-          </create>
-        </mdMethod>
+        <create>
+	        <mdMethod name="applyWithStyleAndStrategy" label="Apply With Style and strategy" static="false" returnType="java.lang.String">
+	          <mdParameter name="style" label="Style" order="0" type="net.geoprism.dashboard.DashboardStyle" />
+            <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
+            <mdParameter name="strategy" label="Strategy" order="2" type="net.geoprism.dashboard.AggregationStrategy" />
+	          <mdParameter name="state" label="State" order="3" type="java.lang.String" />
+	        </mdMethod>
+        </create>
       </mdBusiness>
       <mdController name="net.geoprism.dashboard.DashboardThematicLayerController">
-        <mdAction name="applyWithStyle">
-          <create>
-            <mdParameter name="state" label="State" order="5" type="java.lang.String" />
-          </create>
-        </mdAction>
+        <create>
+          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
+            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.DashboardThematicLayer" />
+            <mdParameter name="style" label="Style" order="1" type="net.geoprism.dashboard.DashboardStyle" />
+            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
+            <mdParameter name="strategy" label="Strategy" order="3" type="net.geoprism.dashboard.AggregationStrategy" />
+            <mdParameter name="state" label="State" order="4" type="java.lang.String" />
+          </mdAction>
+        </create>
       </mdController>
     </update>
-    <delete>
-      <object key="net.geoprism.Dashboard.getConditions" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="net.geoprism.dashboard.DashboardMap.updateConditions" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="net.geoprism.dashboard.DashboardLayer.applyWithStyle.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="net.geoprism.dashboard.DashboardThematicLayer.applyWithStyleAndStrategy.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="net.geoprism.dashboard.DashboardThematicLayerController.applyWithStyle.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
-    </delete>
   </doIt>
   <undoIt>
     <delete>

@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -100929624)
+@com.runwaysdk.business.ClassSignature(hash = -1014216876)
 public abstract class DateParseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.parse.DateParseException";
-  private static final long serialVersionUID = -100929624;
+  public final static String CLASS = "net.geoprism.DateParseException";
+  private static final long serialVersionUID = -1014216876;
   
   public DateParseExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

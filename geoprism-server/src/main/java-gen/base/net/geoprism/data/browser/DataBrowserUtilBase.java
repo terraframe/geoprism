@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.browser;
 
-import net.geoprism.data.browser.DataBrowserUtil;
-
-@com.runwaysdk.business.ClassSignature(hash = -844990936)
+@com.runwaysdk.business.ClassSignature(hash = 1203533595)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,9 +28,9 @@ import net.geoprism.data.browser.DataBrowserUtil;
  */
 public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.DataBrowserUtil";
+  public final static String CLASS = "net.geoprism.data.browser.DataBrowserUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -844990936;
+  private static final long serialVersionUID = 1203533595;
   
   public DataBrowserUtilBase()
   {
@@ -67,19 +65,19 @@ public abstract class DataBrowserUtilBase extends com.runwaysdk.business.Util im
   
   public static void deleteData(java.lang.String type)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.browser.DataBrowserUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.data.browser.MetadataTypeQuery getDefaultTypes()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.browser.DataBrowserUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.data.browser.MetadataTypeQuery getTypes(java.lang.String[] packages, java.lang.String[] types)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.browser.DataBrowserUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

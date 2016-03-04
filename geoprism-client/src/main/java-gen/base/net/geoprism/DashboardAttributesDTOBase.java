@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 975740895)
+@com.runwaysdk.business.ClassSignature(hash = -2086286952)
 public abstract class DashboardAttributesDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.DashboardAttributes";
-  private static final long serialVersionUID = 975740895;
+  public final static String CLASS = "net.geoprism.DashboardAttributes";
+  private static final long serialVersionUID = -2086286952;
   
   public DashboardAttributesDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

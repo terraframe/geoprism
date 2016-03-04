@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -368617983)
+@com.runwaysdk.business.ClassSignature(hash = 331303700)
 public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboard.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle";
-  private static final long serialVersionUID = -368617983;
+  public final static String CLASS = "net.geoprism.dashboard.DashboardThematicStyle";
+  private static final long serialVersionUID = 331303700;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -85,7 +85,6 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
   public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
-  public static java.lang.String STYLECONDITION = "styleCondition";
   public Boolean getBubbleContinuousSize()
   {
     return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(BUBBLECONTINUOUSSIZE));
@@ -1585,55 +1584,6 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
   public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getSecondaryCategoriesMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(SECONDARYCATEGORIES).getAttributeMdDTO();
-  }
-  
-  public net.geoprism.dashboard.condition.DashboardConditionDTO getStyleCondition()
-  {
-    if(getValue(STYLECONDITION) == null || getValue(STYLECONDITION).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return net.geoprism.dashboard.condition.DashboardConditionDTO.get(getRequest(), getValue(STYLECONDITION));
-    }
-  }
-  
-  public String getStyleConditionId()
-  {
-    return getValue(STYLECONDITION);
-  }
-  
-  public void setStyleCondition(net.geoprism.dashboard.condition.DashboardConditionDTO value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECONDITION, "");
-    }
-    else
-    {
-      setValue(STYLECONDITION, value.getId());
-    }
-  }
-  
-  public boolean isStyleConditionWritable()
-  {
-    return isWritable(STYLECONDITION);
-  }
-  
-  public boolean isStyleConditionReadable()
-  {
-    return isReadable(STYLECONDITION);
-  }
-  
-  public boolean isStyleConditionModified()
-  {
-    return isModified(STYLECONDITION);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getStyleConditionMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(STYLECONDITION).getAttributeMdDTO();
   }
   
   public static net.geoprism.dashboard.DashboardThematicStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

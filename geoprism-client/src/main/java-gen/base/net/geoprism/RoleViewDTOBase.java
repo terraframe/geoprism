@@ -18,13 +18,11 @@
  */
 package net.geoprism;
 
-import net.geoprism.RoleViewDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 1955105088)
+@com.runwaysdk.business.ClassSignature(hash = 368359348)
 public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.RoleView";
-  private static final long serialVersionUID = 1955105088;
+  public final static String CLASS = "net.geoprism.RoleView";
+  private static final long serialVersionUID = 368359348;
   
   protected RoleViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -191,7 +189,7 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO imp
   
   public static final net.geoprism.RoleViewDTO[] getAdminRoles(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.GeoprismUserDTO user)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.GeoprismUser"};
+    String[] _declaredTypes = new String[]{"net.geoprism.GeoprismUser"};
     Object[] _parameters = new Object[]{user};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.RoleViewDTO.CLASS, "getAdminRoles", _declaredTypes);
     return (net.geoprism.RoleViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
@@ -199,7 +197,7 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO imp
   
   public static final net.geoprism.RoleViewDTO[] getDashboardRoles(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.GeoprismUserDTO user)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.GeoprismUser"};
+    String[] _declaredTypes = new String[]{"net.geoprism.GeoprismUser"};
     Object[] _parameters = new Object[]{user};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.RoleViewDTO.CLASS, "getDashboardRoles", _declaredTypes);
     return (net.geoprism.RoleViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
@@ -207,7 +205,7 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO imp
   
   public static final net.geoprism.RoleViewDTO[] getRoles(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.GeoprismUserDTO user)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.GeoprismUser"};
+    String[] _declaredTypes = new String[]{"net.geoprism.GeoprismUser"};
     Object[] _parameters = new Object[]{user};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.RoleViewDTO.CLASS, "getRoles", _declaredTypes);
     return (net.geoprism.RoleViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);

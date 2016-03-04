@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -545812439)
+@com.runwaysdk.business.ClassSignature(hash = 90758363)
 public abstract class ClassifierMultiTermAttributeRootDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot";
-  private static final long serialVersionUID = -545812439;
+  public final static String CLASS = "net.geoprism.ontology.ClassifierMultiTermAttributeRoot";
+  private static final long serialVersionUID = 90758363;
   
   public ClassifierMultiTermAttributeRootDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = 761168370)
+@com.runwaysdk.business.ClassSignature(hash = -387551246)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.data.etl.excel;
  */
 public abstract class InvalidExcelFileExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.excel.InvalidExcelFileException";
+  public final static String CLASS = "net.geoprism.data.etl.excel.InvalidExcelFileException";
   public static java.lang.String FILENAME = "fileName";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 761168370;
+  private static final long serialVersionUID = -387551246;
   
   public InvalidExcelFileExceptionBase()
   {

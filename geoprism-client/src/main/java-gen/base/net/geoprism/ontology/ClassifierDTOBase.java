@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1069620461)
+@com.runwaysdk.business.ClassSignature(hash = 590694776)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.Classifier";
-  private static final long serialVersionUID = 1069620461;
+  public final static String CLASS = "net.geoprism.ontology.Classifier";
+  private static final long serialVersionUID = 590694776;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -507,7 +507,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   
   public static final com.runwaysdk.business.ontology.TermAndRelDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentId)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.ontology.Classifier", "java.lang.String"};
+    String[] _declaredTypes = new String[]{"net.geoprism.ontology.Classifier", "java.lang.String"};
     Object[] _parameters = new Object[]{dto, parentId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "create", _declaredTypes);
     return (com.runwaysdk.business.ontology.TermAndRelDTO) clientRequest.invokeMethod(_metadata, null, _parameters);

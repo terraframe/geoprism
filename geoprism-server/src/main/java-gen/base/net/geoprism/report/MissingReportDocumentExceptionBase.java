@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1297553373)
+@com.runwaysdk.business.ClassSignature(hash = -1546051588)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.report;
  */
 public abstract class MissingReportDocumentExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.MissingReportDocumentException";
+  public final static String CLASS = "net.geoprism.report.MissingReportDocumentException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1297553373;
+  private static final long serialVersionUID = -1546051588;
   
   public MissingReportDocumentExceptionBase()
   {
@@ -62,10 +62,10 @@ public abstract class MissingReportDocumentExceptionBase extends com.runwaysdk.b
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.MissingReportDocumentException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()

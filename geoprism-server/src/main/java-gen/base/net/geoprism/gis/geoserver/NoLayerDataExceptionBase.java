@@ -18,7 +18,7 @@
  */
 package net.geoprism.gis.geoserver;
 
-@com.runwaysdk.business.ClassSignature(hash = 1622351049)
+@com.runwaysdk.business.ClassSignature(hash = 1803852688)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.gis.geoserver;
  */
 public abstract class NoLayerDataExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.geoserver.NoLayerDataException";
+  public final static String CLASS = "net.geoprism.gis.geoserver.NoLayerDataException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1622351049;
+  private static final long serialVersionUID = 1803852688;
   
   public NoLayerDataExceptionBase()
   {

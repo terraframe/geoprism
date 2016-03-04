@@ -18,10 +18,10 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -183741776)
+@com.runwaysdk.business.ClassSignature(hash = 234905161)
 public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.DataUploaderController";
+  public static final String CLASS = "net.geoprism.DataUploaderController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -86,29 +86,29 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.controller.MultipartFileParameter:file", post=true)
   public void getAttributeInformation(com.runwaysdk.controller.MultipartFileParameter file) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.getAttributeInformation");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.getAttributeInformation");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.controller.MultipartFileParameter:file", post=true)
   public void failGetAttributeInformation(com.runwaysdk.controller.MultipartFileParameter file) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.failGetAttributeInformation");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failGetAttributeInformation");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:configuration", post=true)
   public void importData(java.lang.String configuration) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.importData");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.importData");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:configuration", post=true)
   public void failImportData(java.lang.String configuration) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.failImportData");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failImportData");
   }
   
 }

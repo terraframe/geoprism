@@ -18,9 +18,7 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.PairView;
-
-@com.runwaysdk.business.ClassSignature(hash = 1808292453)
+@com.runwaysdk.business.ClassSignature(hash = 853827134)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,11 +28,11 @@ import net.geoprism.report.PairView;
  */
 public abstract class PairViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.PairView";
+  public final static String CLASS = "net.geoprism.report.PairView";
   public static java.lang.String ID = "id";
   public static java.lang.String LABEL = "label";
   public static java.lang.String VALUE = "value";
-  private static final long serialVersionUID = 1808292453;
+  private static final long serialVersionUID = 853827134;
   
   public PairViewBase()
   {

@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierDisplayLabel;
-
-@com.runwaysdk.business.ClassSignature(hash = 1016984295)
+@com.runwaysdk.business.ClassSignature(hash = 160088878)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,12 +28,12 @@ import net.geoprism.ontology.ClassifierDisplayLabel;
  */
 public abstract class ClassifierDisplayLabelBase extends com.runwaysdk.business.LocalStruct implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabel";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierDisplayLabel";
   public static java.lang.String DEFAULTLOCALE = "defaultLocale";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String SITEMASTER = "siteMaster";
-  private static final long serialVersionUID = 1016984295;
+  private static final long serialVersionUID = 160088878;
   
   public ClassifierDisplayLabelBase()
   {
@@ -67,10 +65,10 @@ public abstract class ClassifierDisplayLabelBase extends com.runwaysdk.business.
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierDisplayLabel.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getKeyName()
@@ -83,10 +81,10 @@ public abstract class ClassifierDisplayLabelBase extends com.runwaysdk.business.
     this.validateAttribute(KEYNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getKeyNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierDisplayLabel.CLASS);
-    return mdClassIF.definesAttribute(KEYNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
   public void setKeyName(String value)
@@ -111,10 +109,10 @@ public abstract class ClassifierDisplayLabelBase extends com.runwaysdk.business.
     this.validateAttribute(SITEMASTER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSiteMasterMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierDisplayLabel.CLASS);
-    return mdClassIF.definesAttribute(SITEMASTER);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
   protected String getDeclaredType()

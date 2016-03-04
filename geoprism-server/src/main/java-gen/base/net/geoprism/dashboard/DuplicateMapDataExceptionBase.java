@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 124302054)
+@com.runwaysdk.business.ClassSignature(hash = 461830274)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.dashboard;
  */
 public abstract class DuplicateMapDataExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.DuplicateMapDataException";
+  public final static String CLASS = "net.geoprism.dashboard.DuplicateMapDataException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 124302054;
+  private static final long serialVersionUID = 461830274;
   
   public DuplicateMapDataExceptionBase()
   {
@@ -62,10 +62,10 @@ public abstract class DuplicateMapDataExceptionBase extends com.runwaysdk.busine
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DuplicateMapDataException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()

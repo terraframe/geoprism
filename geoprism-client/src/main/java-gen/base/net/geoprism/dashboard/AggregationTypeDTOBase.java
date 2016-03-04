@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -2052589569)
+@com.runwaysdk.business.ClassSignature(hash = -643124919)
 public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.AggregationType";
-  private static final long serialVersionUID = -2052589569;
+  public final static String CLASS = "net.geoprism.dashboard.AggregationType";
+  private static final long serialVersionUID = -643124919;
   
   protected AggregationTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

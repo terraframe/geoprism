@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.MetadataWrapper;
-
-@com.runwaysdk.business.ClassSignature(hash = 1116384770)
+@com.runwaysdk.business.ClassSignature(hash = -798495589)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.MetadataWrapper;
  */
 public abstract class MetadataWrapperBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MetadataWrapper";
+  public final static String CLASS = "net.geoprism.MetadataWrapper";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
@@ -45,7 +43,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 1116384770;
+  private static final long serialVersionUID = -798495589;
   
   public MetadataWrapperBase()
   {
@@ -500,7 +498,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   
   public net.geoprism.MdAttributeView[] getSortedAttributes()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MetadataWrapper.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MetadataWrapper.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

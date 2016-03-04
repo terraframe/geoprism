@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 1536489210)
+@com.runwaysdk.business.ClassSignature(hash = 1454849171)
 public abstract class InvalidReportDefinitionExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.InvalidReportDefinitionException";
-  private static final long serialVersionUID = 1536489210;
+  public final static String CLASS = "net.geoprism.report.InvalidReportDefinitionException";
+  private static final long serialVersionUID = 1454849171;
   
   public InvalidReportDefinitionExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldMultiPolygonBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = -1445501617)
+@com.runwaysdk.business.ClassSignature(hash = -2126394012)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

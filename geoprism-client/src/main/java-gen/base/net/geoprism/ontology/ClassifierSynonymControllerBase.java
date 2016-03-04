@@ -18,10 +18,10 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -368261074)
+@com.runwaysdk.business.ClassSignature(hash = 374746869)
 public class ClassifierSynonymControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController";
+  public static final String CLASS = "net.geoprism.ontology.ClassifierSynonymController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -83,130 +83,130 @@ public class ClassifierSynonymControllerBase implements com.runwaysdk.generation
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void cancel(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.cancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.cancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void failCancel(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failCancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failCancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void create(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.create");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.create");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void failCreate(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failCreate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failCreate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void delete(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.delete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.delete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void failDelete(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failDelete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failDelete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.edit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.edit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failEdit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failEdit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.newInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.newInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failNewInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failNewInstance");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void update(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.update");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.update");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierSynonymDTO:dto", post=true)
   public void failUpdate(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failUpdate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failUpdate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.view");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.view");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failView");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failView");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.viewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.viewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failViewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failViewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.Boolean:isAscending, java.lang.Integer:pageSize, java.lang.Integer:pageNumber", post=false)
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.viewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.viewPage");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.String:isAscending, java.lang.String:pageSize, java.lang.String:pageNumber", post=false)
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.failViewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonymController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierSynonymController.failViewPage");
   }
   
 }

@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.UniversalAttributeBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = 641221901)
+@com.runwaysdk.business.ClassSignature(hash = -84059023)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.data.etl.UniversalAttributeBinding;
  */
 public abstract class UniversalAttributeBindingBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.UniversalAttributeBinding";
+  public final static String CLASS = "net.geoprism.data.etl.UniversalAttributeBinding";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -46,7 +44,7 @@ public abstract class UniversalAttributeBindingBase extends com.runwaysdk.busine
   public static java.lang.String SOURCEATTRIBUTE = "sourceAttribute";
   public static java.lang.String TYPE = "type";
   public static java.lang.String UNIVERSAL = "universal";
-  private static final long serialVersionUID = 641221901;
+  private static final long serialVersionUID = -84059023;
   
   public UniversalAttributeBindingBase()
   {

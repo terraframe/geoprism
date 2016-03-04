@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = 1319696710)
+@com.runwaysdk.business.ClassSignature(hash = -1282110690)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.dashboard.DashboardLayer;
  */
 public abstract class DashboardLayerBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardLayer";
   public static java.lang.String BBOXINCLUDED = "BBoxIncluded";
   public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
   public static java.lang.String CREATEDATE = "createDate";
@@ -58,7 +56,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String TYPE = "type";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = 1319696710;
+  private static final long serialVersionUID = -1282110690;
   
   public DashboardLayerBase()
   {
@@ -741,7 +739,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   
   public java.lang.String applyWithStyle(net.geoprism.dashboard.DashboardStyle style, java.lang.String mapId, java.lang.String state)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -753,7 +751,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   
   public java.lang.String getJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -765,13 +763,13 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   
   public static com.runwaysdk.system.gis.geo.UniversalQuery getSortedUniversals()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public void updateLegend(java.lang.Integer legendXPosition, java.lang.Integer legendYPosition, java.lang.Boolean groupedInLegend)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

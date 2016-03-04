@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 995614373)
+@com.runwaysdk.business.ClassSignature(hash = -1493418306)
 public abstract class DashboardDeleteExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.DashboardDeleteException";
-  private static final long serialVersionUID = 995614373;
+  public final static String CLASS = "net.geoprism.DashboardDeleteException";
+  private static final long serialVersionUID = -1493418306;
   
   public DashboardDeleteExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

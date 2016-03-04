@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -196790562)
+@com.runwaysdk.business.ClassSignature(hash = 82083749)
 public abstract class PossibleAmbiguousSynonymDTOBase extends com.runwaysdk.business.WarningDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.PossibleAmbiguousSynonym";
-  private static final long serialVersionUID = -196790562;
+  public final static String CLASS = "net.geoprism.ontology.PossibleAmbiguousSynonym";
+  private static final long serialVersionUID = 82083749;
   
   public PossibleAmbiguousSynonymDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

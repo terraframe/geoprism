@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.GeoEntityExportMenu;
-
-@com.runwaysdk.business.ClassSignature(hash = -1508485327)
+@com.runwaysdk.business.ClassSignature(hash = 542090038)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -453,6 +451,10 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.GeoEntityExportMenu geoEntityExportMenu);
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.GeoEntityExportMenu geoEntityExportMenu);
+
   }
 
 /**
@@ -469,6 +471,19 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     super(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, alias, displayLabel);
 
   }
+
+
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.GeoEntityExportMenu geoEntityExportMenu)
+    {
+      if(geoEntityExportMenu == null) return this.EQ((java.lang.String)null);
+      return this.EQ(geoEntityExportMenu.getId());
+    }
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.GeoEntityExportMenu geoEntityExportMenu)
+    {
+      if(geoEntityExportMenu == null) return this.NE((java.lang.String)null);
+      return this.NE(geoEntityExportMenu.getId());
+    }
 
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -805,6 +820,12 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
+
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu);
   }
 
 /**
@@ -823,6 +844,66 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
   }
 
 
+
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu)  {
+
+      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
+
+      for (int i=0; i<geoEntityExportMenu.length; i++)
+      {
+        itemIdArray[i] = geoEntityExportMenu[i].getId();
+      }
+
+      return this.containsAny(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu)  {
+
+      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
+
+      for (int i=0; i<geoEntityExportMenu.length; i++)
+      {
+        itemIdArray[i] = geoEntityExportMenu[i].getId();
+      }
+
+      return this.notContainsAny(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu)  {
+
+      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
+
+      for (int i=0; i<geoEntityExportMenu.length; i++)
+      {
+        itemIdArray[i] = geoEntityExportMenu[i].getId();
+      }
+
+      return this.containsAll(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu)  {
+
+      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
+
+      for (int i=0; i<geoEntityExportMenu.length; i++)
+      {
+        itemIdArray[i] = geoEntityExportMenu[i].getId();
+      }
+
+      return this.notContainsAll(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.GeoEntityExportMenu ... geoEntityExportMenu)  {
+
+      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
+
+      for (int i=0; i<geoEntityExportMenu.length; i++)
+      {
+        itemIdArray[i] = geoEntityExportMenu[i].getId();
+      }
+
+      return this.containsExactly(itemIdArray);
+  }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
     return getCreateDate(null);

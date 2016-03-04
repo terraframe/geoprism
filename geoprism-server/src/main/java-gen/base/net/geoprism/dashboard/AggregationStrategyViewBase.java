@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationStrategyView;
-
-@com.runwaysdk.business.ClassSignature(hash = 1285857495)
+@com.runwaysdk.business.ClassSignature(hash = 1169685783)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,13 +28,13 @@ import net.geoprism.dashboard.AggregationStrategyView;
  */
 public abstract class AggregationStrategyViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView";
+  public final static String CLASS = "net.geoprism.dashboard.AggregationStrategyView";
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String AVAILABLEGEOMETRYTYPES = "availableGeometryTypes";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String VALUE = "value";
-  private static final long serialVersionUID = 1285857495;
+  private static final long serialVersionUID = 1169685783;
   
   public AggregationStrategyViewBase()
   {
@@ -183,7 +181,7 @@ public abstract class AggregationStrategyViewBase extends com.runwaysdk.business
   
   public static net.geoprism.dashboard.AggregationStrategyView[] getAggregationStrategies(java.lang.String nodeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.AggregationStrategyView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

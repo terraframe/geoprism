@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1582234165)
+@com.runwaysdk.business.ClassSignature(hash = 609565586)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.report;
  */
 public abstract class ReportItemExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItemException";
+  public final static String CLASS = "net.geoprism.report.ReportItemException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1582234165;
+  private static final long serialVersionUID = 609565586;
   
   public ReportItemExceptionBase()
   {
@@ -62,10 +62,10 @@ public abstract class ReportItemExceptionBase extends com.runwaysdk.business.Sma
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportItemException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()

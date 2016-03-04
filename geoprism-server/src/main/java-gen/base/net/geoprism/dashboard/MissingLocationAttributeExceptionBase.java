@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1772007942)
+@com.runwaysdk.business.ClassSignature(hash = 1820424892)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.dashboard;
  */
 public abstract class MissingLocationAttributeExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.MissingLocationAttributeException";
+  public final static String CLASS = "net.geoprism.dashboard.MissingLocationAttributeException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1772007942;
+  private static final long serialVersionUID = 1820424892;
   
   public MissingLocationAttributeExceptionBase()
   {

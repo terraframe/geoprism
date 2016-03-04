@@ -181,7 +181,7 @@
                 </goals>
                 <configuration>
                   <executable>java</executable>
-                  <mainClass>com.runwaysdk.geodashboard.ImportSchema</mainClass>
+                  <mainClass>net.geoprism.ImportSchema</mainClass>
                   <arguments>
                     <argument>${project.basedir}/src/main/domain</argument>
                   </arguments>
@@ -371,7 +371,7 @@
                 </goals>
                 <configuration>
                   <executable>java</executable>
-                  <mainClass>com.runwaysdk.geodashboard.ImportSchema</mainClass>
+                  <mainClass>net.geoprism.ImportSchema</mainClass>
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
                     <argument></argument>

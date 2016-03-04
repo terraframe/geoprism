@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.EmailSetting;
-
-@com.runwaysdk.business.ClassSignature(hash = 1384390964)
+@com.runwaysdk.business.ClassSignature(hash = 112447362)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

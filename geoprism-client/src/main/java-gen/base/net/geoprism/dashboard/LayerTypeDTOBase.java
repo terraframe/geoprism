@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -92898049)
+@com.runwaysdk.business.ClassSignature(hash = -1622608823)
 public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.LayerType";
-  private static final long serialVersionUID = -92898049;
+  public final static String CLASS = "net.geoprism.dashboard.LayerType";
+  private static final long serialVersionUID = -1622608823;
   
   protected LayerTypeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierMultiTermAttributeRoot;
-
-@com.runwaysdk.business.ClassSignature(hash = 489180841)
+@com.runwaysdk.business.ClassSignature(hash = 691034971)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.ontology.ClassifierMultiTermAttributeRoot;
  */
 public abstract class ClassifierMultiTermAttributeRootBase extends com.runwaysdk.business.Relationship implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierMultiTermAttributeRoot";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierMultiTermAttributeRoot";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -44,7 +42,7 @@ public abstract class ClassifierMultiTermAttributeRootBase extends com.runwaysdk
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 489180841;
+  private static final long serialVersionUID = 691034971;
   
   public ClassifierMultiTermAttributeRootBase(String parentId, String childId)
   {

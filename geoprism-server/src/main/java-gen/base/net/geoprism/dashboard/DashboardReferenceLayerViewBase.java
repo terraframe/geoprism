@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardReferenceLayerView;
-
-@com.runwaysdk.business.ClassSignature(hash = 1481239789)
+@com.runwaysdk.business.ClassSignature(hash = -1004080009)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.dashboard.DashboardReferenceLayerView;
  */
 public abstract class DashboardReferenceLayerViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardReferenceLayerView";
   public static java.lang.String ACTIVEBYDEFAULT = "activeByDefault";
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String FEATURESTRATEGY = "featureStrategy";
@@ -43,7 +41,7 @@ public abstract class DashboardReferenceLayerViewBase extends com.runwaysdk.busi
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = 1481239789;
+  private static final long serialVersionUID = -1004080009;
   
   public DashboardReferenceLayerViewBase()
   {

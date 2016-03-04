@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierSynonym;
-
-@com.runwaysdk.business.ClassSignature(hash = 1470642837)
+@com.runwaysdk.business.ClassSignature(hash = -523889952)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,9 +31,9 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   private static final com.runwaysdk.business.ontology.OntologyStrategyIF strategy;
   static 
   {
-    strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("com.runwaysdk.geodashboard.ontology.ClassifierSynonym");
+    strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("net.geoprism.ontology.ClassifierSynonym");
   }
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonym";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierSynonym";
   public static java.lang.String CLASSIFIER = "classifier";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
@@ -52,7 +50,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1470642837;
+  private static final long serialVersionUID = -523889952;
   
   public ClassifierSynonymBase()
   {
@@ -532,7 +530,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static net.geoprism.ontology.ClassifierSynonym create(net.geoprism.ontology.Classifier classifier, net.geoprism.ontology.ClassifierSynonym synonym)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonym.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonym.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

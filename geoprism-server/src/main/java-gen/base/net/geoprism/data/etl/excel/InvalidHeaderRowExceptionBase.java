@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = 1816860017)
+@com.runwaysdk.business.ClassSignature(hash = -1120435343)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.data.etl.excel;
  */
 public abstract class InvalidHeaderRowExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.excel.InvalidHeaderRowException";
+  public final static String CLASS = "net.geoprism.data.etl.excel.InvalidHeaderRowException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1816860017;
+  private static final long serialVersionUID = -1120435343;
   
   public InvalidHeaderRowExceptionBase()
   {

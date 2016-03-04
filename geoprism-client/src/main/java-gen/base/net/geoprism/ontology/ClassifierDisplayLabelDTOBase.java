@@ -18,13 +18,11 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierDisplayLabelDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = -1044586137)
+@com.runwaysdk.business.ClassSignature(hash = 1380782)
 public abstract class ClassifierDisplayLabelDTOBase extends com.runwaysdk.business.LocalStructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierDisplayLabel";
-  private static final long serialVersionUID = -1044586137;
+  public final static String CLASS = "net.geoprism.ontology.ClassifierDisplayLabel";
+  private static final long serialVersionUID = 1380782;
   
   protected ClassifierDisplayLabelDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

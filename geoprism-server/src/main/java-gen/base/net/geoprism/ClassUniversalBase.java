@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.ClassUniversal;
-
-@com.runwaysdk.business.ClassSignature(hash = 1277697214)
+@com.runwaysdk.business.ClassSignature(hash = -2075368290)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.ClassUniversal;
  */
 public abstract class ClassUniversalBase extends com.runwaysdk.business.Relationship implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ClassUniversal";
+  public final static String CLASS = "net.geoprism.ClassUniversal";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -43,7 +41,7 @@ public abstract class ClassUniversalBase extends com.runwaysdk.business.Relation
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1277697214;
+  private static final long serialVersionUID = -2075368290;
   
   public ClassUniversalBase(String parentId, String childId)
   {

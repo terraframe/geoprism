@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -499939234)
+@com.runwaysdk.business.ClassSignature(hash = -1785237211)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,11 +28,11 @@ package net.geoprism.ontology;
  */
 public abstract class PossibleAmbiguousSynonymBase extends com.runwaysdk.business.Warning implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.PossibleAmbiguousSynonym";
+  public final static String CLASS = "net.geoprism.ontology.PossibleAmbiguousSynonym";
   public static java.lang.String CLASSIFIERLABEL = "classifierLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String SYNONYMLABEL = "synonymLabel";
-  private static final long serialVersionUID = -499939234;
+  private static final long serialVersionUID = -1785237211;
   
   public PossibleAmbiguousSynonymBase()
   {
@@ -49,10 +49,10 @@ public abstract class PossibleAmbiguousSynonymBase extends com.runwaysdk.busines
     this.validateAttribute(CLASSIFIERLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getClassifierLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getClassifierLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.PossibleAmbiguousSynonym.CLASS);
-    return mdClassIF.definesAttribute(CLASSIFIERLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(CLASSIFIERLABEL);
   }
   
   public void setClassifierLabel(String value)
@@ -77,10 +77,10 @@ public abstract class PossibleAmbiguousSynonymBase extends com.runwaysdk.busines
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.PossibleAmbiguousSynonym.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getSynonymLabel()
@@ -93,10 +93,10 @@ public abstract class PossibleAmbiguousSynonymBase extends com.runwaysdk.busines
     this.validateAttribute(SYNONYMLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getSynonymLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSynonymLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.PossibleAmbiguousSynonym.CLASS);
-    return mdClassIF.definesAttribute(SYNONYMLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SYNONYMLABEL);
   }
   
   public void setSynonymLabel(String value)

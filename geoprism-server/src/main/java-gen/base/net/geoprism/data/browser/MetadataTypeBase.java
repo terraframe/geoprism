@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.browser;
 
-import net.geoprism.data.browser.MetadataType;
-
-@com.runwaysdk.business.ClassSignature(hash = -1611134155)
+@com.runwaysdk.business.ClassSignature(hash = -1371635942)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,14 +28,14 @@ import net.geoprism.data.browser.MetadataType;
  */
 public abstract class MetadataTypeBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.databrowser.MetadataType";
+  public final static String CLASS = "net.geoprism.data.browser.MetadataType";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String PARENTTYPEID = "parentTypeId";
   public static java.lang.String TYPEID = "typeId";
   public static java.lang.String TYPENAME = "typeName";
   public static java.lang.String TYPEPACKAGE = "typePackage";
-  private static final long serialVersionUID = -1611134155;
+  private static final long serialVersionUID = -1371635942;
   
   public MetadataTypeBase()
   {
@@ -54,10 +52,10 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     this.validateAttribute(DISPLAYLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDisplayLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.browser.MetadataType.CLASS);
-    return mdClassIF.definesAttribute(DISPLAYLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
   }
   
   public void setDisplayLabel(String value)
@@ -82,10 +80,10 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.browser.MetadataType.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getParentTypeId()
@@ -98,10 +96,10 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     this.validateAttribute(PARENTTYPEID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getParentTypeIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getParentTypeIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.browser.MetadataType.CLASS);
-    return mdClassIF.definesAttribute(PARENTTYPEID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(PARENTTYPEID);
   }
   
   public void setParentTypeId(String value)
@@ -126,10 +124,10 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     this.validateAttribute(TYPEID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypeIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.browser.MetadataType.CLASS);
-    return mdClassIF.definesAttribute(TYPEID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPEID);
   }
   
   public void setTypeId(String value)
@@ -154,10 +152,10 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     this.validateAttribute(TYPENAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypeNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.browser.MetadataType.CLASS);
-    return mdClassIF.definesAttribute(TYPENAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPENAME);
   }
   
   public void setTypeName(String value)
@@ -182,10 +180,10 @@ public abstract class MetadataTypeBase extends com.runwaysdk.business.View imple
     this.validateAttribute(TYPEPACKAGE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getTypePackageMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypePackageMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.browser.MetadataType.CLASS);
-    return mdClassIF.definesAttribute(TYPEPACKAGE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPEPACKAGE);
   }
   
   public void setTypePackage(String value)

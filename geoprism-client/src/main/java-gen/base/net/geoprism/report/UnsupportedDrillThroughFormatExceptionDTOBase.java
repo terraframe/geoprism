@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -873404948)
+@com.runwaysdk.business.ClassSignature(hash = 403871365)
 public abstract class UnsupportedDrillThroughFormatExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnsupportedDrillThroughFormatException";
-  private static final long serialVersionUID = -873404948;
+  public final static String CLASS = "net.geoprism.report.UnsupportedDrillThroughFormatException";
+  private static final long serialVersionUID = 403871365;
   
   public UnsupportedDrillThroughFormatExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

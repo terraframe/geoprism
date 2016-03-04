@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1783520938)
+@com.runwaysdk.business.ClassSignature(hash = 782486074)
 public abstract class NoDashboardExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.NoDashboardException";
-  private static final long serialVersionUID = -1783520938;
+  public final static String CLASS = "net.geoprism.dashboard.NoDashboardException";
+  private static final long serialVersionUID = 782486074;
   
   public NoDashboardExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

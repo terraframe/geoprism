@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 560983672)
+@com.runwaysdk.business.ClassSignature(hash = -1479754476)
 public abstract class DuplicateDashboardExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.DuplicateDashboardException";
-  private static final long serialVersionUID = 560983672;
+  public final static String CLASS = "net.geoprism.dashboard.DuplicateDashboardException";
+  private static final long serialVersionUID = -1479754476;
   
   public DuplicateDashboardExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

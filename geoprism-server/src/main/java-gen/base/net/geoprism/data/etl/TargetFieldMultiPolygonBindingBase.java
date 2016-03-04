@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldMultiPolygonBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = 366452824)
+@com.runwaysdk.business.ClassSignature(hash = -1062841285)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,8 +28,8 @@ import net.geoprism.data.etl.TargetFieldMultiPolygonBinding;
  */
 public abstract class TargetFieldMultiPolygonBindingBase extends net.geoprism.data.etl.TargetFieldCoordinateBinding implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldMultiPolygonBinding";
-  private static final long serialVersionUID = 366452824;
+  public final static String CLASS = "net.geoprism.data.etl.TargetFieldMultiPolygonBinding";
+  private static final long serialVersionUID = -1062841285;
   
   public TargetFieldMultiPolygonBindingBase()
   {

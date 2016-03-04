@@ -18,13 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardLegendDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = -25360382)
+@com.runwaysdk.business.ClassSignature(hash = -1854030068)
 public abstract class DashboardLegendDTOBase extends com.runwaysdk.business.StructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLegend";
-  private static final long serialVersionUID = -25360382;
+  public final static String CLASS = "net.geoprism.dashboard.DashboardLegend";
+  private static final long serialVersionUID = -1854030068;
   
   protected DashboardLegendDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

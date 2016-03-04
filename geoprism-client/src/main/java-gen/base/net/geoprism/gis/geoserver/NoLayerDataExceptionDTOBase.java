@@ -18,11 +18,11 @@
  */
 package net.geoprism.gis.geoserver;
 
-@com.runwaysdk.business.ClassSignature(hash = 1796066121)
+@com.runwaysdk.business.ClassSignature(hash = 383429136)
 public abstract class NoLayerDataExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.geoserver.NoLayerDataException";
-  private static final long serialVersionUID = 1796066121;
+  public final static String CLASS = "net.geoprism.gis.geoserver.NoLayerDataException";
+  private static final long serialVersionUID = 383429136;
   
   public NoLayerDataExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

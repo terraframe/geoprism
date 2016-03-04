@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldGeneratedBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = -368411736)
+@com.runwaysdk.business.ClassSignature(hash = 1788611237)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,8 +28,8 @@ import net.geoprism.data.etl.TargetFieldGeneratedBinding;
  */
 public abstract class TargetFieldGeneratedBindingBase extends net.geoprism.data.etl.TargetFieldBinding implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldGeneratedBinding";
-  private static final long serialVersionUID = -368411736;
+  public final static String CLASS = "net.geoprism.data.etl.TargetFieldGeneratedBinding";
+  private static final long serialVersionUID = 1788611237;
   
   public TargetFieldGeneratedBindingBase()
   {

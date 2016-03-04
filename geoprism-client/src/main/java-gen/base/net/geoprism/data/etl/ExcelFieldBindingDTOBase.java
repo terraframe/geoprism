@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 1669427701)
+@com.runwaysdk.business.ClassSignature(hash = 1213676563)
 public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.ExcelFieldBinding";
-  private static final long serialVersionUID = 1669427701;
+  public final static String CLASS = "net.geoprism.data.etl.ExcelFieldBinding";
+  private static final long serialVersionUID = 1213676563;
   
   protected ExcelFieldBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

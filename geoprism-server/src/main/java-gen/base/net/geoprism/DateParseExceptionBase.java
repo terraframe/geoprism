@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -42557144)
+@com.runwaysdk.business.ClassSignature(hash = 456046804)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,11 +28,11 @@ package net.geoprism;
  */
 public abstract class DateParseExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.parse.DateParseException";
+  public final static String CLASS = "net.geoprism.DateParseException";
   public static java.lang.String ID = "id";
   public static java.lang.String INPUT = "input";
   public static java.lang.String PATTERN = "pattern";
-  private static final long serialVersionUID = -42557144;
+  private static final long serialVersionUID = 456046804;
   
   public DateParseExceptionBase()
   {

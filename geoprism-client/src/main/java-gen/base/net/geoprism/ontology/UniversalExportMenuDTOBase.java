@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1739566707)
+@com.runwaysdk.business.ClassSignature(hash = -571336422)
 public abstract class UniversalExportMenuDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.UniversalExportMenu";
-  private static final long serialVersionUID = -1739566707;
+  public final static String CLASS = "net.geoprism.ontology.UniversalExportMenu";
+  private static final long serialVersionUID = -571336422;
   
   protected UniversalExportMenuDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

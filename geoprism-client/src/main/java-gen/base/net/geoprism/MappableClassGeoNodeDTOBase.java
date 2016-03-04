@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 845961712)
+@com.runwaysdk.business.ClassSignature(hash = -1327506288)
 public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MappableClassGeoNode";
-  private static final long serialVersionUID = 845961712;
+  public final static String CLASS = "net.geoprism.MappableClassGeoNode";
+  private static final long serialVersionUID = -1327506288;
   
   public MappableClassGeoNodeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

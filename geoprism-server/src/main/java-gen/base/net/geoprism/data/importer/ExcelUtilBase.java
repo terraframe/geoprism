@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.importer;
 
-import net.geoprism.data.importer.ExcelUtil;
-
-@com.runwaysdk.business.ClassSignature(hash = -1050614514)
+@com.runwaysdk.business.ClassSignature(hash = 256617480)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,9 +28,9 @@ import net.geoprism.data.importer.ExcelUtil;
  */
 public abstract class ExcelUtilBase extends com.runwaysdk.business.Util implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.service.ExcelUtil";
+  public final static String CLASS = "net.geoprism.data.importer.ExcelUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1050614514;
+  private static final long serialVersionUID = 256617480;
   
   public ExcelUtilBase()
   {
@@ -67,13 +65,13 @@ public abstract class ExcelUtilBase extends com.runwaysdk.business.Util implemen
   
   public static java.io.InputStream exportExcelFile(java.lang.String type, java.lang.String country)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.service.ExcelUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.io.InputStream importExcelFile(java.io.InputStream istream, java.lang.String defaultEntity)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.service.ExcelUtil.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

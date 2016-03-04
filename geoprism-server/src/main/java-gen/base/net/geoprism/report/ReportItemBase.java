@@ -18,9 +18,7 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportItem;
-
-@com.runwaysdk.business.ClassSignature(hash = 1977027519)
+@com.runwaysdk.business.ClassSignature(hash = -1183496079)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.report.ReportItem;
  */
 public abstract class ReportItemBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItem";
+  public final static String CLASS = "net.geoprism.report.ReportItem";
   public static java.lang.String CACHEDOCUMENT = "cacheDocument";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
@@ -51,7 +49,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1977027519;
+  private static final long serialVersionUID = -1183496079;
   
   public ReportItemBase()
   {
@@ -539,7 +537,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public void applyWithFile(java.io.InputStream fileStream)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -551,7 +549,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public java.io.InputStream getDesignAsStream()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -563,7 +561,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public java.io.InputStream getDocumentAsStream()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -575,25 +573,25 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public static net.geoprism.report.PairView[] getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getMetadataForReporting(java.lang.String queryId, java.lang.String context)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.Integer getPageCount(java.lang.String queryId, java.lang.String context, java.lang.Integer pageSize)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public java.lang.String getParameterDefinitions()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -605,31 +603,31 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public static net.geoprism.report.PairView[] getQueriesForReporting()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.report.ReportItem getReportItemForDashboard(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.report.PairView[] getSupportedAggregation(java.lang.String queryId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.report.PairView[] getSupportedGeoNodes(java.lang.String queryId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public java.lang.String getURL()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -641,19 +639,19 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public static java.lang.String getValuesForReporting(java.lang.String queryId, java.lang.String context, java.lang.Integer pageSize, java.lang.Integer pageNumber)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.report.ReportItem lockOrCreateReport(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public java.lang.Long render(java.io.OutputStream outputStream, net.geoprism.report.ReportParameter[] parameters, java.lang.String baseURL, java.lang.String reportURL)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -665,13 +663,13 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   
   public static void unlockByDashboard(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public void validatePermissions()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItem.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItem.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

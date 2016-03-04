@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1207821353)
+@com.runwaysdk.business.ClassSignature(hash = 935934236)
 public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
-  private static final long serialVersionUID = 1207821353;
+  public final static String CLASS = "net.geoprism.Dashboard";
+  private static final long serialVersionUID = 935934236;
   
   protected DashboardDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -707,38 +707,6 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     return (com.runwaysdk.transport.metadata.AttributeDateMdDTO) getAttributeDTO(TODATE).getAttributeMdDTO();
   }
   
-  public final void applyConditions(net.geoprism.dashboard.condition.DashboardConditionDTO[] conditions)
-  {
-    String[] _declaredTypes = new String[]{"[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
-    Object[] _parameters = new Object[]{conditions};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "applyConditions", _declaredTypes);
-    getRequest().invokeMethod(_metadata, this, _parameters);
-  }
-  
-  public static final void applyConditions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, net.geoprism.dashboard.condition.DashboardConditionDTO[] conditions)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
-    Object[] _parameters = new Object[]{id, conditions};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "applyConditions", _declaredTypes);
-    clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
-  public final void applyGlobalConditions(net.geoprism.dashboard.condition.DashboardConditionDTO[] conditions)
-  {
-    String[] _declaredTypes = new String[]{"[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
-    Object[] _parameters = new Object[]{conditions};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "applyGlobalConditions", _declaredTypes);
-    getRequest().invokeMethod(_metadata, this, _parameters);
-  }
-  
-  public static final void applyGlobalConditions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, net.geoprism.dashboard.condition.DashboardConditionDTO[] conditions)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String", "[Lcom.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition;"};
-    Object[] _parameters = new Object[]{id, conditions};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "applyGlobalConditions", _declaredTypes);
-    clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
   public final java.lang.String applyWithOptions(java.lang.String options)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
@@ -781,7 +749,7 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
   
   public static final net.geoprism.DashboardDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.DashboardDTO dto)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.Dashboard"};
+    String[] _declaredTypes = new String[]{"net.geoprism.Dashboard"};
     Object[] _parameters = new Object[]{dto};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "create", _declaredTypes);
     return (net.geoprism.DashboardDTO) clientRequest.invokeMethod(_metadata, null, _parameters);

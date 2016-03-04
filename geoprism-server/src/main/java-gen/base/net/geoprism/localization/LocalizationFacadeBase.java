@@ -18,9 +18,7 @@
  */
 package net.geoprism.localization;
 
-import net.geoprism.localization.LocalizationFacade;
-
-@com.runwaysdk.business.ClassSignature(hash = 2055169719)
+@com.runwaysdk.business.ClassSignature(hash = 1138191568)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,9 +28,9 @@ import net.geoprism.localization.LocalizationFacade;
  */
 public abstract class LocalizationFacadeBase extends com.runwaysdk.business.Util implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.localization.LocalizationFacade";
+  public final static String CLASS = "net.geoprism.localization.LocalizationFacade";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 2055169719;
+  private static final long serialVersionUID = 1138191568;
   
   public LocalizationFacadeBase()
   {
@@ -67,31 +65,31 @@ public abstract class LocalizationFacadeBase extends com.runwaysdk.business.Util
   
   public static java.lang.String getCLDRLocaleName()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.localization.LocalizationFacade.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.localization.LocalizationFacade.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getCalendarLocale()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.localization.LocalizationFacade.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.localization.LocalizationFacade.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getConfigurationJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.localization.LocalizationFacade.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.localization.LocalizationFacade.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getFromBundles(java.lang.String key)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.localization.LocalizationFacade.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.localization.LocalizationFacade.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.localization.LocalizationFacade.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.localization.LocalizationFacade.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

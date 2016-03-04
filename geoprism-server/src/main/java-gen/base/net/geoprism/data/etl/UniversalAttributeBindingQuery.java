@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.UniversalAttributeBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = -591723516)
+@com.runwaysdk.business.ClassSignature(hash = 1297070888)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

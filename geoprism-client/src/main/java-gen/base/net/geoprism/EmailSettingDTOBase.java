@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -415145077)
+@com.runwaysdk.business.ClassSignature(hash = 260254297)
 public abstract class EmailSettingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.EmailSetting";
-  private static final long serialVersionUID = -415145077;
+  public final static String CLASS = "net.geoprism.EmailSetting";
+  private static final long serialVersionUID = 260254297;
   
   protected EmailSettingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

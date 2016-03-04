@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationType;
-
-@com.runwaysdk.business.ClassSignature(hash = -1345969944)
+@com.runwaysdk.business.ClassSignature(hash = -524308430)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -192,7 +190,7 @@ public  class AggregationTypeQuery extends com.runwaysdk.system.EnumerationMaste
   }
 
 /**
- * Specifies type safe query methods for the enumeration com.runwaysdk.geodashboard.gis.persist.AllAggregationType.
+ * Specifies type safe query methods for the enumeration net.geoprism.dashboard.AllAggregationType.
  * This type is used when a join is performed on this class as an enumeration.
  **/
   public interface AllAggregationTypeQueryIF extends com.runwaysdk.generation.loader.Reloadable, AggregationTypeQueryEnumerationIF  {
@@ -205,7 +203,7 @@ public  class AggregationTypeQuery extends com.runwaysdk.system.EnumerationMaste
   }
 
 /**
- * Implements type safe query methods for the enumeration com.runwaysdk.geodashboard.gis.persist.AllAggregationType.
+ * Implements type safe query methods for the enumeration net.geoprism.dashboard.AllAggregationType.
  * This type is used when a join is performed on this class as an enumeration.
  **/
   public static class AllAggregationTypeQuery extends AggregationTypeQueryEnumeration implements  AllAggregationTypeQueryIF, com.runwaysdk.generation.loader.Reloadable

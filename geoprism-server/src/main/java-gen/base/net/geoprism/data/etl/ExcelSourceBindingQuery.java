@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.ExcelSourceBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = -1522405558)
+@com.runwaysdk.business.ClassSignature(hash = 344718805)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -332136062)
+@com.runwaysdk.business.ClassSignature(hash = -1946287732)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.dashboard;
  */
 public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.Information implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.LayerExcludedException";
+  public final static String CLASS = "net.geoprism.dashboard.LayerExcludedException";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERNAME = "layerName";
-  private static final long serialVersionUID = -332136062;
+  private static final long serialVersionUID = -1946287732;
   
   public LayerExcludedExceptionBase()
   {
@@ -48,10 +48,10 @@ public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.LayerExcludedException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getLayerName()
@@ -64,10 +64,10 @@ public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.
     this.validateAttribute(LAYERNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getLayerNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getLayerNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.LayerExcludedException.CLASS);
-    return mdClassIF.definesAttribute(LAYERNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(LAYERNAME);
   }
   
   public void setLayerName(String value)

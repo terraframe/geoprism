@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1719182120)
+@com.runwaysdk.business.ClassSignature(hash = -784253982)
 public abstract class GeometryAggregationStrategyDTOBase extends net.geoprism.dashboard.AggregationStrategyDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy";
-  private static final long serialVersionUID = -1719182120;
+  public final static String CLASS = "net.geoprism.dashboard.GeometryAggregationStrategy";
+  private static final long serialVersionUID = -784253982;
   
   protected GeometryAggregationStrategyDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.MappableClass;
-
-@com.runwaysdk.business.ClassSignature(hash = -369477455)
+@com.runwaysdk.business.ClassSignature(hash = 2022015370)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.MappableClass;
  */
 public abstract class MappableClassBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MappableClass";
+  public final static String CLASS = "net.geoprism.MappableClass";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -44,7 +42,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = -369477455;
+  private static final long serialVersionUID = 2022015370;
   
   public MappableClassBase()
   {
@@ -459,13 +457,13 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static java.lang.String getAttributesAsJSON(java.lang.String dashboardId, java.lang.String mdClassId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getClassesAsJSON(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

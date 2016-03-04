@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.MetadataWrapper;
-
-@com.runwaysdk.business.ClassSignature(hash = 733032761)
+@com.runwaysdk.business.ClassSignature(hash = 1914838290)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.SessionMap;
-
-@com.runwaysdk.business.ClassSignature(hash = -621233956)
+@com.runwaysdk.business.ClassSignature(hash = -1472538909)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.dashboard.SessionMap;
  */
 public abstract class SessionMapBase extends com.runwaysdk.business.Relationship implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.SessionMap";
+  public final static String CLASS = "net.geoprism.dashboard.SessionMap";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -43,7 +41,7 @@ public abstract class SessionMapBase extends com.runwaysdk.business.Relationship
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -621233956;
+  private static final long serialVersionUID = -1472538909;
   
   public SessionMapBase(String parentId, String childId)
   {

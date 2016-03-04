@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -2100982855)
+@com.runwaysdk.business.ClassSignature(hash = -1272420903)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism;
 public class MappableClassGeoNodeQueryDTO extends com.runwaysdk.business.RelationshipQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -2100982855;
+private static final long serialVersionUID = -1272420903;
 
   protected MappableClassGeoNodeQueryDTO(String type)
   {

@@ -18,7 +18,7 @@
  */
 package net.geoprism.gis.geoserver;
 
-@com.runwaysdk.business.ClassSignature(hash = 2000444114)
+@com.runwaysdk.business.ClassSignature(hash = -1081759381)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.gis.geoserver;
  */
 public abstract class MapLayerExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.geoserver.MapLayerException";
+  public final static String CLASS = "net.geoprism.gis.geoserver.MapLayerException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 2000444114;
+  private static final long serialVersionUID = -1081759381;
   
   public MapLayerExceptionBase()
   {

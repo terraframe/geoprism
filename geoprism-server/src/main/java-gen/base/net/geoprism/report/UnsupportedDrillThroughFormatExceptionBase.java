@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 365823084)
+@com.runwaysdk.business.ClassSignature(hash = -1494280955)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.report;
  */
 public abstract class UnsupportedDrillThroughFormatExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnsupportedDrillThroughFormatException";
+  public final static String CLASS = "net.geoprism.report.UnsupportedDrillThroughFormatException";
   public static java.lang.String ID = "id";
   public static java.lang.String OUTPUTFORMAT = "outputFormat";
-  private static final long serialVersionUID = 365823084;
+  private static final long serialVersionUID = -1494280955;
   
   public UnsupportedDrillThroughFormatExceptionBase()
   {
@@ -63,10 +63,10 @@ public abstract class UnsupportedDrillThroughFormatExceptionBase extends com.run
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.UnsupportedDrillThroughFormatException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getOutputFormat()
@@ -79,10 +79,10 @@ public abstract class UnsupportedDrillThroughFormatExceptionBase extends com.run
     this.validateAttribute(OUTPUTFORMAT);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getOutputFormatMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getOutputFormatMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.UnsupportedDrillThroughFormatException.CLASS);
-    return mdClassIF.definesAttribute(OUTPUTFORMAT);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(OUTPUTFORMAT);
   }
   
   public void setOutputFormat(String value)

@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.LayerType;
-
-@com.runwaysdk.business.ClassSignature(hash = 1887102120)
+@com.runwaysdk.business.ClassSignature(hash = -825970190)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -192,7 +190,7 @@ public  class LayerTypeQuery extends com.runwaysdk.system.EnumerationMasterQuery
   }
 
 /**
- * Specifies type safe query methods for the enumeration com.runwaysdk.geodashboard.gis.persist.AllLayerType.
+ * Specifies type safe query methods for the enumeration net.geoprism.dashboard.AllLayerType.
  * This type is used when a join is performed on this class as an enumeration.
  **/
   public interface AllLayerTypeQueryIF extends com.runwaysdk.generation.loader.Reloadable, LayerTypeQueryEnumerationIF  {
@@ -205,7 +203,7 @@ public  class LayerTypeQuery extends com.runwaysdk.system.EnumerationMasterQuery
   }
 
 /**
- * Implements type safe query methods for the enumeration com.runwaysdk.geodashboard.gis.persist.AllLayerType.
+ * Implements type safe query methods for the enumeration net.geoprism.dashboard.AllLayerType.
  * This type is used when a join is performed on this class as an enumeration.
  **/
   public static class AllLayerTypeQuery extends LayerTypeQueryEnumeration implements  AllLayerTypeQueryIF, com.runwaysdk.generation.loader.Reloadable

@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1711280602)
+@com.runwaysdk.business.ClassSignature(hash = 113641334)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.dashboard;
  */
 public abstract class SessionMapLimitExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.SessionMapLimitException";
+  public final static String CLASS = "net.geoprism.dashboard.SessionMapLimitException";
   public static java.lang.String ID = "id";
   public static java.lang.String MAPLIMIT = "mapLimit";
-  private static final long serialVersionUID = 1711280602;
+  private static final long serialVersionUID = 113641334;
   
   public SessionMapLimitExceptionBase()
   {
@@ -63,10 +63,10 @@ public abstract class SessionMapLimitExceptionBase extends com.runwaysdk.busines
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.SessionMapLimitException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public Integer getMapLimit()
@@ -79,10 +79,10 @@ public abstract class SessionMapLimitExceptionBase extends com.runwaysdk.busines
     this.validateAttribute(MAPLIMIT);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMapLimitMd()
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getMapLimitMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.SessionMapLimitException.CLASS);
-    return mdClassIF.definesAttribute(MAPLIMIT);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(MAPLIMIT);
   }
   
   public void setMapLimit(Integer value)

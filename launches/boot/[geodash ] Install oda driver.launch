@@ -9,8 +9,8 @@
 <listEntry value="packaging=jar"/>
 <listEntry value="version=1.01.0005"/>
 <listEntry value="artifactId=oda.driver"/>
-<listEntry value="groupId=com.runwaysdk.geodashboard"/>
-<listEntry value="file=geodashboard-server/lib/com.runwaysdk.geodashboard.oda.driver_1.01.0005.jar"/>
+<listEntry value="groupId=com.runwaysdk.geoprism"/>
+<listEntry value="file=geoprism-server/lib/com.runwaysdk.geoprism.oda.driver_1.01.0005.jar"/>
 </listAttribute>
 <stringAttribute key="M2_RUNTIME" value="EMBEDDED"/>
 <booleanAttribute key="M2_SKIP_TESTS" value="false"/>
@@ -18,5 +18,5 @@
 <booleanAttribute key="M2_UPDATE_SNAPSHOTS" value="false"/>
 <stringAttribute key="M2_USER_SETTINGS" value=""/>
 <booleanAttribute key="M2_WORKSPACE_RESOLUTION" value="false"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/geodashboard}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/geoprism}"/>
 </launchConfiguration>

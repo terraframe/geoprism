@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierTermAttributeRoot;
-
-@com.runwaysdk.business.ClassSignature(hash = -918313270)
+@com.runwaysdk.business.ClassSignature(hash = 1183103164)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

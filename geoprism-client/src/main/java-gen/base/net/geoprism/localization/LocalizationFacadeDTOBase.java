@@ -18,13 +18,11 @@
  */
 package net.geoprism.localization;
 
-import net.geoprism.localization.LocalizationFacadeDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = -808679369)
+@com.runwaysdk.business.ClassSignature(hash = 789917264)
 public abstract class LocalizationFacadeDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.localization.LocalizationFacade";
-  private static final long serialVersionUID = -808679369;
+  public final static String CLASS = "net.geoprism.localization.LocalizationFacade";
+  private static final long serialVersionUID = 789917264;
   
   protected LocalizationFacadeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

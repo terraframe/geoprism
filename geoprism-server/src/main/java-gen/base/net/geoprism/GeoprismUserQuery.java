@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.GeoprismUser;
-
-@com.runwaysdk.business.ClassSignature(hash = -1907294807)
+@com.runwaysdk.business.ClassSignature(hash = 601738525)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -171,9 +169,9 @@ public  class GeoprismUserQuery extends com.runwaysdk.system.UsersQuery
     public com.runwaysdk.query.SelectableChar getPhoneNumber(String alias);
     public com.runwaysdk.query.SelectableChar getPhoneNumber(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.GeoprismUser geodashboardUser);
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.GeoprismUser geoprismUser);
 
-    public com.runwaysdk.query.BasicCondition NE(net.geoprism.GeoprismUser geodashboardUser);
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.GeoprismUser geoprismUser);
 
   }
 
@@ -193,16 +191,16 @@ public  class GeoprismUserQuery extends com.runwaysdk.system.UsersQuery
   }
 
 
-    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.GeoprismUser geodashboardUser)
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.GeoprismUser geoprismUser)
     {
-      if(geodashboardUser == null) return this.EQ((java.lang.String)null);
-      return this.EQ(geodashboardUser.getId());
+      if(geoprismUser == null) return this.EQ((java.lang.String)null);
+      return this.EQ(geoprismUser.getId());
     }
 
-    public com.runwaysdk.query.BasicCondition NE(net.geoprism.GeoprismUser geodashboardUser)
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.GeoprismUser geoprismUser)
     {
-      if(geodashboardUser == null) return this.NE((java.lang.String)null);
-      return this.NE(geodashboardUser.getId());
+      if(geoprismUser == null) return this.NE((java.lang.String)null);
+      return this.NE(geoprismUser.getId());
     }
 
   public com.runwaysdk.query.SelectableChar getEmail()
@@ -295,11 +293,11 @@ public  class GeoprismUserQuery extends com.runwaysdk.system.UsersQuery
     public com.runwaysdk.query.SelectableChar getPhoneNumber(String alias);
     public com.runwaysdk.query.SelectableChar getPhoneNumber(String alias, String displayLabel);
 
-    public com.runwaysdk.query.Condition containsAny(net.geoprism.GeoprismUser ... geodashboardUser);
-    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.GeoprismUser ... geodashboardUser);
-    public com.runwaysdk.query.Condition containsAll(net.geoprism.GeoprismUser ... geodashboardUser);
-    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.GeoprismUser ... geodashboardUser);
-    public com.runwaysdk.query.Condition containsExactly(net.geoprism.GeoprismUser ... geodashboardUser);
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.GeoprismUser ... geoprismUser);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.GeoprismUser ... geoprismUser);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.GeoprismUser ... geoprismUser);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.GeoprismUser ... geoprismUser);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.GeoprismUser ... geoprismUser);
   }
 
 /**
@@ -319,61 +317,61 @@ public  class GeoprismUserQuery extends com.runwaysdk.system.UsersQuery
 
 
 
-    public com.runwaysdk.query.Condition containsAny(net.geoprism.GeoprismUser ... geodashboardUser)  {
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.GeoprismUser ... geoprismUser)  {
 
-      String[] itemIdArray = new String[geodashboardUser.length]; 
+      String[] itemIdArray = new String[geoprismUser.length]; 
 
-      for (int i=0; i<geodashboardUser.length; i++)
+      for (int i=0; i<geoprismUser.length; i++)
       {
-        itemIdArray[i] = geodashboardUser[i].getId();
+        itemIdArray[i] = geoprismUser[i].getId();
       }
 
       return this.containsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.GeoprismUser ... geodashboardUser)  {
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.GeoprismUser ... geoprismUser)  {
 
-      String[] itemIdArray = new String[geodashboardUser.length]; 
+      String[] itemIdArray = new String[geoprismUser.length]; 
 
-      for (int i=0; i<geodashboardUser.length; i++)
+      for (int i=0; i<geoprismUser.length; i++)
       {
-        itemIdArray[i] = geodashboardUser[i].getId();
+        itemIdArray[i] = geoprismUser[i].getId();
       }
 
       return this.notContainsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsAll(net.geoprism.GeoprismUser ... geodashboardUser)  {
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.GeoprismUser ... geoprismUser)  {
 
-      String[] itemIdArray = new String[geodashboardUser.length]; 
+      String[] itemIdArray = new String[geoprismUser.length]; 
 
-      for (int i=0; i<geodashboardUser.length; i++)
+      for (int i=0; i<geoprismUser.length; i++)
       {
-        itemIdArray[i] = geodashboardUser[i].getId();
+        itemIdArray[i] = geoprismUser[i].getId();
       }
 
       return this.containsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.GeoprismUser ... geodashboardUser)  {
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.GeoprismUser ... geoprismUser)  {
 
-      String[] itemIdArray = new String[geodashboardUser.length]; 
+      String[] itemIdArray = new String[geoprismUser.length]; 
 
-      for (int i=0; i<geodashboardUser.length; i++)
+      for (int i=0; i<geoprismUser.length; i++)
       {
-        itemIdArray[i] = geodashboardUser[i].getId();
+        itemIdArray[i] = geoprismUser[i].getId();
       }
 
       return this.notContainsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsExactly(net.geoprism.GeoprismUser ... geodashboardUser)  {
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.GeoprismUser ... geoprismUser)  {
 
-      String[] itemIdArray = new String[geodashboardUser.length]; 
+      String[] itemIdArray = new String[geoprismUser.length]; 
 
-      for (int i=0; i<geodashboardUser.length; i++)
+      for (int i=0; i<geoprismUser.length; i++)
       {
-        itemIdArray[i] = geodashboardUser[i].getId();
+        itemIdArray[i] = geoprismUser[i].getId();
       }
 
       return this.containsExactly(itemIdArray);

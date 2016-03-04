@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.UniversalAggregationStrategy;
-
-@com.runwaysdk.business.ClassSignature(hash = 1167533400)
+@com.runwaysdk.business.ClassSignature(hash = -1011356958)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

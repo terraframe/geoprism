@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldPointBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = 1012995753)
+@com.runwaysdk.business.ClassSignature(hash = -748442586)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,8 +28,8 @@ import net.geoprism.data.etl.TargetFieldPointBinding;
  */
 public abstract class TargetFieldPointBindingBase extends net.geoprism.data.etl.TargetFieldCoordinateBinding implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldPointBinding";
-  private static final long serialVersionUID = 1012995753;
+  public final static String CLASS = "net.geoprism.data.etl.TargetFieldPointBinding";
+  private static final long serialVersionUID = -748442586;
   
   public TargetFieldPointBindingBase()
   {

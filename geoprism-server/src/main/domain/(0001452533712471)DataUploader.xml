@@ -35,21 +35,21 @@
         </mdAction>
       </mdController>
       
-      <mdException name="net.geoprism.excel.InvalidExcelFileException" label="Invalid Excel File Exception" message="The file [{fileName}] is not a valid 2007+ Excel file">
+      <mdException name="net.geoprism.data.etl.excel.InvalidExcelFileException" label="Invalid Excel File Exception" message="The file [{fileName}] is not a valid 2007+ Excel file">
         <attributes>
           <text name="fileName" label="File name" />
         </attributes>
       </mdException>
 
-      <mdException name="net.geoprism.excel.InvalidHeaderRowException" label="Invalid Header Row Exception" message="Header row must contain only text cells with unique values" />
+      <mdException name="net.geoprism.data.etl.excel.InvalidHeaderRowException" label="Invalid Header Row Exception" message="Header row must contain only text cells with unique values" />
       
-      <mdException name="net.geoprism.excel.ExcelFormulaException" label="Excel Formula Exception" message="Workbook cannot contain any forumla cells" />
+      <mdException name="net.geoprism.data.etl.excel.ExcelFormulaException" label="Excel Formula Exception" message="Workbook cannot contain any forumla cells" />
     </create>
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.excel.InvalidHeaderRowException" type="com.runwaysdk.system.metadata.MdException"/>
-      <object key="net.geoprism.excel.InvalidExcelFileException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="net.geoprism.data.etl.excel.InvalidHeaderRowException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="net.geoprism.data.etl.excel.InvalidExcelFileException" type="com.runwaysdk.system.metadata.MdException"/>
       <object key="net.geoprism.DataUploaderController" type="com.runwaysdk.system.metadata.MdController"/>
       <object key="net.geoprism.DataUploader" type="com.runwaysdk.system.metadata.MdView"/>
     </delete>

@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 1949076031)
+@com.runwaysdk.business.ClassSignature(hash = -204220904)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.report;
  */
 public abstract class UnsupportedComparisonExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnsupportedComparisonException";
+  public final static String CLASS = "net.geoprism.report.UnsupportedComparisonException";
   public static java.lang.String COMPARISON = "comparison";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1949076031;
+  private static final long serialVersionUID = -204220904;
   
   public UnsupportedComparisonExceptionBase()
   {

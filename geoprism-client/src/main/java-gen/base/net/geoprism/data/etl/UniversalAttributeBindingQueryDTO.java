@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -1974724650)
+@com.runwaysdk.business.ClassSignature(hash = 83263354)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.data.etl;
 public class UniversalAttributeBindingQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1974724650;
+private static final long serialVersionUID = 83263354;
 
   protected UniversalAttributeBindingQueryDTO(String type)
   {

@@ -18,13 +18,11 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.PairViewDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = -1115481115)
+@com.runwaysdk.business.ClassSignature(hash = -1259880514)
 public abstract class PairViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.PairView";
-  private static final long serialVersionUID = -1115481115;
+  public final static String CLASS = "net.geoprism.report.PairView";
+  private static final long serialVersionUID = -1259880514;
   
   protected PairViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

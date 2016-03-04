@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -703264835)
+@com.runwaysdk.business.ClassSignature(hash = -483871658)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.report;
 public class ReportParameterQueryDTO extends com.runwaysdk.business.ViewQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -703264835;
+private static final long serialVersionUID = -483871658;
 
   protected ReportParameterQueryDTO(String type)
   {

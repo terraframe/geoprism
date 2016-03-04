@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.MdAttributeView;
-
-@com.runwaysdk.business.ClassSignature(hash = 1439442564)
+@com.runwaysdk.business.ClassSignature(hash = -761506997)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,14 +28,14 @@ import net.geoprism.MdAttributeView;
  */
 public abstract class MdAttributeViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MdAttributeView";
+  public final static String CLASS = "net.geoprism.MdAttributeView";
   public static java.lang.String ATTRIBUTENAME = "attributeName";
   public static java.lang.String ATTRIBUTETYPE = "attributeType";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String MDATTRIBUTEID = "mdAttributeId";
   public static java.lang.String MDCLASSID = "mdClassId";
-  private static final long serialVersionUID = 1439442564;
+  private static final long serialVersionUID = -761506997;
   
   public MdAttributeViewBase()
   {
@@ -54,10 +52,10 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
     this.validateAttribute(ATTRIBUTENAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAttributeNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getAttributeNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MdAttributeView.CLASS);
-    return mdClassIF.definesAttribute(ATTRIBUTENAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ATTRIBUTENAME);
   }
   
   public void setAttributeName(String value)
@@ -82,10 +80,10 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
     this.validateAttribute(ATTRIBUTETYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getAttributeTypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getAttributeTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MdAttributeView.CLASS);
-    return mdClassIF.definesAttribute(ATTRIBUTETYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ATTRIBUTETYPE);
   }
   
   public void setAttributeType(String value)
@@ -110,10 +108,10 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
     this.validateAttribute(DISPLAYLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDisplayLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDisplayLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MdAttributeView.CLASS);
-    return mdClassIF.definesAttribute(DISPLAYLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
   }
   
   public void setDisplayLabel(String value)
@@ -138,10 +136,10 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MdAttributeView.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getMdAttributeId()
@@ -154,10 +152,10 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
     this.validateAttribute(MDATTRIBUTEID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMdAttributeIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getMdAttributeIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MdAttributeView.CLASS);
-    return mdClassIF.definesAttribute(MDATTRIBUTEID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(MDATTRIBUTEID);
   }
   
   public void setMdAttributeId(String value)
@@ -182,10 +180,10 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
     this.validateAttribute(MDCLASSID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMdClassIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getMdClassIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MdAttributeView.CLASS);
-    return mdClassIF.definesAttribute(MDCLASSID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(MDCLASSID);
   }
   
   public void setMdClassId(String value)

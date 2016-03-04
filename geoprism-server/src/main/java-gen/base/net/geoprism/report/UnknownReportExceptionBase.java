@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -2062661973)
+@com.runwaysdk.business.ClassSignature(hash = -1725465724)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.report;
  */
 public abstract class UnknownReportExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnknownReportException";
+  public final static String CLASS = "net.geoprism.report.UnknownReportException";
   public static java.lang.String ID = "id";
   public static java.lang.String REPORTNAME = "reportName";
-  private static final long serialVersionUID = -2062661973;
+  private static final long serialVersionUID = -1725465724;
   
   public UnknownReportExceptionBase()
   {
@@ -63,10 +63,10 @@ public abstract class UnknownReportExceptionBase extends com.runwaysdk.business.
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.UnknownReportException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getReportName()
@@ -79,10 +79,10 @@ public abstract class UnknownReportExceptionBase extends com.runwaysdk.business.
     this.validateAttribute(REPORTNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getReportNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getReportNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.UnknownReportException.CLASS);
-    return mdClassIF.definesAttribute(REPORTNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(REPORTNAME);
   }
   
   public void setReportName(String value)

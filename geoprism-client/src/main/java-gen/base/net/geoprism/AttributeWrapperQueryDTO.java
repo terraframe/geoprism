@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1096863858)
+@com.runwaysdk.business.ClassSignature(hash = 1057162990)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism;
 public class AttributeWrapperQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1096863858;
+private static final long serialVersionUID = 1057162990;
 
   protected AttributeWrapperQueryDTO(String type)
   {

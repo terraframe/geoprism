@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.MappableClassGeoNode;
-
-@com.runwaysdk.business.ClassSignature(hash = 516872304)
+@com.runwaysdk.business.ClassSignature(hash = 192486160)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.MappableClassGeoNode;
  */
 public abstract class MappableClassGeoNodeBase extends com.runwaysdk.business.Relationship implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.MappableClassGeoNode";
+  public final static String CLASS = "net.geoprism.MappableClassGeoNode";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -43,7 +41,7 @@ public abstract class MappableClassGeoNodeBase extends com.runwaysdk.business.Re
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 516872304;
+  private static final long serialVersionUID = 192486160;
   
   public MappableClassGeoNodeBase(String parentId, String childId)
   {

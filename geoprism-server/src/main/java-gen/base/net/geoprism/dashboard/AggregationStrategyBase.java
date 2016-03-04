@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationStrategy;
-
-@com.runwaysdk.business.ClassSignature(hash = -158319588)
+@com.runwaysdk.business.ClassSignature(hash = -1221875758)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.dashboard.AggregationStrategy;
  */
 public abstract class AggregationStrategyBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.AggregationStrategy";
+  public final static String CLASS = "net.geoprism.dashboard.AggregationStrategy";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -43,7 +41,7 @@ public abstract class AggregationStrategyBase extends com.runwaysdk.business.Bus
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -158319588;
+  private static final long serialVersionUID = -1221875758;
   
   public AggregationStrategyBase()
   {

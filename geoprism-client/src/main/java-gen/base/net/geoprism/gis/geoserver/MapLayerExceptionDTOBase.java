@@ -18,11 +18,11 @@
  */
 package net.geoprism.gis.geoserver;
 
-@com.runwaysdk.business.ClassSignature(hash = 168049746)
+@com.runwaysdk.business.ClassSignature(hash = -502387989)
 public abstract class MapLayerExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.geoserver.MapLayerException";
-  private static final long serialVersionUID = 168049746;
+  public final static String CLASS = "net.geoprism.gis.geoserver.MapLayerException";
+  private static final long serialVersionUID = -502387989;
   
   public MapLayerExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

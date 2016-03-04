@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 870738899)
+@com.runwaysdk.business.ClassSignature(hash = -965475575)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.dashboard;
  */
 public abstract class NoLayersExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.NoLayersException";
+  public final static String CLASS = "net.geoprism.dashboard.NoLayersException";
   public static java.lang.String ID = "id";
   public static java.lang.String MAPNAME = "mapName";
-  private static final long serialVersionUID = 870738899;
+  private static final long serialVersionUID = -965475575;
   
   public NoLayersExceptionBase()
   {
@@ -63,10 +63,10 @@ public abstract class NoLayersExceptionBase extends com.runwaysdk.business.Smart
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.NoLayersException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getMapName()
@@ -79,10 +79,10 @@ public abstract class NoLayersExceptionBase extends com.runwaysdk.business.Smart
     this.validateAttribute(MAPNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getMapNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getMapNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.NoLayersException.CLASS);
-    return mdClassIF.definesAttribute(MAPNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(MAPNAME);
   }
   
   public void setMapName(String value)

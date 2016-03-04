@@ -18,13 +18,11 @@
  */
 package net.geoprism;
 
-import net.geoprism.GeoEntityUtilDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 289138503)
+@com.runwaysdk.business.ClassSignature(hash = 1865567776)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.GeoEntityUtil";
-  private static final long serialVersionUID = 289138503;
+  public final static String CLASS = "net.geoprism.GeoEntityUtil";
+  private static final long serialVersionUID = 1865567776;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

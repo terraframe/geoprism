@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1190735146)
+@com.runwaysdk.business.ClassSignature(hash = 486702010)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.dashboard;
  */
 public abstract class NoDashboardExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.NoDashboardException";
+  public final static String CLASS = "net.geoprism.dashboard.NoDashboardException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1190735146;
+  private static final long serialVersionUID = 486702010;
   
   public NoDashboardExceptionBase()
   {
@@ -62,10 +62,10 @@ public abstract class NoDashboardExceptionBase extends com.runwaysdk.business.Sm
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.NoDashboardException.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   protected String getDeclaredType()

@@ -18,9 +18,7 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.PairView;
-
-@com.runwaysdk.business.ClassSignature(hash = 134981980)
+@com.runwaysdk.business.ClassSignature(hash = -1511581323)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

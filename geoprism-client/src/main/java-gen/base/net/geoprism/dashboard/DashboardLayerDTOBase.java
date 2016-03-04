@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 64232134)
+@com.runwaysdk.business.ClassSignature(hash = 475507870)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLayer";
-  private static final long serialVersionUID = 64232134;
+  public final static String CLASS = "net.geoprism.dashboard.DashboardLayer";
+  private static final long serialVersionUID = 475507870;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -820,7 +820,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   
   public final java.lang.String applyWithStyle(net.geoprism.dashboard.DashboardStyleDTO style, java.lang.String mapId, java.lang.String state)
   {
-    String[] _declaredTypes = new String[]{"com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "java.lang.String"};
+    String[] _declaredTypes = new String[]{"net.geoprism.dashboard.DashboardStyle", "java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{style, mapId, state};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardLayerDTO.CLASS, "applyWithStyle", _declaredTypes);
     return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
@@ -828,7 +828,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   
   public static final java.lang.String applyWithStyle(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, net.geoprism.dashboard.DashboardStyleDTO style, java.lang.String mapId, java.lang.String state)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "com.runwaysdk.geodashboard.gis.persist.DashboardStyle", "java.lang.String", "java.lang.String"};
+    String[] _declaredTypes = new String[]{"java.lang.String", "net.geoprism.dashboard.DashboardStyle", "java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{id, style, mapId, state};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardLayerDTO.CLASS, "applyWithStyle", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);

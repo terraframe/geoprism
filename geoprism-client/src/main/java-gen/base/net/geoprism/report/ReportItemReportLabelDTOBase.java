@@ -18,13 +18,11 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportItemReportLabelDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 863180748)
+@com.runwaysdk.business.ClassSignature(hash = 1972315365)
 public abstract class ReportItemReportLabelDTOBase extends com.runwaysdk.business.LocalStructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItemReportLabel";
-  private static final long serialVersionUID = 863180748;
+  public final static String CLASS = "net.geoprism.report.ReportItemReportLabel";
+  private static final long serialVersionUID = 1972315365;
   
   protected ReportItemReportLabelDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

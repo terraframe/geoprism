@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierDisplayLabel;
-
-@com.runwaysdk.business.ClassSignature(hash = -126420528)
+@com.runwaysdk.business.ClassSignature(hash = 1914578391)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

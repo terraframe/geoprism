@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 780140728)
+@com.runwaysdk.business.ClassSignature(hash = 1968899586)
 public abstract class HasStyleDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.HasStyle";
-  private static final long serialVersionUID = 780140728;
+  public final static String CLASS = "net.geoprism.dashboard.HasStyle";
+  private static final long serialVersionUID = 1968899586;
   
   public HasStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

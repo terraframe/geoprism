@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -2089297870)
+@com.runwaysdk.business.ClassSignature(hash = -799106970)
 public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.GeoprismUser";
-  private static final long serialVersionUID = -2089297870;
+  public final static String CLASS = "net.geoprism.GeoprismUser";
+  private static final long serialVersionUID = -799106970;
   
   protected GeoprismUserDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

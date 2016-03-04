@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1901589256)
+@com.runwaysdk.business.ClassSignature(hash = 340482964)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.dashboard;
  */
 public abstract class DuplicateDashboardExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.DuplicateDashboardException";
+  public final static String CLASS = "net.geoprism.dashboard.DuplicateDashboardException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1901589256;
+  private static final long serialVersionUID = 340482964;
   
   public DuplicateDashboardExceptionBase()
   {

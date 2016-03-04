@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1951918603)
+@com.runwaysdk.business.ClassSignature(hash = -1130599090)
 public abstract class UnsupportedOutputFormatExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnsupportedOutputFormatException";
-  private static final long serialVersionUID = -1951918603;
+  public final static String CLASS = "net.geoprism.report.UnsupportedOutputFormatException";
+  private static final long serialVersionUID = -1130599090;
   
   public UnsupportedOutputFormatExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

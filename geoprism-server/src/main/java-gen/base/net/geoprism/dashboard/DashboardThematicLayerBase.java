@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardThematicLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = -1180128835)
+@com.runwaysdk.business.ClassSignature(hash = -1104773261)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,12 +28,12 @@ import net.geoprism.dashboard.DashboardThematicLayer;
  */
 public abstract class DashboardThematicLayerBase extends net.geoprism.dashboard.DashboardLayer implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardThematicLayer";
   public static java.lang.String AGGREGATIONSTRATEGY = "aggregationStrategy";
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String GEONODE = "geoNode";
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
-  private static final long serialVersionUID = -1180128835;
+  private static final long serialVersionUID = -1104773261;
   
   public DashboardThematicLayerBase()
   {
@@ -224,7 +222,7 @@ public abstract class DashboardThematicLayerBase extends net.geoprism.dashboard.
   
   public java.lang.String applyWithStyleAndStrategy(net.geoprism.dashboard.DashboardStyle style, java.lang.String mapId, net.geoprism.dashboard.AggregationStrategy strategy, java.lang.String state)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -236,7 +234,7 @@ public abstract class DashboardThematicLayerBase extends net.geoprism.dashboard.
   
   public java.lang.String getFeatureInformation(java.lang.String featureId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -248,13 +246,13 @@ public abstract class DashboardThematicLayerBase extends net.geoprism.dashboard.
   
   public static java.lang.String getGeoNodeGeometryTypesJSON(java.lang.String geoNodeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getOptionsJSON(java.lang.String thematicAttributeId, java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayer.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

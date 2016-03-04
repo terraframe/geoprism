@@ -18,9 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.ExcelSourceBinding;
-
-@com.runwaysdk.business.ClassSignature(hash = -206495)
+@com.runwaysdk.business.ClassSignature(hash = 553127390)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.data.etl.ExcelSourceBinding;
  */
 public abstract class ExcelSourceBindingBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.ExcelSourceBinding";
+  public final static String CLASS = "net.geoprism.data.etl.ExcelSourceBinding";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -45,7 +43,7 @@ public abstract class ExcelSourceBindingBase extends com.runwaysdk.business.Busi
   public static java.lang.String SHEETNAME = "sheetName";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -206495;
+  private static final long serialVersionUID = 553127390;
   
   public ExcelSourceBindingBase()
   {

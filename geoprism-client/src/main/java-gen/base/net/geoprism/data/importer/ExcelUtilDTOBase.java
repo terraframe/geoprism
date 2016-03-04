@@ -18,13 +18,11 @@
  */
 package net.geoprism.data.importer;
 
-import net.geoprism.data.importer.ExcelUtilDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 701269646)
+@com.runwaysdk.business.ClassSignature(hash = 942722440)
 public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.service.ExcelUtil";
-  private static final long serialVersionUID = 701269646;
+  public final static String CLASS = "net.geoprism.data.importer.ExcelUtil";
+  private static final long serialVersionUID = 942722440;
   
   protected ExcelUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

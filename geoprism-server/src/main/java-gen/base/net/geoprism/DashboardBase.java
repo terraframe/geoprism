@@ -18,9 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.Dashboard;
-
-@com.runwaysdk.business.ClassSignature(hash = -25197911)
+@com.runwaysdk.business.ClassSignature(hash = 1076262812)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.Dashboard;
  */
 public abstract class DashboardBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.Dashboard";
+  public final static String CLASS = "net.geoprism.Dashboard";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARDROLE = "dashboardRole";
@@ -55,7 +53,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -25197911;
+  private static final long serialVersionUID = 1076262812;
   
   public DashboardBase()
   {
@@ -626,33 +624,9 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     return (Dashboard) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public void applyConditions(net.geoprism.dashboard.condition.DashboardCondition[] conditions)
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final void applyConditions(java.lang.String id, net.geoprism.dashboard.condition.DashboardCondition[] conditions)
-  {
-    Dashboard _instance = Dashboard.get(id);
-    _instance.applyConditions(conditions);
-  }
-  
-  public void applyGlobalConditions(net.geoprism.dashboard.condition.DashboardCondition[] conditions)
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final void applyGlobalConditions(java.lang.String id, net.geoprism.dashboard.condition.DashboardCondition[] conditions)
-  {
-    Dashboard _instance = Dashboard.get(id);
-    _instance.applyGlobalConditions(conditions);
-  }
-  
   public java.lang.String applyWithOptions(java.lang.String options)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -664,13 +638,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public static void assignUsers(java.lang.String dashboardId, java.lang.String[] userIds)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public net.geoprism.Dashboard clone(java.lang.String name)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -682,13 +656,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public static net.geoprism.Dashboard create(net.geoprism.Dashboard dto)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public void generateThumbnailImage()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -700,7 +674,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public net.geoprism.GeoprismUser[] getAllDashboardUsers()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -712,7 +686,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String getAllDashboardUsersJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -724,37 +698,37 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public static java.lang.String getAvailableDashboardsAsJSON(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String[] getCategoryInputSuggestions(java.lang.String mdAttributeId, java.lang.String geoNodeId, java.lang.String universalId, java.lang.String aggregationVal, java.lang.String text, java.lang.Integer limit, java.lang.String state)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.ontology.Classifier[] getClassifierRoots(java.lang.String mdAttributeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.ontology.Classifier[] getClassifierSuggestions(java.lang.String mdAttributeId, java.lang.String text, java.lang.Integer limit)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getClassifierTree(java.lang.String mdAttributeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public java.lang.String getConditionsJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -766,7 +740,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String getDashboardDefinition()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -778,7 +752,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -790,7 +764,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public com.runwaysdk.system.gis.geo.GeoNode[] getGeoNodes(com.runwaysdk.system.metadata.MdAttribute thematicAttribute)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -802,7 +776,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String getGeoNodesJSON(com.runwaysdk.system.metadata.MdAttribute thematicAttribute)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -814,7 +788,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String getJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -826,7 +800,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String getLayersToDelete(java.lang.String options)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -838,7 +812,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String getMapId()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -850,13 +824,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public static net.geoprism.DashboardQuery getSortedDashboards()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public com.runwaysdk.system.metadata.MdClass[] getSortedTypes()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -868,13 +842,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public static java.lang.String[] getTextSuggestions(java.lang.String mdAttributeId, java.lang.String text, java.lang.Integer limit)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public java.io.InputStream getThumbnailStream()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -886,7 +860,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.Boolean hasAccess()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -898,7 +872,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.Boolean hasReport()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -910,7 +884,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public java.lang.String saveState(java.lang.String state, java.lang.Boolean global)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -922,7 +896,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public void setBaseLayerState(java.lang.String baseLayerState)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -934,7 +908,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public void setDashboardAttributesOrder(java.lang.String typeId, java.lang.String[] attributeIds)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -946,7 +920,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   
   public void setMetadataWrapperOrder(java.lang.String[] typeIds)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

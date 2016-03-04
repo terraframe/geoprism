@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardStyle;
-
-@com.runwaysdk.business.ClassSignature(hash = 1258083355)
+@com.runwaysdk.business.ClassSignature(hash = 1398590181)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.dashboard.DashboardStyle;
  */
 public abstract class DashboardStyleBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardStyle";
+  public final static String CLASS = "net.geoprism.dashboard.DashboardStyle";
   public static java.lang.String BASICPOINTSIZE = "basicPointSize";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
@@ -73,7 +71,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = 1258083355;
+  private static final long serialVersionUID = 1398590181;
   
   public DashboardStyleBase()
   {
@@ -1260,13 +1258,13 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   
   public static java.lang.String getAggregationJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardStyle.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public java.lang.String getJSON()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardStyle.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
@@ -1278,13 +1276,13 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   
   public static net.geoprism.dashboard.AggregationTypeQuery getSortedAggregations(java.lang.String thematicAttributeId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardStyle.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String[] getSortedFonts()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardStyle.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardStyle.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

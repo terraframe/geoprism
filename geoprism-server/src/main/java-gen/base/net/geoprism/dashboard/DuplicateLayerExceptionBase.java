@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 61289371)
+@com.runwaysdk.business.ClassSignature(hash = 647114807)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,9 +28,9 @@ package net.geoprism.dashboard;
  */
 public abstract class DuplicateLayerExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.DuplicateLayerException";
+  public final static String CLASS = "net.geoprism.dashboard.DuplicateLayerException";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 61289371;
+  private static final long serialVersionUID = 647114807;
   
   public DuplicateLayerExceptionBase()
   {

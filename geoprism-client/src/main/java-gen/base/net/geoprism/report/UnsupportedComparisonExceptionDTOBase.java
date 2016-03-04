@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1129100353)
+@com.runwaysdk.business.ClassSignature(hash = 27473816)
 public abstract class UnsupportedComparisonExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.UnsupportedComparisonException";
-  private static final long serialVersionUID = -1129100353;
+  public final static String CLASS = "net.geoprism.report.UnsupportedComparisonException";
+  private static final long serialVersionUID = 27473816;
   
   public UnsupportedComparisonExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

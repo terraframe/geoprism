@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -928423464)
+@com.runwaysdk.business.ClassSignature(hash = 571269819)
 public abstract class TargetFieldMultiPolygonBindingDTOBase extends net.geoprism.data.etl.TargetFieldCoordinateBindingDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldMultiPolygonBinding";
-  private static final long serialVersionUID = -928423464;
+  public final static String CLASS = "net.geoprism.data.etl.TargetFieldMultiPolygonBinding";
+  private static final long serialVersionUID = 571269819;
   
   protected TargetFieldMultiPolygonBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

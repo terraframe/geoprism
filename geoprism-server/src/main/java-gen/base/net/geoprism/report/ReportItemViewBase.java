@@ -18,9 +18,7 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportItemView;
-
-@com.runwaysdk.business.ClassSignature(hash = 1249598101)
+@com.runwaysdk.business.ClassSignature(hash = -1316633316)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,13 +28,13 @@ import net.geoprism.report.ReportItemView;
  */
 public abstract class ReportItemViewBase extends com.runwaysdk.business.View implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.ReportItemView";
+  public final static String CLASS = "net.geoprism.report.ReportItemView";
   public static java.lang.String DASHBOARDLABEL = "dashboardLabel";
   public static java.lang.String ID = "id";
   public static java.lang.String REPORTID = "reportId";
   public static java.lang.String REPORTLABEL = "reportLabel";
   public static java.lang.String REPORTNAME = "reportName";
-  private static final long serialVersionUID = 1249598101;
+  private static final long serialVersionUID = -1316633316;
   
   public ReportItemViewBase()
   {
@@ -53,10 +51,10 @@ public abstract class ReportItemViewBase extends com.runwaysdk.business.View imp
     this.validateAttribute(DASHBOARDLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getDashboardLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getDashboardLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportItemView.CLASS);
-    return mdClassIF.definesAttribute(DASHBOARDLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(DASHBOARDLABEL);
   }
   
   public void setDashboardLabel(String value)
@@ -81,10 +79,10 @@ public abstract class ReportItemViewBase extends com.runwaysdk.business.View imp
     this.validateAttribute(ID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportItemView.CLASS);
-    return mdClassIF.definesAttribute(ID);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
   public String getReportId()
@@ -97,10 +95,10 @@ public abstract class ReportItemViewBase extends com.runwaysdk.business.View imp
     this.validateAttribute(REPORTID);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getReportIdMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getReportIdMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportItemView.CLASS);
-    return mdClassIF.definesAttribute(REPORTID);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(REPORTID);
   }
   
   public void setReportId(String value)
@@ -125,10 +123,10 @@ public abstract class ReportItemViewBase extends com.runwaysdk.business.View imp
     this.validateAttribute(REPORTLABEL);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getReportLabelMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getReportLabelMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportItemView.CLASS);
-    return mdClassIF.definesAttribute(REPORTLABEL);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(REPORTLABEL);
   }
   
   public void setReportLabel(String value)
@@ -153,10 +151,10 @@ public abstract class ReportItemViewBase extends com.runwaysdk.business.View imp
     this.validateAttribute(REPORTNAME);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeDAOIF getReportNameMd()
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getReportNameMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.report.ReportItemView.CLASS);
-    return mdClassIF.definesAttribute(REPORTNAME);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(REPORTNAME);
   }
   
   public void setReportName(String value)
@@ -183,7 +181,7 @@ public abstract class ReportItemViewBase extends com.runwaysdk.business.View imp
   
   public void remove()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.report.ReportItemView.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

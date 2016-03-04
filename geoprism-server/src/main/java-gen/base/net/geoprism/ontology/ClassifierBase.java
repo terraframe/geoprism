@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.Classifier;
-
-@com.runwaysdk.business.ClassSignature(hash = 420895597)
+@com.runwaysdk.business.ClassSignature(hash = 454436856)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,9 +31,9 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   private static final com.runwaysdk.business.ontology.OntologyStrategyIF strategy;
   static 
   {
-    strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("com.runwaysdk.geodashboard.ontology.Classifier");
+    strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("net.geoprism.ontology.Classifier");
   }
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.Classifier";
+  public final static String CLASS = "net.geoprism.ontology.Classifier";
   public static java.lang.String CLASSIFIERID = "classifierId";
   public static java.lang.String CLASSIFIERPACKAGE = "classifierPackage";
   public static java.lang.String CREATEDATE = "createDate";
@@ -53,7 +51,7 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 420895597;
+  private static final long serialVersionUID = 454436856;
   
   public ClassifierBase()
   {
@@ -635,13 +633,13 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   
   public static com.runwaysdk.business.ontology.TermAndRel create(net.geoprism.ontology.Classifier dto, java.lang.String parentId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.Classifier.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.ontology.Classifier getRoot()
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.Classifier.java";
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

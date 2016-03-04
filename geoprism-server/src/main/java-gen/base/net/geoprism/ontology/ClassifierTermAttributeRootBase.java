@@ -18,9 +18,7 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierTermAttributeRoot;
-
-@com.runwaysdk.business.ClassSignature(hash = 838998547)
+@com.runwaysdk.business.ClassSignature(hash = 1494991749)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +28,7 @@ import net.geoprism.ontology.ClassifierTermAttributeRoot;
  */
 public abstract class ClassifierTermAttributeRootBase extends com.runwaysdk.business.Relationship implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierTermAttributeRoot";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierTermAttributeRoot";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -44,7 +42,7 @@ public abstract class ClassifierTermAttributeRootBase extends com.runwaysdk.busi
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 838998547;
+  private static final long serialVersionUID = 1494991749;
   
   public ClassifierTermAttributeRootBase(String parentId, String childId)
   {

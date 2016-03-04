@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = -15534351)
+@com.runwaysdk.business.ClassSignature(hash = 443068913)
 public abstract class InvalidHeaderRowExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.excel.InvalidHeaderRowException";
-  private static final long serialVersionUID = -15534351;
+  public final static String CLASS = "net.geoprism.data.etl.excel.InvalidHeaderRowException";
+  private static final long serialVersionUID = 443068913;
   
   public InvalidHeaderRowExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

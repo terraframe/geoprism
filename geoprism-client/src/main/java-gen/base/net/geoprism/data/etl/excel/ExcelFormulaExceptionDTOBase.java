@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = -999400072)
+@com.runwaysdk.business.ClassSignature(hash = 1306105976)
 public abstract class ExcelFormulaExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.excel.ExcelFormulaException";
-  private static final long serialVersionUID = -999400072;
+  public final static String CLASS = "net.geoprism.data.etl.excel.ExcelFormulaException";
+  private static final long serialVersionUID = 1306105976;
   
   public ExcelFormulaExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {
