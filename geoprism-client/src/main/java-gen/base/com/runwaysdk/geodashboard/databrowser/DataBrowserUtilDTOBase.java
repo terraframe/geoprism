@@ -18,6 +18,8 @@
  */
 package com.runwaysdk.geodashboard.databrowser;
 
+import net.geoprism.data.browser.DataBrowserUtilDTO;
+
 @com.runwaysdk.business.ClassSignature(hash = 1649833896)
 public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -39,7 +41,7 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{type};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO.CLASS, "deleteData", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.browser.DataBrowserUtilDTO.CLASS, "deleteData", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
@@ -47,7 +49,7 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO.CLASS, "getDefaultTypes", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.browser.DataBrowserUtilDTO.CLASS, "getDefaultTypes", _declaredTypes);
     return (com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
@@ -55,7 +57,7 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
   {
     String[] _declaredTypes = new String[]{"[Ljava.lang.String;", "[Ljava.lang.String;"};
     Object[] _parameters = new Object[]{packages, types};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.databrowser.DataBrowserUtilDTO.CLASS, "getTypes", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.browser.DataBrowserUtilDTO.CLASS, "getTypes", _declaredTypes);
     return (com.runwaysdk.geodashboard.databrowser.MetadataTypeQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

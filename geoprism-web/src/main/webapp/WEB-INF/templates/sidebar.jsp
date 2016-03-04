@@ -24,9 +24,9 @@
 <%@page import="java.util.List"%>
 <%@page import="com.runwaysdk.web.WebClientSession"%>
 <%@page import="com.runwaysdk.constants.ClientConstants"%>
-<%@page import="com.runwaysdk.geodashboard.sidebar.XMLMenuProvider"%>
-<%@page import="com.runwaysdk.geodashboard.sidebar.MenuItem"%>
-<%@page import="com.runwaysdk.geodashboard.sidebar.ActivePageWriter"%>
+<%@page import="net.geoprism.sidebar.XMLMenuProvider"%>
+<%@page import="net.geoprism.sidebar.MenuItem"%>
+<%@page import="net.geoprism.sidebar.ActivePageWriter"%>
 
 <%@page import="com.runwaysdk.constants.DeployProperties"%>
 <%

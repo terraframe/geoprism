@@ -18,8 +18,9 @@
  */
 package net.geoprism.gis.geoserver;
 
+import net.geoprism.util.Predicate;
+
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.util.Predicate;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;

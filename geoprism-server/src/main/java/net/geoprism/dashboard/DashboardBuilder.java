@@ -20,19 +20,20 @@ package net.geoprism.dashboard;
 
 import java.util.List;
 
+import net.geoprism.AttributeWrapper;
+import net.geoprism.AttributeWrapperQuery;
+import net.geoprism.Dashboard;
+import net.geoprism.DashboardAttributes;
+import net.geoprism.DashboardAttributesQuery;
+import net.geoprism.DashboardMetadata;
+import net.geoprism.DashboardMetadataQuery;
+import net.geoprism.MetadataWrapper;
+import net.geoprism.MetadataWrapperQuery;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.AttributeWrapper;
-import com.runwaysdk.geodashboard.AttributeWrapperQuery;
-import com.runwaysdk.geodashboard.Dashboard;
-import com.runwaysdk.geodashboard.DashboardAttributes;
-import com.runwaysdk.geodashboard.DashboardAttributesQuery;
-import com.runwaysdk.geodashboard.DashboardMetadata;
-import com.runwaysdk.geodashboard.DashboardMetadataQuery;
-import com.runwaysdk.geodashboard.MetadataWrapper;
-import com.runwaysdk.geodashboard.MetadataWrapperQuery;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;

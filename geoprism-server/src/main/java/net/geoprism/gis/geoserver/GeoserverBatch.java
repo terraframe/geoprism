@@ -21,9 +21,10 @@ package net.geoprism.gis.geoserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.geoprism.dashboard.DashboardLayer;
+import net.geoprism.dashboard.DashboardStyle;
+
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 
 public class GeoserverBatch implements Reloadable
 {

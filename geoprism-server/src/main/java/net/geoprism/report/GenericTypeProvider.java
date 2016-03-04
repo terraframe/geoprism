@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Locale;
 
 import net.geoprism.QueryUtil;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
+import net.geoprism.report.PairView;
 
 import org.json.JSONException;
 
@@ -36,9 +39,6 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
-import com.runwaysdk.geodashboard.report.PairView;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;

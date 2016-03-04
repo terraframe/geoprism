@@ -26,8 +26,8 @@
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <%@page import="com.runwaysdk.system.gis.geo.LocatedInDTO" %>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO" %>
-<%@page import="com.runwaysdk.geodashboard.ontology.ClassifierDTO" %>    
+<%@page import="net.geoprism.ontology.ClassifierIsARelationshipDTO" %>
+<%@page import="net.geoprism.ontology.ClassifierDTO" %>    
     
 <head>
 

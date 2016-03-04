@@ -18,8 +18,9 @@
  */
 package net.geoprism.report;
 
+import net.geoprism.dashboard.AllAggregationType;
+
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 
 public class ReportAttributeMetadata implements Reloadable
 {

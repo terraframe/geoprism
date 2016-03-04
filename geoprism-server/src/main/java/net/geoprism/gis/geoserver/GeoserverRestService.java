@@ -33,16 +33,17 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.geoprism.dashboard.DashboardLayer;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.gis.geoserver.MapLayerException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.geodashboard.gis.geoserver.MapLayerException;
-import com.runwaysdk.geodashboard.gis.persist.DashboardLayer;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;

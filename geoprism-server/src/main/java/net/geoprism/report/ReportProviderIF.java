@@ -20,10 +20,11 @@ package net.geoprism.report;
 
 import java.util.List;
 
+import net.geoprism.report.PairView;
+
 import org.json.JSONException;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.report.PairView;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 

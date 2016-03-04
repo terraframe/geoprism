@@ -18,10 +18,11 @@
  */
 package net.geoprism.report;
 
+import net.geoprism.report.BirtConstants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.geodashboard.report.BirtConstants;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 

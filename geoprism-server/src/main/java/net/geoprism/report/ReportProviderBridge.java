@@ -25,15 +25,16 @@ import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import net.geoprism.dashboard.AggregationStrategyView;
+import net.geoprism.report.PairView;
+import net.geoprism.report.ReportRenderException;
+
 import org.json.JSONException;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.persist.AggregationStrategyView;
-import com.runwaysdk.geodashboard.report.PairView;
-import com.runwaysdk.geodashboard.report.ReportRenderException;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 

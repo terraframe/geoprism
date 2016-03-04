@@ -20,6 +20,9 @@ package net.geoprism.dashboard.query;
 
 import java.util.List;
 
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicLayer;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 
@@ -29,9 +32,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.GeneratedComponentQuery;

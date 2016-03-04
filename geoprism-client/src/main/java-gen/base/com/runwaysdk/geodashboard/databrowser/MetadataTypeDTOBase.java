@@ -18,6 +18,8 @@
  */
 package com.runwaysdk.geodashboard.databrowser;
 
+import net.geoprism.data.browser.MetadataTypeDTO;
+
 @com.runwaysdk.business.ClassSignature(hash = -1543939659)
 public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {

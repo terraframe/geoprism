@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import net.geoprism.localization.LocalizationFacade;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.json.JSONException;
@@ -47,7 +49,6 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 
 public class LocaleManager implements Reloadable
 {

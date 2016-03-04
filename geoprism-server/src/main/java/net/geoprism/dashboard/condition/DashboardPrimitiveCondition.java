@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.report.ReportProviderUtil;
 
 import org.json.JSONException;
@@ -38,7 +39,6 @@ import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 
 public abstract class DashboardPrimitiveCondition extends DashboardAttributeCondition implements Reloadable
 {

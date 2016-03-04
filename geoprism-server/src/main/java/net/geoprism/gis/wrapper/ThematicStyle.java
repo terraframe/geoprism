@@ -18,11 +18,12 @@
  */
 package net.geoprism.gis.wrapper;
 
+import net.geoprism.dashboard.AllAggregationType;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.geodashboard.gis.persist.AllAggregationType;
 
 public interface ThematicStyle extends Style
 {

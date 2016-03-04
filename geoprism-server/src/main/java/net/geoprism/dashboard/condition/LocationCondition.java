@@ -21,7 +21,9 @@ package net.geoprism.dashboard.condition;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.geoprism.GeoEntityUtil;
 import net.geoprism.QueryUtil;
+import net.geoprism.localization.LocalizationFacade;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +32,6 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.geodashboard.GeoEntityUtil;
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.GeneratedComponentQuery;

@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.geoprism.importer.GeodashboardImportPlugin;
+import net.geoprism.data.importer.GeodashboardImportPlugin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

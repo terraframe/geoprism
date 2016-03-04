@@ -41,6 +41,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicStyle;
 import net.geoprism.dashboard.condition.wrapper.And;
 import net.geoprism.dashboard.condition.wrapper.Category;
 import net.geoprism.dashboard.condition.wrapper.Condition;
@@ -56,6 +58,7 @@ import net.geoprism.dashboard.condition.wrapper.LessThanOrEqual;
 import net.geoprism.dashboard.condition.wrapper.NotEqual;
 import net.geoprism.dashboard.condition.wrapper.Or;
 import net.geoprism.dashboard.condition.wrapper.Primitive;
+import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.gis.wrapper.AttributeType;
 import net.geoprism.gis.wrapper.FeatureStrategy;
 import net.geoprism.gis.wrapper.FeatureType;
@@ -66,6 +69,7 @@ import net.geoprism.gis.wrapper.ReferenceLayer;
 import net.geoprism.gis.wrapper.Style;
 import net.geoprism.gis.wrapper.ThematicLayer;
 import net.geoprism.gis.wrapper.ThematicStyle;
+import net.geoprism.localization.LocalizationFacade;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,10 +80,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.transport.conversion.ConversionException;
 

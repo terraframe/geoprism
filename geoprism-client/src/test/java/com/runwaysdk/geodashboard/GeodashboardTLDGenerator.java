@@ -21,6 +21,8 @@ package com.runwaysdk.geodashboard;
 import java.io.File;
 import java.io.IOException;
 
+import net.geoprism.LocalizedTagSupport;
+
 import com.runwaysdk.controller.tag.develop.TLDGenerator;
 
 public class GeodashboardTLDGenerator

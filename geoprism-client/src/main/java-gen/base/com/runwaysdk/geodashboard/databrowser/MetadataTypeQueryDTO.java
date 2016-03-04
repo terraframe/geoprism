@@ -37,8 +37,8 @@ private static final long serialVersionUID = -2132457268;
   }
 
 @SuppressWarnings("unchecked")
-public java.util.List<? extends com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO> getResultSet()
+public java.util.List<? extends net.geoprism.data.browser.MetadataTypeDTO> getResultSet()
 {
-  return (java.util.List<? extends com.runwaysdk.geodashboard.databrowser.MetadataTypeDTO>)super.getResultSet();
+  return (java.util.List<? extends net.geoprism.data.browser.MetadataTypeDTO>)super.getResultSet();
 }
 }

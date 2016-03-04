@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.importer.GeodashboardImportPlugin;
+import net.geoprism.data.importer.GeodashboardImportPlugin;
 
 import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;

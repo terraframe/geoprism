@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.geoprism.SessionParameterFacade;
+import net.geoprism.util.Iterables;
 
 import org.apache.commons.io.FileUtils;
 
@@ -33,7 +34,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.util.Iterables;
 import com.runwaysdk.session.Request;
 
 public class CleanupFacade implements Reloadable

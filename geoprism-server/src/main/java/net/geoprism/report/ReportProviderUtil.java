@@ -23,11 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import net.geoprism.DateParseException;
 import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.localization.LocalizationFacade;
 
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
-import com.runwaysdk.geodashboard.parse.DateParseException;
 import com.runwaysdk.query.GeneratedComponentQuery;
 
 public class ReportProviderUtil implements Reloadable
