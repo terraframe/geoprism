@@ -18,13 +18,13 @@
  */
 package net.geoprism;
 
-import net.geoprism.GeodashboardUserDTOBase;
+import net.geoprism.GeoprismUserDTOBase;
 
-public class GeodashboardUserDTO extends GeodashboardUserDTOBase
+public class GeoprismUserDTO extends GeoprismUserDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{
   private static final long serialVersionUID = 1688177328;
   
-  public GeodashboardUserDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public GeoprismUserDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(clientRequest);
   }
@@ -35,7 +35,7 @@ public class GeodashboardUserDTO extends GeodashboardUserDTOBase
   * @param businessDTO The BusinessDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected GeodashboardUserDTO(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected GeoprismUserDTO(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
   }

@@ -453,10 +453,6 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu geoEntityExportMenu);
-
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu geoEntityExportMenu);
-
   }
 
 /**
@@ -473,19 +469,6 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     super(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, alias, displayLabel);
 
   }
-
-
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu geoEntityExportMenu)
-    {
-      if(geoEntityExportMenu == null) return this.EQ((java.lang.String)null);
-      return this.EQ(geoEntityExportMenu.getId());
-    }
-
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu geoEntityExportMenu)
-    {
-      if(geoEntityExportMenu == null) return this.NE((java.lang.String)null);
-      return this.NE(geoEntityExportMenu.getId());
-    }
 
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -822,12 +805,6 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
-
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu);
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu);
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu);
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu);
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu);
   }
 
 /**
@@ -846,66 +823,6 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
   }
 
 
-
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu)  {
-
-      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
-
-      for (int i=0; i<geoEntityExportMenu.length; i++)
-      {
-        itemIdArray[i] = geoEntityExportMenu[i].getId();
-      }
-
-      return this.containsAny(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu)  {
-
-      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
-
-      for (int i=0; i<geoEntityExportMenu.length; i++)
-      {
-        itemIdArray[i] = geoEntityExportMenu[i].getId();
-      }
-
-      return this.notContainsAny(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu)  {
-
-      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
-
-      for (int i=0; i<geoEntityExportMenu.length; i++)
-      {
-        itemIdArray[i] = geoEntityExportMenu[i].getId();
-      }
-
-      return this.containsAll(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu)  {
-
-      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
-
-      for (int i=0; i<geoEntityExportMenu.length; i++)
-      {
-        itemIdArray[i] = geoEntityExportMenu[i].getId();
-      }
-
-      return this.notContainsAll(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.gis.GeoEntityExportMenu ... geoEntityExportMenu)  {
-
-      String[] itemIdArray = new String[geoEntityExportMenu.length]; 
-
-      for (int i=0; i<geoEntityExportMenu.length; i++)
-      {
-        itemIdArray[i] = geoEntityExportMenu[i].getId();
-      }
-
-      return this.containsExactly(itemIdArray);
-  }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
     return getCreateDate(null);

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.geoprism.GeodashboardUserDTO;
+import net.geoprism.GeoprismUserDTO;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.URLConfigurationManager;
@@ -79,7 +79,7 @@ public class MenuItem
   {
     if (this.getRoles() != null && this.getRoles().length() > 0)
     {
-      return GeodashboardUserDTO.isRoleMemeber(request, this.getRoles());
+      return GeoprismUserDTO.isRoleMemeber(request, this.getRoles());
     }
 
     return true;

@@ -28,7 +28,7 @@ import net.geoprism.AccessConstants;
 import net.geoprism.DashboardDTO;
 import net.geoprism.DashboardQueryDTO;
 import net.geoprism.FileDownloadUtil;
-import net.geoprism.GeodashboardUserDTO;
+import net.geoprism.GeoprismUserDTO;
 import net.geoprism.JavascriptUtil;
 import net.geoprism.dashboard.DashboardMapControllerBase;
 import net.geoprism.gis.geoserver.GeoserverProperties;
@@ -195,8 +195,8 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     }
 
     req.setAttribute("workspace", GeoserverProperties.getWorkspace());
-    req.setAttribute("editDashboard", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
-    req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+    req.setAttribute("editDashboard", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
+    req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
     JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 

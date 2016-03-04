@@ -20,7 +20,7 @@
 --%>
 <%@page import="com.runwaysdk.constants.ClientRequestIF"%>
 <%@page import="net.geoprism.localization.LocalizationFacadeDTO"%>
-<%@page import="net.geoprism.GeodashboardUserDTO"%>
+<%@page import="net.geoprism.GeoprismUserDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="com.runwaysdk.web.WebClientSession"%>
 <%@page import="com.runwaysdk.constants.ClientConstants"%>

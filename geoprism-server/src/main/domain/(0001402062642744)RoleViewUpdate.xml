@@ -27,7 +27,7 @@
 						<text name="groupName" label="Group name" />
 					</attributes>
 					<mdMethod name="getRoles" label="Get roles" static="true" returnType="net.geoprism.RoleView[]">
-						<mdParameter name="user" label="User" order="0" type="net.geoprism.GeodashboardUser" />
+						<mdParameter name="user" label="User" order="0" type="net.geoprism.GeoprismUser" />
 					</mdMethod>
 				</create>
 			</mdView>

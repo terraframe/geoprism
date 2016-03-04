@@ -41,7 +41,7 @@
           <mdParameter order="1" description="Array of user ids assigned to this dashboard" name="userIds" label="User Ids" type="java.lang.String[]" />
         </mdMethod>
         <mdMethod static="false" description="Get all dashboard users and their access status" name="getAllDashboardUsersJSON" label="Get all dashboard users" returnType="java.lang.String"></mdMethod>
-      	<mdMethod static="false" description="Get all dashboard users" name="getAllDashboardUsers" label="Get all dashboard users" returnType="net.geoprism.GeodashboardUser[]"></mdMethod>
+      	<mdMethod static="false" description="Get all dashboard users" name="getAllDashboardUsers" label="Get all dashboard users" returnType="net.geoprism.GeoprismUser[]"></mdMethod>
       </mdBusiness>
 
       <mdRelationship name="net.geoprism.DashboardMetadata" label="Dashboard Metadata" cacheAlgorithm="everything">

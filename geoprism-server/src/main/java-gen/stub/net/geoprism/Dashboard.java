@@ -47,7 +47,7 @@ import net.geoprism.DashboardBase;
 import net.geoprism.DashboardMetadataQuery;
 import net.geoprism.DashboardQuery;
 import net.geoprism.DashboardStateQuery;
-import net.geoprism.GeodashboardUserQuery;
+import net.geoprism.GeoprismUserQuery;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.MappableClassGeoNodeQuery;
 import net.geoprism.MappableClassQuery;
@@ -128,11 +128,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     private Dashboard          dashboard;
 
-    private GeodashboardUser[] users;
+    private GeoprismUser[] users;
 
     private String             sessionId;
 
-    public ThumbnailThread(String sessionId, Dashboard dashboard, GeodashboardUser... users)
+    public ThumbnailThread(String sessionId, Dashboard dashboard, GeoprismUser... users)
     {
       this.dashboard = dashboard;
       this.users = users;
@@ -170,13 +170,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public static DashboardQuery getSortedDashboards()
   {
-    if (!GeodashboardUser.hasAccess(AccessConstants.ADMIN))
+    if (!GeoprismUser.hasAccess(AccessConstants.ADMIN))
     {
-      GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
+      GeoprismUser currentUser = GeoprismUser.getCurrentUser();
 
       QueryFactory f = new QueryFactory();
 
-      GeodashboardUserQuery userQuery = new GeodashboardUserQuery(f);
+      GeoprismUserQuery userQuery = new GeoprismUserQuery(f);
       userQuery.WHERE(userQuery.getId().EQ(currentUser.getId()));
 
       RolesQuery rolesQuery = new RolesQuery(f);
@@ -507,7 +507,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     DashboardState state = DashboardState.getDashboardState(this, null);
     state.clone(this);
 
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    GeoprismUser user = GeoprismUser.getCurrentUser();
 
     if (user != null)
     {
@@ -954,7 +954,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public Boolean hasAccess()
   {
-    GeodashboardUser currentUser = GeodashboardUser.getCurrentUser();
+    GeoprismUser currentUser = GeoprismUser.getCurrentUser();
 
     if (currentUser != null)
     {
@@ -962,7 +962,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
       if (!access)
       {
-        return GeodashboardUser.hasAccess(AccessConstants.ADMIN);
+        return GeoprismUser.hasAccess(AccessConstants.ADMIN);
       }
 
       return true;
@@ -975,14 +975,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
    * Gets all active geodashboard users in the system who are not Administrators
    */
   @Override
-  public GeodashboardUser[] getAllDashboardUsers()
+  public GeoprismUser[] getAllDashboardUsers()
   {
-    ArrayList<GeodashboardUser> nonAdminGDUsers = new ArrayList<GeodashboardUser>();
-    GeodashboardUser[] gdUsers = GeodashboardUser.getAllUsers();
+    ArrayList<GeoprismUser> nonAdminGDUsers = new ArrayList<GeoprismUser>();
+    GeoprismUser[] gdUsers = GeoprismUser.getAllUsers();
     for (int i = 0; i < gdUsers.length; i++)
     {
       boolean isAdmin = false;
-      GeodashboardUser user = gdUsers[i];
+      GeoprismUser user = gdUsers[i];
 
       List<? extends Roles> userRoles = user.getAllAssignedRole().getAll();
       for (Roles role : userRoles)
@@ -1001,7 +1001,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
     }
 
-    GeodashboardUser[] nonAdminGDUsersArr = nonAdminGDUsers.toArray(new GeodashboardUser[nonAdminGDUsers.size()]);
+    GeoprismUser[] nonAdminGDUsersArr = nonAdminGDUsers.toArray(new GeoprismUser[nonAdminGDUsers.size()]);
 
     return nonAdminGDUsersArr;
   }
@@ -1022,12 +1022,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     JSONArray usersArr = new JSONArray();
 
-    GeodashboardUser[] gdUsers = this.getAllDashboardUsers();
+    GeoprismUser[] gdUsers = this.getAllDashboardUsers();
 
     for (int i = 0; i < gdUsers.length; i++)
     {
       JSONObject userObj = new JSONObject();
-      GeodashboardUser user = gdUsers[i];
+      GeoprismUser user = gdUsers[i];
 
       boolean hasAccess = this.userHasAccess(user);
       Boolean inactive = user.getInactive();
@@ -1064,7 +1064,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         JSONObject userObj = users.getJSONObject(i);
 
-        String userId = userObj.getString(GeodashboardUser.ID);
+        String userId = userObj.getString(GeoprismUser.ID);
         boolean assignToDashboard = (Boolean) userObj.get("hasAccess");
 
         UserDAOIF user = UserDAO.get(userId);
@@ -1086,7 +1086,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-  private Boolean userHasAccess(GeodashboardUser user)
+  private Boolean userHasAccess(GeoprismUser user)
   {
     Boolean access = user.isAssigned(this.getDashboardRole());
 
@@ -1240,7 +1240,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   private DashboardState getDashboardState()
   {
-    GeodashboardUser user = GeodashboardUser.getCurrentUser();
+    GeoprismUser user = GeoprismUser.getCurrentUser();
 
     DashboardState state = null;
 
@@ -1257,7 +1257,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return state;
   }
 
-  private DashboardState getOrCreateDashboardState(GeodashboardUser user)
+  private DashboardState getOrCreateDashboardState(GeoprismUser user)
   {
     DashboardState state = DashboardState.getDashboardState(this, user);
 
@@ -1265,7 +1265,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     {
       state = new DashboardState();
       state.setDashboard(this);
-      state.setGeodashboardUser(user);
+      state.setGeoprismUser(user);
     }
     else
     {
@@ -1281,10 +1281,10 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
      * This method is only invoked when a new layer is created. As such, it generates a thumbnail for both the current
      * users state and the global state. Normally you just want to generate a thumbnail for one or the other.
      */
-    this.executeThumbnailThread(GeodashboardUser.getCurrentUser(), null);
+    this.executeThumbnailThread(GeoprismUser.getCurrentUser(), null);
   }
 
-  private void executeThumbnailThread(GeodashboardUser... users)
+  private void executeThumbnailThread(GeoprismUser... users)
   {
     String sessionId = Session.getCurrentSession().getId();
 
@@ -1303,11 +1303,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Transaction
-  private void generateThumbnailImage(GeodashboardUser[] users)
+  private void generateThumbnailImage(GeoprismUser[] users)
   {
     byte[] image = this.generateThumbnail();
 
-    for (GeodashboardUser user : users)
+    for (GeoprismUser user : users)
     {
       DashboardState state = DashboardState.getDashboardState(this, user);
 
@@ -1532,8 +1532,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("label", this.getDisplayLabel().getValue());
     object.put("description", this.getDescription().getValue());
     object.put("hasReport", this.hasReport());
-    object.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
-    object.put("editData", GeodashboardUser.hasAccess(AccessConstants.EDIT_DATA));
+    object.put("editDashboard", GeoprismUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
+    object.put("editData", GeoprismUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
 
     List<GeoEntity> countries = this.getCountries();
@@ -1608,11 +1608,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(json);
 
-    GeodashboardUser user = null;
+    GeoprismUser user = null;
 
     if (!global)
     {
-      user = GeodashboardUser.getCurrentUser();
+      user = GeoprismUser.getCurrentUser();
     }
 
     DashboardState state = this.getOrCreateDashboardState(user);
@@ -1668,7 +1668,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
 
       response.put("dashboards", dashboards);
-      response.put("editDashboard", GeodashboardUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
+      response.put("editDashboard", GeoprismUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
 
       return response.toString();
     }

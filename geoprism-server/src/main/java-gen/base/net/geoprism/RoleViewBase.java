@@ -181,19 +181,19 @@ public abstract class RoleViewBase extends com.runwaysdk.business.View implement
     return (RoleView) com.runwaysdk.business.View.get(id);
   }
   
-  public static net.geoprism.RoleView[] getAdminRoles(net.geoprism.GeodashboardUser user)
+  public static net.geoprism.RoleView[] getAdminRoles(net.geoprism.GeoprismUser user)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.RoleView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static net.geoprism.RoleView[] getDashboardRoles(net.geoprism.GeodashboardUser user)
+  public static net.geoprism.RoleView[] getDashboardRoles(net.geoprism.GeoprismUser user)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.RoleView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static net.geoprism.RoleView[] getRoles(net.geoprism.GeodashboardUser user)
+  public static net.geoprism.RoleView[] getRoles(net.geoprism.GeoprismUser user)
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.RoleView.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

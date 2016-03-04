@@ -19,12 +19,12 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -2089297870)
-public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.UsersDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.GeodashboardUser";
+  public final static String CLASS = "com.runwaysdk.geodashboard.GeoprismUser";
   private static final long serialVersionUID = -2089297870;
   
-  protected GeodashboardUserDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected GeoprismUserDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(clientRequest);
   }
@@ -35,7 +35,7 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
   * @param businessDTO The BusinessDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected GeodashboardUserDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected GeoprismUserDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
   }
@@ -201,7 +201,7 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
   {
     String[] _declaredTypes = new String[]{"[Ljava.lang.String;"};
     Object[] _parameters = new Object[]{roleIds};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "applyWithRoles", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "applyWithRoles", _declaredTypes);
     getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
@@ -209,31 +209,31 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "[Ljava.lang.String;"};
     Object[] _parameters = new Object[]{id, roleIds};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "applyWithRoles", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "applyWithRoles", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final net.geoprism.GeodashboardUserDTO[] getAllUsers(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static final net.geoprism.GeoprismUserDTO[] getAllUsers(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "getAllUsers", _declaredTypes);
-    return (net.geoprism.GeodashboardUserDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "getAllUsers", _declaredTypes);
+    return (net.geoprism.GeoprismUserDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final net.geoprism.GeodashboardUserDTO getCurrentUser(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static final net.geoprism.GeoprismUserDTO getCurrentUser(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "getCurrentUser", _declaredTypes);
-    return (net.geoprism.GeodashboardUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "getCurrentUser", _declaredTypes);
+    return (net.geoprism.GeoprismUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final java.lang.Boolean hasAccess(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String functionality)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{functionality};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "hasAccess", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "hasAccess", _declaredTypes);
     return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
@@ -241,15 +241,15 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{roles};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "isRoleMemeber", _declaredTypes);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "isRoleMemeber", _declaredTypes);
     return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.GeodashboardUserDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.GeoprismUserDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
     
-    return (net.geoprism.GeodashboardUserDTO) dto;
+    return (net.geoprism.GeoprismUserDTO) dto;
   }
   
   public void apply()
@@ -268,9 +268,9 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
     getRequest().delete(this.getId());
   }
   
-  public static net.geoprism.GeodashboardUserQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static net.geoprism.GeoprismUserQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (net.geoprism.GeodashboardUserQueryDTO) clientRequest.getAllInstances(net.geoprism.GeodashboardUserDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (net.geoprism.GeoprismUserQueryDTO) clientRequest.getAllInstances(net.geoprism.GeoprismUserDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -278,12 +278,12 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
     getRequest().lock(this);
   }
   
-  public static net.geoprism.GeodashboardUserDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.GeoprismUserDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "lock", _declaredTypes);
-    return (net.geoprism.GeodashboardUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "lock", _declaredTypes);
+    return (net.geoprism.GeoprismUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -291,12 +291,12 @@ public abstract class GeodashboardUserDTOBase extends com.runwaysdk.system.Users
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.GeodashboardUserDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.GeoprismUserDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeodashboardUserDTO.CLASS, "unlock", _declaredTypes);
-    return (net.geoprism.GeodashboardUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "unlock", _declaredTypes);
+    return (net.geoprism.GeoprismUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

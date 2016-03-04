@@ -123,7 +123,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
   private boolean userIsAdmin()
   {
-    GeodashboardUserDTO currentUser = GeodashboardUserDTO.getCurrentUser(this.getClientRequest());
+    GeoprismUserDTO currentUser = GeoprismUserDTO.getCurrentUser(this.getClientRequest());
 
     List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
     for (RolesDTO role : userRoles)

@@ -140,7 +140,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
     
     this.req.setAttribute("response", response);
-    this.req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+    this.req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
     JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
 
@@ -195,7 +195,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
     this.req.setAttribute("emailSetting", serializedES);
     
-    String metadataUsr = "{className:" + GeodashboardUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
+    String metadataUsr = "{className:" + GeoprismUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
     String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
     this.req.setAttribute("user", serializedUsr);
     

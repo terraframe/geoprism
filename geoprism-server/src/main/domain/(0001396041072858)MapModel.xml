@@ -128,7 +128,7 @@
           <reference name="mdAttribute" label="MdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
           <reference name="geoNode" label="Geo node" required="true" type="com.runwaysdk.system.gis.geo.GeoNode" />
           <reference name="aggregationStrategy" label="Aggregation strategy" required="true" type="net.geoprism.dashboard.AggregationStrategy" />
-        </attributes
+        </attributes>
         <mdMethod name="getGeoNodeGeometryTypesJSON" returnType="java.lang.String" static="true">
         	<mdParameter name="geoNodeId" label="Geo node id" order="0" type="java.lang.String" />
       	</mdMethod>

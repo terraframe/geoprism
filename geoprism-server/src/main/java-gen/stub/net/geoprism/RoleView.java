@@ -61,7 +61,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
   }
 
   @Transaction
-  public static RoleView[] getRoles(GeodashboardUser user)
+  public static RoleView[] getRoles(GeoprismUser user)
   {
     List<RoleView> list = new LinkedList<RoleView>();
     list.addAll(Arrays.asList(RoleView.getAdminRoles(user)));
@@ -71,18 +71,18 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
   }
 
   @Transaction
-  public static RoleView[] getAdminRoles(GeodashboardUser user)
+  public static RoleView[] getAdminRoles(GeoprismUser user)
   {
     return RoleView.getRolesViews(user, RoleView.ADMIN_NAMESPACE, "adminRoles");
   }
 
   @Transaction
-  public static RoleView[] getDashboardRoles(GeodashboardUser user)
+  public static RoleView[] getDashboardRoles(GeoprismUser user)
   {
     return RoleView.getRolesViews(user, RoleView.DASHBOARD_NAMESPACE, "dashboardRoles");
   }
 
-  private static RoleView[] getRolesViews(GeodashboardUser user, String namespace, String groupName)
+  private static RoleView[] getRolesViews(GeoprismUser user, String namespace, String groupName)
   {
     Set<String> roles = RoleView.getAuthorizedRoles(user);
     List<RoleView> list = new LinkedList<RoleView>();
@@ -111,7 +111,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
     }
   }
 
-  public static Set<String> getAuthorizedRoles(GeodashboardUser user)
+  public static Set<String> getAuthorizedRoles(GeoprismUser user)
   {
     TreeSet<String> set = new TreeSet<String>();
 

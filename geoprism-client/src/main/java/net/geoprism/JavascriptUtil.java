@@ -29,7 +29,7 @@ import net.geoprism.DashboardDisplayLabelDTO;
 import net.geoprism.DataUploaderController;
 import net.geoprism.EmailSettingDTO;
 import net.geoprism.GeoEntityUtilDTO;
-import net.geoprism.GeodashboardUserDTO;
+import net.geoprism.GeoprismUserDTO;
 import net.geoprism.MappableClassDTO;
 import net.geoprism.RoleViewDTO;
 import net.geoprism.dashboard.AggregationStrategyDTO;
@@ -150,7 +150,7 @@ public class JavascriptUtil implements Reloadable
     Set<String> types = new HashSet<String>();
     types.add(RolesDTO.CLASS);
     types.add(RoleViewDTO.CLASS);
-    types.add(GeodashboardUserDTO.CLASS);
+    types.add(GeoprismUserDTO.CLASS);
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);   
     types.add(DashboardController.CLASS);
@@ -176,7 +176,7 @@ public class JavascriptUtil implements Reloadable
     types.add(EmailSettingDTO.CLASS);
     types.add(RolesDTO.CLASS);
     types.add(RoleViewDTO.CLASS);
-    types.add(GeodashboardUserDTO.CLASS);
+    types.add(GeoprismUserDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

@@ -432,11 +432,6 @@ public  class UniversalExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
-
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.UniversalExportMenu universalExportMenu);
-
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.gis.UniversalExportMenu universalExportMenu);
-
   }
 
 /**
@@ -453,19 +448,6 @@ public  class UniversalExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     super(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, alias, displayLabel);
 
   }
-
-
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.UniversalExportMenu universalExportMenu)
-    {
-      if(universalExportMenu == null) return this.EQ((java.lang.String)null);
-      return this.EQ(universalExportMenu.getId());
-    }
-
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.gis.UniversalExportMenu universalExportMenu)
-    {
-      if(universalExportMenu == null) return this.NE((java.lang.String)null);
-      return this.NE(universalExportMenu.getId());
-    }
 
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -782,12 +764,6 @@ public  class UniversalExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
-
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu);
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu);
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu);
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu);
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu);
   }
 
 /**
@@ -805,67 +781,6 @@ public  class UniversalExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
 
   }
 
-
-
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu)  {
-
-      String[] itemIdArray = new String[universalExportMenu.length]; 
-
-      for (int i=0; i<universalExportMenu.length; i++)
-      {
-        itemIdArray[i] = universalExportMenu[i].getId();
-      }
-
-      return this.containsAny(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu)  {
-
-      String[] itemIdArray = new String[universalExportMenu.length]; 
-
-      for (int i=0; i<universalExportMenu.length; i++)
-      {
-        itemIdArray[i] = universalExportMenu[i].getId();
-      }
-
-      return this.notContainsAny(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu)  {
-
-      String[] itemIdArray = new String[universalExportMenu.length]; 
-
-      for (int i=0; i<universalExportMenu.length; i++)
-      {
-        itemIdArray[i] = universalExportMenu[i].getId();
-      }
-
-      return this.containsAll(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu)  {
-
-      String[] itemIdArray = new String[universalExportMenu.length]; 
-
-      for (int i=0; i<universalExportMenu.length; i++)
-      {
-        itemIdArray[i] = universalExportMenu[i].getId();
-      }
-
-      return this.notContainsAll(itemIdArray);
-  }
-
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.gis.UniversalExportMenu ... universalExportMenu)  {
-
-      String[] itemIdArray = new String[universalExportMenu.length]; 
-
-      for (int i=0; i<universalExportMenu.length; i++)
-      {
-        itemIdArray[i] = universalExportMenu[i].getId();
-      }
-
-      return this.containsExactly(itemIdArray);
-  }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
     return getCreateDate(null);

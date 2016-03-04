@@ -36,7 +36,7 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String GEODASHBOARDUSER = "geodashboardUser";
+  public static java.lang.String GEOPRISMUSER = "geodashboardUser";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -206,43 +206,43 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
     }
   }
   
-  public net.geoprism.GeodashboardUser getGeodashboardUser()
+  public net.geoprism.GeoprismUser getGeoprismUser()
   {
-    if (getValue(GEODASHBOARDUSER).trim().equals(""))
+    if (getValue(GEOPRISMUSER).trim().equals(""))
     {
       return null;
     }
     else
     {
-      return net.geoprism.GeodashboardUser.get(getValue(GEODASHBOARDUSER));
+      return net.geoprism.GeoprismUser.get(getValue(GEOPRISMUSER));
     }
   }
   
-  public String getGeodashboardUserId()
+  public String getGeoprismUserId()
   {
-    return getValue(GEODASHBOARDUSER);
+    return getValue(GEOPRISMUSER);
   }
   
-  public void validateGeodashboardUser()
+  public void validateGeoprismUser()
   {
-    this.validateAttribute(GEODASHBOARDUSER);
+    this.validateAttribute(GEOPRISMUSER);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeodashboardUserMd()
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeoprismUserMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.DashboardState.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEODASHBOARDUSER);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEOPRISMUSER);
   }
   
-  public void setGeodashboardUser(net.geoprism.GeodashboardUser value)
+  public void setGeoprismUser(net.geoprism.GeoprismUser value)
   {
     if(value == null)
     {
-      setValue(GEODASHBOARDUSER, "");
+      setValue(GEOPRISMUSER, "");
     }
     else
     {
-      setValue(GEODASHBOARDUSER, value.getId());
+      setValue(GEOPRISMUSER, value.getId());
     }
   }
   

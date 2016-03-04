@@ -49,7 +49,7 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String GEODASHBOARDUSER = "geodashboardUser";
+  public static java.lang.String GEOPRISMUSER = "geodashboardUser";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -219,53 +219,53 @@ public abstract class DashboardConditionDTOBase extends com.runwaysdk.business.B
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
   }
   
-  public net.geoprism.GeodashboardUserDTO getGeodashboardUser()
+  public net.geoprism.GeoprismUserDTO getGeoprismUser()
   {
-    if(getValue(GEODASHBOARDUSER) == null || getValue(GEODASHBOARDUSER).trim().equals(""))
+    if(getValue(GEOPRISMUSER) == null || getValue(GEOPRISMUSER).trim().equals(""))
     {
       return null;
     }
     else
     {
-      return net.geoprism.GeodashboardUserDTO.get(getRequest(), getValue(GEODASHBOARDUSER));
+      return net.geoprism.GeoprismUserDTO.get(getRequest(), getValue(GEOPRISMUSER));
     }
   }
   
-  public String getGeodashboardUserId()
+  public String getGeoprismUserId()
   {
-    return getValue(GEODASHBOARDUSER);
+    return getValue(GEOPRISMUSER);
   }
   
-  public void setGeodashboardUser(net.geoprism.GeodashboardUserDTO value)
+  public void setGeoprismUser(net.geoprism.GeoprismUserDTO value)
   {
     if(value == null)
     {
-      setValue(GEODASHBOARDUSER, "");
+      setValue(GEOPRISMUSER, "");
     }
     else
     {
-      setValue(GEODASHBOARDUSER, value.getId());
+      setValue(GEOPRISMUSER, value.getId());
     }
   }
   
-  public boolean isGeodashboardUserWritable()
+  public boolean isGeoprismUserWritable()
   {
-    return isWritable(GEODASHBOARDUSER);
+    return isWritable(GEOPRISMUSER);
   }
   
-  public boolean isGeodashboardUserReadable()
+  public boolean isGeoprismUserReadable()
   {
-    return isReadable(GEODASHBOARDUSER);
+    return isReadable(GEOPRISMUSER);
   }
   
-  public boolean isGeodashboardUserModified()
+  public boolean isGeoprismUserModified()
   {
-    return isModified(GEODASHBOARDUSER);
+    return isModified(GEOPRISMUSER);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeodashboardUserMd()
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getGeoprismUserMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEODASHBOARDUSER).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(GEOPRISMUSER).getAttributeMdDTO();
   }
   
   public String getKeyName()

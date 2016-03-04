@@ -21,9 +21,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.GeodashboardUser">
+      <mdBusiness name="net.geoprism.GeoprismUser">
         <create>
-          <mdMethod name="getCurrentUser" label="Get current user" returnType="net.geoprism.GeodashboardUser" static="true" />
+          <mdMethod name="getCurrentUser" label="Get current user" returnType="net.geoprism.GeoprismUser" static="true" />
         </create>
       </mdBusiness>
       <mdController name="net.geoprism.AdminController" >
@@ -36,7 +36,7 @@
   <undoIt>
     <delete>
       <object key="net.geoprism.AdminController.account" type="com.runwaysdk.system.metadata.MdAction"/>
-      <object key="net.geoprism.GeodashboardUser.getCurrentUser" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.GeoprismUser.getCurrentUser" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>
 </version>

@@ -698,13 +698,13 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
     _instance.generateThumbnailImage();
   }
   
-  public net.geoprism.GeodashboardUser[] getAllDashboardUsers()
+  public net.geoprism.GeoprismUser[] getAllDashboardUsers()
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.Dashboard.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static final net.geoprism.GeodashboardUser[] getAllDashboardUsers(java.lang.String id)
+  public static final net.geoprism.GeoprismUser[] getAllDashboardUsers(java.lang.String id)
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getAllDashboardUsers();

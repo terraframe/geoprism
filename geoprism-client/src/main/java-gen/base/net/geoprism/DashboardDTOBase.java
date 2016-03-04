@@ -803,20 +803,20 @@ public abstract class DashboardDTOBase extends com.runwaysdk.business.BusinessDT
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public final net.geoprism.GeodashboardUserDTO[] getAllDashboardUsers()
+  public final net.geoprism.GeoprismUserDTO[] getAllDashboardUsers()
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "getAllDashboardUsers", _declaredTypes);
-    return (net.geoprism.GeodashboardUserDTO[]) getRequest().invokeMethod(_metadata, this, _parameters);
+    return (net.geoprism.GeoprismUserDTO[]) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final net.geoprism.GeodashboardUserDTO[] getAllDashboardUsers(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final net.geoprism.GeoprismUserDTO[] getAllDashboardUsers(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DashboardDTO.CLASS, "getAllDashboardUsers", _declaredTypes);
-    return (net.geoprism.GeodashboardUserDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (net.geoprism.GeoprismUserDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final java.lang.String getAllDashboardUsersJSON()

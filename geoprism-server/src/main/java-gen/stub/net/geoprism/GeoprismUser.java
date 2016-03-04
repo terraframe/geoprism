@@ -26,8 +26,8 @@ import java.util.Set;
 
 import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
-import net.geoprism.GeodashboardUserBase;
-import net.geoprism.GeodashboardUserQuery;
+import net.geoprism.GeoprismUserBase;
+import net.geoprism.GeoprismUserQuery;
 
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
@@ -41,11 +41,11 @@ import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.Users;
 
-public class GeodashboardUser extends GeodashboardUserBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeoprismUser extends GeoprismUserBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = 394889520;
 
-  public GeodashboardUser()
+  public GeoprismUser()
   {
     super();
   }
@@ -128,12 +128,12 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     return hasAccess;
   }
 
-  public static GeodashboardUser getByUsername(String username)
+  public static GeoprismUser getByUsername(String username)
   {
-    GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
+    GeoprismUserQuery query = new GeoprismUserQuery(new QueryFactory());
     query.WHERE(query.getUsername().EQ(username));
 
-    OIterator<? extends GeodashboardUser> it = query.getIterator();
+    OIterator<? extends GeoprismUser> it = query.getIterator();
 
     try
     {
@@ -151,13 +151,13 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     }
   }
 
-  public static GeodashboardUser getCurrentUser()
+  public static GeoprismUser getCurrentUser()
   {
     SessionIF session = Session.getCurrentSession();
 
     if (session != null)
     {
-      return GeodashboardUser.get(session.getUser().getId());
+      return GeoprismUser.get(session.getUser().getId());
     }
 
     return null;
@@ -202,18 +202,18 @@ public class GeodashboardUser extends GeodashboardUserBase implements com.runway
     return false;
   }
 
-  public static GeodashboardUser[] getAllUsers()
+  public static GeoprismUser[] getAllUsers()
   {
-    GeodashboardUserQuery query = new GeodashboardUserQuery(new QueryFactory());
+    GeoprismUserQuery query = new GeoprismUserQuery(new QueryFactory());
     query.ORDER_BY_ASC(query.getUsername());
 
-    OIterator<? extends GeodashboardUser> it = query.getIterator();
+    OIterator<? extends GeoprismUser> it = query.getIterator();
 
     try
     {
-      List<? extends GeodashboardUser> list = it.getAll();
+      List<? extends GeoprismUser> list = it.getAll();
 
-      return list.toArray(new GeodashboardUser[list.size()]);
+      return list.toArray(new GeoprismUser[list.size()]);
     }
     finally
     {

@@ -37,7 +37,7 @@ public class DashboardState extends DashboardStateBase implements com.runwaysdk.
   {
     DashboardState clone = new DashboardState();
     clone.setDashboard(dashboard);
-    clone.setGeodashboardUser(this.getGeodashboardUser());
+    clone.setGeoprismUser(this.getGeoprismUser());
     clone.setConditions(this.getConditions());
     clone.setMapThumbnail(this.getMapThumbnail());
     clone.apply();
@@ -45,18 +45,18 @@ public class DashboardState extends DashboardStateBase implements com.runwaysdk.
     return clone;
   }
 
-  public static DashboardState getDashboardState(Dashboard dashboard, GeodashboardUser user)
+  public static DashboardState getDashboardState(Dashboard dashboard, GeoprismUser user)
   {
     DashboardStateQuery query = new DashboardStateQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(dashboard));
 
     if (user != null)
     {
-      query.AND(query.getGeodashboardUser().EQ(user));
+      query.AND(query.getGeoprismUser().EQ(user));
     }
     else
     {
-      query.AND(query.getGeodashboardUser().EQ((String) null));
+      query.AND(query.getGeoprismUser().EQ((String) null));
     }
 
     OIterator<? extends DashboardState> it = query.getIterator();
