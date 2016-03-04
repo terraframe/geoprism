@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser">
+      <mdBusiness name="net.geoprism.GeodashboardUser">
         <create>
           <mdMethod name="hasAccess" label="hasAccess" returnType="java.lang.Boolean" static="true">
             <mdParameter name="functionality" label="Functionality" order="0" type="java.lang.String" />

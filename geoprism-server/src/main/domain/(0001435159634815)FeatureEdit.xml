@@ -21,14 +21,14 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer">
+      <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
         <create>
           <mdMethod name="getFeatureInformation" label="Get feature information" returnType="java.lang.String">
             <mdParameter name="featureId" order="1" type="java.lang.String" label="Feature id" />
           </mdMethod>          
         </create>
       </mdBusiness>
-      <mdUtil name="com.runwaysdk.geodashboard.GeoEntityUtil">
+      <mdUtil name="net.geoprism.GeoEntityUtil">
         <create>
           <mdMethod name="getEntityLabel" label="Get entity label" returnType="java.lang.String" static="true">
             <mdParameter name="entityId" order="1" type="java.lang.String" label="Entity id" />
@@ -39,8 +39,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.GeoEntityUtil.getEntityLabel" type="com.runwaysdk.system.metadata.MdMethod"/>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.GeoEntityUtil.getEntityLabel" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.dashboard.DashboardThematicLayer.getFeatureInformation" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>
 </version>

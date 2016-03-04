@@ -23,7 +23,7 @@
     <create></create>
     <update>
     
-    <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+    <mdBusiness name="net.geoprism.Dashboard">
       <create>
         <attributes>
           <date name="fromDate" required="false" label="From"/>
@@ -39,13 +39,13 @@
   <undoIt>
     <delete>
             <object
-        key="com.runwaysdk.geodashboard.Dashboard.fromDate"
+        key="net.geoprism.Dashboard.fromDate"
         type="com.runwaysdk.system.metadata.MdAttribute" />
             <object
-        key="com.runwaysdk.geodashboard.Dashboard.toDate"
+        key="net.geoprism.Dashboard.toDate"
         type="com.runwaysdk.system.metadata.MdAttribute" />
             <object
-        key="com.runwaysdk.geodashboard.Dashboard.filterDate"
+        key="net.geoprism.Dashboard.filterDate"
         type="com.runwaysdk.system.metadata.MdAttribute" />
     </delete>
   </undoIt>

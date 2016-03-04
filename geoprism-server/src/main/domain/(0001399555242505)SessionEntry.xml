@@ -22,12 +22,12 @@
   <doIt>
     <create>
     
-      <mdBusiness name="com.runwaysdk.geodashboard.SessionEntry" label="Session Entry" generateController="false">
+      <mdBusiness name="net.geoprism.SessionEntry" label="Session Entry" generateController="false">
         <attributes>
           <reference name="sessionUser" column="sessionuser" type="com.runwaysdk.system.Users" required="true" label="User" />
           <char name="sessionId" required="true" size="255" label="Session Id" />
         </attributes>
-        <mdMethod name="createMapForSession" label="Create Map for Session" static="true" returnType="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+        <mdMethod name="createMapForSession" label="Create Map for Session" static="true" returnType="net.geoprism.dashboard.DashboardMap">
         </mdMethod>
         <mdMethod name="deleteMapForSession" label="Delete a Map For Session" static="true" returnType="void">
           <mdParameter name="mapId" label="Dashboard Map Id" required="true" type="java.lang.String" order="0" />
@@ -48,17 +48,17 @@
         </mdMethod>
       </mdBusiness>
       
-<!--       <mdIndex type="com.runwaysdk.geodashboard.SessionEntry">
+<!--       <mdIndex type="net.geoprism.SessionEntry">
         <attribute name="dashboardUser" indexOrder="0"/>
         <attribute name="sessionId" indexOrder="1"/>
       </mdIndex> -->
     
-      <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.SessionMap" label="SessionMap" generateController="false">
-        <parent cardinality="1" name="com.runwaysdk.geodashboard.SessionEntry" method="SessionEntry"/>
-        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="DashboardMap"/>
+      <mdRelationship name="net.geoprism.dashboard.SessionMap" label="SessionMap" generateController="false">
+        <parent cardinality="1" name="net.geoprism.SessionEntry" method="SessionEntry"/>
+        <child cardinality="*" name="net.geoprism.dashboard.DashboardMap" method="DashboardMap"/>
       </mdRelationship>
     
-      <mdException name="com.runwaysdk.geodashboard.gis.SessionMapLimitException"
+      <mdException name="net.geoprism.dashboard.SessionMapLimitException"
         label="Session Map Limit Exception" message="A session cannot have more than [{mapLimit}] open maps.">
         <attributes>
           <integer name="mapLimit" label="Map Limit" required="true" />
@@ -71,19 +71,19 @@
     <permissions>
       <method
         methodName="deleteForSession"
-        type="com.runwaysdk.geodashboard.SessionEntry">
+        type="net.geoprism.SessionEntry">
         <assignedRole
           roleName="Administrator" />
       </method>
       <method
         methodName="deleteForUser"
-        type="com.runwaysdk.geodashboard.SessionEntry">
+        type="net.geoprism.SessionEntry">
         <assignedRole
           roleName="Administrator" />
       </method>
       <method
         methodName="deleteAll"
-        type="com.runwaysdk.geodashboard.SessionEntry">
+        type="net.geoprism.SessionEntry">
         <assignedRole
           roleName="Administrator" />
       </method>
@@ -93,9 +93,9 @@
   <undoIt>
     <delete>
     
-      <object key="com.runwaysdk.geodashboard.SessionEntry" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="com.runwaysdk.geodashboard.gis.SessionMapLimitException" type="com.runwaysdk.system.metadata.MdException"/>
-      <object key="com.runwaysdk.geodashboard.gis.persist.SessionMap" type="com.runwaysdk.system.metadata.MdRelationship"/>
+      <object key="net.geoprism.SessionEntry" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.dashboard.SessionMapLimitException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="net.geoprism.dashboard.SessionMap" type="com.runwaysdk.system.metadata.MdRelationship"/>
     
     </delete>
   </undoIt>

@@ -22,7 +22,7 @@
   <doIt>
     <create></create>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+      <mdBusiness name="net.geoprism.dashboard.DashboardMap">
         <create>
           <mdMethod name="getUniversalAggregations" label="Get universal aggregations" returnType="com.runwaysdk.system.gis.geo.Universal[]">
             <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />
@@ -33,8 +33,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.newThematicInstance.mapId" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap.getUniversalAggregations" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.DashboardLayerController.newThematicInstance.mapId" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.DashboardMap.getUniversalAggregations" type="com.runwaysdk.system.metadata.MdMethod" />
     </delete>
   </undoIt>
 </version>

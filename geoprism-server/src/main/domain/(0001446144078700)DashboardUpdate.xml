@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
           <mdMethod name="getJSON" label="Get JSON" static="false" returnType="java.lang.String" />
           <mdMethod name="saveState" label="Save state" static="false" returnType="java.lang.String">
@@ -33,28 +33,28 @@
           </mdMethod>          
         </create>
       </mdBusiness>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+      <mdBusiness name="net.geoprism.dashboard.DashboardMap">
         <create>
           <mdMethod name="refresh" label="Refresh" static="false" returnType="java.lang.String">
             <mdParameter name="state" label="State" order="0" type="java.lang.String" />
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+      <mdBusiness name="net.geoprism.dashboard.DashboardLayer">
         <mdMethod name="applyWithStyle">
           <create>
             <mdParameter name="state" label="State" order="5" type="java.lang.String" />
           </create>
         </mdMethod>
       </mdBusiness>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer">
+      <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
         <mdMethod name="applyWithStyleAndStrategy">
           <create>
             <mdParameter name="state" label="State" order="5" type="java.lang.String" />
           </create>
         </mdMethod>
       </mdBusiness>
-      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController">
+      <mdController name="net.geoprism.dashboard.DashboardThematicLayerController">
         <mdAction name="applyWithStyle">
           <create>
             <mdParameter name="state" label="State" order="5" type="java.lang.String" />
@@ -63,21 +63,21 @@
       </mdController>
     </update>
     <delete>
-      <object key="com.runwaysdk.geodashboard.Dashboard.getConditions" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap.updateConditions" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.applyWithStyle.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.applyWithStyleAndStrategy.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.applyWithStyle.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.Dashboard.getConditions" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.DashboardMap.updateConditions" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.DashboardLayer.applyWithStyle.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.dashboard.DashboardThematicLayer.applyWithStyleAndStrategy.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.dashboard.DashboardThematicLayerController.applyWithStyle.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
     </delete>
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.Dashboard.getAvailableDashboardsAsJSON" type="com.runwaysdk.system.metadata.MdMethod"/>    
-      <object key="com.runwaysdk.geodashboard.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.Dashboard.saveState" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.applyWithStyle.state" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.applyWithStyleAndStrategy.state" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.Dashboard.getAvailableDashboardsAsJSON" type="com.runwaysdk.system.metadata.MdMethod"/>    
+      <object key="net.geoprism.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.Dashboard.saveState" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.DashboardMap.refresh" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.DashboardLayer.applyWithStyle.state" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.dashboard.DashboardThematicLayer.applyWithStyleAndStrategy.state" type="com.runwaysdk.system.metadata.MdParameter" />
     </delete>
   </undoIt>
 </version>

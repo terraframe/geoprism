@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdView name="com.runwaysdk.geodashboard.databrowser.MetadataType">
+      <mdView name="net.geoprism.data.browser.MetadataType">
         <attributes>
           <char name="typeName" size="255"></char>
           <char name="typePackage" size="255"></char>
@@ -31,8 +31,8 @@
         </attributes>
       </mdView>
 
-      <mdUtil name="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil">
-        <mdMethod name="getTypes" label="getTypes" returnType="com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery" static="true">
+      <mdUtil name="net.geoprism.data.browser.DataBrowserUtil">
+        <mdMethod name="getTypes" label="getTypes" returnType="net.geoprism.data.browser.MetadataTypeQuery" static="true">
           <mdParameter name="packages" order="0" type="java.lang.String[]" />
           <mdParameter name="types" order="1" type="java.lang.String[]" />
         </mdMethod>

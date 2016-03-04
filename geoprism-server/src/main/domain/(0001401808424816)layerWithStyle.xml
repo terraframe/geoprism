@@ -22,15 +22,8 @@
   <doIt>
     <create></create>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController">
+      <mdController name="net.geoprism.dashboard.DashboardThematicLayerController">
         <create>
-          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer" />
-            <mdParameter name="style" label="Style" order="1" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
-            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
-            <mdParameter name="strategy" label="Strategy" order="3" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
-            <mdParameter name="conditions" label="Conditions" order="4" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
-          </mdAction>
           <mdAction name="newThematicInstance" label="newThematicInstance" isPost="true">
             <mdParameter name="mdAttribute" label="mdAttribute" order="0" type="java.lang.String" />
             <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
@@ -38,11 +31,11 @@
         </create>
       </mdController>
 
-      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController">
+      <mdController name="net.geoprism.dashboard.DashboardReferenceLayerController">
         <create>
           <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer" />
-            <mdParameter name="style" label="Style" order="1" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
+            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.DashboardReferenceLayer" />
+            <mdParameter name="style" label="Style" order="1" type="net.geoprism.dashboard.DashboardStyle" />
             <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
           </mdAction>
           <mdAction name="newReferenceInstance" label="newReferenceInstance" isPost="true">
@@ -56,8 +49,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.newThematicInstance" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.dashboard.DashboardThematicLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.dashboard.DashboardThematicLayerController.newThematicInstance" type="com.runwaysdk.system.metadata.MdAction" />
     </delete>
   </undoIt>
 </version>

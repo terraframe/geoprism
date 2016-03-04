@@ -22,97 +22,88 @@
   <doIt>
     <create>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
+      <mdBusiness name="net.geoprism.dashboard.DashboardMap" label="Map" generateController="true" cacheAlgorithm="everything">
         <attributes>
           <char name="name" label="Name" size="64" required="true" indexType="unique index" />
-          <reference name="dashboard" type="com.runwaysdk.geodashboard.Dashboard" required="true" indexType="unique index" />
+          <reference name="dashboard" type="net.geoprism.Dashboard" required="true" indexType="unique index" />
         </attributes>
         <mdMethod name="getMapJSON" label="Get Map JSON" returnType="java.lang.String" static="false" />
         <mdMethod name="orderLayers" static="false" label="Order Layers" returnType="java.lang.String">
           <mdParameter name="layerIds" order="0" type="java.lang.String[]" label="Layer Ids" />
         </mdMethod>
-        <mdMethod name="updateConditions" label="updateConditons" returnType="java.lang.String" static="false">
-          <mdParameter name="conditions" order="0" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
-        </mdMethod>
       </mdBusiness>
 
-      <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="Aggregation Type">
+      <enumerationMaster name="net.geoprism.dashboard.AggregationType" label="Aggregation Type">
       </enumerationMaster>
 
-      <object key="SUM" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="SUM" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="SUM" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Sum" />
         </attributeStruct>
       </object>
 
-      <object key="MIN" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="MIN" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="MIN" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Min" />
         </attributeStruct>
       </object>
 
-      <object key="MAX" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="MAX" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="MAX" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Max" />
         </attributeStruct>
       </object>
 
-      <object key="AVG" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="AVG" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="AVG" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Avg" />
         </attributeStruct>
       </object>
 
-      <object key="MAJORITY" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="MAJORITY" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="MAJORITY" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Majority" />
         </attributeStruct>
       </object>
 
-      <object key="MINORITY" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="MINORITY" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="MINORITY" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Minority" />
         </attributeStruct>
       </object>
 
-      <object key="DISTRIBUTION" type="com.runwaysdk.geodashboard.gis.persist.AggregationType">
+      <object key="DISTRIBUTION" type="net.geoprism.dashboard.AggregationType">
         <attribute name="enumName" value="DISTRIBUTION" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Distribution" />
         </attributeStruct>
       </object>
 
-      <mdEnumeration name="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" type="com.runwaysdk.geodashboard.gis.persist.AggregationType" label="All Aggregation Type">
+      <mdEnumeration name="net.geoprism.dashboard.AllAggregationType" type="net.geoprism.dashboard.AggregationType" label="All Aggregation Type">
         <includeAll></includeAll>
       </mdEnumeration>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" isAbstract="true" label="Layer" generateController="true" cacheAlgorithm="everything">
+      <mdBusiness name="net.geoprism.dashboard.DashboardLayer" isAbstract="true" label="Layer" generateController="true" cacheAlgorithm="everything">
         <attributes>
           <localChar name="nameLabel" label="Name" size="64" required="true" />
           <boolean name="displayInLegend" label="Display In Legend" required="true" defaultValue="true" />
           <boolean name="virtual" label="Virtual" description="Sets each ruleset in a separate feature type if true" required="true" defaultValue="false" />
-          <enumeration name="layerType" label="Layer Type" required="true" type="com.runwaysdk.geodashboard.gis.persist.AllLayerType" />
+          <enumeration name="layerType" label="Layer Type" required="true" type="net.geoprism.dashboard.AllLayerType" />
           <dateTime name="lastPublishDate" label="LastPublishDate" description="Last Date The Layer Was Published (To GeoServer)" />
-          <reference name="dashboardMap" label="dashboardMap" required="true" type="com.runwaysdk.geodashboard.gis.persist.DashboardMap" />
+          <reference name="dashboardMap" label="dashboardMap" required="true" type="net.geoprism.dashboard.DashboardMap" />
           <boolean name="activeByDefault" label="Layer Is Active By Default" required="true" defaultValue="true" />
-          <struct name="dashboardLegend" required="false" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <struct name="dashboardLegend" required="false" type="net.geoprism.dashboard.DashboardLegend" />
           <char name="viewName" size="64" label="View Name" description="The name of the DB view this layer maps to." required="false" />
           <boolean name="layerEnabled" required="true" defaultValue="true" label="Layer Enabled" />
           <boolean name="BBoxIncluded" required="true" defaultValue="true" label="BBox Inluded" />
 
         </attributes>
-
-        <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="java.lang.String">
-          <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
-          <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
-          <mdParameter name="conditions" label="Conditions" order="2" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
-        </mdMethod>
 
         <mdMethod name="updateLegend" label="updateLegend" returnType="void" static="false">
           <mdParameter name="legendXPosition" label="legendXPosition" order="0" type="java.lang.Integer" />
@@ -121,36 +112,30 @@
         </mdMethod>
       </mdBusiness>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" label="Aggregation" isAbstract="true" generateController="false" />
+      <mdBusiness name="net.geoprism.dashboard.AggregationStrategy" label="Aggregation" isAbstract="true" generateController="false" />
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy" label="Universal Aggregation" generateController="false" extends="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy">
+      <mdBusiness name="net.geoprism.dashboard.UniversalAggregationStrategy" label="Universal Aggregation" generateController="false" extends="net.geoprism.dashboard.AggregationStrategy">
         <attributes>
           <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
         </attributes>
       </mdBusiness>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy" label="Geometry Aggregation" generateController="false" extends="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
+      <mdBusiness name="net.geoprism.dashboard.GeometryAggregationStrategy" label="Geometry Aggregation" generateController="false" extends="net.geoprism.dashboard.AggregationStrategy" />
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer" label="Thematic Layer" extends="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" generateController="true">
+      <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer" label="Thematic Layer" extends="net.geoprism.dashboard.DashboardLayer" generateController="true">
         <attributes>
-          <enumeration name="aggregationType" selectMultiple="false" label="Aggregation Type" required="false" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
+          <enumeration name="aggregationType" selectMultiple="false" label="Aggregation Type" required="false" type="net.geoprism.dashboard.AllAggregationType" defaultValueKey="SUM" />
           <reference name="mdAttribute" label="MdAttribute" required="true" type="com.runwaysdk.system.metadata.MdAttribute" />
           <reference name="geoNode" label="Geo node" required="true" type="com.runwaysdk.system.gis.geo.GeoNode" />
-          <reference name="aggregationStrategy" label="Aggregation strategy" required="true" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
-        </attributes>
-        <mdMethod name="applyWithStyleAndStrategy" label="Apply With Style and strategy" static="false" returnType="java.lang.String">
-          <mdParameter name="style" label="Style" order="0" type="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" />
-          <mdParameter name="mapId" label="Map Id" order="1" type="java.lang.String" />
-          <mdParameter name="strategy" label="Strategy" order="2" type="com.runwaysdk.geodashboard.gis.persist.AggregationStrategy" />
-          <mdParameter name="conditions" label="Conditions" order="3" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition[]" />
-        </mdMethod>
+          <reference name="aggregationStrategy" label="Aggregation strategy" required="true" type="net.geoprism.dashboard.AggregationStrategy" />
+        </attributes
         <mdMethod name="getGeoNodeGeometryTypesJSON" returnType="java.lang.String" static="true">
         	<mdParameter name="geoNodeId" label="Geo node id" order="0" type="java.lang.String" />
       	</mdMethod>
       </mdBusiness>
 
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer" label="Layer" extends="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" generateController="true">
+      <mdBusiness name="net.geoprism.dashboard.DashboardReferenceLayer" label="Layer" extends="net.geoprism.dashboard.DashboardLayer" generateController="true">
         <attributes>
           <reference name="universal" label="Universal" required="true" type="com.runwaysdk.system.gis.geo.Universal" />
         </attributes>
@@ -158,14 +143,14 @@
 
 
 
-      <mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerView" label="Dashboard Layer View">
+      <mdView name="net.geoprism.dashboard.DashboardLayerView" label="Dashboard Layer View">
         <attributes>
-          <virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
-          <virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
-          <virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
-          <virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
-          <virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
-          <virtual concrete="mdAttribute" type="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer" />
+          <virtual concrete="activeByDefault" type="net.geoprism.dashboard.DashboardLayer" />
+          <virtual concrete="displayInLegend" type="net.geoprism.dashboard.DashboardLayer" />
+          <virtual concrete="legendXPosition" type="net.geoprism.dashboard.DashboardLegend" />
+          <virtual concrete="legendYPosition" type="net.geoprism.dashboard.DashboardLegend" />
+          <virtual concrete="groupedInLegend" type="net.geoprism.dashboard.DashboardLegend" />
+          <virtual concrete="mdAttribute" type="net.geoprism.dashboard.DashboardThematicLayer" />
           <boolean name="layerIsActive" label="Layer Is Active" required="false" defaultValue="true" />
           <char name="viewName" label="viewName" size="64" required="true" />
           <char name="layerName" label="layerName" size="64" required="true" />
@@ -178,13 +163,13 @@
         </attributes>
       </mdView>
 
-      <mdView name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerView" label="Dashboard Reference Layer View">
+      <mdView name="net.geoprism.dashboard.DashboardReferenceLayerView" label="Dashboard Reference Layer View">
         <attributes>
-          <virtual concrete="activeByDefault" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
-          <virtual concrete="displayInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" />
-          <virtual concrete="legendXPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
-          <virtual concrete="legendYPosition" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
-          <virtual concrete="groupedInLegend" type="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" />
+          <virtual concrete="activeByDefault" type="net.geoprism.dashboard.DashboardLayer" />
+          <virtual concrete="displayInLegend" type="net.geoprism.dashboard.DashboardLayer" />
+          <virtual concrete="legendXPosition" type="net.geoprism.dashboard.DashboardLegend" />
+          <virtual concrete="legendYPosition" type="net.geoprism.dashboard.DashboardLegend" />
+          <virtual concrete="groupedInLegend" type="net.geoprism.dashboard.DashboardLegend" />
           <boolean name="layerIsActive" label="Layer Is Active" required="false" defaultValue="true" />
           <char name="viewName" label="viewName" size="64" required="true" />
           <char name="layerName" label="layerName" size="64" required="true" />
@@ -194,7 +179,7 @@
         </attributes>
       </mdView>
 
-      <mdStruct name="com.runwaysdk.geodashboard.gis.persist.DashboardLegend" label="Legend">
+      <mdStruct name="net.geoprism.dashboard.DashboardLegend" label="Legend">
         <attributes>
           <integer name="legendXPosition" label="Legend X Position" required="false" defaultValue="0" />
           <integer name="legendYPosition" label="Legend Y Position" required="false" defaultValue="0" />
@@ -202,70 +187,70 @@
         </attributes>
       </mdStruct>
 
-      <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasLayer" label="Has Layer" composition="false" cacheAlgorithm="everything">
-        <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap" method="ContainingMap" />
-        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="HasLayer" />
+      <mdRelationship name="net.geoprism.dashboard.HasLayer" label="Has Layer" composition="false" cacheAlgorithm="everything">
+        <parent cardinality="1" name="net.geoprism.dashboard.DashboardMap" method="ContainingMap" />
+        <child cardinality="*" name="net.geoprism.dashboard.DashboardLayer" method="HasLayer" />
         <attributes>
           <integer name="layerIndex" required="true" rejectNegative="true" />
         </attributes>
       </mdRelationship>
 
-      <enumerationMaster name="com.runwaysdk.geodashboard.gis.persist.LayerType" label="Layer Type"></enumerationMaster>
+      <enumerationMaster name="net.geoprism.dashboard.LayerType" label="Layer Type"></enumerationMaster>
 
-      <object key="BUBBLE" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+      <object key="BUBBLE" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="BUBBLE" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Bubble" />
         </attributeStruct>
       </object>
 
-      <object key="BASICPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+      <object key="BASICPOINT" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="BASICPOINT" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Basic Point" />
         </attributeStruct>
       </object>
       
-      <object key="BASICPOLYGON" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+      <object key="BASICPOLYGON" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="BASICPOLYGON" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Basic Polygon" />
         </attributeStruct>
       </object>
       
-      <object key="CATEGORYPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+      <object key="CATEGORYPOINT" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="CATEGORYPOINT" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Category Point" />
         </attributeStruct>
       </object>
       
-       <object key="CATEGORYPOLYGON" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+       <object key="CATEGORYPOLYGON" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="CATEGORYPOLYGON" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Category Polygon" />
         </attributeStruct>
       </object>
       
-      <object key="GRADIENTPOINT" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+      <object key="GRADIENTPOINT" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="GRADIENTPOINT" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Gradient Point" />
         </attributeStruct>
       </object>
       
-      <object key="GRADIENTPOLYGON" type="com.runwaysdk.geodashboard.gis.persist.LayerType">
+      <object key="GRADIENTPOLYGON" type="net.geoprism.dashboard.LayerType">
         <attribute name="enumName" value="GRADIENTPOLYGON" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Gradient Polygon" />
         </attributeStruct>
       </object>
   
-      <mdEnumeration name="com.runwaysdk.geodashboard.gis.persist.AllLayerType" type="com.runwaysdk.geodashboard.gis.persist.LayerType" label="All Layer Type">
+      <mdEnumeration name="net.geoprism.dashboard.AllLayerType" type="net.geoprism.dashboard.LayerType" label="All Layer Type">
         <includeAll></includeAll>
       </mdEnumeration>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
+      <mdBusiness name="net.geoprism.dashboard.DashboardStyle" label="Style" generateController="true" cacheAlgorithm="everything">
         <attributes>
           <char name="name" label="Name" size="64" required="false" />
 
@@ -311,10 +296,8 @@
       </mdBusiness>
 
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" label="Thematic Attribute" generateController="true" extends="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+      <mdBusiness name="net.geoprism.dashboard.DashboardThematicStyle" label="Thematic Attribute" generateController="true" extends="net.geoprism.dashboard.DashboardStyle">
         <attributes>
-          <reference name="styleCondition" required="false" type="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCondition" />
-          
           <!-- Gradient Point Attributes -->
           <integer name="gradientPointSize" label="Size" required="true" defaultValue="10" rejectNegative="true" />
           <char name="gradientPointMinFill" label="Min" size="7" required="true" defaultValue="#ffffff" />
@@ -367,19 +350,19 @@
           
           <!-- Secondary Attribute Attributes -->
           <reference name="secondaryAttribute" label="Secondary attribute" type="com.runwaysdk.system.metadata.MdAttribute" indexType="non-unique index" />
-          <enumeration name="secondaryAggregationType" selectMultiple="false" label="Secondary attribute aggregation type" type="com.runwaysdk.geodashboard.gis.persist.AllAggregationType" defaultValueKey="SUM" />
+          <enumeration name="secondaryAggregationType" selectMultiple="false" label="Secondary attribute aggregation type" type="net.geoprism.dashboard.AllAggregationType" defaultValueKey="SUM" />
           <text name="secondaryCategories" label="Category styling for layer or secondary attributes" />
         </attributes>
       </mdBusiness>
 
-      <mdRelationship name="com.runwaysdk.geodashboard.gis.persist.HasStyle" label="Has Style" composition="false">
-        <parent cardinality="1" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" method="ContainingLayer" />
-        <child cardinality="*" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" method="HasStyle" />
+      <mdRelationship name="net.geoprism.dashboard.HasStyle" label="Has Style" composition="false">
+        <parent cardinality="1" name="net.geoprism.dashboard.DashboardLayer" method="ContainingLayer" />
+        <child cardinality="*" name="net.geoprism.dashboard.DashboardStyle" method="HasStyle" />
       </mdRelationship>
 
-      <mdException name="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" label="Duplicate Map Data Exception" description="Thrown when a user tries to create a map with duplicate geo entities." message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
+      <mdException name="net.geoprism.dashboard.DuplicateMapDataException" label="Duplicate Map Data Exception" description="Thrown when a user tries to create a map with duplicate geo entities." message="Cannot create a map because duplicate geo entities exist in the query results. Please restrict the query.">
       </mdException>
-      <mdInformation name="com.runwaysdk.geodashboard.gis.EmptyLayerInformation" label="Empty Layer Information" description="Created when a user creates a layer with no data to display." message="The layer [{layerName}] has no data to display. Either your filter parameters are too restrictive or there is no data for the requested datatype.">
+      <mdInformation name="net.geoprism.dashboard.EmptyLayerInformation" label="Empty Layer Information" description="Created when a user creates a layer with no data to display." message="The layer [{layerName}] has no data to display. Either your filter parameters are too restrictive or there is no data for the requested datatype.">
         <attributes>
           <text name="layerName" label="Layer Name" />
         </attributes>
@@ -387,7 +370,7 @@
 
     </create>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
           <mdMethod name="getMapId" label="Get map id" static="false" returnType="java.lang.String" />
         </create>
@@ -396,17 +379,17 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.pointStrokeOpacity" type="com.runwaysdk.system.metadata.MdAttribute" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.viewName" type="com.runwaysdk.system.metadata.MdAttribute" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.AggregationType" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.aggregationType" type="com.runwaysdk.system.metadata.MdAttribute" />
+      <object key="net.geoprism.dashboard.DashboardMap" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.dashboard.DashboardLayer" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.dashboard.HasLayer" type="com.runwaysdk.system.metadata.MdRelationship" />
+      <object key="net.geoprism.dashboard.DashboardStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.dashboard.DashboardStyle.pointStrokeOpacity" type="com.runwaysdk.system.metadata.MdAttribute" />
+      <object key="net.geoprism.dashboard.DashboardThematicStyle" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.dashboard.LayerType" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.dashboard.DuplicateMapDataException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.dashboard.DashboardLayer.viewName" type="com.runwaysdk.system.metadata.MdAttribute" />
+      <object key="net.geoprism.dashboard.AggregationType" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.dashboard.DashboardThematicStyle.aggregationType" type="com.runwaysdk.system.metadata.MdAttribute" />
     </delete>
   </undoIt>
 </version>

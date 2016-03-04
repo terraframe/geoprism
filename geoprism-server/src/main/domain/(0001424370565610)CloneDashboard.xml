@@ -21,16 +21,16 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.DashboardController">
+      <mdController name="net.geoprism.DashboardController">
         <create>
           <mdAction name="newClone" label="New clone" isPost="true">
             <mdParameter name="dashboardId" label="dashboardId" order="0" type="java.lang.String" />
           </mdAction>
         </create>
       </mdController>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
-          <mdMethod name="clone" returnType="com.runwaysdk.geodashboard.Dashboard" label="Clone" static="false" >
+          <mdMethod name="clone" returnType="net.geoprism.Dashboard" label="Clone" static="false" >
             <mdParameter name="name" label="name" order="1" type="java.lang.String" />
           </mdMethod>
         </create>

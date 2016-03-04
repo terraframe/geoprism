@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.EmailSetting">
+      <mdBusiness name="net.geoprism.EmailSetting">
         <attributes>
           <char name="server" label="server" size="255"/>
           <char name="username" label="username" size="255"/>
@@ -30,11 +30,11 @@
           <char name="from" column="emailFrom" label="from" size="255"/>
           <char name="to" column="emailTo" label="to" size="255"/>
         </attributes>
-        <mdMethod name="getDefault" returnType="com.runwaysdk.geodashboard.EmailSetting" static="true" label="getDefault"></mdMethod>
+        <mdMethod name="getDefault" returnType="net.geoprism.EmailSetting" static="true" label="getDefault"></mdMethod>
       </mdBusiness>
     </create>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.AdminController">
+      <mdController name="net.geoprism.AdminController">
         <create>
           <mdAction name="system" label="System Configuration" isPost="false" isQuery="false" />
         </create>
@@ -43,8 +43,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object type="com.runwaysdk.system.metadata.MdBusiness" key="com.runwaysdk.geodashboard.EmailSetting" />
-      <object type="com.runwaysdk.system.metadata.MdAction" key="com.runwaysdk.geodashboard.AdminController.system" />
+      <object type="com.runwaysdk.system.metadata.MdBusiness" key="net.geoprism.EmailSetting" />
+      <object type="com.runwaysdk.system.metadata.MdAction" key="net.geoprism.AdminController.system" />
     </delete>
   </undoIt>
 </version>

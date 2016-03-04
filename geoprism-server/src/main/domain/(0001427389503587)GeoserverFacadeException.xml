@@ -21,8 +21,8 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdException name="com.runwaysdk.geodashboard.gis.geoserver.MapLayerException" label="Map layer exception" message="The map has no layers" />
-      <mdException name="com.runwaysdk.geodashboard.gis.geoserver.NoLayerDataException" label="No layer data exception" message="There is no data available for one or more layers in your dashboard. This is likely because the filtering criteria is too restrictive causing all the layer data to be filtered out. Please review your filter criteria to ensure you are filtering data as expected." />
+      <mdException name="net.geoprism.gis.geoserver.MapLayerException" label="Map layer exception" message="The map has no layers" />
+      <mdException name="net.geoprism.gis.geoserver.NoLayerDataException" label="No layer data exception" message="There is no data available for one or more layers in your dashboard. This is likely because the filtering criteria is too restrictive causing all the layer data to be filtered out. Please review your filter criteria to ensure you are filtering data as expected." />
     </create>
     <update></update>
   </doIt>

@@ -23,7 +23,7 @@
     <create></create>
     <update>
     
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
           <attributes>
           	<blob name="mapThumbnail" label="Map Thumbnail"></blob>
@@ -37,7 +37,7 @@
         </create>
       </mdBusiness>
       
-<!--       <mdBusiness name="com.runwaysdk.geodashboard.Dashboard"> -->
+<!--       <mdBusiness name="net.geoprism.Dashboard"> -->
 <!--         <create> -->
 <!--           <mdMethod name="setBaseLayerState" static="false" label="Set the state of the base layers" returnType="void"> -->
 <!-- 				<mdParameter name="baseLayerState" order="0" type="java.lang.String" label="Base layer state" /> -->
@@ -45,7 +45,7 @@
 <!--         </create> -->
 <!--       </mdBusiness> -->
 
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+      <mdBusiness name="net.geoprism.dashboard.DashboardMap">
           <mdMethod name="generateMapImageExport" >
           	<create>
 				<mdParameter name="activeBaseMap" order="3" type="java.lang.String" label="Active base map" />
@@ -59,7 +59,7 @@
         </create>
       </mdBusiness>
 
-     <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardMapController">
+     <mdController name="net.geoprism.dashboard.DashboardMapController">
           <mdAction name="exportMap">
           	<create>
           		<mdParameter name="activeBaseMap" order="5" type="java.lang.String" label="Map Size" />
@@ -67,7 +67,7 @@
           </mdAction>
       </mdController>
       
-<!--       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap"> -->
+<!--       <mdBusiness name="net.geoprism.dashboard.DashboardMap"> -->
 <!--         <create> -->
 <!--           <attributes> -->
 <!--           	<char name="activeBaseMap" label="Active Base Map" size="255" required="false" /> -->
@@ -75,7 +75,7 @@
 <!--         </create> -->
 <!--       </mdBusiness> -->
       
-      <mdController name="com.runwaysdk.geodashboard.UserMenuController">
+      <mdController name="net.geoprism.UserMenuController">
       	<create>
        		<mdAction name="getDashboardMapThumbnail" label="Get dashboard map thumbnail" returnType="void">
 				<mdParameter name="dashboardId" order="0" type="java.lang.String" label="Dashboard Id" />

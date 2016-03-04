@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdUtil name="com.runwaysdk.geodashboard.DataUploader" label="Data Uploader">
+      <mdUtil name="net.geoprism.DataUploader" label="Data Uploader">
         <create>
           <mdMethod name="importData" static="true" returnType="java.lang.String">
             <mdParameter name="configuration" label="Configuration" order="0" type="java.lang.String" />
@@ -29,7 +29,7 @@
         </create>
       </mdUtil>
 
-      <mdController name="com.runwaysdk.geodashboard.DataUploaderController" label="Data Upload Controller">
+      <mdController name="net.geoprism.DataUploaderController" label="Data Upload Controller">
         <create>
           <mdAction name="importData" label="Import Data" isPost="true" isQuery="false">
             <mdParameter name="configuration" label="Configuration" order="0" type="java.lang.String" />
@@ -40,8 +40,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.DataUploaderController.importData" type="com.runwaysdk.system.metadata.MdAction" />
-      <object key="com.runwaysdk.geodashboard.DataUploader.importData" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.DataUploaderController.importData" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.DataUploader.importData" type="com.runwaysdk.system.metadata.MdMethod" />
     </delete>
   </undoIt>
 </version>

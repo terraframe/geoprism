@@ -23,7 +23,7 @@
 		<create></create>
 		<update>
 
-			<mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardMapController">
+			<mdController name="net.geoprism.dashboard.DashboardMapController">
 				<create>
 					<mdAction name="createMapForSession" label="Create Map For Session" isPost="false">
 					</mdAction>
@@ -34,7 +34,7 @@
 	</doIt>
 	<undoIt>
 		<delete>
-			<object type="com.runwaysdk.system.metadata.MdAction" key="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.createMapForSession" />
+			<object type="com.runwaysdk.system.metadata.MdAction" key="net.geoprism.dashboard.DashboardMapController.createMapForSession" />
 		</delete>
 	</undoIt>
 </version>

@@ -21,35 +21,35 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.MetadataWrapper">
+      <mdBusiness name="net.geoprism.MetadataWrapper">
         <create>
           <attributes>
-            <reference name="dashboard" type="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" required="true"/>
+            <reference name="dashboard" type="net.geoprism.Dashboard" label="Dashboard" required="true"/>
           </attributes>
         </create>
       </mdBusiness>
     </update>
     <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass" label="Mappable Class" cacheAlgorithm="everything" generateController="false">
+      <mdBusiness name="net.geoprism.MappableClass" label="Mappable Class" cacheAlgorithm="everything" generateController="false">
         <attributes>
           <reference name="wrappedMdClass" type="com.runwaysdk.system.metadata.MdClass" label="MdClass" required="true" />
         </attributes>
       </mdBusiness>
-      <mdRelationship name="com.runwaysdk.geodashboard.ClassUniversal" label="Class Universal" generateController="false" >
-        <parent cardinality="*" name="com.runwaysdk.geodashboard.MappableClass" method="MappableClass"/>
+      <mdRelationship name="net.geoprism.ClassUniversal" label="Class Universal" generateController="false" >
+        <parent cardinality="*" name="net.geoprism.MappableClass" method="MappableClass"/>
         <child cardinality="*" name="com.runwaysdk.system.gis.geo.Universal" method="Universal"/>
       </mdRelationship>
-      <mdRelationship name="com.runwaysdk.geodashboard.MappableClassGeoNode" label="MappableClass - GeoNode" cacheAlgorithm="everything" generateController="false">
-        <parent cardinality="*" name="com.runwaysdk.geodashboard.MappableClass" method="MappableClass" />
+      <mdRelationship name="net.geoprism.MappableClassGeoNode" label="MappableClass - GeoNode" cacheAlgorithm="everything" generateController="false">
+        <parent cardinality="*" name="net.geoprism.MappableClass" method="MappableClass" />
         <child cardinality="*" name="com.runwaysdk.system.gis.geo.GeoNode" method="GeoNode" />
       </mdRelationship>
     </create>
 
     <delete>
 <!-- 
-      <object key="com.runwaysdk.geodashboard.MetadataGeoNode" type="com.runwaysdk.system.metadata.MdRelationship"/>
+      <object key="net.geoprism.MetadataGeoNode" type="com.runwaysdk.system.metadata.MdRelationship"/>
  -->    
-      <object key="com.runwaysdk.geodashboard.MetadataWrapper.universal" type="com.runwaysdk.system.metadata.MdAttribute"/>      
+      <object key="net.geoprism.MetadataWrapper.universal" type="com.runwaysdk.system.metadata.MdAttribute"/>      
     </delete>    
   </doIt>
   <undoIt>

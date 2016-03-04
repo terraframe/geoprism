@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdController name="com.runwaysdk.geodashboard.service.ExcelController" label="Excel Controller">
+      <mdController name="net.geoprism.data.importer.ExcelController" label="Excel Controller">
         <mdAction name="exportExcelForm" label="Export excel form" isPost="false" isQuery="false" >
           <mdParameter name="type" type="java.lang.String" order="0" />          
         </mdAction>
@@ -37,7 +37,7 @@
           <mdParameter name="downloadToken" type="java.lang.String" order="2" />
         </mdAction>
       </mdController>
-      <mdUtil name="com.runwaysdk.geodashboard.service.ExcelUtil" label="Exel util">
+      <mdUtil name="net.geoprism.data.importer.ExcelUtil" label="Exel util">
         <mdMethod name="exportExcelFile" static="true" returnType="java.io.InputStream" label="Export excel template">
           <mdParameter name="type" type="java.lang.String" order="0" />          
           <mdParameter name="country" type="java.lang.String" order="1" />          
@@ -51,8 +51,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.service.ExcelUtil" type="com.runwaysdk.system.metadata.MdUtil" />
-      <object key="com.runwaysdk.geodashboard.service.ExcelController" type="com.runwaysdk.system.metadata.MdController" />
+      <object key="net.geoprism.data.importer.ExcelUtil" type="com.runwaysdk.system.metadata.MdUtil" />
+      <object key="net.geoprism.data.importer.ExcelController" type="com.runwaysdk.system.metadata.MdController" />
     </delete>
   </undoIt>
 </version>

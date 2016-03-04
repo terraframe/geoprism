@@ -21,21 +21,21 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdView name="com.runwaysdk.geodashboard.report.ReportParameter" label="Report parameter">
+      <mdView name="net.geoprism.report.ReportParameter" label="Report parameter">
         <attributes>
           <text name="parameterName" label="Parameter name" required="true" />
           <text name="parameterValue" label="Parameter value" />
         </attributes>
       </mdView>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem" label="Report item" generateController="true">
+      <mdBusiness name="net.geoprism.report.ReportItem" label="Report item" generateController="true">
         <attributes>
           <file name="design" label="Report design" required="true" />
           <file name="document" label="Report document" />
           <char name="reportName" label="Report name" required="true" size="255" indexType="unique index" />
           <localChar name="reportLabel" label="Report label" required="true" size="255" />
           <boolean name="cacheDocument" label="Use report document?" required="true" positiveLabel="Yes" negativeLabel="No" defaultValue="false" />
-          <reference name="dashboard" label="Dashboard" type="com.runwaysdk.geodashboard.Dashboard" required="true" indexType="unique index" />
+          <reference name="dashboard" label="Dashboard" type="net.geoprism.Dashboard" required="true" indexType="unique index" />
         </attributes>
         <mdMethod name="applyWithFile" label="Apply with file" returnType="void" static="false">
           <mdParameter name="fileStream" label="fileStream" order="0" type="java.io.InputStream" />
@@ -44,15 +44,15 @@
         <mdMethod name="getDocumentAsStream" label="Get document as stream" returnType="java.io.InputStream" static="false" />
         <mdMethod name="render" label="Render" returnType="java.lang.Long" static="false">
           <mdParameter name="outputStream" label="outputStream" order="0" type="java.io.OutputStream" />
-          <mdParameter name="parameters" label="parameters" order="1" type="com.runwaysdk.geodashboard.report.ReportParameter[]" />
+          <mdParameter name="parameters" label="parameters" order="1" type="net.geoprism.report.ReportParameter[]" />
           <mdParameter name="baseURL" label="Base URL" order="2" type="java.lang.String" />
           <mdParameter name="reportURL" label="Report URL" order="3" type="java.lang.String" />
         </mdMethod>
         <mdMethod name="validatePermissions" label="Validate permissions" returnType="void" static="false" />
         <mdMethod name="getURL" label="Get url" returnType="java.lang.String" static="false" />
         <mdMethod name="getParameterDefinitions" label="Get parameter definitions" static="false" returnType="java.lang.String" />
-        <mdMethod name="getQueriesForReporting" label="Get queries for reporting" static="true" returnType="com.runwaysdk.geodashboard.report.PairView[]" />
-        <mdMethod name="getSupportedAggregation" label="Get Supported aggregation" static="true" returnType="com.runwaysdk.geodashboard.report.PairView[]">
+        <mdMethod name="getQueriesForReporting" label="Get queries for reporting" static="true" returnType="net.geoprism.report.PairView[]" />
+        <mdMethod name="getSupportedAggregation" label="Get Supported aggregation" static="true" returnType="net.geoprism.report.PairView[]">
           <mdParameter name="queryId" label="Query id" order="0" type="java.lang.String" />
         </mdMethod>
         <mdMethod name="getValuesForReporting" label="Get values for reporting" static="true" returnType="com.runwaysdk.query.ValueQuery">
@@ -70,13 +70,13 @@
           <mdParameter name="queryId" label="Query id" order="0" type="java.lang.String" />
           <mdParameter name="context" label="context" order="1" type="java.lang.String" />
         </mdMethod>
-        <mdMethod name="getReportItemForDashboard" label="Get report item" static="true" returnType="com.runwaysdk.geodashboard.report.ReportItem">
+        <mdMethod name="getReportItemForDashboard" label="Get report item" static="true" returnType="net.geoprism.report.ReportItem">
           <mdParameter name="dashboardId" label="Dashboard id" order="0" type="java.lang.String" />
         </mdMethod>
 
       </mdBusiness>
 
-      <mdView name="com.runwaysdk.geodashboard.report.ReportItemView" label="Report item" generateController="true">
+      <mdView name="net.geoprism.report.ReportItemView" label="Report item" generateController="true">
         <attributes>
           <text name="reportId" label="Report id" />
           <text name="reportName" label="Report name" />
@@ -86,43 +86,43 @@
         <mdMethod name="remove" label="Remove" returnType="void" static="false" />
       </mdView>
 
-      <mdView name="com.runwaysdk.geodashboard.report.PairView" label="Report item" generateController="true">
+      <mdView name="net.geoprism.report.PairView" label="Report item" generateController="true">
         <attributes>
           <text name="value" label="Value" />
           <text name="label" label="Label" />
         </attributes>
       </mdView>
 
-      <mdException name="com.runwaysdk.geodashboard.report.ReportItemException" label="Report item exception" message="Report must have a report design document with the .rptdesign extension" />
-      <mdException name="com.runwaysdk.geodashboard.report.MissingReportDesignException" label="Missing report design" message="Report design does not exist" />
-      <mdException name="com.runwaysdk.geodashboard.report.MissingReportDocumentException" label="Report item exception" message="The cached report document does not exist.  Please make sure you have set up the scheduler to generate the report document." />
-      <mdException name="com.runwaysdk.geodashboard.report.UnsupportedOutputFormatException" label="Unsupported output format exception" message="Output format [{outputFormat}] is not supported">
+      <mdException name="net.geoprism.report.ReportItemException" label="Report item exception" message="Report must have a report design document with the .rptdesign extension" />
+      <mdException name="net.geoprism.report.MissingReportDesignException" label="Missing report design" message="Report design does not exist" />
+      <mdException name="net.geoprism.report.MissingReportDocumentException" label="Report item exception" message="The cached report document does not exist.  Please make sure you have set up the scheduler to generate the report document." />
+      <mdException name="net.geoprism.report.UnsupportedOutputFormatException" label="Unsupported output format exception" message="Output format [{outputFormat}] is not supported">
         <attributes>
           <text name="outputFormat" label="Output format" />
         </attributes>
       </mdException>
-      <mdException name="com.runwaysdk.geodashboard.report.ReportRenderException" label="Report render exception" message="An error has occured while rendering the report: {errorMessage}">
+      <mdException name="net.geoprism.report.ReportRenderException" label="Report render exception" message="An error has occured while rendering the report: {errorMessage}">
         <attributes>
           <text name="errorMessage" label="Error message" />
         </attributes>
       </mdException>
-      <mdException name="com.runwaysdk.geodashboard.report.UnknownReportException" label="Unknown report exception" message="Unable to find a report with the report name [{reportName}]">
+      <mdException name="net.geoprism.report.UnknownReportException" label="Unknown report exception" message="Unable to find a report with the report name [{reportName}]">
         <attributes>
           <text name="reportName" label="Report name" />
         </attributes>
       </mdException>
-      <mdException name="com.runwaysdk.geodashboard.report.UnsupportedDrillThroughFormatException" label="Unsupported drill through format exception" message="The drill through report format [{outputFormat}] is not supported.">
+      <mdException name="net.geoprism.report.UnsupportedDrillThroughFormatException" label="Unsupported drill through format exception" message="The drill through report format [{outputFormat}] is not supported.">
         <attributes>
           <text name="outputFormat" label="Output format" />
         </attributes>
       </mdException>
 
-      <mdException name="com.runwaysdk.geodashboard.report.InvalidReportDefinitionException" label="Invalid report definition" message="Uploaded file is not a valid report definition" />
+      <mdException name="net.geoprism.report.InvalidReportDefinitionException" label="Invalid report definition" message="Uploaded file is not a valid report definition" />
 
       <object type="com.runwaysdk.system.Vault" key="default" />
     </create>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.report.ReportItemController">
+      <mdController name="net.geoprism.report.ReportItemController">
         <mdAction name="create">
           <create>
             <mdParameter name="design" label="Report design" order="1" type="com.runwaysdk.controller.MultipartFileParameter" />
@@ -142,24 +142,24 @@
       </mdController>
     </update>
     <permissions>
-      <method methodName="render" type="com.runwaysdk.geodashboard.report.ReportItem">
+      <method methodName="render" type="net.geoprism.report.ReportItem">
         <assignedRole roleName="Administrator" />
       </method>
     </permissions>
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.report.MultipleReportException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.UnsupportedDrillThroughFormatException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.UnknownReportException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.InvalidReportDefinitionException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.MissingReportDesignException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.MissingReportDocumentException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.UnsupportedOutputFormatException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.ReportRenderException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.ReportItemException" type="com.runwaysdk.system.metadata.MdException" />
-      <object key="com.runwaysdk.geodashboard.report.ReportItem" type="com.runwaysdk.system.metadata.MdBusiness" />
-      <object key="com.runwaysdk.geodashboard.report.ReportParameter" type="com.runwaysdk.system.metadata.MdView" />
+      <object key="net.geoprism.report.MultipleReportException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.UnsupportedDrillThroughFormatException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.UnknownReportException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.InvalidReportDefinitionException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.MissingReportDesignException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.MissingReportDocumentException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.UnsupportedOutputFormatException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.ReportRenderException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.ReportItemException" type="com.runwaysdk.system.metadata.MdException" />
+      <object key="net.geoprism.report.ReportItem" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.report.ReportParameter" type="com.runwaysdk.system.metadata.MdView" />
     </delete>
   </undoIt>
 </version>

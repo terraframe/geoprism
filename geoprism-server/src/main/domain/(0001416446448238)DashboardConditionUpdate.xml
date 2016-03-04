@@ -21,13 +21,13 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdException name="com.runwaysdk.geodashboard.parse.DateParseException" label="Date parse exception" message="Unable to parse a date from [{input}].  Expecting a date in the format [{pattern}]">
+      <mdException name="net.geoprism.DateParseException" label="Date parse exception" message="Unable to parse a date from [{input}].  Expecting a date in the format [{pattern}]">
         <attributes>
           <text name="input" label="Value" />
           <text name="pattern" label="Pattern" />
         </attributes>
       </mdException>
-      <mdException name="com.runwaysdk.geodashboard.report.UnsupportedComparisonException" label="Unsupported comparison exception" message="The comparison [{comparison}] is not suppported">
+      <mdException name="net.geoprism.report.UnsupportedComparisonException" label="Unsupported comparison exception" message="The comparison [{comparison}] is not suppported">
         <attributes>
           <text name="comparison" label="Comparison" />
         </attributes>

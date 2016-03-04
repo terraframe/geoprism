@@ -23,19 +23,19 @@
     <create></create>
     <update>
     
-    	<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+    	<mdBusiness name="net.geoprism.dashboard.DashboardStyle">
         	<create>
     			<mdMethod name="getJSON" label="Get JSON" static="false" returnType="java.lang.String" />
     		</create>
     	</mdBusiness>
     	
-    	<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+    	<mdBusiness name="net.geoprism.dashboard.DashboardLayer">
         	<create>
     			<mdMethod name="getJSON" label="Get JSON" static="false" returnType="java.lang.String" />
     		</create>
     	</mdBusiness>
 
-   	 <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+   	 <mdBusiness name="net.geoprism.Dashboard">
         <create>
           <mdMethod name="getGeoNodesJSON" label="Get geo nodes as JSON" returnType="java.lang.String" static="false">
             <mdParameter name="thematicAttribute" label="Thematic attribute" order="0" type="com.runwaysdk.system.metadata.MdAttribute" />
@@ -43,7 +43,7 @@
         </create>
       </mdBusiness>
       
-        <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer">
+        <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
     		<create>
     			<mdMethod name="getOptionsJSON" label="Get Options JSON" static="true" returnType="java.lang.String">
     				<mdParameter name="thematicAttributeId" label="Thematic attribute Id" order="0" type="java.lang.String" />
@@ -52,7 +52,7 @@
     		</create>
     	</mdBusiness>
     	
-    	<mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer">
+    	<mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
     		<create>
     			<mdMethod name="getOptionsJSON" label="Get Options JSON" static="true" returnType="java.lang.String">
     				<mdParameter name="thematicAttributeId" label="Thematic attribute Id" order="0" type="java.lang.String" />

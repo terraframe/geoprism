@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
           <mdMethod name="getLayersToDelete" label="Check layers" returnType="java.lang.String" static="false">
             <mdParameter name="options" label="Options" order="0" type="java.lang.String"/>

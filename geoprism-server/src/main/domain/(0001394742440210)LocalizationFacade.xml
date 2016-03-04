@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdUtil name="com.runwaysdk.geodashboard.localization.LocalizationFacade" label="Localization facade" >
+      <mdUtil name="net.geoprism.localization.LocalizationFacade" label="Localization facade" >
         <mdMethod name="getFromBundles" label="Get from bundles" static="true" returnType="java.lang.String">
           <mdParameter name="key" label="key" order="0" type="java.lang.String"/>
         </mdMethod>
@@ -31,7 +31,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.localization.LocalizationFacade" type="com.runwaysdk.system.metadata.MdUtil"/>
+      <object key="net.geoprism.localization.LocalizationFacade" type="com.runwaysdk.system.metadata.MdUtil"/>
     </delete>
   </undoIt>
 </version>

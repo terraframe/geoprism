@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.UniversalExportMenu" label="Export Universals" generateController="true" >
+      <mdBusiness name="net.geoprism.ontology.UniversalExportMenu" label="Export Universals" generateController="true" >
         <attributes>
           <enumeration
             name="fileFormat"
@@ -32,7 +32,7 @@
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.GeoEntityExportMenu" label="Export GeoEntities" generateController="true" >
+      <mdBusiness name="net.geoprism.ontology.GeoEntityExportMenu" label="Export GeoEntities" generateController="true" >
         <attributes>
           <enumeration
             name="fileFormat"
@@ -44,7 +44,7 @@
         </attributes>
       </mdBusiness>
       
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.ClassifierExportMenu" label="Export Classifier" generateController="true" >
+      <mdBusiness name="net.geoprism.ontology.ClassifierExportMenu" label="Export Classifier" generateController="true" >
         <attributes>
           <enumeration
             name="fileFormat"
@@ -56,34 +56,34 @@
       </mdBusiness>
     </create>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.gis.UniversalExportMenuController" >
+      <mdController name="net.geoprism.ontology.UniversalExportMenuController" >
 	      <create>
 	        <mdAction name="viewExport" isPost="true" isQuery="false">
 	        </mdAction>
 	        <mdAction name="export" isPost="true" isQuery="false">
-	          <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.gis.UniversalExportMenu" />
+	          <mdParameter order="0" name="dto" type="net.geoprism.ontology.UniversalExportMenu" />
 	          <mdParameter order="1" name="parentTerm" type="java.lang.String" />
 	          <mdParameter order="2" name="downloadToken" type="java.lang.String" />
 	        </mdAction>
 	      </create>
      </mdController>
-     <mdController name="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuController" >
+     <mdController name="net.geoprism.ontology.GeoEntityExportMenuController" >
         <create>
           <mdAction name="viewExport" isPost="true" isQuery="false">
           </mdAction>
           <mdAction name="export" isPost="true" isQuery="false">
-            <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.gis.GeoEntityExportMenu" />
+            <mdParameter order="0" name="dto" type="net.geoprism.ontology.GeoEntityExportMenu" />
             <mdParameter order="1" name="parentTerm" type="java.lang.String" />
             <mdParameter order="2" name="downloadToken" type="java.lang.String" />
           </mdAction>
         </create>
      </mdController>
-     <mdController name="com.runwaysdk.geodashboard.gis.ClassifierExportMenuController" >
+     <mdController name="net.geoprism.ontology.ClassifierExportMenuController" >
         <create>
           <mdAction name="viewExport" isPost="true" isQuery="false">
           </mdAction>
           <mdAction name="export" isPost="true" isQuery="false">
-            <mdParameter order="0" name="dto" type="com.runwaysdk.geodashboard.gis.ClassifierExportMenu" />
+            <mdParameter order="0" name="dto" type="net.geoprism.ontology.ClassifierExportMenu" />
             <mdParameter order="1" name="parentTerm" type="java.lang.String" />
             <mdParameter order="2" name="downloadToken" type="java.lang.String" />
           </mdAction>
@@ -94,13 +94,13 @@
   <undoIt>
     <delete>
       <object
-        key="com.runwaysdk.geodashboard.gis.UniversalExportMenu"
+        key="net.geoprism.ontology.UniversalExportMenu"
         type="com.runwaysdk.system.metadata.MdBusiness" />
       <object
-        key="com.runwaysdk.geodashboard.gis.GeoEntityExportMenu"
+        key="net.geoprism.ontology.GeoEntityExportMenu"
         type="com.runwaysdk.system.metadata.MdBusiness" />
       <object
-        key="com.runwaysdk.geodashboard.gis.ClassifierExportMenu"
+        key="net.geoprism.ontology.ClassifierExportMenu"
         type="com.runwaysdk.system.metadata.MdBusiness" />
     </delete>
   </undoIt>

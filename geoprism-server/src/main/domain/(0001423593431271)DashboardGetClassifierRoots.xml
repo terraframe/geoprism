@@ -22,9 +22,9 @@
   <doIt>
     <create></create>
     <update>
-        <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+        <mdBusiness name="net.geoprism.Dashboard">
         <create>
-          <mdMethod name="getClassifierRoots" label="Get root terms" static="true" returnType="com.runwaysdk.geodashboard.ontology.Classifier[]">
+          <mdMethod name="getClassifierRoots" label="Get root terms" static="true" returnType="net.geoprism.ontology.Classifier[]">
             <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />
           </mdMethod>
         </create>

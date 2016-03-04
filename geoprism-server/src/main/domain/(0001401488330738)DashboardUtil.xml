@@ -23,7 +23,7 @@
     <create></create>
     <update>
     
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer">
+      <mdBusiness name="net.geoprism.dashboard.DashboardLayer">
         <create>
           <mdMethod name="getSortedUniversals" static="true" label="Get Sorted Universals" 
             returnType="com.runwaysdk.system.gis.geo.UniversalQuery">
@@ -31,17 +31,17 @@
         </create>
       </mdBusiness>
       
-<!--       <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer"> -->
+<!--       <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer"> -->
 <!--         <create> -->
-<!--           <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" returnType="com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery"> -->
+<!--           <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" returnType="net.geoprism.dashboard.AggregationTypeQuery"> -->
 <!--           		<mdParameter name="thematicAttributeId" order="0" type="java.lang.String" label="Thematic Attribute Id" /> -->
 <!--           </mdMethod> -->
 <!--         </create> -->
 <!--       </mdBusiness> -->
     
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle">
+      <mdBusiness name="net.geoprism.dashboard.DashboardStyle">
         <create>
-          <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" returnType="com.runwaysdk.geodashboard.gis.persist.AggregationTypeQuery">
+          <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" returnType="net.geoprism.dashboard.AggregationTypeQuery">
           		<mdParameter name="thematicAttributeId" order="0" type="java.lang.String" label="Thematic Attribute Id" />
           </mdMethod>
           
@@ -51,7 +51,7 @@
         </create>
       </mdBusiness>
       
-      <mdController name="com.runwaysdk.geodashboard.gis.persist.DashboardMapController">
+      <mdController name="net.geoprism.dashboard.DashboardMapController">
         <create>
           <mdAction name="exportMap" static="false" label="Export Map" returnType="void">
           		<mdParameter name="mapId" order="0" type="java.lang.String" label="Map Id" />
@@ -63,7 +63,7 @@
         </create>
       </mdController>
     
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+      <mdBusiness name="net.geoprism.dashboard.DashboardMap">
         <create>
           <mdMethod name="generateMapImageExport" static="false" label="Export Map" returnType="java.io.InputStream">
           		<mdParameter name="outFileFormat" order="0" type="java.lang.String" label="File Format" />
@@ -79,10 +79,10 @@
   <undoIt>
     <delete>
     
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.getSortedUniversals"
+      <object key="net.geoprism.dashboard.DashboardLayer.getSortedUniversals"
         type="com.runwaysdk.system.metadata.MdMethod"/>
         
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.getSortedAggregations"
+      <object key="net.geoprism.dashboard.DashboardStyle.getSortedAggregations"
         type="com.runwaysdk.system.metadata.MdMethod"/>
     
     </delete>

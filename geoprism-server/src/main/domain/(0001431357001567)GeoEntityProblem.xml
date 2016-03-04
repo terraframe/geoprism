@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdUtil name="com.runwaysdk.geodashboard.GeoEntityUtil">
+      <mdUtil name="net.geoprism.GeoEntityUtil">
         <create>
           <mdMethod name="deleteEntityProblem" returnType="void" label="Delete entity problem" static="true">
             <mdParameter name="problemId" label="Problem id" order="0" type="java.lang.String" />
@@ -33,7 +33,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.GeoEntityUtil.deleteEntityProblem" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.GeoEntityUtil.deleteEntityProblem" type="com.runwaysdk.system.metadata.MdMethod" />
     </delete>
   </undoIt>
 </version>

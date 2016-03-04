@@ -21,9 +21,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem">
+      <mdBusiness name="net.geoprism.report.ReportItem">
         <create>
-          <mdMethod name="getSupportedGeoNodes" label="Get supported geo nodes" static="true" returnType="com.runwaysdk.geodashboard.report.PairView[]">
+          <mdMethod name="getSupportedGeoNodes" label="Get supported geo nodes" static="true" returnType="net.geoprism.report.PairView[]">
             <mdParameter name="queryId" order="0" type="java.lang.String" label="Query id" />
           </mdMethod>          
         </create>
@@ -33,7 +33,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.report.ReportItem.getSupportedGeoNodes" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.report.ReportItem.getSupportedGeoNodes" type="com.runwaysdk.system.metadata.MdMethod" />
     </delete>
   </undoIt>
 </version>

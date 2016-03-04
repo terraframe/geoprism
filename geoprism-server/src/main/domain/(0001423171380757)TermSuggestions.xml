@@ -21,9 +21,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
-          <mdMethod name="getClassifierSuggestions" label="Get text suggestions" static="true" returnType="com.runwaysdk.geodashboard.ontology.Classifier[]">
+          <mdMethod name="getClassifierSuggestions" label="Get text suggestions" static="true" returnType="net.geoprism.ontology.Classifier[]">
             <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />
             <mdParameter name="text" order="1" type="java.lang.String" label="Text" />
             <mdParameter name="limit" order="2" type="java.lang.Integer" label="Limit" />

@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdUtil name="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil">
+      <mdUtil name="net.geoprism.data.browser.DataBrowserUtil">
         <create>
           <mdMethod name="deleteData" static="true" returnType="void" label="Delete data">
             <mdParameter name="type" label="Type" order="0" type="java.lang.String"/>

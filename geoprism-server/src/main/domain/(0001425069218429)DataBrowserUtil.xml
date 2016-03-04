@@ -21,9 +21,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdUtil name="com.runwaysdk.geodashboard.databrowser.DataBrowserUtil">
+      <mdUtil name="net.geoprism.data.browser.DataBrowserUtil">
         <create>
-          <mdMethod name="getDefaultTypes" label="getDefaultTypes" returnType="com.runwaysdk.geodashboard.databrowser.MetadataTypeQuery" static="true" />
+          <mdMethod name="getDefaultTypes" label="getDefaultTypes" returnType="net.geoprism.data.browser.MetadataTypeQuery" static="true" />
         </create>
       </mdUtil>
     </update>

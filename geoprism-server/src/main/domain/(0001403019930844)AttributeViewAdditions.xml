@@ -22,7 +22,7 @@
   <doIt>
     <create></create>
     <update>
-      <mdView name="com.runwaysdk.geodashboard.MdAttributeView">
+      <mdView name="net.geoprism.MdAttributeView">
         <create>
         <attributes>
           <char name="attributeName" required="true" label="Attribute Name" size="255"/>
@@ -34,8 +34,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.MdAttributeView.attributeName" type="com.runwaysdk.system.metadata.MdAttribute"/>
-      <object key="com.runwaysdk.geodashboard.MdAttributeView.attributeType" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="net.geoprism.MdAttributeView.attributeName" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="net.geoprism.MdAttributeView.attributeType" type="com.runwaysdk.system.metadata.MdAttribute"/>
     </delete>
   </undoIt>
 </version>

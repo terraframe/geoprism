@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-    	<mdException name="com.runwaysdk.geodashboard.gis.DuplicateDashboardException" label="Duplicate Dashboard Exception" description="Thrown when a user tries to create a dashboard with the same name as another." message="A dashboard with this name already exists in the system.">
+    	<mdException name="net.geoprism.dashboard.DuplicateDashboardException" label="Duplicate Dashboard Exception" description="Thrown when a user tries to create a dashboard with the same name as another." message="A dashboard with this name already exists in the system.">
       	</mdException>
     </create>
   </doIt>

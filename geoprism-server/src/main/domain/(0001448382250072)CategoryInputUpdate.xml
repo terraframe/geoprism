@@ -21,10 +21,10 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.Dashboard.getCategoryInputSuggestions.conditions" type="com.runwaysdk.system.metadata.MdParameter" />
     </delete>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <mdMethod name="getCategoryInputSuggestions">
           <create>
             <mdParameter name="state" label="State" order="8" type="java.lang.String"/>

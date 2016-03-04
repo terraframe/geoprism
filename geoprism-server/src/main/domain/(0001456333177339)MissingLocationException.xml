@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdException name="com.runwaysdk.geodashboard.gis.persist.MissingLocationAttributeException" label="Missing location attribute exception" message="Unable to map. Data set does not contain any location attributes" />
+      <mdException name="net.geoprism.dashboard.MissingLocationAttributeException" label="Missing location attribute exception" message="Unable to map. Data set does not contain any location attributes" />
     </create>
   </doIt>
   <undoIt>

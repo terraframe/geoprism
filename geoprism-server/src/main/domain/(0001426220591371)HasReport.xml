@@ -22,7 +22,7 @@
   <doIt>
 
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <create>
           <mdMethod name="hasReport" label="Has report" returnType="java.lang.Boolean" static="false" />
         </create>

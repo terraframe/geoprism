@@ -937,64 +937,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return map;
   }
 
-  // HEADS UP
-
-  // @Override
-  // @Transaction
-  // public void applyConditions(DashboardCondition[] conditions)
-  // {
-  // /*
-  // * First delete any conditions which exist
-  // */
-  // GeodashboardUser user = GeodashboardUser.getCurrentUser();
-  //
-  // byte[] image = this.generateThumbnail();
-  //
-  // JSONArray array = new JSONArray();
-  //
-  // for (DashboardCondition condition : conditions)
-  // {
-  // array.put(condition.getJSON());
-  // }
-  //
-  // DashboardState state = DashboardState.getDashboardState(this, user);
-  //
-  // if (state == null)
-  // {
-  // state = new DashboardState();
-  // state.setDashboard(this);
-  // state.setGeodashboardUser(user);
-  // }
-  // else
-  // {
-  // state.lock();
-  // }
-  //
-  // state.setConditions(array.toString());
-  // state.setMapThumbnail(image);
-  // state.apply();
-  // }
-  //
-  // @Override
-  // @Transaction
-  // public void applyGlobalConditions(DashboardCondition[] conditions)
-  // {
-  // byte[] image = this.generateThumbnail();
-  //
-  // JSONArray array = new JSONArray();
-  //
-  // for (DashboardCondition condition : conditions)
-  // {
-  // array.put(condition.getJSON());
-  // }
-  //
-  // DashboardState state = DashboardState.getDashboardState(this, null);
-  // state.lock();
-  // state.setConditions(array.toString());
-  // state.setMapThumbnail(image);
-  // state.apply();
-  // }
-
   @Override
   public String getConditionsJSON()
   {

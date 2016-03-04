@@ -21,9 +21,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem">
+      <mdBusiness name="net.geoprism.report.ReportItem">
         <create>
-          <mdMethod name="lockOrCreateReport" label="Lock or create report" returnType="com.runwaysdk.geodashboard.report.ReportItem" static="true">
+          <mdMethod name="lockOrCreateReport" label="Lock or create report" returnType="net.geoprism.report.ReportItem" static="true">
             <mdParameter name="dashboardId" label="Dashboard Id" order="0" type="java.lang.String" />
           </mdMethod>
         </create>

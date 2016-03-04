@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem" label="Report item" generateController="true">
+      <mdBusiness name="net.geoprism.report.ReportItem" label="Report item" generateController="true">
         <attributes>
           <char name="reportName" label="Report name" required="true" size="255" indexType="no index" />
         </attributes>

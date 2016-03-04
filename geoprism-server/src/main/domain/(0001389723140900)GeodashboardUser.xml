@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="com.runwaysdk.geodashboard.GeodashboardUser" label="User" extends="com.runwaysdk.system.Users" generateController="false">
+      <mdBusiness name="net.geoprism.GeodashboardUser" label="User" extends="com.runwaysdk.system.Users" generateController="false">
         <attributes>
           <char name="firstName" label="First name" size="255" required="true" />
           <char name="lastName" label="Last name" size="255" required="true" />
@@ -32,7 +32,7 @@
           <mdParameter name="roleIds" label="Role ids" order="0" type="java.lang.String[]" />
         </mdMethod>
       </mdBusiness>
-      <mdController name="com.runwaysdk.geodashboard.AdminController" label="User controller">
+      <mdController name="net.geoprism.AdminController" label="User controller">
         <mdAction name="users" label="Users" isPost="false" isQuery="false" />
         <mdAction name="geoentity" label="Geo entity" isPost="false" isQuery="false" />
         <mdAction name="roles" label="Roles" isPost="false" isQuery="false" />
@@ -41,26 +41,26 @@
         <mdAction name="databrowser" label="DataBrowser" isPost="false" isQuery="false" />
         <mdAction name="ontologies" label="Ontologies" isPost="false" isQuery="false" />
       </mdController>
-      <mdView name="com.runwaysdk.geodashboard.RoleView" label="Role view">
+      <mdView name="net.geoprism.RoleView" label="Role view">
         <attributes>
           <char name="roleId" label="Role id" size="64" required="true" />
           <text name="displayLabel" label="Display label" />
           <boolean name="assigned" label="Is assigned" description="Flag denoting if the current user is assigned to the role" />
         </attributes>
-        <mdMethod name="getAdminRoles" label="Get admin roles" static="true" returnType="com.runwaysdk.geodashboard.RoleView[]">
-          <mdParameter name="user" label="User" order="0" type="com.runwaysdk.geodashboard.GeodashboardUser" />
+        <mdMethod name="getAdminRoles" label="Get admin roles" static="true" returnType="net.geoprism.RoleView[]">
+          <mdParameter name="user" label="User" order="0" type="net.geoprism.GeodashboardUser" />
         </mdMethod>
-        <mdMethod name="getDashboardRoles" label="Get dashboard roles" static="true" returnType="com.runwaysdk.geodashboard.RoleView[]">
-          <mdParameter name="user" label="User" order="0" type="com.runwaysdk.geodashboard.GeodashboardUser" />
+        <mdMethod name="getDashboardRoles" label="Get dashboard roles" static="true" returnType="net.geoprism.RoleView[]">
+          <mdParameter name="user" label="User" order="0" type="net.geoprism.GeodashboardUser" />
         </mdMethod>
       </mdView>
     </create>
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.RoleView" type="com.runwaysdk.system.metadata.MdView" />
-      <object key="com.runwaysdk.geodashboard.AdminController" type="com.runwaysdk.system.metadata.MdController" />
-      <object key="com.runwaysdk.geodashboard.GeodashboardUser" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.RoleView" type="com.runwaysdk.system.metadata.MdView" />
+      <object key="net.geoprism.AdminController" type="com.runwaysdk.system.metadata.MdController" />
+      <object key="net.geoprism.GeodashboardUser" type="com.runwaysdk.system.metadata.MdBusiness" />
     </delete>
   </undoIt>
 </version>

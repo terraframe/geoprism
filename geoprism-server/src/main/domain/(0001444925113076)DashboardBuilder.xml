@@ -21,12 +21,12 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="com.runwaysdk.geodashboard.AdminController">
+      <mdController name="net.geoprism.AdminController">
         <create>
           <mdAction name="builder" label="Builder" isPost="false" isQuery="false" />
         </create>
       </mdController>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard">
+      <mdBusiness name="net.geoprism.Dashboard">
         <mdMethod name="applyWithOptions" returnType="java.lang.String">
           <create>
             <mdParameter name="options" label="Options" order="2" type="java.lang.String" />
@@ -43,7 +43,7 @@
           </mdMethod>          
         </create>
       </mdBusiness>
-      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
+      <mdBusiness name="net.geoprism.MappableClass">
         <create>
           <mdMethod name="getClassesAsJSON" label="Get classes as JSON" static="true" returnType="java.lang.String">
             <mdParameter name="dashboardId" label="Dashboard Id" order="0" type="java.lang.String" />
@@ -56,19 +56,19 @@
       </mdBusiness>
     </update>
     <delete>
-      <object key="com.runwaysdk.geodashboard.Dashboard.applyWithOptions.userIds" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="com.runwaysdk.geodashboard.Dashboard.applyWithOptions.name" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.Dashboard.applyWithOptions.userIds" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.Dashboard.applyWithOptions.name" type="com.runwaysdk.system.metadata.MdParameter" />
     </delete>
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.Dashboard.applyWithOptions.options" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="com.runwaysdk.geodashboard.MappableClass.getClassesAsJSON" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.AdminController.builder" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.Dashboard.applyWithOptions.options" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.MappableClass.getClassesAsJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.AdminController.builder" type="com.runwaysdk.system.metadata.MdAction" />
     </delete>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.Dashboard" label="Dashboard" cacheAlgorithm="everything">
+      <mdBusiness name="net.geoprism.Dashboard" label="Dashboard" cacheAlgorithm="everything">
         <mdMethod name="applyWithOptions" label="Apply With Options" static="false" returnType="void">
           <create>
             <mdParameter order="0" description="Array of user ids assigned to this dashboard" name="userIds" label="User Ids" type="java.lang.String[]" />

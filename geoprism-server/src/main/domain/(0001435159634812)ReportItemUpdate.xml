@@ -21,9 +21,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.report.ReportItem">
+      <mdBusiness name="net.geoprism.report.ReportItem">
         <create>
-          <mdMethod name="getGeoEntitySuggestions" label="Get geo entity suggestions" static="true" returnType="com.runwaysdk.geodashboard.report.PairView[]">
+          <mdMethod name="getGeoEntitySuggestions" label="Get geo entity suggestions" static="true" returnType="net.geoprism.report.PairView[]">
             <mdParameter name="text" order="0" type="java.lang.String" label="Text" />
             <mdParameter name="limit" order="1" type="java.lang.Integer" label="Limit" />
           </mdMethod>          
@@ -34,7 +34,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.report.ReportItem.getGeoEntitySuggestions" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.report.ReportItem.getGeoEntitySuggestions" type="com.runwaysdk.system.metadata.MdMethod" />
     </delete>
   </undoIt>
 </version>

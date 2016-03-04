@@ -22,7 +22,7 @@
   <doIt>
     <create></create>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.gis.persist.DashboardMap">
+      <mdBusiness name="net.geoprism.dashboard.DashboardMap">
         <mdMethod name="getMapJSON">
           <create>
             <mdParameter name="config" type="java.lang.String" label="Config" description="JSON Configuration" order="0" />
@@ -33,7 +33,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.gis.persist.DashboardMap.getMapJSON.config"
+      <object key="net.geoprism.dashboard.DashboardMap.getMapJSON.config"
         type="com.runwaysdk.system.metadata.MdParameter"/>
     </delete>
   </undoIt>
