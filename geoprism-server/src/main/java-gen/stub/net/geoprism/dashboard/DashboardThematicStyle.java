@@ -103,7 +103,6 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       json.put("secondaryAggregationType", this.getSecondaryAggregationType());
       json.put("secondaryAttribute", this.getSecondaryAttributeId());
       json.put("secondaryCategories", this.getSecondaryCategories());
-      json.put("styleCondition", this.getStyleCondition());
 
       json.put("aggregationMap", DashboardStyle.getAggregationJSON());
 
@@ -122,12 +121,12 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
   {
     super.delete();
 
-    DashboardCondition cond = this.getStyleCondition();
-
-    if (cond != null)
-    {
-      cond.delete();
-    }
+//    DashboardCondition cond = this.getStyleCondition();
+//
+//    if (cond != null)
+//    {
+//      cond.delete();
+//    }
   }
 
   @Override
@@ -240,8 +239,6 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       this.addSecondaryAggregationType(tSource.getSecondaryAttributeAggregationMethod());
       this.setSecondaryAttribute(tSource.getSecondaryAttribute());
       this.setSecondaryCategories(tSource.getSecondaryCategories());
-
-      this.setStyleCondition(tSource.getStyleCondition());
     }
   }
 }

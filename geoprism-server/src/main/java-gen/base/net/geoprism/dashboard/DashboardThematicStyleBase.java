@@ -1221,18 +1221,6 @@ public abstract class DashboardThematicStyleBase extends net.geoprism.dashboard.
     }
   }
   
-  public net.geoprism.dashboard.condition.DashboardCondition getStyleCondition()
-  {
-    if (getValue(STYLECONDITION).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return net.geoprism.dashboard.condition.DashboardCondition.get(getValue(STYLECONDITION));
-    }
-  }
-  
   public String getStyleConditionId()
   {
     return getValue(STYLECONDITION);
@@ -1247,18 +1235,6 @@ public abstract class DashboardThematicStyleBase extends net.geoprism.dashboard.
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardThematicStyle.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(STYLECONDITION);
-  }
-  
-  public void setStyleCondition(net.geoprism.dashboard.condition.DashboardCondition value)
-  {
-    if(value == null)
-    {
-      setValue(STYLECONDITION, "");
-    }
-    else
-    {
-      setValue(STYLECONDITION, value.getId());
-    }
   }
   
   protected String getDeclaredType()

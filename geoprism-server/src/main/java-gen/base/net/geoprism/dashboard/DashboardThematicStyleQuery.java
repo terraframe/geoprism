@@ -750,29 +750,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.SECONDARYCATEGORIES, alias, displayLabel);
 
   }
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition()
-  {
-    return getStyleCondition(null);
-
-  }
- 
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION);
-
-    return (net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION, mdAttributeIF, this, alias, null);
-
-  }
- 
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel)
-  {
-
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION);
-
-    return (net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION, mdAttributeIF, this, alias, displayLabel);
-
-  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -780,10 +757,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     if (name.equals(net.geoprism.dashboard.DashboardThematicStyle.SECONDARYATTRIBUTE)) 
     {
        return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION)) 
-    {
-       return new net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -957,9 +930,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     public com.runwaysdk.query.SelectableChar getSecondaryCategories();
     public com.runwaysdk.query.SelectableChar getSecondaryCategories(String alias);
     public com.runwaysdk.query.SelectableChar getSecondaryCategories(String alias, String displayLabel);
-    public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition();
-    public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias);
-    public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.DashboardThematicStyle dashboardThematicStyle);
 
@@ -1675,23 +1645,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardThematicStyle.SECONDARYCATEGORIES, alias, displayLabel);
 
   }
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition()
-  {
-    return getStyleCondition(null);
-
-  }
- 
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias)
-  {
-    return (net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION, alias, null);
-
-  }
- 
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel)
-  {
-    return (net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION,  alias, displayLabel);
-
-  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -1699,10 +1652,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     if (name.equals(net.geoprism.dashboard.DashboardThematicStyle.SECONDARYATTRIBUTE)) 
     {
        return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION)) 
-    {
-       return new net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -1853,9 +1802,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     public com.runwaysdk.query.SelectableChar getSecondaryCategories();
     public com.runwaysdk.query.SelectableChar getSecondaryCategories(String alias);
     public com.runwaysdk.query.SelectableChar getSecondaryCategories(String alias, String displayLabel);
-    public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition();
-    public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias);
-    public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(net.geoprism.dashboard.DashboardThematicStyle ... dashboardThematicStyle);
     public com.runwaysdk.query.Condition notContainsAny(net.geoprism.dashboard.DashboardThematicStyle ... dashboardThematicStyle);
@@ -2620,23 +2566,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardThematicStyle.SECONDARYCATEGORIES, alias, displayLabel);
 
   }
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition()
-  {
-    return getStyleCondition(null);
-
-  }
- 
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias)
-  {
-    return (net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION, alias, null);
-
-  }
- 
-  public net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF getStyleCondition(String alias, String displayLabel)
-  {
-    return (net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION,  alias, displayLabel);
-
-  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -2644,10 +2573,6 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     if (name.equals(net.geoprism.dashboard.DashboardThematicStyle.SECONDARYATTRIBUTE)) 
     {
        return new com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
-    }
-    else if (name.equals(net.geoprism.dashboard.DashboardThematicStyle.STYLECONDITION)) 
-    {
-       return new net.geoprism.dashboard.condition.DashboardConditionQuery.DashboardConditionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

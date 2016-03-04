@@ -433,9 +433,9 @@ public  class ClassifierExportMenuQuery extends com.runwaysdk.query.GeneratedBus
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.gis.ClassifierExportMenu classifierExportMenu);
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierExportMenu classifierExportMenu);
 
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.gis.ClassifierExportMenu classifierExportMenu);
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierExportMenu classifierExportMenu);
 
   }
 
