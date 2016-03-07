@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.UnsupportedDrillThroughFormatExceptionBase;
 
 public class UnsupportedDrillThroughFormatException extends UnsupportedDrillThroughFormatExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

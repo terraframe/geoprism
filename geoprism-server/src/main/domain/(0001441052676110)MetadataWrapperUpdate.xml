@@ -21,10 +21,10 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.MetadataWrapper">
+      <mdBusiness name="net.geoprism.dashboard.MetadataWrapper">
         <create>
           <attributes>
-            <reference name="dashboard" type="net.geoprism.Dashboard" label="Dashboard" required="true"/>
+            <reference name="dashboard" type="net.geoprism.dashboard.Dashboard" label="Dashboard" required="true"/>
           </attributes>
         </create>
       </mdBusiness>

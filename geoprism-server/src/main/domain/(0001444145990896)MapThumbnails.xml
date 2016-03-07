@@ -23,7 +23,7 @@
     <create></create>
     <update>
     
-      <mdBusiness name="net.geoprism.Dashboard">
+      <mdBusiness name="net.geoprism.dashboard.Dashboard">
         <create>
           <attributes>
           	<blob name="mapThumbnail" label="Map Thumbnail"></blob>
@@ -37,7 +37,7 @@
         </create>
       </mdBusiness>
       
-<!--       <mdBusiness name="net.geoprism.Dashboard"> -->
+<!--       <mdBusiness name="net.geoprism.dashboard.Dashboard"> -->
 <!--         <create> -->
 <!--           <mdMethod name="setBaseLayerState" static="false" label="Set the state of the base layers" returnType="void"> -->
 <!-- 				<mdParameter name="baseLayerState" order="0" type="java.lang.String" label="Base layer state" /> -->

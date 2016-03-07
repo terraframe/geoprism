@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.MissingReportDesignExceptionBase;
 
 public class MissingReportDesignException extends MissingReportDesignExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

@@ -40,8 +40,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import net.geoprism.localization.LocalizationFacade;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.json.JSONException;

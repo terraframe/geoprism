@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.ExcelSourceBinding;
 
 public interface SourceFieldIF
 {

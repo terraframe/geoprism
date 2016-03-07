@@ -20,12 +20,6 @@ package net.geoprism.ontology;
 
 import java.util.List;
 
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
-import net.geoprism.ontology.ClassifierBase;
-import net.geoprism.ontology.ClassifierQuery;
-import net.geoprism.ontology.ClassifierSynonymQuery;
-import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;

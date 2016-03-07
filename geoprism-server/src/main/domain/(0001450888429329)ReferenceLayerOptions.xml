@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.dashboard.DashboardReferenceLayer">
+      <mdBusiness name="net.geoprism.dashboard.layer.DashboardReferenceLayer">
         <mdMethod name="getOptionsJSON">
           <create>
             <mdParameter name="dashboardId" label="Dashboard Id" order="0" type="java.lang.String"/>

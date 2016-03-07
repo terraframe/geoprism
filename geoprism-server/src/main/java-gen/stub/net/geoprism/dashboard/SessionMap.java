@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.SessionMapBase;
 
 public class SessionMap extends SessionMapBase implements com.runwaysdk.generation.loader.Reloadable
 {

@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportParameterBase;
 
 public class ReportParameter extends ReportParameterBase implements com.runwaysdk.generation.loader.Reloadable
 {

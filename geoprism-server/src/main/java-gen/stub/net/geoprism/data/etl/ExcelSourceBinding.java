@@ -21,10 +21,6 @@ package net.geoprism.data.etl;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.data.etl.ExcelFieldBindingQuery;
-import net.geoprism.data.etl.ExcelSourceBindingBase;
-import net.geoprism.data.etl.ExcelSourceBindingQuery;
-
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;

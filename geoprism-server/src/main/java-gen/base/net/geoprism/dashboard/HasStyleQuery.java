@@ -78,7 +78,7 @@ public  class HasStyleQuery extends com.runwaysdk.query.GeneratedRelationshipQue
    * @param dashboardLayerQuery
    * @return Condition restricting objects that are parents in this relationship.
    */
-   public com.runwaysdk.query.Condition hasParent(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+   public com.runwaysdk.query.Condition hasParent(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
    {
      return this.getRelationshipQuery().hasParent(dashboardLayerQuery);
    }
@@ -87,7 +87,7 @@ public  class HasStyleQuery extends com.runwaysdk.query.GeneratedRelationshipQue
    * @param dashboardLayerQuery
    * @return Condition restricting objects that are parents in this relationship.
    */
-   public com.runwaysdk.query.Condition doesNotHaveParent(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+   public com.runwaysdk.query.Condition doesNotHaveParent(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
    {
      return this.getRelationshipQuery().doesNotHaveParent(dashboardLayerQuery);
    }

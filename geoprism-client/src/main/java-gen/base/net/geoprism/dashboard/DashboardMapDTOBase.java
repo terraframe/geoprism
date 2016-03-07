@@ -159,7 +159,7 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
   }
   
-  public net.geoprism.DashboardDTO getDashboard()
+  public net.geoprism.dashboard.DashboardDTO getDashboard()
   {
     if(getValue(DASHBOARD) == null || getValue(DASHBOARD).trim().equals(""))
     {
@@ -167,7 +167,7 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      return net.geoprism.DashboardDTO.get(getRequest(), getValue(DASHBOARD));
+      return net.geoprism.dashboard.DashboardDTO.get(getRequest(), getValue(DASHBOARD));
     }
   }
   
@@ -176,7 +176,7 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return getValue(DASHBOARD);
   }
   
-  public void setDashboard(net.geoprism.DashboardDTO value)
+  public void setDashboard(net.geoprism.dashboard.DashboardDTO value)
   {
     if(value == null)
     {
@@ -561,12 +561,12 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final net.geoprism.MdAttributeViewDTO[] getSecondaryAttributes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mapId, java.lang.String mdAttributeId)
+  public static final net.geoprism.dashboard.MdAttributeViewDTO[] getSecondaryAttributes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mapId, java.lang.String mdAttributeId)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{mapId, mdAttributeId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardMapDTO.CLASS, "getSecondaryAttributes", _declaredTypes);
-    return (net.geoprism.MdAttributeViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (net.geoprism.dashboard.MdAttributeViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public final com.runwaysdk.system.gis.geo.UniversalDTO[] getUniversalAggregations(java.lang.String mdAttributeId)
@@ -618,57 +618,57 @@ public abstract class DashboardMapDTOBase extends com.runwaysdk.business.Busines
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO> getAllHasLayer()
+  public java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllHasLayer()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO>) getRequest().getChildren(this.getId(), net.geoprism.dashboard.HasLayerDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) getRequest().getChildren(this.getId(), net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO> getAllHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO>) clientRequestIF.getChildren(id, net.geoprism.dashboard.HasLayerDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) clientRequestIF.getChildren(id, net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends net.geoprism.dashboard.HasLayerDTO> getAllHasLayerRelationships()
+  public java.util.List<? extends net.geoprism.dashboard.layer.HasLayerDTO> getAllHasLayerRelationships()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.HasLayerDTO>) getRequest().getChildRelationships(this.getId(), net.geoprism.dashboard.HasLayerDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.HasLayerDTO>) getRequest().getChildRelationships(this.getId(), net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.HasLayerDTO> getAllHasLayerRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.layer.HasLayerDTO> getAllHasLayerRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.HasLayerDTO>) clientRequestIF.getChildRelationships(id, net.geoprism.dashboard.HasLayerDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.HasLayerDTO>) clientRequestIF.getChildRelationships(id, net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
-  public net.geoprism.dashboard.HasLayerDTO addHasLayer(net.geoprism.dashboard.DashboardLayerDTO child)
+  public net.geoprism.dashboard.layer.HasLayerDTO addHasLayer(net.geoprism.dashboard.layer.DashboardLayerDTO child)
   {
-    return (net.geoprism.dashboard.HasLayerDTO) getRequest().addChild(this.getId(), child.getId(), net.geoprism.dashboard.HasLayerDTO.CLASS);
+    return (net.geoprism.dashboard.layer.HasLayerDTO) getRequest().addChild(this.getId(), child.getId(), net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.HasLayerDTO addHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.DashboardLayerDTO child)
+  public static net.geoprism.dashboard.layer.HasLayerDTO addHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.layer.DashboardLayerDTO child)
   {
-    return (net.geoprism.dashboard.HasLayerDTO) clientRequestIF.addChild(id, child.getId(), net.geoprism.dashboard.HasLayerDTO.CLASS);
+    return (net.geoprism.dashboard.layer.HasLayerDTO) clientRequestIF.addChild(id, child.getId(), net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
-  public void removeHasLayer(net.geoprism.dashboard.HasLayerDTO relationship)
+  public void removeHasLayer(net.geoprism.dashboard.layer.HasLayerDTO relationship)
   {
     getRequest().deleteChild(relationship.getId());
   }
   
-  public static void removeHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.dashboard.HasLayerDTO relationship)
+  public static void removeHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.dashboard.layer.HasLayerDTO relationship)
   {
     clientRequestIF.deleteChild(relationship.getId());
   }
   
   public void removeAllHasLayer()
   {
-    getRequest().deleteChildren(this.getId(), net.geoprism.dashboard.HasLayerDTO.CLASS);
+    getRequest().deleteChildren(this.getId(), net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
   public static void removeAllHasLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    clientRequestIF.deleteChildren(id, net.geoprism.dashboard.HasLayerDTO.CLASS);
+    clientRequestIF.deleteChildren(id, net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")

@@ -26,8 +26,6 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import net.geoprism.dashboard.AggregationStrategyView;
-import net.geoprism.report.PairView;
-import net.geoprism.report.ReportRenderException;
 
 import org.json.JSONException;
 

@@ -25,8 +25,8 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import net.geoprism.AccessConstants;
-import net.geoprism.DashboardDTO;
-import net.geoprism.DashboardQueryDTO;
+import net.geoprism.dashboard.DashboardDTO;
+import net.geoprism.dashboard.DashboardQueryDTO;
 import net.geoprism.FileDownloadUtil;
 import net.geoprism.GeoprismUserDTO;
 import net.geoprism.JavascriptUtil;

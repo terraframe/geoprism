@@ -18,7 +18,6 @@
  */
 package net.geoprism.gis.geoserver;
 
-import net.geoprism.gis.geoserver.MapLayerExceptionBase;
 
 public class MapLayerException extends MapLayerExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

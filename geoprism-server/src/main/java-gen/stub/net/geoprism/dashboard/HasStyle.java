@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.HasStyleBase;
 
 public class HasStyle extends HasStyleBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -29,7 +28,7 @@ public class HasStyle extends HasStyleBase implements com.runwaysdk.generation.l
     super(parentId, childId);
   }
   
-  public HasStyle(net.geoprism.dashboard.DashboardLayer parent, net.geoprism.dashboard.DashboardStyle child)
+  public HasStyle(net.geoprism.dashboard.layer.DashboardLayer parent, net.geoprism.dashboard.DashboardStyle child)
   {
     this(parent.getId(), child.getId());
   }

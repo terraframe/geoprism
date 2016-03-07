@@ -123,7 +123,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
-  public net.geoprism.Dashboard getDashboard()
+  public net.geoprism.dashboard.Dashboard getDashboard()
   {
     if (getValue(DASHBOARD).trim().equals(""))
     {
@@ -131,7 +131,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     }
     else
     {
-      return net.geoprism.Dashboard.get(getValue(DASHBOARD));
+      return net.geoprism.dashboard.Dashboard.get(getValue(DASHBOARD));
     }
   }
   
@@ -151,7 +151,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARD);
   }
   
-  public void setDashboard(net.geoprism.Dashboard value)
+  public void setDashboard(net.geoprism.dashboard.Dashboard value)
   {
     if(value == null)
     {
@@ -447,32 +447,32 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     return query;
   }
   
-  public net.geoprism.dashboard.HasLayer addHasLayer(net.geoprism.dashboard.DashboardLayer dashboardLayer)
+  public net.geoprism.dashboard.layer.HasLayer addHasLayer(net.geoprism.dashboard.layer.DashboardLayer dashboardLayer)
   {
-    return (net.geoprism.dashboard.HasLayer) addChild(dashboardLayer, net.geoprism.dashboard.HasLayer.CLASS);
+    return (net.geoprism.dashboard.layer.HasLayer) addChild(dashboardLayer, net.geoprism.dashboard.layer.HasLayer.CLASS);
   }
   
-  public void removeHasLayer(net.geoprism.dashboard.DashboardLayer dashboardLayer)
+  public void removeHasLayer(net.geoprism.dashboard.layer.DashboardLayer dashboardLayer)
   {
-    removeAllChildren(dashboardLayer, net.geoprism.dashboard.HasLayer.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.DashboardLayer> getAllHasLayer()
-  {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.DashboardLayer>) getChildren(net.geoprism.dashboard.HasLayer.CLASS);
+    removeAllChildren(dashboardLayer, net.geoprism.dashboard.layer.HasLayer.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasLayer> getAllHasLayerRel()
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.DashboardLayer> getAllHasLayer()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasLayer>) getChildRelationships(net.geoprism.dashboard.HasLayer.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.DashboardLayer>) getChildren(net.geoprism.dashboard.layer.HasLayer.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasLayer> getHasLayerRel(net.geoprism.dashboard.DashboardLayer dashboardLayer)
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.HasLayer> getAllHasLayerRel()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasLayer>) getRelationshipsWithChild(dashboardLayer, net.geoprism.dashboard.HasLayer.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.HasLayer>) getChildRelationships(net.geoprism.dashboard.layer.HasLayer.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.HasLayer> getHasLayerRel(net.geoprism.dashboard.layer.DashboardLayer dashboardLayer)
+  {
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.HasLayer>) getRelationshipsWithChild(dashboardLayer, net.geoprism.dashboard.layer.HasLayer.CLASS);
   }
   
   public net.geoprism.dashboard.SessionMap addSessionEntry(net.geoprism.SessionEntry sessionEntry)
@@ -537,7 +537,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
     return _instance.getMapJSON(config);
   }
   
-  public static net.geoprism.MdAttributeView[] getSecondaryAttributes(java.lang.String mapId, java.lang.String mdAttributeId)
+  public static net.geoprism.dashboard.MdAttributeView[] getSecondaryAttributes(java.lang.String mapId, java.lang.String mdAttributeId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

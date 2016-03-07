@@ -22,7 +22,7 @@
   <doIt>
     <create></create>
     <update>
-      <mdController name="net.geoprism.dashboard.DashboardThematicLayerController">
+      <mdController name="net.geoprism.dashboard.layer.DashboardThematicLayerController">
         <create>
           <mdAction name="newThematicInstance" label="newThematicInstance" isPost="true">
             <mdParameter name="mdAttribute" label="mdAttribute" order="0" type="java.lang.String" />
@@ -31,10 +31,10 @@
         </create>
       </mdController>
 
-      <mdController name="net.geoprism.dashboard.DashboardReferenceLayerController">
+      <mdController name="net.geoprism.dashboard.layer.DashboardReferenceLayerController">
         <create>
           <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.DashboardReferenceLayer" />
+            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.layer.DashboardReferenceLayer" />
             <mdParameter name="style" label="Style" order="1" type="net.geoprism.dashboard.DashboardStyle" />
             <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
           </mdAction>
@@ -49,8 +49,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.dashboard.DashboardThematicLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction" />
-      <object key="net.geoprism.dashboard.DashboardThematicLayerController.newThematicInstance" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.dashboard.layer.DashboardThematicLayerController.applyWithStyle" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.dashboard.layer.DashboardThematicLayerController.newThematicInstance" type="com.runwaysdk.system.metadata.MdAction" />
     </delete>
   </undoIt>
 </version>

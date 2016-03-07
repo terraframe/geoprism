@@ -20,8 +20,6 @@ package net.geoprism.report;
 
 import java.util.List;
 
-import net.geoprism.report.PairView;
-
 import org.json.JSONException;
 
 import com.runwaysdk.generation.loader.Reloadable;

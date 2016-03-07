@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportRenderExceptionBase;
 
 public class ReportRenderException extends ReportRenderExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

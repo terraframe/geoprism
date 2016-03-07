@@ -24,12 +24,11 @@ import java.util.List;
 import net.geoprism.dashboard.AggregationStrategy;
 import net.geoprism.dashboard.AggregationStrategyView;
 import net.geoprism.dashboard.AllAggregationType;
-import net.geoprism.dashboard.DashboardThematicLayer;
 import net.geoprism.dashboard.GeometryAggregationStrategy;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
-import net.geoprism.report.PairView;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;

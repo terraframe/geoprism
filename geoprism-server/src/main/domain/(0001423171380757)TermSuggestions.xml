@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.Dashboard">
+      <mdBusiness name="net.geoprism.dashboard.Dashboard">
         <create>
           <mdMethod name="getClassifierSuggestions" label="Get text suggestions" static="true" returnType="net.geoprism.ontology.Classifier[]">
             <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="MdAttribute id" />

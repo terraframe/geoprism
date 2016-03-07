@@ -27,10 +27,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 
-import net.geoprism.AttributeWrapperQuery;
-import net.geoprism.MappableClassBase;
-import net.geoprism.MappableClassQuery;
-import net.geoprism.MetadataWrapperQuery;
+import net.geoprism.dashboard.AttributeWrapper;
+import net.geoprism.dashboard.AttributeWrapperQuery;
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardAttributes;
+import net.geoprism.dashboard.DashboardMetadata;
+import net.geoprism.dashboard.MetadataWrapper;
+import net.geoprism.dashboard.MetadataWrapperQuery;
 import net.geoprism.ontology.Classifier;
 
 import org.json.JSONArray;

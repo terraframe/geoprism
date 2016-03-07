@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl.excel;
 
-import net.geoprism.data.etl.excel.ExcelFormulaExceptionBase;
 
 public class ExcelFormulaException extends ExcelFormulaExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

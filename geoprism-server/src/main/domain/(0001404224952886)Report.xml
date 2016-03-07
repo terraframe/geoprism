@@ -35,7 +35,7 @@
           <char name="reportName" label="Report name" required="true" size="255" indexType="unique index" />
           <localChar name="reportLabel" label="Report label" required="true" size="255" />
           <boolean name="cacheDocument" label="Use report document?" required="true" positiveLabel="Yes" negativeLabel="No" defaultValue="false" />
-          <reference name="dashboard" label="Dashboard" type="net.geoprism.Dashboard" required="true" indexType="unique index" />
+          <reference name="dashboard" label="Dashboard" type="net.geoprism.dashboard.Dashboard" required="true" indexType="unique index" />
         </attributes>
         <mdMethod name="applyWithFile" label="Apply with file" returnType="void" static="false">
           <mdParameter name="fileStream" label="fileStream" order="0" type="java.io.InputStream" />

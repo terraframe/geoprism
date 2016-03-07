@@ -18,7 +18,8 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.UniversalAggregationStrategyBase;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.layer.EmptyLayerInformation;
 import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.wrapper.FeatureType;

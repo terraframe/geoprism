@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationStrategyBase;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
 import org.json.JSONObject;
 

@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.geoprism.RoleViewBase;
-
 import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;

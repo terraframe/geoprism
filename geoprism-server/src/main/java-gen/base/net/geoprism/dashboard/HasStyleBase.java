@@ -348,9 +348,9 @@ public abstract class HasStyleBase extends com.runwaysdk.business.Relationship i
     return query;
   }
   
-  public net.geoprism.dashboard.DashboardLayer getParent()
+  public net.geoprism.dashboard.layer.DashboardLayer getParent()
   {
-    return (net.geoprism.dashboard.DashboardLayer) super.getParent();
+    return (net.geoprism.dashboard.layer.DashboardLayer) super.getParent();
   }
   
   public net.geoprism.dashboard.DashboardStyle getChild()

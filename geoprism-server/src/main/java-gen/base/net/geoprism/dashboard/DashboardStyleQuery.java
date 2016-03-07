@@ -883,7 +883,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.getBusinessQuery().isChildIn_SUBSELECT(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -892,7 +892,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -901,13 +901,13 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.getBusinessQuery().isChildIn(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.getBusinessQuery().isChildIn_SUBSELECT(hasStyleQuery);
@@ -941,7 +941,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -950,7 +950,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -959,13 +959,13 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.getBusinessQuery().isNotChildIn(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(hasStyleQuery);
@@ -1112,27 +1112,27 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
 
 
   public com.runwaysdk.query.Condition containingLayer();
-  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
+  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_containingLayer();
-  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_containingLayer();
-  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
+  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer();
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery);
 
   }
 
@@ -1906,7 +1906,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.isChildIn_SUBSELECT(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -1915,7 +1915,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.isChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -1924,13 +1924,13 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.isChildIn(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.isChildIn_SUBSELECT(hasStyleQuery);
@@ -1964,7 +1964,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.isNotChildIn_SUBSELECT(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -1973,7 +1973,7 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.isNotChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasStyle.CLASS);
@@ -1982,13 +1982,13 @@ public  class DashboardStyleQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.isNotChildIn(hasStyleQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_containingLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasStyleQuery hasStyleQuery)
   {
     hasStyleQuery.AND(hasStyleQuery.hasParent(dashboardLayerQuery));
     return this.isNotChildIn_SUBSELECT(hasStyleQuery);

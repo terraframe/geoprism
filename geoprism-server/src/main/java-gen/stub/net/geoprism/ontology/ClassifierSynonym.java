@@ -18,11 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
-import net.geoprism.ontology.ClassifierQuery;
-import net.geoprism.ontology.ClassifierSynonymBase;
-import net.geoprism.ontology.ClassifierSynonymQuery;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;

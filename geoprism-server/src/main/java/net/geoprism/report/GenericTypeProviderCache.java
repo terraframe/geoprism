@@ -21,7 +21,7 @@ package net.geoprism.report;
 import java.util.HashMap;
 import java.util.List;
 
-import net.geoprism.MetadataWrapper;
+import net.geoprism.dashboard.MetadataWrapper;
 
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.metadata.MdClass;

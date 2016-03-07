@@ -23,11 +23,11 @@ import java.net.URI;
 import java.util.List;
 
 import net.geoprism.ClassUniversalQuery;
-import net.geoprism.Dashboard;
-import net.geoprism.DashboardQuery;
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardBuilder;
+import net.geoprism.dashboard.DashboardQuery;
 import net.geoprism.dashboard.DashboardTypeInfo;
 
 import org.xml.sax.Attributes;

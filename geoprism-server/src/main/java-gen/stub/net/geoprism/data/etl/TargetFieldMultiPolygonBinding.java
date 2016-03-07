@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldMultiPolygonBindingBase;
 
 public class TargetFieldMultiPolygonBinding extends TargetFieldMultiPolygonBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {

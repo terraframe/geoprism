@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierHasSynonymBase;
 
 public class ClassifierHasSynonym extends ClassifierHasSynonymBase implements com.runwaysdk.generation.loader.Reloadable
 {

@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.Dashboard">
+      <mdBusiness name="net.geoprism.dashboard.Dashboard">
         <create>
           <mdMethod name="getJSON" label="Get JSON" static="false" returnType="java.lang.String" />
           <mdMethod name="saveState" label="Save state" static="false" returnType="java.lang.String">
@@ -40,7 +40,7 @@
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdBusiness name="net.geoprism.dashboard.DashboardLayer">
+      <mdBusiness name="net.geoprism.dashboard.layer.DashboardLayer">
         <create>
         <mdMethod name="applyWithStyle" label="Apply With Style" static="false" returnType="java.lang.String">
           <mdParameter name="style" label="Style" order="0" type="net.geoprism.dashboard.DashboardStyle" />
@@ -49,7 +49,7 @@
         </mdMethod>
         </create>
       </mdBusiness>
-      <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
+      <mdBusiness name="net.geoprism.dashboard.layer.DashboardThematicLayer">
         <create>
 	        <mdMethod name="applyWithStyleAndStrategy" label="Apply With Style and strategy" static="false" returnType="java.lang.String">
 	          <mdParameter name="style" label="Style" order="0" type="net.geoprism.dashboard.DashboardStyle" />
@@ -59,10 +59,10 @@
 	        </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="net.geoprism.dashboard.DashboardThematicLayerController">
+      <mdController name="net.geoprism.dashboard.layer.DashboardThematicLayerController">
         <create>
           <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.DashboardThematicLayer" />
+            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.layer.DashboardThematicLayer" />
             <mdParameter name="style" label="Style" order="1" type="net.geoprism.dashboard.DashboardStyle" />
             <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
             <mdParameter name="strategy" label="Strategy" order="3" type="net.geoprism.dashboard.AggregationStrategy" />
@@ -74,12 +74,12 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.Dashboard.getAvailableDashboardsAsJSON" type="com.runwaysdk.system.metadata.MdMethod"/>    
-      <object key="net.geoprism.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="net.geoprism.Dashboard.saveState" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.Dashboard.getAvailableDashboardsAsJSON" type="com.runwaysdk.system.metadata.MdMethod"/>    
+      <object key="net.geoprism.dashboard.Dashboard.getJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.Dashboard.saveState" type="com.runwaysdk.system.metadata.MdMethod" />
       <object key="net.geoprism.dashboard.DashboardMap.refresh" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="net.geoprism.dashboard.DashboardLayer.applyWithStyle.state" type="com.runwaysdk.system.metadata.MdParameter" />
-      <object key="net.geoprism.dashboard.DashboardThematicLayer.applyWithStyleAndStrategy.state" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.dashboard.layer.DashboardLayer.applyWithStyle.state" type="com.runwaysdk.system.metadata.MdParameter" />
+      <object key="net.geoprism.dashboard.layer.DashboardThematicLayer.applyWithStyleAndStrategy.state" type="com.runwaysdk.system.metadata.MdParameter" />
     </delete>
   </undoIt>
 </version>

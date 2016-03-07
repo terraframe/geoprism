@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierMultiTermAttributeRootBase;
 
 public class ClassifierMultiTermAttributeRoot extends ClassifierMultiTermAttributeRootBase implements com.runwaysdk.generation.loader.Reloadable
 {

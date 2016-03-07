@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl.excel;
 
-import net.geoprism.data.etl.excel.InvalidExcelFileExceptionBase;
 
 public class InvalidExcelFileException extends InvalidExcelFileExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

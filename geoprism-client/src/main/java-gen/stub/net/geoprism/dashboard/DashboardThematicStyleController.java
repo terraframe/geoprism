@@ -54,7 +54,6 @@ public class DashboardThematicStyleController extends DashboardThematicStyleCont
   public void failCreate(net.geoprism.dashboard.DashboardThematicStyleDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("_mdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_styleCondition", net.geoprism.dashboard.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
@@ -73,7 +72,6 @@ public class DashboardThematicStyleController extends DashboardThematicStyleCont
   public void failDelete(net.geoprism.dashboard.DashboardThematicStyleDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("_mdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_styleCondition", net.geoprism.dashboard.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -81,7 +79,6 @@ public class DashboardThematicStyleController extends DashboardThematicStyleCont
   {
     net.geoprism.dashboard.DashboardThematicStyleDTO dto = net.geoprism.dashboard.DashboardThematicStyleDTO.lock(super.getClientRequest(), id);
     req.setAttribute("_mdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_styleCondition", net.geoprism.dashboard.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -94,7 +91,6 @@ public class DashboardThematicStyleController extends DashboardThematicStyleCont
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     net.geoprism.dashboard.DashboardThematicStyleDTO dto = new net.geoprism.dashboard.DashboardThematicStyleDTO(clientRequest);
     req.setAttribute("_mdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_styleCondition", net.geoprism.dashboard.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
@@ -117,7 +113,6 @@ public class DashboardThematicStyleController extends DashboardThematicStyleCont
   public void failUpdate(net.geoprism.dashboard.DashboardThematicStyleDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("_mdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_styleCondition", net.geoprism.dashboard.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
@@ -125,7 +120,6 @@ public class DashboardThematicStyleController extends DashboardThematicStyleCont
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
     req.setAttribute("_mdAttribute", com.runwaysdk.system.metadata.MdAttributeDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
-    req.setAttribute("_styleCondition", net.geoprism.dashboard.condition.DashboardConditionDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("item", net.geoprism.dashboard.DashboardThematicStyleDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }

@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldCoordinateBindingBase;
 
 public abstract class TargetFieldCoordinateBinding extends TargetFieldCoordinateBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {

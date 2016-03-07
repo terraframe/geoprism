@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetFieldBindingBase;
 
 public abstract class TargetFieldBinding extends TargetFieldBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {

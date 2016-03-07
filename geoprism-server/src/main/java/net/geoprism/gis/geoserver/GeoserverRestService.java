@@ -33,10 +33,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.geoprism.dashboard.DashboardLayer;
 import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.gis.geoserver.GeoserverProperties;
-import net.geoprism.gis.geoserver.MapLayerException;
+import net.geoprism.dashboard.layer.DashboardLayer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

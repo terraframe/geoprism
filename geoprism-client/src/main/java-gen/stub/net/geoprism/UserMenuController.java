@@ -27,7 +27,8 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
-import net.geoprism.DashboardQueryDTO;
+import net.geoprism.dashboard.DashboardDTO;
+import net.geoprism.dashboard.DashboardQueryDTO;
 import net.geoprism.JavascriptUtil;
 import net.geoprism.UserMenuControllerBase;
 

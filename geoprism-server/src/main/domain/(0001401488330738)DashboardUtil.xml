@@ -23,7 +23,7 @@
     <create></create>
     <update>
     
-      <mdBusiness name="net.geoprism.dashboard.DashboardLayer">
+      <mdBusiness name="net.geoprism.dashboard.layer.DashboardLayer">
         <create>
           <mdMethod name="getSortedUniversals" static="true" label="Get Sorted Universals" 
             returnType="com.runwaysdk.system.gis.geo.UniversalQuery">
@@ -31,7 +31,7 @@
         </create>
       </mdBusiness>
       
-<!--       <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer"> -->
+<!--       <mdBusiness name="net.geoprism.dashboard.layer.DashboardThematicLayer"> -->
 <!--         <create> -->
 <!--           <mdMethod name="getSortedAggregations" static="true" label="Get Sorted Aggregations" returnType="net.geoprism.dashboard.AggregationTypeQuery"> -->
 <!--           		<mdParameter name="thematicAttributeId" order="0" type="java.lang.String" label="Thematic Attribute Id" /> -->
@@ -79,7 +79,7 @@
   <undoIt>
     <delete>
     
-      <object key="net.geoprism.dashboard.DashboardLayer.getSortedUniversals"
+      <object key="net.geoprism.dashboard.layer.DashboardLayer.getSortedUniversals"
         type="com.runwaysdk.system.metadata.MdMethod"/>
         
       <object key="net.geoprism.dashboard.DashboardStyle.getSortedAggregations"

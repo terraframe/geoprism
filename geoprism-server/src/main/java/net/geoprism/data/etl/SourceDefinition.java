@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.geoprism.data.etl.ExcelSourceBinding;
-
 import com.runwaysdk.system.metadata.MdView;
 
 public class SourceDefinition implements SourceDefinitionIF

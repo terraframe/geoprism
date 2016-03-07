@@ -21,17 +21,17 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="net.geoprism.DashboardState" label="Dashboard State" generateController="false">
+      <mdBusiness name="net.geoprism.dashboard.DashboardState" label="Dashboard State" generateController="false">
         <attributes>
           <blob name="mapThumbnail" label="Map Thumbnail"/>
           <text name="conditions" label="Conditions" />
           <reference name="GeoprismUser" label="User" type="net.geoprism.GeoprismUser"  />
-          <reference name="dashboard" label="Dashboard" type="net.geoprism.Dashboard" indexType="non-unique index" required="true"  />
+          <reference name="dashboard" label="Dashboard" type="net.geoprism.dashboard.Dashboard" indexType="non-unique index" required="true"  />
         </attributes>
       </mdBusiness>
     </create>
     <update>
-      <mdBusiness name="net.geoprism.Dashboard">
+      <mdBusiness name="net.geoprism.dashboard.Dashboard">
         <create>
           <mdMethod name="getThumbnailStream" label="Get thumbnail stream" returnType="java.io.InputStream" static="false" />
         </create>
@@ -40,8 +40,8 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.DashboardState" type="com.runwaysdk.system.metadata.MdBusiness"/>
-      <object key="net.geoprism.Dashboard.getThumbnailStream" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.dashboard.DashboardState" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.dashboard.Dashboard.getThumbnailStream" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>
 </version>

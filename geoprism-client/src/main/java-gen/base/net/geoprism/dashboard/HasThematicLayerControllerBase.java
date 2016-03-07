@@ -84,14 +84,14 @@ public class HasThematicLayerControllerBase implements com.runwaysdk.generation.
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void cancel(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void cancel(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.cancel");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void failCancel(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failCancel(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.failCancel");
@@ -112,28 +112,28 @@ public class HasThematicLayerControllerBase implements com.runwaysdk.generation.
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void create(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void create(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.create");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void failCreate(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failCreate(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.failCreate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void delete(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void delete(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.delete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void failDelete(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failDelete(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.failDelete");
@@ -196,14 +196,14 @@ public class HasThematicLayerControllerBase implements com.runwaysdk.generation.
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void update(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void update(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.update");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerDTO:dto", post=true)
-  public void failUpdate(net.geoprism.dashboard.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
+  public void failUpdate(net.geoprism.dashboard.layer.HasThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.failUpdate");

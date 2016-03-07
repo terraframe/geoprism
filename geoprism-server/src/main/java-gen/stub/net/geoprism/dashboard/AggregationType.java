@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationTypeBase;
 
 public class AggregationType extends AggregationTypeBase implements com.runwaysdk.generation.loader.Reloadable
 {

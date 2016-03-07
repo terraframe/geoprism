@@ -21,8 +21,8 @@ package net.geoprism.gis.geoserver;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.geoprism.dashboard.DashboardLayer;
 import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.layer.DashboardLayer;
 
 import com.runwaysdk.generation.loader.Reloadable;
 

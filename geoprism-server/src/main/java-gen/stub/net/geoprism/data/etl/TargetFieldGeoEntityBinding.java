@@ -21,9 +21,6 @@ package net.geoprism.data.etl;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.data.etl.TargetFieldGeoEntityBindingBase;
-import net.geoprism.data.etl.UniversalAttributeBindingQuery;
-
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;

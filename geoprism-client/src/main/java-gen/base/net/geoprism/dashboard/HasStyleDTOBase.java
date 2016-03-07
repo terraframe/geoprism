@@ -404,9 +404,9 @@ public abstract class HasStyleDTOBase extends com.runwaysdk.business.Relationshi
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public net.geoprism.dashboard.DashboardLayerDTO getParent()
+  public net.geoprism.dashboard.layer.DashboardLayerDTO getParent()
   {
-    return net.geoprism.dashboard.DashboardLayerDTO.get(getRequest(), super.getParentId());
+    return net.geoprism.dashboard.layer.DashboardLayerDTO.get(getRequest(), super.getParentId());
   }
   
     public net.geoprism.dashboard.DashboardStyleDTO getChild()

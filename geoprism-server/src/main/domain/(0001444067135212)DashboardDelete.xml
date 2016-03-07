@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.Dashboard">      
+      <mdBusiness name="net.geoprism.dashboard.Dashboard">      
         <create>
           <attributes>
             <boolean name="removable" label="Removable" defaultValue="true" positiveLabel="true" negativeLabel="false"/>
@@ -30,7 +30,7 @@
       </mdBusiness>
     </update>
     <create>
-      <mdException name="net.geoprism.DashboardDeleteException" label="Dashboard delete exception" message="The dashboard [{label}] is a required dashboard and cannot be deleted">
+      <mdException name="net.geoprism.dashboard.DashboardDeleteException" label="Dashboard delete exception" message="The dashboard [{label}] is a required dashboard and cannot be deleted">
         <attributes>
           <text name="label" label="Label" />
         </attributes>
@@ -39,7 +39,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.Dashboard.removable" type="com.runwaysdk.system.metadata.MdAttribute"/>
+      <object key="net.geoprism.dashboard.Dashboard.removable" type="com.runwaysdk.system.metadata.MdAttribute"/>
     </delete>
   </undoIt>
 </version>

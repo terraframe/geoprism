@@ -107,7 +107,6 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
   }
   public void newRelationship() throws java.io.IOException, javax.servlet.ServletException
   {
-    req.setAttribute("parentList", net.geoprism.dashboard.DashboardLayerDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     req.setAttribute("childList", net.geoprism.dashboard.DashboardStyleDTO.getAllInstances(super.getClientSession().getRequest(), "keyName", true, 0, 0).getResultSet());
     render("newRelationshipComponent.jsp");
   }

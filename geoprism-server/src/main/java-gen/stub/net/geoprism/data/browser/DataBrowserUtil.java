@@ -23,7 +23,6 @@ import java.util.List;
 
 import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
-import net.geoprism.data.browser.DataBrowserUtilBase;
 
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.Entity;

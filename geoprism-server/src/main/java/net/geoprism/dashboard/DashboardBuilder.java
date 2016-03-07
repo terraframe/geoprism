@@ -20,16 +20,6 @@ package net.geoprism.dashboard;
 
 import java.util.List;
 
-import net.geoprism.AttributeWrapper;
-import net.geoprism.AttributeWrapperQuery;
-import net.geoprism.Dashboard;
-import net.geoprism.DashboardAttributes;
-import net.geoprism.DashboardAttributesQuery;
-import net.geoprism.DashboardMetadata;
-import net.geoprism.DashboardMetadataQuery;
-import net.geoprism.MetadataWrapper;
-import net.geoprism.MetadataWrapperQuery;
-
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;

@@ -32,21 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.geoprism.Dashboard;
+import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.report.BirtConstants;
-import net.geoprism.report.BirtEngine;
-import net.geoprism.report.CacheDocumentManager;
-import net.geoprism.report.HTMLUrlActionHandler;
-import net.geoprism.report.PDFUrlActionHandler;
-import net.geoprism.report.RemoteQuery;
-import net.geoprism.report.RemoteQueryBuilder;
-import net.geoprism.report.ReportItemBase;
-import net.geoprism.report.ReportItemQuery;
-import net.geoprism.report.ReportParameterUtil;
-import net.geoprism.report.ReportProviderBridge;
-import net.geoprism.report.ReportProviderUtil;
 
 import org.apache.axis.encoding.Base64;
 import org.apache.commons.io.FileUtils;

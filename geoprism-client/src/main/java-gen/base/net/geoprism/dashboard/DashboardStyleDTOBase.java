@@ -1584,15 +1584,15 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO> getAllContainingLayer()
+  public java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllContainingLayer()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO>) getRequest().getParents(this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) getRequest().getParents(this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO> getAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardLayerDTO>) clientRequestIF.getParents(id, net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) clientRequestIF.getParents(id, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
@@ -1607,12 +1607,12 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (java.util.List<? extends net.geoprism.dashboard.HasStyleDTO>) clientRequestIF.getParentRelationships(id, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
-  public net.geoprism.dashboard.HasStyleDTO addContainingLayer(net.geoprism.dashboard.DashboardLayerDTO parent)
+  public net.geoprism.dashboard.HasStyleDTO addContainingLayer(net.geoprism.dashboard.layer.DashboardLayerDTO parent)
   {
     return (net.geoprism.dashboard.HasStyleDTO) getRequest().addParent(parent.getId(), this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.HasStyleDTO addContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.DashboardLayerDTO parent)
+  public static net.geoprism.dashboard.HasStyleDTO addContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.layer.DashboardLayerDTO parent)
   {
     return (net.geoprism.dashboard.HasStyleDTO) clientRequestIF.addParent(parent.getId(), id, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }

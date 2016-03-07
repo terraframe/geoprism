@@ -24,11 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.geoprism.ConfigurationIF;
-import net.geoprism.ConfigurationService;
-import net.geoprism.GeoprismUserBase;
-import net.geoprism.GeoprismUserQuery;
-
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;

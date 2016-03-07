@@ -37,8 +37,8 @@ private static final long serialVersionUID = 1620203608;
   }
 
 @SuppressWarnings("unchecked")
-public java.util.List<? extends net.geoprism.dashboard.HasThematicLayerDTO> getResultSet()
+public java.util.List<? extends net.geoprism.dashboard.layer.HasThematicLayerDTO> getResultSet()
 {
-  return (java.util.List<? extends net.geoprism.dashboard.HasThematicLayerDTO>)super.getResultSet();
+  return (java.util.List<? extends net.geoprism.dashboard.layer.HasThematicLayerDTO>)super.getResultSet();
 }
 }

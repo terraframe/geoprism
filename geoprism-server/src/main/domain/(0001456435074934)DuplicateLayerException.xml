@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-        <mdException name="net.geoprism.dashboard.DuplicateLayerException" label="Duplicate Layer Exception" description="Thrown when a user tries to create a layer with the same name as another." message="A layer with this name already exists in the system. Please change the name to something unique to this dashboard.">
+        <mdException name="net.geoprism.dashboard.layer.DuplicateLayerException" label="Duplicate Layer Exception" description="Thrown when a user tries to create a layer with the same name as another." message="A layer with this name already exists in the system. Please change the name to something unique to this dashboard.">
       	</mdException>
     </create>
     <update></update>

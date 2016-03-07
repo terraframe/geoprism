@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdBusiness name="net.geoprism.dashboard.DashboardThematicLayer">
+      <mdBusiness name="net.geoprism.dashboard.layer.DashboardThematicLayer">
         <create>
           <mdMethod name="getFeatureInformation" label="Get feature information" returnType="java.lang.String">
             <mdParameter name="featureId" order="1" type="java.lang.String" label="Feature id" />
@@ -40,7 +40,7 @@
   <undoIt>
     <delete>
       <object key="net.geoprism.GeoEntityUtil.getEntityLabel" type="com.runwaysdk.system.metadata.MdMethod"/>
-      <object key="net.geoprism.dashboard.DashboardThematicLayer.getFeatureInformation" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>
 </version>

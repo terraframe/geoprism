@@ -24,10 +24,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.geoprism.localization.LocaleManager;
-import net.geoprism.localization.LocalizationFacadeBase;
-import net.geoprism.localization.MultiBundle;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

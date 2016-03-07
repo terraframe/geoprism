@@ -1218,20 +1218,20 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
     return query;
   }
   
-  public net.geoprism.dashboard.HasStyle addContainingLayer(net.geoprism.dashboard.DashboardLayer dashboardLayer)
+  public net.geoprism.dashboard.HasStyle addContainingLayer(net.geoprism.dashboard.layer.DashboardLayer dashboardLayer)
   {
     return (net.geoprism.dashboard.HasStyle) addParent(dashboardLayer, net.geoprism.dashboard.HasStyle.CLASS);
   }
   
-  public void removeContainingLayer(net.geoprism.dashboard.DashboardLayer dashboardLayer)
+  public void removeContainingLayer(net.geoprism.dashboard.layer.DashboardLayer dashboardLayer)
   {
     removeAllParents(dashboardLayer, net.geoprism.dashboard.HasStyle.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.DashboardLayer> getAllContainingLayer()
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.DashboardLayer> getAllContainingLayer()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.DashboardLayer>) getParents(net.geoprism.dashboard.HasStyle.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.layer.DashboardLayer>) getParents(net.geoprism.dashboard.HasStyle.CLASS);
   }
   
   @SuppressWarnings("unchecked")
@@ -1241,7 +1241,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasStyle> getContainingLayerRel(net.geoprism.dashboard.DashboardLayer dashboardLayer)
+  public com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasStyle> getContainingLayerRel(net.geoprism.dashboard.layer.DashboardLayer dashboardLayer)
   {
     return (com.runwaysdk.query.OIterator<? extends net.geoprism.dashboard.HasStyle>) getRelationshipsWithParent(dashboardLayer, net.geoprism.dashboard.HasStyle.CLASS);
   }

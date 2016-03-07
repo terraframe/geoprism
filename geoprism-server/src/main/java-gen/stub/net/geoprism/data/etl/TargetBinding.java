@@ -22,9 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.geoprism.MappableClass;
-import net.geoprism.data.etl.TargetBindingBase;
-import net.geoprism.data.etl.TargetBindingQuery;
-import net.geoprism.data.etl.TargetFieldBindingQuery;
 
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;

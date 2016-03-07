@@ -21,19 +21,6 @@ package net.geoprism.report;
 import java.util.Collection;
 import java.util.List;
 
-import net.geoprism.report.AttributeBooleanMetadata;
-import net.geoprism.report.AttributeCharacterMetadata;
-import net.geoprism.report.AttributeDateMetadata;
-import net.geoprism.report.AttributeDateTimeMetadata;
-import net.geoprism.report.AttributeDecimalMetadata;
-import net.geoprism.report.AttributeDoubleMetadata;
-import net.geoprism.report.AttributeLongMetadata;
-import net.geoprism.report.AttributeMetadataIF;
-import net.geoprism.report.AttributeTextMetadata;
-import net.geoprism.report.AttributeTimeMetadata;
-import net.geoprism.report.RemoteQuery;
-import net.geoprism.report.RemoteResult;
-
 import com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;

@@ -64,7 +64,7 @@ public abstract class DuplicateLayerExceptionBase extends com.runwaysdk.business
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DuplicateLayerException.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.layer.DuplicateLayerException.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   

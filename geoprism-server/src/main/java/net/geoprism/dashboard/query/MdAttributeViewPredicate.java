@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.query;
 
-import net.geoprism.MdAttributeView;
+import net.geoprism.dashboard.MdAttributeView;
 import net.geoprism.util.Predicate;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;

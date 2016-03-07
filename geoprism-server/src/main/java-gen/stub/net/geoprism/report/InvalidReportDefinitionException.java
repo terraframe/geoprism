@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.InvalidReportDefinitionExceptionBase;
 
 public class InvalidReportDefinitionException extends InvalidReportDefinitionExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

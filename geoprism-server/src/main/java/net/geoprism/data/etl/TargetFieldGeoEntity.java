@@ -21,10 +21,6 @@ package net.geoprism.data.etl;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.geoprism.data.etl.TargetBinding;
-import net.geoprism.data.etl.TargetFieldGeoEntityBinding;
-import net.geoprism.data.etl.UniversalAttributeBinding;
-
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.query.OIterator;

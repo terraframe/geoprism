@@ -129,7 +129,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
-  public net.geoprism.Dashboard getDashboard()
+  public net.geoprism.dashboard.Dashboard getDashboard()
   {
     if (getValue(DASHBOARD).trim().equals(""))
     {
@@ -137,7 +137,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     }
     else
     {
-      return net.geoprism.Dashboard.get(getValue(DASHBOARD));
+      return net.geoprism.dashboard.Dashboard.get(getValue(DASHBOARD));
     }
   }
   
@@ -157,7 +157,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(DASHBOARD);
   }
   
-  public void setDashboard(net.geoprism.Dashboard value)
+  public void setDashboard(net.geoprism.dashboard.Dashboard value)
   {
     if(value == null)
     {

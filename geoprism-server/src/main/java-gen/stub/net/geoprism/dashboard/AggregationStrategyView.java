@@ -26,7 +26,6 @@ import net.geoprism.GeoEntityUtil;
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNode;
 import net.geoprism.MappableClassGeoNodeQuery;
-import net.geoprism.dashboard.AggregationStrategyViewBase;
 
 import org.json.JSONArray;
 import org.json.JSONException;

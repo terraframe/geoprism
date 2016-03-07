@@ -113,27 +113,27 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardMap.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
   {
     return getDashboard(null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.DashboardMap.DASHBOARD);
 
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardMap.DASHBOARD, mdAttributeIF, this, alias, null);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardMap.DASHBOARD, mdAttributeIF, this, alias, null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.DashboardMap.DASHBOARD);
 
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardMap.DASHBOARD, mdAttributeIF, this, alias, displayLabel);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardMap.DASHBOARD, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -357,7 +357,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     }
     else if (name.equals(net.geoprism.dashboard.DashboardMap.DASHBOARD)) 
     {
-       return new net.geoprism.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.dashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.dashboard.DashboardMap.ENTITYDOMAIN)) 
     {
@@ -526,7 +526,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.getBusinessQuery().isParentIn(relationshipQuery);
   }
@@ -535,46 +535,46 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition SUBSELECT_hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.getBusinessQuery().isParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.getBusinessQuery().isParentIn_SUBSELECT(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.getBusinessQuery().isParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.getBusinessQuery().isParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.getBusinessQuery().isParentIn_SUBSELECT(hasLayerQuery);
@@ -584,7 +584,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition NOT_IN_hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
   }
@@ -593,46 +593,46 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.getBusinessQuery().isNotParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.getBusinessQuery().isNotParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(hasLayerQuery);
@@ -655,9 +655,9 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard();
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard();
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -699,30 +699,30 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
 
   public com.runwaysdk.query.Condition hasLayer();
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery);
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_hasLayer();
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_hasLayer();
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery);
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer();
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery);
 
 
   public com.runwaysdk.query.Condition sessionEntry();
@@ -829,21 +829,21 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.CREATEDBY,  alias, displayLabel);
 
   }
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
   {
     return getDashboard(null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD, alias, null);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD, alias, null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD,  alias, displayLabel);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -1037,7 +1037,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.isParentIn(relationshipQuery);
   }
@@ -1046,46 +1046,46 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition SUBSELECT_hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.isParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.isParentIn_SUBSELECT(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.isParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.isParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.isParentIn_SUBSELECT(hasLayerQuery);
@@ -1095,7 +1095,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition NOT_IN_hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.isNotParentIn(relationshipQuery);
   }
@@ -1104,46 +1104,46 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
 
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.isNotParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     return this.isNotParentIn_SUBSELECT(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.isNotParentIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.HasLayer.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.dashboard.layer.HasLayer.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(dashboardLayerQuery));
 
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.isNotParentIn(hasLayerQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.HasLayerQuery hasLayerQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_hasLayer(net.geoprism.dashboard.layer.DashboardLayerQuery dashboardLayerQuery, net.geoprism.dashboard.layer.HasLayerQuery hasLayerQuery)
   {
     hasLayerQuery.AND(hasLayerQuery.hasChild(dashboardLayerQuery));
     return this.isNotParentIn_SUBSELECT(hasLayerQuery);
@@ -1275,7 +1275,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     }
     else if (name.equals(net.geoprism.dashboard.DashboardMap.DASHBOARD)) 
     {
-       return new net.geoprism.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.dashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.dashboard.DashboardMap.ENTITYDOMAIN)) 
     {
@@ -1318,9 +1318,9 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard();
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard();
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -1489,21 +1489,21 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.CREATEDBY,  alias, displayLabel);
 
   }
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
   {
     return getDashboard(null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD, alias, null);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD, alias, null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD,  alias, displayLabel);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardMap.DASHBOARD,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -1703,7 +1703,7 @@ public  class DashboardMapQuery extends com.runwaysdk.query.GeneratedBusinessQue
     }
     else if (name.equals(net.geoprism.dashboard.DashboardMap.DASHBOARD)) 
     {
-       return new net.geoprism.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.dashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.dashboard.DashboardMap.ENTITYDOMAIN)) 
     {

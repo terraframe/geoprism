@@ -22,9 +22,9 @@ import java.util.List;
 
 import net.geoprism.dashboard.AllAggregationType;
 import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.DashboardThematicLayer;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;

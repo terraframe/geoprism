@@ -19,7 +19,6 @@
 package net.geoprism.report;
 
 import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.report.PairViewBase;
 
 public class PairView extends PairViewBase implements com.runwaysdk.generation.loader.Reloadable
 {

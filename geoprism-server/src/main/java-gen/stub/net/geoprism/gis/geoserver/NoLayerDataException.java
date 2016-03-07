@@ -18,7 +18,6 @@
  */
 package net.geoprism.gis.geoserver;
 
-import net.geoprism.gis.geoserver.NoLayerDataExceptionBase;
 
 public class NoLayerDataException extends NoLayerDataExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {

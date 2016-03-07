@@ -18,9 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.EmailSettingBase;
-import net.geoprism.EmailSettingQuery;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 

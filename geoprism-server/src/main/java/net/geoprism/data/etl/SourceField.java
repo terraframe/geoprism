@@ -18,9 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.ExcelFieldBinding;
-import net.geoprism.data.etl.ExcelSourceBinding;
-
 import com.runwaysdk.system.metadata.MdAttribute;
 
 public class SourceField implements SourceFieldIF

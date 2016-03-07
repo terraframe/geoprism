@@ -113,27 +113,27 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.report.ReportItem.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
   {
     return getDashboard(null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.report.ReportItem.DASHBOARD);
 
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.report.ReportItem.DASHBOARD, mdAttributeIF, this, alias, null);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.report.ReportItem.DASHBOARD, mdAttributeIF, this, alias, null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.report.ReportItem.DASHBOARD);
 
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.report.ReportItem.DASHBOARD, mdAttributeIF, this, alias, displayLabel);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.report.ReportItem.DASHBOARD, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.VaultFileQuery.VaultFileQueryReferenceIF getDesign()
@@ -426,7 +426,7 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     }
     else if (name.equals(net.geoprism.report.ReportItem.DASHBOARD)) 
     {
-       return new net.geoprism.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.dashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.report.ReportItem.DESIGN)) 
     {
@@ -515,9 +515,9 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard();
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard();
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -640,21 +640,21 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.report.ReportItem.CREATEDBY,  alias, displayLabel);
 
   }
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
   {
     return getDashboard(null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD, alias, null);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD, alias, null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD,  alias, displayLabel);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.VaultFileQuery.VaultFileQueryReferenceIF getDesign()
@@ -905,7 +905,7 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     }
     else if (name.equals(net.geoprism.report.ReportItem.DASHBOARD)) 
     {
-       return new net.geoprism.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.dashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.report.ReportItem.DESIGN)) 
     {
@@ -971,9 +971,9 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard();
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
-    public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard();
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias);
+    public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -1145,21 +1145,21 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.report.ReportItem.CREATEDBY,  alias, displayLabel);
 
   }
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard()
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard()
   {
     return getDashboard(null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD, alias, null);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD, alias, null);
 
   }
  
-  public net.geoprism.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
+  public net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF getDashboard(String alias, String displayLabel)
   {
-    return (net.geoprism.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD,  alias, displayLabel);
+    return (net.geoprism.dashboard.DashboardQuery.DashboardQueryReferenceIF)this.get(net.geoprism.report.ReportItem.DASHBOARD,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.VaultFileQuery.VaultFileQueryReferenceIF getDesign()
@@ -1410,7 +1410,7 @@ public  class ReportItemQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     }
     else if (name.equals(net.geoprism.report.ReportItem.DASHBOARD)) 
     {
-       return new net.geoprism.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.dashboard.DashboardQuery.DashboardQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.report.ReportItem.DESIGN)) 
     {

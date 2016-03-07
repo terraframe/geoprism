@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.browser;
 
-import net.geoprism.data.browser.MetadataTypeBase;
 
 public class MetadataType extends MetadataTypeBase implements com.runwaysdk.generation.loader.Reloadable
 {

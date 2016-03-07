@@ -18,8 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.BirtConstants;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

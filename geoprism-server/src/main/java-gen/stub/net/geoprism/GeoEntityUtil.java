@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.geoprism.GeoEntityUtilBase;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

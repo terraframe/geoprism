@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import net.geoprism.DataUploaderBase;
 import net.geoprism.data.etl.Converter;
 import net.geoprism.data.etl.ConverterIF;
 import net.geoprism.data.etl.DataSetBuilder;

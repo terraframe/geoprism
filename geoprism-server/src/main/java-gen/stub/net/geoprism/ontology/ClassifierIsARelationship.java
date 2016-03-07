@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierIsARelationshipBase;
 
 public class ClassifierIsARelationship extends ClassifierIsARelationshipBase implements com.runwaysdk.generation.loader.Reloadable
 {

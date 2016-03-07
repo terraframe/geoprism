@@ -447,27 +447,27 @@ public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.Rel
     return net.geoprism.dashboard.DashboardMapDTO.get(getRequest(), super.getParentId());
   }
   
-    public net.geoprism.dashboard.DashboardThematicLayerDTO getChild()
+    public net.geoprism.dashboard.layer.DashboardThematicLayerDTO getChild()
   {
-    return net.geoprism.dashboard.DashboardThematicLayerDTO.get(getRequest(), super.getChildId());
+    return net.geoprism.dashboard.layer.DashboardThematicLayerDTO.get(getRequest(), super.getChildId());
   }
   
-  public static net.geoprism.dashboard.HasThematicLayerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.layer.HasThematicLayerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(id);
     
-    return (net.geoprism.dashboard.HasThematicLayerDTO) dto;
+    return (net.geoprism.dashboard.layer.HasThematicLayerDTO) dto;
   }
   
   public static net.geoprism.dashboard.HasThematicLayerQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId)
   {
-    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.HasThematicLayerDTO.CLASS);
+    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS);
     queryDTO.addCondition("parent_id", "EQ", parentId);
     return (net.geoprism.dashboard.HasThematicLayerQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.dashboard.HasThematicLayerQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childId)
   {
-    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.HasThematicLayerDTO.CLASS);
+    com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS);
     queryDTO.addCondition("child_id", "EQ", childId);
     return (net.geoprism.dashboard.HasThematicLayerQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
@@ -489,7 +489,7 @@ public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.Rel
   
   public static net.geoprism.dashboard.HasThematicLayerQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (net.geoprism.dashboard.HasThematicLayerQueryDTO) clientRequest.getAllInstances(net.geoprism.dashboard.HasThematicLayerDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (net.geoprism.dashboard.HasThematicLayerQueryDTO) clientRequest.getAllInstances(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -497,12 +497,12 @@ public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.Rel
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.HasThematicLayerDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.HasThematicLayerDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.HasThematicLayerDTO.CLASS, "lock", _declaredTypes);
-    return (net.geoprism.dashboard.HasThematicLayerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS, "lock", _declaredTypes);
+    return (net.geoprism.dashboard.layer.HasThematicLayerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -510,12 +510,12 @@ public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.Rel
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.HasThematicLayerDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.HasThematicLayerDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.HasThematicLayerDTO.CLASS, "unlock", _declaredTypes);
-    return (net.geoprism.dashboard.HasThematicLayerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS, "unlock", _declaredTypes);
+    return (net.geoprism.dashboard.layer.HasThematicLayerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

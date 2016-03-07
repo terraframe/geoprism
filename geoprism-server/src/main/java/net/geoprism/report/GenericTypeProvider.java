@@ -25,7 +25,6 @@ import java.util.Locale;
 import net.geoprism.QueryUtil;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
-import net.geoprism.report.PairView;
 
 import org.json.JSONException;
 

@@ -33,7 +33,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.dashboard.DashboardLayerController.newThematicInstance.mapId" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.dashboard.layer.DashboardLayerController.newThematicInstance.mapId" type="com.runwaysdk.system.metadata.MdMethod" />
       <object key="net.geoprism.dashboard.DashboardMap.getUniversalAggregations" type="com.runwaysdk.system.metadata.MdMethod" />
     </delete>
   </undoIt>

@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.ClassUniversalBase;
 
 public class ClassUniversal extends ClassUniversalBase implements com.runwaysdk.generation.loader.Reloadable
 {

@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierAllPathsTable;
 
 @com.runwaysdk.business.ClassSignature(hash = 1904852304)
 /**

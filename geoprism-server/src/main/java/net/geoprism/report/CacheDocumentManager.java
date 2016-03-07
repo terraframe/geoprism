@@ -23,8 +23,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import net.geoprism.report.BirtConstants;
-
 import org.apache.axis.encoding.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

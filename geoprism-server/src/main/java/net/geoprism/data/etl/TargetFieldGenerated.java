@@ -18,9 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.TargetBinding;
-import net.geoprism.data.etl.TargetFieldGeneratedBinding;
-
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.system.metadata.MdAttribute;

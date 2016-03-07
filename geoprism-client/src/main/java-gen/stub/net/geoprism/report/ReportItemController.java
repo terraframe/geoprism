@@ -29,7 +29,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
-import net.geoprism.DashboardDTO;
+import net.geoprism.dashboard.DashboardDTO;
 import net.geoprism.localization.LocalizationFacadeDTO;
 import net.geoprism.report.ReportItemControllerBase;
 import net.geoprism.report.ReportItemQueryDTO;

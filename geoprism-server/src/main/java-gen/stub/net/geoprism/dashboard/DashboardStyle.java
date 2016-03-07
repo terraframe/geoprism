@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import net.geoprism.SessionParameterFacade;
-import net.geoprism.dashboard.AggregationTypeQuery;
-import net.geoprism.dashboard.DashboardStyleBase;
+import net.geoprism.dashboard.layer.DashboardLayer;
 import net.geoprism.gis.sld.SLDMapVisitor;
 import net.geoprism.gis.wrapper.MapVisitor;
 import net.geoprism.gis.wrapper.Style;

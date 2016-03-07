@@ -24,7 +24,7 @@
 
 		<create>
 			<mdInformation
-				name="net.geoprism.dashboard.LayerExcludedException"
+				name="net.geoprism.dashboard.layer.LayerExcludedException"
 				label="Layer Excluded from Map"
 				message="The layer [{layerName}] was invalid and excluded from the map.">
 				<attributes>
@@ -34,7 +34,7 @@
 			</mdInformation>
 
 			<mdException
-				name="net.geoprism.dashboard.NoLayersException"
+				name="net.geoprism.dashboard.layer.NoLayersException"
 				label="No Layers Exception" message="The map [{mapName}] contains no valid layers.">
 				<attributes>
           <char name="mapName" label="Map Name" size="255"
@@ -50,19 +50,19 @@
 		<delete>
 
 			<object
-				key="net.geoprism.dashboard.DashboardLayer.layerEnabled"
+				key="net.geoprism.dashboard.layer.DashboardLayer.layerEnabled"
 				type="com.runwaysdk.system.metadata.MdAttribute" />
 
 			<object
-				key="net.geoprism.dashboard.DashboardLayer.BboxEnabled"
+				key="net.geoprism.dashboard.layer.DashboardLayer.BboxEnabled"
 				type="com.runwaysdk.system.metadata.MdAttribute" />
 
 			<object
-				key="net.geoprism.dashboard.LayerExcludedException"
+				key="net.geoprism.dashboard.layer.LayerExcludedException"
 				type="com.runwaysdk.system.metadata.MdInformation" />
 				
 			<object
-				key="net.geoprism.dashboard.NoLayersException"
+				key="net.geoprism.dashboard.layer.NoLayersException"
 				type="com.runwaysdk.system.metadata.MdException" />
 
 		</delete>

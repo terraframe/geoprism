@@ -19,7 +19,8 @@
 package net.geoprism.dashboard;
 
 import net.geoprism.QueryUtil;
-import net.geoprism.dashboard.GeometryAggregationStrategyBase;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.layer.EmptyLayerInformation;
 import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverFacade;
