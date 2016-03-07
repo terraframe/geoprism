@@ -233,7 +233,6 @@ public class TargetBuilder
         definition.addField(multiPolygon);
         definition.addField(featureId);
         definition.addField(location);
-        
 
         // Create the geoNode
         GeoNodeGeometry node = new GeoNodeGeometry();
@@ -263,7 +262,6 @@ public class TargetBuilder
     {
       mClass.addGeoNode(node).apply();
     }
-    
 
     /*
      * Assign permissions
@@ -385,14 +383,19 @@ public class TargetBuilder
       /*
        * Create the root term for the options
        */
-      Classifier classifier = new Classifier();
-      classifier.setClassifierId(attributeName);
-      classifier.setClassifierPackage(mdClass.definesType());
-      classifier.setKeyName(key);
-      classifier.getDisplayLabel().setValue(label);
-      classifier.apply();
+      Classifier classifier = Classifier.findClassifier(mdClass.definesType(), attributeName);
 
-      classifier.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+      if (classifier == null)
+      {
+        classifier = new Classifier();
+        classifier.setClassifierId(attributeName);
+        classifier.setClassifierPackage(mdClass.definesType());
+        classifier.setKeyName(key);
+        classifier.getDisplayLabel().setValue(label);
+        classifier.apply();
+
+        classifier.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+      }
 
       /*
        * Add the root as an option to the MdAttributeTerm

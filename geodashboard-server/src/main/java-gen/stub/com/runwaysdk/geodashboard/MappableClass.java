@@ -95,30 +95,38 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   public void delete()
   {
     MdClass mdClass = this.getWrappedMdClass();
-    
+
+    if (mdClass.getGenerateSource())
+    {
+      String msg = "Cannot delete types that have generated source.";
+
+      // TODO Change Exception type
+      throw new ProgrammingErrorException(msg);
+    }
+
     /*
      * Delete all layers which reference attributes on this type
      */
-//    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
-//    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
-//    
-//    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
-//
-//    try
-//    {
-//      while (iterator.hasNext())
-//      {
-//        MetadataWrapper wrapper = iterator.next();
-//        wrapper.delete();
-//      }
-//    }
-//    finally
-//    {
-//      iterator.close();
-//    }    
+    // MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    // query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+    //
+    // OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+    //
+    // try
+    // {
+    // while (iterator.hasNext())
+    // {
+    // MetadataWrapper wrapper = iterator.next();
+    // wrapper.delete();
+    // }
+    // }
+    // finally
+    // {
+    // iterator.close();
+    // }
 
     /*
-     * Delete all import mappings if they exist 
+     * Delete all import mappings if they exist
      */
     TargetBinding binding = TargetBinding.getBinding(mdClass.definesType());
 

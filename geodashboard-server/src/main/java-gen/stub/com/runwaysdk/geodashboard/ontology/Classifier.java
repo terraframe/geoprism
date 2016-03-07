@@ -597,4 +597,34 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     problem.delete();
   }
 
+  public static Classifier findClassifier(String classifierPackage, String classifierId)
+  {
+    ClassifierQuery query = new ClassifierQuery(new QueryFactory());
+    query.WHERE(query.getClassifierPackage().EQ(classifierPackage));
+    query.WHERE(query.getClassifierId().EQ(classifierId));
+
+    OIterator<? extends Classifier> it = null;
+
+    try
+    {
+      it = query.getIterator();
+
+      if (it.hasNext())
+      {
+        Classifier classifier = it.next();
+
+        return classifier;
+      }
+
+      return null;
+    }
+    finally
+    {
+      if (it != null)
+      {
+        it.close();
+      }
+    }
+  }
+
 }
