@@ -20,6 +20,8 @@ package com.runwayskd.geodashboard.etl;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -177,7 +179,7 @@ public class TargetBuilder
       JSONObject values = cAttributes.getJSONObject("values");
       JSONArray ids = cAttributes.getJSONArray("ids");
 
-      boolean createNode = ( !cSheet.has("coordinates") || cSheet.getJSONObject("coordinates").getJSONArray("ids").length() == 0 );
+      Set<String> references = this.getReferencedLocationAttributes(cSheet);
 
       for (int i = 0; i < ids.length(); i++)
       {
@@ -192,7 +194,7 @@ public class TargetBuilder
         definition.addField(field);
 
         // Create the geoNode
-        if (createNode)
+        if (!references.contains(field.getLabel()))
         {
           String key = field.getKey();
 
@@ -274,6 +276,29 @@ public class TargetBuilder
     }
 
     return definition;
+  }
+
+  private Set<String> getReferencedLocationAttributes(JSONObject cSheet) throws JSONException
+  {
+    Set<String> locations = new TreeSet<String>();
+
+    if (cSheet.has("coordinates"))
+    {
+      JSONObject cCoordinates = cSheet.getJSONObject("coordinates");
+      JSONObject values = cCoordinates.getJSONObject("values");
+      JSONArray ids = cCoordinates.getJSONArray("ids");
+
+      for (int i = 0; i < ids.length(); i++)
+      {
+        String id = ids.getString(i);
+        JSONObject cField = values.getJSONObject(id);
+        String location = cField.getString("location");
+
+        locations.add(location);
+      }
+    }
+
+    return locations;
   }
 
   private Universal setLowest(Universal current, String universalId)

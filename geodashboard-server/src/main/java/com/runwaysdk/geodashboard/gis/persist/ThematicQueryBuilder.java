@@ -34,6 +34,7 @@ import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.AggregateFunction;
 import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.AttributeChar;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.F;
@@ -108,7 +109,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
         AttributeCharacter thematicGeoId = thematicQuery.aCharacter(GeoEntity.GEOID);
         thematicGeoId.setColumnAlias(GeoEntity.GEOID);
 
-        AttributeCharacter thematicLabel = thematicQuery.aCharacter(GeoEntity.DISPLAYLABEL);
+        AttributeChar thematicLabel = (AttributeChar) thematicQuery.get(GeoEntity.DISPLAYLABEL);
         thematicLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
 
         Attribute thematicAttribute = thematicQuery.get(thematicMdAttribute.definesAttribute());
