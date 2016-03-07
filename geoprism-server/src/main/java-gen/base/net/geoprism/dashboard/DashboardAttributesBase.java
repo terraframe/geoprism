@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardAttributes;
-
-@com.runwaysdk.business.ClassSignature(hash = 2094286872)
+@com.runwaysdk.business.ClassSignature(hash = -1336550594)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -44,7 +42,7 @@ public abstract class DashboardAttributesBase extends com.runwaysdk.business.Rel
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 2094286872;
+  private static final long serialVersionUID = -1336550594;
   
   public DashboardAttributesBase(String parentId, String childId)
   {

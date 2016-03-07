@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.geoprism.data.importer.GeodashboardImportPlugin;
+import net.geoprism.data.importer.GeoprismImportPlugin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,14 +76,14 @@ public abstract class PatchingContextListener implements Reloadable, ServerConte
   @Override
   public void startup()
   {
-    SAXSourceParser.registerPlugin(new GeodashboardImportPlugin());
+    SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
 
     this.patchMetadata();
   }
 
   protected String[] getModules()
   {
-    return new String[] { "geodashboard" };
+    return new String[] { "geoprism" };
   }
 
   @Transaction

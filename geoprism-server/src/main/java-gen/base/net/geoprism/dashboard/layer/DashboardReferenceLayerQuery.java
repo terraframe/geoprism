@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardReferenceLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = -706933621)
+@com.runwaysdk.business.ClassSignature(hash = -1855322552)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -131,6 +129,10 @@ public  class DashboardReferenceLayerQuery extends net.geoprism.dashboard.layer.
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias);
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel);
 
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.layer.DashboardReferenceLayer dashboardReferenceLayer);
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.dashboard.layer.DashboardReferenceLayer dashboardReferenceLayer);
+
   }
 
 /**
@@ -147,6 +149,19 @@ public  class DashboardReferenceLayerQuery extends net.geoprism.dashboard.layer.
     super(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, alias, displayLabel);
 
   }
+
+
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.layer.DashboardReferenceLayer dashboardReferenceLayer)
+    {
+      if(dashboardReferenceLayer == null) return this.EQ((java.lang.String)null);
+      return this.EQ(dashboardReferenceLayer.getId());
+    }
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.dashboard.layer.DashboardReferenceLayer dashboardReferenceLayer)
+    {
+      if(dashboardReferenceLayer == null) return this.NE((java.lang.String)null);
+      return this.NE(dashboardReferenceLayer.getId());
+    }
 
   public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal()
   {
@@ -191,6 +206,12 @@ public  class DashboardReferenceLayerQuery extends net.geoprism.dashboard.layer.
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal();
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias);
     public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal(String alias, String displayLabel);
+
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer);
   }
 
 /**
@@ -208,6 +229,67 @@ public  class DashboardReferenceLayerQuery extends net.geoprism.dashboard.layer.
 
   }
 
+
+
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer)  {
+
+      String[] itemIdArray = new String[dashboardReferenceLayer.length]; 
+
+      for (int i=0; i<dashboardReferenceLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardReferenceLayer[i].getId();
+      }
+
+      return this.containsAny(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer)  {
+
+      String[] itemIdArray = new String[dashboardReferenceLayer.length]; 
+
+      for (int i=0; i<dashboardReferenceLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardReferenceLayer[i].getId();
+      }
+
+      return this.notContainsAny(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer)  {
+
+      String[] itemIdArray = new String[dashboardReferenceLayer.length]; 
+
+      for (int i=0; i<dashboardReferenceLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardReferenceLayer[i].getId();
+      }
+
+      return this.containsAll(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer)  {
+
+      String[] itemIdArray = new String[dashboardReferenceLayer.length]; 
+
+      for (int i=0; i<dashboardReferenceLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardReferenceLayer[i].getId();
+      }
+
+      return this.notContainsAll(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.dashboard.layer.DashboardReferenceLayer ... dashboardReferenceLayer)  {
+
+      String[] itemIdArray = new String[dashboardReferenceLayer.length]; 
+
+      for (int i=0; i<dashboardReferenceLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardReferenceLayer[i].getId();
+      }
+
+      return this.containsExactly(itemIdArray);
+  }
   public com.runwaysdk.system.gis.geo.UniversalQuery.UniversalQueryReferenceIF getUniversal()
   {
     return getUniversal(null);

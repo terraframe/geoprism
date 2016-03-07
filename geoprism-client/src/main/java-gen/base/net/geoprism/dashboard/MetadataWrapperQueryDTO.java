@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1184017892)
+@com.runwaysdk.business.ClassSignature(hash = 1227785738)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.dashboard;
 public class MetadataWrapperQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1184017892;
+private static final long serialVersionUID = 1227785738;
 
   protected MetadataWrapperQueryDTO(String type)
   {

@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.LayerType;
-
-@com.runwaysdk.business.ClassSignature(hash = -825970190)
+@com.runwaysdk.business.ClassSignature(hash = 445133007)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -129,6 +127,10 @@ public  class LayerTypeQuery extends com.runwaysdk.system.EnumerationMasterQuery
   {
 
 
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.layer.LayerType layerType);
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.dashboard.layer.LayerType layerType);
+
   }
 
 /**
@@ -145,6 +147,19 @@ public  class LayerTypeQuery extends com.runwaysdk.system.EnumerationMasterQuery
     super(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, alias, displayLabel);
 
   }
+
+
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.layer.LayerType layerType)
+    {
+      if(layerType == null) return this.EQ((java.lang.String)null);
+      return this.EQ(layerType.getId());
+    }
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.dashboard.layer.LayerType layerType)
+    {
+      if(layerType == null) return this.NE((java.lang.String)null);
+      return this.NE(layerType.getId());
+    }
 
   }
 

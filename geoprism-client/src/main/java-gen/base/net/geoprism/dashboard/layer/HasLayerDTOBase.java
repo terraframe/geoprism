@@ -18,13 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DashboardMapDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 648895025)
+@com.runwaysdk.business.ClassSignature(hash = 1311302827)
 public abstract class HasLayerDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.HasLayer";
-  private static final long serialVersionUID = 648895025;
+  private static final long serialVersionUID = 1311302827;
   
   public HasLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {

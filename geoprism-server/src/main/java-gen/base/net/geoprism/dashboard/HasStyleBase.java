@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -94886782)
+@com.runwaysdk.business.ClassSignature(hash = -932387777)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -41,7 +41,7 @@ public abstract class HasStyleBase extends com.runwaysdk.business.Relationship i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -94886782;
+  private static final long serialVersionUID = -932387777;
   
   public HasStyleBase(String parentId, String childId)
   {

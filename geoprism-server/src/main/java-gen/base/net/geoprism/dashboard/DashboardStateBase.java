@@ -18,10 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.GeoprismUser;
-import net.geoprism.dashboard.DashboardState;
-
-@com.runwaysdk.business.ClassSignature(hash = -718842656)
+@com.runwaysdk.business.ClassSignature(hash = 1250616532)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -48,7 +45,7 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -718842656;
+  private static final long serialVersionUID = 1250616532;
   
   public DashboardStateBase()
   {

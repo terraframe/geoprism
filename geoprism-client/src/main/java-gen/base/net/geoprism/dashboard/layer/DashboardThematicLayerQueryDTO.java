@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -2038907062)
+@com.runwaysdk.business.ClassSignature(hash = -341562361)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.dashboard.layer;
 public class DashboardThematicLayerQueryDTO extends net.geoprism.dashboard.layer.DashboardLayerQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -2038907062;
+private static final long serialVersionUID = -341562361;
 
   protected DashboardThematicLayerQueryDTO(String type)
   {

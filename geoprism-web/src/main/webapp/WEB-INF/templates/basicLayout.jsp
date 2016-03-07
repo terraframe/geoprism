@@ -72,7 +72,7 @@ window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
 	<jwr:script src="/bundles/widget.js" useRandomParam="false"/>	
 	<jwr:script src="/bundles/localization.js" useRandomParam="false"/>
 	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
 		  
 	<!-- include HTML5 IE enabling script for IE -->
 	<!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->

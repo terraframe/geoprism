@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1602883547)
+@com.runwaysdk.business.ClassSignature(hash = 560166885)
 public abstract class AttributeWrapperDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.AttributeWrapper";
-  private static final long serialVersionUID = -1602883547;
+  private static final long serialVersionUID = 560166885;
   
   protected AttributeWrapperDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

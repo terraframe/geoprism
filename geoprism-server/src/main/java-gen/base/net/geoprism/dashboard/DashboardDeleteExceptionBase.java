@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1057979710)
+@com.runwaysdk.business.ClassSignature(hash = -1308843292)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +31,7 @@ public abstract class DashboardDeleteExceptionBase extends com.runwaysdk.busines
   public final static String CLASS = "net.geoprism.dashboard.DashboardDeleteException";
   public static java.lang.String ID = "id";
   public static java.lang.String LABEL = "label";
-  private static final long serialVersionUID = 1057979710;
+  private static final long serialVersionUID = -1308843292;
   
   public DashboardDeleteExceptionBase()
   {

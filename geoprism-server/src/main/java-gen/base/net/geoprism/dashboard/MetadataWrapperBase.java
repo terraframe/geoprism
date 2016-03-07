@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.MetadataWrapper;
-
-@com.runwaysdk.business.ClassSignature(hash = -798495589)
+@com.runwaysdk.business.ClassSignature(hash = 1298827521)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -45,7 +43,7 @@ public abstract class MetadataWrapperBase extends com.runwaysdk.business.Busines
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = -798495589;
+  private static final long serialVersionUID = 1298827521;
   
   public MetadataWrapperBase()
   {

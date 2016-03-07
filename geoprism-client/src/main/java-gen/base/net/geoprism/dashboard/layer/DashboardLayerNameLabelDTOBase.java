@@ -18,13 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardLayerNameLabelDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 413949646)
+@com.runwaysdk.business.ClassSignature(hash = 1688057547)
 public abstract class DashboardLayerNameLabelDTOBase extends com.runwaysdk.business.LocalStructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.DashboardLayerNameLabel";
-  private static final long serialVersionUID = 413949646;
+  private static final long serialVersionUID = 1688057547;
   
   protected DashboardLayerNameLabelDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

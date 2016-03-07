@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1174403938)
+@com.runwaysdk.business.ClassSignature(hash = 1186385980)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.dashboard;
 public class MdAttributeViewQueryDTO extends com.runwaysdk.business.ViewQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1174403938;
+private static final long serialVersionUID = 1186385980;
 
   protected MdAttributeViewQueryDTO(String type)
   {

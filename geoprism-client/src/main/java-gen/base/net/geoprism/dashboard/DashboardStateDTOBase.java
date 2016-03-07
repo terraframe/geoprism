@@ -18,13 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.GeoprismUserDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 1974838112)
+@com.runwaysdk.business.ClassSignature(hash = -10423468)
 public abstract class DashboardStateDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardState";
-  private static final long serialVersionUID = 1974838112;
+  private static final long serialVersionUID = -10423468;
   
   protected DashboardStateDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -2143330747)
+@com.runwaysdk.business.ClassSignature(hash = -2140454741)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.dashboard;
 public class DashboardDescriptionQueryDTO extends com.runwaysdk.business.StructQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -2143330747;
+private static final long serialVersionUID = -2140454741;
 
   protected DashboardDescriptionQueryDTO(String type)
   {

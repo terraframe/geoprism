@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -1183496079)
+@com.runwaysdk.business.ClassSignature(hash = 1282781579)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -49,7 +49,7 @@ public abstract class ReportItemBase extends com.runwaysdk.business.Business imp
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1183496079;
+  private static final long serialVersionUID = 1282781579;
   
   public ReportItemBase()
   {

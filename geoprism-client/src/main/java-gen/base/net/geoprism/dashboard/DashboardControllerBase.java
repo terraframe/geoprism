@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 867488313)
+@com.runwaysdk.business.ClassSignature(hash = 451832951)
 public class DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.dashboard.DashboardController";

@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.MdAttributeView;
-
-@com.runwaysdk.business.ClassSignature(hash = -761506997)
+@com.runwaysdk.business.ClassSignature(hash = -46589723)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -37,7 +35,7 @@ public abstract class MdAttributeViewBase extends com.runwaysdk.business.View im
   public static java.lang.String ID = "id";
   public static java.lang.String MDATTRIBUTEID = "mdAttributeId";
   public static java.lang.String MDCLASSID = "mdClassId";
-  private static final long serialVersionUID = -761506997;
+  private static final long serialVersionUID = -46589723;
   
   public MdAttributeViewBase()
   {

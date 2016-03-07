@@ -29,7 +29,7 @@
 
 <!-- User account CSS -->
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+<jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
 
 <!-- User account Javascript -->
 <jwr:script src="/bundles/system.js" useRandomParam="false"/>

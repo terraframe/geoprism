@@ -410,7 +410,7 @@
       <resource>
         <directory>src/main/domain</directory>
         <filtering>false</filtering>
-        <targetPath>${project.basedir}/target/classes/metadata/geodashboard</targetPath>
+        <targetPath>${project.basedir}/target/classes/metadata/geoprism</targetPath>
       </resource>
     </resources>
     <testSourceDirectory>src/test/java</testSourceDirectory>

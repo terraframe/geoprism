@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = 1740080604)
+@com.runwaysdk.business.ClassSignature(hash = -1551614695)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -231,6 +229,10 @@ public  class DashboardThematicLayerQuery extends net.geoprism.dashboard.layer.D
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
 
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.layer.DashboardThematicLayer dashboardThematicLayer);
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.dashboard.layer.DashboardThematicLayer dashboardThematicLayer);
+
   }
 
 /**
@@ -247,6 +249,19 @@ public  class DashboardThematicLayerQuery extends net.geoprism.dashboard.layer.D
     super(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, alias, displayLabel);
 
   }
+
+
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.dashboard.layer.DashboardThematicLayer dashboardThematicLayer)
+    {
+      if(dashboardThematicLayer == null) return this.EQ((java.lang.String)null);
+      return this.EQ(dashboardThematicLayer.getId());
+    }
+
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.dashboard.layer.DashboardThematicLayer dashboardThematicLayer)
+    {
+      if(dashboardThematicLayer == null) return this.NE((java.lang.String)null);
+      return this.NE(dashboardThematicLayer.getId());
+    }
 
   public net.geoprism.dashboard.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy()
   {
@@ -373,6 +388,12 @@ public  class DashboardThematicLayerQuery extends net.geoprism.dashboard.layer.D
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute();
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias);
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getMdAttribute(String alias, String displayLabel);
+
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer);
   }
 
 /**
@@ -390,6 +411,67 @@ public  class DashboardThematicLayerQuery extends net.geoprism.dashboard.layer.D
 
   }
 
+
+
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer)  {
+
+      String[] itemIdArray = new String[dashboardThematicLayer.length]; 
+
+      for (int i=0; i<dashboardThematicLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardThematicLayer[i].getId();
+      }
+
+      return this.containsAny(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer)  {
+
+      String[] itemIdArray = new String[dashboardThematicLayer.length]; 
+
+      for (int i=0; i<dashboardThematicLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardThematicLayer[i].getId();
+      }
+
+      return this.notContainsAny(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer)  {
+
+      String[] itemIdArray = new String[dashboardThematicLayer.length]; 
+
+      for (int i=0; i<dashboardThematicLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardThematicLayer[i].getId();
+      }
+
+      return this.containsAll(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer)  {
+
+      String[] itemIdArray = new String[dashboardThematicLayer.length]; 
+
+      for (int i=0; i<dashboardThematicLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardThematicLayer[i].getId();
+      }
+
+      return this.notContainsAll(itemIdArray);
+  }
+
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.dashboard.layer.DashboardThematicLayer ... dashboardThematicLayer)  {
+
+      String[] itemIdArray = new String[dashboardThematicLayer.length]; 
+
+      for (int i=0; i<dashboardThematicLayer.length; i++)
+      {
+        itemIdArray[i] = dashboardThematicLayer[i].getId();
+      }
+
+      return this.containsExactly(itemIdArray);
+  }
   public net.geoprism.dashboard.AggregationStrategyQuery.AggregationStrategyQueryReferenceIF getAggregationStrategy()
   {
     return getAggregationStrategy(null);

@@ -58,7 +58,7 @@ import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 
-public class GeodashboardImportPlugin implements ImportPluginIF
+public class GeoprismImportPlugin implements ImportPluginIF
 {
   private static class TypeNodeHandler extends TagHandler
   {

@@ -29,7 +29,7 @@
 
     <!-- User account CSS -->
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+	<jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
 	
     <!-- User account Javascript -->
 	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -70,7 +70,7 @@
 			overflow: hidden;
 			height: 70%;
 			overflow-y: auto;
-    		background-image: url(com/runwaysdk/geodashboard/images/theme_background.png);
+    		background-image: url(net/geoprism/images/theme_background.png);
     		background-size: 100%;
     		background-repeat: no-repeat;
     		background-position-y: -10%;
@@ -205,7 +205,7 @@
 				<div class="row-fluid header-logo-row">
 					<div class="hidden-xs col-md-1"></div>
        				<div class="col-md-8">
-       					<img id="logo" class="pull-left img-responsive" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo"/>
+       					<img id="logo" class="pull-left img-responsive" src="net/geoprism/images/splash_logo.png" alt="logo"/>
        				</div>
        				<div class="hidden-xs col-md-3"></div>
 		 		</div>
@@ -221,13 +221,13 @@
 							<div class="row-fluid">
 							  <div class="col-xs-12 col-sm-6 text-center">
 								<div id="dashboard-link" class="nav-option">
-									<img class="nav-icon-img img-responsive" src="com/runwaysdk/geodashboard/images/dashboard_icon.png" alt="Navigation" />
+									<img class="nav-icon-img img-responsive" src="net/geoprism/images/dashboard_icon.png" alt="Navigation" />
 									<h3 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.geodashboards"/></h3>
 								</div>
 								</div>
 							  <div class="col-xs-12 col-sm-6 text-center">
 								<div class="nav-option">
-									<img id="geodashboard-admin" class="nav-icon-img img-responsive" src="com/runwaysdk/geodashboard/images/admin_icon.png" alt="Navigation" />
+									<img id="geodashboard-admin" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
 									<h3 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.administration"/></h3>
 								</div>
 							  </div>

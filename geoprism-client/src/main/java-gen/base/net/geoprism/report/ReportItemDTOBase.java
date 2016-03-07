@@ -18,11 +18,11 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = -773277967)
+@com.runwaysdk.business.ClassSignature(hash = 1750138891)
 public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.report.ReportItem";
-  private static final long serialVersionUID = -773277967;
+  private static final long serialVersionUID = 1750138891;
   
   protected ReportItemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

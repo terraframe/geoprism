@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardDisplayLabel;
-
-@com.runwaysdk.business.ClassSignature(hash = -1662650630)
+@com.runwaysdk.business.ClassSignature(hash = 1722720788)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -35,7 +33,7 @@ public abstract class DashboardDisplayLabelBase extends com.runwaysdk.business.L
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String SITEMASTER = "siteMaster";
-  private static final long serialVersionUID = -1662650630;
+  private static final long serialVersionUID = 1722720788;
   
   public DashboardDisplayLabelBase()
   {

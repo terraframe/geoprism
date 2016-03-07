@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-import net.geoprism.data.importer.GeodashboardImportPlugin;
+import net.geoprism.data.importer.GeoprismImportPlugin;
 
 import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
@@ -31,7 +31,7 @@ public class ImportSchema
   public static void main(String[] args)
   {
     SAXSourceParser.registerPlugin(new GISImportPlugin());
-    SAXSourceParser.registerPlugin(new GeodashboardImportPlugin());
+    SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
 
     Versioning.main(args);
   }

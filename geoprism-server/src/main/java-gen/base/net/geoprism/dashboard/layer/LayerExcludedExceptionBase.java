@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -1946287732)
+@com.runwaysdk.business.ClassSignature(hash = 697943305)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.dashboard.layer;
  */
 public abstract class LayerExcludedExceptionBase extends com.runwaysdk.business.Information implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.LayerExcludedException";
+  public final static String CLASS = "net.geoprism.dashboard.layer.LayerExcludedException";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERNAME = "layerName";
-  private static final long serialVersionUID = -1946287732;
+  private static final long serialVersionUID = 697943305;
   
   public LayerExcludedExceptionBase()
   {

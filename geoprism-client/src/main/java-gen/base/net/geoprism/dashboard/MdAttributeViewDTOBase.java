@@ -18,12 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-
-@com.runwaysdk.business.ClassSignature(hash = 1195336139)
+@com.runwaysdk.business.ClassSignature(hash = 909903717)
 public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.MdAttributeView";
-  private static final long serialVersionUID = 1195336139;
+  private static final long serialVersionUID = 909903717;
   
   protected MdAttributeViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

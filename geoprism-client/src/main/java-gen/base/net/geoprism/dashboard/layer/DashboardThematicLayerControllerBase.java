@@ -18,13 +18,10 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.AggregationStrategyDTO;
-import net.geoprism.dashboard.DashboardStyleDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = -1201552558)
+@com.runwaysdk.business.ClassSignature(hash = -558258612)
 public class DashboardThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "net.geoprism.dashboard.DashboardThematicLayerController";
+  public static final String CLASS = "net.geoprism.dashboard.layer.DashboardThematicLayerController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -86,158 +83,158 @@ public class DashboardThematicLayerControllerBase implements com.runwaysdk.gener
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:layer, net.geoprism.dashboard.DashboardStyleDTO:style, java.lang.String:mapId, net.geoprism.dashboard.AggregationStrategyDTO:strategy, java.lang.String:state", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:layer, net.geoprism.dashboard.DashboardStyleDTO:style, java.lang.String:mapId, net.geoprism.dashboard.AggregationStrategyDTO:strategy, java.lang.String:state", post=true)
   public void applyWithStyle(net.geoprism.dashboard.layer.DashboardThematicLayerDTO layer, net.geoprism.dashboard.DashboardStyleDTO style, java.lang.String mapId, net.geoprism.dashboard.AggregationStrategyDTO strategy, java.lang.String state) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.applyWithStyle");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.applyWithStyle");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:layer, net.geoprism.dashboard.DashboardStyleDTO:style, java.lang.String:mapId, net.geoprism.dashboard.AggregationStrategyDTO:strategy, java.lang.String:state", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:layer, net.geoprism.dashboard.DashboardStyleDTO:style, java.lang.String:mapId, net.geoprism.dashboard.AggregationStrategyDTO:strategy, java.lang.String:state", post=true)
   public void failApplyWithStyle(net.geoprism.dashboard.layer.DashboardThematicLayerDTO layer, net.geoprism.dashboard.DashboardStyleDTO style, java.lang.String mapId, net.geoprism.dashboard.AggregationStrategyDTO strategy, java.lang.String state) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failApplyWithStyle");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failApplyWithStyle");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void cancel(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.cancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.cancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void failCancel(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failCancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failCancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void create(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.create");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.create");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void failCreate(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failCreate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failCreate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void delete(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.delete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.delete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void failDelete(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failDelete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failDelete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.edit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.edit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failEdit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failEdit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.newInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.newInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failNewInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failNewInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttribute, java.lang.String:mapId", post=true)
   public void newThematicInstance(java.lang.String mdAttribute, java.lang.String mapId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.newThematicInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.newThematicInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttribute, java.lang.String:mapId", post=true)
   public void failNewThematicInstance(java.lang.String mdAttribute, java.lang.String mapId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failNewThematicInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failNewThematicInstance");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void update(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.update");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.update");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardThematicLayerDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.layer.DashboardThematicLayerDTO:dto", post=true)
   public void failUpdate(net.geoprism.dashboard.layer.DashboardThematicLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failUpdate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failUpdate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.view");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.view");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failView");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failView");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.viewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.viewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failViewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failViewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.Boolean:isAscending, java.lang.Integer:pageSize, java.lang.Integer:pageNumber", post=false)
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.viewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.viewPage");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.String:isAscending, java.lang.String:pageSize, java.lang.String:pageNumber", post=false)
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardThematicLayerController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardThematicLayerController.failViewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.DashboardThematicLayerController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.DashboardThematicLayerController.failViewPage");
   }
   
 }

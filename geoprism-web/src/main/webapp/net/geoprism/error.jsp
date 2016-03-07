@@ -33,7 +33,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><gdb:localize key="error.title" /></title>
-  <jwr:style src="/resources/com/runwaysdk/geodashboard/login/login.css" />  
+  <jwr:style src="/resources/net/geoprism/login/login.css" />  
   <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>

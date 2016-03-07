@@ -23,7 +23,7 @@
     <update>
       <mdBusiness name="net.geoprism.dashboard.DashboardMap">
         <create>
-          <mdMethod name="getSecondaryAttributes" label="Get secondary attributes" static="true" returnType="net.geoprism.MdAttributeView[]">
+          <mdMethod name="getSecondaryAttributes" label="Get secondary attributes" static="true" returnType="net.geoprism.dashboard.MdAttributeView[]">
             <mdParameter name="mapId" label="Map id" order="0" type="java.lang.String"/>
             <mdParameter name="mdAttributeId" label="MdAttributeId" order="1" type="java.lang.String"/>
           </mdMethod>

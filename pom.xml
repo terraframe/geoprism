@@ -150,8 +150,6 @@
 
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
             <exclude>**/webapp/3rd-party/**</exclude>
-            <exclude>**/webapp/com/runwaysdk/geodashboard/fonts/**</exclude>
-            <exclude>**/webapp/ie.js</exclude>
           </excludes>
           <properties>
             <name>${project.name}</name>

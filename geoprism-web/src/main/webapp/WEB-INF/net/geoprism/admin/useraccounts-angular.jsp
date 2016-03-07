@@ -68,7 +68,7 @@
 	<jwr:script src="/bundles/widget.js" useRandomParam="false"/>	
 	<jwr:script src="/bundles/localization.js" useRandomParam="false"/>
 	
-	<script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
 		  
 	<!-- include HTML5 IE enabling script for IE -->
 	<!--[if IE 8]><script type="text/javascript" src="./../../../../../ie.js"></script><![endif]-->
@@ -86,7 +86,7 @@
 	
 	<!-- User account CSS -->
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-	<jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+	<jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
 
 	<!-- User account Javascript -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>	

@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AttributeWrapper;
-
-@com.runwaysdk.business.ClassSignature(hash = 1451028133)
+@com.runwaysdk.business.ClassSignature(hash = -1468385691)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -44,7 +42,7 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDATTRIBUTE = "wrappedMdAttribute";
-  private static final long serialVersionUID = 1451028133;
+  private static final long serialVersionUID = -1468385691;
   
   public AttributeWrapperBase()
   {

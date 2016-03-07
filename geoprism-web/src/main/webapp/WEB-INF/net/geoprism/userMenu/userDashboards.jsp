@@ -30,7 +30,7 @@
   
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-  <jwr:style src="/com/runwaysdk/geodashboard/userstable/UsersTable.css" useRandomParam="false"/>  
+  <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
   
   <!-- User account Javascript -->
   <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -51,7 +51,7 @@
         background-color: #333;
         margin: 0;
         min-width: 100%;
-        background-image: url(../../../../../com/runwaysdk/geodashboard/images/earth-profile.jpg);
+        background-image: url(../../../../../net/geoprism/images/earth-profile.jpg);
       background-size: cover;
     }
     
@@ -330,7 +330,7 @@
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" class="" >
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
 		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" 
-		              		onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" 
+		              		onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" 
 		              		alt="Dashboard">
 		              
 		              <div class="caption">
@@ -361,7 +361,7 @@
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" class="" >
 		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
@@ -391,7 +391,7 @@
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" class="" >
 		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png') this.src = 'com/runwaysdk/geodashboard/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>

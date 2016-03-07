@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1398590181)
+@com.runwaysdk.business.ClassSignature(hash = 1007956360)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -71,7 +71,7 @@ public abstract class DashboardStyleBase extends com.runwaysdk.business.Business
   public static java.lang.String VALUEHALO = "valueHalo";
   public static java.lang.String VALUEHALOWIDTH = "valueHaloWidth";
   public static java.lang.String VALUESIZE = "valueSize";
-  private static final long serialVersionUID = 1398590181;
+  private static final long serialVersionUID = 1007956360;
   
   public DashboardStyleBase()
   {

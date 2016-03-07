@@ -23,7 +23,7 @@ import javax.servlet.ServletContextListener;
 
 import com.runwaysdk.generation.loader.LoaderDecorator;
 
-public class GeodashboardContextListener implements ServletContextListener
+public class GeoprismContextListener implements ServletContextListener
 {
   @Override
   public void contextInitialized(ServletContextEvent arg0) {

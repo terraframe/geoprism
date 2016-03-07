@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardMetadata;
-
-@com.runwaysdk.business.ClassSignature(hash = -1501889201)
+@com.runwaysdk.business.ClassSignature(hash = 727268073)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -44,7 +42,7 @@ public abstract class DashboardMetadataBase extends com.runwaysdk.business.Relat
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1501889201;
+  private static final long serialVersionUID = 727268073;
   
   public DashboardMetadataBase(String parentId, String childId)
   {

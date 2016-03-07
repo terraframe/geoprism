@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -679262197)
+@com.runwaysdk.business.ClassSignature(hash = -1566081784)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.dashboard;
 public class HasStyleQueryDTO extends com.runwaysdk.business.RelationshipQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -679262197;
+private static final long serialVersionUID = -1566081784;
 
   protected HasStyleQueryDTO(String type)
   {

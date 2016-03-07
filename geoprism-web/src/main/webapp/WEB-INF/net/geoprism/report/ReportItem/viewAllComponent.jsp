@@ -28,7 +28,7 @@
 
 <!-- Report CSS -->
 <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-<jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
+<jwr:style src="/net/geoprism/report/ReportTable.css" useRandomParam="false"/>  
 
 <!-- Report Javascript -->
 <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -38,8 +38,8 @@
 <!-- 
 <jwr:script src="/bundles/report.js" useRandomParam="false"/>
 
-<jwr:script src="/com/runwaysdk/geodashboard/report/ReportItem.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/report/ReportItemView.js" useRandomParam="false"/>
+<jwr:script src="/net/geoprism/report/ReportItem.js" useRandomParam="false"/>
+<jwr:script src="/net/geoprism/report/ReportItemView.js" useRandomParam="false"/>
  -->
 
 

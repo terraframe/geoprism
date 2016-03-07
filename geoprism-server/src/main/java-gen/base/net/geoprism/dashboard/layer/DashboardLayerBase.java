@@ -18,11 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DashboardMap;
-import net.geoprism.dashboard.HasStyle;
-import net.geoprism.dashboard.layer.DashboardLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = -1282110690)
+@com.runwaysdk.business.ClassSignature(hash = 1273915079)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -60,7 +56,7 @@ public abstract class DashboardLayerBase extends com.runwaysdk.business.Business
   public static java.lang.String TYPE = "type";
   public static java.lang.String VIEWNAME = "viewName";
   public static java.lang.String VIRTUAL = "virtual";
-  private static final long serialVersionUID = -1282110690;
+  private static final long serialVersionUID = 1273915079;
   
   public DashboardLayerBase()
   {

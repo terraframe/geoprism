@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.MdAttributeView;
-
-@com.runwaysdk.business.ClassSignature(hash = 1663754612)
+@com.runwaysdk.business.ClassSignature(hash = 1745799118)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

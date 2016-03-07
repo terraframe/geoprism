@@ -32,7 +32,7 @@
 <head>
 
 <!-- Ontologies CSS -->
-<jwr:style src="/com/runwaysdk/geodashboard/ontology/TermTree.css" useRandomParam="false"/>  
+<jwr:style src="/net/geoprism/ontology/TermTree.css" useRandomParam="false"/>  
 
 
 <!-- Ontologies Javascript -->

@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.HasLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = 2145520561)
+@com.runwaysdk.business.ClassSignature(hash = 1381979691)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -44,7 +42,7 @@ public abstract class HasLayerBase extends com.runwaysdk.business.Relationship i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 2145520561;
+  private static final long serialVersionUID = 1381979691;
   
   public HasLayerBase(String parentId, String childId)
   {

@@ -34,8 +34,8 @@
 <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
 <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
 <jwr:script src="/bundles/scheduler.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/Cron.js" useRandomParam="false"/>
-<jwr:script src="/com/runwaysdk/geodashboard/scheduler/Scheduler.js" useRandomParam="false"/>
+<jwr:script src="/net/geoprism/Cron.js" useRandomParam="false"/>
+<jwr:script src="/net/geoprism/scheduler/Scheduler.js" useRandomParam="false"/>
 
 <script type="text/javascript">${js}</script>
 

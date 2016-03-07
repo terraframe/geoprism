@@ -49,7 +49,7 @@
 <!-- 
       <object key="net.geoprism.MetadataGeoNode" type="com.runwaysdk.system.metadata.MdRelationship"/>
  -->    
-      <object key="net.geoprism.MetadataWrapper.universal" type="com.runwaysdk.system.metadata.MdAttribute"/>      
+      <object key="net.geoprism.dashboard.MetadataWrapper.universal" type="com.runwaysdk.system.metadata.MdAttribute"/>      
     </delete>    
   </doIt>
   <undoIt>

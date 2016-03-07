@@ -199,10 +199,10 @@
 				<!--     --> 
 				  </form>
 	    	</header>
-			<img id="logo" src="com/runwaysdk/geodashboard/images/splash_logo.png" alt="logo" />
+			<img id="logo" src="net/geoprism/images/splash_logo.png" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
-		    <img id="background-img" src="com/runwaysdk/geodashboard/images/theme_background.png" alt="background" />
+		    <img id="background-img" src="net/geoprism/images/theme_background.png" alt="background" />
 		
 			<div id="geoprism-landing-footer">
 				<h4><gdb:localize key="login.footerMessage"/></h4>

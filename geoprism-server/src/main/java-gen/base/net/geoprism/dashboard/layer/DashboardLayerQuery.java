@@ -18,10 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.HasStyle;
-import net.geoprism.dashboard.layer.DashboardLayer;
-
-@com.runwaysdk.business.ClassSignature(hash = -1661892651)
+@com.runwaysdk.business.ClassSignature(hash = -749714498)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -371,6 +368,29 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.layer.DashboardLayer.LOCKEDBY);
 
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.layer.DashboardLayer.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel()
+  {
+    return getNameLabel(null);
+
+  }
+ 
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL);
+
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL);
+
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -873,6 +893,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
+    public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel();
+    public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias);
+    public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1248,6 +1271,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.dashboard.layer.DashboardLayer.LOCKEDBY,  alias, displayLabel);
+
+  }
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel()
+  {
+    return getNameLabel(null);
+
+  }
+ 
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias)
+  {
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF)this.attributeFactory(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+
+  }
+ 
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias, String displayLabel)
+  {
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF)this.attributeFactory(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1721,6 +1761,9 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
+    public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel();
+    public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias);
+    public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -2093,6 +2136,23 @@ public  class DashboardLayerQuery extends com.runwaysdk.query.GeneratedBusinessQ
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.dashboard.layer.DashboardLayer.LOCKEDBY,  alias, displayLabel);
+
+  }
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel()
+  {
+    return getNameLabel(null);
+
+  }
+ 
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias)
+  {
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF)this.attributeFactory(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+
+  }
+ 
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF getNameLabel(String alias, String displayLabel)
+  {
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelQuery.DashboardLayerNameLabelQueryStructIF)this.attributeFactory(net.geoprism.dashboard.layer.DashboardLayer.NAMELABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()

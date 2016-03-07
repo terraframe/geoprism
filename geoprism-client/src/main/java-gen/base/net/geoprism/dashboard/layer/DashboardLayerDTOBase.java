@@ -18,16 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DashboardLegendDTO;
-import net.geoprism.dashboard.DashboardMapDTO;
-import net.geoprism.dashboard.DashboardStyleDTO;
-import net.geoprism.dashboard.HasStyleDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 475507870)
+@com.runwaysdk.business.ClassSignature(hash = -172218297)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.DashboardLayer";
-  private static final long serialVersionUID = 475507870;
+  private static final long serialVersionUID = -172218297;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -624,6 +619,12 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
+  
+  public net.geoprism.dashboard.layer.DashboardLayerNameLabelDTO getNameLabel()
+  {
+    return (net.geoprism.dashboard.layer.DashboardLayerNameLabelDTO) this.getAttributeStructDTO(NAMELABEL).getStructDTO();
+  }
+  
   public boolean isNameLabelWritable()
   {
     return isWritable(NAMELABEL);
@@ -1002,6 +1003,11 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
   public void delete()
   {
     getRequest().delete(this.getId());
+  }
+  
+  public static net.geoprism.dashboard.layer.DashboardLayerQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  {
+    return (net.geoprism.dashboard.layer.DashboardLayerQueryDTO) clientRequest.getAllInstances(net.geoprism.dashboard.layer.DashboardLayerDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()

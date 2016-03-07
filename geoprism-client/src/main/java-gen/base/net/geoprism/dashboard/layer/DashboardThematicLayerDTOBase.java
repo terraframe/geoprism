@@ -18,15 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.AggregationStrategyDTO;
-import net.geoprism.dashboard.AllAggregationTypeDTO;
-import net.geoprism.dashboard.DashboardStyleDTO;
-
-@com.runwaysdk.business.ClassSignature(hash = 462433779)
+@com.runwaysdk.business.ClassSignature(hash = -319932432)
 public abstract class DashboardThematicLayerDTOBase extends net.geoprism.dashboard.layer.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.DashboardThematicLayer";
-  private static final long serialVersionUID = 462433779;
+  public final static String CLASS = "net.geoprism.dashboard.layer.DashboardThematicLayer";
+  private static final long serialVersionUID = -319932432;
   
   protected DashboardThematicLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -405803516)
+@com.runwaysdk.business.ClassSignature(hash = 1215255361)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,10 +28,10 @@ package net.geoprism.dashboard.layer;
  */
 public abstract class EmptyLayerInformationBase extends com.runwaysdk.business.Information implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.EmptyLayerInformation";
+  public final static String CLASS = "net.geoprism.dashboard.layer.EmptyLayerInformation";
   public static java.lang.String ID = "id";
   public static java.lang.String LAYERNAME = "layerName";
-  private static final long serialVersionUID = -405803516;
+  private static final long serialVersionUID = 1215255361;
   
   public EmptyLayerInformationBase()
   {

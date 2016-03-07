@@ -18,9 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardLayerView;
-
-@com.runwaysdk.business.ClassSignature(hash = 292268123)
+@com.runwaysdk.business.ClassSignature(hash = 59987480)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -47,7 +45,7 @@ public abstract class DashboardLayerViewBase extends com.runwaysdk.business.View
   public static java.lang.String MDATTRIBUTE = "mdAttribute";
   public static java.lang.String SLDNAME = "sldName";
   public static java.lang.String VIEWNAME = "viewName";
-  private static final long serialVersionUID = 292268123;
+  private static final long serialVersionUID = 59987480;
   
   public DashboardLayerViewBase()
   {

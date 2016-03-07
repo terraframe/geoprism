@@ -56,7 +56,7 @@
   <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
   
   <!-- Dynamic map CSS -->
-  <jwr:style src="/com/runwaysdk/geodashboard/report/ReportTable.css" useRandomParam="false"/>  
+  <jwr:style src="/net/geoprism/report/ReportTable.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
   <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
@@ -68,13 +68,13 @@
   <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
   
   <script type="text/javascript">${js}</script>
-  <%-- <jwr:style src="/com/runwaysdk/geodashboard/MapConfig.json" useRandomParam="false"/>   --%>
-  <script src="/com/runwaysdk/geodashboard/MapConfig.json"></script>
+  <%-- <jwr:style src="/net/geoprism/MapConfig.json" useRandomParam="false"/>   --%>
+  <script src="/net/geoprism/MapConfig.json"></script>
   
   <!-- Google maps API -->
 <!--   <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>   -->
   
-  <script type="text/javascript" src="${pageContext.request.contextPath}/com/runwaysdk/geodashboard/Localized.js.jsp"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
   
   <jwr:script src="/bundles/dashboard.js" useRandomParam="false"/> 
   

@@ -38,7 +38,7 @@ textarea#description {
 
 div.scheduler_small_busy_spinner
 {
-  background-image:url('../../../../com/runwaysdk/geodashboard/images/busy.gif');
+  background-image:url('../../../../net/geoprism/images/busy.gif');
   background-repeat:no-repeat;
   background-position:center center;
   opacity: 0.5;

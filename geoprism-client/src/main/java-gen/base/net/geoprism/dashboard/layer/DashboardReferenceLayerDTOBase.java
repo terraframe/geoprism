@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = 61549602)
+@com.runwaysdk.business.ClassSignature(hash = -1045309281)
 public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashboard.layer.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.DashboardReferenceLayer";
-  private static final long serialVersionUID = 61549602;
+  public final static String CLASS = "net.geoprism.dashboard.layer.DashboardReferenceLayer";
+  private static final long serialVersionUID = -1045309281;
   
   protected DashboardReferenceLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
