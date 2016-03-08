@@ -28,7 +28,7 @@ package net.geoprism.report;
  */
 public abstract class MultipleReportExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.MultipleReportException";
+  public final static String CLASS = "net.geoprism.report.MultipleReportException";
   public static java.lang.String FORMAT = "format";
   public static java.lang.String ID = "id";
   public static java.lang.String REPORTNAME = "reportName";

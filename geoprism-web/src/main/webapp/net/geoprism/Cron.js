@@ -19,7 +19,7 @@
 //define(["../../ClassFramework", "../../Util", "../RunwaySDK_UI", "../factory/runway/widget/Widget", "../factory/runway/form/Form", "jquery-cron"], function(ClassFramework, Util, UI, Widget, Forms) {
 (function(){  
 
-  var pack = "com.runwaysdk.geodashboard.";
+  var pack = "net.geoprism.";
   var widgetName = pack+'CronPicker';
   
   /**
@@ -62,11 +62,11 @@
       getPeriodFromValue : function(value)
       {
         var regexMapper = [
-          {regex: /0 \* \* \* \* \?/, name: com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE},
-          {regex: /0 \d+ \* \* \* \?/, name: com.runwaysdk.geodashboard.CronEntry.EVERY_HOUR},
-          {regex: /0 \d+ \d+ \* \* \?/, name: com.runwaysdk.geodashboard.CronEntry.EVERY_DAY},
-          {regex: /0 \d+ \d+ \? \* ./, name: com.runwaysdk.geodashboard.CronEntry.EVERY_WEEK},
-          {regex: /0 \d+ \d+ \d+ \* \?/, name: com.runwaysdk.geodashboard.CronEntry.EVERY_MONTH}
+          {regex: /0 \* \* \* \* \?/, name: net.geoprism.CronEntry.EVERY_MINUTE},
+          {regex: /0 \d+ \* \* \* \?/, name: net.geoprism.CronEntry.EVERY_HOUR},
+          {regex: /0 \d+ \d+ \* \* \?/, name: net.geoprism.CronEntry.EVERY_DAY},
+          {regex: /0 \d+ \d+ \? \* ./, name: net.geoprism.CronEntry.EVERY_WEEK},
+          {regex: /0 \d+ \d+ \d+ \* \?/, name: net.geoprism.CronEntry.EVERY_MONTH}
         ];
         
         for (var i = 0; i < regexMapper.length; ++i)
@@ -77,7 +77,7 @@
           }
         }
             
-        return com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE;
+        return net.geoprism.CronEntry.EVERY_MINUTE;
       },
       cronToHumanReadable : function(cronStr) {
         if (cronStr == null || cronStr == "") {
@@ -85,7 +85,7 @@
           return 'never';
         }
         
-        var period = com.runwaysdk.geodashboard.CronUtil.getPeriodFromValue(cronStr);
+        var period = net.geoprism.CronUtil.getPeriodFromValue(cronStr);
         
         if (period == null)
         {
@@ -95,30 +95,30 @@
         var label = com.runwaysdk.Localize.localize(widgetName,period);        
         var cronStrParts = cronStr.split(" ");
         
-        var minute = cronStrParts[com.runwaysdk.geodashboard.CronEntry.MINUTES];          
-        var hour = cronStrParts[com.runwaysdk.geodashboard.CronEntry.HOURS];                    
-        var dow = cronStrParts[com.runwaysdk.geodashboard.CronEntry.DOW];
-        var day = cronStrParts[com.runwaysdk.geodashboard.CronEntry.DOM];
+        var minute = cronStrParts[net.geoprism.CronEntry.MINUTES];          
+        var hour = cronStrParts[net.geoprism.CronEntry.HOURS];                    
+        var dow = cronStrParts[net.geoprism.CronEntry.DOW];
+        var day = cronStrParts[net.geoprism.CronEntry.DOM];
         
         if (minute.length === 1) {
           minute = "0" + minute;
         }
         
-        if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE) {
+        if (period === net.geoprism.CronEntry.EVERY_MINUTE) {
           return label.replace("${minute}", com.runwaysdk.Localize.localize(widgetName, "minute"));
         }
-        else if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_HOUR) {
+        else if (period === net.geoprism.CronEntry.EVERY_HOUR) {
           return label.replace("${hour}", com.runwaysdk.Localize.localize(widgetName, "hour")).replace("${actualMinute}", minute);
         }
-        else if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_DAY) {
+        else if (period === net.geoprism.CronEntry.EVERY_DAY) {
           return label.replace("${day}", com.runwaysdk.Localize.localize(widgetName, "day")).replace("${actualHour}", hour).replace("${actualMinute}", minute);
         }
-        else if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_WEEK) {          
-          var actualWeek = com.runwaysdk.geodashboard.CronUtil.convertDayOfWeekNumberToLocalizedWeek(dow);
+        else if (period === net.geoprism.CronEntry.EVERY_WEEK) {          
+          var actualWeek = net.geoprism.CronUtil.convertDayOfWeekNumberToLocalizedWeek(dow);
           return label.replace("${week}", com.runwaysdk.Localize.localize(widgetName, "week")).replace("${actualDayOfWeek}", actualWeek).replace("${actualHour}", hour).replace("${actualMinute}", minute);
         }
-        else if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_MONTH) {
-          var actualDay = com.runwaysdk.geodashboard.CronUtil.formatDayValue(day);
+        else if (period === net.geoprism.CronEntry.EVERY_MONTH) {
+          var actualDay = net.geoprism.CronUtil.formatDayValue(day);
           return label.replace("${month}", com.runwaysdk.Localize.localize(widgetName, "month")).replace("${actualDay}", actualDay).replace("${actualHour}", hour).replace("${actualMinute}", minute);
         }
         else {
@@ -143,25 +143,25 @@
       },
       
       convertDayOfWeekNumberToLocalizedWeek : function(weekNum) {
-        if (weekNum == com.runwaysdk.geodashboard.CronEntry.SUNDAY) {
+        if (weekNum == net.geoprism.CronEntry.SUNDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "sunday");
         }
-        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.MONDAY) {
+        else if (weekNum == net.geoprism.CronEntry.MONDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "monday");
         }
-        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.TUESDAY) {
+        else if (weekNum == net.geoprism.CronEntry.TUESDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "tuesday");
         }
-        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.WEDNESDAY) {
+        else if (weekNum == net.geoprism.CronEntry.WEDNESDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "wednesday");
         }
-        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.THURSDAY) {
+        else if (weekNum == net.geoprism.CronEntry.THURSDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "thursday");
         }
-        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.FRIDAY) {
+        else if (weekNum == net.geoprism.CronEntry.FRIDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "friday");
         }
-        else if (weekNum == com.runwaysdk.geodashboard.CronEntry.SATURDAY) {
+        else if (weekNum == net.geoprism.CronEntry.SATURDAY) {
           return com.runwaysdk.Localize.localize(widgetName, "saturday");
         }
       }
@@ -204,7 +204,7 @@
   });
   
   Mojo.Meta.newClass(pack+'CronEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
+    Extends : net.geoprism.AbstractFormEntry,
     Constants: {
       SECONDS : 0,
       MINUTES : 1,
@@ -278,16 +278,16 @@
         scheduledRunDiv.appendChild(this.scheduledRunError);        
                         
         var periodOptions = [
-          //{value: com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE, label: this.localize("minute")},
-          {value: com.runwaysdk.geodashboard.CronEntry.EVERY_HOUR, label: this.localize("hour")},
-          {value: com.runwaysdk.geodashboard.CronEntry.EVERY_DAY, label: this.localize("day")},
-          {value: com.runwaysdk.geodashboard.CronEntry.EVERY_WEEK, label: this.localize("week")},          
-          {value: com.runwaysdk.geodashboard.CronEntry.EVERY_MONTH, label: this.localize("month")}
+          //{value: net.geoprism.CronEntry.EVERY_MINUTE, label: this.localize("minute")},
+          {value: net.geoprism.CronEntry.EVERY_HOUR, label: this.localize("hour")},
+          {value: net.geoprism.CronEntry.EVERY_DAY, label: this.localize("day")},
+          {value: net.geoprism.CronEntry.EVERY_WEEK, label: this.localize("week")},          
+          {value: net.geoprism.CronEntry.EVERY_MONTH, label: this.localize("month")}
         ];
         
         this._period = this._generateSelectList('period', periodOptions);        
-        this._day = this._generateNumberPicker('day', 1, 31, com.runwaysdk.geodashboard.CronUtil.formatDayValue);
-        this._dow = this._generateNumberPicker('dow', com.runwaysdk.geodashboard.CronEntry.SUNDAY, com.runwaysdk.geodashboard.CronEntry.SATURDAY, function(index){return com.runwaysdk.geodashboard.CronUtil.convertDayOfWeekNumberToLocalizedWeek(index);});
+        this._day = this._generateNumberPicker('day', 1, 31, net.geoprism.CronUtil.formatDayValue);
+        this._dow = this._generateNumberPicker('dow', net.geoprism.CronEntry.SUNDAY, net.geoprism.CronEntry.SATURDAY, function(index){return net.geoprism.CronUtil.convertDayOfWeekNumberToLocalizedWeek(index);});
         this._hour = this._generateNumberPicker('hour', 0, 23);
         this._minute = this._generateNumberPicker('minute', 0, 59, function(index){if (index < 10) {return "0"+index;} return index; });
         
@@ -304,7 +304,7 @@
         this.setId(id);        
       },
       _onClickEnable : function() {
-        this.setValue(com.runwaysdk.geodashboard.CronEntry.DEFAULT_VALUE);
+        this.setValue(net.geoprism.CronEntry.DEFAULT_VALUE);
       },        
       _onClickDisable : function() {
         this.setValue(null);
@@ -345,7 +345,7 @@
         div.appendChild(label);
         div.appendChild(select);
 
-        return new com.runwaysdk.geodashboard.CronInput(div, select);
+        return new net.geoprism.CronInput(div, select);
       },      
       _calcCronValue : function()
       {
@@ -356,35 +356,35 @@
         var dayNum = this._day.getValue();
         var month = null; 
           
-        if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_MINUTE) {
+        if (period === net.geoprism.CronEntry.EVERY_MINUTE) {
           minute = null;
           hour = null;
           dayNum = null;
           dayOfTheWeek = null;
           month = null;
         }
-        else if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_HOUR) {
+        else if (period === net.geoprism.CronEntry.EVERY_HOUR) {
           minute = minute || 0;
           hour = null;
           dayNum = null;
           dayOfTheWeek = null;
           month = null;
         }
-        else if (period == com.runwaysdk.geodashboard.CronEntry.EVERY_DAY) {
+        else if (period == net.geoprism.CronEntry.EVERY_DAY) {
           minute = minute || 0;
           hour = hour || 0;
           dayNum = null;
           dayOfTheWeek = null;
           month = null;
         }
-        else if (period == com.runwaysdk.geodashboard.CronEntry.EVERY_WEEK) {
+        else if (period == net.geoprism.CronEntry.EVERY_WEEK) {
           minute = minute || 0;
           hour = hour || 0;
           dayOfTheWeek = dayOfTheWeek || 0;
           dayNum = null;
           month = null;
         }
-        else if (period === com.runwaysdk.geodashboard.CronEntry.EVERY_MONTH) {
+        else if (period === net.geoprism.CronEntry.EVERY_MONTH) {
           minute = minute || 0;
           hour = hour || 0;
           dayNum = dayNum || 1;
@@ -430,40 +430,40 @@
         if (this._value !== null && this._value !== "")
         {        
           var cronStrParts = this.getValue().split(" ");
-          var periodValue = com.runwaysdk.geodashboard.CronUtil.getPeriodFromValue(this._value);
+          var periodValue = net.geoprism.CronUtil.getPeriodFromValue(this._value);
           
           this._period.setValue(periodValue);
           this._period.show();
                         
-          if (periodValue === com.runwaysdk.geodashboard.CronEntry.EVERY_HOUR) {
-            this._minute.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.MINUTES]);
+          if (periodValue === net.geoprism.CronEntry.EVERY_HOUR) {
+            this._minute.setValue(cronStrParts[net.geoprism.CronEntry.MINUTES]);
             this._minute.show();
           }
-          else if (periodValue === com.runwaysdk.geodashboard.CronEntry.EVERY_DAY) {
-            this._minute.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.MINUTES]);
+          else if (periodValue === net.geoprism.CronEntry.EVERY_DAY) {
+            this._minute.setValue(cronStrParts[net.geoprism.CronEntry.MINUTES]);
             this._minute.show();
             
-            this._hour.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.HOURS]);
+            this._hour.setValue(cronStrParts[net.geoprism.CronEntry.HOURS]);
             this._hour.show();
           }
-          else if (periodValue === com.runwaysdk.geodashboard.CronEntry.EVERY_WEEK) {
-            this._minute.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.MINUTES]);
+          else if (periodValue === net.geoprism.CronEntry.EVERY_WEEK) {
+            this._minute.setValue(cronStrParts[net.geoprism.CronEntry.MINUTES]);
             this._minute.show();
             
-            this._hour.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.HOURS]);
+            this._hour.setValue(cronStrParts[net.geoprism.CronEntry.HOURS]);
             this._hour.show();
             
-            this._dow.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.DOW]);
+            this._dow.setValue(cronStrParts[net.geoprism.CronEntry.DOW]);
             this._dow.show();
           }
-          else if (periodValue === com.runwaysdk.geodashboard.CronEntry.EVERY_MONTH) {
-            this._minute.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.MINUTES]);
+          else if (periodValue === net.geoprism.CronEntry.EVERY_MONTH) {
+            this._minute.setValue(cronStrParts[net.geoprism.CronEntry.MINUTES]);
             this._minute.show();
             
-            this._hour.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.HOURS]);
+            this._hour.setValue(cronStrParts[net.geoprism.CronEntry.HOURS]);
             this._hour.show();
             
-            this._day.setValue(cronStrParts[com.runwaysdk.geodashboard.CronEntry.DOM]);
+            this._day.setValue(cronStrParts[net.geoprism.CronEntry.DOM]);
             this._day.show();
           }
           

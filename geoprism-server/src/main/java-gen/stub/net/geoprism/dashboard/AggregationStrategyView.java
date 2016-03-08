@@ -22,10 +22,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.GeoEntityUtil;
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNode;
 import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

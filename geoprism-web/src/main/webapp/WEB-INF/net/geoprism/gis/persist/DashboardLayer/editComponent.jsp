@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Layer"/>
 
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.id" 
-  name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.name" method="POST" classes="modal-form" >
+  <mjl:form id="net.geoprism.dashboard.layer.DashboardLayer.form.id" 
+  name="net.geoprism.dashboard.layer.DashboardLayer.form.name" method="POST" classes="modal-form" >
     <%@include file="form.jsp" %>
  </mjl:form>

@@ -391,9 +391,9 @@
           rootTerms.push({termId : nodes[i].id});
         }
               
-        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-          termType : "com.runwaysdk.geodashboard.ontology.Classifier" ,
-          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+        var tree = new net.geoprism.ontology.OntologyTree({
+          termType : "net.geoprism.ontology.Classifier" ,
+          relationshipTypes : [ "net.geoprism.ontology.ClassifierIsARelationship" ],
           rootTerms : rootTerms,
           editable : false,
           slide : false,

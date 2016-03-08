@@ -39,7 +39,7 @@
        * are invoking it directly through the Facade.  FormData is required for
        * submitting file objects through javascript.
        */
-      Mojo.$.com.runwaysdk.Facade._controllerWrapper('com.runwaysdk.geodashboard.DataUploaderController.getAttributeInformation.mojax', request, params);
+      Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
     }
     
     service.importData = function(configuration, element, onSuccess, onFailure) {
@@ -51,7 +51,7 @@
     	
       var request = runwayService.createStandbyRequest(element, success, onFailure);
       
-      com.runwaysdk.geodashboard.DataUploaderController.importData(request, JSON.stringify(configuration));
+      net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
     }
     
     return service;  

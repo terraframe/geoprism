@@ -38,7 +38,7 @@
         var information = JSON.parse(json);
         var dashboard = dashboardService.getDashboard();
           
-        var form = new com.runwaysdk.geodashboard.gis.FeatureForm(dashboard, information);
+        var form = new net.geoprism.dashboardForm(dashboard, information);
         form.render();
       };
       

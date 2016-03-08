@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.browser;
 
-import com.runwaysdk.geodashboard.databrowser.MetadataTypeDTOBase;
+import net.geoprism.data.browser.MetadataTypeDTOBase;
 
 public class MetadataTypeDTO extends MetadataTypeDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

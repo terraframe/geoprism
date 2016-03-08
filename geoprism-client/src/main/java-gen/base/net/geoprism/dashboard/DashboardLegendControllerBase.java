@@ -21,7 +21,7 @@ package net.geoprism.dashboard;
 @com.runwaysdk.business.ClassSignature(hash = 134810937)
 public class DashboardLegendControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController";
+  public static final String CLASS = "net.geoprism.dashboard.DashboardLegendController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -83,130 +83,130 @@ public class DashboardLegendControllerBase implements com.runwaysdk.generation.l
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void cancel(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.cancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.cancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void failCancel(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failCancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failCancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void create(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.create");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.create");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void failCreate(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failCreate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failCreate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void delete(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.delete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.delete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void failDelete(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failDelete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failDelete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.edit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.edit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failEdit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failEdit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.newInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.newInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failNewInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failNewInstance");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void update(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.update");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.update");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.gis.persist.DashboardLegendDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardLegendDTO:dto", post=true)
   public void failUpdate(net.geoprism.dashboard.DashboardLegendDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failUpdate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failUpdate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.view");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.view");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failView");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failView");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.viewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.viewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failViewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failViewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.Boolean:isAscending, java.lang.Integer:pageSize, java.lang.Integer:pageNumber", post=false)
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.viewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.viewPage");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.String:isAscending, java.lang.String:pageSize, java.lang.String:pageNumber", post=false)
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.failViewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardLegendController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardLegendController.failViewPage");
   }
   
 }

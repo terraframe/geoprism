@@ -91,7 +91,7 @@ public class GISManagerLauncher
       {
         try
         {
-          Class<?> clazz = LoaderDecorator.load("com.runwaysdk.geodashboard.gis.GISManagerWindow");
+          Class<?> clazz = LoaderDecorator.load("net.geoprism.shapefile.GISManagerWindow");
 
           Constructor<?> constructor = clazz.getConstructor();
           Object instance = constructor.newInstance();

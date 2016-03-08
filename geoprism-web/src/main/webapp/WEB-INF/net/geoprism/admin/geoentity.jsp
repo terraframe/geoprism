@@ -58,7 +58,7 @@
     var request = new Mojo.ClientRequest({
       onSuccess: function(views){
             
-        var tree = new com.runwaysdk.geodashboard.ontology.GeoEntityTree({
+        var tree = new net.geoprism.ontology.GeoEntityTree({
           termType : "${type}",
           relationshipTypes : [ "${relationshipType}" ],
           rootTerms : [ { termId : "${rootId}"} ],
@@ -80,6 +80,6 @@
       }
     });
       
-    com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request);    
+    net.geoprism.ontology.GeoEntityUtil.getAllProblems(request);    
   });
 </script>

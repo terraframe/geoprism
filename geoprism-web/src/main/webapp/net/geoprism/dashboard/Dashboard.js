@@ -437,7 +437,7 @@
     controller.getMapExtent = function() {
       var mapBounds = {};
       
-      var mapExtent = mapService.getCurrentBounds(com.runwaysdk.geodashboard.gis.DynamicMap.SRID);
+      var mapExtent = mapService.getCurrentBounds(net.geoprism.dashboardMap.SRID);
       mapBounds.left = mapExtent._southWest.lng;
       mapBounds.bottom = mapExtent._southWest.lat;
       mapBounds.right = mapExtent._northEast.lng;
@@ -484,7 +484,7 @@
         'activeBaseMap' : activeBaseMapStr
       };
       
-      var url = 'com.runwaysdk.geodashboard.gis.persist.DashboardMapController.exportMap.mojo?' + $.param(params);
+      var url = 'net.geoprism.dashboard.DashboardMapController.exportMap.mojo?' + $.param(params);
               
       window.location.href = url;            
     }
@@ -587,7 +587,7 @@
           configuration : JSON.stringify(configuration) 
         }
                   
-        var url = 'com.runwaysdk.geodashboard.report.ReportItemController.run.mojo?' + $.param(params);
+        var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
                   
         window.location.href = url;    
       }
@@ -640,7 +640,7 @@
     }
     
     controller.cloneDashboard = function() {
-      var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, controller.dashboardId);
+      var dashboardForm = new net.geopnet.geoprism.dashboardontroller, controller.dashboardId);
       dashboardForm.open();
     }
     

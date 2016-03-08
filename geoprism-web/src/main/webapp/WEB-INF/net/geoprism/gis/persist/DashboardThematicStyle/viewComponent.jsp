@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Thematic Attribute"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.form.id" name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.DashboardThematicStyle.form.id" name="net.geoprism.dashboard.DashboardThematicStyle.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="mdAttribute">
@@ -107,7 +107,7 @@
         ${item.wellKnownName}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardThematicStyle.form.edit.button" value="Edit" action="net.geoprism.dashboard.DashboardThematicStyleController.edit.mojo" />
   </mjl:form>
 </dl>
 <dl>
@@ -119,7 +119,7 @@
   <dd>
     <ul>
       <li>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.HasStyle.childQuery.link" action="com.runwaysdk.geodashboard.gis.persist.HasStyleController.childQuery.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.HasStyle.childQuery.link" action="net.geoprism.dashboard.HasStyleController.childQuery.mojo">
           
           <mjl:property name="childId" value="${item.id}" />
         </mjl:commandLink>
@@ -127,6 +127,6 @@
     </ul>
   </dd>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyleController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.DashboardThematicStyle.viewAll.link" action="net.geoprism.dashboard.DashboardThematicStyleController.viewAll.mojo">
   View All
 </mjl:commandLink>

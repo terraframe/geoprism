@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Layer"/>
 
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.id" 
-  name="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.form.name" method="POST" classes="modal-form">
+  <mjl:form id="net.geoprism.dashboard.layer.DashboardThematicLayer.form.id" 
+  name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.name" method="POST" classes="modal-form">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.create.button" value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.create.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.cancel.mojo" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardLayer.form.create.button" value="Map It" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.create.mojo" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardLayer.form.cancel.button" value="Cancel" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.cancel.mojo" />
   </mjl:form>
 

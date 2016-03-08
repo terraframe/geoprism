@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Greater Than"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.dashboard.condition.DashboardGreaterThanController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="comparisonValue">
     </mjl:attributeColumn>
@@ -36,7 +36,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -51,6 +51,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="DashboardGreaterThanController.newInstance" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.newInstance.mojo">
+<mjl:commandLink name="DashboardGreaterThanController.newInstance" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.newInstance.mojo">
   Create a new Greater Than
 </mjl:commandLink>

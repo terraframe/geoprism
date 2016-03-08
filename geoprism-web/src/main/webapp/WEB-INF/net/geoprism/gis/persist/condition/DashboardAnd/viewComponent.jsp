@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a And"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd.form.id" name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.condition.DashboardAnd.form.id" name="net.geoprism.dashboard.condition.DashboardAnd.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="leftCondition">
@@ -35,9 +35,9 @@
         ${item.styleReference.keyName}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAndController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardAnd.form.edit.button" value="Edit" action="net.geoprism.dashboard.condition.DashboardAndController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAnd.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardAndController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.condition.DashboardAnd.viewAll.link" action="net.geoprism.dashboard.condition.DashboardAndController.viewAll.mojo">
   View All
 </mjl:commandLink>

@@ -22,16 +22,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Name"/>
 <dl>
-  <mjl:form method="POST" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.name" id="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.layer.DashboardLayerNameLabel.form.name" id="net.geoprism.dashboard.layer.DashboardLayerNameLabel.form.id">
     <mjl:input param="id" type="hidden" value="${item.id}" />
     <mjl:component item="${item}" param="dto">
       <mjl:dt attribute="defaultLocale">
         ${item.defaultLocale}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.edit.button" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabelController.edit.mojo" value="Edit" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardLayerNameLabel.form.edit.button" action="net.geoprism.dashboard.layer.DashboardLayerNameLabelController.edit.mojo" value="Edit" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabelController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.layer.DashboardLayerNameLabel.viewAll.link" action="net.geoprism.dashboard.layer.DashboardLayerNameLabelController.viewAll.mojo">
   View All
 </mjl:commandLink>

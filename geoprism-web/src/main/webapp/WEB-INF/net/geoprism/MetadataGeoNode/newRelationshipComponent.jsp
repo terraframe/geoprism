@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Select Wrapper Geo node Participants"/>
-<mjl:form id="com.runwaysdk.geodashboard.MetadataGeoNode.form.id" name="com.runwaysdk.geodashboard.MetadataGeoNode.form.name" method="POST">
+<mjl:form id="net.geoprism.dashboard.MetadataGeoNode.form.id" name="net.geoprism.dashboard.MetadataGeoNode.form.name" method="POST">
   <dl>
     <dt>
       <label>
@@ -47,6 +47,6 @@
         </mjl:option>
       </mjl:select>
     </dd>
-    <mjl:command name="com.runwaysdk.geodashboard.MetadataGeoNode.form.newInstance.button" value="New Instance" action="com.runwaysdk.geodashboard.MetadataGeoNodeController.newInstance.mojo" />
+    <mjl:command name="net.geoprism.dashboard.MetadataGeoNode.form.newInstance.button" value="New Instance" action="net.geoprism.dashboard.MetadataGeoNodeController.newInstance.mojo" />
   </dl>
 </mjl:form>

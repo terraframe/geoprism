@@ -28,9 +28,9 @@
     <table class="table">
       <thead class="popup-table-heading">
         <tr>
-          <th><gdb:localize key="com.runwaysdk.geodashboard.DynamicMap.location"/></th>  
-          <th><gdb:localize key="com.runwaysdk.geodashboard.DynamicMap.aggregationMethod"/></th> 
-          <th><gdb:localize key="com.runwaysdk.geodashboard.DynamicMap.aggregateValue"/></th> 
+          <th><gdb:localize key="net.geoprism.gis.DynamicMap.location"/></th>  
+          <th><gdb:localize key="net.geoprism.gis.DynamicMap.aggregationMethod"/></th> 
+          <th><gdb:localize key="net.geoprism.gis.DynamicMap.aggregateValue"/></th> 
         </tr>  
       </thead>
       <tbody>  
@@ -41,7 +41,7 @@
         </tr>
         <tr ng-if="ctrl.canEditData()"> 
           <td colspan="3">
-            <a href="#" ng-click="ctrl.editData()" class="edit-feature"><gdb:localize key="com.runwaysdk.geodashboard.DynamicMap.editFeature"/></a>
+            <a href="#" ng-click="ctrl.editData()" class="edit-feature"><gdb:localize key="net.geoprism.gis.DynamicMap.editFeature"/></a>
           </td>  
         </tr>
       </tbody>

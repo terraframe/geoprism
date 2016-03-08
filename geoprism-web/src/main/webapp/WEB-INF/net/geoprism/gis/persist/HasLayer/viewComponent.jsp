@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Has Layer"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.HasLayer.form.id" name="com.runwaysdk.geodashboard.gis.persist.HasLayer.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.layer.HasLayer.form.id" name="net.geoprism.dashboard.layer.HasLayer.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <dt>
@@ -31,7 +31,7 @@
         </label>
       </dt>
       <dd>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardMap.form.view.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.view.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.DashboardMap.form.view.link" action="net.geoprism.dashboard.DashboardMapController.view.mojo">
           ${item.parent.keyName}
           <mjl:property name="id" value="${item.parentId}" />
         </mjl:commandLink>
@@ -42,7 +42,7 @@
         </label>
       </dt>
       <dd>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.view.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerController.view.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.layer.DashboardLayer.form.view.link" action="net.geoprism.dashboard.layer.DashboardLayerController.view.mojo">
           ${item.parent.keyName}
           <mjl:property name="id" value="${item.parentId}" />
         </mjl:commandLink>
@@ -51,9 +51,9 @@
         ${item.layerIndex}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.HasLayer.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.HasLayerController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.layer.HasLayer.form.edit.button" value="Edit" action="net.geoprism.dashboard.layer.HasLayerController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.HasLayer.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.HasLayerController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.layer.HasLayer.viewAll.link" action="net.geoprism.dashboard.layer.HasLayerController.viewAll.mojo">
   View All
 </mjl:commandLink>

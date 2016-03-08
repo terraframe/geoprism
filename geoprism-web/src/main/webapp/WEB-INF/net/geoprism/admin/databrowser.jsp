@@ -48,7 +48,7 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var db = new com.runwaysdk.geodashboard.databrowser.DataBrowser({
+  var db = new net.geoprism.data.browser.DataBrowser({
     types: com.runwaysdk.DTOUtil.convertToType(<%=request.getAttribute("response")%>.returnValue[0]).getResultSet(),
     editData : <%=request.getAttribute("editData")%>
   });

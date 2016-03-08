@@ -5,16 +5,16 @@ Bundle-SymbolicName: com.runwaysdk.geodashboard.oda.driver;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  src
-Bundle-Activator: com.runwaysdk.geodashboard.oda.driver.Activator
+Bundle-Activator: net.geoprism.oda.driver.Activator
 Bundle-Vendor: TerraFrame
 Bundle-Localization: plugin
-Export-Package: com.runwaysdk.geodashboard.oda.driver;version="1.0.0.qualifier",
- com.runwaysdk,
+Export-Package: com.runwaysdk,
  com.runwaysdk.business,
  com.runwaysdk.business.generation,
  com.runwaysdk.constants,
  com.runwaysdk.request,
- com.runwaysdk.session
+ com.runwaysdk.session,
+ net.geoprism.oda.driver;version="1.0.0.qualifier"
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity.oda;bundle-version="[3.3.0,4.0.0)",

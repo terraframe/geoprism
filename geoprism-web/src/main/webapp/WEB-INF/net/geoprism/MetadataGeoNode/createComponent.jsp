@@ -22,8 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Create a new Wrapper Geo node"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.MetadataGeoNode.form.id" name="com.runwaysdk.geodashboard.MetadataGeoNode.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.MetadataGeoNode.form.id" name="net.geoprism.dashboard.MetadataGeoNode.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.MetadataGeoNode.form.create.button" value="Create" action="com.runwaysdk.geodashboard.MetadataGeoNodeController.create.mojo" />
+    <mjl:command name="net.geoprism.dashboard.MetadataGeoNode.form.create.button" value="Create" action="net.geoprism.dashboard.MetadataGeoNodeController.create.mojo" />
   </mjl:form>
 </dl>

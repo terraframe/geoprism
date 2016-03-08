@@ -22,8 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Create a new Description"/>
 <dl>
-  <mjl:form method="POST" name="com.runwaysdk.geodashboard.DashboardDescription.form.name" id="com.runwaysdk.geodashboard.DashboardDescription.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardDescription.form.name" id="net.geoprism.dashboard.DashboardDescription.form.id">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.DashboardDescription.form.create.button" action="com.runwaysdk.geodashboard.DashboardDescriptionController.create.mojo" value="Create" />
+    <mjl:command name="net.geoprism.dashboard.DashboardDescription.form.create.button" action="net.geoprism.dashboard.DashboardDescriptionController.create.mojo" value="Create" />
   </mjl:form>
 </dl>

@@ -22,14 +22,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Has Thematic Layer"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.dashboard.layer.HasThematicLayerController.viewPage.mojo" />
   <mjl:columns>
     <mjl:freeColumn>
       <mjl:header>
         Map
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="parent.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.view.mojo">
+        <mjl:commandLink name="parent.link" action="net.geoprism.dashboard.DashboardMapController.view.mojo">
           ${item.parent.keyName}
           <mjl:property name="id" value="${item.parentId}" />
         </mjl:commandLink>
@@ -43,7 +43,7 @@
         Layer
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="child.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.view.mojo">
+        <mjl:commandLink name="child.link" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.view.mojo">
           ${item.child.keyName}
           <mjl:property name="id" value="${item.childId}" />
         </mjl:commandLink>
@@ -59,7 +59,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.dashboard.layer.HasThematicLayerController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -74,6 +74,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="HasThematicLayerController.newRelationship" action="com.runwaysdk.geodashboard.gis.persist.HasThematicLayerController.newRelationship.mojo">
+<mjl:commandLink name="HasThematicLayerController.newRelationship" action="net.geoprism.dashboard.layer.HasThematicLayerController.newRelationship.mojo">
   Create a new Has Thematic Layer
 </mjl:commandLink>

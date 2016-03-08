@@ -22,10 +22,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.geoprism.DataUploader;
-import net.geoprism.GeoEntityUtil;
 import net.geoprism.MappableClass;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,7 +79,7 @@ import com.runwaysdk.system.metadata.MdClass;
 
 public class TargetBuilder
 {
-  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.business";
+  public static final String PACKAGE_NAME = "net.geoprism.data.business";
 
   public static final String EXLUDE       = "EXCLUDE";
 

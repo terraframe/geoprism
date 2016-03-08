@@ -22,16 +22,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Description"/>
 <dl>
-  <mjl:form method="POST" name="com.runwaysdk.geodashboard.DashboardDescription.form.name" id="com.runwaysdk.geodashboard.DashboardDescription.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardDescription.form.name" id="net.geoprism.dashboard.DashboardDescription.form.id">
     <mjl:input param="id" type="hidden" value="${item.id}" />
     <mjl:component item="${item}" param="dto">
       <mjl:dt attribute="defaultLocale">
         ${item.defaultLocale}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.DashboardDescription.form.edit.button" action="com.runwaysdk.geodashboard.DashboardDescriptionController.edit.mojo" value="Edit" />
+    <mjl:command name="net.geoprism.dashboard.DashboardDescription.form.edit.button" action="net.geoprism.dashboard.DashboardDescriptionController.edit.mojo" value="Edit" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.DashboardDescription.viewAll.link" action="com.runwaysdk.geodashboard.DashboardDescriptionController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.DashboardDescription.viewAll.link" action="net.geoprism.dashboard.DashboardDescriptionController.viewAll.mojo">
   View All
 </mjl:commandLink>

@@ -44,7 +44,7 @@
          point="org.eclipse.ui.propertyPages">
       <page
             name="%profile.propertypage.name"
-            class="com.runwaysdk.geodashboard.oda.driver.ui.profile.GeodashboardPropertyPage"
+            class="net.geoprism.oda.driver.ui.profile.GeodashboardPropertyPage"
             id="%oda.data.source.id">
          <enabledWhen>
             <instanceof
@@ -62,7 +62,7 @@
       <dataSourceUI
             id="%oda.data.source.id">
          <newDataSourceWizard
-               pageClass="com.runwaysdk.geodashboard.oda.driver.ui.profile.GeodashboardSelectionWizardPage"
+               pageClass="net.geoprism.oda.driver.ui.profilenet.geoprism.GeodashboardSelectionWizardPage"
                includesProgressMonitor="false"
                pageTitle="%wizard.data.source.page.title"
                windowTitle="%wizard.window.title">
@@ -71,8 +71,8 @@
       <dataSetUI
             supportsOutParameters="false"
             supportsInParameters="true"
-            initialPageId="com.runwaysdk.geodashboard.oda.driver.dataSet.page1"
-            id="com.runwaysdk.geodashboard.oda.driver.dataSet">
+            initialPageId="net.geoprism.oda.driver.dataSet.page1"
+            id="net.geoprism.oda.driver.dataSet">
          <dataSetWizard
                class="org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizard"
                windowTitle="%wizard.data.set.window.title">
@@ -80,9 +80,9 @@
          <dataSetPage
                displayName="%wizard.data.set.page.title"
                icon="icons/datasetpage.ico"
-               wizardPageClass="com.runwaysdk.geodashboard.oda.driver.ui.editors.GeodashboardDataSetEditorPage"
+               wizardPageClass="net.geoprism.oda.driver.ui.editorsnet.geoprism.GeodashboardDataSetEditorPage"
                path="/"
-               id="com.runwaysdk.geodashboard.oda.driver.dataSet.page1">
+               id="net.geoprism.oda.driver.dataSet.page1">
          </dataSetPage>
       </dataSetUI>
    </extension>

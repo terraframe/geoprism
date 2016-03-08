@@ -30,7 +30,7 @@ import net.geoprism.dashboard.layer.HasThematicLayer;
  */
 public abstract class HasThematicLayerBase extends com.runwaysdk.business.Relationship implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.gis.persist.HasThematicLayer";
+  public final static String CLASS = "net.geoprism.dashboard.layer.HasThematicLayer";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";

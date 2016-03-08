@@ -42,7 +42,6 @@ import javax.imageio.ImageIO;
 import net.coobird.thumbnailator.Thumbnails;
 import net.geoprism.AccessConstants;
 import net.geoprism.ClassUniversalQuery;
-import net.geoprism.GeoEntityUtil;
 import net.geoprism.GeoprismUser;
 import net.geoprism.GeoprismUserQuery;
 import net.geoprism.KeyGeneratorIF;
@@ -63,6 +62,7 @@ import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierQuery;
 import net.geoprism.ontology.ClassifierTermAttributeRoot;
 import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
+import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.report.ReportItem;
 import net.geoprism.report.ReportItemQuery;
 

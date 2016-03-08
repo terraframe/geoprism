@@ -23,10 +23,10 @@
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   var InstanceQueryDataSource = com.runwaysdk.ui.datatable.datasource.InstanceQueryDataSource;
   var GenericDataTable = com.runwaysdk.ui.factory.generic.datatable.DataTable;
-  var FormEntry = com.runwaysdk.geodashboard.FormEntry;
-  var Form = com.runwaysdk.geodashboard.Form;
+  var FormEntry = net.geoprism.FormEntry;
+  var Form = net.geoprism.Form;
   
-  var defaultQueryType = "com.runwaysdk.geodashboard.GeodashboardUser";
+  var defaultQueryType = "net.geoprism.GeoprismUser";
   
   var usersTableName = "com.runwaysdk.ui.userstable.UsersTable";
   
@@ -150,7 +150,7 @@
               var roles = that._getRoles(values);
               that._populateComponent(values);
         
-              var applyCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+              var applyCallback = new net.geoprism.StandbyClientRequest({
                 onSuccess : function(user) {
                   container.close();
                 
@@ -177,7 +177,7 @@
             var cancelCallback = function() {
               if(!that._user.isNewInstance())
               {                
-                var unlockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+                var unlockCallback = new net.geoprism.StandbyClientRequest({
                   onSuccess : function(user) {
                     container.close();
                   
@@ -231,7 +231,7 @@
         else if(this._user.isFirstNameReadable())
         {
           var label = this._user.getFirstNameMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('firstName', label, this._user ? this._user.getFirstName() : "");
+          var entry = new net.geoprism.ReadEntry('firstName', label, this._user ? this._user.getFirstName() : "");
           form.addEntry(entry);                  
         }
           
@@ -244,7 +244,7 @@
         else if(this._user.isLastNameReadable())
         {
           var label = this._user.getLastNameMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('lastName', label, this._user ? this._user.getLastName() : "");
+          var entry = new net.geoprism.ReadEntry('lastName', label, this._user ? this._user.getLastName() : "");
           form.addEntry(entry);                  
         }
           
@@ -257,7 +257,7 @@
         else if(this._user.isPhoneNumberReadable())
         {
           var label = this._user.getPhoneNumberMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('phoneNumber', label, this._user ? this._user.getPhoneNumber() : "");
+          var entry = new net.geoprism.ReadEntry('phoneNumber', label, this._user ? this._user.getPhoneNumber() : "");
           form.addEntry(entry);                  
         }
           
@@ -290,7 +290,7 @@
         else if(this._user.isEmailReadable())
         {
           var label = this._user.getEmailMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('email', label, this._user ? this._user.getEmail() : "");
+          var entry = new net.geoprism.ReadEntry('email', label, this._user ? this._user.getEmail() : "");
           form.addEntry(entry);                  
         }
           
@@ -307,7 +307,7 @@
         else if(this._user.isUsernameReadable())
         {
           var label = this._user.getUsernameMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('username', label, this._user ? this._user.getUsername() : "");
+          var entry = new net.geoprism.ReadEntry('username', label, this._user ? this._user.getUsername() : "");
           form.addEntry(entry);                  
         }
         
@@ -374,7 +374,7 @@
               var role = roles[i];
               var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
                   
-              var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
+              var entry = new net.geoprism.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
               form.addEntry(entry);
             }
           }
@@ -457,7 +457,7 @@
         
         getRoles : function(callback, user)
         {
-          com.runwaysdk.geodashboard.RoleView.getRoles(callback, user);
+          net.geoprism.RoleView.getRoles(callback, user);
         }
 	  }	  
   });
@@ -533,7 +533,7 @@
     	var user = e.getUser();
     	  
         if(e.getEventType() === UserFormEvent.ON_EDIT) {
-          var lockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+          var lockCallback = new net.geoprism.StandbyClientRequest({
             onSuccess : function(user) {
               that.reload(user, false);
             },
@@ -570,7 +570,7 @@
               }
             }); 
                     
-            com.runwaysdk.geodashboard.GeodashboardUser.getCurrentUser(callback);
+            net.geoprism.GeoprismUser.getCurrentUser(callback);
           }
         }));
           
@@ -619,7 +619,7 @@
           
         var user = this._table.getDataSource().getResultsQueryDTO().getResultSet()[rowNumber];
         
-        var callback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+        var callback = new net.geoprism.StandbyClientRequest({
           that : this,
           onSuccess : function(dto) {
             this.that._buildDialog(this.that.localize("dialogEditUserTitle"), dto);        
@@ -640,7 +640,7 @@
       },
       
       _onNewUser : function(e) {        
-        var user = new com.runwaysdk.geodashboard.GeodashboardUser();
+        var user = new net.geoprism.GeoprismUser();
       
         if(user.isWritable())
         {
@@ -764,7 +764,7 @@
             dialog.close();
             var mainDiv = document.getElementById("usersTable");
             
-            var removeCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+            var removeCallback = new net.geoprism.StandbyClientRequest({
               onSuccess : function() {
                 table.refresh();
               },
@@ -810,7 +810,7 @@
         this._makeButtons();
         
         // Build the columns from the read permissions
-        var user = new com.runwaysdk.geodashboard.GeodashboardUser();
+        var user = new net.geoprism.GeoprismUser();
         var columns = [];        
 
         columns.push({header: this.localize("delete"), customFormatter: Mojo.Util.bind(this, function(result, rowNumber){

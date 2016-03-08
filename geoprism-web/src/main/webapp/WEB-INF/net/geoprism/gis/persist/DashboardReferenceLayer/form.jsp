@@ -476,11 +476,11 @@
                   </div>
                 </div>
                 <div class="button-holder">
-							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.create.button" 
-							      value="Map It" action="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.applyWithStyle.mojo"
+							    <mjl:command name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.create.button" 
+							      value="Map It" action="net.geoprism.dashboard.layer.DashboardReferenceLayerController.applyWithStyle.mojo"
 							      classes="btn btn-primary"  />
-							    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.cancel.button"
-							      value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.cancel.mojo"
+							    <mjl:command name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.cancel.button"
+							      value="Cancel" action="net.geoprism.dashboard.layer.DashboardReferenceLayerController.cancel.mojo"
 							      classes="btn btn-default" />
                 </div>
               </div>

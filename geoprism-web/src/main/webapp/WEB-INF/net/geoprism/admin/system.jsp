@@ -45,10 +45,10 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var emailSetting = new com.runwaysdk.geodashboard.EmailSetting(${emailSetting}.returnValue[0]);
-  var user = new com.runwaysdk.geodashboard.GeodashboardUser(${user}.returnValue[0]);
+  var emailSetting = new net.geoprism.EmailSetting(${emailSetting}.returnValue[0]);
+  var user = new net.geoprism.GeoprismUser(${user}.returnValue[0]);
   
-  var sf = new com.runwaysdk.geodashboard.system.SystemForm(emailSetting, user);  
+  var sf = new net.geoprism.system.SystemForm(emailSetting, user);  
   sf.render("#systemForm");
 </script>
 

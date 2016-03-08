@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a "/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.EmailSetting.form.id" name="com.runwaysdk.geodashboard.EmailSetting.form.name" method="POST">
+  <mjl:form id="net.geoprism.EmailSetting.form.id" name="net.geoprism.EmailSetting.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="from">
@@ -44,9 +44,9 @@
         ${item.username}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.EmailSetting.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.EmailSettingController.edit.mojo" />
+    <mjl:command name="net.geoprism.EmailSetting.form.edit.button" value="Edit" action="net.geoprism.EmailSettingController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.EmailSetting.viewAll.link" action="com.runwaysdk.geodashboard.EmailSettingController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.EmailSetting.viewAll.link" action="net.geoprism.EmailSettingController.viewAll.mojo">
   View All
 </mjl:commandLink>

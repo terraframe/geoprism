@@ -21,7 +21,7 @@ package net.geoprism.dashboard;
 @com.runwaysdk.business.ClassSignature(hash = -239984451)
 public class DashboardMetadataControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.DashboardMetadataController";
+  public static final String CLASS = "net.geoprism.dashboard.DashboardMetadataController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -83,172 +83,172 @@ public class DashboardMetadataControllerBase implements com.runwaysdk.generation
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void cancel(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.cancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.cancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void failCancel(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failCancel");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failCancel");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:childId", post=false)
   public void childQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.childQuery");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.childQuery");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:childId", post=false)
   public void failChildQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failChildQuery");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failChildQuery");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void create(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.create");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.create");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void failCreate(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failCreate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failCreate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void delete(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.delete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.delete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void failDelete(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failDelete");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failDelete");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.edit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.edit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failEdit");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failEdit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:childId", post=true)
   public void newInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.newInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.newInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:childId", post=true)
   public void failNewInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failNewInstance");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failNewInstance");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void newRelationship() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.newRelationship");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.newRelationship");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failNewRelationship() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failNewRelationship");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failNewRelationship");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId", post=false)
   public void parentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.parentQuery");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.parentQuery");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId", post=false)
   public void failParentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failParentQuery");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failParentQuery");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void update(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.update");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.update");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.geodashboard.DashboardMetadataDTO:dto", post=true)
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardMetadataDTO:dto", post=true)
   public void failUpdate(net.geoprism.dashboard.DashboardMetadataDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failUpdate");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failUpdate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.view");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.view");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
   public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failView");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failView");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.viewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.viewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failViewAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failViewAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.Boolean:isAscending, java.lang.Integer:pageSize, java.lang.Integer:pageNumber", post=false)
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.viewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.viewPage");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:sortAttribute, java.lang.String:isAscending, java.lang.String:pageSize, java.lang.String:pageNumber", post=false)
   public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DashboardMetadataController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DashboardMetadataController.failViewPage");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMetadataController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMetadataController.failViewPage");
   }
   
 }

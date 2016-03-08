@@ -20,7 +20,7 @@
 
   function BuilderService(runwayService) {
     var service = {};
-    service.dto = new com.runwaysdk.geodashboard.Dashboard();
+    service.dto = new net.geoprism.dashboard.Dashboard();
     
     service.applyWithOptions = function(object, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
@@ -77,7 +77,7 @@
       }, onFailure);
       
       if(dashboardId != null) {
-        var dto = new com.runwaysdk.geodashboard.Dashboard();
+        var dto = new net.geoprism.dashboard.Dashboard();
         dto.id = dashboardId;
         dto.newInstance = false;
         dto.attributeMap.id.value = dashboardId;
@@ -85,7 +85,7 @@
         dto.getDashboardDefinition(request);
       }
       else {
-        var dto = new com.runwaysdk.geodashboard.Dashboard();
+        var dto = new net.geoprism.dashboard.Dashboard();
         dto.getDashboardDefinition(request);
       }
     }

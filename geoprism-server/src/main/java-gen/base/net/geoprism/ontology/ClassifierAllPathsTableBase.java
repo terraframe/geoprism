@@ -29,7 +29,7 @@ package net.geoprism.ontology;
  */
 public abstract class ClassifierAllPathsTableBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierAllPathsTable";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierAllPathsTable";
   public static java.lang.String CHILDTERM = "childTerm";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";

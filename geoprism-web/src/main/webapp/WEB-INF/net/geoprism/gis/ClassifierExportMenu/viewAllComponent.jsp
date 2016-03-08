@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Export Classifier"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.gis.ClassifierExportMenuController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.ontologyerExportMenuController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="fileFormat">
       <mjl:row>
@@ -40,7 +40,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.gis.ClassifierExportMenuController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprnet.geoprism.ontologyenuController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -55,6 +55,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="ClassifierExportMenuController.newInstance" action="com.runwaysdk.geodashboard.gis.ClassifierExportMenuController.newInstance.mojo">
+<mjl:commandLink name="ClassifierExportMenuController.newInstance" action="net.geoprism.ontolnet.geoprism.ontologyller.newInstance.mojo">
   Create a new Export Classifier
 </mjl:commandLink>

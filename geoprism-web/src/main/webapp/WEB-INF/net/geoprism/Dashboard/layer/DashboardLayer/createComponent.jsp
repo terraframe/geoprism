@@ -22,8 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Create a new Layer"/>
 <dl>
-  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardLayer.form.name" id="net.geoprism.dashboard.DashboardLayer.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.layer.DashboardLayer.form.name" id="net.geoprism.dashboard.layer.DashboardLayer.form.id">
     <%@include file="form.jsp" %>
-    <mjl:command name="net.geoprism.dashboard.DashboardLayer.form.create.button" action="net.geoprism.dashboard.DashboardLayerController.create.mojo" value="Create" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardLayer.form.create.button" action="net.geoprism.dashboard.layer.DashboardLayerController.create.mojo" value="Create" />
   </mjl:form>
 </dl>

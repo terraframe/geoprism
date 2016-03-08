@@ -23,8 +23,8 @@
 <c:set var="page_title" scope="request" value="Edit an existing Layer" />
 <dl>
 	<mjl:form
-		id="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.id"
-		name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.name"
+		id="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.id"
+		name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.name"
 		method="POST" classes="modal-form">
 		<%@include file="form.jsp"%>
 

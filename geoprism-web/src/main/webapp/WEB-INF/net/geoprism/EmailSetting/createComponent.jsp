@@ -22,8 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Create a new "/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.EmailSetting.form.id" name="com.runwaysdk.geodashboard.EmailSetting.form.name" method="POST">
+  <mjl:form id="net.geoprism.EmailSetting.form.id" name="net.geoprism.EmailSetting.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.EmailSetting.form.create.button" value="Create" action="com.runwaysdk.geodashboard.EmailSettingController.create.mojo" />
+    <mjl:command name="net.geoprism.EmailSetting.form.create.button" value="Create" action="net.geoprism.EmailSettingController.create.mojo" />
   </mjl:form>
 </dl>

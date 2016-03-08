@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdUtil name="net.geoprism.GeoEntityUtil" label="Geo entity util">
+      <mdUtil name="net.geoprism.ontology.GeoEntityUtil" label="Geo entity util">
         <mdMethod name="makeSynonym" returnType="java.lang.String[]" label="Make synonym" static="true">
           <mdParameter name="sourceId" label="Source id" order="0" type="java.lang.String" />
           <mdParameter name="destinationId" label="Destination id" order="1" type="java.lang.String" />
@@ -36,7 +36,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.GeoEntityUtil" type="com.runwaysdk.system.metadata.MdUtil" />
+      <object key="net.geoprism.ontology.GeoEntityUtil" type="com.runwaysdk.system.metadata.MdUtil" />
     </delete>
   </undoIt>
 </version>

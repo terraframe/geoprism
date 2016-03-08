@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Classifier Synonym"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.ontology.ClassifierSynonymController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="displayLabel">
     </mjl:attributeColumn>
@@ -33,7 +33,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.ontology.ClassifierSynonymController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -48,6 +48,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="ClassifierSynonymController.newInstance" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.newInstance.mojo">
+<mjl:commandLink name="ClassifierSynonymController.newInstance" action="net.geoprism.ontology.ClassifierSynonymController.newInstance.mojo">
   Create a new Classifier Synonym
 </mjl:commandLink>

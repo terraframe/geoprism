@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Layer"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.id" name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.id" name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="BBoxIncluded">
@@ -81,7 +81,7 @@
         ${item.virtual ? item.virtualMd.positiveDisplayLabel : item.virtualMd.negativeDisplayLabel}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.edit.button" value="Edit" action="net.geoprism.dashboard.layer.DashboardReferenceLayerController.edit.mojo" />
   </mjl:form>
 </dl>
 <dl>
@@ -93,7 +93,7 @@
   <dd>
     <ul>
       <li>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.HasStyle.parentQuery.link" action="com.runwaysdk.geodashboard.gis.persist.HasStyleController.parentQuery.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.HasStyle.parentQuery.link" action="net.geoprism.dashboard.HasStyleController.parentQuery.mojo">
           
           <mjl:property name="parentId" value="${item.id}" />
         </mjl:commandLink>
@@ -108,7 +108,7 @@
   <dd>
     <ul>
       <li>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.HasLayer.childQuery.link" action="com.runwaysdk.geodashboard.gis.persist.HasLayerController.childQuery.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.layer.HasLayer.childQuery.link" action="net.geoprism.dashboard.layer.HasLayerController.childQuery.mojo">
           
           <mjl:property name="childId" value="${item.id}" />
         </mjl:commandLink>
@@ -116,6 +116,6 @@
     </ul>
   </dd>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayer.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.layer.DashboardReferenceLayer.viewAll.link" action="net.geoprism.dashboard.layer.DashboardReferenceLayerController.viewAll.mojo">
   View All
 </mjl:commandLink>

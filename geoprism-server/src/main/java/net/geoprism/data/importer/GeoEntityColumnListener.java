@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import net.geoprism.GeoEntityUtil;
 import net.geoprism.KeyGeneratorIF;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

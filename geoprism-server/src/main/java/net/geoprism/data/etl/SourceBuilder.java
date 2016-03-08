@@ -37,7 +37,7 @@ import com.runwaysdk.system.metadata.MdViewQuery;
 
 public class SourceBuilder
 {
-  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.view";
+  public static final String PACKAGE_NAME = "net.geoprism.data.view";
 
   private JSONObject         configuration;
 

@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Export GeoEntities"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.ontologyyExportMenuController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="fileFormat">
       <mjl:row>
@@ -42,7 +42,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprnet.geoprism.ontologynuController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -57,6 +57,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="GeoEntityExportMenuController.newInstance" action="com.runwaysdk.geodashboard.gis.GeoEntityExportMenuController.newInstance.mojo">
+<mjl:commandLink name="GeoEntityExportMenuController.newInstance" action="net.geoprism.ontolnet.geoprism.ontologyler.newInstance.mojo">
   Create a new Export GeoEntities
 </mjl:commandLink>

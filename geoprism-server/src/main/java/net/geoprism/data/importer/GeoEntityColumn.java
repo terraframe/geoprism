@@ -20,7 +20,7 @@ package net.geoprism.data.importer;
 
 import java.util.Collection;
 
-import net.geoprism.GeoEntityUtil;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.poi.ss.usermodel.Cell;
 

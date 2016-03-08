@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Thematic Layer"/>
 <dl>
-  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardThematicLayer.form.name" id="net.geoprism.dashboard.DashboardThematicLayer.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.name" id="net.geoprism.dashboard.layer.DashboardThematicLayer.form.id">
     <%@include file="form.jsp" %>
-    <mjl:command name="net.geoprism.dashboard.DashboardThematicLayer.form.update.button" action="net.geoprism.dashboard.DashboardThematicLayerController.update.mojo" value="Update" />
-    <mjl:command name="net.geoprism.dashboard.DashboardThematicLayer.form.delete.button" action="net.geoprism.dashboard.DashboardThematicLayerController.delete.mojo" value="Delete" />
-    <mjl:command name="net.geoprism.dashboard.DashboardThematicLayer.form.cancel.button" action="net.geoprism.dashboard.DashboardThematicLayerController.cancel.mojo" value="Cancel" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.update.button" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.update.mojo" value="Update" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.delete.button" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.delete.mojo" value="Delete" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.cancel.button" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.cancel.mojo" value="Cancel" />
   </mjl:form>
 </dl>

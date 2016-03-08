@@ -174,9 +174,9 @@
           rootTerms.push({termId : id});
         }
         
-        var tree = new com.runwaysdk.geodashboard.ontology.OntologyTree({
-          termType : "com.runwaysdk.geodashboard.ontology.Classifier",
-          relationshipTypes : [ "com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship" ],
+        var tree = new net.geoprism.ontology.OntologyTree({
+          termType : "net.geoprism.ontology.Classifier",
+          relationshipTypes : [ "net.geoprism.ontology.ClassifierIsARelationship" ],
           rootTerms : rootTerms,
           editable : false,
           slide : false,
@@ -330,7 +330,7 @@
      controller.showAggregationMethods = function() {
        var strategy = $scope.getCurrentAggregationStrategy();
          
-       return (strategy != null && strategy.type === 'com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy');
+       return (strategy != null && strategy.type === 'net.geoprism.dashboard.UniversalAggregationStrategy');
      }
    }   
    
@@ -720,14 +720,14 @@
            
            var layerTypesJSON = $scope.dynamicDataModel.layerTypeNames;
            
-           if(type === "com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy"){
+           if(type === "net.geoprism.dashboard.UniversalAggregationStrategy"){
              for(var i=0; i<layerTypesJSON.length; i++){
                var lType = layerTypesJSON[i];
                
                $("." + lType).show();
              }
            }
-           else if (type === "com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy"){
+           else if (type === "net.geoprism.dashboard.GeometryAggregationStrategy"){
              for(var i=0; i<layerTypesJSON.length; i++){
                var lType = layerTypesJSON[i];
                

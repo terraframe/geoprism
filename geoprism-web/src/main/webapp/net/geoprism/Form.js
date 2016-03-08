@@ -21,7 +21,7 @@
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   var Visitable = com.runwaysdk.ui.factory.runway.Visitable;
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.AbstractFormEntry', {
+  Mojo.Meta.newClass('net.geoprism.AbstractFormEntry', {
     IsAbstract : true,
     Instance : {
       initialize : function()
@@ -117,8 +117,8 @@
     }
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ListFormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
+  Mojo.Meta.newClass('net.geoprism.ListFormEntry', {
+    Extends : net.geoprism.AbstractFormEntry,
     Instance : {
       initialize : function(id, displayLabel, options)
       {
@@ -198,8 +198,8 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.CheckListFormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
+  Mojo.Meta.newClass('net.geoprism.CheckListFormEntry', {
+    Extends : net.geoprism.AbstractFormEntry,
     Instance : {
       initialize : function(id, displayLabel, options)
       {
@@ -331,8 +331,8 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.AbstractGroupFormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,
+  Mojo.Meta.newClass('net.geoprism.AbstractGroupFormEntry', {
+    Extends : net.geoprism.AbstractFormEntry,
     Instance : {
       initialize : function(id, displayLabel, options)
       {
@@ -420,8 +420,8 @@
     }
   });  
 
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.CheckboxFormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractGroupFormEntry,
+  Mojo.Meta.newClass('net.geoprism.CheckboxFormEntry', {
+    Extends : net.geoprism.AbstractGroupFormEntry,
     Instance : {
       initialize : function(id, displayLabel, options)
       {
@@ -437,8 +437,8 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.RadioFormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractGroupFormEntry,
+  Mojo.Meta.newClass('net.geoprism.RadioFormEntry', {
+    Extends : net.geoprism.AbstractGroupFormEntry,
     Instance : {
       initialize : function(id, displayLabel, options)
       {
@@ -454,8 +454,8 @@
     }
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.DateFormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+  Mojo.Meta.newClass('net.geoprism.DateFormEntry', {
+    Extends : net.geoprism.AbstractFormEntry,  
     Instance : {
       initialize : function(attributeMd, name, value)
       {
@@ -562,9 +562,9 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.TermEntry', {
+  Mojo.Meta.newClass('net.geoprism.TermEntry', {
     IsAbstract : true,    
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+    Extends : net.geoprism.AbstractFormEntry,  
     Instance : {
       initialize : function(attributeMd, value)
       {
@@ -663,8 +663,8 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ClassifierEntry', {
-    Extends : com.runwaysdk.geodashboard.TermEntry,  
+  Mojo.Meta.newClass('net.geoprism.ClassifierEntry', {
+    Extends : net.geoprism.TermEntry,  
     Instance : {
       initialize : function(attributeMd, value)
       {
@@ -682,7 +682,7 @@
           }
         });
                 
-        com.runwaysdk.geodashboard.ontology.Classifier.get(request, termId);         
+        net.geoprism.ontology.Classifier.get(request, termId);         
       },
       _getSuggestions : function(request, response) {
         var that = this;
@@ -706,13 +706,13 @@
           }
         });
 
-        com.runwaysdk.geodashboard.Dashboard.getClassifierSuggestions(req, that._attributeMd.getId(), request.term, 10);        
+        net.geoprism.dashboard.Dashboard.getClassifierSuggestions(req, that._attributeMd.getId(), request.term, 10);        
       }
     }
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.GeoEntityEntry', {
-    Extends : com.runwaysdk.geodashboard.TermEntry,  
+  Mojo.Meta.newClass('net.geoprism.GeoEntityEntry', {
+    Extends : net.geoprism.TermEntry,  
     Instance : {
       initialize : function(attributeMd, value, dashboardId)
       {
@@ -732,7 +732,7 @@
           }
         });
         
-        com.runwaysdk.geodashboard.GeoEntityUtil.getEntityLabel(request, termId);         
+        net.geoprism.ontology.GeoEntityUtil.getEntityLabel(request, termId);         
       },
       _getSuggestions : function(request, response) {
         var that = this;
@@ -756,13 +756,13 @@
           }
         });
         
-        com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(req, that._dashboardId, request.term, 10);
+        net.geoprism.dashboard.Dashboard.getGeoEntitySuggestions(req, that._dashboardId, request.term, 10);
       }
     }
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+  Mojo.Meta.newClass('net.geoprism.FormEntry', {
+    Extends : net.geoprism.AbstractFormEntry,  
     Instance : {
       initialize : function(displayLabel, widget)
       {
@@ -853,8 +853,8 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ReadEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+  Mojo.Meta.newClass('net.geoprism.ReadEntry', {
+    Extends : net.geoprism.AbstractFormEntry,  
     Instance : {
       initialize : function(id, displayLabel, value)
       {
@@ -912,8 +912,8 @@
     }
   });  
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ReadTextAreaEntry', {
-    Extends : com.runwaysdk.geodashboard.AbstractFormEntry,  
+  Mojo.Meta.newClass('net.geoprism.ReadTextAreaEntry', {
+    Extends : net.geoprism.AbstractFormEntry,  
     Instance : {
       initialize : function(id, displayLabel, value, config)
       {
@@ -976,7 +976,7 @@
     
   
   
-  var FormList = Mojo.Meta.newClass('com.runwaysdk.geodashboard.FormList', {
+  var FormList = Mojo.Meta.newClass('net.geoprism.FormList', {
     Extends : Widget,
     Instance : {
       initialize : function()
@@ -1019,7 +1019,7 @@
     }
   }); 
 
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.Form', {
+  Mojo.Meta.newClass('net.geoprism.Form', {
     Extends : Widget,
     Implements : Visitable,
     Instance : {
@@ -1090,7 +1090,7 @@
           label += " *";
         }
         
-        var entry = new com.runwaysdk.geodashboard.FormEntry(label, input);
+        var entry = new net.geoprism.FormEntry(label, input);
         this.addEntry(entry);        
         
         return entry;

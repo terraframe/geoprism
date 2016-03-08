@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Thematic Layer"/>
 <dl>
-  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardThematicLayer.form.name" id="net.geoprism.dashboard.DashboardThematicLayer.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.name" id="net.geoprism.dashboard.layer.DashboardThematicLayer.form.id">
     <mjl:input param="id" type="hidden" value="${item.id}" />
     <mjl:component item="${item}" param="dto">
       <mjl:dt attribute="aggregationStrategy">
@@ -93,11 +93,11 @@
         ${item.virtual ? item.virtualMd.positiveDisplayLabel : item.virtualMd.negativeDisplayLabel}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="net.geoprism.dashboard.DashboardThematicLayer.form.edit.button" action="net.geoprism.dashboard.DashboardThematicLayerController.edit.mojo" value="Edit" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardThematicLayer.form.edit.button" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.edit.mojo" value="Edit" />
   </mjl:form>
 </dl>
 <dl>
 </dl>
-<mjl:commandLink name="net.geoprism.dashboard.DashboardThematicLayer.viewAll.link" action="net.geoprism.dashboard.DashboardThematicLayerController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.layer.DashboardThematicLayer.viewAll.link" action="net.geoprism.dashboard.layer.DashboardThematicLayerController.viewAll.mojo">
   View All
 </mjl:commandLink>

@@ -23,8 +23,8 @@
   var ClassFramework = Mojo.Meta;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   
-  var ontologyTreeName = "com.runwaysdk.geodashboard.ontology.OntologyTree";
-  var TermTree = com.runwaysdk.geodashboard.ontology.TermTree;
+  var ontologyTreeName = "net.geoprism.ontology.OntologyTree";
+  var TermTree = net.geoprism.ontology.TermTree;
   
   /**
    * LANGUAGE
@@ -47,7 +47,7 @@
         config = config || {};
         this._config = config;
         
-        config.exportMenuType = "com.runwaysdk.geodashboard.gis.ClassifierExportMenu";
+        config.exportMenuType = "net.geoprism.ontologyerExportMenu";
         
         this.$initialize(config);
         

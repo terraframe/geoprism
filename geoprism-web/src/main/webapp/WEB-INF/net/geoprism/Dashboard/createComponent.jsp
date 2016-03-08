@@ -22,8 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Create a new Map"/>
 
-  <mjl:form id="com.runwaysdk.geodashboard.Dashboard.form.id" 
-  name="com.runwaysdk.geodashboard.Dashboard.form.name" method="POST" classes="modal-form" >
+  <mjl:form id="net.geoprism.dashboard.Dashboard.form.id" 
+  name="net.geoprism.dashboard.Dashboard.form.name" method="POST" classes="modal-form" >
     <%@include file="form.jsp" %>
   </mjl:form>
 

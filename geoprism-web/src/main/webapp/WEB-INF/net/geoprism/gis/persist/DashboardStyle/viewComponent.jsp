@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Style"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.form.id" name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.DashboardStyle.form.id" name="net.geoprism.dashboard.DashboardStyle.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="enableLabel">
@@ -101,7 +101,7 @@
         ${item.wellKnownName}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.DashboardStyleController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardStyle.form.edit.button" value="Edit" action="net.geoprism.dashboard.DashboardStyleController.edit.mojo" />
   </mjl:form>
 </dl>
 <dl>
@@ -113,7 +113,7 @@
   <dd>
     <ul>
       <li>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.HasStyle.childQuery.link" action="com.runwaysdk.geodashboard.gis.persist.HasStyleController.childQuery.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.HasStyle.childQuery.link" action="net.geoprism.dashboard.HasStyleController.childQuery.mojo">
           
           <mjl:property name="childId" value="${item.id}" />
         </mjl:commandLink>
@@ -121,6 +121,6 @@
     </ul>
   </dd>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardStyle.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardStyleController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.DashboardStyle.viewAll.link" action="net.geoprism.dashboard.DashboardStyleController.viewAll.mojo">
   View All
 </mjl:commandLink>

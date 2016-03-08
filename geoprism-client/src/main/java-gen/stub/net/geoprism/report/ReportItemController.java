@@ -432,7 +432,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
   public String getReportURL() throws UnsupportedEncodingException
   {
-    String str = "com.runwaysdk.geodashboard.report.ReportItemController.generate.mojo?";
+    String str = "net.geoprism.report.ReportItemController.generate.mojo?";
     boolean isFirst = true;
 
     Enumeration<String> paramNames = req.getParameterNames();

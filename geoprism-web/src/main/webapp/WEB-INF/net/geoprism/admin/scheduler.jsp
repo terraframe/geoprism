@@ -46,7 +46,7 @@
 <script type="text/javascript">
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
-  var ut = new com.runwaysdk.geodashboard.scheduler.Scheduler();
+  var ut = new net.geoprism.account.scheduler.Scheduler();
   ut.render("#scheduler");
   
 </script>

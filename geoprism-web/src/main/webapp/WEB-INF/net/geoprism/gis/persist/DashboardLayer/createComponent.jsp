@@ -23,6 +23,6 @@
 <c:set var="page_title" scope="request" value="Create a new Layer"/>
 
   <mjl:form id="com-runwaysdk-geodashboard-gis-persist-DashboardLayer-form-id" 
-  name="com.runwaysdk.geodashboard.gis.persist.DashboardLayer.form.name" method="POST" classes="modal-form" >
+  name="net.geoprism.dashboard.layer.DashboardLayer.form.name" method="POST" classes="modal-form" >
     <%@include file="form.jsp" %>
  </mjl:form>

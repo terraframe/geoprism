@@ -52,7 +52,7 @@
       if(service.canEdit()) {
         var request = runwayService.createRequest(onSuccess, onFailure);
                    
-        com.runwaysdk.geodashboard.gis.persist.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);        
+        net.geoprism.dashboard.layer.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);        
       }
     };
     
@@ -68,7 +68,7 @@
       if(service.canEdit()) {      
         var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
         
-        com.runwaysdk.geodashboard.gis.persist.DashboardMap.orderLayers(request, mapId, layerIds);
+        net.geoprism.dashboard.DashboardMap.orderLayers(request, mapId, layerIds);
       }
     };
     
@@ -76,44 +76,44 @@
       if(service.canEdit()){
         var request = runwayService.createRequest(onSuccess, onFailure);
       
-        com.runwaysdk.geodashboard.Dashboard.setBaseLayerState(request, dashboardId, baseMap);
+        net.geoprism.dashboard.Dashboard.setBaseLayerState(request, dashboardId, baseMap);
       }
     }
     
     service.refreshMap = function(state, elementId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
               
-      com.runwaysdk.geodashboard.gis.persist.DashboardMap.refresh(request, state.mapId, state);
+      net.geoprism.dashboard.DashboardMap.refresh(request, state.mapId, state);
     }
     
     service.getDashboardJSON = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
           
-      com.runwaysdk.geodashboard.Dashboard.getJSON(request, dashboardId);
+      net.geoprism.dashboard.Dashboard.getJSON(request, dashboardId);
     }
     
     service.getAvailableDashboardsAsJSON = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
     
-      com.runwaysdk.geodashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
+      net.geoprism.dashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
     }
     
     service.saveDashboardState = function(dashboardId, state, global, elementId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
       
-      com.runwaysdk.geodashboard.Dashboard.saveState(request, dashboardId, state, global);      
+      net.geoprism.dashboard.Dashboard.saveState(request, dashboardId, state, global);      
     }
     
     service.getGeoEntitySuggestions = function(dashboardId, text, size, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
     
-      com.runwaysdk.geodashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
+      net.geoprism.dashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
     }
     
     service.getTextSuggestions = function(mdAttributeId, term, limit, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
 
-      com.runwaysdk.geodashboard.Dashboard.getTextSuggestions(request, mdAttributeId, term, limit);
+      net.geoprism.dashboard.Dashboard.getTextSuggestions(request, mdAttributeId, term, limit);
     }
     
     service.getFeatureInformation = function(feature, onSuccess, onFailure) {
@@ -122,20 +122,20 @@
       var layerId = feature.layerId;
       var geoId = feature.geoId;
 
-      com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);   
+      net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);   
  	
     }
     
     service.hasReport = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
       
-      com.runwaysdk.geodashboard.Dashboard.hasReport(request, dashboardId);    	
+      net.geoprism.dashboard.Dashboard.hasReport(request, dashboardId);    	
     }
     
     service.runReport = function(dashboardId, configuration, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
     	
-      com.runwaysdk.geodashboard.report.ReportItemController.run(request, dashboardId, configuration);
+      net.geoprism.report.ReportItemController.run(request, dashboardId, configuration);
     }
     
     service.removeDashboard = function(dashboardId, elementId, onSuccess, onFailure) {
@@ -147,25 +147,25 @@
     service.getClassifierTree = function(mdAttributeId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);    
       
-      com.runwaysdk.geodashboard.Dashboard.getClassifierTree(request, mdAttributeId);
+      net.geoprism.dashboard.Dashboard.getClassifierTree(request, mdAttributeId);
     }
     
     service.generateThumbnailImage = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);    
       
-      com.runwaysdk.geodashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
+      net.geoprism.dashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
     }
     
     service.setDataSetOrder = function(dashboardId, typeIds, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
         
-      com.runwaysdk.geodashboard.Dashboard.setMetadataWrapperOrder(request, dashboardId, typeIds);
+      net.geoprism.dashboard.Dashboard.setMetadataWrapperOrder(request, dashboardId, typeIds);
     }
     
     service.setDataSetAttributeOrder = function(dashboardId, typeId, attributeIds, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
     
-      com.runwaysdk.geodashboard.Dashboard.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
+      net.geoprism.dashboard.Dashboard.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
     }
     
     service.isEmptyFilter = function(filter) {

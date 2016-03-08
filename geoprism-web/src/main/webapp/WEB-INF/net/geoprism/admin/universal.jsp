@@ -46,7 +46,7 @@
   com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     com.runwaysdk.ui.Manager.setFactory("JQuery");
     
-    document.universaltree = new com.runwaysdk.geodashboard.ontology.UniversalTree({
+    document.universaltree = new net.geoprism.ontology.UniversalTree({
   	  termType : "${type}",
 	  relationshipTypes : [ "${allowedInType}", "${isARelationshipType}" ],
       rootTerms : [ { termId : "${rootId}" } ],

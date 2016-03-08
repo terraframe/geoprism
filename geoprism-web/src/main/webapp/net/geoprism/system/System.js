@@ -25,10 +25,10 @@
 	
   var ClassFramework = Mojo.Meta;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
-  var FormEntry = com.runwaysdk.geodashboard.FormEntry;
-  var Form = com.runwaysdk.geodashboard.Form;
+  var FormEntry = net.geoprism.FormEntry;
+  var Form = net.geoprism.Form;
   
-  var systemFormName = "com.runwaysdk.geodashboard.system.SystemForm";
+  var systemFormName = "net.geoprism.system.SystemForm";
   
   /**
    * LANGUAGE
@@ -58,7 +58,7 @@
     "notAllowed" : "Not allowed to create a new user",
   });
   
-  var SystemFormEvent = ClassFramework.newClass('com.runwaysdk.geodashboard.system.SystemFormBuilderEvent', {
+  var SystemFormEvent = ClassFramework.newClass('net.geoprism.system.SystemFormBuilderEvent', {
     Constants : {
       APPLY_SUCCESS : 0,
       APPLY_FAILURE : 1,
@@ -87,7 +87,7 @@
     }
   });
   
-  ClassFramework.newClass('com.runwaysdk.geodashboard.system.SystemFormBuilder', {
+  ClassFramework.newClass('net.geoprism.system.SystemFormBuilder', {
       
     Instance : {
        
@@ -151,7 +151,7 @@
               var roles = that._getRoles(values);
               that._populateComponent(values);
         
-              var applyCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+              var applyCallback = new net.geoprism.StandbyClientRequest({
                 onSuccess : function(user) {
                   container.close();
                 
@@ -178,7 +178,7 @@
             var cancelCallback = function() {
               if(!that._emailSetting.isNewInstance())
               {                
-                var unlockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+                var unlockCallback = new net.geoprism.StandbyClientRequest({
                   onSuccess : function(user) {
                     container.close();
                   
@@ -237,7 +237,7 @@
         else if(this._emailSetting.isServerReadable())
         {
           var label = this._emailSetting.getServerMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
+          var entry = new net.geoprism.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
           form.addEntry(entry);
         }
         
@@ -253,7 +253,7 @@
         else if(this._emailSetting.isUsernameReadable())
         {
           var label = this._emailSetting.getUsernameMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
+          var entry = new net.geoprism.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
           form.addEntry(entry);
         }
           
@@ -298,7 +298,7 @@
         else if(this._emailSetting.isPortReadable())
         {
           var label = this._emailSetting.getPortMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
+          var entry = new net.geoprism.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
           form.addEntry(entry);                  
         }
         
@@ -333,7 +333,7 @@
         else if(this._emailSetting.isFromReadable())
         {
           var label = this._emailSetting.getFromMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
+          var entry = new net.geoprism.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
           form.addEntry(entry);
         }
         
@@ -372,7 +372,7 @@
         else if(this._emailSetting.isToReadable())
         {
           var label = this._emailSetting.getToMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
+          var entry = new net.geoprism.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
           form.addEntry(entry);                  
         }
         
@@ -399,7 +399,7 @@
               var role = roles[i];
               var options = [{displayLabel:this.localize('allow'), value:role.getRoleId(), checked:role.getAssigned()}]; 
                   
-              var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
+              var entry = new net.geoprism.CheckboxFormEntry('role_' + role.getRoleId(), role.getDisplayLabel(), options);
               form.addEntry(entry);
             }
           }
@@ -499,15 +499,15 @@
     }
   });
   
-  ClassFramework.newClass('com.runwaysdk.geodashboard.system.SystemFormConfiguator', {
+  ClassFramework.newClass('net.geoprism.system.SystemFormConfiguator', {
 	  Instance : {
 		get : function(factory, emailSetting, user, rolesMap) {
-		  return new com.runwaysdk.geodashboard.system.SystemFormBuilder(factory, emailSetting, user, rolesMap);
+		  return new net.geoprism.system.SystemFormBuilder(factory, emailSetting, user, rolesMap);
         },
         
         getRoles : function(callback, user)
         {
-          com.runwaysdk.geodashboard.RoleView.getRoles(callback, user);
+          net.geoprism.RoleView.getRoles(callback, user);
         }
 	  }	  
   });
@@ -525,7 +525,7 @@
                   
         this.$initialize("div");
         
-        this._configuator = new com.runwaysdk.geodashboard.system.SystemFormConfiguator();
+        this._configuator = new net.geoprism.system.SystemFormConfiguator();
       },
       getFactory : function ()
       {
@@ -583,7 +583,7 @@
     	var user = e.getEmailSetting();
     	  
         if(e.getEventType() === SystemFormEvent.ON_EDIT) {
-          var lockCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+          var lockCallback = new net.geoprism.StandbyClientRequest({
             onSuccess : function(user) {
               that.reload(user, false);
             },

@@ -23,8 +23,8 @@
   var ClassFramework = Mojo.Meta;
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   
-  var universalTreeName = "com.runwaysdk.geodashboard.ontology.UniversalTree";
-  var TermTree = com.runwaysdk.geodashboard.ontology.TermTree;
+  var universalTreeName = "net.geoprism.ontology.UniversalTree";
+  var TermTree = net.geoprism.ontology.TermTree;
   
   /**
    * LANGUAGE
@@ -51,13 +51,13 @@
         config = config || {};
         this._config = config;
         
-        config.exportMenuType = "com.runwaysdk.geodashboard.gis.UniversalExportMenu";
+        config.exportMenuType = "net.geoprism.ontologylExportMenu";
         
         this.$initialize(config);
         
         this._wrapperDiv = this.getFactory().newElement("div");
         
-        this._subtypeMap = new com.runwaysdk.geodashboard.ontology.NodeMap(this);
+        this._subtypeMap = new net.geoprism.ontology.NodeMap(this);
       },
       
       removeNode : function(node) {          

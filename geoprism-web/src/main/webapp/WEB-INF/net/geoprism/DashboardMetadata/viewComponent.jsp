@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a "/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.DashboardMetadata.form.id" name="com.runwaysdk.geodashboard.DashboardMetadata.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.DashboardMetadata.form.id" name="net.geoprism.dashboard.DashboardMetadata.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <dt>
@@ -31,7 +31,7 @@
         </label>
       </dt>
       <dd>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.Dashboard.form.view.link" action="com.runwaysdk.geodashboard.DashboardController.view.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.Dashboard.form.view.link" action="net.geoprism.dashboard.DashboardController.view.mojo">
           ${item.parent.keyName}
           <mjl:property name="id" value="${item.parentId}" />
         </mjl:commandLink>
@@ -42,15 +42,15 @@
         </label>
       </dt>
       <dd>
-        <mjl:commandLink name="com.runwaysdk.geodashboard.MetadataWrapper.form.view.link" action="com.runwaysdk.geodashboard.MetadataWrapperController.view.mojo">
+        <mjl:commandLink name="net.geoprism.dashboard.MetadataWrapper.form.view.link" action="net.geoprism.dashboard.MetadataWrapperController.view.mojo">
           ${item.parent.keyName}
           <mjl:property name="id" value="${item.parentId}" />
         </mjl:commandLink>
       </dd>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.DashboardMetadata.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.DashboardMetadataController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardMetadata.form.edit.button" value="Edit" action="net.geoprism.dashboard.DashboardMetadataController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.DashboardMetadata.viewAll.link" action="com.runwaysdk.geodashboard.DashboardMetadataController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.DashboardMetadata.viewAll.link" action="net.geoprism.dashboard.DashboardMetadataController.viewAll.mojo">
   View All
 </mjl:commandLink>

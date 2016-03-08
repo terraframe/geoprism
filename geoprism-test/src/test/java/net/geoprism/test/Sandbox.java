@@ -33,13 +33,13 @@ import net.geoprism.DashboardQueryDTO;
 import net.geoprism.MdAttributeViewDTO;
 import net.geoprism.MetadataWrapperDTO;
 import net.geoprism.dashboard.AllLayerType;
-import net.geoprism.dashboard.DashboardLayerDTO;
+import net.geoprism.dashboard.layer.DashboardLayerDTO;
 import net.geoprism.dashboard.DashboardMap;
 import net.geoprism.dashboard.DashboardMapDTO;
 import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.DashboardThematicLayer;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 import net.geoprism.dashboard.DashboardThematicStyleDTO;
-import net.geoprism.dashboard.HasLayer;
+import net.geoprism.dashboard.layer.HasLayer;
 import net.geoprism.dashboard.HasStyle;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.wrapper.Layer;
@@ -129,7 +129,7 @@ public class Sandbox
 
   private static void two(HashMap<String, Object> req, ClientRequestIF clientRequest)
   {
-    net.geoprism.dashboard.DashboardLayerDTO layer = new net.geoprism.dashboard.DashboardLayerDTO(clientRequest);
+    net.geoprism.dashboard.layer.DashboardLayerDTO layer = new net.geoprism.dashboard.layer.DashboardLayerDTO(clientRequest);
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(clientRequest);
 
     req.put("layer", layer);

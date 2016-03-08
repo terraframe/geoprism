@@ -29,7 +29,7 @@ public class GeoprismContextListener implements ServletContextListener
   public void contextInitialized(ServletContextEvent arg0) {
     try
     {
-      LoaderDecorator.load("com.runwaysdk.geodashboard.context.ServerInitializer").getMethod("initialize").invoke(null);
+      LoaderDecorator.load("net.geoprism.context.ServerInitializer").getMethod("initialize").invoke(null);
     }
     catch(Throwable t)
     {
@@ -41,7 +41,7 @@ public class GeoprismContextListener implements ServletContextListener
   public void contextDestroyed(ServletContextEvent arg0) {
     try
     {
-      LoaderDecorator.load("com.runwaysdk.geodashboard.context.ServerInitializer").getMethod("destroy").invoke(null);
+      LoaderDecorator.load("net.geoprism.context.ServerInitializer").getMethod("destroy").invoke(null);
     }
     catch(Throwable t)
     {

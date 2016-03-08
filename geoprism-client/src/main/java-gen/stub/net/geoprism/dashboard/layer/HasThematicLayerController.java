@@ -19,8 +19,8 @@
 package net.geoprism.dashboard.layer;
 
 import net.geoprism.dashboard.DashboardMapDTO;
-import net.geoprism.dashboard.HasThematicLayerControllerBase;
-import net.geoprism.dashboard.HasThematicLayerQueryDTO;
+import net.geoprism.dashboard.layer.HasThematicLayerControllerBase;
+import net.geoprism.dashboard.layer.HasThematicLayerQueryDTO;
 
 public class HasThematicLayerController extends HasThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -44,7 +44,7 @@ public class HasThematicLayerController extends HasThematicLayerControllerBase i
   public void childQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.childQuery(clientRequest, childId);
+    net.geoprism.dashboard.layer.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.childQuery(clientRequest, childId);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
@@ -120,7 +120,7 @@ public class HasThematicLayerController extends HasThematicLayerControllerBase i
   public void parentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.parentQuery(clientRequest, parentId);
+    net.geoprism.dashboard.layer.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.parentQuery(clientRequest, parentId);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
@@ -158,7 +158,7 @@ public class HasThematicLayerController extends HasThematicLayerControllerBase i
   public void viewAll() throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.getAllInstances(clientRequest, null, true, 20, 1);
+    net.geoprism.dashboard.layer.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.getAllInstances(clientRequest, null, true, 20, 1);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
@@ -169,7 +169,7 @@ public class HasThematicLayerController extends HasThematicLayerControllerBase i
   public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
+    net.geoprism.dashboard.layer.HasThematicLayerQueryDTO query = net.geoprism.dashboard.layer.HasThematicLayerDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }

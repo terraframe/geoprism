@@ -22,8 +22,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Create a new Name"/>
 <dl>
-  <mjl:form method="POST" name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.name" id="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.layer.DashboardLayerNameLabel.form.name" id="net.geoprism.dashboard.layer.DashboardLayerNameLabel.form.id">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabel.form.create.button" action="com.runwaysdk.geodashboard.gis.persist.DashboardLayerNameLabelController.create.mojo" value="Create" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardLayerNameLabel.form.create.button" action="net.geoprism.dashboard.layer.DashboardLayerNameLabelController.create.mojo" value="Create" />
   </mjl:form>
 </dl>

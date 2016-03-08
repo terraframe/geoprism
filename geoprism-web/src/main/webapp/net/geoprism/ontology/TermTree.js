@@ -25,7 +25,7 @@
   var RW = Mojo.Meta.alias(Mojo.RW_PACKAGE + "*");
   var UI = Mojo.Meta.alias(Mojo.UI_PACKAGE + "*");
   
-  var termTreeName = 'com.runwaysdk.geodashboard.ontology.TermTree';
+  var termTreeName = 'net.geoprism.ontology.TermTree';
   
   /**
    * LANGUAGE
@@ -45,7 +45,7 @@
     "export" : "Export"
   });
   
-  var tree = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.TermNodeLabel', {
+  var tree = Mojo.Meta.newClass('net.geoprism.ontology.TermNodeLabel', {
     Instance : {
       initialize : function(label) {
         this._label = label;
@@ -59,14 +59,14 @@
     }    
   });
   
-  var tree = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.TermNode', {
+  var tree = Mojo.Meta.newClass('net.geoprism.ontology.TermNode', {
     Instance : {
       initialize : function(id, label, type) {
         /*
          * IMPORTANT : Do not change field names it will break JSON serialization
          */
         this.id = id;
-        this.label = new com.runwaysdk.geodashboard.ontology.TermNodeLabel(label);
+        this.label = new net.geoprism.ontology.TermNodeLabel(label);
         this._type = type;
         
         /*
@@ -96,7 +96,7 @@
     }    
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.NodeMap', {
+  Mojo.Meta.newClass('net.geoprism.ontology.NodeMap', {
     Instance : {
       initialize : function(tree) {
         this._tree = tree;
@@ -162,7 +162,7 @@
   });
   
   /**
-   * @class com.runwaysdk.geodashboard.ontology.TermTree A wrapper around JQuery widget jqTree to allow for integration with Term objects.
+   * @class net.geoprism.ontology.TermTree A wrapper around JQuery widget jqTree to allow for integration with Term objects.
    * 
    * @constructs
    * @param Object config
@@ -220,7 +220,7 @@
         
         this.termCache = {};
         
-        this._nodeMap = new com.runwaysdk.geodashboard.ontology.NodeMap(this);
+        this._nodeMap = new net.geoprism.ontology.NodeMap(this);
         
         this.parentRelationshipCache = new ParentRelationshipCache();
         
@@ -275,7 +275,7 @@
           {
             var term = rootTerm.term;
           
-            if (term instanceof com.runwaysdk.business.TermDTO || term instanceof com.runwaysdk.geodashboard.ontology.TermNode)
+            if (term instanceof com.runwaysdk.business.TermDTO || term instanceof net.geoprism.ontology.TermNode)
             {
               rootTerm.termId = term.getId();
               this.rootTermConfigs.put(rootTerm.termId, rootTerm);
@@ -1393,7 +1393,7 @@
           if(this.__getNodesById(node.id) == null) {
             
             // Create the cached term
-            var term = new com.runwaysdk.geodashboard.ontology.TermNode(node.id, node.label, node.type);
+            var term = new net.geoprism.ontology.TermNode(node.id, node.label, node.type);
           
             // Populate the caches
             this.termCache[term.getId()] = term;
@@ -1575,9 +1575,9 @@
   });
   
   /**
-   * @class com.runwaysdk.geodashboard.ontology.ParentRelationshipCache A parent relationship cache that maps a childId to known parent records.
+   * @class net.geoprism.ontology.ParentRelationshipCache A parent relationship cache that maps a childId to known parent records.
    */
-  var ParentRelationshipCache = Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.ParentRelationshipCache', {
+  var ParentRelationshipCache = Mojo.Meta.newClass('net.geoprism.ontology.ParentRelationshipCache', {
     
     IsAbstract : false,
     

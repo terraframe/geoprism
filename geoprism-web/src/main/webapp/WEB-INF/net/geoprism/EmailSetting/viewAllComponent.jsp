@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all "/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.EmailSettingController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.EmailSettingController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="from">
     </mjl:attributeColumn>
@@ -41,7 +41,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.EmailSettingController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.EmailSettingController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -56,6 +56,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="EmailSettingController.newInstance" action="com.runwaysdk.geodashboard.EmailSettingController.newInstance.mojo">
+<mjl:commandLink name="EmailSettingController.newInstance" action="net.geoprism.EmailSettingController.newInstance.mojo">
   Create a new 
 </mjl:commandLink>

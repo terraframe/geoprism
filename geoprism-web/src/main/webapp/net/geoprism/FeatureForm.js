@@ -19,13 +19,13 @@
 (function(){
   var ClassFramework = Mojo.Meta;
   var Util = Mojo.Util; 
-  var FormEntry = com.runwaysdk.geodashboard.FormEntry;
-  var Form = com.runwaysdk.geodashboard.Form;
+  var FormEntry = net.geoprism.FormEntry;
+  var Form = net.geoprism.Form;
 
   /**
    * LANGUAGE
    */
-  com.runwaysdk.Localize.defineLanguage('com.runwaysdk.geodashboard.gis.FeatureForm', {
+  com.runwaysdk.Localize.defineLanguage('net.geoprism.dashboardForm', {
     "submit" : "Submit",
     "cancel" : "Cancel",
     "integerError" : "Value is not a valid whole number",
@@ -34,7 +34,7 @@
     "formErrors" : "Form errors must be corrected before the form can be submitted"
   });
       
-  var FeatureForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.FeatureForm', {
+  var FeatureForm = Mojo.Meta.newClass('net.geopnet.geoprism.dashboard
     Extends : com.runwaysdk.ui.Component,
     Instance : {
         
@@ -166,13 +166,13 @@
               }                            
             }
             else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeReferenceDTO) {                
-              if(attributeMd.getReferencedMdBusiness() == 'com.runwaysdk.geodashboard.ontology.Classifier' ) {                
-                var entry = new com.runwaysdk.geodashboard.ClassifierEntry(attributeMd, attributeDTO.getValue());
+              if(attributeMd.getReferencedMdBusiness() == 'net.geoprism.ontology.Classifier' ) {                
+                var entry = new net.geoprism.ClassifierEntry(attributeMd, attributeDTO.getValue());
               
                 this._form.addEntry(entry);                
               }
               else if(attributeMd.getReferencedMdBusiness() == 'com.runwaysdk.system.gis.geo.GeoEntity' ) {                
-                var entry = new com.runwaysdk.geodashboard.GeoEntityEntry(attributeMd, attributeDTO.getValue(), this._controller.getDashboardId());
+                var entry = new net.geoprism.GeoEntityEntry(attributeMd, attributeDTO.getValue(), this._controller.getDashboardId());
                 
                 this._form.addEntry(entry);                
               }
@@ -182,7 +182,7 @@
               var date = attributeDTO.getValue();
               var value = this._formatDate(date);
               
-              var entry = new com.runwaysdk.geodashboard.DateFormEntry(attributeMd, attributeName, value);
+              var entry = new net.geoprism.DateFormEntry(attributeMd, attributeName, value);
               entry.addValidator(Mojo.Util.bind(this, this._validateDate), this.localize("dateError"));
               
               this._form.addEntry(entry);
@@ -249,7 +249,7 @@
             } 
           });
         
-          var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+          var request = new net.geoprism.StandbyClientRequest({
             onSuccess : function(object){
               that._dialog.close();
               that._controller.refresh();
@@ -265,7 +265,7 @@
       _onCancel : function() {
         var that = this;
           
-        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+        var request = new net.geoprism.StandbyClientRequest({
           onSuccess : function(object){
             that._dialog.close();
           },

@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Dashboard"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.DashboardController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.dashboard.DashboardController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="displayLabel">
     </mjl:attributeColumn>
@@ -31,7 +31,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.DashboardController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.dashboard.DashboardController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -46,6 +46,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="DashboardController.newInstance" action="com.runwaysdk.geodashboard.DashboardController.newInstance.mojo">
+<mjl:commandLink name="DashboardController.newInstance" action="net.geoprism.dashboard.DashboardController.newInstance.mojo">
   Create a new Dashboard
 </mjl:commandLink>

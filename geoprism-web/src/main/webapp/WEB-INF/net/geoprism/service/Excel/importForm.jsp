@@ -26,7 +26,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
 
-<form action="#" id="com.runwaysdk.geodashboard.service.Excel.form.id" name="form.name" class="submit-form" method="POST" enctype="multipart/form-data" target="result_iframe">
+<form action="#" id="net.geoprism.data.importer.Excel.form.id" name="form.name" class="submit-form" method="POST" enctype="multipart/form-data" target="result_iframe">
   <fieldset class="com-runwaysdk-geodashboard-FormList">
     <section class="form-container">
       <div class="field-row clearfix">

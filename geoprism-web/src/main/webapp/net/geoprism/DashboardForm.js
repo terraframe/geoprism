@@ -18,7 +18,7 @@
  */
 (function(){
   
-  var DashboardForm = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.DashboardForm', {
+  var DashboardForm = Mojo.Meta.newClass('net.geoprism.dashboardrdForm', {
     Extends : com.runwaysdk.ui.Component,  
     IsAbstract : false,    
     Constants : {
@@ -29,13 +29,13 @@
         this._controller = controller;
         this._dashboardId = dashboardId;
         
-        this._DashboardController = com.runwaysdk.geodashboard.DashboardController;
+        this._DashboardController = net.geoprism.dashboard.DashboardController;
       },
       
       _addDashboardUsersHTML : function() {
           
         var usersJSON = $("#add-dashboard-users-container").data("dashboarduserjson");
-          var users = com.runwaysdk.geodashboard.gis.CategoryWidget.getValueFromHTML(usersJSON);
+          var users = net.geopnet.geoprism.dashboardgetValueFromHTML(usersJSON);
           var html = '<div class="holder"><div class="row-holder">';
           
           if(users.length > 0){
@@ -70,7 +70,7 @@
         _addMappableClassesHTML : function() {
           
           var typesJSON = $("#add-dashboard-type-container").data("classes");
-          var types = com.runwaysdk.geodashboard.gis.CategoryWidget.getValueFromHTML(typesJSON);
+          var types = net.geoprism.dasnet.geoprism.dashboardFromHTML(typesJSON);
           var html = '<div class="holder"><div class="row-holder">';
           
           if(types.length > 0){
@@ -123,7 +123,7 @@
             text : com.runwaysdk.Localize.localize("dashboard", "Ok", "Ok"),
             "class": 'btn btn-primary',
             click : function() {
-              var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+              var request = new net.geoprism.StandbyClientRequest({
                 onSuccess : function(dashboard){
                 	that._controller.refreshDashboard({
                 		id : dashboard.getId(), 
@@ -147,7 +147,7 @@
                 
               if(label != null && label.length > 0)
               {
-                com.runwaysdk.geodashboard.Dashboard.clone(request, dashboardId, label);                    
+                net.geoprism.dashboard.Dashboard.clone(request, dashboardId, label);                    
               }
               else
               {
@@ -195,7 +195,7 @@
               click : function() {
                 var dashboardId = $('#dashboard-id').val();
                 var label = $('#dashboard-label').val();
-                var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+                var request = new net.geoprism.StandbyClientRequest({
                   onSuccess : function(dashboard){
                     
                     var label = $('#dashboard-label').val();
@@ -218,7 +218,7 @@
                 {
                   var options = JSON.stringify({"label" : label, "userIds" : userIds, "types" : types});
                 	
-                  com.runwaysdk.geodashboard.Dashboard.applyWithOptions(request, dashboardId, options);                    
+                  net.geoprism.dashboard.Dashboard.applyWithOptions(request, dashboardId, options);                    
                 }
                 else
                 {
@@ -356,14 +356,12 @@
   /**
    * LANGUAGE
    */
-   com.runwaysdk.Localize.defineLanguage('com.runwaysdk.geodashboard.gis.TypeForm', {
-    "submit" : "Submit",
+   com.runwaysdk.Localize.defineLanguage('net.geoprism.dashboard.Tnet.geoprism.dashboardbmit",
     "cancel" : "Cancel",
     "title"  : "Configure type attributes"
    });
 
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.TypeForm', {
-    Extends : com.runwaysdk.ui.Component,  
+  Mojo.Meta.newClass('net.geoprism.dashboard.TypeForm'net.geoprism.dashboardk.ui.Component,  
     Constants : {
       DASHBOARD_MODAL : '#type-dialog'
     },
@@ -398,7 +396,7 @@
               var dialog = fac.newDialog(that.localize("title"), {minHeight:250, maxHeight:$(window).height() - 75, minWidth:730, resizable: false});   
               dialog.setId('type-dialog');
                 
-              var form = new com.runwaysdk.geodashboard.Form();
+              var form = new net.geoprism.Form();
               
               var options = [];
               
@@ -409,7 +407,7 @@
                 options.push(option);
               }
               
-              var entry = new com.runwaysdk.geodashboard.CheckboxFormEntry('types', 'Attributes',options);
+              var entry = new net.geoprism.CheckboxFormEntry('types', 'Attributes',options);
               form.addEntry(entry);
               
               dialog.appendContent(form);
@@ -431,7 +429,7 @@
           }); 
             
             
-          com.runwaysdk.geodashboard.MappableClass.getAttributesAsJSON(request, that._dashboardId, that._mdClassId);
+          net.geoprism.MappableClass.getAttributesAsJSON(request, that._dashboardId, that._mdClassId);
         }
       },
       _handleSubmit : function(e) {
@@ -445,7 +443,7 @@
           
         var values = this._form.getValues();
           
-        var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+        var request = new net.geoprism.StandbyClientRequest({
           onSuccess : function(dashboard) {
             that._dialog.close();
           },

@@ -136,7 +136,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void databrowser() throws IOException, ServletException
   {
     String sessionId = this.getClientSession().getSessionId();
-    String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
+    String metadata = "{className:'net.geoprism.data.browser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
     
     this.req.setAttribute("response", response);

@@ -75,7 +75,7 @@
     }
     
     controller.cloneDashboard = function(dashboardId) {
-        var dashboardForm = new com.runwaysdk.geodashboard.gis.DashboardForm(controller, dashboardId);
+        var dashboardForm = new net.geoprism.dashboardrdForm(controller, dashboardId);
         dashboardForm.open();
     }
     

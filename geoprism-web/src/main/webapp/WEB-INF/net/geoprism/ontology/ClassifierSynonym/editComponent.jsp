@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Classifier Synonym"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.ontology.ClassifierSynonym.form.id" name="com.runwaysdk.geodashboard.ontology.ClassifierSynonym.form.name" method="POST">
+  <mjl:form id="net.geoprism.ontology.ClassifierSynonym.form.id" name="net.geoprism.ontology.ClassifierSynonym.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.ontology.ClassifierSynonym.form.update.button" value="Update" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.ontology.ClassifierSynonym.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.ontology.ClassifierSynonym.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController.cancel.mojo" />
+    <mjl:command name="net.geoprism.ontology.ClassifierSynonym.form.update.button" value="Update" action="net.geoprism.ontology.ClassifierSynonymController.update.mojo" />
+    <mjl:command name="net.geoprism.ontology.ClassifierSynonym.form.delete.button" value="Delete" action="net.geoprism.ontology.ClassifierSynonymController.delete.mojo" />
+    <mjl:command name="net.geoprism.ontology.ClassifierSynonym.form.cancel.button" value="Cancel" action="net.geoprism.ontology.ClassifierSynonymController.cancel.mojo" />
   </mjl:form>
 </dl>

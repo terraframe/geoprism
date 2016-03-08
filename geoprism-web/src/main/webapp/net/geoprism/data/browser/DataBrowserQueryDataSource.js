@@ -34,7 +34,7 @@
    * @param obj
    *   @param com.runwaysdk.business.BusinessQueryDTO queryDTO The query dto to display data from.
    */
-  var queryDataSource = ClassFramework.newClass('com.runwaysdk.geodashboard.databrowser.DataBrowserQueryDataSource', {
+  var queryDataSource = ClassFramework.newClass('net.geoprism.data.browser.DataBrowserQueryDataSource', {
     
     Extends : ServerDataSource,
     

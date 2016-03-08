@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Select Has Layer Participants"/>
-<mjl:form id="com.runwaysdk.geodashboard.gis.persist.HasLayer.form.id" name="com.runwaysdk.geodashboard.gis.persist.HasLayer.form.name" method="POST">
+<mjl:form id="net.geoprism.dashboard.layer.HasLayer.form.id" name="net.geoprism.dashboard.layer.HasLayer.form.name" method="POST">
   <dl>
     <dt>
       <label>
@@ -47,6 +47,6 @@
         </mjl:option>
       </mjl:select>
     </dd>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.HasLayer.form.newInstance.button" value="New Instance" action="com.runwaysdk.geodashboard.gis.persist.HasLayerController.newInstance.mojo" />
+    <mjl:command name="net.geoprism.dashboard.layer.HasLayer.form.newInstance.button" value="New Instance" action="net.geoprism.dashboard.layer.HasLayerController.newInstance.mojo" />
   </dl>
 </mjl:form>

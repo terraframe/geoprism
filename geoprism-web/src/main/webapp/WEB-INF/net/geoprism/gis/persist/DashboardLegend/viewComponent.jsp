@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Legend"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardLegend.form.id" name="com.runwaysdk.geodashboard.gis.persist.DashboardLegend.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.DashboardLegend.form.id" name="net.geoprism.dashboard.DashboardLegend.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="legendXPosition">
@@ -32,9 +32,9 @@
         ${item.legendYPosition}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardLegend.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardLegend.form.edit.button" value="Edit" action="net.geoprism.dashboard.DashboardLegendController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.DashboardLegend.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.DashboardLegendController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.DashboardLegend.viewAll.link" action="net.geoprism.dashboard.DashboardLegendController.viewAll.mojo">
   View All
 </mjl:commandLink>

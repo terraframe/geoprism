@@ -25,8 +25,8 @@
   var STRUCT = ClassFramework.alias(Mojo.STRUCTURE_PACKAGE + "*");
 
   
-  var geoentityTreeName = "com.runwaysdk.geodashboard.ontology.GeoEntityTree";
-  var TermTree = com.runwaysdk.geodashboard.ontology.TermTree;
+  var geoentityTreeName = "net.geoprism.ontology.GeoEntityTree";
+  var TermTree = net.geoprism.ontology.TermTree;
   
   /**
    * LANGUAGE
@@ -51,7 +51,7 @@
     	
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.RefreshQueue', {
+  Mojo.Meta.newClass('net.geoprism.ontology.RefreshQueue', {
     Instance : {
       initialize : function(tree, ids) {
         this._tree = tree;
@@ -83,7 +83,7 @@
       initialize : function(config) {
         config = config || {};
         
-        config.exportMenuType = "com.runwaysdk.geodashboard.gis.GeoEntityExportMenu";
+        config.exportMenuType = "net.geoprism.ontologyyExportMenu";
         config.onCreateLi = Mojo.Util.bind(this, this.__onCreateLi);
         
         this.$initialize(config);
@@ -173,7 +173,7 @@
           }
         });
                   
-        com.runwaysdk.geodashboard.GeoEntityUtil.deleteEntityProblem(request, problemId);
+        net.geoprism.ontology.GeoEntityUtil.deleteEntityProblem(request, problemId);
       },
       
       __onCreateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
@@ -330,7 +330,7 @@
           var okHandler = Mojo.Util.bind(this, function() {
             var request = new Mojo.ClientRequest({
               onSuccess : function(idsToUpdate) {
-                var queue = new com.runwaysdk.geodashboard.ontology.RefreshQueue(that, idsToUpdate);
+                var queue = new net.geoprism.ontology.RefreshQueue(that, idsToUpdate);
                 queue.start();
                     
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);}); 
@@ -345,7 +345,7 @@
                   
             this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
                 
-            com.runwaysdk.geodashboard.GeoEntityUtil.makeSynonym(request, movedNodeId, targetNodeId);            
+            net.geoprism.ontology.GeoEntityUtil.makeSynonym(request, movedNodeId, targetNodeId);            
           });          
           
           dialog.appendContent(that.localize("mergeConfirmation"));
@@ -410,7 +410,7 @@
             }              
           });
           
-          com.runwaysdk.geodashboard.GeoEntityUtil.getGeoEntityTree(request, termId);
+          net.geoprism.ontology.GeoEntityUtil.getGeoEntityTree(request, termId);
         }
         else {
           for(var i = 0; i < nodes.length; i++) {
@@ -647,7 +647,7 @@
           }
         });
         
-        com.runwaysdk.geodashboard.GeoEntityUtil.getAllProblems(request);
+        net.geoprism.ontology.GeoEntityUtil.getAllProblems(request);
       },
       
       /**

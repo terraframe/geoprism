@@ -104,7 +104,7 @@
       var dashboardId = dashboardService.getDashboard().getDashboardId();
       
       var config = {
-        type: 'com.runwaysdk.geodashboard.report.ReportItem',
+        type: 'net.geoprism.report.ReportItem',
         action: "update",
         viewAction: "edit",
         viewParams: {id: dashboardId},          
@@ -129,7 +129,7 @@
             }
           });
             
-          com.runwaysdk.geodashboard.report.ReportItem.unlockByDashboard(request, dashboardId);
+          net.geoprism.report.ReportItem.unlockByDashboard(request, dashboardId);
         }
       };
             

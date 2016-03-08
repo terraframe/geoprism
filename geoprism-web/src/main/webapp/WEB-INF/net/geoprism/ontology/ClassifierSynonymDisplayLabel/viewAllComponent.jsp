@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all "/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.ontology.ClassifierSynonymDisplayLabelController.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="defaultLocale">
     </mjl:attributeColumn>
@@ -31,7 +31,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.ontology.ClassifierSynonymDisplayLabelController.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -46,6 +46,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="ClassifierSynonymDisplayLabelController.newInstance" action="com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelController.newInstance.mojo">
+<mjl:commandLink name="ClassifierSynonymDisplayLabelController.newInstance" action="net.geoprism.ontology.ClassifierSynonymDisplayLabelController.newInstance.mojo">
   Create a new 
 </mjl:commandLink>

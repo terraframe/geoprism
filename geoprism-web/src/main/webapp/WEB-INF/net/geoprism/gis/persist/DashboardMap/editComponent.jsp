@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Map"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.DashboardMap.form.id" name="com.runwaysdk.geodashboard.gis.persist.DashboardMap.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.DashboardMap.form.id" name="net.geoprism.dashboard.DashboardMap.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardMap.form.update.button" value="Update" action="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardMap.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.DashboardMap.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.DashboardMapController.cancel.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardMap.form.update.button" value="Update" action="net.geoprism.dashboard.DashboardMapController.update.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardMap.form.delete.button" value="Delete" action="net.geoprism.dashboard.DashboardMapController.delete.mojo" />
+    <mjl:command name="net.geoprism.dashboard.DashboardMap.form.cancel.button" value="Cancel" action="net.geoprism.dashboard.DashboardMapController.cancel.mojo" />
   </mjl:form>
 </dl>

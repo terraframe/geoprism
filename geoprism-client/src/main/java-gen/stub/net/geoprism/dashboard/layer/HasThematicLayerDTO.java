@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.HasThematicLayerDTOBase;
+import net.geoprism.dashboard.layer.HasThematicLayerDTOBase;
 
 public class HasThematicLayerDTO extends HasThematicLayerDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

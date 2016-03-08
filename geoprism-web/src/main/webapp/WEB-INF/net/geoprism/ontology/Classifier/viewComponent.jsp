@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Classifier"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.ontology.Classifier.form.id" name="com.runwaysdk.geodashboard.ontology.Classifier.form.name" method="POST">
+  <mjl:form id="net.geoprism.ontology.Classifier.form.id" name="net.geoprism.ontology.Classifier.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="classifierId">
@@ -35,11 +35,11 @@
         ${item.displayLabel}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.ontology.Classifier.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.ontology.ClassifierController.edit.mojo" />
+    <mjl:command name="net.geoprism.ontology.Classifier.form.edit.button" value="Edit" action="net.geoprism.ontology.ClassifierController.edit.mojo" />
   </mjl:form>
 </dl>
 <dl>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.ontology.Classifier.viewAll.link" action="com.runwaysdk.geodashboard.ontology.ClassifierController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.ontology.Classifier.viewAll.link" action="net.geoprism.ontology.ClassifierController.viewAll.mojo">
   View All
 </mjl:commandLink>

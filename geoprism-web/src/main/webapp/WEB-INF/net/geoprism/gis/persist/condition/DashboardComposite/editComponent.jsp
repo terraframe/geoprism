@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Composite"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite.form.id" name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.condition.DashboardComposite.form.id" name="net.geoprism.dashboard.condition.DashboardComposite.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite.form.update.button" value="Update" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCompositeController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCompositeController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardComposite.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardCompositeController.cancel.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardComposite.form.update.button" value="Update" action="net.geoprism.dashboard.condition.DashboardCompositeController.update.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardComposite.form.delete.button" value="Delete" action="net.geoprism.dashboard.condition.DashboardCompositeController.delete.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardComposite.form.cancel.button" value="Cancel" action="net.geoprism.dashboard.condition.DashboardCompositeController.cancel.mojo" />
   </mjl:form>
 </dl>

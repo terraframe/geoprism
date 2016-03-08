@@ -26,7 +26,7 @@
          id="%oda.data.source.id"
          point="org.eclipse.datatools.connectivity.oda.dataSource">
       <dataSource
-            driverClass="com.runwaysdk.geodashboard.oda.driver.Driver"
+            driverClass="net.geoprism.oda.driver.Driver"
             defaultDisplayName="%data.source.name"
             setThreadContextClassLoader="false"
             odaVersion="3.2"
@@ -57,7 +57,7 @@
       </dataSource>
       <dataSet
             defaultDisplayName="%data.set.name"
-            id="com.runwaysdk.geodashboard.oda.driver.dataSet">
+            id="net.geoprism.oda.driver.dataSet">
          <dataTypeMapping
                nativeDataTypeCode="1"
                odaScalarDataType="String"

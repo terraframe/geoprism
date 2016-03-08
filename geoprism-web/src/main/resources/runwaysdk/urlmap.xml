@@ -22,36 +22,36 @@
 <mappings>
   <map uri="" forward="/index.jsp"/>
   
-  <map uri="DashboardViewer" controller="com.runwaysdk.geodashboard.gis.persist.DashboardMapController">
+  <map uri="DashboardViewer" controller="net.geoprism.dashboard.DashboardMapController">
     <action method="createMapForSession" uri=""/>
   </map>
 
   <map uri="login" forward="/login.jsp"/>
   <map uri="loginRedirect" forward="/loginRedirect.jsp"/>
-  <map uri="account" controller="com.runwaysdk.geodashboard.AdminController">
+  <map uri="account" controller="net.geoprism.AdminController">
   	<action method="account" uri=""/> 
   </map>
 
-  <map uri="menu" controller="com.runwaysdk.geodashboard.UserMenuController">
+  <map uri="menu" controller="net.geoprism.UserMenuController">
     <action method="menu" uri=""/>    
   </map>
   
-  <map uri="dashboards" controller="com.runwaysdk.geodashboard.UserMenuController">
+  <map uri="dashboards" controller="net.geoprism.UserMenuController">
     <action method="dashboards" uri=""/>    
   </map>
   
-  <map uri="mapthumb" controller="com.runwaysdk.geodashboard.UserMenuController">
+  <map uri="mapthumb" controller="net.geoprism.UserMenuController">
   	<action method=".*" uri="${method}" />
   </map>
 
-  <map uri="session" controller="com.runwaysdk.geodashboard.SessionController">
+  <map uri="session" controller="net.geoprism.SessionController">
     <action method=".*" uri="${method}"/>
   </map>
   
-  <map uri="admin" controller="com.runwaysdk.geodashboard.AdminController">
+  <map uri="admin" controller="net.geoprism.AdminController">
     <action method=".*" uri="${method}"/>    
   </map>
-  <map uri="report" controller="com.runwaysdk.geodashboard.report.ReportItemController">
+  <map uri="report" controller="net.geoprism.report.ReportItemController">
     <action method=".*" uri="${method}"/>    
   </map>
   

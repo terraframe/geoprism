@@ -21,7 +21,7 @@ package net.geoprism.report;
 @com.runwaysdk.business.ClassSignature(hash = -1197382218)
 public abstract class MultipleReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.report.MultipleReportException";
+  public final static String CLASS = "net.geoprism.report.MultipleReportException";
   private static final long serialVersionUID = -1197382218;
   
   public MultipleReportExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

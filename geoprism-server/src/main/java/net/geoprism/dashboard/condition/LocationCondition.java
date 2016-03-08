@@ -21,9 +21,9 @@ package net.geoprism.dashboard.condition;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.GeoEntityUtil;
 import net.geoprism.QueryUtil;
 import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

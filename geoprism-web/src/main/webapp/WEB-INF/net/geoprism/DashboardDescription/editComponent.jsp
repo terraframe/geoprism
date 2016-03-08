@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Description"/>
 <dl>
-  <mjl:form method="POST" name="com.runwaysdk.geodashboard.DashboardDescription.form.name" id="com.runwaysdk.geodashboard.DashboardDescription.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardDescription.form.name" id="net.geoprism.dashboard.DashboardDescription.form.id">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.DashboardDescription.form.update.button" action="com.runwaysdk.geodashboard.DashboardDescriptionController.update.mojo" value="Update" />
-    <mjl:command name="com.runwaysdk.geodashboard.DashboardDescription.form.delete.button" action="com.runwaysdk.geodashboard.DashboardDescriptionController.delete.mojo" value="Delete" />
-    <mjl:command name="com.runwaysdk.geodashboard.DashboardDescription.form.cancel.button" action="com.runwaysdk.geodashboard.DashboardDescriptionController.cancel.mojo" value="Cancel" />
+    <mjl:command name="net.geoprism.dashboard.DashboardDescription.form.update.button" action="net.geoprism.dashboard.DashboardDescriptionController.update.mojo" value="Update" />
+    <mjl:command name="net.geoprism.dashboard.DashboardDescription.form.delete.button" action="net.geoprism.dashboard.DashboardDescriptionController.delete.mojo" value="Delete" />
+    <mjl:command name="net.geoprism.dashboard.DashboardDescription.form.cancel.button" action="net.geoprism.dashboard.DashboardDescriptionController.cancel.mojo" value="Cancel" />
   </mjl:form>
 </dl>

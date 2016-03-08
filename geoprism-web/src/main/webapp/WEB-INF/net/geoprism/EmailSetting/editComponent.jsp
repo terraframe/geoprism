@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing "/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.EmailSetting.form.id" name="com.runwaysdk.geodashboard.EmailSetting.form.name" method="POST">
+  <mjl:form id="net.geoprism.EmailSetting.form.id" name="net.geoprism.EmailSetting.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.EmailSetting.form.update.button" value="Update" action="com.runwaysdk.geodashboard.EmailSettingController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.EmailSetting.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.EmailSettingController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.EmailSetting.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.EmailSettingController.cancel.mojo" />
+    <mjl:command name="net.geoprism.EmailSetting.form.update.button" value="Update" action="net.geoprism.EmailSettingController.update.mojo" />
+    <mjl:command name="net.geoprism.EmailSetting.form.delete.button" value="Delete" action="net.geoprism.EmailSettingController.delete.mojo" />
+    <mjl:command name="net.geoprism.EmailSetting.form.cancel.button" value="Cancel" action="net.geoprism.EmailSettingController.cancel.mojo" />
   </mjl:form>
 </dl>

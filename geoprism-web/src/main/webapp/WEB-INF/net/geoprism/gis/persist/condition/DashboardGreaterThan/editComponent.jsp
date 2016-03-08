@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Greater Than"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.id" name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.condition.DashboardGreaterThan.form.id" name="net.geoprism.dashboard.condition.DashboardGreaterThan.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.update.button" value="Update" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.cancel.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardGreaterThan.form.update.button" value="Update" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.update.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardGreaterThan.form.delete.button" value="Delete" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.delete.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardGreaterThan.form.cancel.button" value="Cancel" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.cancel.mojo" />
   </mjl:form>
 </dl>

@@ -60,14 +60,14 @@
 					
 					<div class="button-holder">
 						<mjl:command
-							name="com.runwaysdk.geodashboard.Dashboard.form.create.button"
+							name="net.geoprism.dashboard.Dashboard.form.create.button"
 							value="Create New"
-							action="com.runwaysdk.geodashboard.DashboardController.create.mojo"
+							action="net.geoprism.dashboard.DashboardController.create.mojo"
 							classes="btn btn-primary" />
 						<mjl:command
-							name="com.runwaysdk.geodashboard.Dashboard.form.cancel.button"
+							name="net.geoprism.dashboard.Dashboard.form.cancel.button"
 							value="Cancel"
-							action="com.runwaysdk.geodashboard.DashboardController.cancel.mojo"
+							action="net.geoprism.dashboard.DashboardController.cancel.mojo"
 							classes="btn btn-default" />
 					</div>
 				</div>

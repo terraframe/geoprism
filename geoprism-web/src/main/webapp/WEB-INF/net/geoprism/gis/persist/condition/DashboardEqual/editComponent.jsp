@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Equals"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.form.id" name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.condition.DashboardEqual.form.id" name="net.geoprism.dashboard.condition.DashboardEqual.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.form.update.button" value="Update" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqual.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardEqualController.cancel.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardEqual.form.update.button" value="Update" action="net.geoprism.dashboard.condition.DashboardEqualController.update.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardEqual.form.delete.button" value="Delete" action="net.geoprism.dashboard.condition.DashboardEqualController.delete.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardEqual.form.cancel.button" value="Cancel" action="net.geoprism.dashboard.condition.DashboardEqualController.cancel.mojo" />
   </mjl:form>
 </dl>

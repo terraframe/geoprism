@@ -37,7 +37,7 @@ public class SessionEntryManager
     // use reflection to avoid Reloadable being infectious
     try
     {
-      LoaderDecorator.load("com.runwaysdk.geodashboard.SessionEntry").getMethod("deleteAll").invoke(null);
+      LoaderDecorator.load("net.geoprism.SessionEntry").getMethod("deleteAll").invoke(null);
     }
     catch(Throwable t)
     {
@@ -55,7 +55,7 @@ public class SessionEntryManager
     // use reflection to avoid Reloadable being infectious
     try
     {
-      LoaderDecorator.load("com.runwaysdk.geodashboard.SessionEntry").getMethod("deleteAll").invoke(null);
+      LoaderDecorator.load("net.geoprism.SessionEntry").getMethod("deleteAll").invoke(null);
     }
     catch(Throwable t)
     {

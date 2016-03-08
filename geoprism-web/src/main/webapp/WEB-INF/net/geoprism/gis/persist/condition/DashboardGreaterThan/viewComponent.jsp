@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Greater Than"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.id" name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.name" method="POST">
+  <mjl:form id="net.geoprism.dashboard.condition.DashboardGreaterThan.form.id" name="net.geoprism.dashboard.condition.DashboardGreaterThan.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
     <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="comparisonValue">
@@ -32,9 +32,9 @@
         ${item.styleReference.keyName}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.form.edit.button" value="Edit" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.edit.mojo" />
+    <mjl:command name="net.geoprism.dashboard.condition.DashboardGreaterThan.form.edit.button" value="Edit" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.edit.mojo" />
   </mjl:form>
 </dl>
-<mjl:commandLink name="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThan.viewAll.link" action="com.runwaysdk.geodashboard.gis.persist.condition.DashboardGreaterThanController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.condition.DashboardGreaterThan.viewAll.link" action="net.geoprism.dashboard.condition.DashboardGreaterThanController.viewAll.mojo">
   View All
 </mjl:commandLink>

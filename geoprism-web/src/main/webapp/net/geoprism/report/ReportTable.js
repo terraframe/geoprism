@@ -24,9 +24,9 @@
   var ViewQueryDataSource = com.runwaysdk.ui.datatable.datasource.ViewQueryDataSource;
   var GenericDataTable = com.runwaysdk.ui.factory.generic.datatable.DataTable;
   
-  var defaultQueryType = "com.runwaysdk.geodashboard.report.ReportItemView";
+  var defaultQueryType = "net.geoprism.report.ReportItemView";
   
-  var tableClassName = "com.runwaysdk.geodashboard.ui.report.ReportTable";
+  var tableClassName = "net.geoprism.report.ReportTable";
   
   /**
    * LANGUAGE
@@ -73,7 +73,7 @@
         var that = this;
         
         var config = {
-          type: 'com.runwaysdk.geodashboard.report.ReportItem',
+          type: 'net.geoprism.report.ReportItem',
           action: "update",
           viewAction: "edit",
           viewParams: {id: id},          
@@ -93,7 +93,7 @@
         var that = this;
           
         var config = {
-          type: 'com.runwaysdk.geodashboard.report.ReportItem',
+          type: 'net.geoprism.report.ReportItem',
           action: "create",
           viewAction: "newInstance",
           width: 600,
@@ -144,7 +144,7 @@
             dialog.close();
             var mainDiv = document.getElementById("reportTable");
             
-            var removeCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+            var removeCallback = new net.geoprism.StandbyClientRequest({
               onSuccess : function() {
                 table.refresh();
               },
@@ -190,7 +190,7 @@
         this._makeButtons();
         
         // Build the columns from the read permissions
-        var report = new com.runwaysdk.geodashboard.report.ReportItemView();
+        var report = new net.geoprism.report.ReportItemView();
         var columns = [];        
         
         columns.push({header: this.localize("edit"), customFormatter: Mojo.Util.bind(this, function(result, rowNumber){

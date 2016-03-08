@@ -31,7 +31,7 @@
      "editFeature" : "Edit feature"
   });
     
-  var MapWidget = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.MapWidget', {
+  var MapWidget = Mojo.Meta.newClass('net.geoprismet', {
   Extends : com.runwaysdk.ui.Component,  
     IsAbstract : true,
     Constants : {
@@ -167,7 +167,7 @@
   });
   
   
-  var OpenLayersMap = Mojo.Meta.newClass('com.runwaysdk.geodashboard.gis.OpenLayersMap', {
+  var OpenLayersMap = Mojo.Meta.newClass('net.geopnet.geoprism {
       Extends : MapWidget,  
       IsAbstract : false,
       Constants : {

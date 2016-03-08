@@ -18,7 +18,7 @@
  */
 (function(){
   
-  var ROOT_PACKAGE = Mojo.ROOT_PACKAGE + 'geodashboard.';
+  var ROOT_PACKAGE = Mojo.ROOT_PACKAGE + 'geoprism.';
   var ALIAS = 'GDB';
   
   var Constants = Mojo.Meta.newInterface(ROOT_PACKAGE+'Constants', {
@@ -185,5 +185,5 @@
   
 
   // Alias the project's root to GDB
-  Mojo.GLOBAL[ALIAS] = Mojo.$.com.runwaysdk.geodashboard;
+  Mojo.GLOBAL[ALIAS] = Mojo.$.net.geoprism;
 })();

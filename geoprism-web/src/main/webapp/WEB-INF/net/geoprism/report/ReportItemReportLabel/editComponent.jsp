@@ -22,10 +22,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="Edit an existing Report label"/>
 <dl>
-  <mjl:form id="com.runwaysdk.geodashboard.report.ReportItemReportLabel.form.id" name="com.runwaysdk.geodashboard.report.ReportItemReportLabel.form.name" method="POST">
+  <mjl:form id="net.geoprism.report.ReportItemReportLabel.form.id" name="net.geoprism.report.ReportItemReportLabel.form.name" method="POST">
     <%@include file="form.jsp" %>
-    <mjl:command name="com.runwaysdk.geodashboard.report.ReportItemReportLabel.form.update.button" value="Update" action="com.runwaysdk.geodashboard.report.ReportItemReportLabelController.update.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.report.ReportItemReportLabel.form.delete.button" value="Delete" action="com.runwaysdk.geodashboard.report.ReportItemReportLabelController.delete.mojo" />
-    <mjl:command name="com.runwaysdk.geodashboard.report.ReportItemReportLabel.form.cancel.button" value="Cancel" action="com.runwaysdk.geodashboard.report.ReportItemReportLabelController.cancel.mojo" />
+    <mjl:command name="net.geoprism.report.ReportItemReportLabel.form.update.button" value="Update" action="net.geoprism.report.ReportItemReportLabelController.update.mojo" />
+    <mjl:command name="net.geoprism.report.ReportItemReportLabel.form.delete.button" value="Delete" action="net.geoprism.report.ReportItemReportLabelController.delete.mojo" />
+    <mjl:command name="net.geoprism.report.ReportItemReportLabel.form.cancel.button" value="Cancel" action="net.geoprism.report.ReportItemReportLabelController.cancel.mojo" />
   </mjl:form>
 </dl>

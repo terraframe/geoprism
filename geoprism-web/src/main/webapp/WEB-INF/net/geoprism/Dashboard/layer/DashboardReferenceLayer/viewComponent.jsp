@@ -22,7 +22,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Layer"/>
 <dl>
-  <mjl:form method="POST" name="net.geoprism.dashboard.DashboardReferenceLayer.form.name" id="net.geoprism.dashboard.DashboardReferenceLayer.form.id">
+  <mjl:form method="POST" name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.name" id="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.id">
     <mjl:input param="id" type="hidden" value="${item.id}" />
     <mjl:component item="${item}" param="dto">
       <mjl:dt attribute="universal">
@@ -78,11 +78,11 @@
         ${item.virtual ? item.virtualMd.positiveDisplayLabel : item.virtualMd.negativeDisplayLabel}
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="net.geoprism.dashboard.DashboardReferenceLayer.form.edit.button" action="net.geoprism.dashboard.DashboardReferenceLayerController.edit.mojo" value="Edit" />
+    <mjl:command name="net.geoprism.dashboard.layer.DashboardReferenceLayer.form.edit.button" action="net.geoprism.dashboard.layer.DashboardReferenceLayerController.edit.mojo" value="Edit" />
   </mjl:form>
 </dl>
 <dl>
 </dl>
-<mjl:commandLink name="net.geoprism.dashboard.DashboardReferenceLayer.viewAll.link" action="net.geoprism.dashboard.DashboardReferenceLayerController.viewAll.mojo">
+<mjl:commandLink name="net.geoprism.dashboard.layer.DashboardReferenceLayer.viewAll.link" action="net.geoprism.dashboard.layer.DashboardReferenceLayerController.viewAll.mojo">
   View All
 </mjl:commandLink>

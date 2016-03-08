@@ -123,10 +123,10 @@
       var strategyDTO = null;
       
       if(strategy.type.indexOf("UniversalAggregationStrategy")  > -1){
-        strategyDTO = new com.runwaysdk.geodashboard.gis.persist.UniversalAggregationStrategy();
+        strategyDTO = new net.geoprism.dashboard.UniversalAggregationStrategy();
       }
       else if(strategy.type.indexOf("GeometryAggregationStrategy")  > -1){
-        strategyDTO = new com.runwaysdk.geodashboard.gis.persist.GeometryAggregationStrategy();
+        strategyDTO = new net.geoprism.dashboard.GeometryAggregationStrategy();
       }
         
       // the universal property will be skipped for geometry agg in the populate method because that property
@@ -547,7 +547,7 @@
             
       var request = service.createStandbyRequest(element, success, onFailure);
             
-      com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.edit(request, layerId);    
+      net.geoprism.dashboard.layer.DashboardThematicLayerController.edit(request, layerId);    
     }
       
     service.newInstance = function(mdAttributeId, mapId, element, onSuccess, onFailure) {
@@ -559,7 +559,7 @@
         
       var request = service.createStandbyRequest(element, success, onFailure);
         
-      com.runwaysdk.geodashboard.gis.persist.DashboardThematicLayerController.newThematicInstance(request, mdAttributeId, mapId);
+      net.geoprism.dashboard.layer.DashboardThematicLayerController.newThematicInstance(request, mdAttributeId, mapId);
     }
       
     service.isValidFont = function(font, options) {
@@ -575,7 +575,7 @@
     
     service.categoryAutoCompleteService = function(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure){
       var request = service.createRequest(onSuccess, onFailure);
-      com.runwaysdk.geodashboard.Dashboard.getCategoryInputSuggestions(request, mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions);
+      net.geoprism.dashboard.Dashboard.getCategoryInputSuggestions(request, mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions);
     }
     
     return service;
@@ -717,7 +717,7 @@
           
       var request = service.createStandbyRequest(element, success, onFailure);
           
-      com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.edit(request, layerId);    	
+      net.geoprism.dashboard.layer.DashboardReferenceLayerController.edit(request, layerId);    	
     }
     
     service.newInstance = function(mapId, element, onSuccess, onFailure) {
@@ -734,7 +734,7 @@
       
       var request = service.createStandbyRequest(element, success, onFailure);
       
-      com.runwaysdk.geodashboard.gis.persist.DashboardReferenceLayerController.newReferenceInstance(request, '', mapId);
+      net.geoprism.dashboard.layer.DashboardReferenceLayerController.newReferenceInstance(request, '', mapId);
     }
     
     service.isValidFont = function(font, options) {

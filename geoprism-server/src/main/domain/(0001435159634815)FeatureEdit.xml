@@ -28,7 +28,7 @@
           </mdMethod>          
         </create>
       </mdBusiness>
-      <mdUtil name="net.geoprism.GeoEntityUtil">
+      <mdUtil name="net.geoprism.ontology.GeoEntityUtil">
         <create>
           <mdMethod name="getEntityLabel" label="Get entity label" returnType="java.lang.String" static="true">
             <mdParameter name="entityId" order="1" type="java.lang.String" label="Entity id" />
@@ -39,7 +39,7 @@
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.GeoEntityUtil.getEntityLabel" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.ontology.GeoEntityUtil.getEntityLabel" type="com.runwaysdk.system.metadata.MdMethod"/>
       <object key="net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>

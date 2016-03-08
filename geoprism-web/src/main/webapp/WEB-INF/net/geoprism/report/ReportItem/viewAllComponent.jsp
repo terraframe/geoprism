@@ -52,7 +52,7 @@
   com.runwaysdk.ui.Manager.setFactory("JQuery");
   
   $(document).ready(function() {
-  		var ut = new com.runwaysdk.geodashboard.ui.report.ReportTable({"bAutoWidth":false});  
+  		var ut = new net.geoprism.report.ReportTable({"bAutoWidth":false});  
   		ut.render("#reportTable");
   });  
 </script>

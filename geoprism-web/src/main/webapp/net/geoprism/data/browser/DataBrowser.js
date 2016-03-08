@@ -24,9 +24,9 @@
   var Widget = com.runwaysdk.ui.factory.runway.Widget;
   var GenericDataTable = com.runwaysdk.ui.factory.generic.datatable.DataTable;
   
-  var dataBrowserName = "com.runwaysdk.geodashboard.databrowser.DataBrowser";
+  var dataBrowserName = "net.geoprism.data.browser.DataBrowser";
   
-  var Form = ClassFramework.newClass('com.runwaysdk.geodashboard.IFrameResponseFormDialogDownloader', {
+  var Form = ClassFramework.newClass('net.geoprism.IFrameResponseFormDialogDownloader', {
     Extends : com.runwaysdk.ui.RunwayControllerFormDialogDownloader,
     Instance : {
         
@@ -194,7 +194,7 @@
         var title = this.localize("export")
           
         var config = {
-          type: 'com.runwaysdk.geodashboard.service.Excel',
+          type: 'net.geoprism.data.importer.Excel',
           title: title,
           viewParams: {},
           action: "exportExcelFile",
@@ -216,7 +216,7 @@
         var title = this.localize("import")
         
         var config = {
-          type: 'com.runwaysdk.geodashboard.service.Excel',
+          type: 'net.geoprism.data.importer.Excel',
           title: title,
           viewParams: {},
           action: "importExcelFile",
@@ -262,7 +262,7 @@
           start : function(){
             dialog.close();
             
-            var request = new com.runwaysdk.geodashboard.StandbyClientRequest({
+            var request = new net.geoprism.StandbyClientRequest({
               onSuccess : function() {
                 that._table.refresh();
               },
@@ -272,7 +272,7 @@
               }
             }, '#databrowser');
             
-            com.runwaysdk.geodashboard.databrowser.DataBrowserUtil.deleteData(request, type)
+            net.geoprism.data.browser.DataBrowserUtil.deleteData(request, type)
           }
         }));
         
@@ -312,7 +312,7 @@
           this._tableHolder.setStyle("text-align", "left");
           
           tableCfg.el = tableEl;
-          tableCfg.dataSource = new com.runwaysdk.geodashboard.databrowser.DataBrowserQueryDataSource({
+          tableCfg.dataSource = new net.geoprism.data.browser.DataBrowserQueryDataSource({
             className: type,
             readColumnsFromMetadata: true,
             formatters:{

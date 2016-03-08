@@ -23,7 +23,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
 
-<mjl:form id="com.runwaysdk.geodashboard.service.Excel.form.id" name="form.name" classes="submit-form" method="POST" enctype="multipart/form-data">
+<mjl:form id="net.geoprism.data.importer.Excel.form.id" name="form.name" classes="submit-form" method="POST" enctype="multipart/form-data">
   <fieldset class="com-runwaysdk-geodashboard-FormList">
     <section class="form-container">
       <div class="field-row clearfix">
