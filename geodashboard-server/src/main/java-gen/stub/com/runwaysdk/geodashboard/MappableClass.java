@@ -40,7 +40,9 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
@@ -156,6 +158,13 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     super.delete();
+    
+    /*
+     * Delete all of the data views which reference this type
+     */
+    List<String> viewNames = Database.getReferencingViews(MdElementDAO.getMdElementDAO(mdClass.definesType()));
+
+    Database.dropViews(viewNames);
 
     mdClass.delete();
   }
