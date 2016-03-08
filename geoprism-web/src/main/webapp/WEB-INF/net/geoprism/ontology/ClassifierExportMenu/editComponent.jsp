@@ -20,12 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="page_title" scope="request" value="Edit an existing Export Classifier"/>
-<dl>
-  <mjl:form method="POST" name="net.geoprism.ontology.ClassifierExportMenu.form.name" id="net.geoprism.ontology.ClassifierExportMenu.form.id">
-    <%@include file="form.jsp" %>
-    <mjl:command name="net.geoprism.ontology.ClassifierExportMenu.form.update.button" action="net.geoprism.ontology.ClassifierExportMenuController.update.mojo" value="Update" />
-    <mjl:command name="net.geoprism.ontology.ClassifierExportMenu.form.delete.button" action="net.geoprism.ontology.ClassifierExportMenuController.delete.mojo" value="Delete" />
-    <mjl:command name="net.geoprism.ontology.ClassifierExportMenu.form.cancel.button" action="net.geoprism.ontology.ClassifierExportMenuController.cancel.mojo" value="Cancel" />
-  </mjl:form>
-</dl>
+
+<mjl:form id="net.geoprism.ontology.ClassifierExportMenu.form.id" name="net.geoprism.ontology.ClassifierExportMenu.form.name" method="POST">
+  <%@include file="form.jsp" %>
+</mjl:form>

@@ -58,7 +58,7 @@
               <div class="label-holder">
               </div>
               <div class="holder">
-                <%@include file="../../../../../../templates/inlineError.jsp" %>
+                <%@include file="../../../../../templates/inlineError.jsp" %>
               </div>
             </div>
           </c:if>

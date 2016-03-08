@@ -27,7 +27,7 @@
     <mjl:attributeColumn attributeName="fileFormat">
       <mjl:row>
         <ul>
-          <c:forEach var="enumName" items="${item.fileFormatEnumNames}">
+          <c:forEach items="${item.fileFormatEnumNames}" var="enumName">
             <li>
               ${item.fileFormatMd.enumItems[enumName]}
             </li>
@@ -55,6 +55,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="ClassifierExportMenuController.newInstance" action="net.geoprism.ontology.ClassifierExportMenuController.newInstance.mojo">
+<mjl:commandLink name="ClassifierExportMenu.newInstance" action="net.geoprism.ontology.ClassifierExportMenuController.newInstance.mojo">
   Create a new Export Classifier
 </mjl:commandLink>

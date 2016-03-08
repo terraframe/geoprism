@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.EmptyLayerInformationDTOBase;
 
 
 public class EmptyLayerInformationDTO extends EmptyLayerInformationDTOBase

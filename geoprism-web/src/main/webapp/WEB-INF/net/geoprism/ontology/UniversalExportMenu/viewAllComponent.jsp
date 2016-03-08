@@ -22,12 +22,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View all Export Universals"/>
 <mjl:table var="item" query="${query}">
-  <mjl:context action="net.geoprism.ontology.UniversalExportMenuController.viewPage.mojo" />
+  <mjl:context action="net.geoprism.ontology.UniversalExportMenu.viewPage.mojo" />
   <mjl:columns>
     <mjl:attributeColumn attributeName="fileFormat">
       <mjl:row>
         <ul>
-          <c:forEach var="enumName" items="${item.fileFormatEnumNames}">
+          <c:forEach items="${item.fileFormatEnumNames}" var="enumName">
             <li>
               ${item.fileFormatMd.enumItems[enumName]}
             </li>
@@ -40,7 +40,7 @@
         
       </mjl:header>
       <mjl:row>
-        <mjl:commandLink name="view.link" action="net.geoprism.ontology.UniversalExportMenuController.view.mojo">
+        <mjl:commandLink name="view.link" action="net.geoprism.ontology.UniversalExportMenu.view.mojo">
           View
           <mjl:property name="id" value="${item.id}" />
         </mjl:commandLink>
@@ -55,6 +55,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="UniversalExportMenuController.newInstance" action="net.geoprism.ontology.UniversalExportMenuController.newInstance.mojo">
+<mjl:commandLink name="UniversalExportMenuController.newInstance" action="net.geoprism.ontology.UniversalExportMenu.newInstance.mojo">
   Create a new Export Universals
 </mjl:commandLink>

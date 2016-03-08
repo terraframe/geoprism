@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.LayerExcludedExceptionDTOBase;
 
 public class LayerExcludedExceptionDTO extends LayerExcludedExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

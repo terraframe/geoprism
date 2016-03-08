@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.NoLayersExceptionDTOBase;
 
 public class NoLayersExceptionDTO extends NoLayersExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dashboard;
+package net.geoprism.dashboard.layer;
+
+import net.geoprism.dashboard.DashboardMapDTO;
 
 @com.runwaysdk.business.ClassSignature(hash = 303359297)
 public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable

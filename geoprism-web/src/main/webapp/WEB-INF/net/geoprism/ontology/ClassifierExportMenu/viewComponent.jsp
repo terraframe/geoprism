@@ -22,12 +22,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="page_title" scope="request" value="View a Export Classifier"/>
 <dl>
-  <mjl:form method="POST" name="net.geoprism.ontology.ClassifierExportMenu.form.name" id="net.geoprism.ontology.ClassifierExportMenu.form.id">
-    <mjl:input param="id" type="hidden" value="${item.id}" />
-    <mjl:component item="${item}" param="dto">
+  <mjl:form id="net.geoprism.ontology.ClassifierExportMenu.form.id" name="net.geoprism.ontology.ClassifierExportMenu.form.name" method="POST">
+    <mjl:input param="id" value="${item.id}" type="hidden" />
+    <mjl:component param="dto" item="${item}">
       <mjl:dt attribute="fileFormat">
         <ul>
-          <c:forEach var="enumName" items="${item.fileFormatEnumNames}">
+          <c:forEach items="${item.fileFormatEnumNames}" var="enumName">
             <li>
               ${item.fileFormatMd.enumItems[enumName]}
             </li>
@@ -35,9 +35,8 @@
         </ul>
       </mjl:dt>
     </mjl:component>
-    <mjl:command name="net.geoprism.ontology.ClassifierExportMenu.form.edit.button" action="net.geoprism.ontology.ClassifierExportMenuController.edit.mojo" value="Edit" />
+    <mjl:command name="net.geoprism.ontology.ClassifierExportMenu.form.edit.button" value="Edit" action="net.geoprism.ontology.ClassifierExportMenuController.edit.mojo" />
   </mjl:form>
 </dl>
 <mjl:commandLink name="net.geoprism.ontology.ClassifierExportMenu.viewAll.link" action="net.geoprism.ontology.ClassifierExportMenuController.viewAll.mojo">
-  View All
 </mjl:commandLink>

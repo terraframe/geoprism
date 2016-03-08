@@ -27,7 +27,7 @@
     <mjl:attributeColumn attributeName="fileFormat">
       <mjl:row>
         <ul>
-          <c:forEach var="enumName" items="${item.fileFormatEnumNames}">
+          <c:forEach items="${item.fileFormatEnumNames}" var="enumName">
             <li>
               ${item.fileFormatMd.enumItems[enumName]}
             </li>
@@ -57,6 +57,6 @@
   </mjl:pagination>
 </mjl:table>
 <br />
-<mjl:commandLink name="GeoEntityExportMenuController.newInstance" action="net.geoprism.ontology.GeoEntityExportMenuController.newInstance.mojo">
+<mjl:commandLink name="GeoEntityExportMenuController.newInstance" action="net.geoprism.ontology.GeoEntityExportMenu.newInstance.mojo">
   Create a new Export GeoEntities
 </mjl:commandLink>

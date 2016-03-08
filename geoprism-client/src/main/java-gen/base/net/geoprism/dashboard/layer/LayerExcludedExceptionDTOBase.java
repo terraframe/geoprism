@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -978627703)
+@com.runwaysdk.business.ClassSignature(hash = -1107529716)
 public abstract class LayerExcludedExceptionDTOBase extends com.runwaysdk.business.InformationDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.layer.LayerExcludedException";
-  private static final long serialVersionUID = -978627703;
+  public final static String CLASS = "net.geoprism.dashboard.LayerExcludedException";
+  private static final long serialVersionUID = -1107529716;
   
   public LayerExcludedExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

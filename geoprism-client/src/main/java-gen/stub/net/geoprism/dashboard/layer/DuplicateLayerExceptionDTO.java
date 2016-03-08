@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DuplicateLayerExceptionDTOBase;
 
 
 public class DuplicateLayerExceptionDTO extends DuplicateLayerExceptionDTOBase

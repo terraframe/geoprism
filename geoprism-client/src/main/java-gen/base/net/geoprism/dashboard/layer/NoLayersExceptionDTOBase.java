@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -1994505300)
+@com.runwaysdk.business.ClassSignature(hash = 343729289)
 public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.layer.NoLayersException";
-  private static final long serialVersionUID = -1994505300;
+  public final static String CLASS = "net.geoprism.dashboard.NoLayersException";
+  private static final long serialVersionUID = 343729289;
   
   public NoLayersExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {
