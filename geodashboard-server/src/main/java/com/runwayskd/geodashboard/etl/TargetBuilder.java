@@ -140,7 +140,7 @@ public class TargetBuilder
     definition.setTargetType(PACKAGE_NAME + "." + typeName);
 
     /*
-     * Define the new MdBussiness and Mappable class
+     * Define the new MdBussiness
      */
     MdBusinessDAO mdBusiness = MdBusinessDAO.newInstance();
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
@@ -149,7 +149,24 @@ public class TargetBuilder
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
+    
+    /*
+     * Create the default classifier root for the MdBusiness
+     */
+    Classifier root = Classifier.findClassifier(mdBusiness.definesType(), typeName);
 
+    if (root == null)
+    {
+      root = new Classifier();
+      root.setClassifierId(typeName);
+      root.setClassifierPackage(mdBusiness.definesType());
+      root.setKeyName(mdBusiness.definesType());
+      root.getDisplayLabel().setValue(label);
+      root.apply();
+
+      root.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+    }
+    
     /*
      * Add all of the basic fields
      */
@@ -163,7 +180,7 @@ public class TargetBuilder
 
         if (this.isValid(cField))
         {
-          TargetFieldIF field = this.createMdAttribute(mdBusiness, sheetName, cField);
+          TargetFieldIF field = this.createMdAttribute(mdBusiness, sheetName, cField, root);
 
           definition.addField(field);
         }
@@ -384,7 +401,7 @@ public class TargetBuilder
     return false;
   }
 
-  private TargetFieldIF createMdAttribute(MdClassDAO mdClass, String sheetName, JSONObject cField) throws JSONException
+  private TargetFieldIF createMdAttribute(MdClassDAO mdClass, String sheetName, JSONObject cField, Classifier root) throws JSONException
   {
     String columnType = cField.getString("type");
     String columnName = cField.getString("name");
@@ -419,7 +436,7 @@ public class TargetBuilder
         classifier.getDisplayLabel().setValue(label);
         classifier.apply();
 
-        classifier.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+        classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
       }
 
       /*
