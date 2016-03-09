@@ -35,7 +35,7 @@ import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
 public class DashboardReferenceLayerController extends DashboardReferenceLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardReferenceLayer/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardReferenceLayer/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 

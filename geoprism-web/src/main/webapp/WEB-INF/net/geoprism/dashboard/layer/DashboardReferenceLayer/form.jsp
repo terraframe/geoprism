@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 

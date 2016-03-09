@@ -22,7 +22,7 @@ import net.geoprism.report.ReportItemReportLabelControllerBase;
 
 public class ReportItemReportLabelController extends ReportItemReportLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/report/ReportItemReportLabel/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/report/ReportItemReportLabel/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public ReportItemReportLabelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

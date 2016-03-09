@@ -22,7 +22,7 @@ import net.geoprism.ontology.ClassifierSynonymDisplayLabelControllerBase;
 
 public class ClassifierSynonymDisplayLabelController extends ClassifierSynonymDisplayLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/ontology/ClassifierSynonymDisplayLabel/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierSynonymDisplayLabel/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public ClassifierSynonymDisplayLabelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

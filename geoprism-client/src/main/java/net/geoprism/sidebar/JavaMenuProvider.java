@@ -28,7 +28,7 @@ public class JavaMenuProvider
   {
     ArrayList<MenuItem> items = new ArrayList<MenuItem>();
 
-    String jspDir = "com/runwaysdk/geodashboard/jsp/";
+    String jspDir = "net/geoprism/jsp/";
 
     MenuItem accManage = new MenuItem("Account Management", null, null);
     accManage.addChild(new MenuItem("User Accounts", jspDir + "useraccounts.jsp", null));

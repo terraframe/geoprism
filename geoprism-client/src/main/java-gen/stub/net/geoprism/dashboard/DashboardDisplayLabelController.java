@@ -22,7 +22,7 @@ import net.geoprism.dashboard.DashboardDisplayLabelControllerBase;
 
 public class DashboardDisplayLabelController extends DashboardDisplayLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/DashboardDisplayLabel/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardDisplayLabel/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public DashboardDisplayLabelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

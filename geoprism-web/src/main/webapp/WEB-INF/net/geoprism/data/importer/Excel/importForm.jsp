@@ -23,7 +23,7 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 
 <form action="#" id="net.geoprism.data.importer.Excel.form.id" name="form.name" class="submit-form" method="POST" enctype="multipart/form-data" target="result_iframe">

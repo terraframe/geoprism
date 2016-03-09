@@ -45,7 +45,7 @@ import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class ReportItemController extends ReportItemControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/report/ReportItem/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/report/ReportItem/";
 
   public static final String LAYOUT  = "/WEB-INF/templates/layout.jsp";
 
@@ -379,7 +379,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
           {
             req.setAttribute("report", rStream.toString());
 
-            req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/report/report.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/net/geoprism/report/report.jsp").forward(req, resp);
           }
           else
           {

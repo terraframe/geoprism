@@ -22,7 +22,7 @@ import net.geoprism.EmailSettingControllerBase;
 
 public class EmailSettingController extends EmailSettingControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/EmailSetting/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/EmailSetting/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public EmailSettingController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

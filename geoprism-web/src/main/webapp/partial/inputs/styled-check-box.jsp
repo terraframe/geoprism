@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <div class="check-block">
   <div ng-attr-id="{{id || undefined}}" ng-attr-name="{{name}}" ng-click="ctrl.toggle()" ng-class="{'chk-checked' : model}" class="jcf-unselectable chk-area">
     <span></span>

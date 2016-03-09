@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <div class="filter-block">
   <div class="row-holder">
     <label for="filter-geo"><gdb:localize key="filter.geo"/></label>

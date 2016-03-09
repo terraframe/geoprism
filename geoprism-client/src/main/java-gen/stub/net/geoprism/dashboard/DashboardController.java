@@ -29,7 +29,7 @@ import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/Dashboard/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/Dashboard/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 

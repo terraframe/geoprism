@@ -36,7 +36,7 @@ import com.runwaysdk.controller.MultipartFileParameter;
 
 public class ExcelController extends ExcelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/service/Excel/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/data/importer/Excel/";
 
   public static final String LAYOUT  = "/WEB-INF/templates/layout.jsp";
 

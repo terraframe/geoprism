@@ -19,7 +19,7 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <head>

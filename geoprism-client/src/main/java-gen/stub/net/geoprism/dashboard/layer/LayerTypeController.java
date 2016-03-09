@@ -23,7 +23,7 @@ import net.geoprism.dashboard.layer.LayerTypeQueryDTO;
 
 public class LayerTypeController extends LayerTypeControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/LayerType/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/LayerType/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public LayerTypeController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

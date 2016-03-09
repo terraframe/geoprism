@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <div class="data-block">
   <div class="col">
     <label><gdb:localize key="dashboardViewer.dates.from" /></label>

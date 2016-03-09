@@ -154,7 +154,7 @@ public class SessionFilter implements Filter, Reloadable
     }
     
     // Allow direct hitting of all page resources in login directories.
-    if (uri.contains("/com/runwaysdk/geodashboard/login"))
+    if (uri.contains("/net/geoprism/login"))
     {
       return true;
     }

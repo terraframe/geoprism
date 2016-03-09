@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <form action="#" class="control-form" id="control-form" ng-cloak>
   <div id="control-form-collapse-button">
     <i class="fa toggle-left" ng-click="ctrl.toggle()" ng-class="{'fa-angle-double-left' : ctrl.expanded, 'fa-angle-double-right' : !ctrl.expanded}"></i>

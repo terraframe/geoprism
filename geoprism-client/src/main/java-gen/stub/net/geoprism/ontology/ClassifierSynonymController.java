@@ -22,7 +22,7 @@ import net.geoprism.ontology.ClassifierSynonymControllerBase;
 
 public class ClassifierSynonymController extends ClassifierSynonymControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/ontology/ClassifierSynonym/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierSynonym/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public ClassifierSynonymController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

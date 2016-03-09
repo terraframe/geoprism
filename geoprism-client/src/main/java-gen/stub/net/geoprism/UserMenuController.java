@@ -42,9 +42,9 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
   public static final String LAYOUT     = "WEB-INF/templates/basicLayout.jsp";
 
-  public static final String MENU       = "com/runwaysdk/geodashboard/userMenu/userMenu.jsp";
+  public static final String MENU       = "net/geoprism/userMenu/userMenu.jsp";
 
-  public static final String DASHBOARDS = "com/runwaysdk/geodashboard/userMenu/userDashboards.jsp";
+  public static final String DASHBOARDS = "net/geoprism/userMenu/userDashboards.jsp";
 
   public UserMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {

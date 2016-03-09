@@ -150,11 +150,11 @@
   </listener>
   <error-page>
     <exception-type>java.lang.Exception</exception-type>
-    <location>/com/runwaysdk/geodashboard/error.jsp</location>
+    <location>/net/geoprism/error.jsp</location>
   </error-page>
   <error-page>
     <exception-type>com.runwaysdk.session.InvalidSessionExceptionDTO</exception-type>
-    <location>/com/runwaysdk/geodashboard/login/login.jsp</location>
+    <location>/net/geoprism/login/login.jsp</location>
   </error-page>
   <filter>
     <filter-name>RunwayFilter</filter-name>

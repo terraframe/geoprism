@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <a href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
   <span class="ico ontology-category-color-icon ontology-other-color-icon" ng-style="::{'background' : category.color}" style="border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;"></span>

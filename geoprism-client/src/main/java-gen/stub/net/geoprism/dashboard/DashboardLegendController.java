@@ -22,7 +22,7 @@ import net.geoprism.dashboard.DashboardLegendControllerBase;
 
 public class DashboardLegendController extends DashboardLegendControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardLegend/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardLegend/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public DashboardLegendController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

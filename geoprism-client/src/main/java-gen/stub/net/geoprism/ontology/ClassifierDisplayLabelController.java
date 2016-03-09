@@ -22,7 +22,7 @@ import net.geoprism.ontology.ClassifierDisplayLabelControllerBase;
 
 public class ClassifierDisplayLabelController extends ClassifierDisplayLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/ontology/ClassifierDisplayLabel/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierDisplayLabel/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public ClassifierDisplayLabelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

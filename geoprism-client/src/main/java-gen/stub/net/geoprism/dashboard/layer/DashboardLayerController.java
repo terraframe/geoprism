@@ -24,7 +24,7 @@ import net.geoprism.dashboard.layer.DashboardLayerQueryDTO;
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardLayer/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardLayer/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 

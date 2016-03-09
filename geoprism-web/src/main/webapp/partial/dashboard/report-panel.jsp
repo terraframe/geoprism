@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <article id="reporticng-container" class="reporticng-container report-panel-closed">
   <div ng-if="ctrl.canEdit() || hasReport" id="report-toolbar">

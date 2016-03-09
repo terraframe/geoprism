@@ -23,7 +23,7 @@ import net.geoprism.dashboard.layer.DashboardLayerNameLabelQueryDTO;
 
 public class DashboardLayerNameLabelController extends DashboardLayerNameLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardLayerNameLabel/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardLayerNameLabel/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public DashboardLayerNameLabelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

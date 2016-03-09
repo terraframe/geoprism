@@ -22,7 +22,7 @@ import net.geoprism.dashboard.DashboardThematicStyleControllerBase;
 
 public class DashboardThematicStyleController extends DashboardThematicStyleControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardThematicStyle/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardThematicStyle/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public DashboardThematicStyleController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

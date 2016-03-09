@@ -31,7 +31,7 @@ import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class ClassifierController extends ClassifierControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/ontology/Classifier/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/Classifier/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public ClassifierController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

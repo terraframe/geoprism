@@ -38,7 +38,7 @@ import com.runwaysdk.controller.ErrorUtility;
 
 public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardMap/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 
@@ -200,7 +200,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
 
     JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 
-    req.getRequestDispatcher("/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardMap/dashboardViewer.jsp").forward(req, resp);
+    req.getRequestDispatcher("/WEB-INF/net/geoprism/dashboard/DashboardMap/dashboardViewer.jsp").forward(req, resp);
   }
 
   @Override

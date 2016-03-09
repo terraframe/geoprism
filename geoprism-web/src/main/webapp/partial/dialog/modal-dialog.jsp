@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <div class='ng-modal'>
   <div ng-attr-id="{{overlay || undefined}}" class='ng-modal-overlay'></div>
   <div ng-attr-id="{{modal || undefined}}" class='ng-modal-dialog' ng-style='dialogStyle'>

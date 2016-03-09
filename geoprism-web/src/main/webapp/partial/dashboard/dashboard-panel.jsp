@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <aside class="aside animated legend-snapable" ng-class="{'expanded' : ctrl.expanded}" id="dashboardMetadata" ng-cloak> 
   <div id="data-panel-toggle-container">
     <i id="data-panel-expand-toggle" ng-click="ctrl.toggle()" class="fa" ng-class="{'fa-angle-double-right' : ctrl.expanded, 'fa-angle-double-left' : !ctrl.expanded}"></i>

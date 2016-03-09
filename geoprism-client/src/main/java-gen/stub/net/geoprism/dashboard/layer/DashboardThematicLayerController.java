@@ -34,7 +34,7 @@ import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
 public class DashboardThematicLayerController extends DashboardThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/DashboardThematicLayer/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardThematicLayer/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 

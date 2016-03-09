@@ -22,7 +22,7 @@ import net.geoprism.dashboard.HasStyleControllerBase;
 
 public class HasStyleController extends HasStyleControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/HasStyle/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/HasStyle/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public HasStyleController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

@@ -21,7 +21,7 @@
 
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <gdb:localize var="dashboardEditLabel" key="dashboard.edit.label"/>
 <gdb:localize var="dashboardLabel" key="dashboard.label"/>

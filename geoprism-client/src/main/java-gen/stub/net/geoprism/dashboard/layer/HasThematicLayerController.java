@@ -24,7 +24,7 @@ import net.geoprism.dashboard.layer.HasThematicLayerQueryDTO;
 
 public class HasThematicLayerController extends HasThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/HasThematicLayer/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/HasThematicLayer/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public HasThematicLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

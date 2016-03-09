@@ -24,7 +24,7 @@ import net.geoprism.dashboard.layer.HasLayerQueryDTO;
 
 public class HasLayerController extends HasLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/HasLayer/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/HasLayer/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public HasLayerController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

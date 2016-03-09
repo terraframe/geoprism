@@ -22,7 +22,7 @@ import net.geoprism.dashboard.MetadataWrapperControllerBase;
 
 public class MetadataWrapperController extends MetadataWrapperControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/MetadataWrapper/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/MetadataWrapper/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public MetadataWrapperController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

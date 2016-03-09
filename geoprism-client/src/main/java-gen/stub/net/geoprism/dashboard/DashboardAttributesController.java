@@ -22,7 +22,7 @@ import net.geoprism.dashboard.DashboardAttributesControllerBase;
 
 public class DashboardAttributesController extends DashboardAttributesControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/DashboardAttributes/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardAttributes/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public DashboardAttributesController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

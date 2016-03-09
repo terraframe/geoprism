@@ -22,7 +22,7 @@ import net.geoprism.dashboard.AggregationTypeControllerBase;
 
 public class AggregationTypeController extends AggregationTypeControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/persist/AggregationType/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/AggregationType/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public AggregationTypeController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

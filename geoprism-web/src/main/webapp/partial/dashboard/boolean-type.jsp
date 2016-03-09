@@ -18,7 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geodashboard.tld" prefix="gdb"%>
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 <div class="checks-frame">
   <div>
     <input ng-model="attribute.filter.value"  class="gdb-attr-filter filter-boolean" id="{{attribute.mdAttributeId}}-true" name="filter-{{attribute.mdAttributeId}}" type="radio" value="true">
