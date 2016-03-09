@@ -21,7 +21,7 @@ package net.geoprism;
 @com.runwaysdk.business.ClassSignature(hash = 1474466631)
 public class EmailSettingControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.EmailSettingController";
+  public static final String CLASS = "net.geoprism.EmailSettingController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;

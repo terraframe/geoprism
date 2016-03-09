@@ -31,7 +31,7 @@
      "editFeature" : "Edit feature"
   });
     
-  var MapWidget = Mojo.Meta.newClass('net.geoprismet', {
+  var MapWidget = Mojo.Meta.newClass('net.geoprism.gis.MapWidget', {
   Extends : com.runwaysdk.ui.Component,  
     IsAbstract : true,
     Constants : {
@@ -747,9 +747,9 @@
               X:x,
               Y:y,
               BBOX:mapBbox,
-              LAYERS:"geodashboard:"+ layerStringList,
-              QUERY_LAYERS:"geodashboard:"+ layerStringList,
-              TYPENAME:"geodashboard:"+ layerStringList
+              LAYERS:"geoprism:"+ layerStringList,
+              QUERY_LAYERS:"geoprism:"+ layerStringList,
+              TYPENAME:"geoprism:"+ layerStringList
             };
                 
             var url = window.location.origin+"/geoserver/" + workspace +"/wms?" + $.param(params);

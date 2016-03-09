@@ -36,7 +36,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 public class GeoserverProperties implements Reloadable
 {
   public static enum ConfigGroup implements ConfigGroupIF {
-    GEODASHBOARD("geodashboard/", "");
+    GEODASHBOARD("geoprism/", "");
 
     private String path;
 

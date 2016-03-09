@@ -27,7 +27,7 @@
 
 
 <form action="#" id="net.geoprism.data.importer.Excel.form.id" name="form.name" class="submit-form" method="POST" enctype="multipart/form-data" target="result_iframe">
-  <fieldset class="com-runwaysdk-geodashboard-FormList">
+  <fieldset class="net-geoprism-FormList">
     <section class="form-container">
       <div class="field-row clearfix">
         <label for="country">* <gdb:localize key="excel.country"/> </label>

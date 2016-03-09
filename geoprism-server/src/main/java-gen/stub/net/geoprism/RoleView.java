@@ -36,7 +36,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 {
   private static final long  serialVersionUID       = -875685428;
 
-  public static final String GEODASHBOARD_NAMESPACE = "geodashboard";
+  public static final String GEODASHBOARD_NAMESPACE = "geoprism";
 
   public static final String ADMIN_NAMESPACE        = GEODASHBOARD_NAMESPACE + ".admin";
 

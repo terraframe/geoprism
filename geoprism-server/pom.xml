@@ -29,8 +29,8 @@
   <artifactId>geoprism-server</artifactId>
   <packaging>jar</packaging>
 
-  <name>Geo dashboard server</name>
-  <description>The back-end database server for Geo dashboard</description>
+  <name>Geoprism server</name>
+  <description>The back-end database server for Geoprism</description>
 
   <properties>
     <!-- Specify your development root database credentials here. -->
@@ -74,7 +74,7 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.runwaysdk.geodashboard</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>oda.driver</artifactId>
       <version>1.01.0007</version>
     </dependency>
@@ -421,7 +421,7 @@
     </testResources>
 
     <plugins>
-      <!-- Read the server properties (from projects that extend geodashboard) as maven properties. This allows us to override the database properties later when we build. -->
+      <!-- Read the server properties (from projects that extend geoprism) as maven properties. This allows us to override the database properties later when we build. -->
       <plugin>
         <groupId>org.kohsuke.gmaven</groupId>
         <artifactId>gmaven-plugin</artifactId>

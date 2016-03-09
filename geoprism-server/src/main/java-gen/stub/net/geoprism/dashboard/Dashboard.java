@@ -965,7 +965,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   /*
-   * Gets all active geodashboard users in the system who are not Administrators
+   * Gets all active geoprism users in the system who are not Administrators
    */
   @Override
   public GeoprismUser[] getAllDashboardUsers()
@@ -1000,7 +1000,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   /*
-   * Gets all active geodashboard users in the system who are not Administrators and whether they already have access to
+   * Gets all active geoprism users in the system who are not Administrators and whether they already have access to
    * a given dashboard.
    */
   @Override

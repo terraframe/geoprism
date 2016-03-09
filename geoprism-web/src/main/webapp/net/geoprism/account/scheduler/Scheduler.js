@@ -30,9 +30,9 @@
 
   var JOB_QUERY_TYPE = "com.runwaysdk.system.scheduler.ExecutableJob";
   
-  var schedulerName = 'com.runwaysdk.ui.scheduler.Scheduler';
-  var jobTableName = 'com.runwaysdk.ui.scheduler.JobTable';
-  var jobHistoryTableName = "com.runwaysdk.ui.scheduler.JobHistoryTable";
+  var schedulerName = 'net.geoprism.account.scheduler.Scheduler';
+  var jobTableName = 'net.geoprism.account.scheduler.JobTable';
+  var jobHistoryTableName = "net.geoprism.account.scheduler.JobHistoryTable";
 
   /**
    * LANGUAGE

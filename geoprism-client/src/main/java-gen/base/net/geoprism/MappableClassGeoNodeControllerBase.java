@@ -21,7 +21,7 @@ package net.geoprism;
 @com.runwaysdk.business.ClassSignature(hash = -997489575)
 public class MappableClassGeoNodeControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.MappableClassGeoNodeController";
+  public static final String CLASS = "net.geoprism.MappableClassGeoNodeController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;

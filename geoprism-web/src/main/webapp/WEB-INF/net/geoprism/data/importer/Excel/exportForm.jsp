@@ -24,7 +24,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <mjl:form id="net.geoprism.data.importer.Excel.form.id" name="form.name" classes="submit-form" method="POST" enctype="multipart/form-data">
-  <fieldset class="com-runwaysdk-geodashboard-FormList">
+  <fieldset class="net-geoprism-FormList">
     <section class="form-container">
       <div class="field-row clearfix">
         <label for="country">* <gdb:localize key="excel.country"/> </label>

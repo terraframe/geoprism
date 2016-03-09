@@ -29,7 +29,7 @@
   <version>1.01.0005</version>
   <packaging>pom</packaging>
 
-  <name>Geo dashboard</name>
+  <name>Geoprism</name>
   <description>The root pom for geoprism.</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
 

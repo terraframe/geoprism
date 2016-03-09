@@ -38,7 +38,7 @@ import com.runwaysdk.configuration.RunwayConfigurationException;
 
 public class XMLMenuProvider
 {
-  private static final String        fileName       = "geodashboard/sidebar.xml";
+  private static final String        fileName       = "geoprism/sidebar.xml";
 
   private static final Object        initializeLock = new Object();
 
@@ -48,7 +48,7 @@ public class XMLMenuProvider
 
   public XMLMenuProvider()
   {
-    String exMsg = "An exception occurred while reading the geodashboard sidebar configuration file.";
+    String exMsg = "An exception occurred while reading the geoprism sidebar configuration file.";
 
     try
     {
@@ -97,7 +97,7 @@ public class XMLMenuProvider
     }
     else
     {
-      throw new RunwayConfigurationException("Expected the geodashboard sidebar configuration file on the classpath at [" + fileName + "].");
+      throw new RunwayConfigurationException("Expected the geoprism sidebar configuration file on the classpath at [" + fileName + "].");
     }
   }
 

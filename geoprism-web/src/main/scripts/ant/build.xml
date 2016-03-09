@@ -23,7 +23,7 @@
 
 	<!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
 
-	<property name="projectName" value="geodashboard" />	
+	<property name="projectName" value="geoprism" />	
 	<property name="project.webapp.root" value="${basedir}/src/main/webapp" />
     <property name="runway.webapp.root" value="/home/jlewis/development/Runway-SDK/runwaysdk-web"></property>
 	

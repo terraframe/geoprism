@@ -172,8 +172,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
-                                // req, resp, this.isAsynchronous());
+      boolean redirect = false;
+      
       if (!redirect)
       {
         this.failNewInstance();
@@ -247,8 +247,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
-                                // req, resp, this.isAsynchronous());
+      boolean redirect = false;
+      
       if (!redirect)
       {
         this.failView(id);
@@ -265,8 +265,8 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
     catch (Throwable t)
     {
-      boolean redirect = false; // com.runwaysdk.geodashboard.util.ErrorUtility.prepareThrowable(t,
-                                // req, resp, this.isAsynchronous());
+      boolean redirect = false;
+      
       if (!redirect)
       {
         this.failView(dto.getId());

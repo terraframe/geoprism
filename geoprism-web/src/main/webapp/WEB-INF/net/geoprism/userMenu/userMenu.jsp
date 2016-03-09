@@ -222,13 +222,13 @@
 							  <div class="col-xs-12 col-sm-6 text-center">
 								<div id="dashboard-link" class="nav-option">
 									<img class="nav-icon-img img-responsive" src="net/geoprism/images/dashboard_icon.png" alt="Navigation" />
-									<h3 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.geodashboards"/></h3>
+									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dashboards"/></h3>
 								</div>
 								</div>
 							  <div class="col-xs-12 col-sm-6 text-center">
 								<div class="nav-option">
-									<img id="geodashboard-admin" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
-									<h3 class="nav-icon-img-label"><gdb:localize key="geodashboardLanding.administration"/></h3>
+									<img id="geoprism-admin" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
+									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.administration"/></h3>
 								</div>
 							  </div>
 							</div>
@@ -239,7 +239,7 @@
 		     </div>
 						
 			<div id="geodash-landing-footer">
-				<h4><gdb:localize key="geodashboardLanding.footerMessage"/></h4>
+				<h4><gdb:localize key="geoprismLanding.footerMessage"/></h4>
 			</div>
 		</div>
 	
@@ -254,7 +254,7 @@
 					window.open(window.location.origin +"${pageContext.request.contextPath}/dashboards", "_self");
 				});	
 
-				$("#geodashboard-admin").click(function(){
+				$("#geoprism-admin").click(function(){
 					window.open(window.location.origin +"${pageContext.request.contextPath}", "_self");
 				});	
 

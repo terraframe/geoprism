@@ -18,7 +18,7 @@
  */
 (function(){
   
-  var ROOT_PACKAGE = Mojo.ROOT_PACKAGE + 'geoprism.';
+  var ROOT_PACKAGE = 'net.geoprism.';
   var ALIAS = 'GDB';
   
   var Constants = Mojo.Meta.newInterface(ROOT_PACKAGE+'Constants', {

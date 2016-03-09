@@ -27,7 +27,7 @@ import com.runwaysdk.system.ontology.io.TermFileFormatMasterDTO;
 
 public class GeoEntityExportMenuController extends GeoEntityExportMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/GeoEntityExportMenu/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/GeoEntityExportMenu/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public GeoEntityExportMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

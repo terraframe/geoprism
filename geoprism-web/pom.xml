@@ -29,7 +29,7 @@
   <artifactId>geoprism-web</artifactId>
   <packaging>war</packaging>
 
-  <name>Geo dashboard Web</name>
+  <name>Geoprism Web</name>
   <description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
 
   <properties>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.8</version>
+      <version>2.0.11-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>

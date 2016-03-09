@@ -33,7 +33,7 @@ public class JSONMenuProvider
   public ArrayList<MenuItem> getMenu() {
     try
     {
-      String json = FileUtils.readFileToString(new File(ConfigurationManager.getResource(ConfigurationManager.ConfigGroup.ROOT, "geodashboard/sidebar.txt").getPath()));
+      String json = FileUtils.readFileToString(new File(ConfigurationManager.getResource(ConfigurationManager.ConfigGroup.ROOT, "geoprism/sidebar.txt").getPath()));
       return this.toMenu(new JSONArray(json));
     }
     catch (Exception e)

@@ -30,7 +30,7 @@
 	<artifactId>geoprism-client</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Geo dashboard Client </name>
+	<name>Geoprism Client </name>
 	<description>Generated client domain code and its associated artifacts.</description>
 
 	<dependencies>
@@ -95,7 +95,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>/home/jsmethie/workspace/ide/com.runwaysdk.geodashboard.oda.driver/lib</outputDirectory>
+              <outputDirectory>/home/jsmethie/workspace/ide/net.geoprism.oda.driver/lib</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>

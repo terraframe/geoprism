@@ -42,9 +42,9 @@ export JAVA_HOME=/usr/java/default # This is also hardcoded in platform.properti
 cp -R .ebextensions/tomcat-lib/* $TOMCAT_HOME/lib/
 
 # Add our security cert to the jvm
-$JAVA_HOME/bin/keytool -importcert -alias geodashboard -file .ebextensions/geodashboard.crt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt
-cp .ebextensions/geodashboard.ks $TOMCAT_HOME/conf/geodashboard.ks
-cp .ebextensions/geodashboard.tstore $TOMCAT_HOME/conf/geodashboard.ts
+$JAVA_HOME/bin/keytool -importcert -alias geoprism -file .ebextensions/geoprism.crt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt
+cp .ebextensions/geoprism.ks $TOMCAT_HOME/conf/geoprism.ks
+cp .ebextensions/geoprism.tstore $TOMCAT_HOME/conf/geoprism.ts
 # sed -i "s/{TOMCAT_HOME}/$TOMCAT_HOME/g" .ebextensions/server.xml
 
 # Copy the server.xml config file

@@ -24,7 +24,7 @@ import com.runwaysdk.configuration.ConfigurationManager.ConfigGroupIF;
 public class GDBConfigurationManager
 {
   public static enum GDBConfigGroup implements ConfigGroupIF {
-    CLIENT("geodashboard/", "client"), COMMON("geodashboard/", "common"), SERVER("geodashboard/", "server"), ROOT("", "root");
+    CLIENT("geoprism/", "client"), COMMON("geoprism/", "common"), SERVER("geoprism/", "server"), ROOT("", "root");
 
     private String path;
 

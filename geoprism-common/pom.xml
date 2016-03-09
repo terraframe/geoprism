@@ -32,7 +32,7 @@
   <artifactId>geoprism-common</artifactId>
   <packaging>jar</packaging>
 
-  <name>Geo dashboard Common</name>
+  <name>Geoprism Common</name>
   <description>Common components, used in both Server and Client.</description>
 
   <repositories>

@@ -27,7 +27,7 @@ import com.runwaysdk.system.ontology.io.TermFileFormatMasterDTO;
 
 public class ClassifierExportMenuController extends ClassifierExportMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/gis/ClassifierExportMenu/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierExportMenu/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
   
   public ClassifierExportMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)

@@ -104,7 +104,7 @@
         
         this.$initialize(this._config.el);
         
-        this.addClassName("geodashboard-databrowser");
+        this.addClassName("geoprism-databrowser");
         
         this._pushedTypes = {};
         
@@ -364,15 +364,15 @@
       
       _makeTree : function() {
         this._treeSection = this.getFactory().newElement("div");
-        this._treeSection.addClassName("geodashboard-databrowser-treesection");
+        this._treeSection.addClassName("geoprism-databrowser-treesection");
         this.appendChild(this._treeSection);
         
         this._treeTitle = this.getFactory().newElement("span", {innerHTML : this.localize("treeTitle")});
-        this._treeTitle.addClassName("geodashboard-databrowser-treetitle");
+        this._treeTitle.addClassName("geoprism-databrowser-treetitle");
         this._treeSection.appendChild(this._treeTitle);
         
         this._treeEl = this.getFactory().newElement("div");
-        this._treeEl.addClassName("geodashboard-databrowser-tree");
+        this._treeEl.addClassName("geoprism-databrowser-tree");
         this._treeSection.appendChild(this._treeEl);
 
         var that = this;
@@ -421,15 +421,15 @@
       
       _makeTableSection : function() {
         this._tableSection = this.getFactory().newElement("div");
-        this._tableSection.addClassName("geodashboard-databrowser-tablesection");
+        this._tableSection.addClassName("geoprism-databrowser-tablesection");
         this.appendChild(this._tableSection);
         
         this._tableTitle = this.getFactory().newElement("span", {innerHTML: this.localize("tableTitle")});
-        this._tableTitle.addClassName("geodashboard-databrowser-tabletitle");
+        this._tableTitle.addClassName("geoprism-databrowser-tabletitle");
         this._tableSection.appendChild(this._tableTitle);
         
         this._tableHolder = this.getFactory().newElement("div", {innerHTML: this.localize("noTypeSelected")});
-        this._tableHolder.addClassName("geodashboard-databrowser-table");
+        this._tableHolder.addClassName("geoprism-databrowser-table");
         this._tableHolder.setStyle("text-align", "center");
         this._tableSection.appendChild(this._tableHolder);
       },
