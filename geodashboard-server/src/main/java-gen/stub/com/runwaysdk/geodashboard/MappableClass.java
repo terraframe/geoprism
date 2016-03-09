@@ -40,7 +40,9 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.geodashboard.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
@@ -95,30 +97,40 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   public void delete()
   {
     MdClass mdClass = this.getWrappedMdClass();
-    
+
+    if (mdClass.getGenerateSource())
+    {
+      String msg = "Cannot delete types that have generated source.";
+
+      RequiredMappableClassException ex = new RequiredMappableClassException(msg);
+      ex.setDataSetLabel(mdClass.getDisplayLabel().getValue());
+
+      throw ex;
+    }
+
     /*
      * Delete all layers which reference attributes on this type
      */
-//    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
-//    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
-//    
-//    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
-//
-//    try
-//    {
-//      while (iterator.hasNext())
-//      {
-//        MetadataWrapper wrapper = iterator.next();
-//        wrapper.delete();
-//      }
-//    }
-//    finally
-//    {
-//      iterator.close();
-//    }    
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        MetadataWrapper wrapper = iterator.next();
+        wrapper.delete();
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
 
     /*
-     * Delete all import mappings if they exist 
+     * Delete all import mappings if they exist
      */
     TargetBinding binding = TargetBinding.getBinding(mdClass.definesType());
 
@@ -146,6 +158,13 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     super.delete();
+    
+    /*
+     * Delete all of the data views which reference this type
+     */
+    List<String> viewNames = Database.getReferencingViews(MdElementDAO.getMdElementDAO(mdClass.definesType()));
+
+    Database.dropViews(viewNames);
 
     mdClass.delete();
   }
