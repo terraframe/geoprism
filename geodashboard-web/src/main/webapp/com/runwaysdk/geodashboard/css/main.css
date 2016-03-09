@@ -3550,9 +3550,9 @@ span.select-area span.center {
 	i.range-cat-ico {
 	    font-size: 20px;
 	    font-weight: bolder;
+	    height: 31px;
 	    vertical-align: middle;
 	    line-height: 29px;
-/* 	    float: left; */
 	    cursor: pointer;
 	    border: solid 1px #bbb;
 	    padding-left: 3px;
