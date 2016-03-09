@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
-Bundle-SymbolicName: com.runwaysdk.geodashboard.oda.driver.ui;singleton:=true
+Bundle-SymbolicName: net.geoprism.oda.driver.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: net.geoprism.oda.driver.ui.GeoprismPlugin
 Bundle-Vendor: RUNWAYSDK
@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.equinox.security,
  org.eclipse.datatools.connectivity.oda.design.ui;bundle-version="[3.2.0,4.0.0)",
- com.runwaysdk.geodashboard.oda.driver
+ net.geoprism.oda.driver
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
