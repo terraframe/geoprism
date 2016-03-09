@@ -18,7 +18,7 @@
  */
 (function(){
   
-  var DashboardForm = Mojo.Meta.newClass('net.geoprism.dashboardrdForm', {
+  var DashboardForm = Mojo.Meta.newClass('net.geoprism.dashboard.DashboardForm', {
     Extends : com.runwaysdk.ui.Component,  
     IsAbstract : false,    
     Constants : {
@@ -71,7 +71,7 @@
         _addMappableClassesHTML : function() {
           
           var typesJSON = $("#add-dashboard-type-container").data("classes");
-          var types = net.geoprism.dasnet.geoprism.dashboardFromHTML(typesJSON);
+          var types = net.geoprism.dashboard.FromHTML(typesJSON);
           var html = '<div class="holder"><div class="row-holder">';
           
           if(types.length > 0){
@@ -357,12 +357,16 @@
   /**
    * LANGUAGE
    */
-   com.runwaysdk.Localize.defineLanguage('net.geoprism.dashboard.Tnet.geoprism.dashboardbmit",
+  
+   com.runwaysdk.Localize.defineLanguage('net.geoprism.dashboard.TypeForm', {
+    "submit" : "Submit",
     "cancel" : "Cancel",
     "title"  : "Configure type attributes"
    });
 
-  Mojo.Meta.newClass('net.geoprism.dashboard.TypeForm'net.geoprism.dashboardk.ui.Component,  
+  Mojo.Meta.newClass('net.geoprism.dashboard.TypeForm', {
+    Extends : com.runwaysdk.ui.Component,
+    
     Constants : {
       DASHBOARD_MODAL : '#type-dialog'
     },

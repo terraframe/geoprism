@@ -640,7 +640,7 @@
     }
     
     controller.cloneDashboard = function() {
-      var dashboardForm = new net.geoprism.dashboardForm(controller, controller.dashboardId);
+      var dashboardForm = new net.geoprism.dashboard.DashboardForm(controller, controller.dashboardId);
       dashboardForm.open();
     }
     

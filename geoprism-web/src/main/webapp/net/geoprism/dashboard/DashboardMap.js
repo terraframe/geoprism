@@ -38,7 +38,7 @@
         var information = JSON.parse(json);
         var dashboard = dashboardService.getDashboard();
           
-        var form = new net.geoprism.dashboardForm(dashboard, information);
+        var form = new net.geoprism.dashboard.DashboardForm(dashboard, information);
         form.render();
       };
       

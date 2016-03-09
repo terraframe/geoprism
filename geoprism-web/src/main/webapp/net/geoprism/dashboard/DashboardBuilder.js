@@ -35,7 +35,7 @@
         
       $scope.fields = null;
       $scope.dashboard = null;    
-    }
+    };
     
     controller.cancel = function() {
       var onSuccess = function(newInstance) {      
@@ -44,10 +44,10 @@
         if(!newInstance) {
           $scope.$apply();
         }
-      }
+      };
         
       builderService.unlock($scope.dashboard, onSuccess);
-    }
+    };
     
     controller.persist = function() {
       $scope.busy = true;
@@ -79,10 +79,10 @@
         else {
           controller.applyWithOptions();
         }
-      }    
+      };    
       
       builderService.getLayersToDelete($scope.dashboard,'#ng-modal-overlay', onSuccess);
-    }
+    };
     
     controller.applyWithOptions = function() {
       var onSuccess = function(result) {      
