@@ -59,7 +59,7 @@ public class SecureKeystoreManager
   /**
    * ISecurePreference node name specific to this plugin
    */
-  private static final String          NODE_NAME       = "geodashboard"; //$NON-NLS-1$
+  private static final String          NODE_NAME       = "geoprism"; //$NON-NLS-1$
 
   private static SecureKeystoreManager instance;
 

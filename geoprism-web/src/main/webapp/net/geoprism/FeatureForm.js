@@ -25,7 +25,7 @@
   /**
    * LANGUAGE
    */
-  com.runwaysdk.Localize.defineLanguage('net.geoprism.dashboardForm', {
+  com.runwaysdk.Localize.defineLanguage('net.geoprism.FeatureForm', {
     "submit" : "Submit",
     "cancel" : "Cancel",
     "integerError" : "Value is not a valid whole number",
@@ -34,7 +34,7 @@
     "formErrors" : "Form errors must be corrected before the form can be submitted"
   });
       
-  var FeatureForm = Mojo.Meta.newClass('net.geopnet.geoprism.dashboard
+  var FeatureForm = Mojo.Meta.newClass('net.geoprism.FeatureForm', {
     Extends : com.runwaysdk.ui.Component,
     Instance : {
         

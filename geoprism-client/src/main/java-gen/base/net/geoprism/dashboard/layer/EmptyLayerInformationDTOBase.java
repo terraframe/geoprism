@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = 1524841604)
+@com.runwaysdk.business.ClassSignature(hash = 2054013377)
 public abstract class EmptyLayerInformationDTOBase extends com.runwaysdk.business.InformationDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.dashboard.EmptyLayerInformation";
-  private static final long serialVersionUID = 1524841604;
+  public final static String CLASS = "net.geoprism.dashboard.layer.EmptyLayerInformation";
+  private static final long serialVersionUID = 2054013377;
   
   public EmptyLayerInformationDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

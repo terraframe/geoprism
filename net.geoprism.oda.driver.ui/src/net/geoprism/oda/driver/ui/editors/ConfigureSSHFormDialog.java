@@ -117,7 +117,7 @@ public class ConfigureSSHFormDialog extends TitleAreaDialog
 
     this.alias = new Text(content, SWT.BORDER);
     this.alias.setLayoutData(gridData);
-    this.alias.setText("geodashboard"); //$NON-NLS-1$
+    this.alias.setText("geoprism"); //$NON-NLS-1$
 
     return content;
   }

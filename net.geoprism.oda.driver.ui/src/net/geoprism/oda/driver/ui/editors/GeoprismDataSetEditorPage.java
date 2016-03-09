@@ -57,11 +57,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * The Geodashborad DatasetEditor page which enable user to browse the catalog of the selected data source. The page
- * extends the <code>DataSetWizardPage</code> it could be loaded as a custom page for geodashboard ui.
+ * The Geoprism DatasetEditor page which enable user to browse the catalog of the selected data source. The page
+ * extends the <code>DataSetWizardPage</code> it could be loaded as a custom page for geoprism ui.
  */
 
-public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements ISelectionChangedListener
+public class GeoprismDataSetEditorPage extends DataSetWizardPage implements ISelectionChangedListener
 {
   /**
    * Time out in seconds
@@ -100,7 +100,7 @@ public class GeodashboardDataSetEditorPage extends DataSetWizardPage implements 
    * 
    * @param pageName
    */
-  public GeodashboardDataSetEditorPage(String pageName)
+  public GeoprismDataSetEditorPage(String pageName)
   {
     super(pageName);
 

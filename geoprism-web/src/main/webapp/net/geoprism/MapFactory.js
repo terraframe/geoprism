@@ -166,8 +166,7 @@
     }
   });
   
-  
-  var OpenLayersMap = Mojo.Meta.newClass('net.geopnet.geoprism {
+  var OpenLayersMap = Mojo.Meta.newClass('net.geoprism.gis.OpenLayersMap', {
       Extends : MapWidget,  
       IsAbstract : false,
       Constants : {

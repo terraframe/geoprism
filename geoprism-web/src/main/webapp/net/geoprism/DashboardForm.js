@@ -35,7 +35,8 @@
       _addDashboardUsersHTML : function() {
           
         var usersJSON = $("#add-dashboard-users-container").data("dashboarduserjson");
-          var users = net.geopnet.geoprism.dashboardgetValueFromHTML(usersJSON);
+        
+          var users = net.geoprism.dashboard.CategoryWidget.getValueFromHTML(usersJSON);
           var html = '<div class="holder"><div class="row-holder">';
           
           if(users.length > 0){
