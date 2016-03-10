@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data.etl;
+package com.runwayskd.geodashboard.etl;
 
-import net.geoprism.DataUploader;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +32,15 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdViewDAO;
+import com.runwaysdk.geodashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.ConfigurationService;
+import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdViewQuery;
 
 public class SourceBuilder
 {
-  public static final String PACKAGE_NAME = "net.geoprism.data.view";
+  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.view";
 
   private JSONObject         configuration;
 
@@ -106,6 +109,16 @@ public class SourceBuilder
       SourceFieldIF field = this.createMdAttribute(mdView, cField);
 
       definition.addField(field);
+    }
+
+    /*
+     * Assign permissions
+     */
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.configurePermissions(mdView);
     }
 
     return definition;

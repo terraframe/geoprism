@@ -27,19 +27,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 
-import net.geoprism.dashboard.AttributeWrapper;
-import net.geoprism.dashboard.AttributeWrapperQuery;
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.DashboardAttributes;
-import net.geoprism.dashboard.DashboardMetadata;
-import net.geoprism.dashboard.MetadataWrapper;
-import net.geoprism.dashboard.MetadataWrapperQuery;
-import net.geoprism.ontology.Classifier;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.BusinessInfo;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -48,8 +40,11 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import net.geoprism.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -57,6 +52,7 @@ import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
+import net.geoprism.data.etl.TargetBinding;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -100,6 +96,52 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   @Transaction
   public void delete()
   {
+    MdClass mdClass = this.getWrappedMdClass();
+
+    if (mdClass.getGenerateSource())
+    {
+      String msg = "Cannot delete types that have generated source.";
+
+      RequiredMappableClassException ex = new RequiredMappableClassException(msg);
+      ex.setDataSetLabel(mdClass.getDisplayLabel().getValue());
+
+      throw ex;
+    }
+
+    /*
+     * Delete all layers which reference attributes on this type
+     */
+    MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
+    query.WHERE(query.getWrappedMdClass().EQ(mdClass));
+
+    OIterator<? extends MetadataWrapper> iterator = query.getIterator();
+
+    try
+    {
+      while (iterator.hasNext())
+      {
+        MetadataWrapper wrapper = iterator.next();
+        wrapper.delete();
+      }
+    }
+    finally
+    {
+      iterator.close();
+    }
+
+    /*
+     * Delete all import mappings if they exist
+     */
+    TargetBinding binding = TargetBinding.getBinding(mdClass.definesType());
+
+    if (binding != null)
+    {
+      binding.delete();
+    }
+
+    /*
+     * Delete all geo nodes
+     */
     OIterator<? extends GeoNode> nodes = this.getAllGeoNode();
 
     try
@@ -116,6 +158,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     super.delete();
+    
+    /*
+     * Delete all of the data views which reference this type
+     */
+    List<String> viewNames = Database.getReferencingViews(MdElementDAO.getMdElementDAO(mdClass.definesType()));
+
+    Database.dropViews(viewNames);
+
+    mdClass.delete();
   }
 
   public static MappableClass getMappableClass(String type)
@@ -617,4 +668,32 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
+  public static String getAllAsJSON()
+  {
+    try
+    {
+      JSONArray array = new JSONArray();
+
+      MappableClass[] mClasses = MappableClass.getAll();
+
+      for (MappableClass mClass : mClasses)
+      {
+        array.put(mClass.toJSON());
+      }
+
+      return array.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void remove(String id)
+  {
+    MappableClass mClass = MappableClass.get(id);
+    mClass.delete();
+  }
 }

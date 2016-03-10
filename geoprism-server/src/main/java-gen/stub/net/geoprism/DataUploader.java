@@ -48,6 +48,7 @@ import org.json.JSONObject;
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -179,6 +180,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
   }
 
+  @Authenticate
   public static String importData(String configuration)
   {
     try

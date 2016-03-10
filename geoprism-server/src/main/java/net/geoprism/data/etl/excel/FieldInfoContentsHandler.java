@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.geoprism.data.etl.ColumnType;
-
 import org.apache.poi.ss.util.CellReference;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,9 +100,9 @@ public class FieldInfoContentsHandler implements SheetHandler
       }
       else
       {
-        object.put("type", "");
-        object.put("columnType", "");
-        object.put("accepted", true);
+        object.put("type", ColumnType.TEXT.name());
+        object.put("columnType", ColumnType.TEXT.name());
+        object.put("accepted", false);
       }
 
       return object;
@@ -207,7 +205,7 @@ public class FieldInfoContentsHandler implements SheetHandler
   }
 
   @Override
-  public void cell(String cellReference, String formattedValue, ColumnType cellType)
+  public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
     if (cellType.equals(ColumnType.FORMULA))
     {
@@ -231,11 +229,10 @@ public class FieldInfoContentsHandler implements SheetHandler
 
       if (cellType.equals(ColumnType.NUMBER))
       {
-        BigDecimal value = new BigDecimal(formattedValue);
-        value = value.stripTrailingZeros();
+        BigDecimal decimal = new BigDecimal(contentValue).stripTrailingZeros();
 
-        attribute.setScale(value.scale());
-        attribute.setPrecision(value.precision());
+        attribute.setScale(decimal.scale());
+        attribute.setPrecision(decimal.precision());
       }
     }
   }

@@ -39,6 +39,7 @@ public class ExcelDataFormatter extends DataFormatter
     else
     {
       return new Double(value).toString();
+//      return super.formatRawCellContents(value, formatIndex, formatString);
     }
   }
 
@@ -52,7 +53,7 @@ public class ExcelDataFormatter extends DataFormatter
     else
     {
       return new Double(value).toString();
-      // return super.formatRawCellContents(value, formatIndex, formatString, use1904Windowing);
+//       return super.formatRawCellContents(value, formatIndex, formatString, use1904Windowing);
     }
   }
 }

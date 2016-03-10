@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 914409409)
+@com.runwaysdk.business.ClassSignature(hash = -674687271)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -54,7 +54,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
 
   public String getClassType()
   {
-    return net.geoprism.MappableClass.CLASS;
+    return com.runwaysdk.geodashboard.MappableClass.CLASS;
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
   {
@@ -64,13 +64,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.MappableClass.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.MappableClass.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -82,18 +82,18 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.CREATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.CREATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.CREATEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.CREATEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.CREATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.CREATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -105,18 +105,18 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.ENTITYDOMAIN);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN);
 
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.ENTITYDOMAIN, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.ENTITYDOMAIN);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN);
 
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -127,13 +127,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -144,13 +144,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -161,13 +161,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.MappableClass.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.MappableClass.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -179,18 +179,18 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.LASTUPDATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.LASTUPDATEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.LASTUPDATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -202,18 +202,18 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.LOCKEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.LOCKEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.LOCKEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -225,18 +225,18 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.OWNER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.OWNER);
 
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.OWNER, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.OWNER, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.OWNER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.OWNER);
 
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.OWNER, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.OWNER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -247,13 +247,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.MappableClass.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.MappableClass.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -264,13 +264,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -281,13 +281,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.MappableClass.TYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass()
@@ -299,45 +299,45 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.WRAPPEDMDCLASS);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS);
 
-    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.WRAPPEDMDCLASS, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.WRAPPEDMDCLASS);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS);
 
-    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.WRAPPEDMDCLASS, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS, mdAttributeIF, this, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.MappableClass.CREATEDBY)) 
+    if (name.equals(com.runwaysdk.geodashboard.MappableClass.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.ENTITYDOMAIN)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.LASTUPDATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.LOCKEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.OWNER)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.WRAPPEDMDCLASS)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS)) 
     {
        return new com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -376,7 +376,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.getBusinessQuery().isParentIn(relationshipQuery);
   }
@@ -385,17 +385,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.getBusinessQuery().isParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.getBusinessQuery().isParentIn_SUBSELECT(mappableClassGeoNodeQuery);
   }
@@ -403,7 +403,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.getBusinessQuery().isParentIn(relationshipQuery);
@@ -412,19 +412,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.getBusinessQuery().isParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.getBusinessQuery().isParentIn_SUBSELECT(mappableClassGeoNodeQuery);
@@ -434,7 +434,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
   }
@@ -443,17 +443,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.getBusinessQuery().isNotParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(mappableClassGeoNodeQuery);
   }
@@ -461,7 +461,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
@@ -470,19 +470,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.getBusinessQuery().isNotParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(mappableClassGeoNodeQuery);
@@ -492,7 +492,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.getBusinessQuery().isParentIn(relationshipQuery);
   }
@@ -501,17 +501,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.getBusinessQuery().isParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.getBusinessQuery().isParentIn_SUBSELECT(classUniversalQuery);
   }
@@ -519,7 +519,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.getBusinessQuery().isParentIn(relationshipQuery);
@@ -528,19 +528,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.getBusinessQuery().isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.getBusinessQuery().isParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.getBusinessQuery().isParentIn_SUBSELECT(classUniversalQuery);
@@ -550,7 +550,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
   }
@@ -559,17 +559,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.getBusinessQuery().isNotParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(classUniversalQuery);
   }
@@ -577,7 +577,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.getBusinessQuery().isNotParentIn(relationshipQuery);
@@ -586,19 +586,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.getBusinessQuery().isNotParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.getBusinessQuery().isNotParentIn_SUBSELECT(classUniversalQuery);
@@ -652,65 +652,65 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
     public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias);
     public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.MappableClass mappableClass);
+    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.MappableClass mappableClass);
 
-    public com.runwaysdk.query.BasicCondition NE(net.geoprism.MappableClass mappableClass);
+    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.MappableClass mappableClass);
 
 
   public com.runwaysdk.query.Condition geoNode();
 
   public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
 
-  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_geoNode();
 
   public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
 
 
   public com.runwaysdk.query.Condition universal();
 
   public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery);
 
-  public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery);
+  public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_universal();
 
   public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_geoNode();
 
   public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode();
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_universal();
 
   public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery);
+  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal();
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery);
 
   }
 
@@ -730,13 +730,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   }
 
 
-    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.MappableClass mappableClass)
+    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.MappableClass mappableClass)
     {
       if(mappableClass == null) return this.EQ((java.lang.String)null);
       return this.EQ(mappableClass.getId());
     }
 
-    public com.runwaysdk.query.BasicCondition NE(net.geoprism.MappableClass mappableClass)
+    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.MappableClass mappableClass)
     {
       if(mappableClass == null) return this.NE((java.lang.String)null);
       return this.NE(mappableClass.getId());
@@ -750,13 +750,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -767,13 +767,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.CREATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.CREATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -784,13 +784,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.MappableClass.ENTITYDOMAIN, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.MappableClass.ENTITYDOMAIN,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -801,13 +801,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -818,13 +818,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -835,13 +835,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -852,13 +852,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.LASTUPDATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.LASTUPDATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -869,13 +869,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.MappableClass.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.MappableClass.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -886,13 +886,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.MappableClass.OWNER, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.OWNER, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.MappableClass.OWNER,  alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.OWNER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -903,13 +903,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.MappableClass.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.MappableClass.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.MappableClass.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.MappableClass.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -920,13 +920,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -937,13 +937,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.TYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass()
@@ -954,20 +954,20 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.MappableClass.WRAPPEDMDCLASS, alias, null);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.MappableClass.WRAPPEDMDCLASS,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS,  alias, displayLabel);
 
   }
 
   public com.runwaysdk.query.Condition geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.isParentIn(relationshipQuery);
   }
@@ -976,17 +976,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.isParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.isParentIn_SUBSELECT(mappableClassGeoNodeQuery);
   }
@@ -994,7 +994,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.isParentIn(relationshipQuery);
@@ -1003,19 +1003,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.isParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.isParentIn_SUBSELECT(mappableClassGeoNodeQuery);
@@ -1025,7 +1025,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.isParentIn(relationshipQuery);
   }
@@ -1034,17 +1034,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.isParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.isParentIn_SUBSELECT(classUniversalQuery);
   }
@@ -1052,7 +1052,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.isParentIn(relationshipQuery);
@@ -1061,19 +1061,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.isParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.isParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.isParentIn_SUBSELECT(classUniversalQuery);
@@ -1083,7 +1083,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.isNotParentIn(relationshipQuery);
   }
@@ -1092,17 +1092,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
 
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.isNotParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     return this.isNotParentIn_SUBSELECT(mappableClassGeoNodeQuery);
   }
@@ -1110,7 +1110,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.isNotParentIn(relationshipQuery);
@@ -1119,19 +1119,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.MappableClassGeoNode.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(geoNodeQuery));
 
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.isNotParentIn(mappableClassGeoNodeQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, net.geoprism.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_geoNode(com.runwaysdk.system.gis.geo.GeoNodeQuery geoNodeQuery, com.runwaysdk.geodashboard.MappableClassGeoNodeQuery mappableClassGeoNodeQuery)
   {
     mappableClassGeoNodeQuery.AND(mappableClassGeoNodeQuery.hasChild(geoNodeQuery));
     return this.isNotParentIn_SUBSELECT(mappableClassGeoNodeQuery);
@@ -1141,7 +1141,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.isNotParentIn(relationshipQuery);
   }
@@ -1150,17 +1150,17 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
 
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.isNotParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     return this.isNotParentIn_SUBSELECT(classUniversalQuery);
   }
@@ -1168,7 +1168,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.isNotParentIn(relationshipQuery);
@@ -1177,19 +1177,19 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ClassUniversal.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
     relationshipQuery.AND(relationshipQuery.hasChild(universalQuery));
 
     return this.isNotParentIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.isNotParentIn(classUniversalQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, net.geoprism.ClassUniversalQuery classUniversalQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_universal(com.runwaysdk.system.gis.geo.UniversalQuery universalQuery, com.runwaysdk.geodashboard.ClassUniversalQuery classUniversalQuery)
   {
     classUniversalQuery.AND(classUniversalQuery.hasChild(universalQuery));
     return this.isNotParentIn_SUBSELECT(classUniversalQuery);
@@ -1199,27 +1199,27 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.MappableClass.CREATEDBY)) 
+    if (name.equals(com.runwaysdk.geodashboard.MappableClass.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.ENTITYDOMAIN)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.LASTUPDATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.LOCKEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.OWNER)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.WRAPPEDMDCLASS)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS)) 
     {
        return new com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -1279,11 +1279,11 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
     public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias);
     public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias, String displayLabel);
 
-    public com.runwaysdk.query.Condition containsAny(net.geoprism.MappableClass ... mappableClass);
-    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.MappableClass ... mappableClass);
-    public com.runwaysdk.query.Condition containsAll(net.geoprism.MappableClass ... mappableClass);
-    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.MappableClass ... mappableClass);
-    public com.runwaysdk.query.Condition containsExactly(net.geoprism.MappableClass ... mappableClass);
+    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.MappableClass ... mappableClass);
+    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.MappableClass ... mappableClass);
+    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.MappableClass ... mappableClass);
+    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.MappableClass ... mappableClass);
+    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.MappableClass ... mappableClass);
   }
 
 /**
@@ -1303,7 +1303,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
 
 
 
-    public com.runwaysdk.query.Condition containsAny(net.geoprism.MappableClass ... mappableClass)  {
+    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.MappableClass ... mappableClass)  {
 
       String[] itemIdArray = new String[mappableClass.length]; 
 
@@ -1315,7 +1315,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
       return this.containsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.MappableClass ... mappableClass)  {
+    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.MappableClass ... mappableClass)  {
 
       String[] itemIdArray = new String[mappableClass.length]; 
 
@@ -1327,7 +1327,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
       return this.notContainsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsAll(net.geoprism.MappableClass ... mappableClass)  {
+    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.MappableClass ... mappableClass)  {
 
       String[] itemIdArray = new String[mappableClass.length]; 
 
@@ -1339,7 +1339,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
       return this.containsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.MappableClass ... mappableClass)  {
+    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.MappableClass ... mappableClass)  {
 
       String[] itemIdArray = new String[mappableClass.length]; 
 
@@ -1351,7 +1351,7 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
       return this.notContainsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsExactly(net.geoprism.MappableClass ... mappableClass)  {
+    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.MappableClass ... mappableClass)  {
 
       String[] itemIdArray = new String[mappableClass.length]; 
 
@@ -1370,13 +1370,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -1387,13 +1387,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.CREATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.CREATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.CREATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -1404,13 +1404,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.MappableClass.ENTITYDOMAIN, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.MappableClass.ENTITYDOMAIN,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -1421,13 +1421,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -1438,13 +1438,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -1455,13 +1455,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.MappableClass.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -1472,13 +1472,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.LASTUPDATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.LASTUPDATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -1489,13 +1489,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.MappableClass.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.MappableClass.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1506,13 +1506,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.MappableClass.OWNER, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.OWNER, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.MappableClass.OWNER,  alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.OWNER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -1523,13 +1523,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.MappableClass.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.MappableClass.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.MappableClass.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.MappableClass.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -1540,13 +1540,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -1557,13 +1557,13 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.MappableClass.TYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass()
@@ -1574,40 +1574,40 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
  
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.MappableClass.WRAPPEDMDCLASS, alias, null);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getWrappedMdClass(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.MappableClass.WRAPPEDMDCLASS,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS,  alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.MappableClass.CREATEDBY)) 
+    if (name.equals(com.runwaysdk.geodashboard.MappableClass.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.ENTITYDOMAIN)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.LASTUPDATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.LOCKEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.OWNER)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.MappableClass.WRAPPEDMDCLASS)) 
+    else if (name.equals(com.runwaysdk.geodashboard.MappableClass.WRAPPEDMDCLASS)) 
     {
        return new com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }

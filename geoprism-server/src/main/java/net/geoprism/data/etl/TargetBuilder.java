@@ -16,16 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data.etl;
+package com.runwayskd.geodashboard.etl;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import net.geoprism.DataUploader;
-import net.geoprism.MappableClass;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationship;
-import net.geoprism.ontology.GeoEntityUtil;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +55,13 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.geodashboard.ConfigurationIF;
+import com.runwaysdk.geodashboard.ConfigurationService;
+import com.runwaysdk.geodashboard.DataUploader;
+import com.runwaysdk.geodashboard.GeoEntityUtil;
+import com.runwaysdk.geodashboard.MappableClass;
+import com.runwaysdk.geodashboard.ontology.Classifier;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
@@ -79,11 +82,11 @@ import com.runwaysdk.system.metadata.MdClass;
 
 public class TargetBuilder
 {
-  public static final String PACKAGE_NAME = "net.geoprism.data.business";
+  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.business";
 
   public static final String EXLUDE       = "EXCLUDE";
 
-  public static final String DERIVED      = "DERIVED";
+  public static final String DERIVE       = "DERIVE";
 
   private JSONObject         configuration;
 
@@ -137,7 +140,7 @@ public class TargetBuilder
     definition.setTargetType(PACKAGE_NAME + "." + typeName);
 
     /*
-     * Define the new MdBussiness and Mappable class
+     * Define the new MdBussiness
      */
     MdBusinessDAO mdBusiness = MdBusinessDAO.newInstance();
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
@@ -146,7 +149,24 @@ public class TargetBuilder
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
+    
+    /*
+     * Create the default classifier root for the MdBusiness
+     */
+    Classifier root = Classifier.findClassifier(mdBusiness.definesType(), typeName);
 
+    if (root == null)
+    {
+      root = new Classifier();
+      root.setClassifierId(typeName);
+      root.setClassifierPackage(mdBusiness.definesType());
+      root.setKeyName(mdBusiness.definesType());
+      root.getDisplayLabel().setValue(label);
+      root.apply();
+
+      root.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+    }
+    
     /*
      * Add all of the basic fields
      */
@@ -160,7 +180,7 @@ public class TargetBuilder
 
         if (this.isValid(cField))
         {
-          TargetFieldIF field = this.createMdAttribute(mdBusiness, sheetName, cField);
+          TargetFieldIF field = this.createMdAttribute(mdBusiness, sheetName, cField, root);
 
           definition.addField(field);
         }
@@ -176,7 +196,7 @@ public class TargetBuilder
       JSONObject values = cAttributes.getJSONObject("values");
       JSONArray ids = cAttributes.getJSONArray("ids");
 
-      boolean createNode = ( !cSheet.has("coordinates") || cSheet.getJSONObject("coordinates").getJSONArray("ids").length() == 0 );
+      Set<String> references = this.getReferencedLocationAttributes(cSheet);
 
       for (int i = 0; i < ids.length(); i++)
       {
@@ -191,7 +211,7 @@ public class TargetBuilder
         definition.addField(field);
 
         // Create the geoNode
-        if (createNode)
+        if (!references.contains(field.getLabel()))
         {
           String key = field.getKey();
 
@@ -231,6 +251,7 @@ public class TargetBuilder
         definition.addField(point);
         definition.addField(multiPolygon);
         definition.addField(featureId);
+        definition.addField(location);
 
         // Create the geoNode
         GeoNodeGeometry node = new GeoNodeGeometry();
@@ -261,7 +282,40 @@ public class TargetBuilder
       mClass.addGeoNode(node).apply();
     }
 
+    /*
+     * Assign permissions
+     */
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.configurePermissions(mdBusiness);
+    }
+
     return definition;
+  }
+
+  private Set<String> getReferencedLocationAttributes(JSONObject cSheet) throws JSONException
+  {
+    Set<String> locations = new TreeSet<String>();
+
+    if (cSheet.has("coordinates"))
+    {
+      JSONObject cCoordinates = cSheet.getJSONObject("coordinates");
+      JSONObject values = cCoordinates.getJSONObject("values");
+      JSONArray ids = cCoordinates.getJSONArray("ids");
+
+      for (int i = 0; i < ids.length(); i++)
+      {
+        String id = ids.getString(i);
+        JSONObject cField = values.getJSONObject(id);
+        String location = cField.getString("location");
+
+        locations.add(location);
+      }
+    }
+
+    return locations;
   }
 
   private Universal setLowest(Universal current, String universalId)
@@ -284,7 +338,7 @@ public class TargetBuilder
   {
     String location = cCoordinate.getString("location");
 
-    if (location.equals(DERIVED))
+    if (location.equals(DERIVE))
     {
       String label = cCoordinate.getString("label");
       String latitude = cCoordinate.getString("latitude");
@@ -347,7 +401,7 @@ public class TargetBuilder
     return false;
   }
 
-  private TargetFieldIF createMdAttribute(MdClassDAO mdClass, String sheetName, JSONObject cField) throws JSONException
+  private TargetFieldIF createMdAttribute(MdClassDAO mdClass, String sheetName, JSONObject cField, Classifier root) throws JSONException
   {
     String columnType = cField.getString("type");
     String columnName = cField.getString("name");
@@ -371,14 +425,19 @@ public class TargetBuilder
       /*
        * Create the root term for the options
        */
-      Classifier classifier = new Classifier();
-      classifier.setClassifierId(attributeName);
-      classifier.setClassifierPackage(mdClass.definesType());
-      classifier.setKeyName(key);
-      classifier.getDisplayLabel().setValue(label);
-      classifier.apply();
+      Classifier classifier = Classifier.findClassifier(mdClass.definesType(), attributeName);
 
-      classifier.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
+      if (classifier == null)
+      {
+        classifier = new Classifier();
+        classifier.setClassifierId(attributeName);
+        classifier.setClassifierPackage(mdClass.definesType());
+        classifier.setKeyName(key);
+        classifier.getDisplayLabel().setValue(label);
+        classifier.apply();
+
+        classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+      }
 
       /*
        * Add the root as an option to the MdAttributeTerm

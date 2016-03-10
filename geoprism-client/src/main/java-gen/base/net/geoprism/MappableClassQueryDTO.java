@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1098277613)
+@com.runwaysdk.business.ClassSignature(hash = 1540569031)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism;
 public class MappableClassQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1098277613;
+private static final long serialVersionUID = 1540569031;
 
   protected MappableClassQueryDTO(String type)
   {
@@ -37,8 +37,8 @@ private static final long serialVersionUID = -1098277613;
   }
 
 @SuppressWarnings("unchecked")
-public java.util.List<? extends net.geoprism.MappableClassDTO> getResultSet()
+public java.util.List<? extends com.runwaysdk.geodashboard.MappableClassDTO> getResultSet()
 {
-  return (java.util.List<? extends net.geoprism.MappableClassDTO>)super.getResultSet();
+  return (java.util.List<? extends com.runwaysdk.geodashboard.MappableClassDTO>)super.getResultSet();
 }
 }

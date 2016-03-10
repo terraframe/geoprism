@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.ontology;
+package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1230656769)
+@com.runwaysdk.business.ClassSignature(hash = 773110901)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.ontology;
 public class ClassifierQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1230656769;
+private static final long serialVersionUID = 773110901;
 
   protected ClassifierQueryDTO(String type)
   {
@@ -37,8 +37,8 @@ private static final long serialVersionUID = 1230656769;
   }
 
 @SuppressWarnings("unchecked")
-public java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getResultSet()
+public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierDTO> getResultSet()
 {
-  return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>)super.getResultSet();
+  return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierDTO>)super.getResultSet();
 }
 }

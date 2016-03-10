@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.ontology;
+package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -523889952)
+@com.runwaysdk.business.ClassSignature(hash = 162908360)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,9 +31,9 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   private static final com.runwaysdk.business.ontology.OntologyStrategyIF strategy;
   static 
   {
-    strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("net.geoprism.ontology.ClassifierSynonym");
+    strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("com.runwaysdk.geodashboard.ontology.ClassifierSynonym");
   }
-  public final static String CLASS = "net.geoprism.ontology.ClassifierSynonym";
+  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierSynonym";
   public static java.lang.String CLASSIFIER = "classifier";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
@@ -50,7 +50,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -523889952;
+  private static final long serialVersionUID = 162908360;
   
   public ClassifierSynonymBase()
   {
@@ -58,7 +58,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
     displayLabel = super.getStruct("displayLabel");
   }
   
-  public net.geoprism.ontology.Classifier getClassifier()
+  public com.runwaysdk.geodashboard.ontology.Classifier getClassifier()
   {
     if (getValue(CLASSIFIER).trim().equals(""))
     {
@@ -66,7 +66,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
     }
     else
     {
-      return net.geoprism.ontology.Classifier.get(getValue(CLASSIFIER));
+      return com.runwaysdk.geodashboard.ontology.Classifier.get(getValue(CLASSIFIER));
     }
   }
   
@@ -82,11 +82,11 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getClassifierMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CLASSIFIER);
   }
   
-  public void setClassifier(net.geoprism.ontology.Classifier value)
+  public void setClassifier(com.runwaysdk.geodashboard.ontology.Classifier value)
   {
     if(value == null)
     {
@@ -110,7 +110,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getCreateDateMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(CREATEDATE);
   }
   
@@ -138,13 +138,13 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCreatedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabel getDisplayLabel()
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabel getDisplayLabel()
   {
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabel) displayLabel;
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabel) displayLabel;
   }
   
   public void validateDisplayLabel()
@@ -154,7 +154,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF getDisplayLabelMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
   }
   
@@ -182,7 +182,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getEntityDomainMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ENTITYDOMAIN);
   }
   
@@ -210,7 +210,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
@@ -226,7 +226,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
@@ -254,7 +254,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastUpdateDateMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTUPDATEDATE);
   }
   
@@ -282,7 +282,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLastUpdatedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
@@ -310,7 +310,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLockedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
@@ -338,7 +338,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOwnerMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(OWNER);
   }
   
@@ -366,7 +366,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
   }
   
@@ -382,7 +382,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
@@ -398,7 +398,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierSynonym.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   
@@ -414,88 +414,88 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
     return query;
   }
   
-  public net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot addClassifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTerm mdAttributeMultiTerm)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot addClassifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTerm mdAttributeMultiTerm)
   {
-    return (net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot) addParent(mdAttributeMultiTerm, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot) addParent(mdAttributeMultiTerm, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
   }
   
   public void removeClassifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTerm mdAttributeMultiTerm)
   {
-    removeAllParents(mdAttributeMultiTerm, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    removeAllParents(mdAttributeMultiTerm, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeMultiTerm> getAllClassifierSynonymMultiTermAttributeRoots()
   {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeMultiTerm>) getParents(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeMultiTerm>) getParents(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot> getAllClassifierSynonymMultiTermAttributeRootsRel()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot> getAllClassifierSynonymMultiTermAttributeRootsRel()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot>) getParentRelationships(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot>) getParentRelationships(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot> getClassifierSynonymMultiTermAttributeRootsRel(com.runwaysdk.system.metadata.MdAttributeMultiTerm mdAttributeMultiTerm)
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot> getClassifierSynonymMultiTermAttributeRootsRel(com.runwaysdk.system.metadata.MdAttributeMultiTerm mdAttributeMultiTerm)
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot>) getRelationshipsWithParent(mdAttributeMultiTerm, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot>) getRelationshipsWithParent(mdAttributeMultiTerm, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
   }
   
-  public net.geoprism.ontology.ClassifierSynonymTermAttributeRoot addClassifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot addClassifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
   {
-    return (net.geoprism.ontology.ClassifierSynonymTermAttributeRoot) addParent(mdAttributeTerm, net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot) addParent(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
   }
   
   public void removeClassifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
   {
-    removeAllParents(mdAttributeTerm, net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    removeAllParents(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm> getAllClassifierSynonymTermAttributeRoots()
   {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm>) getParents(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.metadata.MdAttributeTerm>) getParents(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymTermAttributeRoot> getAllClassifierSynonymTermAttributeRootsRel()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot> getAllClassifierSynonymTermAttributeRootsRel()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymTermAttributeRoot>) getParentRelationships(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot>) getParentRelationships(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymTermAttributeRoot> getClassifierSynonymTermAttributeRootsRel(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot> getClassifierSynonymTermAttributeRootsRel(com.runwaysdk.system.metadata.MdAttributeTerm mdAttributeTerm)
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierSynonymTermAttributeRoot>) getRelationshipsWithParent(mdAttributeTerm, net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot>) getRelationshipsWithParent(mdAttributeTerm, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
   }
   
-  public net.geoprism.ontology.ClassifierHasSynonym addIsSynonymFor(net.geoprism.ontology.Classifier classifier)
+  public com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym addIsSynonymFor(com.runwaysdk.geodashboard.ontology.Classifier classifier)
   {
-    return (net.geoprism.ontology.ClassifierHasSynonym) addParent(classifier, net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym) addParent(classifier, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
   }
   
-  public void removeIsSynonymFor(net.geoprism.ontology.Classifier classifier)
+  public void removeIsSynonymFor(com.runwaysdk.geodashboard.ontology.Classifier classifier)
   {
-    removeAllParents(classifier, net.geoprism.ontology.ClassifierHasSynonym.CLASS);
-  }
-  
-  @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.Classifier> getAllIsSynonymFor()
-  {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.Classifier>) getParents(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    removeAllParents(classifier, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierHasSynonym> getAllIsSynonymForRel()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.Classifier> getAllIsSynonymFor()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierHasSynonym>) getParentRelationships(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.Classifier>) getParents(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public net.geoprism.ontology.ClassifierHasSynonym getIsSynonymForRel(net.geoprism.ontology.Classifier classifier)
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym> getAllIsSynonymForRel()
   {
-    com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierHasSynonym> iterator = (com.runwaysdk.query.OIterator<? extends net.geoprism.ontology.ClassifierHasSynonym>) getRelationshipsWithParent(classifier, net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym>) getParentRelationships(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym getIsSynonymForRel(com.runwaysdk.geodashboard.ontology.Classifier classifier)
+  {
+    com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym> iterator = (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym>) getRelationshipsWithParent(classifier, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     try
     {
       if (iterator.hasNext())
@@ -528,9 +528,15 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
     return strategy;
   }
   
-  public static net.geoprism.ontology.ClassifierSynonym create(net.geoprism.ontology.Classifier classifier, net.geoprism.ontology.ClassifierSynonym synonym)
+  public static com.runwaysdk.geodashboard.ontology.ClassifierSynonym create(com.runwaysdk.geodashboard.ontology.Classifier classifier, com.runwaysdk.geodashboard.ontology.ClassifierSynonym synonym)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierSynonym.java";
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonym.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.business.ontology.TermAndRel createSynonym(com.runwaysdk.geodashboard.ontology.ClassifierSynonym synonym, java.lang.String classifierId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.ontology.ClassifierSynonym.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

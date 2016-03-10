@@ -22,19 +22,55 @@ import net.geoprism.data.etl.ColumnType;
 
 public interface SheetHandler
 {
+  /**
+   * A sheet with the given name has started
+   * 
+   * @param sheetName
+   *          Name of the sheet
+   */
   public void startSheet(String sheetName);
 
+  /**
+   * A sheet has ended
+   */
   public void endSheet();
 
-  /** A row with the (zero based) row number has started */
+  /**
+   * A row with the (zero based) row number has started
+   * 
+   * @param rowNum
+   *          Zero based role number
+   */
   public void startRow(int rowNum);
 
-  /** A row with the (zero based) row number has ended */
+  /**
+   * A row with the (zero based) row number has ended
+   */
   public void endRow();
 
-  /** A cell, with the given formatted value, was encountered */
-  public void cell(String cellReference, String formattedValue, ColumnType cellType);
+  /**
+   * A cell, with the given formatted value, was encountered
+   * 
+   * @param cellReference
+   *          Reference of the cell
+   * @param contentValue
+   *          Content value of the cell
+   * @param formattedValue
+   *          Formatted value of the cell as seen by the user
+   * @param cellType
+   *          Cell type
+   */
+  public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType);
 
-  /** A header or footer has been encountered */
+  /**
+   * A header or footer has been encountered
+   * 
+   * @param text
+   *          Text of the header or footer
+   * @param isHeader
+   *          Flag denoting if it is a header or a footer
+   * @param tagName
+   *          Tag name
+   */
   public void headerFooter(String text, boolean isHeader, String tagName);
 }

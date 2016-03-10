@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="page_title" scope="request" value="View a Classifier Synonym"/>
+<c:set var="page_title" scope="request" value="View a Synonym"/>
 <dl>
   <mjl:form id="net.geoprism.ontology.ClassifierSynonym.form.id" name="net.geoprism.ontology.ClassifierSynonym.form.name" method="POST">
     <mjl:input param="id" value="${item.id}" type="hidden" />
@@ -28,12 +28,11 @@
       <mjl:dt attribute="displayLabel">
         ${item.displayLabel}
       </mjl:dt>
-      <mjl:dt attribute="synonymId">
-        ${item.synonymId}
-      </mjl:dt>
     </mjl:component>
     <mjl:command name="net.geoprism.ontology.ClassifierSynonym.form.edit.button" value="Edit" action="net.geoprism.ontology.ClassifierSynonymController.edit.mojo" />
   </mjl:form>
+</dl>
+<dl>
 </dl>
 <mjl:commandLink name="net.geoprism.ontology.ClassifierSynonym.viewAll.link" action="net.geoprism.ontology.ClassifierSynonymController.viewAll.mojo">
   View All

@@ -16,19 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package com.runwaysdk.geodashboard;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import net.geoprism.AccessConstants;
-import net.geoprism.AdminControllerBase;
-import net.geoprism.JavascriptUtil;
-import net.geoprism.ontology.ClassifierDTO;
-import net.geoprism.ontology.ClassifierIsARelationshipDTO;
-
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
+import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
@@ -38,11 +34,11 @@ import com.runwaysdk.web.json.JSONController;
 
 public class AdminController extends AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR   = "/WEB-INF/net/geoprism/admin/";
+  public static final String JSP_DIR   = "/WEB-INF/com/runwaysdk/geodashboard/admin/";
 
   public static final String LAYOUT    = "/WEB-INF/templates/layout.jsp";
 
-  public static final String INDEX_JSP = "/net/geoprism/jsp/index.jsp";
+  public static final String INDEX_JSP = "/com/runwaysdk/geodashboard/jsp/index.jsp";
 
   public AdminController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
@@ -136,11 +132,11 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void databrowser() throws IOException, ServletException
   {
     String sessionId = this.getClientSession().getSessionId();
-    String metadata = "{className:'net.geoprism.data.browser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
+    String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
-    
+
     this.req.setAttribute("response", response);
-    this.req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+    this.req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
     JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
 
@@ -186,7 +182,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
-  
+
   @Override
   public void system() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -194,11 +190,11 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String metadataES = "{className:" + EmailSettingDTO.CLASS + ", methodName:'getDefault', declaredTypes: []}";
     String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
     this.req.setAttribute("emailSetting", serializedES);
-    
-    String metadataUsr = "{className:" + GeoprismUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
+
+    String metadataUsr = "{className:" + GeodashboardUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
     String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
     this.req.setAttribute("user", serializedUsr);
-    
+
     JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
 
     render("system.jsp");
@@ -206,6 +202,20 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
 
   @Override
   public void failSystem() throws java.io.IOException, javax.servlet.ServletException
+  {
+    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }
+
+  @Override
+  public void datasets() throws IOException, ServletException
+  {
+    JavascriptUtil.loadDatasets(this.getClientRequest(), this.req);
+
+    render("datasets.jsp");
+  }
+
+  @Override
+  public void failDatasets() throws IOException, ServletException
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }

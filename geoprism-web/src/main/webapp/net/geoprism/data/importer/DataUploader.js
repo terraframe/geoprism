@@ -544,7 +544,7 @@
     }   
   }  
 
-  function UploaderDialogController($scope, $rootScope, dataService) {
+  function UploaderDialogController($scope, $rootScope, datasetService) {
     var controller = this;
     
     // Flag indicating if the modal and all of its elements should be destroyed
@@ -577,6 +577,8 @@
         controller.clear();
           
         $scope.$emit('closeUploader', {datasets:result.datasets});
+        
+        $scope.$apply();
       }
         
       var onFailure = function(e){
@@ -590,7 +592,7 @@
       
       $scope.errors = [];
       
-      dataService.importData($scope.configuration, '#uploader-div', onSuccess, onFailure);      
+      datasetService.importData($scope.configuration, '#uploader-div', onSuccess, onFailure);      
     }
     
     controller.cancel = function() {
@@ -770,7 +772,7 @@
   };  
   
   
-  angular.module("data-uploader", ["data-service", "styled-inputs"]);
+  angular.module("data-uploader", ["dataset-service", "styled-inputs"]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('namePage', NamePage)

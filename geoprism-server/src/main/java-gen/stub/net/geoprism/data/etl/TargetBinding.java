@@ -21,13 +21,11 @@ package net.geoprism.data.etl;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.MappableClass;
-
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdView;
 
 public class TargetBinding extends TargetBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -51,12 +49,10 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
 
     super.delete();
 
-    MdBusiness targetBusiness = this.getTargetBusiness();
+    MdView mdView = this.getSourceView();
 
-    MappableClass mClass = MappableClass.getMappableClass(MdClassDAO.getMdClassDAO(targetBusiness.definesType()));
-    mClass.delete();
-
-    targetBusiness.delete();
+    ExcelSourceBinding source = ExcelSourceBinding.getBinding(mdView.definesType());
+    source.delete();
   }
 
   public List<TargetFieldBinding> getFields()

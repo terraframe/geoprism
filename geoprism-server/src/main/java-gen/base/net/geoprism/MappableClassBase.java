@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 2022015370)
+@com.runwaysdk.business.ClassSignature(hash = 1494776880)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -28,7 +28,7 @@ package net.geoprism;
  */
 public abstract class MappableClassBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.MappableClass";
+  public final static String CLASS = "com.runwaysdk.geodashboard.MappableClass";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
@@ -42,7 +42,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 2022015370;
+  private static final long serialVersionUID = 1494776880;
   
   public MappableClassBase()
   {
@@ -61,7 +61,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getCreateDateMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(CREATEDATE);
   }
   
@@ -89,7 +89,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCreatedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
@@ -117,7 +117,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getEntityDomainMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ENTITYDOMAIN);
   }
   
@@ -145,7 +145,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
@@ -161,7 +161,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
@@ -189,7 +189,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastUpdateDateMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTUPDATEDATE);
   }
   
@@ -217,7 +217,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLastUpdatedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
@@ -245,7 +245,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLockedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
@@ -273,7 +273,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOwnerMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(OWNER);
   }
   
@@ -301,7 +301,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
   }
   
@@ -317,7 +317,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
@@ -333,7 +333,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   
@@ -361,7 +361,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getWrappedMdClassMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(WRAPPEDMDCLASS);
   }
   
@@ -389,60 +389,60 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
     return query;
   }
   
-  public net.geoprism.MappableClassGeoNode addGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
+  public com.runwaysdk.geodashboard.MappableClassGeoNode addGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
   {
-    return (net.geoprism.MappableClassGeoNode) addChild(geoNode, net.geoprism.MappableClassGeoNode.CLASS);
+    return (com.runwaysdk.geodashboard.MappableClassGeoNode) addChild(geoNode, com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
   }
   
   public void removeGeoNode(com.runwaysdk.system.gis.geo.GeoNode geoNode)
   {
-    removeAllChildren(geoNode, net.geoprism.MappableClassGeoNode.CLASS);
+    removeAllChildren(geoNode, com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode> getAllGeoNode()
   {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode>) getChildren(net.geoprism.MappableClassGeoNode.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.GeoNode>) getChildren(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.MappableClassGeoNode> getAllGeoNodeRel()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MappableClassGeoNode> getAllGeoNodeRel()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.MappableClassGeoNode>) getChildRelationships(net.geoprism.MappableClassGeoNode.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MappableClassGeoNode>) getChildRelationships(com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.MappableClassGeoNode> getGeoNodeRel(com.runwaysdk.system.gis.geo.GeoNode geoNode)
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MappableClassGeoNode> getGeoNodeRel(com.runwaysdk.system.gis.geo.GeoNode geoNode)
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.MappableClassGeoNode>) getRelationshipsWithChild(geoNode, net.geoprism.MappableClassGeoNode.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.MappableClassGeoNode>) getRelationshipsWithChild(geoNode, com.runwaysdk.geodashboard.MappableClassGeoNode.CLASS);
   }
   
-  public net.geoprism.ClassUniversal addUniversal(com.runwaysdk.system.gis.geo.Universal universal)
+  public com.runwaysdk.geodashboard.ClassUniversal addUniversal(com.runwaysdk.system.gis.geo.Universal universal)
   {
-    return (net.geoprism.ClassUniversal) addChild(universal, net.geoprism.ClassUniversal.CLASS);
+    return (com.runwaysdk.geodashboard.ClassUniversal) addChild(universal, com.runwaysdk.geodashboard.ClassUniversal.CLASS);
   }
   
   public void removeUniversal(com.runwaysdk.system.gis.geo.Universal universal)
   {
-    removeAllChildren(universal, net.geoprism.ClassUniversal.CLASS);
+    removeAllChildren(universal, com.runwaysdk.geodashboard.ClassUniversal.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.Universal> getAllUniversal()
   {
-    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.Universal>) getChildren(net.geoprism.ClassUniversal.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.system.gis.geo.Universal>) getChildren(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ClassUniversal> getAllUniversalRel()
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ClassUniversal> getAllUniversalRel()
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ClassUniversal>) getChildRelationships(net.geoprism.ClassUniversal.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ClassUniversal>) getChildRelationships(com.runwaysdk.geodashboard.ClassUniversal.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public com.runwaysdk.query.OIterator<? extends net.geoprism.ClassUniversal> getUniversalRel(com.runwaysdk.system.gis.geo.Universal universal)
+  public com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ClassUniversal> getUniversalRel(com.runwaysdk.system.gis.geo.Universal universal)
   {
-    return (com.runwaysdk.query.OIterator<? extends net.geoprism.ClassUniversal>) getRelationshipsWithChild(universal, net.geoprism.ClassUniversal.CLASS);
+    return (com.runwaysdk.query.OIterator<? extends com.runwaysdk.geodashboard.ClassUniversal>) getRelationshipsWithChild(universal, com.runwaysdk.geodashboard.ClassUniversal.CLASS);
   }
   
   public static MappableClass get(String id)
@@ -455,15 +455,27 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
     return (MappableClass) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
+  public static java.lang.String getAllAsJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String getAttributesAsJSON(java.lang.String dashboardId, java.lang.String mdClassId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.lang.String getClassesAsJSON(java.lang.String dashboardId)
   {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void remove(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   

@@ -27,8 +27,14 @@
         <li ng-repeat="category in categories.catLiElems track by $index">
           <div class="category-container">
             <div class="text category-input-container">
-              <input class="category-input" type="text" ng-class="{'category-range-input' : (categories.rangeCategoriesEnabled)}" ng-model="category.val" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
-              <input class="category-input category-range-input cat-range-max-val" type="text" ng-model="category.valMax" ng-show="(categories.rangeCategoriesEnabled)" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
+              <div class="category-input-sub-container" ng-class="{'left' : (categories.rangeCategoriesEnabled)}">
+              	<i class="range-cat-ico range-cat-left-ico" ng-class="{'active' : (category.rangeAllMin)}" ng-click="toggleMin($event)" ng-show="categories.rangeCategoriesEnabled" title="<gdb:localize key="DashboardThematicLayer.form.minCatRangeTooltip"/>">&#60;</i>
+              	<input class="category-input left" type="text" ng-class="{'category-range-input' : (categories.rangeCategoriesEnabled), 'active' : (category.rangeAllMin)}" ng-disabled="category.rangeAllMin" ng-model="category.val" ng-required="categoryCheck()" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
+              </div>
+              <div class="category-input-sub-container right">
+              	<i class="range-cat-ico range-cat-right-ico" ng-class="{'active' : (category.rangeAllMax)}" ng-click="toggleMax($event)" ng-show="categories.rangeCategoriesEnabled" title="<gdb:localize key="DashboardThematicLayer.form.maxCatRangeTooltip"/>">&#62;</i>
+              	<input class="category-input category-range-input cat-range-max-val right" ng-class="{'active' : (category.rangeAllMin)}" ng-disabled="category.rangeAllMax" type="text" ng-model="category.valMax" ng-required="categoryCheck()" ng-show="(categories.rangeCategoriesEnabled)" placeholder="<gdb:localize key="DashboardLayer.form.catPlaceHolder"/>" autocomplete="on" category-auto-complete source="autoComplete()" number-only enforce="{{type === 'number'}}"></input>
+              </div>	
             </div>
             <div class="cell">
               <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>             

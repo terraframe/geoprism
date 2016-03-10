@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data.etl;
-
-import net.geoprism.ontology.Classifier;
+package com.runwayskd.geodashboard.etl;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.geodashboard.ontology.Classifier;
 
 public class TargetFieldClassifier extends TargetFieldBasic implements TargetFieldIF
 {
@@ -47,7 +46,7 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
     {
       MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
 
-      Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm);
+      Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm, true);
 
       return classifier.getId();
     }

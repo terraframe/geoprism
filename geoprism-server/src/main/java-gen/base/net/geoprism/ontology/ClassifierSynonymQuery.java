@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.ontology;
+package com.runwaysdk.geodashboard.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 351216969)
+@com.runwaysdk.business.ClassSignature(hash = 1672974257)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -54,29 +54,29 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
 
   public String getClassType()
   {
-    return net.geoprism.ontology.ClassifierSynonym.CLASS;
+    return com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASS;
   }
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
   {
     return getClassifier(null);
 
   }
  
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER);
 
-    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER, mdAttributeIF, this, alias, null);
 
   }
  
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER);
 
-    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -87,13 +87,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -105,41 +105,41 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.CREATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.CREATEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.CREATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel()
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel()
   {
     return getDisplayLabel(null);
 
   }
  
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL);
 
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL, mdAttributeIF, this, alias, null);
 
   }
  
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL);
 
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -151,18 +151,18 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN);
 
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN);
 
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -173,13 +173,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -190,13 +190,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -207,13 +207,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -225,18 +225,18 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -248,18 +248,18 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -271,18 +271,18 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.OWNER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER);
 
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.OWNER, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierSynonym.OWNER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER);
 
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierSynonym.OWNER, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -293,13 +293,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -310,13 +310,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -327,40 +327,40 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierSynonym.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.TYPE, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER)) 
+    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER)) 
     {
-       return new net.geoprism.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.CREATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.OWNER)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -375,9 +375,9 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL)) 
+    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL)) 
     {
-       return new net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -414,7 +414,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
@@ -423,17 +423,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
   }
@@ -441,7 +441,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
@@ -450,19 +450,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.getBusinessQuery().isChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.getBusinessQuery().isChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
@@ -472,7 +472,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
@@ -481,17 +481,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isNotChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
   }
@@ -499,7 +499,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
@@ -508,19 +508,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.getBusinessQuery().isNotChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
@@ -530,7 +530,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
@@ -539,17 +539,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
   }
@@ -557,7 +557,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
@@ -566,19 +566,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.getBusinessQuery().isChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.getBusinessQuery().isChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
@@ -588,7 +588,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
@@ -597,17 +597,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isNotChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
   }
@@ -615,7 +615,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
@@ -624,19 +624,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.getBusinessQuery().isNotChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
@@ -646,7 +646,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
@@ -655,46 +655,46 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.getBusinessQuery().isChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.getBusinessQuery().isChildIn_SUBSELECT(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.getBusinessQuery().isChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.getBusinessQuery().isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.getBusinessQuery().isChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.getBusinessQuery().isChildIn_SUBSELECT(classifierHasSynonymQuery);
@@ -704,7 +704,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
@@ -713,46 +713,46 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.getBusinessQuery().isNotChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.getBusinessQuery().isNotChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.getBusinessQuery().isNotChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.getBusinessQuery().isNotChildIn_SUBSELECT(classifierHasSynonymQuery);
@@ -766,18 +766,18 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public interface ClassifierSynonymQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableReference
   {
 
-    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
-    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
-    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
+    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
+    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel();
-    public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias);
-    public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel();
+    public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias);
+    public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -809,81 +809,81 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierSynonym classifierSynonym);
+    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym);
 
-    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierSynonym classifierSynonym);
+    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym);
 
 
   public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots();
   public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots();
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots();
   public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
 
-  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots();
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition isSynonymFor();
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery);
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery);
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor();
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots();
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots();
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots();
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots();
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery);
 
 
   public com.runwaysdk.query.Condition NOT_IN_isSynonymFor();
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery);
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery);
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
 
 
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor();
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery);
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery);
 
   }
 
@@ -903,33 +903,33 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   }
 
 
-    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierSynonym classifierSynonym)
+    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym)
     {
       if(classifierSynonym == null) return this.EQ((java.lang.String)null);
       return this.EQ(classifierSynonym.getId());
     }
 
-    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierSynonym classifierSynonym)
+    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.ClassifierSynonym classifierSynonym)
     {
       if(classifierSynonym == null) return this.NE((java.lang.String)null);
       return this.NE(classifierSynonym.getId());
     }
 
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
   {
     return getClassifier(null);
 
   }
  
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
   {
-    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER, alias, null);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER, alias, null);
 
   }
  
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
   {
-    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER,  alias, displayLabel);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -940,13 +940,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -957,30 +957,30 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY,  alias, displayLabel);
 
   }
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel()
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel()
   {
     return getDisplayLabel(null);
 
   }
  
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias)
   {
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
 
   }
  
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
   {
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -991,13 +991,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -1008,13 +1008,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -1025,13 +1025,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -1042,13 +1042,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -1059,13 +1059,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -1076,13 +1076,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1093,13 +1093,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.OWNER, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.OWNER,  alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -1110,13 +1110,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierSynonym.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierSynonym.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -1127,13 +1127,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -1144,20 +1144,20 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.TYPE, alias, displayLabel);
 
   }
 
   public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.isChildIn(relationshipQuery);
   }
@@ -1166,17 +1166,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.isChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.isChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
   }
@@ -1184,7 +1184,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.isChildIn(relationshipQuery);
@@ -1193,19 +1193,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.isChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.isChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
@@ -1215,7 +1215,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.isChildIn(relationshipQuery);
   }
@@ -1224,17 +1224,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.isChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.isChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
   }
@@ -1242,7 +1242,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isChildIn(relationshipQuery);
@@ -1251,19 +1251,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.isChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.isChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
@@ -1273,7 +1273,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.isChildIn(relationshipQuery);
   }
@@ -1282,46 +1282,46 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.isChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.isChildIn_SUBSELECT(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.isChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.isChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.isChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.isChildIn_SUBSELECT(classifierHasSynonymQuery);
@@ -1331,7 +1331,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.isNotChildIn(relationshipQuery);
   }
@@ -1340,17 +1340,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.isNotChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     return this.isNotChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
   }
@@ -1358,7 +1358,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.isNotChildIn(relationshipQuery);
@@ -1367,19 +1367,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeMultiTermQuery));
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.isNotChildIn(classifierSynonymMultiTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermQuery mdAttributeMultiTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymMultiTermAttributeRootQuery classifierSynonymMultiTermAttributeRootQuery)
   {
     classifierSynonymMultiTermAttributeRootQuery.AND(classifierSynonymMultiTermAttributeRootQuery.hasParent(mdAttributeMultiTermQuery));
     return this.isNotChildIn_SUBSELECT(classifierSynonymMultiTermAttributeRootQuery);
@@ -1389,7 +1389,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.isNotChildIn(relationshipQuery);
   }
@@ -1398,17 +1398,17 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.isNotChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     return this.isNotChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
   }
@@ -1416,7 +1416,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isNotChildIn(relationshipQuery);
@@ -1425,19 +1425,19 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRoot.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(mdAttributeTermQuery));
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.isNotChildIn(classifierSynonymTermAttributeRootQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, net.geoprism.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_classifierSynonymTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermQuery mdAttributeTermQuery, com.runwaysdk.geodashboard.ontology.ClassifierSynonymTermAttributeRootQuery classifierSynonymTermAttributeRootQuery)
   {
     classifierSynonymTermAttributeRootQuery.AND(classifierSynonymTermAttributeRootQuery.hasParent(mdAttributeTermQuery));
     return this.isNotChildIn_SUBSELECT(classifierSynonymTermAttributeRootQuery);
@@ -1447,7 +1447,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition NOT_IN_isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.isNotChildIn(relationshipQuery);
   }
@@ -1456,46 +1456,46 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor()
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.isNotChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     return this.isNotChildIn_SUBSELECT(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.isNotChildIn(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery)
   {
     com.runwaysdk.query.QueryFactory queryFactory = this.getQueryFactory();
-    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(net.geoprism.ontology.ClassifierHasSynonym.CLASS);
+    com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.geodashboard.ontology.ClassifierHasSynonym.CLASS);
     relationshipQuery.AND(relationshipQuery.hasParent(classifierQuery));
 
     return this.isNotChildIn_SUBSELECT(relationshipQuery);
   }
 
-  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.isNotChildIn(classifierHasSynonymQuery);
   }
 
-  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(net.geoprism.ontology.ClassifierQuery classifierQuery, net.geoprism.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
+  public com.runwaysdk.query.Condition SUBSELECT_NOT_IN_isSynonymFor(com.runwaysdk.geodashboard.ontology.ClassifierQuery classifierQuery, com.runwaysdk.geodashboard.ontology.ClassifierHasSynonymQuery classifierHasSynonymQuery)
   {
     classifierHasSynonymQuery.AND(classifierHasSynonymQuery.hasParent(classifierQuery));
     return this.isNotChildIn_SUBSELECT(classifierHasSynonymQuery);
@@ -1505,27 +1505,27 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER)) 
+    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER)) 
     {
-       return new net.geoprism.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.CREATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.OWNER)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -1540,9 +1540,9 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL)) 
+    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL)) 
     {
-       return new net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -1560,18 +1560,18 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   public interface ClassifierSynonymQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableMultiReference
   {
 
-    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
-    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
-    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
+    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
+    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
-    public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel();
-    public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias);
-    public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
+    public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel();
+    public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias);
+    public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -1603,11 +1603,11 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
-    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym);
-    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym);
-    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym);
-    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym);
-    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym);
+    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym);
+    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym);
+    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym);
+    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym);
+    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym);
   }
 
 /**
@@ -1627,7 +1627,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
 
 
 
-    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym)  {
+    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym)  {
 
       String[] itemIdArray = new String[classifierSynonym.length]; 
 
@@ -1639,7 +1639,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
       return this.containsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym)  {
+    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym)  {
 
       String[] itemIdArray = new String[classifierSynonym.length]; 
 
@@ -1651,7 +1651,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
       return this.notContainsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym)  {
+    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym)  {
 
       String[] itemIdArray = new String[classifierSynonym.length]; 
 
@@ -1663,7 +1663,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
       return this.containsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym)  {
+    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym)  {
 
       String[] itemIdArray = new String[classifierSynonym.length]; 
 
@@ -1675,7 +1675,7 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
       return this.notContainsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierSynonym ... classifierSynonym)  {
+    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierSynonym ... classifierSynonym)  {
 
       String[] itemIdArray = new String[classifierSynonym.length]; 
 
@@ -1686,21 +1686,21 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
 
       return this.containsExactly(itemIdArray);
   }
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
   {
     return getClassifier(null);
 
   }
  
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
   {
-    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER, alias, null);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER, alias, null);
 
   }
  
-  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
+  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
   {
-    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER,  alias, displayLabel);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -1711,13 +1711,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -1728,30 +1728,30 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.CREATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY,  alias, displayLabel);
 
   }
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel()
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel()
   {
     return getDisplayLabel(null);
 
   }
  
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias)
   {
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
 
   }
  
-  public net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
+  public com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
   {
-    return (net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+    return (com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -1762,13 +1762,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -1779,13 +1779,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -1796,13 +1796,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -1813,13 +1813,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -1830,13 +1830,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -1847,13 +1847,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1864,13 +1864,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.OWNER, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierSynonym.OWNER,  alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -1881,13 +1881,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierSynonym.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierSynonym.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -1898,13 +1898,13 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -1915,40 +1915,40 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierSynonym.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.TYPE, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.ontology.ClassifierSynonym.CLASSIFIER)) 
+    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CLASSIFIER)) 
     {
-       return new net.geoprism.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.CREATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.ENTITYDOMAIN)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.LASTUPDATEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.LOCKEDBY)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(net.geoprism.ontology.ClassifierSynonym.OWNER)) 
+    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -1963,9 +1963,9 @@ public  class ClassifierSynonymQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(net.geoprism.ontology.ClassifierSynonym.DISPLAYLABEL)) 
+    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierSynonym.DISPLAYLABEL)) 
     {
-       return new net.geoprism.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.geodashboard.ontology.ClassifierSynonymDisplayLabelQuery.ClassifierSynonymDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

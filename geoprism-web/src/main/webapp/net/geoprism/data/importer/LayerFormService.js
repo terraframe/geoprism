@@ -73,7 +73,7 @@
         var category = categories.catLiElems[i];
                  
         // Only send back categories which have values
-        if(category.val != null && (typeof category.val !== 'string' || category.val.length > 0)) {        	
+        if(category.val != null && (typeof category.val !== 'string' || (category.val.length > 0 || category.rangeAllMin))) {        	
           var object = {};
           angular.copy(category, object);
                  
@@ -380,13 +380,13 @@
         basicPointCatOptionsObj : {
           otherEnabled : true,      
           rangeCategoriesEnabled : false,
-          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":true},
           catLiElems : [
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false}
           ]
         },
         polygonCatOptionsObj : {
@@ -394,11 +394,11 @@
           rangeCategoriesEnabled : false,
           other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
           catLiElems:[
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false}
           ]
         }
       };
@@ -417,13 +417,13 @@
         method : {},
         otherEnabled : false,
         rangeCategoriesEnabled : false,
-        other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
+        other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":true},
         catLiElems : [
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}          
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false}          
         ]
       };
       

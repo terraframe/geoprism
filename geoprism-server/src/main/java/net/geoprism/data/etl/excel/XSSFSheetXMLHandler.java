@@ -63,14 +63,22 @@ public class XSSFSheetXMLHandler extends DefaultHandler
 
   // Set when cell start element is seen;
   // used when cell close element is seen.
-  private ColumnType                   nextDataType;
+  private ColumnType                 nextDataType;
 
   // Used to format numeric cell values.
   private short                      formatIndex;
 
   private String                     formatString;
 
-  private final DataFormatter        formatter;
+  /**
+   * Formatter for getting the formatted cell values
+   */
+  private final DataFormatter        cellFormatter;
+
+  /**
+   * Formatter for getting DATE and NUMBER values in a specific format for further parsing
+   */
+  private final DataFormatter        contentFormatter;
 
   private String                     cellRef;
 
@@ -98,7 +106,9 @@ public class XSSFSheetXMLHandler extends DefaultHandler
     this.output = sheetContentsHandler;
     this.formulasNotResults = formulasNotResults;
     this.nextDataType = ColumnType.NUMBER;
-    this.formatter = dataFormatter;
+
+    this.contentFormatter = dataFormatter;
+    this.cellFormatter = new DataFormatter();
   }
 
   /**
@@ -242,6 +252,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
   public void endElement(String uri, String localName, String name) throws SAXException
   {
     String thisStr = null;
+    String thisData = null;
 
     // v => contents of a cell
     if (isTextTag(name))
@@ -254,16 +265,19 @@ public class XSSFSheetXMLHandler extends DefaultHandler
         case BOOLEAN:
           char first = value.charAt(0);
           thisStr = first == '0' ? "FALSE" : "TRUE";
+          thisData = new String(thisStr);
           break;
 
         case ERROR:
           thisStr = "ERROR:" + value.toString();
+          thisData = new String(thisStr);          
           break;
 
         case FORMULA:
           if (formulasNotResults)
           {
             thisStr = formula.toString();
+            thisData = new String(thisStr);            
           }
           else
           {
@@ -275,18 +289,21 @@ public class XSSFSheetXMLHandler extends DefaultHandler
               {
                 // Try to use the value as a formattable number
                 double d = Double.parseDouble(fv);
-                thisStr = formatter.formatRawCellContents(d, this.formatIndex, this.formatString);
+                thisStr = this.cellFormatter.formatRawCellContents(d, this.formatIndex, this.formatString);
+                thisData = this.contentFormatter.formatRawCellContents(d, this.formatIndex, this.formatString);
               }
               catch (NumberFormatException e)
               {
                 // Formula is a String result not a Numeric one
                 thisStr = fv;
+                thisData = new String(thisStr);                
               }
             }
             else
             {
               // No formating applied, just do raw value in all cases
               thisStr = fv;
+              thisData = new String(thisStr);              
             }
           }
           break;
@@ -295,6 +312,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
           // TODO: Can these ever have formatting on them?
           XSSFRichTextString rtsi = new XSSFRichTextString(value.toString());
           thisStr = rtsi.toString();
+          thisData = new String(thisStr);          
           break;
 
         case TEXT:
@@ -304,6 +322,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
             int idx = Integer.parseInt(sstIndex);
             XSSFRichTextString rtss = new XSSFRichTextString(sharedStringsTable.getEntryAt(idx));
             thisStr = rtss.toString();
+            thisData = new String(thisStr);
           }
           catch (NumberFormatException ex)
           {
@@ -314,23 +333,30 @@ public class XSSFSheetXMLHandler extends DefaultHandler
         case NUMBER:
           String n = value.toString();
           if (this.formatString != null)
-            thisStr = formatter.formatRawCellContents(Double.parseDouble(n), this.formatIndex, this.formatString);
+          {
+            thisStr = cellFormatter.formatRawCellContents(Double.parseDouble(n), this.formatIndex, this.formatString);
+            thisData = this.contentFormatter.formatRawCellContents(Double.parseDouble(n), this.formatIndex, this.formatString);            
+          }
           else
+          {
             thisStr = n;
+            thisData = new String(thisStr);          
+          }
           break;
 
         default:
           thisStr = "(TODO: Unexpected type: " + nextDataType + ")";
+          thisData = new String(thisStr);          
           break;
       }
 
       if (DateUtil.isADateFormat(this.formatIndex, this.formatString))
       {
-        output.cell(cellRef, thisStr, ColumnType.DATE);
+        output.cell(cellRef, thisData, thisStr, ColumnType.DATE);
       }
       else
       {
-        output.cell(cellRef, thisStr, nextDataType);
+        output.cell(cellRef, thisData, thisStr, nextDataType);
       }
     }
     else if ("f".equals(name))

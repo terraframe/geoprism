@@ -83,7 +83,7 @@
       initialize : function(config) {
         config = config || {};
         
-        config.exportMenuType = "net.geoprism.ontologyyExportMenu";
+        config.exportMenuType = "net.geoprism.ontology.GeoEntityExportMenu";
         config.onCreateLi = Mojo.Util.bind(this, this.__onCreateLi);
         
         this.$initialize(config);
@@ -198,17 +198,20 @@
           }
         }).render();
       },
+      
       __onHideSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
         this.getImpl().tree("removeNode", targetNode.data.synonymNode);
         targetNode.data.synonymNode = null;
       },
+      
       __onRefreshSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var targetNode = contextMenu.getTarget();
         
         this.refreshTerm(this.__getRunwayIdFromNode(targetNode));
       },
+      
       __onUpdateSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
         var targetNode = contextMenu.getTarget();
@@ -241,6 +244,7 @@
           }
         }).render();
       },
+      
       __onDeleteSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
         var that = this;
         var targetNode = contextMenu.getTarget();
@@ -265,6 +269,7 @@
           }
         }).render();
       },
+      
       /**
        * Creates the "Synonyms" node and then loads the synonyms under it.
        */
@@ -504,20 +509,20 @@
       __createTreeNode : function(childId, parentNode, hasFetched, config, hide) {
        
         var problemId = "";
-       var hasProblem = this.hasProblem(childId);
+        var hasProblem = this.hasProblem(childId);
         if(hasProblem){
-         problemId = $(".geoent-problem-error-li[data-entity='"+childId+"']").data("id");
-       }
+          problemId = $(".geoent-problem-error-li[data-entity='"+childId+"']").data("id");
+        }
         
-       if(config){
-         config.hasProblem = hasProblem;
-         config.problemId = problemId
-       }
-       else{
-         var config = {};
-         config.hasProblem = hasProblem;
-         config.problemId = problemId
-       }
+        if(config){
+          config.hasProblem = hasProblem;
+          config.problemId = problemId
+        }
+        else{
+          var config = {};
+          config.hasProblem = hasProblem;
+          config.problemId = problemId
+        }
        
         var node = this.$__createTreeNode(childId, parentNode, hasFetched, config, hide);
 
@@ -578,6 +583,9 @@
         return (problem.length > 0);
       },
       
+      /**
+       * OVERRIDE
+       */
       _handleUpdateTerm : function (termId, responseObj) {
         var that = this;
           
@@ -590,7 +598,10 @@
           
         this.refreshEntityProblems(callback);
       },
-      
+
+      /**
+       * OVERRIDE
+       */
       _handleCreateTerm : function (parentId, parentNodes, responseObj) {
         var that = this;
         
@@ -601,7 +612,10 @@
         
         this.refreshEntityProblems(callback);
       },
-      
+
+      /**
+       * OVERRIDE
+       */
       refreshTreeAfterDeleteTerm : function(termId) {
         var that = this;
         

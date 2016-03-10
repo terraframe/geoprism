@@ -16,130 +16,223 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.ontology;
+package com.runwaysdk.geodashboard.ontology;
 
-import net.geoprism.ontology.ClassifierSynonymControllerBase;
+import java.io.IOException;
+
+import org.json.JSONArray;
+
+import com.runwaysdk.business.ontology.TermAndRelDTO;
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.controller.ErrorUtility;
+import com.runwaysdk.system.ontology.TermUtilDTO;
+import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
+import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class ClassifierSynonymController extends ClassifierSynonymControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierSynonym/";
-  public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
-  
-  public ClassifierSynonymController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
+  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/ontology/ClassifierSynonym/";
+
+  public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
+
+  public ClassifierSynonymController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
-  
-  public void cancel(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void cancel(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     dto.unlock();
     this.view(dto.getId());
   }
-  public void failCancel(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failCancel(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     this.edit(dto.getId());
   }
-  public void create(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void create(ClassifierSynonymDTO dto, String classifierId) throws IOException, javax.servlet.ServletException
   {
     try
     {
-      dto.apply();
-      this.view(dto.getId());
+      TermAndRelDTO tnr = ClassifierSynonymDTO.createSynonym(this.getClientRequest(), dto, classifierId);
+
+      this.resp.getWriter().print(new JSONReturnObject(tnr.toJSON()).toString());
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (Throwable t)
     {
-      this.failCreate(dto);
+      ErrorUtility.handleFormError(t, req, resp);
     }
   }
-  public void failCreate(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failCreate(ClassifierSynonymDTO dto, String classifierId) throws IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
-  public void delete(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failCreate(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
+  {
+    req.setAttribute("item", dto);
+    render("createComponent.jsp");
+  }
+
+  public void delete(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     try
     {
       dto.delete();
       this.viewAll();
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (com.runwaysdk.ProblemExceptionDTO e)
     {
       this.failDelete(dto);
     }
   }
-  public void failDelete(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failDelete(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+
+  public void edit(String id) throws IOException, javax.servlet.ServletException
   {
-    net.geoprism.ontology.ClassifierSynonymDTO dto = net.geoprism.ontology.ClassifierSynonymDTO.lock(super.getClientRequest(), id);
+    ClassifierSynonymDTO dto = ClassifierSynonymDTO.lock(super.getClientRequest(), id);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failEdit(String id) throws IOException, javax.servlet.ServletException
   {
     this.view(id);
   }
-  public void newInstance() throws java.io.IOException, javax.servlet.ServletException
+
+  public void newInstance() throws IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.ontology.ClassifierSynonymDTO dto = new net.geoprism.ontology.ClassifierSynonymDTO(clientRequest);
+    ClientRequestIF clientRequest = super.getClientRequest();
+    ClassifierSynonymDTO dto = new ClassifierSynonymDTO(clientRequest);
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
-  public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
+
+  public void failNewInstance() throws IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
-  public void update(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void update(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     try
     {
       dto.apply();
-      this.view(dto.getId());
+
+      String ret = BusinessDTOToJSON.getConverter(dto).populate().toString();
+
+      this.resp.getWriter().print(new JSONReturnObject(ret).toString());
     }
-    catch(com.runwaysdk.ProblemExceptionDTO e)
+    catch (Throwable t)
     {
-      this.failUpdate(dto);
+      boolean needsRedirect = ErrorUtility.handleFormError(t, req, resp);
+
+      if (needsRedirect)
+      {
+        this.viewUpdate(dto.getId());
+      }
     }
   }
-  public void failUpdate(net.geoprism.ontology.ClassifierSynonymDTO dto) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failUpdate(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+
+  public void view(String id) throws IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", net.geoprism.ontology.ClassifierSynonymDTO.get(clientRequest, id));
+    ClientRequestIF clientRequest = super.getClientRequest();
+    req.setAttribute("item", ClassifierSynonymDTO.get(clientRequest, id));
     render("viewComponent.jsp");
   }
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failView(String id) throws IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
-  public void viewAll() throws java.io.IOException, javax.servlet.ServletException
+
+  public void viewAll() throws IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.ontology.ClassifierSynonymQueryDTO query = net.geoprism.ontology.ClassifierSynonymDTO.getAllInstances(clientRequest, null, true, 20, 1);
+    ClientRequestIF clientRequest = super.getClientRequest();
+    ClassifierSynonymQueryDTO query = ClassifierSynonymDTO.getAllInstances(clientRequest, null, true, 20, 1);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failViewAll() throws java.io.IOException, javax.servlet.ServletException
+
+  public void failViewAll() throws IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
-  public void viewPage(java.lang.String sortAttribute, java.lang.Boolean isAscending, java.lang.Integer pageSize, java.lang.Integer pageNumber) throws java.io.IOException, javax.servlet.ServletException
+
+  public void viewPage(String sortAttribute, Boolean isAscending, Integer pageSize, Integer pageNumber) throws IOException, javax.servlet.ServletException
   {
-    com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.ontology.ClassifierSynonymQueryDTO query = net.geoprism.ontology.ClassifierSynonymDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
+    ClientRequestIF clientRequest = super.getClientRequest();
+    ClassifierSynonymQueryDTO query = ClassifierSynonymDTO.getAllInstances(clientRequest, sortAttribute, isAscending, pageSize, pageNumber);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failViewPage(java.lang.String sortAttribute, java.lang.String isAscending, java.lang.String pageSize, java.lang.String pageNumber) throws java.io.IOException, javax.servlet.ServletException
+
+  public void failViewPage(String sortAttribute, String isAscending, String pageSize, String pageNumber) throws IOException, javax.servlet.ServletException
+  {
+    resp.sendError(500);
+  }
+
+  public void getDirectDescendants(String parentId) throws IOException, javax.servlet.ServletException
+  {
+    try
+    {
+      JSONArray array = new JSONArray();
+
+      TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentId, new String[] { ClassifierHasSynonymDTO.CLASS });
+
+      for (TermAndRelDTO tnr : tnrs)
+      {
+        array.put(tnr.toJSON());
+      }
+
+      resp.getWriter().print(new JSONReturnObject(array).toString());
+    }
+    catch (Throwable t)
+    {
+      ErrorUtility.prepareAjaxThrowable(t, resp);
+    }
+  }
+
+  public void failGetDirectDescendants(String parentId) throws IOException, javax.servlet.ServletException
+  {
+    resp.sendError(500);
+  }
+
+  public void viewCreate() throws IOException, javax.servlet.ServletException
+  {
+    ClientRequestIF clientRequest = super.getClientRequest();
+    ClassifierSynonymDTO dto = new ClassifierSynonymDTO(clientRequest);
+    req.setAttribute("item", dto);
+    render("createComponent.jsp");
+  }
+
+  public void failViewCreate() throws IOException, javax.servlet.ServletException
+  {
+    resp.sendError(500);
+  }
+
+  public void viewUpdate(String id) throws IOException, javax.servlet.ServletException
+  {
+    ClassifierSynonymDTO dto = ClassifierSynonymDTO.lock(super.getClientRequest(), id);
+    req.setAttribute("item", dto);
+    render("editComponent.jsp");
+  }
+
+  public void failViewUpdate(String id) throws IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }

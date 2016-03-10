@@ -494,6 +494,41 @@
       }
     };
   }
+
+  function ModalDialog() {
+    return {
+      restrict: 'E',
+      scope: {
+      },
+      replace: true, // Replace with the template below
+      transclude: true, // we want to insert custom content inside the directive
+      templateUrl: '/partial/dialog/modal-dialog.jsp',
+      link: function(scope, element, attrs) {
+        scope.dialogStyle = {};
+        
+        if (attrs.width) {
+          scope.dialogStyle.width = attrs.width;        
+        }
+        
+        if (attrs.height) {
+          scope.dialogStyle.height = attrs.height;        
+        }
+        
+        if (attrs.modal) {
+          scope.modal = attrs.modal;        
+        }
+        
+        if (attrs.overlay) {
+          scope.overlay = attrs.overlay;        
+        }
+        
+        scope.hideModal = function() {
+          scope.show = false;
+        };
+      }
+    };
+  }
+  
   
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
@@ -510,5 +545,6 @@
     .directive('numberOnly', NumberOnly)
     .directive('integerOnly', IntegerOnly)
     .directive('categoryAutoComplete', CategoryAutoComplete)
+    .directive('modalDialog', ModalDialog)
     .directive('isolateForm', IsolateForm);    
 })();

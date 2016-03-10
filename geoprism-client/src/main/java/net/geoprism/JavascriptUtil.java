@@ -23,18 +23,13 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.geoprism.dashboard.DashboardController;
-import net.geoprism.dashboard.DashboardDTO;
-import net.geoprism.dashboard.DashboardDisplayLabelDTO;
-import net.geoprism.DataUploaderController;
-import net.geoprism.EmailSettingDTO;
-import net.geoprism.GeoprismUserDTO;
-import net.geoprism.MappableClassDTO;
-import net.geoprism.RoleViewDTO;
 import net.geoprism.dashboard.AggregationStrategyDTO;
 import net.geoprism.dashboard.AggregationStrategyViewDTO;
 import net.geoprism.dashboard.AggregationTypeDTO;
 import net.geoprism.dashboard.AllAggregationTypeDTO;
+import net.geoprism.dashboard.DashboardController;
+import net.geoprism.dashboard.DashboardDTO;
+import net.geoprism.dashboard.DashboardDisplayLabelDTO;
 import net.geoprism.dashboard.DashboardMapController;
 import net.geoprism.dashboard.DashboardMapDTO;
 import net.geoprism.dashboard.DashboardStyleDTO;
@@ -56,6 +51,10 @@ import net.geoprism.ontology.ClassifierDTO;
 import net.geoprism.ontology.ClassifierDisplayLabelDTO;
 import net.geoprism.ontology.ClassifierExportMenuDTO;
 import net.geoprism.ontology.ClassifierIsARelationshipDTO;
+import net.geoprism.ontology.ClassifierProblemDTO;
+import net.geoprism.ontology.ClassifierProblemViewDTO;
+import net.geoprism.ontology.ClassifierSynonymDTO;
+import net.geoprism.ontology.ClassifierSynonymDisplayLabelDTO;
 import net.geoprism.ontology.GeoEntityExportMenuDTO;
 import net.geoprism.ontology.GeoEntityUtilDTO;
 import net.geoprism.ontology.UniversalExportMenuDTO;
@@ -211,7 +210,11 @@ public class JavascriptUtil implements Reloadable
     types.add(ClassifierDisplayLabelDTO.CLASS);
     types.add(ClassifierController.CLASS);
     types.add(TermUtilDTO.CLASS);
+    types.add(ClassifierSynonymDTO.CLASS);
+    types.add(ClassifierSynonymDisplayLabelDTO.CLASS);    
     types.add(ClassifierExportMenuDTO.CLASS);
+    types.add(ClassifierProblemViewDTO.CLASS);
+    types.add(ClassifierProblemDTO.CLASS);
 
     return types;
   }
@@ -270,6 +273,15 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
+    types.add(DataUploaderController.CLASS);
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+    
+  public static void loadDatasets(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DataSetController.CLASS);
     types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);

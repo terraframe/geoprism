@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function BuilderDialogController($scope, $rootScope, $timeout, builderService, dataService) {
+  function BuilderDialogController($scope, $rootScope, $timeout, builderService, datasetService) {
     var controller = this;
     
     controller.clear = function() {
@@ -164,7 +164,7 @@
 
       // Reset the file Errors
       $scope.fileErrors = [];
-      dataService.uploadSpreadsheet(files[0], '#builder-div', onSuccess, onFailure);
+      datasetService.uploadSpreadsheet(files[0], '#builder-div', onSuccess, onFailure);
     }
     
     /*
@@ -417,49 +417,13 @@
       link: function (scope, element, attrs, ctrl) {
       }
     }    
-  }
-  
-  function ModalDialog() {
-    return {
-      restrict: 'E',
-      scope: {
-      },
-      replace: true, // Replace with the template below
-      transclude: true, // we want to insert custom content inside the directive
-      templateUrl: '/partial/dialog/modal-dialog.jsp',
-      link: function(scope, element, attrs) {
-        scope.dialogStyle = {};
-        
-        if (attrs.width) {
-          scope.dialogStyle.width = attrs.width;        
-        }
-        
-        if (attrs.height) {
-          scope.dialogStyle.height = attrs.height;        
-        }
-        
-        if (attrs.modal) {
-          scope.modal = attrs.modal;        
-        }
-        
-        if (attrs.overlay) {
-          scope.overlay = attrs.overlay;        
-        }
-        
-        scope.hideModal = function() {
-          scope.show = false;
-        };
-      }
-    };
-  }
+  }  
 
-
-  angular.module("dashboard-builder", ["builder-service", "data-service", "styled-inputs", 'ngFileUpload']);
+  angular.module("dashboard-builder", ["builder-service", "dataset-service", "styled-inputs", 'ngFileUpload']);
   angular.module("dashboard-builder")
    .directive('textField', TextField)
    .directive('textAreaField', TextAreaField)
    .directive('selectField', SelectField)
-   .directive('modalDialog', ModalDialog)
    .directive('typeAttribute', TypeAttribute)
    .directive('builderDialog', BuilderDialog);
 })();

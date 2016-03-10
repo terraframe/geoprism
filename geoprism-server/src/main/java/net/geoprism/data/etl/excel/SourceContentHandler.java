@@ -145,13 +145,13 @@ public class SourceContentHandler implements SheetHandler
   }
 
   @Override
-  public void cell(String cellReference, String formattedValue, ColumnType cellType)
+  public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
     if (cellType.equals(ColumnType.FORMULA))
     {
       throw new ExcelFormulaException();
     }
-
+    
     if (this.rowNum == 0)
     {
       if (!cellType.equals(ColumnType.TEXT))
@@ -169,13 +169,13 @@ public class SourceContentHandler implements SheetHandler
 
       if (field.getType().equals(ColumnType.LONG))
       {
-        formattedValue = this.nFormat.format(Double.parseDouble(formattedValue));
+        formattedValue = this.nFormat.format(Double.parseDouble(contentValue));
       }
       else if (field.getType().equals(ColumnType.DATE))
       {
         try
         {
-          Date date = this.dateTimeFormat.parse(formattedValue);
+          Date date = this.dateTimeFormat.parse(contentValue);
 
           formattedValue = this.dateFormat.format(date);
         }
