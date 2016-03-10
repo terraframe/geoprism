@@ -22,7 +22,7 @@
 
 
 <div>
-  <modal-dialog modal="uploader-div" ng-if="show">
+  <modal-dialog modal="uploader-div" overlay="uploader-overlay" ng-if="show">
     <div role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
       <div class="heading">
         <h1 class="ui-dialog-title"><gdb:localize key="dataUploader.title"/></h1>
@@ -41,6 +41,7 @@
         <div class="" style="">
           <fieldset class="">
             <section class="form-container">
+              <match-page ng-if="page.current == 'MATCH'"></match-page>            
               <name-page ng-if="page.current == 'INITIAL'"></name-page>
               <attributes-page ng-if="page.current == 'FIELDS'"></attributes-page>
               <location-page ng-if="page.current == 'LOCATION'"></location-page>
@@ -53,7 +54,7 @@
             <div class="holder">
               <div class="button-holder" fire-on-ready>
                 <input
-                  ng-if="page.current != 'INITIAL'"      
+                  ng-if="page.current != 'INITIAL' && page.current != 'MATCH'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.previous"/>"
                   class="btn btn-primary" 
@@ -61,13 +62,21 @@
                   ng-disabled="busy"
                 />
                 <input
-                  ng-if="page.current != 'SUMMARY'"      
+                  ng-if="page.current != 'SUMMARY' && page.current != 'MATCH'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.next"/>"
                   class="btn btn-primary" 
                   ng-click="ctrl.next()"
                   ng-disabled="form.$invalid || busy"
                 />
+                <input
+                  ng-if="page.current == 'MATCH'"      
+                  type="button"
+                  value="<gdb:localize key="dataUploader.newDataset"/>"
+                  class="btn btn-primary" 
+                  ng-click="ctrl.next()"
+                  ng-disabled="form.$invalid || busy"
+                />                
                 <input 
                   ng-if="page.current == 'SUMMARY'"
                   type="button"

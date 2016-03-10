@@ -79,10 +79,35 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
     }
   }
 
+  public TargetDefinitionIF getDefinition()
+  {
+    MdView sourceView = this.getSourceView();
+    MdBusiness targetBusiness = this.getTargetBusiness();
+
+    TargetDefinition definition = new TargetDefinition();
+    definition.setSourceType(sourceView.definesType());
+    definition.setTargetType(targetBusiness.definesType());
+    definition.setNew(false);
+
+    List<TargetFieldBinding> fields = this.getFields();
+
+    for (TargetFieldBinding field : fields)
+    {
+      definition.addField(field.getTargetField());
+    }
+
+    return definition;
+  }
+
   public static TargetBinding getBinding(String type)
   {
+    return TargetBinding.getBinding(MdBusiness.getMdBusiness(type));
+  }
+
+  public static TargetBinding getBinding(MdBusiness mdBusiness)
+  {
     TargetBindingQuery query = new TargetBindingQuery(new QueryFactory());
-    query.WHERE(query.getTargetBusiness().EQ(MdBusiness.getMdBusiness(type)));
+    query.WHERE(query.getTargetBusiness().EQ(mdBusiness));
 
     OIterator<? extends TargetBinding> iterator = query.getIterator();
 
@@ -102,4 +127,29 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
       iterator.close();
     }
   }
+
+  public static TargetBinding getBinding(MdView mdView)
+  {
+    TargetBindingQuery query = new TargetBindingQuery(new QueryFactory());
+    query.WHERE(query.getSourceView().EQ(mdView));
+
+    OIterator<? extends TargetBinding> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        TargetBinding binding = iterator.next();
+
+        return binding;
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
 }

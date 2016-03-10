@@ -21,15 +21,15 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdLocalStruct name="com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription" label="Description" description="Description" />
+      <mdLocalStruct name="net.geoprism.ontology.ClassifierProblemTypeMasterDescription" label="Description" description="Description" />
 
-      <enumerationMaster name="com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster" label="Geo entity problem type" generateController="false">
+      <enumerationMaster name="net.geoprism.ontology.ClassifierProblemTypeMaster" label="Geo entity problem type" generateController="false">
         <attributes>
-          <localChar removable="true" label="Description" description="Description" name="description" immutable="false" required="false" size="255" type="com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription" />
+          <localChar removable="true" label="Description" description="Description" name="description" immutable="false" required="false" size="255" type="net.geoprism.ontology.ClassifierProblemTypeMasterDescription" />
         </attributes>
       </enumerationMaster>
 
-      <object key="UNMATCHED" type="com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster">
+      <object key="UNMATCHED" type="net.geoprism.ontology.ClassifierProblemTypeMaster">
         <attribute name="enumName" value="UNMATCHED" />
         <attributeStruct name="displayLabel">
           <attribute name="defaultLocale" value="Unmatched" />
@@ -39,18 +39,18 @@
         </attributeStruct>
       </object>
 
-      <mdEnumeration name="com.runwaysdk.geodashboard.ontology.ClassifierProblemType" type="com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster">
+      <mdEnumeration name="net.geoprism.ontology.ClassifierProblemType" type="net.geoprism.ontology.ClassifierProblemTypeMaster">
         <includeAll />
       </mdEnumeration>
 
-      <mdBusiness name="com.runwaysdk.geodashboard.ontology.ClassifierProblem" table="classifier_problem" label="Classifier problem" generateController="false">
+      <mdBusiness name="net.geoprism.ontology.ClassifierProblem" table="classifier_problem" label="Classifier problem" generateController="false">
         <attributes>
-          <reference name="classifier" label="Classifier" type="com.runwaysdk.geodashboard.ontology.Classifier" required="true" indexType="non-unique index" />
-          <enumeration name="problemType" label="Problem type" type="com.runwaysdk.geodashboard.ontology.ClassifierProblemType" selectMultiple="false" />
+          <reference name="classifier" label="Classifier" type="net.geoprism.ontology.Classifier" required="true" indexType="non-unique index" />
+          <enumeration name="problemType" label="Problem type" type="net.geoprism.ontology.ClassifierProblemType" selectMultiple="false" />
         </attributes>
       </mdBusiness>
 
-      <mdView name="com.runwaysdk.geodashboard.ontology.ClassifierProblemView" label="Classifier problem" generateController="false">
+      <mdView name="net.geoprism.ontology.ClassifierProblemView" label="Classifier problem" generateController="false">
         <attributes>
           <char name="classifierId" label="Classifier id" size="255" />
           <char name="concreteId" label="Concrete id" size="255" />
@@ -60,7 +60,7 @@
       </mdView>
     </create>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.ontology.Classifier">
+      <mdBusiness name="net.geoprism.ontology.Classifier">
         <create>
           <mdMethod name="makeSynonym" returnType="java.lang.String[]" label="Make synonym" static="true">
             <mdParameter name="sourceId" label="Source id" order="0" type="java.lang.String" />
@@ -69,13 +69,13 @@
           <mdMethod name="getClassifierTree" returnType="java.lang.String" label="Get classifier tree" static="true">
             <mdParameter name="classifierId" label="Classifier id" order="0" type="java.lang.String" />
           </mdMethod>
-          <mdMethod name="getAllProblems" label="Get all problems" static="true" returnType="com.runwaysdk.geodashboard.ontology.ClassifierProblemView[]" />
+          <mdMethod name="getAllProblems" label="Get all problems" static="true" returnType="net.geoprism.ontology.ClassifierProblemView[]" />
           <mdMethod name="deleteClassifierProblem" returnType="void" label="Delete classifier problem" static="true">
             <mdParameter name="problemId" label="Problem id" order="0" type="java.lang.String" />
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="com.runwaysdk.geodashboard.ontology.ClassifierSynonymController">
+      <mdController name="net.geoprism.ontology.ClassifierSynonymController">
         <mdAction name="create">
           <create>
             <mdParameter name="classifierId" label="Classifier id" order="2" type="java.lang.String" />
@@ -91,10 +91,10 @@
           </mdAction>
         </create>
       </mdController>
-      <mdBusiness name="com.runwaysdk.geodashboard.ontology.ClassifierSynonym">
+      <mdBusiness name="net.geoprism.ontology.ClassifierSynonym">
         <create>
           <mdMethod name="createSynonym" label="Create" returnType="com.runwaysdk.business.ontology.TermAndRel" static="true">
-            <mdParameter name="synonym" order="0" type="com.runwaysdk.geodashboard.ontology.ClassifierSynonym" />
+            <mdParameter name="synonym" order="0" type="net.geoprism.ontology.ClassifierSynonym" />
             <mdParameter name="classifierId" order="1" type="java.lang.String" />
           </mdMethod>
         </create>

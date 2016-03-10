@@ -33,4 +33,6 @@ public interface TargetDefinitionIF
   public List<TargetFieldIF> getFields();
 
   public void persist();
+  
+  public boolean isNew();
 }

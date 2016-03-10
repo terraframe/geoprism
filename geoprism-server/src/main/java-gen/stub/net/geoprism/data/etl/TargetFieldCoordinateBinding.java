@@ -18,14 +18,29 @@
  */
 package net.geoprism.data.etl;
 
+import com.runwaysdk.system.metadata.MdAttribute;
 
 public abstract class TargetFieldCoordinateBinding extends TargetFieldCoordinateBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = 913917673;
-  
+
   public TargetFieldCoordinateBinding()
   {
     super();
   }
-  
+
+  @Override
+  protected void populate(TargetField field)
+  {
+    super.populate(field);
+
+    MdAttribute latitude = this.getLatitudeAttribute();
+    MdAttribute longitude = this.getLongitudeAttribute();
+
+    TargetFieldCoordinate tField = (TargetFieldCoordinate) field;
+    tField.setLatitudeSourceAttributeName(latitude.getAttributeName());
+    tField.setLatitudeLabel(latitude.getDisplayLabel().getValue());
+    tField.setLongitudeSourceAttributeName(longitude.getAttributeName());
+    tField.setLongitudeLabel(longitude.getDisplayLabel().getValue());
+  }
 }

@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -137164151)
+@com.runwaysdk.business.ClassSignature(hash = 580497932)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +31,7 @@ public abstract class TargetFieldCoordinateBindingBase extends net.geoprism.data
   public final static String CLASS = "net.geoprism.data.etl.TargetFieldCoordinateBinding";
   public static java.lang.String LATITUDEATTRIBUTE = "latitudeAttribute";
   public static java.lang.String LONGITUDEATTRIBUTE = "longitudeAttribute";
-  private static final long serialVersionUID = -137164151;
+  private static final long serialVersionUID = 580497932;
   
   public TargetFieldCoordinateBindingBase()
   {

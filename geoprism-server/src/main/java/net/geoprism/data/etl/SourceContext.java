@@ -30,10 +30,6 @@ public class SourceContext implements SourceContextIF
 {
   private Map<String, SourceDefinitionIF> sheets;
 
-  private String                          directory;
-
-  private String                          filename;
-
   public SourceContext()
   {
     this.sheets = new HashMap<String, SourceDefinitionIF>();
@@ -86,26 +82,6 @@ public class SourceContext implements SourceContextIF
     SourceDefinitionIF sheet = this.getSheet(sheetName);
 
     return sheet.getType();
-  }
-
-  public String getDirectory()
-  {
-    return this.directory;
-  }
-
-  public void setDirectory(String directory)
-  {
-    this.directory = directory;
-  }
-
-  public String getFilename()
-  {
-    return this.filename;
-  }
-
-  public void setFilename(String filename)
-  {
-    this.filename = filename;
   }
 
   public void persist()

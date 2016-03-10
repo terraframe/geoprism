@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdException name="com.runwaysdk.geodashboard.RequiredMappableClassException" label="RequiredMappableClassException" message="The dataset [{dataSetLabel}] is required and cannot be deleted.">
+      <mdException name="net.geoprism.RequiredMappableClassException" label="RequiredMappableClassException" message="The dataset [{dataSetLabel}] is required and cannot be deleted.">
         <attributes>
           <text name="dataSetLabel" label="Display label" />
         </attributes>

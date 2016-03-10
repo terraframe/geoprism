@@ -18,14 +18,34 @@
  */
 package net.geoprism.data.etl;
 
+import com.runwaysdk.system.metadata.MdAttribute;
 
 public class TargetFieldBasicBinding extends TargetFieldBasicBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = -15027979;
-  
+
   public TargetFieldBasicBinding()
   {
     super();
   }
-  
+
+  protected void populate(TargetField field)
+  {
+    super.populate(field);
+
+    MdAttribute sourceAttribute = this.getSourceAttribute();
+
+    TargetFieldBasic basic = (TargetFieldBasic) field;
+    basic.setSourceAttributeName(sourceAttribute.getAttributeName());
+  }
+
+  @Override
+  public TargetFieldIF getTargetField()
+  {
+    TargetFieldBasic field = new TargetFieldBasic();
+
+    this.populate(field);
+
+    return field;
+  }
 }

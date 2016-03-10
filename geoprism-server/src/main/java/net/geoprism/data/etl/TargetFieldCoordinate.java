@@ -30,6 +30,10 @@ public abstract class TargetFieldCoordinate extends TargetField implements Targe
 
   private String          longitudeSourceAttributeName;
 
+  private String          latitudeLabel;
+
+  private String          longitudeLabel;
+
   private GeometryFactory geometryFactory;
 
   private GeometryHelper  geometryHelper;
@@ -58,6 +62,26 @@ public abstract class TargetFieldCoordinate extends TargetField implements Targe
   public void setLongitudeSourceAttributeName(String longitudeSourceAttributeName)
   {
     this.longitudeSourceAttributeName = longitudeSourceAttributeName;
+  }
+
+  public String getLatitudeLabel()
+  {
+    return latitudeLabel;
+  }
+
+  public void setLatitudeLabel(String latitudeLabel)
+  {
+    this.latitudeLabel = latitudeLabel;
+  }
+
+  public String getLongitudeLabel()
+  {
+    return longitudeLabel;
+  }
+
+  public void setLongitudeLabel(String longitudeLabel)
+  {
+    this.longitudeLabel = longitudeLabel;
   }
 
   public GeometryFactory getGeometryFactory()

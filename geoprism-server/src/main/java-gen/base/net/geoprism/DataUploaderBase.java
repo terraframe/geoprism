@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -284480929)
+@com.runwaysdk.business.ClassSignature(hash = 558465304)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
 {
   public final static String CLASS = "net.geoprism.DataUploader";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -284480929;
+  private static final long serialVersionUID = 558465304;
   
   public DataUploaderBase()
   {
@@ -63,6 +63,12 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
     return (DataUploader) com.runwaysdk.business.Util.get(id);
   }
   
+  public static void cancelImport(java.lang.String configuration)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String getAttributeInformation(java.lang.String fileName, java.io.InputStream fileStream)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
@@ -70,6 +76,12 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
   }
   
   public static java.lang.String getOptionsJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getSavedConfiguration(java.lang.String id, java.lang.String sheetName)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

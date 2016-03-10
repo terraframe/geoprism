@@ -18,6 +18,9 @@
  */
 package net.geoprism.data.etl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.runwaysdk.system.metadata.MdAttribute;
 
 public class SourceField implements SourceFieldIF
@@ -85,5 +88,23 @@ public class SourceField implements SourceFieldIF
     field.setMdAttribute(mdAttribute);
     field.setSourceDefinition(source);
     field.apply();
+  }
+  
+  @Override
+  public JSONObject toJSON() throws JSONException
+  {
+//    "$$hashKey":"object:564",
+//    "universal":"i8moh5ne0j66q2tbpawrpgkhnlbp4lx0i1vpa2tywfkq0wgqelwt6ay8b49cnbch",
+//    "selected":true    
+    
+    JSONObject object = new JSONObject();
+    object.put("name", this.attributeName);
+    object.put("accepted", true);
+    object.put("selected", true);
+    object.put("label", this.label);
+    object.put("type", this.type.name());
+    object.put("columnType", this.type.name());
+    
+    return object;
   }
 }

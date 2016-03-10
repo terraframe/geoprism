@@ -89,7 +89,43 @@ public class DataUploaderController extends DataUploaderControllerBase implement
     {
       JSONControllerUtil.handleException(this.resp, t, request);
     }
+  }
 
+  @Override
+  public void cancelImport(String configuration) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.cancelImport(request, configuration);
+
+      JSONControllerUtil.writeReponse(this.resp, "");
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void getSavedConfiguration(String id, String sheetName) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      String configuration = DataUploaderDTO.getSavedConfiguration(request, id, sheetName);
+
+      JSONObject object = new JSONObject();
+      object.put("datasets", new JSONObject(configuration));
+
+      JSONControllerUtil.writeReponse(this.resp, object.toString());
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
   }
 
 }

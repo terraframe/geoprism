@@ -18,14 +18,30 @@
  */
 package net.geoprism.data.etl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometryQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeReference;
+import com.runwaysdk.util.IDGenerator;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 
-public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFieldIF
+public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFieldPointIF
 {
+  private String id;
+
+  public TargetFieldPoint()
+  {
+    this.id = IDGenerator.nextID();
+  }
+
   @Override
   public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
@@ -57,4 +73,84 @@ public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFie
     field.apply();
   }
 
+  @Override
+  public String getId()
+  {
+    return this.id;
+  }
+
+  public GeoNodeGeometry getNode()
+  {
+    GeoNodeGeometryQuery query = new GeoNodeGeometryQuery(new QueryFactory());
+    query.WHERE(query.getGeometryAttribute().EQ(MdAttribute.getByKey(this.getKey())));
+
+    OIterator<? extends GeoNodeGeometry> iterator = query.getIterator();
+
+    try
+    {
+      GeoNodeGeometry node = iterator.next();
+
+      return node;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  public TargetFieldDerivedBinding getDerivedBinding(MdAttributeReference geoEntityAttribute)
+  {
+    TargetFieldDerivedBindingQuery query = new TargetFieldDerivedBindingQuery(new QueryFactory());
+    query.WHERE(query.getTargetAttribute().EQ(geoEntityAttribute));
+
+    OIterator<? extends TargetFieldDerivedBinding> iterator = query.getIterator();
+
+    try
+    {
+      if (iterator.hasNext())
+      {
+        TargetFieldDerivedBinding binding = iterator.next();
+
+        return binding;
+      }
+
+      return null;
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
+
+  @Override
+  public JSONObject toJSON() throws JSONException
+  {
+    GeoNodeGeometry node = this.getNode();
+
+    MdAttribute identifierAttribute = node.getIdentifierAttribute();
+    MdAttributeReference geoEntityAttribute = node.getGeoEntityAttribute();
+
+    JSONObject object = new JSONObject();
+    object.put("id", this.id);
+    object.put("label", this.getLabel());
+    object.put("latitude", this.getLatitudeLabel());
+    object.put("longitude", this.getLongitudeLabel());
+    object.put("featureLabel", identifierAttribute.getDisplayLabel().getValue());
+
+    TargetFieldDerivedBinding binding = this.getDerivedBinding(geoEntityAttribute);
+
+    if (binding != null)
+    {
+      object.put("location", "DERIVE");
+      object.put("universal", binding.getUniversalId());
+    }
+    else
+    {
+      object.put("location", geoEntityAttribute.getDisplayLabel().getValue());
+      object.put("universal", "");
+    }
+
+    return object;
+
+  }
 }

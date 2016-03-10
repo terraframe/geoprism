@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 373515904)
+@com.runwaysdk.business.ClassSignature(hash = 272358389)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -149,7 +149,7 @@ public  class TargetFieldCoordinateBindingQuery extends net.geoprism.data.etl.Ta
  * Interface that masks all type unsafe query methods and defines all type safe methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public interface TargetFieldCoordinateBindingQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, net.geoprism.data.etl.TargetFieldBindingQuery.TargetFieldBindingQueryReferenceIF
+  public interface TargetFieldCoordinateBindingQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, net.geoprism.data.etl.TargetFieldBasicBindingQuery.TargetFieldBasicBindingQueryReferenceIF
   {
 
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getLatitudeAttribute();
@@ -169,7 +169,7 @@ public  class TargetFieldCoordinateBindingQuery extends net.geoprism.data.etl.Ta
  * Implements type safe query methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public static class TargetFieldCoordinateBindingQueryReference extends net.geoprism.data.etl.TargetFieldBindingQuery.TargetFieldBindingQueryReference
+  public static class TargetFieldCoordinateBindingQueryReference extends net.geoprism.data.etl.TargetFieldBasicBindingQuery.TargetFieldBasicBindingQueryReference
  implements TargetFieldCoordinateBindingQueryReferenceIF
 , com.runwaysdk.generation.loader.Reloadable
   {
@@ -251,7 +251,7 @@ public  class TargetFieldCoordinateBindingQuery extends net.geoprism.data.etl.Ta
  * Interface that masks all type unsafe query methods and defines all type safe methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public interface TargetFieldCoordinateBindingQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, net.geoprism.data.etl.TargetFieldBindingQuery.TargetFieldBindingQueryMultiReferenceIF
+  public interface TargetFieldCoordinateBindingQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, net.geoprism.data.etl.TargetFieldBasicBindingQuery.TargetFieldBasicBindingQueryMultiReferenceIF
   {
 
     public com.runwaysdk.system.metadata.MdAttributeQuery.MdAttributeQueryReferenceIF getLatitudeAttribute();
@@ -272,7 +272,7 @@ public  class TargetFieldCoordinateBindingQuery extends net.geoprism.data.etl.Ta
  * Implements type safe query methods.
  * This type is used when a join is performed on this class as a reference.
  **/
-  public static class TargetFieldCoordinateBindingQueryMultiReference extends net.geoprism.data.etl.TargetFieldBindingQuery.TargetFieldBindingQueryMultiReference
+  public static class TargetFieldCoordinateBindingQueryMultiReference extends net.geoprism.data.etl.TargetFieldBasicBindingQuery.TargetFieldBasicBindingQueryMultiReference
  implements TargetFieldCoordinateBindingQueryMultiReferenceIF
 , com.runwaysdk.generation.loader.Reloadable
   {

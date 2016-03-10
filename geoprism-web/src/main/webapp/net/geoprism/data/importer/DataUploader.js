@@ -17,6 +17,33 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+  function MatchPageController($scope, datasetService) {
+    var controller = this;
+    
+    controller.select = function(match) {
+      var onSuccess = function(result) {
+        $scope.$emit('loadConfiguration', {sheet: result.datasets});
+          
+        $scope.$apply();
+      }
+        
+      datasetService.getSavedConfiguration(match.id, $scope.sheet.name, '#uploader-div', onSuccess);      
+    }
+  }
+  
+  function MatchPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/match-page.jsp',
+      scope: true,
+      controller : MatchPageController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }
+  
   function NamePage() {
     return {
       restrict: 'E',
@@ -86,17 +113,9 @@
     }   
   }
   
-  function LocationPageController($scope, $rootScope) {
+  function LocationPageController($scope, runwayService) {
     var controller = this;
     
-    controller.generateId = function() {
-      var S4 = function() {
-        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-      };
-          
-      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-    }    
-        
     controller.initialize = function() {
       // Initialize the universal options
       var countries = $scope.options.countries;
@@ -184,7 +203,7 @@
     controller.newAttribute = function() {
       if($scope.attribute != null) {      
         if($scope.attribute.id == -1) {
-          $scope.attribute.id = controller.generateId();
+          $scope.attribute.id = runwayService.generateId();
           $scope.sheet.attributes.ids.push($scope.attribute.id);
           $scope.sheet.attributes.values[$scope.attribute.id] = {};              
         }     
@@ -324,7 +343,7 @@
     }   
   }
   
-  function CoordinatePageController($scope) {
+  function CoordinatePageController($scope, runwayService) {
     var controller = this;
     
     controller.initialize = function() {        
@@ -391,14 +410,6 @@
       }
     }
     
-    controller.generateId = function() {
-      var S4 = function() {
-        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-      };
-            
-      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-    }        
-    
     controller.isBasic = function(field) {
       return (field.type == 'TEXT' || field.type == 'LONG' || field.type == 'DOUBLE');	
     }
@@ -420,7 +431,7 @@
     
     controller.newCoordinate = function() {
       if($scope.coordinate.id == -1) {
-        $scope.coordinate.id = controller.generateId();      
+        $scope.coordinate.id = runwayService.generateId();      
         $scope.sheet.coordinates.ids.push($scope.coordinate.id);
         $scope.sheet.coordinates.values[$scope.coordinate.id] = {};              
       }     
@@ -439,7 +450,7 @@
       };  
       
       // Update the field.selected status
-      controller.setFieldSelected();
+//      controller.setFieldSelected();
     }
     
     controller.isUniqueLabel = function(label) {
@@ -592,13 +603,28 @@
       
       $scope.errors = [];
       
-      datasetService.importData($scope.configuration, '#uploader-div', onSuccess, onFailure);      
+      datasetService.importData($scope.configuration, '#uploader-overlay', onSuccess, onFailure);      
     }
     
     controller.cancel = function() {
-      controller.clear();
-    
-      $scope.$emit('closeUploader', {});                
+      var onSuccess = function(result) {
+        controller.clear();
+          
+        $scope.$emit('closeUploader', {});                
+            
+        $scope.$apply();
+      }
+            
+      var onFailure = function(e){
+        $scope.errors.push(e.message);
+            
+        $scope.$apply();
+      };             
+
+      // Reset the file Errors
+      $scope.errors = [];
+          
+      datasetService.cancelImport($scope.configuration, '#uploader-overlay', onSuccess, onFailure);
     }
     
     controller.load = function(information, options) {
@@ -616,12 +642,19 @@
         current : 'INITIAL',
       };
       
+      if($scope.sheet.matches.length > 0) {
+        $scope.page.current = 'MATCH';
+      }
+      
       $scope.$apply();
     }
     
     controller.next = function() {
       // State machine
-      if($scope.page.current == 'INITIAL') {
+      if($scope.page.current == 'MATCH') {
+        $scope.page.current = 'INITIAL';      
+      }
+      else if($scope.page.current == 'INITIAL') {
         // Go to fields page  
         $scope.page.current = 'FIELDS';      
         
@@ -720,7 +753,23 @@
       if(data.information != null && data.information.sheets.length > 0) {
         controller.load(data.information, data.options);
       }
-    });    
+    });
+    
+    $scope.$on('loadConfiguration', function(event, data){
+      // Go to summary page
+      $scope.page.current = 'SUMMARY';      
+        
+      var snapshot = {
+        page : 'MATCH',
+        sheet : angular.copy($scope.sheet)        
+      };        
+      $scope.page.snapshots.push(snapshot);
+
+      angular.copy(data.sheet, $scope.sheet)
+      
+      event.stopPropigation();
+    });
+
   } 
   
   function UploaderDialog() {
@@ -772,9 +821,10 @@
   };  
   
   
-  angular.module("data-uploader", ["dataset-service", "styled-inputs"]);
+  angular.module("data-uploader", ["dataset-service", "styled-inputs", "runway-service"]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
+   .directive('matchPage', MatchPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)
    .directive('coordinatePage', CoordinatePage)

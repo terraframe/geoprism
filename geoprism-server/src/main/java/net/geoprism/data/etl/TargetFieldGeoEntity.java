@@ -19,7 +19,12 @@
 package net.geoprism.data.etl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
@@ -37,17 +42,20 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.util.IDGenerator;
 
-public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
+public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoEntityIF
 {
   public static class UniversalAttribute
   {
     private String    attributeName;
 
+    private String    label;
+
     private Universal universal;
 
-    public UniversalAttribute(String attributeName, Universal universal)
+    public UniversalAttribute(String attributeName, String label, Universal universal)
     {
       this.attributeName = attributeName;
+      this.label = label;
       this.universal = universal;
     }
 
@@ -70,15 +78,28 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
     {
       this.universal = universal;
     }
+    
+    public String getLabel()
+    {
+      return label;
+    }
   }
 
-  private List<UniversalAttribute> attributes;
+  private ArrayList<UniversalAttribute> attributes;
 
-  private GeoEntity                root;
+  private GeoEntity                     root;
+
+  private String                        id;
 
   public TargetFieldGeoEntity()
   {
     this.attributes = new ArrayList<UniversalAttribute>();
+    this.id = IDGenerator.nextID();
+  }
+
+  public String getId()
+  {
+    return id;
   }
 
   public GeoEntity getRoot()
@@ -91,14 +112,22 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
     this.root = root;
   }
 
-  public List<UniversalAttribute> getUniversalAttributes()
+  public void addUniversalAttribute(String attributeName, String label, Universal universal)
   {
-    return attributes;
+    this.attributes.add(new UniversalAttribute(attributeName, label, universal));
   }
 
-  public void addUniversalAttribute(String attributeName, Universal universal)
+  @Override
+  public Map<String, String> getUniversalAttributes()
   {
-    this.attributes.add(new UniversalAttribute(attributeName, universal));
+    Map<String, String> map = new HashMap<String, String>();
+
+    for (UniversalAttribute attribute : this.attributes)
+    {
+      map.put(attribute.getAttributeName(), attribute.getUniversal().getId());
+    }
+
+    return map;
   }
 
   @Override
@@ -226,9 +255,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
     field.setGeoEntity(this.root);
     field.apply();
 
-    List<UniversalAttribute> attributes = this.getUniversalAttributes();
-
-    for (UniversalAttribute attribute : attributes)
+    for (UniversalAttribute attribute : this.attributes)
     {
       MdAttribute sourceAttribute = MdAttribute.getByKey(binding.getSourceView().definesType() + "." + attribute.getAttributeName());
 
@@ -238,5 +265,26 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldIF
       uAttribute.setUniversal(attribute.getUniversal());
       uAttribute.apply();
     }
+  }
+
+  @Override
+  public JSONObject toJSON() throws JSONException
+  {
+    JSONObject fields = new JSONObject();
+
+    for (UniversalAttribute attribute : this.attributes)
+    {
+      fields.put(attribute.getUniversal().getId(), attribute.getLabel());
+    }
+
+    UniversalAttribute attribute = this.attributes.get(this.attributes.size() - 1);
+
+    JSONObject object = new JSONObject();
+    object.put("label", this.getLabel());
+    object.put("universal", attribute.getUniversal().getId());
+    object.put("fields", fields);
+    object.put("id", this.id);
+
+    return object;
   }
 }

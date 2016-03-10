@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 1182564434)
+@com.runwaysdk.business.ClassSignature(hash = -1603424669)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.data.etl;
 public class TargetFieldCoordinateBindingQueryDTO extends net.geoprism.data.etl.TargetFieldBindingQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1182564434;
+private static final long serialVersionUID = -1603424669;
 
   protected TargetFieldCoordinateBindingQueryDTO(String type)
   {

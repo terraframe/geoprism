@@ -24,11 +24,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import net.geoprism.data.etl.ConfigurationBuilder;
 import net.geoprism.data.etl.Converter;
 import net.geoprism.data.etl.ConverterIF;
 import net.geoprism.data.etl.DataSetBuilder;
 import net.geoprism.data.etl.DataSetBuilderIF;
+import net.geoprism.data.etl.ExcelSourceBinding;
 import net.geoprism.data.etl.SourceContextIF;
+import net.geoprism.data.etl.SourceDefinitionIF;
 import net.geoprism.data.etl.TargetContextIF;
 import net.geoprism.data.etl.TargetDefinitionIF;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
@@ -249,12 +252,15 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       for (TargetDefinitionIF definition : definitions)
       {
-        String type = definition.getTargetType();
+        if (definition.isNew())
+        {
+          String type = definition.getTargetType();
 
-        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
-        MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
+          MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
+          MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
 
-        datasets.put(mClass.toJSON());
+          datasets.put(mClass.toJSON());
+        }
       }
 
       // Return the new data set definition
@@ -265,6 +271,53 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       throw e;
     }
     catch (Exception e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  /**
+   * Deletes the temp files of the import
+   * 
+   * @param configuration
+   */
+  public static void cancelImport(String configuration)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(configuration);
+
+      String name = object.getString("directory");
+
+      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+
+      FileUtils.deleteDirectory(directory);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    catch (IOException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static String getSavedConfiguration(String id, String sheetName)
+  {
+    try
+    {
+      ExcelSourceBinding binding = ExcelSourceBinding.get(id);
+
+      SourceDefinitionIF sDefinition = binding.getDefinition(sheetName);
+      TargetDefinitionIF tDefinition = binding.getTargetBinding().getDefinition();
+
+      ConfigurationBuilder builder = new ConfigurationBuilder(sDefinition, tDefinition);
+      JSONObject configuration = builder.getConfiguration();
+
+      return configuration.toString();
+    }
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }

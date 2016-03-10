@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdController name="com.runwaysdk.geodashboard.DataSetController" label="Data Set Controller">
+      <mdController name="net.geoprism.DataSetController" label="Data Set Controller">
         <mdAction name="getAll" label="Get all data sets" isPost="true" isQuery="false"></mdAction>
         <mdAction name="remove" label="Remove" isPost="true" isQuery="false">
           <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
@@ -29,7 +29,7 @@
       </mdController>
     </create>
     <update>
-      <mdBusiness name="com.runwaysdk.geodashboard.MappableClass">
+      <mdBusiness name="net.geoprism.MappableClass">
         <create>
           <mdMethod name="getAllAsJSON" label="Get all as JSON" static="true" returnType="java.lang.String" />
           <mdMethod name="remove" label="Remove" static="true" returnType="void">
@@ -37,23 +37,23 @@
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="com.runwaysdk.geodashboard.AdminController">
+      <mdController name="net.geoprism.AdminController">
         <create>
           <mdAction name="datasets" label="Data sets" isPost="false" isQuery="false"></mdAction>
         </create>
       </mdController>
     </update>
     <permissions>
-      <method methodName="remove" type="com.runwaysdk.geodashboard.MappableClass">
+      <method methodName="remove" type="net.geoprism.MappableClass">
         <assignedRole roleName="Administrator"/>
       </method>    
     </permissions>    
   </doIt>
   <undoIt>
     <delete>
-      <object key="com.runwaysdk.geodashboard.AdminController.datasets" type="com.runwaysdk.system.metadata.MdAction" />
-      <object key="com.runwaysdk.geodashboard.MappableClass.getAllAsJSON" type="com.runwaysdk.system.metadata.MdMethod" />
-      <object key="com.runwaysdk.geodashboard.DataSetController" type="com.runwaysdk.system.metadata.MdController" />
+      <object key="net.geoprism.AdminController.datasets" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.MappableClass.getAllAsJSON" type="com.runwaysdk.system.metadata.MdMethod" />
+      <object key="net.geoprism.DataSetController" type="com.runwaysdk.system.metadata.MdController" />
     </delete>
   </undoIt>
 </version>

@@ -54,11 +54,15 @@ import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -166,7 +170,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     super.delete();
-    
+
     /*
      * Delete all of the data views which reference this type
      */
@@ -703,5 +707,46 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     MappableClass mClass = MappableClass.get(id);
     mClass.delete();
+  }
+
+  public Universal getCountry()
+  {
+    QueryFactory factory = new QueryFactory();
+
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    cuQuery.WHERE(cuQuery.getParent().EQ(this));
+
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+
+    UniversalQuery uQuery = new UniversalQuery(factory);
+    uQuery.WHERE(uQuery.allowedIn(aiQuery));
+    uQuery.AND(uQuery.EQ(aptQuery.getParentTerm()));
+
+    OIterator<? extends Universal> iterator = null;
+
+    try
+    {
+      iterator = uQuery.getIterator();
+
+      if (iterator.hasNext())
+      {
+        Universal universal = iterator.next();
+
+        return universal;
+      }
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
+
+    return null;
   }
 }

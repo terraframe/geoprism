@@ -20,7 +20,6 @@ package net.geoprism.dashboard;
 
 import java.util.List;
 
-import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.gis.wrapper.MapVisitor;
 import net.geoprism.gis.wrapper.ThematicStyle;
 

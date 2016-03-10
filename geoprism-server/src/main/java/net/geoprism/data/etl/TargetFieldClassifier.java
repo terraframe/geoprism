@@ -23,6 +23,7 @@ import net.geoprism.ontology.Classifier;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.system.metadata.MdAttribute;
 
 public class TargetFieldClassifier extends TargetFieldBasic implements TargetFieldIF
 {
@@ -53,5 +54,20 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
     }
 
     return null;
+  }
+
+  @Override
+  public void persist(TargetBinding binding)
+  {
+    MdAttribute sourceAttribute = MdAttribute.getByKey(binding.getSourceView().definesType() + "." + this.getSourceAttributeName());
+    MdAttribute targetAttribute = MdAttribute.getByKey(this.getKey());
+
+    TargetFieldClassifierBinding field = new TargetFieldClassifierBinding();
+    field.setTarget(binding);
+    field.setTargetAttribute(targetAttribute);
+    field.setSourceAttribute(sourceAttribute);
+    field.setColumnLabel(this.getLabel());
+    field.setPackageName(this.getPackageName());
+    field.apply();
   }
 }

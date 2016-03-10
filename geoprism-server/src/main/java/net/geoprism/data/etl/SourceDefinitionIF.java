@@ -18,15 +18,28 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.List;
+
 public interface SourceDefinitionIF
 {
   public String getType();
+
+  public String getName();
+
+  public String getLabel();
+
+  public String getId();
+
+  public String getCountry();
+
+  public boolean isNew();
 
   public SourceFieldIF getFieldByName(String columnName);
 
   public SourceFieldIF getFieldByLabel(String label);
 
-  public String getName();
+  public List<SourceFieldIF> getFields();
 
   public void persist();
+
 }

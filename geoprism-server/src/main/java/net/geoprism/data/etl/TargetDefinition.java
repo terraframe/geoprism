@@ -37,10 +37,13 @@ public class TargetDefinition implements TargetDefinitionIF
 
   private HashMap<String, TargetFieldIF> labelMap;
 
+  private boolean                        isNew;
+
   public TargetDefinition()
   {
     this.fieldMap = new HashMap<String, TargetFieldIF>();
     this.labelMap = new HashMap<String, TargetFieldIF>();
+    this.isNew = true;
   }
 
   public String getSourceType()
@@ -61,6 +64,17 @@ public class TargetDefinition implements TargetDefinitionIF
   public void setTargetType(String targetType)
   {
     this.targetType = targetType;
+  }
+
+  public void setNew(boolean isNew)
+  {
+    this.isNew = isNew;
+  }
+
+  @Override
+  public boolean isNew()
+  {
+    return this.isNew;
   }
 
   public void addField(TargetFieldIF field)
@@ -93,16 +107,19 @@ public class TargetDefinition implements TargetDefinitionIF
   @Override
   public void persist()
   {
-    TargetBinding binding = new TargetBinding();
-    binding.setSourceView(MdView.getMdView(this.sourceType));
-    binding.setTargetBusiness(MdBusiness.getMdBusiness(this.targetType));
-    binding.apply();
-
-    Collection<TargetFieldIF> fields = this.fieldMap.values();
-
-    for (TargetFieldIF field : fields)
+    if (this.isNew())
     {
-      field.persist(binding);
+      TargetBinding binding = new TargetBinding();
+      binding.setSourceView(MdView.getMdView(this.sourceType));
+      binding.setTargetBusiness(MdBusiness.getMdBusiness(this.targetType));
+      binding.apply();
+
+      Collection<TargetFieldIF> fields = this.fieldMap.values();
+
+      for (TargetFieldIF field : fields)
+      {
+        field.persist(binding);
+      }
     }
   }
 }

@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.etl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public interface SourceFieldIF
 {
@@ -30,4 +32,6 @@ public interface SourceFieldIF
   public ColumnType getType();
 
   public void persist(ExcelSourceBinding source);
+
+  public JSONObject toJSON() throws JSONException;
 }
