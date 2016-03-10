@@ -18,9 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DashboardMapDTO;
-import net.geoprism.dashboard.layer.HasThematicLayerControllerBase;
-import net.geoprism.dashboard.layer.HasThematicLayerQueryDTO;
 
 public class HasThematicLayerController extends HasThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

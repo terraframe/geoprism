@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.SessionEntryDTOBase;
 
 public class SessionEntryDTO extends SessionEntryDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

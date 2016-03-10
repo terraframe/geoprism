@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DashboardMapDTO;
 
 @com.runwaysdk.business.ClassSignature(hash = 303359297)
 public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable

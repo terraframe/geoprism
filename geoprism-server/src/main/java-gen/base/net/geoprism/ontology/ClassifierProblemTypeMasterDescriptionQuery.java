@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 653443137)
 /**
@@ -53,7 +53,7 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
 
   public String getClassType()
   {
-    return com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.CLASS;
+    return net.geoprism.ontology.ClassifierProblemTypeMasterDescription.CLASS;
   }
   public com.runwaysdk.query.SelectableChar getDefaultLocale()
   {
@@ -63,13 +63,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getDefaultLocale(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getDefaultLocale(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -80,13 +80,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -97,13 +97,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -114,13 +114,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, displayLabel);
 
   }
   /**  
@@ -191,13 +191,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getDefaultLocale(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getDefaultLocale(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.DEFAULTLOCALE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -208,13 +208,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -225,13 +225,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -242,13 +242,13 @@ public  class ClassifierProblemTypeMasterDescriptionQuery extends com.runwaysdk.
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblemTypeMasterDescription.SITEMASTER, alias, displayLabel);
 
   }
   }

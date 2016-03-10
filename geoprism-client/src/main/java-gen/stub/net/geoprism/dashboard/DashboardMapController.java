@@ -25,12 +25,9 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import net.geoprism.AccessConstants;
-import net.geoprism.dashboard.DashboardDTO;
-import net.geoprism.dashboard.DashboardQueryDTO;
 import net.geoprism.FileDownloadUtil;
 import net.geoprism.GeoprismUserDTO;
 import net.geoprism.JavascriptUtil;
-import net.geoprism.dashboard.DashboardMapControllerBase;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 
 import com.runwaysdk.constants.ClientRequestIF;

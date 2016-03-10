@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.HasThematicLayer;
 
 @com.runwaysdk.business.ClassSignature(hash = 217945793)
 /**

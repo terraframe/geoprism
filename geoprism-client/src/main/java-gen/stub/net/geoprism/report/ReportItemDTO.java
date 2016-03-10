@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportItemDTOBase;
 
 public class ReportItemDTO extends ReportItemDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

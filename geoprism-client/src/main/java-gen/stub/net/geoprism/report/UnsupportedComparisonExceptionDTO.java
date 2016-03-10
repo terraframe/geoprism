@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.UnsupportedComparisonExceptionDTOBase;
 
 public class UnsupportedComparisonExceptionDTO extends UnsupportedComparisonExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

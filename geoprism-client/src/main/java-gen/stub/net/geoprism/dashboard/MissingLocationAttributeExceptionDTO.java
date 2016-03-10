@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.MissingLocationAttributeExceptionDTOBase;
 
 public class MissingLocationAttributeExceptionDTO extends MissingLocationAttributeExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

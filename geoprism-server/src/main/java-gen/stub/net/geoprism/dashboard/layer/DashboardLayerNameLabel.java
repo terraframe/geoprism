@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardLayerNameLabelBase;
 
 public class DashboardLayerNameLabel extends DashboardLayerNameLabelBase implements com.runwaysdk.generation.loader.Reloadable
 {

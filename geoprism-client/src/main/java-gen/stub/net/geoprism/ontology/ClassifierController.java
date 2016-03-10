@@ -18,9 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierControllerBase;
-import net.geoprism.ontology.ClassifierQueryDTO;
-
 import org.json.JSONArray;
 
 import com.runwaysdk.business.ontology.TermAndRelDTO;

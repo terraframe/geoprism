@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 /**
  * This class is generated automatically.
@@ -29,21 +29,21 @@ public enum ClassifierProblemType implements com.runwaysdk.business.BusinessEnum
 {
   UNMATCHED();
   
-  public static final java.lang.String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblemType";
-  private com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster enumeration;
+  public static final java.lang.String CLASS = "net.geoprism.ontology.ClassifierProblemType";
+  private net.geoprism.ontology.ClassifierProblemTypeMaster enumeration;
   
   private synchronized void loadEnumeration()
   {
-    com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster enu = com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.getEnumeration(this.name());
+    net.geoprism.ontology.ClassifierProblemTypeMaster enu = net.geoprism.ontology.ClassifierProblemTypeMaster.getEnumeration(this.name());
     setEnumeration(enu);
   }
   
-  private synchronized void setEnumeration(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster enumeration)
+  private synchronized void setEnumeration(net.geoprism.ontology.ClassifierProblemTypeMaster enumeration)
   {
     this.enumeration = enumeration;
   }
   
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescription getDescription()
   {
     loadEnumeration();
     return enumeration.getDescription();

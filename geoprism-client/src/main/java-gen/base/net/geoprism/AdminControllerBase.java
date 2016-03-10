@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 1298902421)
 public class AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.AdminController";
+  public static final String CLASS = "net.geoprism.AdminController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -86,155 +86,155 @@ public class AdminControllerBase implements com.runwaysdk.generation.loader.Relo
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void account() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.account");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.account");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failAccount() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failAccount");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failAccount");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void builder() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.builder");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.builder");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failBuilder() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failBuilder");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failBuilder");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void databrowser() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.databrowser");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.databrowser");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failDatabrowser() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failDatabrowser");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failDatabrowser");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void datasets() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.datasets");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.datasets");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failDatasets() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failDatasets");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failDatasets");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void geoentity() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.geoentity");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.geoentity");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failGeoentity() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failGeoentity");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failGeoentity");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void ontologies() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.ontologies");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.ontologies");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failOntologies() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failOntologies");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failOntologies");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void roles() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.roles");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.roles");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failRoles() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failRoles");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failRoles");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void scheduler() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.scheduler");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.scheduler");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failScheduler() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failScheduler");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failScheduler");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void system() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.system");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.system");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failSystem() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failSystem");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failSystem");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void universal() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.universal");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.universal");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failUniversal() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failUniversal");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failUniversal");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void users() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.users");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.users");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
   public void failUsers() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.AdminController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.AdminController.failUsers");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.AdminController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.AdminController.failUsers");
   }
   
 }

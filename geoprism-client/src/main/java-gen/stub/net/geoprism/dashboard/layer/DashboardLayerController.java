@@ -18,8 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardLayerControllerBase;
-import net.geoprism.dashboard.layer.DashboardLayerQueryDTO;
 
 
 public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable

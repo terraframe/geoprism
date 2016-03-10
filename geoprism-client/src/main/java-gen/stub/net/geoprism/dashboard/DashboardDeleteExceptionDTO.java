@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardDeleteExceptionDTOBase;
 
 public class DashboardDeleteExceptionDTO extends DashboardDeleteExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

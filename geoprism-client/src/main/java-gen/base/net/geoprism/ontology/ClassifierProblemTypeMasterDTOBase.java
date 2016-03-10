@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -295586723)
 public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierProblemTypeMaster";
   private static final long serialVersionUID = -295586723;
   
   protected ClassifierProblemTypeMasterDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
@@ -46,9 +46,9 @@ public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.s
   }
   
   public static java.lang.String DESCRIPTION = "description";
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionDTO getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionDTO getDescription()
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionDTO) this.getAttributeStructDTO(DESCRIPTION).getStructDTO();
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionDTO) this.getAttributeStructDTO(DESCRIPTION).getStructDTO();
   }
   
   public boolean isDescriptionWritable()
@@ -71,11 +71,11 @@ public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.s
     return (com.runwaysdk.transport.metadata.AttributeLocalCharacterMdDTO) getAttributeDTO(DESCRIPTION).getAttributeMdDTO();
   }
   
-  public static com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.ontology.ClassifierProblemTypeMasterDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
     
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO) dto;
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDTO) dto;
   }
   
   public void apply()
@@ -94,9 +94,9 @@ public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.s
     getRequest().delete(this.getId());
   }
   
-  public static com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static net.geoprism.ontology.ClassifierProblemTypeMasterQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQueryDTO) clientRequest.getAllInstances(net.geoprism.ontology.ClassifierProblemTypeMasterDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -104,12 +104,12 @@ public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.s
     getRequest().lock(this);
   }
   
-  public static com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ontology.ClassifierProblemTypeMasterDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO.CLASS, "lock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierProblemTypeMasterDTO.CLASS, "lock", _declaredTypes);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -117,12 +117,12 @@ public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.s
     getRequest().unlock(this);
   }
   
-  public static com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ontology.ClassifierProblemTypeMasterDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO.CLASS, "unlock", _declaredTypes);
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierProblemTypeMasterDTO.CLASS, "unlock", _declaredTypes);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

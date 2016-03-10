@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.sld;
+package net.geoprism.gis.sld;
 
 import java.awt.Color;
 import java.io.StringWriter;
@@ -41,6 +41,35 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicStyle;
+import net.geoprism.dashboard.condition.wrapper.And;
+import net.geoprism.dashboard.condition.wrapper.Category;
+import net.geoprism.dashboard.condition.wrapper.Equal;
+import net.geoprism.dashboard.condition.wrapper.Gradient;
+import net.geoprism.dashboard.condition.wrapper.GreaterThan;
+import net.geoprism.dashboard.condition.wrapper.GreaterThanOrEqual;
+import net.geoprism.dashboard.condition.wrapper.IsBetween;
+import net.geoprism.dashboard.condition.wrapper.IsLike;
+import net.geoprism.dashboard.condition.wrapper.IsNull;
+import net.geoprism.dashboard.condition.wrapper.LessThan;
+import net.geoprism.dashboard.condition.wrapper.LessThanOrEqual;
+import net.geoprism.dashboard.condition.wrapper.NotEqual;
+import net.geoprism.dashboard.condition.wrapper.Or;
+import net.geoprism.dashboard.condition.wrapper.Primitive;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.gis.wrapper.AttributeType;
+import net.geoprism.gis.wrapper.FeatureStrategy;
+import net.geoprism.gis.wrapper.FeatureType;
+import net.geoprism.gis.wrapper.Layer;
+import net.geoprism.gis.wrapper.Map;
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.gis.wrapper.ReferenceLayer;
+import net.geoprism.gis.wrapper.Style;
+import net.geoprism.gis.wrapper.ThematicLayer;
+import net.geoprism.gis.wrapper.ThematicStyle;
+import net.geoprism.localization.LocalizationFacade;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,35 +79,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.geodashboard.gis.model.AttributeType;
-import com.runwaysdk.geodashboard.gis.model.FeatureStrategy;
-import com.runwaysdk.geodashboard.gis.model.FeatureType;
-import com.runwaysdk.geodashboard.gis.model.Layer;
-import com.runwaysdk.geodashboard.gis.model.Map;
-import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.ReferenceLayer;
-import com.runwaysdk.geodashboard.gis.model.Style;
-import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
-import com.runwaysdk.geodashboard.gis.model.ThematicStyle;
-import com.runwaysdk.geodashboard.gis.model.condition.And;
-import com.runwaysdk.geodashboard.gis.model.condition.Category;
-import com.runwaysdk.geodashboard.gis.model.condition.Condition;
-import com.runwaysdk.geodashboard.gis.model.condition.Equal;
-import com.runwaysdk.geodashboard.gis.model.condition.Gradient;
-import com.runwaysdk.geodashboard.gis.model.condition.GreaterThan;
-import com.runwaysdk.geodashboard.gis.model.condition.GreaterThanOrEqual;
-import com.runwaysdk.geodashboard.gis.model.condition.IsBetween;
-import com.runwaysdk.geodashboard.gis.model.condition.IsLike;
-import com.runwaysdk.geodashboard.gis.model.condition.IsNull;
-import com.runwaysdk.geodashboard.gis.model.condition.LessThan;
-import com.runwaysdk.geodashboard.gis.model.condition.LessThanOrEqual;
-import com.runwaysdk.geodashboard.gis.model.condition.NotEqual;
-import com.runwaysdk.geodashboard.gis.model.condition.Or;
-import com.runwaysdk.geodashboard.gis.model.condition.Primitive;
-import com.runwaysdk.geodashboard.gis.persist.DashboardStyle;
-import com.runwaysdk.geodashboard.gis.persist.DashboardThematicStyle;
-import com.runwaysdk.geodashboard.localization.LocalizationFacade;
+import com.runwaysdk.form.web.condition.Condition;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.transport.conversion.ConversionException;
 

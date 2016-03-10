@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.MultipleReportExceptionDTOBase;
 
 public class MultipleReportExceptionDTO extends MultipleReportExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

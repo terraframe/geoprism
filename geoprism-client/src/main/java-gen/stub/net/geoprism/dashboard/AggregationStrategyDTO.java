@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AggregationStrategyDTOBase;
 
 public abstract class AggregationStrategyDTO extends AggregationStrategyDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

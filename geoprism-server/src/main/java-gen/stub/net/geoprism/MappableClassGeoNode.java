@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.MappableClassGeoNodeBase;
 
 public class MappableClassGeoNode extends MappableClassGeoNodeBase implements com.runwaysdk.generation.loader.Reloadable
 {

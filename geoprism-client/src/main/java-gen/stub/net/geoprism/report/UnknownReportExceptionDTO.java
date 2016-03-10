@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.UnknownReportExceptionDTOBase;
 
 public class UnknownReportExceptionDTO extends UnknownReportExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

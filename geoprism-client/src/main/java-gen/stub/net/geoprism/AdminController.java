@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package net.geoprism;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import net.geoprism.ontology.ClassifierDTO;
+import net.geoprism.ontology.ClassifierIsARelationshipDTO;
+
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.geodashboard.ontology.ClassifierDTO;
-import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
@@ -132,11 +133,11 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void databrowser() throws IOException, ServletException
   {
     String sessionId = this.getClientSession().getSessionId();
-    String metadata = "{className:'com.runwaysdk.geodashboard.databrowser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
+    String metadata = "{className:'net.geoprism.data.browser.DataBrowserUtil', methodName:'getDefaultTypes', declaredTypes: []}";
     String response = JSONController.invokeMethod(sessionId, metadata, null, "[]");
 
     this.req.setAttribute("response", response);
-    this.req.setAttribute("editData", GeodashboardUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+    this.req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
     JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
 
@@ -191,7 +192,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
     this.req.setAttribute("emailSetting", serializedES);
 
-    String metadataUsr = "{className:" + GeodashboardUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
+    String metadataUsr = "{className:" + GeoprismUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
     String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
     this.req.setAttribute("user", serializedUsr);
 

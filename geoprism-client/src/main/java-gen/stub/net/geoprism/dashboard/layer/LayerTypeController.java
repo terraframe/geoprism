@@ -18,8 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.LayerTypeControllerBase;
-import net.geoprism.dashboard.layer.LayerTypeQueryDTO;
 
 public class LayerTypeController extends LayerTypeControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

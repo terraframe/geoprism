@@ -21,8 +21,6 @@ package net.geoprism.dashboard;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.geoprism.dashboard.AggregationTypeDTO;
-import net.geoprism.dashboard.AllAggregationTypeDTO;
 import net.geoprism.util.Predicate;
 
 import com.runwaysdk.generation.loader.Reloadable;

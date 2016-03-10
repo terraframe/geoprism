@@ -16,551 +16,31 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.persist;
+package net.geoprism.dashboard;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.gis.wrapper.ThematicStyle;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.constants.ComponentInfo;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.Dashboard;
-import com.runwaysdk.geodashboard.MdAttributeView;
-import com.runwaysdk.geodashboard.QueryUtil;
-import com.runwaysdk.geodashboard.gis.DuplicateLayerException;
-import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.model.AttributeType;
-import com.runwaysdk.geodashboard.gis.model.MapVisitor;
-import com.runwaysdk.geodashboard.gis.model.ThematicLayer;
-import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
-import com.runwaysdk.geodashboard.util.CollectionUtil;
-import com.runwaysdk.query.GeneratedComponentQuery;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.Selectable;
-import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Session;
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoNode;
-import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
-import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
-import com.runwaysdk.system.gis.metadata.MdAttributePoint;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdAttributeCharacter;
-import com.runwaysdk.system.metadata.MdAttributeConcrete;
-import com.runwaysdk.system.metadata.MdAttributeDate;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
-import com.runwaysdk.system.metadata.MdAttributeText;
-import com.runwaysdk.system.metadata.MdAttributeVirtual;
 
-public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
+public class DashboardThematicStyle extends DashboardThematicStyleBase implements Reloadable, ThematicStyle
 {
-  private static final long serialVersionUID = -810007054;
+  private static final long serialVersionUID = -1178596850;
 
-  public static String      layerType        = "THEMATICLAYER";
-
-  public DashboardThematicLayer()
+  public DashboardThematicStyle()
   {
     super();
-  }
-
-  // @Override
-  // public String getName()
-  // {
-  // return this.getNameLabel().getValue();
-  // }
-
-  @Transaction
-  public void applyAll(DashboardStyle style, String mapId, AggregationStrategy strategy, DashboardCondition[] conditions)
-  {
-    // If there is an existing aggregation strategy then delete it and use the new one
-    AggregationStrategy existing = this.getAggregationStrategy();
-
-    strategy.apply();
-
-    this.setAggregationStrategy(strategy);
-
-    super.applyAll(style, mapId, conditions);
-
-    if (existing != null)
-    {
-      existing.delete();
-    }
-    
-    // Validate thtat the style is able to generate its SLD correctly
-    style.generateSLD();
-  }
-
-  @Override
-  public String applyWithStyleAndStrategy(DashboardStyle style, String mapId, AggregationStrategy strategy, String state)
-  {
-    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
-
-    try
-    {
-      this.applyAll(style, mapId, strategy, conditions);
-    }
-    catch(com.runwaysdk.dataaccess.database.DuplicateDataDatabaseException e)
-    {
-      throw new DuplicateLayerException(e);
-    }
-
-    return this.publish();
-  }
-
-  /**
-   * Gets the min and max values of a data set to be used for styling based data distributions
-   */
-  public HashMap<String, Double> getLayerMinMax(String _attribute)
-  {
-
-    HashMap<String, Double> minMaxMap = new HashMap<String, Double>();
-
-    QueryFactory f = new QueryFactory();
-    ValueQuery wrapper = new ValueQuery(f);
-    wrapper.FROM(getViewName(), "");
-
-    List<Selectable> selectables = new LinkedList<Selectable>();
-    AllLayerType layerType = this.getLayerType().get(0);
-    if (layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENTPOLYGON || layerType == AllLayerType.GRADIENTPOINT)
-    {
-
-      selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
-      selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
-    }
-
-    selectables.add(wrapper.aSQLAggregateLong("totalResults", "COUNT(*)"));
-
-    wrapper.SELECT(selectables.toArray(new Selectable[selectables.size()]));
-
-    OIterator<? extends ValueObject> iter = wrapper.getIterator();
-    try
-    {
-      ValueObject row = iter.next();
-
-      String min = row.getValue("min_data");
-      String max = row.getValue("max_data");
-
-      CollectionUtil.populateMap(minMaxMap, "min", min, new Double(0));
-      CollectionUtil.populateMap(minMaxMap, "max", max, new Double(0));
-
-      return minMaxMap;
-    }
-    finally
-    {
-      iter.close();
-    }
-  }
-
-  @Override
-  public String getJSON()
-  {
-    return this.toJSON().toString();
-  }
-
-  private static MdAttributeConcrete getMdAttributeConcrete(MdAttribute mdAttr)
-  {
-    if (mdAttr instanceof MdAttributeVirtual)
-    {
-      MdAttributeVirtual mdAttributeVirtual = (MdAttributeVirtual) mdAttr;
-
-      return mdAttributeVirtual.getMdAttributeConcrete();
-    }
-
-    return ( (MdAttributeConcrete) mdAttr );
-  }
-
-  private static String getCategoryType(MdAttributeDAOIF mdAttribute)
-  {
-    MdAttributeConcreteDAOIF mdAttributeConcrete = mdAttribute.getMdAttributeConcrete();
-
-    if (mdAttributeConcrete instanceof MdAttributeDateDAOIF)
-    {
-      return "date";
-    }
-    else if (mdAttributeConcrete instanceof MdAttributeNumberDAOIF)
-    {
-      return "number";
-    }
-
-    return "text";
-  }
-
-  private static JSONObject getMdAttributeType(MdAttribute mdAttribute)
-  {
-    JSONObject attrObj = new JSONObject();
-    MdAttributeConcrete mdAttributeConcrete = getMdAttributeConcrete(mdAttribute);
-
-    // Determine if the attribute is an ontology attribute
-    if (mdAttributeConcrete instanceof MdAttributeTerm)
-    {
-      MdAttributeTermDAOIF mdAttributeTerm = MdAttributeTermDAO.get(mdAttributeConcrete.getId());
-
-      if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
-      {
-        try
-        {
-          attrObj.put("isOntologyAttribute", true);
-          attrObj.put("isTextAttribute", false);
-          attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
-          attrObj.put("termType", Classifier.CLASS);
-          attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
-        }
-        catch (JSONException e)
-        {
-          throw new ProgrammingErrorException(e);
-        }
-      }
-    }
-    else if (mdAttributeConcrete instanceof MdAttributeCharacter || mdAttributeConcrete instanceof MdAttributeText)
-    {
-      try
-      {
-        attrObj.put("isTextAttribute", true);
-        attrObj.put("isOntologyAttribute", false);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-    else
-    {
-      try
-      {
-        attrObj.put("isOntologyAttribute", false);
-        attrObj.put("isTextAttribute", false);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-
-    return attrObj;
-  }
-
-  public static String getOptionsJSON(String thematicAttributeId, String dashboardId)
-  {
-    Dashboard dashboard = Dashboard.get(dashboardId);
-    MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
-    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
-
-    String[] fonts = DashboardThematicStyle.getSortedFonts();
-    OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
-    String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr);
-
-    JSONArray aggStrategiesJSON = new JSONArray();
-    GeoNode[] geoNodes = dashboard.getGeoNodes(tAttr);
-    for (GeoNode geoNode : geoNodes)
-    {
-      JSONObject nodeObj = new JSONObject();
-      String nodeId = geoNode.getId();
-      String nodeType = geoNode.getType();
-      String nodeLabel = geoNode.getDisplayLabelAttribute().getDisplayLabel().toString();
-
-      try
-      {
-        nodeObj.put("nodeId", nodeId);
-        nodeObj.put("nodeType", nodeType);
-        nodeObj.put("nodeLabel", nodeLabel);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-
-      JSONArray aggArr = new JSONArray();
-      AggregationStrategyView[] aggStrategies = AggregationStrategyView.getAggregationStrategies(geoNode);
-
-      for (AggregationStrategyView aggStrat : aggStrategies)
-      {
-        try
-        {
-          aggArr.put(aggStrat.toJSON());
-        }
-        catch (JSONException e)
-        {
-          throw new ProgrammingErrorException(e);
-        }
-      }
-
-      try
-      {
-        nodeObj.put("aggregationStrategies", aggArr);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-
-      aggStrategiesJSON.put(nodeObj);
-    }
-
-    JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);
-    JSONObject attributeType = getMdAttributeType(tAttr);
-    String attrDataType = getCategoryType(mdAttribute);
-
-    // Set possible layer types based on attribute type
-    Map<String, String> layerTypes = new LinkedHashMap<String, String>();
-    MdAttributeConcrete mdAttributeConcrete = getMdAttributeConcrete(tAttr);
-    if (mdAttributeConcrete instanceof MdAttributeDate)
-    {
-      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
-    }
-    else if (mdAttributeConcrete instanceof MdAttributeTerm || mdAttributeConcrete instanceof MdAttributeText || mdAttributeConcrete instanceof MdAttributeCharacter)
-    {
-      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOINT.getEnumName(), AllLayerType.CATEGORYPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOLYGON.getEnumName(), AllLayerType.CATEGORYPOLYGON.getDisplayLabel());
-    }
-    else
-    {
-      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.GRADIENTPOINT.getEnumName(), AllLayerType.GRADIENTPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOINT.getEnumName(), AllLayerType.CATEGORYPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.BUBBLE.getEnumName(), AllLayerType.BUBBLE.getDisplayLabel());
-      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
-      layerTypes.put(AllLayerType.GRADIENTPOLYGON.getEnumName(), AllLayerType.GRADIENTPOLYGON.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOLYGON.getEnumName(), AllLayerType.CATEGORYPOLYGON.getDisplayLabel());
-    }
-
-    JSONObject json = new JSONObject();
-    try
-    {
-      json.put("aggregations", formatAggregationMethods(aggregations));
-      json.put("aggegationStrategies", aggStrategiesJSON);
-      json.put("fonts", new JSONArray(Arrays.asList(fonts)));
-      json.put("geoNodes", new JSONArray(geoNodesJSON));
-
-      json.put("attributeType", attributeType);
-      json.put("attributeDataType", attrDataType);
-
-      json.put("secondaryAttributes", secondaryAttributes);
-
-      json.put("aggregationMap", DashboardStyle.getAggregationJSON());
-
-      json.put("layerTypeNames", new JSONArray(layerTypes.keySet().toArray()));
-      json.put("layerTypeLabels", new JSONArray(layerTypes.values().toArray()));
-
-      JSONArray pointTypes = new JSONArray();
-      pointTypes.put("CIRCLE");
-      pointTypes.put("STAR");
-      pointTypes.put("SQUARE");
-      pointTypes.put("TRIANGLE");
-      pointTypes.put("CROSS");
-      pointTypes.put("X");
-      json.put("pointTypes", pointTypes);
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-
-    if (aggStrategiesJSON.length() == 0)
-    {
-      throw new MissingLocationAttributeException();
-    }
-
-    return json.toString();
-  }
-
-  private static JSONArray formatAggregationMethods(OIterator<? extends AggregationType> aggregations)
-  {
-    JSONArray formattedAggMethods = new JSONArray();
-    for (AggregationType aggMethod : aggregations)
-    {
-      try
-      {
-        JSONObject aggMethodObj = new JSONObject();
-        String formattedAggMethod = aggMethod.toString().replaceAll(".*\\.", "");
-        aggMethodObj.put("method", formattedAggMethod);
-        aggMethodObj.put("label", aggMethod.getDisplayLabel());
-        aggMethodObj.put("id", aggMethod.getId());
-        formattedAggMethods.put(aggMethodObj);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-
-    return formattedAggMethods;
-  }
-
-  private static JSONArray getSecodaryAttributesJSON(String mapId, String mdAttributeId)
-  {
-    JSONArray secAttrs = new JSONArray();
-    MdAttributeView[] secondaryAttributes = DashboardMap.getSecondaryAttributes(mapId, mdAttributeId);
-
-    try
-    {
-      JSONObject object = new JSONObject();
-      object.put("label", "None");
-      object.put("id", "NONE");
-
-      secAttrs.put(object);
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-
-    for (MdAttributeView secAttr : secondaryAttributes)
-    {
-      JSONObject secAttrObj = new JSONObject();
-      try
-      {
-        MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(secAttr.getMdAttributeId()).getMdAttributeConcrete();
-
-        secAttrObj.put("id", secAttr.getId());
-        secAttrObj.put("mdAttributeId", secAttr.getMdAttributeId());
-        secAttrObj.put("type", secAttr.getAttributeType());
-        secAttrObj.put("label", secAttr.getDisplayLabel());
-        secAttrObj.put("categoryType", DashboardThematicLayer.getCategoryType(mdAttributeConcrete));
-
-        if (mdAttributeConcrete instanceof MdAttributeTermDAOIF)
-        {
-          MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttributeConcrete;
-
-          if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
-          {
-            secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
-          }
-        }
-
-        secAttrs.put(secAttrObj);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-
-    return secAttrs;
-  }
-
-  public JSONObject toJSON()
-  {
-    try
-    {
-      DashboardLegend legend = this.getDashboardLegend();
-
-      JSONObject json = new JSONObject();
-      json.put("viewName", getViewName());
-      json.put("sldName", getSLDName());
-      json.put("layerName", getName());
-      json.put("layerId", getId());
-      json.put("inLegend", this.getDisplayInLegend());
-      json.put("legendXPosition", legend.getLegendXPosition());
-      json.put("legendYPosition", legend.getLegendYPosition());
-      json.put("groupedInLegend", legend.getGroupedInLegend());
-      json.put("featureStrategy", getFeatureStrategy());
-      json.put("mdAttributeId", this.getMdAttributeId());
-      json.put("attributeType", this.getAttributeType());
-      json.put("aggregationMethod", this.getAggregationMethod());
-      json.put("aggregationAttribute", this.getAttribute());
-      json.put("layerType", layerType);
-      json.put("attributeLabel", this.getAttributeDisplayLabel());
-      json.put("geoNodeId", this.getGeoNodeId());
-
-      AggregationStrategy aggStrategy = this.getAggregationStrategy();
-      JSONObject aggStratJSON = null;
-      if (aggStrategy != null)
-      {
-        aggStratJSON = aggStrategy.getJSON();
-      }
-      else
-      {
-        aggStratJSON = new JSONObject();
-      }
-      json.put("aggregationStrategy", aggStratJSON);
-
-      JSONArray jsonStyles = new JSONArray();
-      List<? extends DashboardStyle> styles = this.getStyles();
-      for (int i = 0; i < styles.size(); ++i)
-      {
-        DashboardStyle style = styles.get(i);
-        jsonStyles.put(style.toJSON());
-      }
-      json.put("styles", jsonStyles);
-
-      return json;
-    }
-    catch (JSONException ex)
-    {
-      log.error("Could not properly form DashboardLayer [" + this.toString() + "] into valid JSON to send back to the client.");
-      throw new ProgrammingErrorException(ex);
-    }
-  }
-
-  public String getAttributeDisplayLabel()
-  {
-    MdAttributeDAOIF mdAttribute = this.getMdAttributeDAO();
-
-    String label = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
-
-    if (label == null || label.length() == 0)
-    {
-      return mdAttribute.getMdAttributeConcrete().getDisplayLabel(Session.getCurrentLocale());
-    }
-
-    return label;
-  }
-
-  /**
-   * @prerequisite conditions is populated with any DashboardConditions necessary for restricting the view dataset.
-   * 
-   * @return A ValueQuery for use in creating/dropping the database view which will be used with GeoServer.
-   */
-  public ValueQuery getViewQuery()
-  {
-    AggregationStrategy strategy = this.getAggregationStrategy();
-
-    return strategy.getViewQuery(this);
-  }
-
-  public DashboardStyle getStyle()
-  {
-    OIterator<? extends DashboardStyle> iter = this.getAllHasStyle();
-
-    try
-    {
-      while (iter.hasNext())
-      {
-        return iter.next();
-
-      }
-    }
-    finally
-    {
-      iter.close();
-    }
-
-    throw new ProgrammingErrorException("Dashboard layer exists without a style");
   }
 
   @Override
@@ -569,21 +49,95 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     visitor.visit(this);
   }
 
-  public AllAggregationType getAggregationMethod()
+  @Override
+  public JSONObject toJSON()
   {
-    List<AllAggregationType> allAgg = this.getAggregationType();
-
-    if (allAgg.size() > 0)
+    try
     {
-      return allAgg.get(0);
+      JSONObject json = new JSONObject();
+      json.put("bubbleContinuousSize", this.getBubbleContinuousSize());
+
+      JSONObject dashboardLayerJSON = super.toJSON();
+      for (String key : JSONObject.getNames(dashboardLayerJSON))
+      {
+        json.put(key, dashboardLayerJSON.get(key));
+      }
+
+      json.put("bubbleFill", this.getBubbleFill());
+      json.put("bubbleMaxSize", this.getBubbleMaxSize());
+      json.put("bubbleMinSize", this.getBubbleMinSize());
+      json.put("bubbleOpacity", this.getBubbleOpacity());
+      json.put("bubbleRotation", this.getBubbleRotation());
+      json.put("bubbleSize", this.getBubbleSize());
+      json.put("bubbleStroke", this.getBubbleStroke());
+      json.put("bubbleStrokeOpacity", this.getBubbleStrokeOpacity());
+      json.put("bubbleStrokeWidth", this.getBubbleStrokeWidth());
+      json.put("bubbleWellKnownName", this.getBubbleWellKnownName());
+      json.put("categoryPointFillOpacity", this.getCategoryPointFillOpacity());
+      json.put("categoryPointSize", this.getCategoryPointSize());
+      json.put("categoryPointStroke", this.getCategoryPointStroke());
+      json.put("categoryPointStrokeOpacity", this.getCategoryPointStrokeOpacity());
+      json.put("categoryPointStrokeWidth", this.getCategoryPointStrokeWidth());
+      json.put("categoryPointStyles", this.getCategoryPointStyles());
+      json.put("categoryPointWellKnownName", this.getCategoryPointWellKnownName());
+      json.put("categoryPolygonFillOpacity", this.getCategoryPolygonFillOpacity());
+      json.put("categoryPolygonStroke", this.getCategoryPolygonStroke());
+      json.put("categoryPolygonStrokeOpacity", this.getCategoryPolygonStrokeOpacity());
+      json.put("categoryPolygonStrokeWidth", this.getCategoryPolygonStrokeWidth());
+      json.put("categoryPolygonStyles", this.getCategoryPolygonStyles());
+      json.put("gradientPointFillOpacity", this.getGradientPointFillOpacity());
+      json.put("gradientPointMaxFill", this.getGradientPointMaxFill());
+      json.put("gradientPointMinFill", this.getGradientPointMinFill());
+      json.put("gradientPointSize", this.getGradientPointSize());
+      json.put("gradientPointStroke", this.getGradientPointStroke());
+      json.put("gradientPointStrokeOpacity", this.getGradientPointStrokeOpacity());
+      json.put("gradientPointStrokeWidth", this.getGradientPointStrokeWidth());
+      json.put("gradientPointWellKnownName", this.getGradientPointWellKnownName());
+      json.put("gradientPolygonFillOpacity", this.getGradientPolygonFillOpacity());
+      json.put("gradientPolygonMaxFill", this.getGradientPolygonMaxFill());
+      json.put("gradientPolygonMinFill", this.getGradientPolygonMinFill());
+      json.put("gradientPolygonStroke", this.getGradientPolygonStroke());
+      json.put("gradientPolygonStrokeOpacity", this.getGradientPolygonStrokeOpacity());
+      json.put("gradientPolygonStrokeWidth", this.getGradientPolygonStrokeWidth());
+      json.put("secondaryAggregationType", this.getSecondaryAggregationType());
+      json.put("secondaryAttribute", this.getSecondaryAttributeId());
+      json.put("secondaryCategories", this.getSecondaryCategories());
+
+      json.put("aggregationMap", DashboardStyle.getAggregationJSON());
+
+      return json;
+    }
+    catch (JSONException ex)
+    {
+      String msg = "Could not properly form DashboardStyle [" + this.toString() + "] into valid JSON to send back to the client.";
+      throw new ProgrammingErrorException(msg, ex);
+    }
+  }
+
+  @Override
+  @Transaction
+  public void delete()
+  {
+    super.delete();
+  }
+
+  @Override
+  public AllAggregationType getSecondaryAttributeAggregationMethod()
+  {
+    List<AllAggregationType> aggregations = this.getSecondaryAggregationType();
+
+    if (aggregations.size() > 0)
+    {
+      return aggregations.get(0);
     }
 
     return null;
   }
 
-  public MdAttributeDAOIF getMdAttributeDAO()
+  @Override
+  public MdAttributeDAOIF getSecondaryAttributeDAO()
   {
-    String mdAttributeId = this.getMdAttributeId();
+    String mdAttributeId = this.getSecondaryAttributeId();
 
     if (mdAttributeId != null && mdAttributeId.length() > 0)
     {
@@ -594,163 +148,89 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   }
 
   @Override
-  public AttributeType getAttributeType()
+  public JSONArray getSecondaryAttributeCategoriesAsJSON() throws JSONException
   {
-    MdAttributeConcreteDAOIF mdAttribute = this.getMdAttributeDAO().getMdAttributeConcrete();
-
-    if (mdAttribute instanceof MdAttributeDateDAOIF)
+    if (this.getSecondaryCategories() != null && this.getSecondaryCategories().length() > 0)
     {
-      return AttributeType.DATE;
-    }
-    else if (mdAttribute instanceof MdAttributeDateTimeDAOIF)
-    {
-      return AttributeType.DATETIME;
-    }
-    else if (mdAttribute instanceof MdAttributeTimeDAOIF)
-    {
-      return AttributeType.TIME;
-    }
-    else if (mdAttribute instanceof MdAttributeNumberDAOIF)
-    {
-      return AttributeType.NUMBER;
+      return new JSONArray(this.getSecondaryCategories());
     }
 
-    return AttributeType.BASIC;
+    return null;
   }
 
   @Override
-  public String getAttribute()
+  public DashboardStyle clone()
   {
-    return MdAttributeDAO.get(this.getMdAttributeId()).definesAttribute();
+    DashboardThematicStyle clone = new DashboardThematicStyle();
+    clone.populate(this);
+    clone.apply();
+
+    return clone;
   }
 
-  protected void populate(DashboardLayer source)
+  @Override
+  protected void populate(DashboardStyle source)
   {
     super.populate(source);
 
-    if (source instanceof DashboardThematicLayer)
+    if (source instanceof DashboardThematicStyle)
     {
-      DashboardThematicLayer tSource = (DashboardThematicLayer) source;
+      DashboardThematicStyle tSource = (DashboardThematicStyle) source;
 
-      List<AllAggregationType> types = tSource.getAggregationType();
+      // Bubble
+      this.setBubbleContinuousSize(tSource.getBubbleContinuousSize());
+      this.setBubbleFill(tSource.getBubbleFill());
+      this.setBubbleMaxSize(tSource.getBubbleMaxSize());
+      this.setBubbleMinSize(tSource.getBubbleMinSize());
+      this.setBubbleOpacity(tSource.getBubbleOpacity());
+      this.setBubbleRotation(tSource.getBubbleRotation());
+      this.setBubbleSize(tSource.getBubbleSize());
+      this.setBubbleStroke(tSource.getBubbleStroke());
+      this.setBubbleStrokeOpacity(tSource.getBubbleStrokeOpacity());
+      this.setBubbleStrokeWidth(tSource.getBubbleStrokeWidth());
+      this.setBubbleWellKnownName(tSource.getBubbleWellKnownName());
 
-      for (AllAggregationType type : types)
-      {
-        this.addAggregationType(type);
-      }
+      // Category Point
+      this.setCategoryPointFillOpacity(tSource.getCategoryPointFillOpacity());
+      this.setCategoryPointSize(tSource.getCategoryPointSize());
+      this.setCategoryPointStroke(tSource.getCategoryPointStroke());
+      this.setCategoryPointStrokeOpacity(tSource.getCategoryPointStrokeOpacity());
+      this.setCategoryPointStrokeWidth(tSource.getCategoryPointStrokeWidth());
+      this.setCategoryPointStyles(tSource.getCategoryPointStyles());
+      this.setCategoryPointWellKnownName(tSource.getCategoryPointWellKnownName());
 
-      this.setMdAttribute(tSource.getMdAttribute());
-      this.setGeoNode(tSource.getGeoNode());
-      this.setAggregationStrategy(tSource.getAggregationStrategy().clone());
+      // Category Polygon
+      this.setCategoryPolygonFillOpacity(tSource.getCategoryPolygonFillOpacity());
+      this.setCategoryPolygonStroke(tSource.getCategoryPolygonStroke());
+      this.setCategoryPolygonStrokeOpacity(tSource.getCategoryPolygonStrokeOpacity());
+      this.setCategoryPolygonStrokeWidth(tSource.getCategoryPolygonStrokeWidth());
+      this.setCategoryPolygonStyles(tSource.getCategoryPolygonStyles());
+
+      // Gradient Point
+      this.setGradientPointSize(tSource.getGradientPointSize());
+      this.setGradientPointWellKnownName(tSource.getGradientPointWellKnownName());
+      this.setGradientPointFillOpacity(tSource.getGradientPointFillOpacity());
+      this.setGradientPointMaxFill(tSource.getGradientPointMaxFill());
+      this.setGradientPointMinFill(tSource.getGradientPointMinFill());
+      this.setGradientPointStroke(tSource.getGradientPointStroke());
+      this.setGradientPointStrokeOpacity(tSource.getGradientPointStrokeOpacity());
+      this.setGradientPointStrokeWidth(tSource.getGradientPointStrokeWidth());
+
+      // Gradient Polygon
+      this.setGradientPolygonFillOpacity(tSource.getGradientPolygonFillOpacity());
+      this.setGradientPolygonStroke(tSource.getGradientPolygonStroke());
+      this.setGradientPolygonMaxFill(tSource.getGradientPolygonMaxFill());
+      this.setGradientPolygonMinFill(tSource.getGradientPolygonMinFill());
+      this.setGradientPolygonStrokeOpacity(tSource.getGradientPolygonStrokeOpacity());
+      this.setGradientPolygonStrokeWidth(tSource.getGradientPolygonStrokeWidth());
+
+      // this.setPointRadius(tSource.getPointRadius());
+      this.setBasicPointSize(tSource.getBasicPointSize());
+
+      // Secondary attributes
+      this.addSecondaryAggregationType(tSource.getSecondaryAttributeAggregationMethod());
+      this.setSecondaryAttribute(tSource.getSecondaryAttribute());
+      this.setSecondaryCategories(tSource.getSecondaryCategories());
     }
-  }
-
-  @Override
-  protected DashboardLayer newInstance()
-  {
-    return new DashboardThematicLayer();
-  }
-
-  public String getCategoryLabel(String categoryId)
-  {
-    AggregationStrategy strategy = this.getAggregationStrategy();
-    GeoNode geoNode = this.getGeoNode();
-
-    return strategy.getCategoryLabel(geoNode, categoryId);
-  }
-
-  @Override
-  public String getFeatureInformation(String featureId)
-  {
-    GeoNode geoNode = this.getGeoNode();
-    AggregationStrategy strategy = this.getAggregationStrategy();
-
-    if (geoNode instanceof GeoNodeGeometry && strategy instanceof GeometryAggregationStrategy)
-    {
-      String mdAttributeId = geoNode.getValue(GeoNodeGeometry.IDENTIFIERATTRIBUTE);
-      MdAttributeConcreteDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
-      MdClassDAOIF mdClass = mdAttribute.definedByClass();
-
-      ValueQuery vQuery = new ValueQuery(new QueryFactory());
-      GeneratedComponentQuery query = QueryUtil.getQuery(mdClass, vQuery);
-
-      Selectable geoId = query.get(mdAttribute.definesAttribute());
-      geoId.setColumnAlias(GeoEntity.GEOID);
-      geoId.setUserDefinedAlias(GeoEntity.GEOID);
-      geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
-
-      Selectable id = query.get(ComponentInfo.ID);
-      id.setColumnAlias(ComponentInfo.ID);
-      id.setUserDefinedAlias(ComponentInfo.ID);
-      id.setUserDefinedDisplayLabel(GeoEntity.getIdMd().getDisplayLabel(Session.getCurrentLocale()));
-
-      vQuery.SELECT(id, geoId);
-      vQuery.WHERE(geoId.EQ(featureId));
-
-      OIterator<ValueObject> iterator = null;
-
-      try
-      {
-        iterator = vQuery.getIterator();
-
-        if (iterator.hasNext())
-        {
-          ValueObject vObject = iterator.next();
-
-          JSONObject json = new JSONObject();
-          json.put(ComponentInfo.ID, vObject.getValue(ComponentInfo.ID));
-          json.put(ComponentInfo.TYPE, mdClass.definesType());
-          json.put(GeoEntity.GEOID, vObject.getValue(GeoEntity.GEOID));
-
-          return json.toString();
-        }
-        else
-        {
-          throw new ProgrammingErrorException("Unable to find a feature with the feature id of [" + featureId + "] for layer [" + this.getId() + "]");
-        }
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-      finally
-      {
-        if (iterator != null)
-        {
-          iterator.close();
-        }
-      }
-    }
-    else
-    {
-      throw new ProgrammingErrorException("Feature information is unsupported for layers which do not use the geometry aggregation strategy.");
-    }
-
-  }
-
-  public static String getGeoNodeGeometryTypesJSON(String geoNodeId)
-  {
-    JSONArray json = new JSONArray();
-    GeoNode geoNode = GeoNode.get(geoNodeId);
-
-    MdAttribute mdAttributeGeometry = geoNode.getGeometryAttribute();
-    if (mdAttributeGeometry != null)
-    {
-      json.put(mdAttributeGeometry.getType());
-    }
-
-    MdAttributePoint mdAttributePoint = geoNode.getPointAttribute();
-    if (mdAttributePoint != null)
-    {
-      json.put(mdAttributePoint.getType());
-    }
-
-    MdAttributeMultiPolygon mdAttributeMultiPolygon = geoNode.getMultiPolygonAttribute();
-    if (mdAttributeMultiPolygon != null)
-    {
-      json.put(mdAttributeMultiPolygon.getType());
-    }
-
-    return json.toString();
   }
 }

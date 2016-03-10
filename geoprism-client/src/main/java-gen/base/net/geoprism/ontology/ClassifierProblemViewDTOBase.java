@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -2036203152)
 public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblemView";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierProblemView";
   private static final long serialVersionUID = -2036203152;
   
   protected ClassifierProblemViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)

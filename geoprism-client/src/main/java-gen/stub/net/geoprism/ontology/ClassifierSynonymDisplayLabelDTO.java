@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierSynonymDisplayLabelDTOBase;
 
 public class ClassifierSynonymDisplayLabelDTO extends ClassifierSynonymDisplayLabelDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

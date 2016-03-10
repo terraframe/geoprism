@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 1404400371)
 public abstract class RequiredMappableClassExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.RequiredMappableClassException";
+  public final static String CLASS = "net.geoprism.RequiredMappableClassException";
   private static final long serialVersionUID = 1404400371;
   
   public RequiredMappableClassExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

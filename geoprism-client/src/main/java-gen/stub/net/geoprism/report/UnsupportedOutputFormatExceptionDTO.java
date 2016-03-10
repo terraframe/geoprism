@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.UnsupportedOutputFormatExceptionDTOBase;
 
 public class UnsupportedOutputFormatExceptionDTO extends UnsupportedOutputFormatExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

@@ -31,8 +31,6 @@ import javax.servlet.ServletOutputStream;
 
 import net.geoprism.dashboard.DashboardDTO;
 import net.geoprism.localization.LocalizationFacadeDTO;
-import net.geoprism.report.ReportItemControllerBase;
-import net.geoprism.report.ReportItemQueryDTO;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.oda.driver.session.IClientSession;
 
 import org.apache.axis.encoding.Base64;
 import org.apache.commons.io.FileUtils;
@@ -70,7 +71,6 @@ import com.runwaysdk.constants.VaultFileInfo;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import net.geoprism.oda.driver.session.IClientSession;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;

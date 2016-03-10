@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.EmailSettingDTOBase;
 
 public class EmailSettingDTO extends EmailSettingDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

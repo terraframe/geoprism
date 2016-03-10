@@ -25,9 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.geoprism.DataUploaderControllerBase;
-import net.geoprism.JSONControllerUtil;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 

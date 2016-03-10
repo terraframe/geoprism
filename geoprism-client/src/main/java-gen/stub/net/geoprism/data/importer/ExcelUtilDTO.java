@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.importer;
 
-import net.geoprism.data.importer.ExcelUtilDTOBase;
 
 public class ExcelUtilDTO extends ExcelUtilDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

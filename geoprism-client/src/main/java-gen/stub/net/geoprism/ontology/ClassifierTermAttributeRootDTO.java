@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierTermAttributeRootDTOBase;
 
 public class ClassifierTermAttributeRootDTO extends ClassifierTermAttributeRootDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

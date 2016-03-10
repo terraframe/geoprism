@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AttributeWrapperControllerBase;
 
 public class AttributeWrapperController extends AttributeWrapperControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

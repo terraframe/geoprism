@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 1463621913)
 /**
@@ -28,7 +28,7 @@ package com.runwaysdk.geodashboard.ontology;
  */
 public abstract class ClassifierProblemBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblem";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierProblem";
   public static java.lang.String CLASSIFIER = "classifier";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
@@ -50,7 +50,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
     super();
   }
   
-  public com.runwaysdk.geodashboard.ontology.Classifier getClassifier()
+  public net.geoprism.ontology.Classifier getClassifier()
   {
     if (getValue(CLASSIFIER).trim().equals(""))
     {
@@ -58,7 +58,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
     }
     else
     {
-      return com.runwaysdk.geodashboard.ontology.Classifier.get(getValue(CLASSIFIER));
+      return net.geoprism.ontology.Classifier.get(getValue(CLASSIFIER));
     }
   }
   
@@ -74,11 +74,11 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getClassifierMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CLASSIFIER);
   }
   
-  public void setClassifier(com.runwaysdk.geodashboard.ontology.Classifier value)
+  public void setClassifier(net.geoprism.ontology.Classifier value)
   {
     if(value == null)
     {
@@ -102,7 +102,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getCreateDateMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(CREATEDATE);
   }
   
@@ -130,7 +130,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getCreatedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
   }
   
@@ -158,7 +158,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getEntityDomainMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(ENTITYDOMAIN);
   }
   
@@ -186,7 +186,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
@@ -202,7 +202,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getKeyNameMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(KEYNAME);
   }
   
@@ -230,7 +230,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getLastUpdateDateMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(LASTUPDATEDATE);
   }
   
@@ -258,7 +258,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLastUpdatedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
@@ -286,7 +286,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getLockedByMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
   }
   
@@ -314,7 +314,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getOwnerMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(OWNER);
   }
   
@@ -331,12 +331,12 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   }
   
   @SuppressWarnings("unchecked")
-  public java.util.List<com.runwaysdk.geodashboard.ontology.ClassifierProblemType> getProblemType()
+  public java.util.List<net.geoprism.ontology.ClassifierProblemType> getProblemType()
   {
-    return (java.util.List<com.runwaysdk.geodashboard.ontology.ClassifierProblemType>) getEnumValues(PROBLEMTYPE);
+    return (java.util.List<net.geoprism.ontology.ClassifierProblemType>) getEnumValues(PROBLEMTYPE);
   }
   
-  public void addProblemType(com.runwaysdk.geodashboard.ontology.ClassifierProblemType value)
+  public void addProblemType(net.geoprism.ontology.ClassifierProblemType value)
   {
     if(value != null)
     {
@@ -344,7 +344,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
     }
   }
   
-  public void removeProblemType(com.runwaysdk.geodashboard.ontology.ClassifierProblemType value)
+  public void removeProblemType(net.geoprism.ontology.ClassifierProblemType value)
   {
     if(value != null)
     {
@@ -364,7 +364,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF getProblemTypeMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdClassIF.definesAttribute(PROBLEMTYPE);
   }
   
@@ -380,7 +380,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeLongDAOIF getSeqMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLongDAOIF)mdClassIF.definesAttribute(SEQ);
   }
   
@@ -396,7 +396,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getSiteMasterMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SITEMASTER);
   }
   
@@ -412,7 +412,7 @@ public abstract class ClassifierProblemBase extends com.runwaysdk.business.Busin
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getTypeMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblem.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(TYPE);
   }
   

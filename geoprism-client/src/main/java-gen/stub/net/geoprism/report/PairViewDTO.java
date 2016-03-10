@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.PairViewDTOBase;
 
 public class PairViewDTO extends PairViewDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

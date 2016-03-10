@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.ExcelFieldBindingDTOBase;
 
 public class ExcelFieldBindingDTO extends ExcelFieldBindingDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

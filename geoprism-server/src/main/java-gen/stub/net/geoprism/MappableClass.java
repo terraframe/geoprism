@@ -27,6 +27,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 
+import net.geoprism.dashboard.AttributeWrapper;
+import net.geoprism.dashboard.AttributeWrapperQuery;
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardAttributes;
+import net.geoprism.dashboard.DashboardMetadata;
+import net.geoprism.dashboard.MetadataWrapper;
+import net.geoprism.dashboard.MetadataWrapperQuery;
+import net.geoprism.data.etl.TargetBinding;
+import net.geoprism.ontology.Classifier;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +54,6 @@ import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import net.geoprism.ontology.Classifier;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -52,7 +61,6 @@ import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
-import net.geoprism.data.etl.TargetBinding;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
 {

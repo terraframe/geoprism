@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.MdAttributeViewDTOBase;
 
 public class MdAttributeViewDTO extends MdAttributeViewDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

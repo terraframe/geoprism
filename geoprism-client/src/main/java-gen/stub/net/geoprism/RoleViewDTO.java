@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.RoleViewDTOBase;
 
 public class RoleViewDTO extends RoleViewDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

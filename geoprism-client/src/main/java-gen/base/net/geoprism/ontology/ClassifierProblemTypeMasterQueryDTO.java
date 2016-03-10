@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -1910879372)
 /**
@@ -37,8 +37,8 @@ private static final long serialVersionUID = -1910879372;
   }
 
 @SuppressWarnings("unchecked")
-public java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO> getResultSet()
+public java.util.List<? extends net.geoprism.ontology.ClassifierProblemTypeMasterDTO> getResultSet()
 {
-  return (java.util.List<? extends com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO>)super.getResultSet();
+  return (java.util.List<? extends net.geoprism.ontology.ClassifierProblemTypeMasterDTO>)super.getResultSet();
 }
 }

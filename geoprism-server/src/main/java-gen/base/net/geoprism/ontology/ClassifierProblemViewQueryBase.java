@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -585092967)
 /**
@@ -41,7 +41,7 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
   }
   public String getClassType()
   {
-    return com.runwaysdk.geodashboard.ontology.ClassifierProblemView.CLASS;
+    return net.geoprism.ontology.ClassifierProblemView.CLASS;
   }
   public com.runwaysdk.query.SelectableChar getClassifierId()
   {
@@ -51,13 +51,13 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
  
   public com.runwaysdk.query.SelectableChar getClassifierId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.CLASSIFIERID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.CLASSIFIERID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getClassifierId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.CLASSIFIERID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.CLASSIFIERID, alias, displayLabel);
 
   }
  
@@ -69,13 +69,13 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
  
   public com.runwaysdk.query.SelectableChar getConcreteId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.CONCRETEID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.CONCRETEID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getConcreteId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.CONCRETEID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.CONCRETEID, alias, displayLabel);
 
   }
  
@@ -87,13 +87,13 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.ID, alias, displayLabel);
 
   }
  
@@ -105,13 +105,13 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
  
   public com.runwaysdk.query.SelectableChar getProblem(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.PROBLEM, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.PROBLEM, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getProblem(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.PROBLEM, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.PROBLEM, alias, displayLabel);
 
   }
  
@@ -123,13 +123,13 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
  
   public com.runwaysdk.query.SelectableChar getProblemName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.PROBLEMNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.PROBLEMNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getProblemName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(com.runwaysdk.geodashboard.ontology.ClassifierProblemView.PROBLEMNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.PROBLEMNAME, alias, displayLabel);
 
   }
  

@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardLegendDTOBase;
 
 public class DashboardLegendDTO extends DashboardLegendDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

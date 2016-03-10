@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 1343169651)
 /**
@@ -28,7 +28,7 @@ package com.runwaysdk.geodashboard;
  */
 public abstract class RequiredMappableClassExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.RequiredMappableClassException";
+  public final static String CLASS = "net.geoprism.RequiredMappableClassException";
   public static java.lang.String DATASETLABEL = "dataSetLabel";
   public static java.lang.String ID = "id";
   private static final long serialVersionUID = 1343169651;
@@ -65,7 +65,7 @@ public abstract class RequiredMappableClassExceptionBase extends com.runwaysdk.b
   
   public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getDataSetLabelMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.RequiredMappableClassException.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RequiredMappableClassException.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(DATASETLABEL);
   }
   
@@ -93,7 +93,7 @@ public abstract class RequiredMappableClassExceptionBase extends com.runwaysdk.b
   
   public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getIdMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.RequiredMappableClassException.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.RequiredMappableClassException.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   

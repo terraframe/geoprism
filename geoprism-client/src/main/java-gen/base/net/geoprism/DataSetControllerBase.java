@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard;
+package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -1739504320)
 public class DataSetControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String CLASS = "com.runwaysdk.geodashboard.DataSetController";
+  public static final String CLASS = "net.geoprism.DataSetController";
   protected javax.servlet.http.HttpServletRequest req;
   protected javax.servlet.http.HttpServletResponse resp;
   protected java.lang.Boolean isAsynchronous;
@@ -86,29 +86,29 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
   @com.runwaysdk.controller.ActionParameters(parameters="", post=true)
   public void getAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataSetController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataSetController.getAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.getAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=true)
   public void failGetAll() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataSetController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataSetController.failGetAll");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failGetAll");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
   public void remove(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataSetController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataSetController.remove");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.remove");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
   public void failRemove(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataSetController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataSetController.failRemove");
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failRemove");
   }
   
 }

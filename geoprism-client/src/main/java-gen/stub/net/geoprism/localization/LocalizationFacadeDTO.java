@@ -18,7 +18,6 @@
  */
 package net.geoprism.localization;
 
-import net.geoprism.localization.LocalizationFacadeDTOBase;
 
 public class LocalizationFacadeDTO extends LocalizationFacadeDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

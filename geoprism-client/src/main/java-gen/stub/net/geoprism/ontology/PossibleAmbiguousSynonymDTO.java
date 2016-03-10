@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.PossibleAmbiguousSynonymDTOBase;
 
 public class PossibleAmbiguousSynonymDTO extends PossibleAmbiguousSynonymDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.ClassUniversalDTOBase;
 
 public class ClassUniversalDTO extends ClassUniversalDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.geoprism.data.etl.ColumnType;
+
 import org.apache.poi.ss.util.CellReference;
 import org.json.JSONArray;
 import org.json.JSONException;

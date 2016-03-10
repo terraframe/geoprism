@@ -16,22 +16,27 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.gis.persist;
+package net.geoprism.dashboard.query;
 
 import java.util.List;
+
+import net.geoprism.QueryUtil;
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicStyle;
+import net.geoprism.dashboard.condition.DashboardAttributeCondition;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.condition.LocationCondition;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.geodashboard.QueryUtil;
-import com.runwaysdk.geodashboard.gis.geoserver.GeoserverProperties;
-import com.runwaysdk.geodashboard.gis.impl.condition.DashboardAttributeCondition;
-import com.runwaysdk.geodashboard.gis.impl.condition.DashboardCondition;
-import com.runwaysdk.geodashboard.gis.impl.condition.LocationCondition;
-import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierQuery;
 import com.runwaysdk.query.AggregateFunction;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeChar;

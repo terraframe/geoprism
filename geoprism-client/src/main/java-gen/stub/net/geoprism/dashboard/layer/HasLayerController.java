@@ -18,9 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DashboardMapDTO;
-import net.geoprism.dashboard.layer.HasLayerControllerBase;
-import net.geoprism.dashboard.layer.HasLayerQueryDTO;
 
 public class HasLayerController extends HasLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

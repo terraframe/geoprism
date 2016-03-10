@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierDisplayLabelDTOBase;
 
 public class ClassifierDisplayLabelDTO extends ClassifierDisplayLabelDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

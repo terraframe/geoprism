@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.MappableClassDTOBase;
 
 public class MappableClassDTO extends MappableClassDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

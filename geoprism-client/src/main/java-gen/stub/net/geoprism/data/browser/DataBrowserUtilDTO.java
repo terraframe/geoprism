@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.browser;
 
-import net.geoprism.data.browser.DataBrowserUtilDTOBase;
 
 public class DataBrowserUtilDTO extends DataBrowserUtilDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

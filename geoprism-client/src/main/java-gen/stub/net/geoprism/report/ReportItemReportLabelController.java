@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.ReportItemReportLabelControllerBase;
 
 public class ReportItemReportLabelController extends ReportItemReportLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

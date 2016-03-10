@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.geoprism.SessionParameterFacade;
-import net.geoprism.dashboard.layer.DashboardLayerBase;
 import net.geoprism.dashboard.DashboardMap;
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.HasStyle;

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -1581475368)
 public abstract class ClassifierProblemTypeMasterDescriptionDTOBase extends com.runwaysdk.business.LocalStructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierProblemTypeMasterDescription";
   private static final long serialVersionUID = -1581475368;
   
   protected ClassifierProblemTypeMasterDescriptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
@@ -134,9 +134,9 @@ public abstract class ClassifierProblemTypeMasterDescriptionDTOBase extends com.
     getRequest().delete(this.getId());
   }
   
-  public static com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQueryDTO) clientRequest.getAllInstances(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQueryDTO) clientRequest.getAllInstances(net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
 }

@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.SessionMapDTOBase;
 
 public class SessionMapDTO extends SessionMapDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

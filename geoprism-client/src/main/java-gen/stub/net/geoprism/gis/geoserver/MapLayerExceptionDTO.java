@@ -18,7 +18,6 @@
  */
 package net.geoprism.gis.geoserver;
 
-import net.geoprism.gis.geoserver.MapLayerExceptionDTOBase;
 
 public class MapLayerExceptionDTO extends MapLayerExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

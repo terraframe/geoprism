@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.AttributeWrapperDTOBase;
 
 public class AttributeWrapperDTO extends AttributeWrapperDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

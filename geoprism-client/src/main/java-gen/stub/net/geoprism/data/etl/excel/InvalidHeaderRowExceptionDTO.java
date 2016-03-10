@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl.excel;
 
-import net.geoprism.data.etl.excel.InvalidHeaderRowExceptionDTOBase;
 
 public class InvalidHeaderRowExceptionDTO extends InvalidHeaderRowExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

@@ -16,12 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.etl;
+package net.geoprism.data.etl;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
+import net.geoprism.DataUploader;
+import net.geoprism.MappableClass;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,13 +63,6 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
-import com.runwaysdk.geodashboard.ConfigurationIF;
-import com.runwaysdk.geodashboard.ConfigurationService;
-import com.runwaysdk.geodashboard.DataUploader;
-import com.runwaysdk.geodashboard.GeoEntityUtil;
-import com.runwaysdk.geodashboard.MappableClass;
-import com.runwaysdk.geodashboard.ontology.Classifier;
-import com.runwaysdk.geodashboard.ontology.ClassifierIsARelationship;
 import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
@@ -82,7 +83,7 @@ import com.runwaysdk.system.metadata.MdClass;
 
 public class TargetBuilder
 {
-  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.business";
+  public static final String PACKAGE_NAME = "net.geoprism.data.business";
 
   public static final String EXLUDE       = "EXCLUDE";
 

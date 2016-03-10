@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.HasLayerBase;
 
 public class HasLayer extends HasLayerBase implements com.runwaysdk.generation.loader.Reloadable
 {

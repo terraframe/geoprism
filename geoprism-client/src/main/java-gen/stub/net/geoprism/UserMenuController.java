@@ -29,8 +29,6 @@ import javax.servlet.ServletOutputStream;
 
 import net.geoprism.dashboard.DashboardDTO;
 import net.geoprism.dashboard.DashboardQueryDTO;
-import net.geoprism.JavascriptUtil;
-import net.geoprism.UserMenuControllerBase;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.system.RolesDTO;

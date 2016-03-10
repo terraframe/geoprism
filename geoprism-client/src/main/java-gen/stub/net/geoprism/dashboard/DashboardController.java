@@ -22,9 +22,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import net.geoprism.dashboard.DashboardControllerBase;
-import net.geoprism.dashboard.DashboardQueryDTO;
-
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable

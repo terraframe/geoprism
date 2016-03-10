@@ -18,8 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.DashboardLayerDTOBase;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

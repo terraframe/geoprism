@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardMetadataControllerBase;
 
 public class DashboardMetadataController extends DashboardMetadataControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

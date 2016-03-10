@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardDisplayLabelControllerBase;
 
 public class DashboardDisplayLabelController extends DashboardDisplayLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

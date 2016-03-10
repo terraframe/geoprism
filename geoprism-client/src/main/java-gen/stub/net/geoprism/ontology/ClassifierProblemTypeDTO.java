@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 /**
  * This class is generated automatically.
@@ -29,29 +29,29 @@ public enum ClassifierProblemTypeDTO implements com.runwaysdk.business.Enumerati
 {
   UNMATCHED();
   
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblemType";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierProblemType";
   
   
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO item(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDTO item(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO) clientRequest.getEnumeration(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeDTO.CLASS, this.name());
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDTO) clientRequest.getEnumeration(net.geoprism.ontology.ClassifierProblemTypeDTO.CLASS, this.name());
   }
   
   @java.lang.SuppressWarnings("unchecked")
-  public static java.util.List<com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO> items(com.runwaysdk.constants.ClientRequestIF clientRequest, ClassifierProblemTypeDTO ... items)
+  public static java.util.List<net.geoprism.ontology.ClassifierProblemTypeMasterDTO> items(com.runwaysdk.constants.ClientRequestIF clientRequest, ClassifierProblemTypeDTO ... items)
   {
     java.lang.String[] itemNames = new java.lang.String[items.length];
     for(int i=0; i<items.length; i++)
     {
       itemNames[i] = items[i].name();
     }
-    return (java.util.List<com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO>) clientRequest.getEnumerations(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeDTO.CLASS, itemNames);
+    return (java.util.List<net.geoprism.ontology.ClassifierProblemTypeMasterDTO>) clientRequest.getEnumerations(net.geoprism.ontology.ClassifierProblemTypeDTO.CLASS, itemNames);
   }
   
   @java.lang.SuppressWarnings("unchecked")
-  public static java.util.List<com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO> allItems(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static java.util.List<net.geoprism.ontology.ClassifierProblemTypeMasterDTO> allItems(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
-    return (java.util.List<com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDTO>) clientRequest.getAllEnumerations(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeDTO.CLASS);
+    return (java.util.List<net.geoprism.ontology.ClassifierProblemTypeMasterDTO>) clientRequest.getAllEnumerations(net.geoprism.ontology.ClassifierProblemTypeDTO.CLASS);
   }
   
   public java.lang.String getName()

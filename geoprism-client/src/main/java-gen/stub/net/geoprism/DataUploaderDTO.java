@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.DataUploaderDTOBase;
 
 public class DataUploaderDTO extends DataUploaderDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

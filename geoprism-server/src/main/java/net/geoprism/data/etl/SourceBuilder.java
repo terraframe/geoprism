@@ -16,9 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwayskd.geodashboard.etl;
+package net.geoprism.data.etl;
 
 import java.util.List;
+
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
+import net.geoprism.DataUploader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,15 +36,12 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdViewDAO;
-import com.runwaysdk.geodashboard.ConfigurationIF;
-import com.runwaysdk.geodashboard.ConfigurationService;
-import com.runwaysdk.geodashboard.DataUploader;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdViewQuery;
 
 public class SourceBuilder
 {
-  public static final String PACKAGE_NAME = "com.runwaysdk.geodashboard.data.view";
+  public static final String PACKAGE_NAME = "net.geoprism.data.view";
 
   private JSONObject         configuration;
 

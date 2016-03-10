@@ -18,7 +18,6 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.data.etl.UniversalAttributeBindingDTOBase;
 
 public class UniversalAttributeBindingDTO extends UniversalAttributeBindingDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

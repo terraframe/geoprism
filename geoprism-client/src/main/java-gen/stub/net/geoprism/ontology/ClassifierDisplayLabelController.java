@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierDisplayLabelControllerBase;
 
 public class ClassifierDisplayLabelController extends ClassifierDisplayLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

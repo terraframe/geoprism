@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -2104500350)
 /**
@@ -54,29 +54,29 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
 
   public String getClassType()
   {
-    return com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASS;
+    return net.geoprism.ontology.ClassifierProblem.CLASS;
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
   {
     return getClassifier(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.CLASSIFIER);
 
-    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER, mdAttributeIF, this, alias, null);
+    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.CLASSIFIER, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.CLASSIFIER);
 
-    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER, mdAttributeIF, this, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.CLASSIFIER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -87,13 +87,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -105,18 +105,18 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.CREATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.CREATEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.CREATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -128,18 +128,18 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN);
 
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN);
 
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -150,13 +150,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -167,13 +167,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -184,13 +184,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -202,18 +202,18 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY);
 
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -225,18 +225,18 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.LOCKEDBY, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -248,41 +248,41 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.OWNER);
 
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.OWNER, mdAttributeIF, this, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.OWNER);
 
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.OWNER, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType()
   {
     return getProblemType(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE);
 
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE, mdAttributeIF, this, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE);
 
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE, mdAttributeIF, this, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -293,13 +293,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -310,13 +310,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -327,40 +327,40 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.TYPE, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblem.CLASSIFIER)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -375,9 +375,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -418,9 +418,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public interface ClassifierProblemQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableReference
   {
 
-    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
-    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
-    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
+    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
+    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
+    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -448,9 +448,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType();
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias);
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel);
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType();
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias);
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -461,9 +461,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.ontology.ClassifierProblem classifierProblem);
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierProblem classifierProblem);
 
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.ClassifierProblem classifierProblem);
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierProblem classifierProblem);
 
   }
 
@@ -483,33 +483,33 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   }
 
 
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.ontology.ClassifierProblem classifierProblem)
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierProblem classifierProblem)
     {
       if(classifierProblem == null) return this.EQ((java.lang.String)null);
       return this.EQ(classifierProblem.getId());
     }
 
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.ClassifierProblem classifierProblem)
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierProblem classifierProblem)
     {
       if(classifierProblem == null) return this.NE((java.lang.String)null);
       return this.NE(classifierProblem.getId());
     }
 
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
   {
     return getClassifier(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER, alias, null);
+    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CLASSIFIER, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER,  alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CLASSIFIER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -520,13 +520,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -537,13 +537,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -554,13 +554,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -571,13 +571,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -588,13 +588,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -605,13 +605,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -622,13 +622,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -639,13 +639,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LOCKEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -656,30 +656,30 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.OWNER, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER,  alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.OWNER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType()
   {
     return getProblemType(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -690,13 +690,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierProblem.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierProblem.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -707,13 +707,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -724,40 +724,40 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.TYPE, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblem.CLASSIFIER)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -772,9 +772,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -792,9 +792,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   public interface ClassifierProblemQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableMultiReference
   {
 
-    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
-    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
-    public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
+    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier();
+    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias);
+    public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableMoment getCreateDate();
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias);
     public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel);
@@ -822,9 +822,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType();
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias);
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel);
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType();
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias);
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableLong getSeq();
     public com.runwaysdk.query.SelectableLong getSeq(String alias);
     public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel);
@@ -835,11 +835,11 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
 
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem);
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem);
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem);
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem);
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem);
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierProblem ... classifierProblem);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierProblem ... classifierProblem);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierProblem ... classifierProblem);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierProblem ... classifierProblem);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierProblem ... classifierProblem);
   }
 
 /**
@@ -859,7 +859,7 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
 
 
 
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem)  {
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierProblem ... classifierProblem)  {
 
       String[] itemIdArray = new String[classifierProblem.length]; 
 
@@ -871,7 +871,7 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
       return this.containsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem)  {
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierProblem ... classifierProblem)  {
 
       String[] itemIdArray = new String[classifierProblem.length]; 
 
@@ -883,7 +883,7 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
       return this.notContainsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem)  {
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierProblem ... classifierProblem)  {
 
       String[] itemIdArray = new String[classifierProblem.length]; 
 
@@ -895,7 +895,7 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
       return this.containsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem)  {
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierProblem ... classifierProblem)  {
 
       String[] itemIdArray = new String[classifierProblem.length]; 
 
@@ -907,7 +907,7 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
       return this.notContainsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierProblem ... classifierProblem)  {
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierProblem ... classifierProblem)  {
 
       String[] itemIdArray = new String[classifierProblem.length]; 
 
@@ -918,21 +918,21 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
 
       return this.containsExactly(itemIdArray);
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier()
   {
     return getClassifier(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER, alias, null);
+    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CLASSIFIER, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF getClassifier(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER,  alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierQuery.ClassifierQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CLASSIFIER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getCreateDate()
@@ -943,13 +943,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getCreateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy()
@@ -960,13 +960,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.CREATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -977,13 +977,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN, alias, null);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN, alias, null);
 
   }
  
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getId()
@@ -994,13 +994,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getId(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ID, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.ID, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.ID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -1011,13 +1011,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.KEYNAME, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.KEYNAME, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.KEYNAME, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.KEYNAME, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate()
@@ -1028,13 +1028,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDATE, alias, null);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDATE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableMoment getLastUpdateDate(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableMoment)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDATE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDATE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy()
@@ -1045,13 +1045,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
@@ -1062,13 +1062,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LOCKEDBY, alias, null);
 
   }
  
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1079,30 +1079,30 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER, alias, null);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.OWNER, alias, null);
 
   }
  
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER,  alias, displayLabel);
+    return (com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.OWNER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType()
   {
     return getProblemType(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF getProblemType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQueryIF)this.get(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableLong getSeq()
@@ -1113,13 +1113,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SEQ, alias, null);
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierProblem.SEQ, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableLong getSeq(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableLong)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SEQ, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableLong)this.get(net.geoprism.ontology.ClassifierProblem.SEQ, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getSiteMaster()
@@ -1130,13 +1130,13 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SITEMASTER, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.SITEMASTER, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getSiteMaster(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.SITEMASTER, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.SITEMASTER, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -1147,40 +1147,40 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
  
   public com.runwaysdk.query.SelectableChar getType(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.TYPE, alias, null);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.TYPE, alias, null);
 
   }
  
   public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(com.runwaysdk.geodashboard.ontology.ClassifierProblem.TYPE, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.TYPE, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CLASSIFIER)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblem.CLASSIFIER)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierQuery.ClassifierQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.CREATEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.CREATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.ENTITYDOMAIN)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN)) 
     {
        return new com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LASTUPDATEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.LASTUPDATEDBY)) 
     {
        return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.LOCKEDBY)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.LOCKEDBY)) 
     {
        return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
-    else if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.OWNER)) 
+    else if (name.equals(net.geoprism.ontology.ClassifierProblem.OWNER)) 
     {
        return new com.runwaysdk.system.ActorQuery.ActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
@@ -1195,9 +1195,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblem.PROBLEMTYPE)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblem.PROBLEMTYPE)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterQuery.ClassifierProblemTypeQuery((com.runwaysdk.dataaccess.MdAttributeEnumerationDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdEnumerationTableName, masterListMdBusinessIF, masterListTalbeAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

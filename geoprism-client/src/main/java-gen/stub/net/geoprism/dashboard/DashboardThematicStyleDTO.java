@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.DashboardThematicStyleDTOBase;
 
 
 public class DashboardThematicStyleDTO extends DashboardThematicStyleDTOBase implements com.runwaysdk.generation.loader.Reloadable

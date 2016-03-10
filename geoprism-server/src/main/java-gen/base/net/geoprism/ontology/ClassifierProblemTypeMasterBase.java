@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 893674973)
 /**
@@ -28,7 +28,7 @@ package com.runwaysdk.geodashboard.ontology;
  */
 public abstract class ClassifierProblemTypeMasterBase extends com.runwaysdk.system.EnumerationMaster implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster";
+  public final static String CLASS = "net.geoprism.ontology.ClassifierProblemTypeMaster";
   public static java.lang.String DESCRIPTION = "description";
   private com.runwaysdk.business.Struct description = null;
   
@@ -40,9 +40,9 @@ public abstract class ClassifierProblemTypeMasterBase extends com.runwaysdk.syst
     description = super.getStruct("description");
   }
   
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescription getDescription()
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescription) description;
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescription) description;
   }
   
   public void validateDescription()
@@ -52,7 +52,7 @@ public abstract class ClassifierProblemTypeMasterBase extends com.runwaysdk.syst
   
   public static com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF getDescriptionMd()
   {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.CLASS);
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.ClassifierProblemTypeMaster.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF)mdClassIF.definesAttribute(DESCRIPTION);
   }
   
@@ -80,7 +80,7 @@ public abstract class ClassifierProblemTypeMasterBase extends com.runwaysdk.syst
   
   public static ClassifierProblemTypeMaster getEnumeration(String enumName)
   {
-    return (ClassifierProblemTypeMaster) com.runwaysdk.business.Business.getEnumeration(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.CLASS ,enumName);
+    return (ClassifierProblemTypeMaster) com.runwaysdk.business.Business.getEnumeration(net.geoprism.ontology.ClassifierProblemTypeMaster.CLASS ,enumName);
   }
   
   public static ClassifierProblemTypeMaster lock(java.lang.String id)

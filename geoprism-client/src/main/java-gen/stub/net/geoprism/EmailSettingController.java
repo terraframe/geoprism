@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import net.geoprism.EmailSettingControllerBase;
 
 public class EmailSettingController extends EmailSettingControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {

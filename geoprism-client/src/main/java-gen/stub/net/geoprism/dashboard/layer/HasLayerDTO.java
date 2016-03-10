@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.layer.HasLayerDTOBase;
 
 public class HasLayerDTO extends HasLayerDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

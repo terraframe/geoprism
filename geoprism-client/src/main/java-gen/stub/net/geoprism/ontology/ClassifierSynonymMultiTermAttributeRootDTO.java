@@ -18,7 +18,6 @@
  */
 package net.geoprism.ontology;
 
-import net.geoprism.ontology.ClassifierSynonymMultiTermAttributeRootDTOBase;
 
 public class ClassifierSynonymMultiTermAttributeRootDTO extends ClassifierSynonymMultiTermAttributeRootDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

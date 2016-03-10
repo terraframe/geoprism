@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.MetadataWrapperDTOBase;
 
 public class MetadataWrapperDTO extends MetadataWrapperDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

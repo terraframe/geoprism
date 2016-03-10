@@ -18,7 +18,6 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.report.InvalidReportDefinitionExceptionDTOBase;
 
 public class InvalidReportDefinitionExceptionDTO extends InvalidReportDefinitionExceptionDTOBase
  implements com.runwaysdk.generation.loader.Reloadable{

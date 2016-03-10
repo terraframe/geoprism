@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.runwaysdk.geodashboard.ontology;
+package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 1593267846)
 /**
@@ -54,38 +54,38 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
 
   public String getClassType()
   {
-    return com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.CLASS;
+    return net.geoprism.ontology.ClassifierProblemTypeMaster.CLASS;
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
   {
     return getDescription(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION);
 
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, mdAttributeIF, this, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
   {
 
-    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION);
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION);
 
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.getComponentQuery().internalAttributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, mdAttributeIF, this, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, mdAttributeIF, this, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -128,7 +128,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.system.metadata.EnumerationAttributeItem.CLASS);
 
     com.runwaysdk.business.BusinessQuery businessQuery = queryFactory.businessQuery(com.runwaysdk.system.metadata.MdEnumeration.CLASS);
-    com.runwaysdk.dataaccess.MdEnumerationDAOIF mdEnumerationIF = com.runwaysdk.dataaccess.metadata.MdEnumerationDAO.getMdEnumerationDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblemType.CLASS); 
+    com.runwaysdk.dataaccess.MdEnumerationDAOIF mdEnumerationIF = com.runwaysdk.dataaccess.metadata.MdEnumerationDAO.getMdEnumerationDAO(net.geoprism.ontology.ClassifierProblemType.CLASS); 
     businessQuery.WHERE(businessQuery.id().EQ(mdEnumerationIF.getId()));
 
     relationshipQuery.WHERE(relationshipQuery.hasParent(businessQuery));
@@ -147,7 +147,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
     com.runwaysdk.business.RelationshipQuery relationshipQuery = queryFactory.relationshipQuery(com.runwaysdk.system.metadata.EnumerationAttributeItem.CLASS);
 
     com.runwaysdk.business.BusinessQuery businessQuery = queryFactory.businessQuery(com.runwaysdk.system.metadata.MdEnumeration.CLASS);
-    com.runwaysdk.dataaccess.MdEnumerationDAOIF mdEnumerationIF = com.runwaysdk.dataaccess.metadata.MdEnumerationDAO.getMdEnumerationDAO(com.runwaysdk.geodashboard.ontology.ClassifierProblemType.CLASS); 
+    com.runwaysdk.dataaccess.MdEnumerationDAOIF mdEnumerationIF = com.runwaysdk.dataaccess.metadata.MdEnumerationDAO.getMdEnumerationDAO(net.geoprism.ontology.ClassifierProblemType.CLASS); 
     businessQuery.WHERE(businessQuery.id().EQ(mdEnumerationIF.getId()));
 
     relationshipQuery.WHERE(relationshipQuery.hasParent(businessQuery));
@@ -163,13 +163,13 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
   public interface ClassifierProblemTypeMasterQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.system.EnumerationMasterQuery.EnumerationMasterQueryReferenceIF
   {
 
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription();
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias);
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel);
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription();
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias);
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel);
 
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster);
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster);
 
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster);
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster);
 
   }
 
@@ -189,42 +189,42 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
   }
 
 
-    public com.runwaysdk.query.BasicCondition EQ(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster)
+    public com.runwaysdk.query.BasicCondition EQ(net.geoprism.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster)
     {
       if(classifierProblemTypeMaster == null) return this.EQ((java.lang.String)null);
       return this.EQ(classifierProblemTypeMaster.getId());
     }
 
-    public com.runwaysdk.query.BasicCondition NE(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster)
+    public com.runwaysdk.query.BasicCondition NE(net.geoprism.ontology.ClassifierProblemTypeMaster classifierProblemTypeMaster)
     {
       if(classifierProblemTypeMaster == null) return this.NE((java.lang.String)null);
       return this.NE(classifierProblemTypeMaster.getId());
     }
 
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
   {
     return getDescription(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -241,9 +241,9 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
   public interface ClassifierProblemTypeMasterQueryEnumerationIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.system.EnumerationMasterQuery.EnumerationMasterQueryEnumerationIF
   {
 
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription();
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias);
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel);
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription();
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias);
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel);
 
   }
 
@@ -261,30 +261,30 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
 
   }
 
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
   {
     return getDescription(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -295,20 +295,20 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
   }
 
 /**
- * Specifies type safe query methods for the enumeration com.runwaysdk.geodashboard.ontology.ClassifierProblemType.
+ * Specifies type safe query methods for the enumeration net.geoprism.ontology.ClassifierProblemType.
  * This type is used when a join is performed on this class as an enumeration.
  **/
   public interface ClassifierProblemTypeQueryIF extends com.runwaysdk.generation.loader.Reloadable, ClassifierProblemTypeMasterQueryEnumerationIF  {
 
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType);
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType);
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType);
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType);
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType);
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType);
   }
 
 /**
- * Implements type safe query methods for the enumeration com.runwaysdk.geodashboard.ontology.ClassifierProblemType.
+ * Implements type safe query methods for the enumeration net.geoprism.ontology.ClassifierProblemType.
  * This type is used when a join is performed on this class as an enumeration.
  **/
   public static class ClassifierProblemTypeQuery extends ClassifierProblemTypeMasterQueryEnumeration implements  ClassifierProblemTypeQueryIF, com.runwaysdk.generation.loader.Reloadable
@@ -319,7 +319,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
 
   }
 
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType)  {
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType)  {
 
       String[] enumIdArray = new String[classifierProblemType.length]; 
 
@@ -331,7 +331,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.containsAny(enumIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType)  {
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType)  {
 
       String[] enumIdArray = new String[classifierProblemType.length]; 
 
@@ -343,7 +343,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.notContainsAny(enumIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType)  {
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType)  {
 
       String[] enumIdArray = new String[classifierProblemType.length]; 
 
@@ -355,7 +355,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.containsAll(enumIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType)  {
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType)  {
 
       String[] enumIdArray = new String[classifierProblemType.length]; 
 
@@ -367,7 +367,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.notContainsAll(enumIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierProblemType ... classifierProblemType)  {
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierProblemType ... classifierProblemType)  {
 
       String[] enumIdArray = new String[classifierProblemType.length]; 
 
@@ -386,15 +386,15 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
   public interface ClassifierProblemTypeMasterQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.system.EnumerationMasterQuery.EnumerationMasterQueryMultiReferenceIF
   {
 
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription();
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias);
-    public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel);
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription();
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias);
+    public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel);
 
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster);
   }
 
 /**
@@ -414,7 +414,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
 
 
 
-    public com.runwaysdk.query.Condition containsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
+    public com.runwaysdk.query.Condition containsAny(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
 
       String[] itemIdArray = new String[classifierProblemTypeMaster.length]; 
 
@@ -426,7 +426,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.containsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAny(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
+    public com.runwaysdk.query.Condition notContainsAny(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
 
       String[] itemIdArray = new String[classifierProblemTypeMaster.length]; 
 
@@ -438,7 +438,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.notContainsAny(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
+    public com.runwaysdk.query.Condition containsAll(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
 
       String[] itemIdArray = new String[classifierProblemTypeMaster.length]; 
 
@@ -450,7 +450,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.containsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition notContainsAll(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
+    public com.runwaysdk.query.Condition notContainsAll(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
 
       String[] itemIdArray = new String[classifierProblemTypeMaster.length]; 
 
@@ -462,7 +462,7 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
       return this.notContainsAll(itemIdArray);
   }
 
-    public com.runwaysdk.query.Condition containsExactly(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
+    public com.runwaysdk.query.Condition containsExactly(net.geoprism.ontology.ClassifierProblemTypeMaster ... classifierProblemTypeMaster)  {
 
       String[] itemIdArray = new String[classifierProblemTypeMaster.length]; 
 
@@ -473,30 +473,30 @@ public  class ClassifierProblemTypeMasterQuery extends com.runwaysdk.system.Enum
 
       return this.containsExactly(itemIdArray);
   }
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription()
   {
     return getDescription(null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
 
   }
  
-  public com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
+  public net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF getDescription(String alias, String displayLabel)
   {
-    return (com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+    return (net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStructIF)this.attributeFactory(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
     
-    if (name.equals(com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
+    if (name.equals(net.geoprism.ontology.ClassifierProblemTypeMaster.DESCRIPTION)) 
     {
-       return new com.runwaysdk.geodashboard.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new net.geoprism.ontology.ClassifierProblemTypeMasterDescriptionQuery.ClassifierProblemTypeMasterDescriptionQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

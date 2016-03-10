@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.HasStyleControllerBase;
 
 public class HasStyleController extends HasStyleControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
