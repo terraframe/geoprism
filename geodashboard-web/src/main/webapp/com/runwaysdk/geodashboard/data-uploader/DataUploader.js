@@ -450,7 +450,7 @@
       };  
       
       // Update the field.selected status
-      controller.setFieldSelected();
+//      controller.setFieldSelected();
     }
     
     controller.isUniqueLabel = function(label) {

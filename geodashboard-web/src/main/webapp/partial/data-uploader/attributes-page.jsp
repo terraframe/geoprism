@@ -75,7 +75,7 @@
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.type == 'LOCATION'">
-        <label><gdb:localize key="dataUploader.universal"/></label>
+        <label><gdb:localize key="dataUploader.locationType"/></label>
         <select class="select-area" ng-model="field.universal" name="{{::$index + '-universal'}}" ng-required="true" ng-options="opt.value as opt.label for opt in universals">
           <option value=""></option>          
         </select>
