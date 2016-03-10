@@ -21,12 +21,12 @@ div#databrowser {
 	
 }
 
-.geodashboard-databrowser {
+.geoprism-databrowser {
   display: table;
   min-height:500px;
 }
 
-.geodashboard-databrowser-treesection {
+.geoprism-databrowser-treesection {
 	display: table-cell;
 	padding: 2em;
 	min-width: 300px;
@@ -36,20 +36,20 @@ div#databrowser {
   text-align:center;
 }
 
-.geodashboard-databrowser-treetitle {
+.geoprism-databrowser-treetitle {
   text-align: center;
   font-size: 20px;
   font-weight: bold;
 }
 
-.geodashboard-databrowser-tree {
+.geoprism-databrowser-tree {
   text-align: left;
   margin-top: 13px;
   height: 450px;
   overflow: auto;
 }
 
-.geodashboard-databrowser-tablesection {
+.geoprism-databrowser-tablesection {
 	display: table-cell;
 	text-align: center;
 	padding: 2em;
@@ -59,13 +59,13 @@ div#databrowser {
   overflow: auto;
 }
 
-.geodashboard-databrowser-tabletitle {
+.geoprism-databrowser-tabletitle {
 	text-align: center;
 	font-size: 20px;
   font-weight: bold;
 }
 
-.geodashboard-databrowser-table {
+.geoprism-databrowser-table {
 	margin-top: 13px;
 }
 
@@ -74,7 +74,7 @@ div#databrowser {
 	max-height: 600px;
 }
 
-.geodashboard-databrowser-table select {
+.geoprism-databrowser-table select {
 	height: 31px;
 }
 }

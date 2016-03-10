@@ -21,7 +21,7 @@
   function MapService() {
     var service = {};
     service.workspace = '';    
-    service.map = new net.geoprismersMap("mapDivId", null, null);
+    service.map = new net.geoprism.gis.OpenLayersMap("mapDivId", null, null);
     
     service.setWorkspace = function(workspace) {
       service.workspace = workspace;

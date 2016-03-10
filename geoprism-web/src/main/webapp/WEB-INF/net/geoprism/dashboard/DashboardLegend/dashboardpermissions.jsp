@@ -24,29 +24,11 @@
 
 <head>
 
-<gdb:localize var="page_title" key="scheduler.title"/>
-
-<!-- Scheduler CSS -->
-<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-<jwr:style src="/bundles/scheduler.css" useRandomParam="false"/> 
-
-<!-- Scheduler Javascript -->
-<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
-<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
-<jwr:script src="/bundles/scheduler.js" useRandomParam="false"/>
-<jwr:script src="/net/geoprism/Cron.js" useRandomParam="false"/>
-<jwr:script src="/net/geoprism/admin/scheduler/Scheduler.js" useRandomParam="false"/>
-
-<script type="text/javascript">${js}</script>
+<gdb:localize var="page_title" key="dashboardViewer.title"/>
 
 </head>
 
-<div id="scheduler"></div>
+<div>
+<gdb:localize key="dashboard.permissions"/>  
+</div>
 
-<script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-  
-  var ut = new net.geoprism.account.scheduler.Scheduler();
-  ut.render("#scheduler");
-  
-</script>

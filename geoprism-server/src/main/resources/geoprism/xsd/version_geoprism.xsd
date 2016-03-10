@@ -19,7 +19,7 @@
 
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:include schemaLocation="datatype_geodashboard.xsd"/>
+  <xs:include schemaLocation="datatype_geoprism.xsd"/>
   <xs:element name="version">
     <xs:complexType>
       <xs:sequence>
