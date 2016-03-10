@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.geodashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -183741776)
+@com.runwaysdk.business.ClassSignature(hash = 143958759)
 public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "com.runwaysdk.geodashboard.DataUploaderController";
@@ -83,6 +83,20 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:configuration", post=true)
+  public void cancelImport(java.lang.String configuration) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.cancelImport");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:configuration", post=true)
+  public void failCancelImport(java.lang.String configuration) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.failCancelImport");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.controller.MultipartFileParameter:file", post=true)
   public void getAttributeInformation(com.runwaysdk.controller.MultipartFileParameter file) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -95,6 +109,20 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.failGetAttributeInformation");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, java.lang.String:sheetName", post=true)
+  public void getSavedConfiguration(java.lang.String id, java.lang.String sheetName) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.getSavedConfiguration");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, java.lang.String:sheetName", post=true)
+  public void failGetSavedConfiguration(java.lang.String id, java.lang.String sheetName) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.geodashboard.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.geodashboard.DataUploaderController.failGetSavedConfiguration");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:configuration", post=true)

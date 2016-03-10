@@ -32,7 +32,13 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.geodashboard.excel.ExcelFormulaException;
 import com.runwaysdk.geodashboard.excel.InvalidHeaderRowException;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdView;
 import com.runwayskd.geodashboard.etl.ColumnType;
+import com.runwayskd.geodashboard.etl.ExcelFieldBindingQuery;
+import com.runwayskd.geodashboard.etl.ExcelSourceBinding;
+import com.runwayskd.geodashboard.etl.ExcelSourceBindingQuery;
 
 public class FieldInfoContentsHandler implements SheetHandler
 {
@@ -56,6 +62,11 @@ public class FieldInfoContentsHandler implements SheetHandler
     public void setName(String name)
     {
       this.name = name;
+    }
+
+    public String getName()
+    {
+      return name;
     }
 
     public void addDataType(ColumnType dataType)
@@ -183,10 +194,16 @@ public class FieldInfoContentsHandler implements SheetHandler
         fields.put(this.map.get(key).toJSON());
       }
 
+      /*
+       * Search for potential existing upload matches
+       */
+      JSONArray matches = this.findMatches();
+
       JSONObject sheet = new JSONObject();
       sheet.put("name", this.sheetName);
       sheet.put("label", this.sheetName);
       sheet.put("fields", fields);
+      sheet.put("matches", matches);
 
       this.information.put(sheet);
     }
@@ -243,5 +260,54 @@ public class FieldInfoContentsHandler implements SheetHandler
   @Override
   public void headerFooter(String text, boolean isHeader, String tagName)
   {
+  }
+
+  private JSONArray findMatches() throws JSONException
+  {
+    JSONArray options = new JSONArray();
+
+    QueryFactory factory = new QueryFactory();
+
+    ExcelSourceBindingQuery query = new ExcelSourceBindingQuery(factory);
+
+    Set<Integer> keys = this.map.keySet();
+
+    for (Integer key : keys)
+    {
+      Field field = this.map.get(key);
+
+      ExcelFieldBindingQuery fieldQuery = new ExcelFieldBindingQuery(factory);
+      fieldQuery.WHERE(fieldQuery.getColumnHeader().EQ(field.getName()));
+
+      query.WHERE(query.EQ(fieldQuery.getSourceDefinition()));
+    }
+
+    OIterator<? extends ExcelSourceBinding> iterator = null;
+
+    try
+    {
+      iterator = query.getIterator();
+
+      while (iterator.hasNext())
+      {
+        ExcelSourceBinding binding = iterator.next();
+        MdView mdView = binding.getMdView();
+
+        JSONObject option = new JSONObject();
+        option.put("id", binding.getId());
+        option.put("label", mdView.getDisplayLabel().getValue());
+
+        options.put(option);
+      }
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
+
+    return options;
   }
 }

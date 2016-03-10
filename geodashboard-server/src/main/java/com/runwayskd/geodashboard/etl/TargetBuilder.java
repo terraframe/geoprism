@@ -111,9 +111,21 @@ public class TargetBuilder
       {
         JSONObject sheet = cSheets.getJSONObject(i);
 
-        TargetDefinitionIF definition = this.createMdBusiness(sheet);
+        if (sheet.has("existing"))
+        {
+          String bindingId = sheet.getString("existing");
 
-        this.target.addDefinition(definition);
+          ExcelSourceBinding sBinding = ExcelSourceBinding.get(bindingId);
+          TargetBinding tBinding = sBinding.getTargetBinding();
+
+          this.target.addDefinition(tBinding.getDefinition());
+        }
+        else
+        {
+          TargetDefinitionIF definition = this.createMdBusiness(sheet);
+
+          this.target.addDefinition(definition);
+        }
       }
     }
     catch (JSONException e)
@@ -149,7 +161,7 @@ public class TargetBuilder
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
-    
+
     /*
      * Create the default classifier root for the MdBusiness
      */
@@ -166,7 +178,7 @@ public class TargetBuilder
 
       root.addLink(Classifier.getRoot(), ClassifierIsARelationship.CLASS).apply();
     }
-    
+
     /*
      * Add all of the basic fields
      */
@@ -553,7 +565,7 @@ public class TargetBuilder
         {
           SourceFieldIF sField = source.getFieldByLabel(sheetName, sLabel);
 
-          field.addUniversalAttribute(sField.getAttributeName(), (Universal) universal);
+          field.addUniversalAttribute(sField.getAttributeName(), sLabel, (Universal) universal);
         }
       }
     }
@@ -603,12 +615,17 @@ public class TargetBuilder
     mdAttribute.setValue(MdAttributePointInfo.SRID, "4326");
     mdAttribute.apply();
 
+    SourceFieldIF latField = this.source.getFieldByLabel(sheetName, latitude);
+    SourceFieldIF longField = this.source.getFieldByLabel(sheetName, longitude);
+
     TargetFieldPoint field = new TargetFieldPoint();
     field.setName(attributeName);
     field.setLabel(label);
     field.setKey(mdClass.definesType() + "." + attributeName);
-    field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
-    field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
+    field.setLatitudeSourceAttributeName(latField.getAttributeName());
+    field.setLatitudeLabel(latField.getLabel());
+    field.setLongitudeSourceAttributeName(longField.getAttributeName());
+    field.setLongitudeLabel(latField.getLabel());
 
     return field;
   }

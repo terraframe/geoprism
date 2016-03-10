@@ -21,10 +21,19 @@ package com.runwayskd.geodashboard.etl;
 public class TargetFieldMultiPolygonBinding extends TargetFieldMultiPolygonBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = -1318777893;
-  
+
   public TargetFieldMultiPolygonBinding()
   {
     super();
   }
-  
+
+  @Override
+  public TargetFieldIF getTargetField()
+  {
+    TargetFieldMultiPolygon field = new TargetFieldMultiPolygon();
+
+    populate(field);
+
+    return field;
+  }
 }

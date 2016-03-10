@@ -18,28 +18,12 @@
  */
 package com.runwayskd.geodashboard.etl;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public interface SourceDefinitionIF
+public interface TargetFieldPointIF extends TargetFieldIF
 {
-  public String getType();
-
-  public String getName();
-
-  public String getLabel();
-
   public String getId();
 
-  public String getCountry();
-
-  public boolean isNew();
-
-  public SourceFieldIF getFieldByName(String columnName);
-
-  public SourceFieldIF getFieldByLabel(String label);
-
-  public List<SourceFieldIF> getFields();
-
-  public void persist();
-
+  public JSONObject toJSON() throws JSONException;
 }

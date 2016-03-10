@@ -22,8 +22,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.geodashboard.MappableClass;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdView;
 
 public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.runwaysdk.generation.loader.Reloadable
@@ -97,5 +99,34 @@ public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.ru
     {
       iterator.close();
     }
+  }
+
+  public SourceDefinitionIF getDefinition(String sheetName)
+  {
+    MdView mdView = this.getMdView();
+    
+    MappableClass mClass = MappableClass.getMappableClass(this.getTargetBinding().getTargetBusiness().definesType());
+    Universal country = mClass.getCountry();
+    
+    SourceDefinition definition = new SourceDefinition();
+    definition.setType(mdView.definesType());
+    definition.setLabel(mdView.getDisplayLabel().getValue());
+    definition.setSheetName(sheetName);
+    definition.setCountry(country.getId());
+    definition.setNew(false);
+    definition.setId(this.getId());
+
+    List<ExcelFieldBinding> fields = this.getFields();
+
+    for (ExcelFieldBinding field : fields)
+    {
+      definition.addField(field.getSourceField());
+    }
+    return definition;
+  }
+
+  public TargetBinding getTargetBinding()
+  {
+    return TargetBinding.getBinding(this.getMdView());
   }
 }

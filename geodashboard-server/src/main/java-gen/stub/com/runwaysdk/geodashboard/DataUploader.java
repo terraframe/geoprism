@@ -16,25 +16,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
-
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.runwaysdk.geodashboard;
 
 import java.io.File;
@@ -68,11 +49,14 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwayskd.geodashboard.etl.ConfigurationBuilder;
 import com.runwayskd.geodashboard.etl.Converter;
 import com.runwayskd.geodashboard.etl.ConverterIF;
 import com.runwayskd.geodashboard.etl.DataSetBuilder;
 import com.runwayskd.geodashboard.etl.DataSetBuilderIF;
+import com.runwayskd.geodashboard.etl.ExcelSourceBinding;
 import com.runwayskd.geodashboard.etl.SourceContextIF;
+import com.runwayskd.geodashboard.etl.SourceDefinitionIF;
 import com.runwayskd.geodashboard.etl.TargetContextIF;
 import com.runwayskd.geodashboard.etl.TargetDefinitionIF;
 import com.runwayskd.geodashboard.etl.excel.ExcelDataFormatter;
@@ -267,12 +251,15 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       for (TargetDefinitionIF definition : definitions)
       {
-        String type = definition.getTargetType();
+        if (definition.isNew())
+        {
+          String type = definition.getTargetType();
 
-        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
-        MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
+          MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
+          MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
 
-        datasets.put(mClass.toJSON());
+          datasets.put(mClass.toJSON());
+        }
       }
 
       // Return the new data set definition
@@ -283,6 +270,53 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       throw e;
     }
     catch (Exception e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  /**
+   * Deletes the temp files of the import
+   * 
+   * @param configuration
+   */
+  public static void cancelImport(String configuration)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(configuration);
+
+      String name = object.getString("directory");
+
+      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+
+      FileUtils.deleteDirectory(directory);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    catch (IOException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static String getSavedConfiguration(String id, String sheetName)
+  {
+    try
+    {
+      ExcelSourceBinding binding = ExcelSourceBinding.get(id);
+
+      SourceDefinitionIF sDefinition = binding.getDefinition(sheetName);
+      TargetDefinitionIF tDefinition = binding.getTargetBinding().getDefinition();
+
+      ConfigurationBuilder builder = new ConfigurationBuilder(sDefinition, tDefinition);
+      JSONObject configuration = builder.getConfiguration();
+
+      return configuration.toString();
+    }
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }

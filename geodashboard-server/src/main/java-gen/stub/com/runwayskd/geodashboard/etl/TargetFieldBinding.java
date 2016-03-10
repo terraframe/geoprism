@@ -18,13 +18,27 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import com.runwaysdk.system.metadata.MdAttribute;
+
 public abstract class TargetFieldBinding extends TargetFieldBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = 1647156669;
-  
+
   public TargetFieldBinding()
   {
     super();
   }
-  
+
+  public abstract TargetFieldIF getTargetField();
+
+  protected void populate(TargetField field)
+  {
+    MdAttribute targetAttribute = this.getTargetAttribute();
+    String key = targetAttribute.getKey();
+    String attributeName = targetAttribute.getAttributeName();
+
+    field.setKey(key);
+    field.setLabel(targetAttribute.getDisplayLabel().getValue());
+    field.setName(attributeName);
+  }
 }

@@ -20,6 +20,8 @@ package com.runwayskd.geodashboard.etl;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.runwaysdk.system.metadata.MdView;
@@ -28,16 +30,36 @@ public class SourceDefinition implements SourceDefinitionIF
 {
   private String                         sheetName;
 
+  private String                         label;
+
   private String                         type;
 
   private Map<String, SourceFieldIF>     fieldMap;
 
   private HashMap<String, SourceFieldIF> labelMap;
 
+  private boolean                        isNew;
+
+  private String                         id;
+
+  private String                         country;
+
   public SourceDefinition()
   {
     this.fieldMap = new HashMap<String, SourceFieldIF>();
     this.labelMap = new HashMap<String, SourceFieldIF>();
+    this.isNew = true;
+  }
+
+  public void setId(String id)
+  {
+    this.id = id;
+  }
+
+  @Override
+  public String getId()
+  {
+    return id;
   }
 
   @Override
@@ -52,6 +74,17 @@ public class SourceDefinition implements SourceDefinitionIF
   }
 
   @Override
+  public String getCountry()
+  {
+    return this.country;
+  }
+
+  public void setCountry(String country)
+  {
+    this.country = country;
+  }
+
+  @Override
   public String getName()
   {
     return this.sheetName;
@@ -60,6 +93,28 @@ public class SourceDefinition implements SourceDefinitionIF
   public void setSheetName(String sheetName)
   {
     this.sheetName = sheetName;
+  }
+
+  public void setNew(boolean isNew)
+  {
+    this.isNew = isNew;
+  }
+
+  @Override
+  public boolean isNew()
+  {
+    return this.isNew;
+  }
+
+  @Override
+  public String getLabel()
+  {
+    return this.label;
+  }
+
+  public void setLabel(String label)
+  {
+    this.label = label;
   }
 
   public void addField(SourceFieldIF field)
@@ -81,18 +136,27 @@ public class SourceDefinition implements SourceDefinitionIF
   }
 
   @Override
+  public List<SourceFieldIF> getFields()
+  {
+    return new LinkedList<SourceFieldIF>(this.fieldMap.values());
+  }
+
+  @Override
   public void persist()
   {
-    ExcelSourceBinding source = new ExcelSourceBinding();
-    source.setSheetName(this.sheetName);
-    source.setMdView(MdView.getMdView(this.type));
-    source.apply();
-    
-    Collection<SourceFieldIF> fields = this.fieldMap.values();
-
-    for (SourceFieldIF field : fields)
+    if (this.isNew())
     {
-      field.persist(source);
+      ExcelSourceBinding source = new ExcelSourceBinding();
+      source.setSheetName(this.sheetName);
+      source.setMdView(MdView.getMdView(this.type));
+      source.apply();
+
+      Collection<SourceFieldIF> fields = this.fieldMap.values();
+
+      for (SourceFieldIF field : fields)
+      {
+        field.persist(source);
+      }
     }
   }
 }

@@ -18,6 +18,9 @@
  */
 package com.runwayskd.geodashboard.etl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public interface SourceFieldIF
 {
   public String getColumnName();
@@ -29,4 +32,6 @@ public interface SourceFieldIF
   public ColumnType getType();
 
   public void persist(ExcelSourceBinding source);
+
+  public JSONObject toJSON() throws JSONException;
 }

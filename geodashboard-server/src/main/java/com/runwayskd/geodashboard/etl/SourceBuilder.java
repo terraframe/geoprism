@@ -62,16 +62,22 @@ public class SourceBuilder
       {
         JSONObject sheet = cSheets.getJSONObject(i);
 
-        SourceDefinitionIF definition = this.createMdView(sheet);
+        if (sheet.has("existing"))
+        {
+          String id = sheet.getString("existing");
+          String sheetName = sheet.getString("name");
 
-        this.source.addSheetDefinition(definition);
+          ExcelSourceBinding sBinding = ExcelSourceBinding.get(id);
+
+          this.source.addSheetDefinition(sBinding.getDefinition(sheetName));
+        }
+        else
+        {
+          SourceDefinitionIF definition = this.createMdView(sheet);
+
+          this.source.addSheetDefinition(definition);
+        }
       }
-
-      String directory = configuration.getString("directory");
-      String filename = configuration.getString("filename");
-
-      this.source.setDirectory(directory);
-      this.source.setFilename(filename);
     }
     catch (JSONException e)
     {
@@ -83,6 +89,7 @@ public class SourceBuilder
   {
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
+    String country = cSheet.getString("country");
 
     String typeName = this.generateViewType(label);
 
@@ -101,6 +108,7 @@ public class SourceBuilder
     SourceDefinition definition = new SourceDefinition();
     definition.setType(PACKAGE_NAME + "." + typeName);
     definition.setSheetName(sheetName);
+    definition.setCountry(country);
 
     for (int i = 0; i < cFields.length(); i++)
     {

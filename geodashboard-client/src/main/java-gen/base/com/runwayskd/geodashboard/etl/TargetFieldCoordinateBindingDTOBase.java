@@ -19,7 +19,7 @@
 package com.runwayskd.geodashboard.etl;
 
 @com.runwaysdk.business.ClassSignature(hash = -372760436)
-public abstract class TargetFieldCoordinateBindingDTOBase extends com.runwayskd.geodashboard.etl.TargetFieldBasicBindingDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class TargetFieldCoordinateBindingDTOBase extends com.runwayskd.geodashboard.etl.TargetFieldBindingDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "com.runwayskd.geodashboard.etl.TargetFieldCoordinateBinding";
   private static final long serialVersionUID = -372760436;

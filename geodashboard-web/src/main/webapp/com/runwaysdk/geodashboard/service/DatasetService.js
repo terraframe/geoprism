@@ -54,10 +54,29 @@
       com.runwaysdk.geodashboard.DataUploaderController.importData(request, JSON.stringify(configuration));
     }
     
+    service.cancelImport = function(configuration, element, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+          
+      com.runwaysdk.geodashboard.DataUploaderController.cancelImport(request, JSON.stringify(configuration));    	
+    }
+    
     service.getAll = function(onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
     
       com.runwaysdk.geodashboard.DataSetController.getAll(request);
+    }
+    
+    
+    service.getSavedConfiguration = function(id, sheetName, element, onSuccess, onFailure) {
+      var success = function(response) {
+        var result = JSON.parse(response);
+          
+         onSuccess(result);
+      };
+        
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
+          
+      com.runwaysdk.geodashboard.DataUploaderController.getSavedConfiguration(request, id, sheetName);
     }
     
     service.remove = function(id, element, success, onFailure) {

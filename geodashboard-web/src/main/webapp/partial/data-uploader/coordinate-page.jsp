@@ -122,4 +122,10 @@
       </div>  <!-- end row-holder   -->
     </div>  <!-- end holder   -->
   </div>  <!-- end ng-if   -->
+  <div class="label-holder"></div>
+  <div class="holder">
+    <div class="error-message">
+      <p ng-show="form.$error.size"><gdb:localize key="dataUploader.unassignedCoordinateFields"/></p>
+    </div>          
+  </div>    
 </div>

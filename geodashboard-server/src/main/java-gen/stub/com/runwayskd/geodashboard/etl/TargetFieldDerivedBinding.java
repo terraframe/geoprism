@@ -21,10 +21,29 @@ package com.runwayskd.geodashboard.etl;
 public class TargetFieldDerivedBinding extends TargetFieldDerivedBindingBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = -759579865;
-  
+
   public TargetFieldDerivedBinding()
   {
     super();
   }
-  
+
+  @Override
+  protected void populate(TargetField field)
+  {
+    super.populate(field);
+
+    TargetFieldDerived tField = (TargetFieldDerived) field;
+    tField.setCountry(this.getGeoEntity());
+    tField.setUniversal(this.getUniversal());
+  }
+
+  @Override
+  public TargetFieldIF getTargetField()
+  {
+    TargetFieldDerived field = new TargetFieldDerived();
+
+    populate(field);
+
+    return field;
+  }
 }
