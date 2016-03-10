@@ -50,7 +50,7 @@
 			}
 			else {			
 				//// Add main page if no hash exists
-				$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src="${pageContext.request.contextPath}/jsp/mainContent.jsp"></iframe>');			
+				$("#main").html('<iframe id="main-content-frame" seamless sandbox="allow-same-origin allow-top-navigation allow-scripts allow-popups allow-forms" src="${pageContext.request.contextPath}/jsp/mainContent.jsp"></iframe>');	
 			}
 		
 			$(window).on('hashchange', function(e) {				

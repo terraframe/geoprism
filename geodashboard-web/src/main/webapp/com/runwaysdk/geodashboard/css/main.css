@@ -2164,7 +2164,7 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	width:62px;
 	height:100%;
 	padding:3px;
-	border:1px solid #ccc;
+	border:1px solid #aaa;
 	position:relative;
 	background:#ddd;
 }
@@ -2323,17 +2323,22 @@ option[selected]{ font-weight:bold}
 .modal-form .label-holder.style02{padding-top:12px;}
 .modal-form .label-holder.style03{padding-top:9px;}
 .nav-tabs.type-tabs{
-	padding:0;
 	margin:0;
 	list-style:none;
 	border:none;
 	box-shadow:none;
 	border-radius:0;
-  height: 140px;
-  width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
-  overflow-y: hidden;
+  	height: 140px;
+  	width: 100%;
+  	overflow-x: auto;
+  	white-space: nowrap;
+  	overflow-y: hidden;
+  
+  	background-color: #eee;
+  	border: solid #aaa 1px;
+  	padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .nav-tabs.type-tabs li{
 /* 	float:left; */
@@ -2481,11 +2486,12 @@ option[selected]{ font-weight:bold}
 .modal-form .tab-content>.tab-pane{padding:9px 0 22px 2px;}
 .modal-form .tab-pane .cell label{margin-bottom:5px;}
 .modal-form .tab-pane .text input[type="text"]{
-	height:28px;
-	background:#fff;
+/* 	height:28px; */
+	height:31px;
+/* 	background:#fff; */
 	font-size:12px;
 	line-height:15px;
-	color:#bababa;
+	color:#333;
 	padding: 5px 7px;
 }
 .modal-form .tab-pane .text input[type="text"]::-moz-placeholder{
@@ -2685,7 +2691,7 @@ h4.location-summary-sub-table-heading{
 }
 
 .modal-form .color-section{
-	width:312px;
+	width:345px;
 	float:left;
 }
 .modal-form .color-section+.stroke-block{margin:0 0 0 22px;}
@@ -3437,14 +3443,14 @@ span.select-area span.center {
 	}
 	
 	div.text.category-input-container {
-		width: 225px;
+		width: 275px;
 	}
 	
 	.modal-form .text input[type="text"]{
 	}
 	
 	.modal-form .text .category-input.category-range-input{
-		width: 49%;
+		width: 110px;
 	}
 	
 	.cat-range-max-val{
@@ -3468,7 +3474,7 @@ span.select-area span.center {
 	}
 	
 	div.panel-group.choice-color.category-group {
-		width: 300px;
+		width: 100%;
 	}
 	
 	#cat-other-basic-label{
@@ -3526,6 +3532,69 @@ span.select-area span.center {
 	  width: 105px;
 	  margin: 10px 0 0 0;
 	}
+	
+	.category-container .cell {
+		float: right;
+		margin: 0;
+	}
+	
+	.category-input-sub-container.left {
+    	float: left;
+    	width: 135px;
+	}
+	.category-input-sub-container.right {
+	    float: right;
+	    width: 135px;
+	}
+	
+	i.range-cat-ico {
+	    font-size: 20px;
+	    font-weight: bolder;
+	    height: 31px;
+	    vertical-align: middle;
+	    line-height: 29px;
+	    cursor: pointer;
+	    border: solid 1px #bbb;
+	    padding-left: 3px;
+	    padding-right: 3px;
+	    color: #bbb;
+	    background-color: #eee;
+	}
+	
+	i.range-cat-ico:hover,
+	i.range-cat-ico:focus,
+	i.range-cat-ico.active
+	{
+		color: white;
+    	background-color: #00bfff;
+    	border-color: #02789e;
+	}
+	
+	i.range-cat-left-ico {
+	    margin-right: 2px;
+	    float: left;
+	}
+	
+	i.range-cat-right-ico {
+	    margin-left: 2px;
+	    float: right;
+	}
+	
+	i.range-cat-ico.range-cat-left-ico.active ~ input.category-input.left{
+		font-size: 0px;
+		background-color: #E1E1E1;
+	}
+	i.range-cat-ico.range-cat-right-ico.active ~ input.category-input.right{
+		font-size: 0px;
+		background-color: #E1E1E1;
+	}
+	
+	input.category-input.category-range-input.cat-range-max-val.right{
+		float: right;
+	}
+
+
+
 	
 .ui-autocomplete {
 	z-index: 999999 !important;

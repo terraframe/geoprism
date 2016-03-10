@@ -43,6 +43,35 @@
   function StyleCategoryListController($scope) {
 	  var controller = this;
 	  
+	  $scope.toggleMin = function(event){
+		  this.category.val = "";
+		  this.category.rangeAllMin = !($(event.target).hasClass("active"));
+	  }
+	  
+	  $scope.toggleMax = function(event){
+		  this.category.valMax = "";
+		  this.category.rangeAllMax = !($(event.target).hasClass("active"));
+	  }
+	  
+	  $scope.categoryCheck = function(){
+		  
+		  if(this.category.isRangeCat && this.category.val && this.category.valMax){
+			  return false;
+		  }
+		  else if(this.category.isRangeCat && this.category.rangeAllMin && this.category.valMax){
+			  return false;
+		  }
+		  else if(this.category.isRangeCat && this.category.rangeAllMax && this.category.val){
+			  return false;
+		  }
+		  else if(this.category.isRangeCat && !this.category.val && this.category.valMax){
+			  return true;
+		  }
+		  else if(this.category.isRangeCat && this.category.val && !this.category.valMax){
+			  return true;
+		  }
+	  }
+	  
       $scope.$watch("categories.rangeCategoriesEnabled", function(newValue, oldValue) {
       	var scopeRef = $scope;
       	var cats = scopeRef.categories.catLiElems;
@@ -63,6 +92,15 @@
       		}
   			else{
       			cat.isRangeCat = false;
+      			
+      			// make sure min category isn't disabled if set in widget and toggled back to basic categories
+      			// we really only need to reset the min val but i'm resetting max to be consistent
+          		if(cat.rangeAllMin){
+          			cat.rangeAllMin = false;
+          		}
+          		if(cat.rangeAllMax){
+          			cat.rangeAllMax = false;
+          		}
       		}
       	}
       }); 
@@ -352,6 +390,9 @@
      
      controller.setLayerType = function(type) {
        $scope.layerModel.layerType = type;
+       
+       // preventing widget from scolling on selection
+       $(".style04 > .type-tabs")[0].scrollLeft = $(".style04 > .type-tabs")[0].scrollLeft;
      }
    }     
   
@@ -364,6 +405,11 @@
         controller : LayerTypesController,
         controllerAs : 'ctrl',
         link: function (scope, element, attrs) {
+        	
+        	// Adjusting the layer-types scroll setting on load
+        	$timeout(function(){
+        		$(".style04 > .type-tabs")[0].scrollLeft = $('#'+scope.layerModel.layerType).position().left;
+        	}, 1000);
         }
       };    
    };

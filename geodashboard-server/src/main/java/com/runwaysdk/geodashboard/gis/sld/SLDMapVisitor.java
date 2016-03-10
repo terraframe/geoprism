@@ -507,7 +507,28 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               String key = category.getString(ThematicStyle.VAL);
               String color = category.getString(ThematicStyle.COLOR);
 
-              NodeBuilder[] filterNodes = new NodeBuilder[] { node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), node(OGC, "And").child(node(OGC, "Not").child(node(OGC, "Or").child(node(OGC, "PropertyIsNull").child(node(OGC, "PropertyName").text(attributeName)), node(OGC, "PropertyIsEqualTo").child(node(OGC, "Literal").text("NEVER"), node(OGC, "Literal").text("TRUE")))), node(OGC, "PropertyIsEqualTo").child(node(OGC, "PropertyName").text(attributeName), node(OGC, "Literal").text(key))) };
+              NodeBuilder[] filterNodes = new NodeBuilder[] { 
+                  node(OGC, "PropertyIsEqualTo").child(
+                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+                      node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+                  ), 
+                  node(OGC, "And").child(
+                      node(OGC, "Not").child(
+                          node(OGC, "Or").child(
+                              node(OGC, "PropertyIsNull").child(
+                                  node(OGC, "PropertyName").text(attributeName)
+                              ), node(OGC, "PropertyIsEqualTo").child(
+                                  node(OGC, "Literal").text("NEVER"), 
+                                  node(OGC, "Literal").text("TRUE")
+                              )
+                          )
+                      ), 
+                      node(OGC, "PropertyIsEqualTo").child(
+                          node(OGC, "PropertyName").text(attributeName), 
+                          node(OGC, "Literal").text(key)
+                      )
+                  ) 
+              };
 
               this.createRule(root, filterNodes, color, key, minAttrVal, maxAttrVal, minSize, maxSize);
             }
@@ -541,6 +562,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         boolean isOntologyCat;
         boolean isRangeCat = false;
         String catMaxVal = null;
+        boolean rangeAllMin = false;
+        boolean rangeAllMax = false;
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicLayer tLayer = (ThematicLayer) layer;
@@ -586,6 +609,23 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   if(catOtherCat == false && isRangeCat == true)
                   {
                     catMaxVal = thisObj.getString("valMax");
+                    
+                    if(catVal.length() == 0)
+                    {
+                      catVal = "ALLLESSTHAN";
+                    }
+                    if(catMaxVal.length() == 0)
+                    {
+                      catMaxVal = "ALLGREATERTHAN";
+                    }
+                    if(thisObj.has("rangeAllMin"))
+                    {
+                      rangeAllMin = thisObj.getBoolean("rangeAllMin");
+                    }
+                    if(thisObj.has("rangeAllMax"))
+                    {
+                      rangeAllMax = thisObj.getBoolean("rangeAllMax");
+                    }
                   }
                 }
               }
@@ -602,12 +642,21 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 {
                   if(isRangeCat == true)
                   {
-                    if(catMaxVal != null && catMaxVal.length() > 0)
+                    if(catMaxVal != null && (rangeAllMax || catMaxVal.length() > 0))
                     {
                       try
                       {
                         String catMin = formatter.format(new Double(catVal));
-                        String catMax = formatter.format(new Double(catMaxVal));
+                        
+                        String catMax;
+                        if(rangeAllMax)
+                        {
+                          catMax = "ALLGREATERTHAN";
+                        }
+                        else
+                        {
+                          catMax = formatter.format(new Double(catMaxVal));
+                        }
                         catTitle = catMin.concat(" - ").concat(catMax);
                       }
                       catch (Exception e)
@@ -633,8 +682,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 if(isRangeCat == true)
                 {
                   ruleNode = node("Rule").child(
-                      node("Name").text(catVal + " - " + catMaxVal),
-                      node("Title").text(catVal + " - " + catMaxVal),
+                      node("Name").text(catTitle),
+                      node("Title").text(catTitle),
                       node(OGC, "Filter").child(
                           node(OGC, "And").child(
                               node(OGC, "Not").child(
@@ -647,11 +696,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                               node(OGC, "PropertyName").text(attribute)),
                                           node(OGC, "PropertyIsEqualTo").child(
                                               node(OGC, "Literal").text("NEVER"),
-                                              node(OGC, "Literal").text("TRUE"))))),
-                              node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
-                                  node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(catVal)),
-                                  node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(catMaxVal))))),
-                                  this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)
+                                              node(OGC, "Literal").text("TRUE")
+                                          )
+                                      )
+                                  )
+                              ),
+                              this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
+                          )
+                      ),
+                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)
                                   
                       ).build(root);
                 }
@@ -706,7 +759,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 // 'OTHER' Point styles
                 if (catOtherEnabled == true)
                 {
-                  
                      NodeBuilder wrapperAndNode = node(OGC, "And");
                   
                      String label = LocalizationFacade.getFromBundles("Other");
@@ -722,10 +774,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                          String minVal = rangeVals[0];
                          String maxVal = rangeVals[1];
                          otherNotNode.child(
-                             node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
-                                 node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(minVal)),
-                                 node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(maxVal))
-                             )
+                             this.getCategoryRangeNode(attribute, minVal, maxVal, rangeAllMin, rangeAllMax)
                          );
                          
                          wrapperAndNode.child(otherNotNode);
@@ -1038,6 +1087,40 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       
       return symbolNode;
     }
+    
+    private NodeBuilder getCategoryRangeNode(String attribute, String lowRange, String highRange, boolean rangeAllMin, boolean rangeAllMax)
+    {
+      NodeBuilder catNode = null;
+      
+      if(rangeAllMin)
+      {
+        catNode = node(OGC, "PropertyIsLessThanOrEqualTo").child(
+            node(OGC, "PropertyName").text(attribute),
+            node(OGC, "Literal").text(highRange)
+        );
+      }
+      else if(rangeAllMax)
+      {
+        catNode = node(OGC, "PropertyIsGreaterThanOrEqualTo").child(
+            node(OGC, "PropertyName").text(attribute),
+            node(OGC, "Literal").text(lowRange)
+        );
+      }
+      else
+      {
+        catNode = node(OGC, "PropertyIsBetween").child(
+            node(OGC, "PropertyName").text(attribute),
+            node(OGC, "LowerBoundary").child(
+                node(OGC, "Literal").text(lowRange)
+            ),
+            node(OGC, "UpperBoundary").child(
+                node(OGC, "Literal").text(highRange)
+            )
+        );
+      }
+      
+      return catNode;
+    }
 
     private NodeBuilder getFillNode(Style style, String fill)
     {
@@ -1142,6 +1225,40 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     protected String getSymbolizerName()
     {
       return "FeatureTypeStyle";
+    }
+    
+    private NodeBuilder getCategoryRangeNode(String attribute, String lowRange, String highRange, boolean rangeAllMin, boolean rangeAllMax)
+    {
+      NodeBuilder catNode = null;
+      
+      if(rangeAllMin)
+      {
+        catNode = node(OGC, "PropertyIsLessThanOrEqualTo").child(
+            node(OGC, "PropertyName").text(attribute),
+            node(OGC, "Literal").text(highRange)
+        );
+      }
+      else if(rangeAllMax)
+      {
+        catNode = node(OGC, "PropertyIsGreaterThanOrEqualTo").child(
+            node(OGC, "PropertyName").text(attribute),
+            node(OGC, "Literal").text(lowRange)
+        );
+      }
+      else
+      {
+        catNode = node(OGC, "PropertyIsBetween").child(
+            node(OGC, "PropertyName").text(attribute),
+            node(OGC, "LowerBoundary").child(
+                node(OGC, "Literal").text(lowRange)
+            ),
+            node(OGC, "UpperBoundary").child(
+                node(OGC, "Literal").text(highRange)
+            )
+        );
+      }
+      
+      return catNode;
     }
 
     @Override
@@ -1264,6 +1381,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         boolean isOntologyCat;
         boolean isRangeCat = false;
         String catMaxVal = null;
+        boolean rangeAllMin = false;
+        boolean rangeAllMax = false;
         ArrayList<String> catValTracking = new ArrayList<String>();
 
         ThematicLayer tLayer = (ThematicLayer) layer;
@@ -1309,6 +1428,23 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                     if (isRangeCat)
                     {
                       catMaxVal = thisObj.getString("valMax");
+                      
+                      if(catVal.length() == 0)
+                      {
+                        catVal = "ALLLESSTHAN";
+                      }
+                      if(catMaxVal.length() == 0)
+                      {
+                        catMaxVal = "ALLGREATERTHAN";
+                      }
+                      if(thisObj.has("rangeAllMin"))
+                      {
+                        rangeAllMin = thisObj.getBoolean("rangeAllMin");
+                      }
+                      if(thisObj.has("rangeAllMax"))
+                      {
+                        rangeAllMax = thisObj.getBoolean("rangeAllMax");
+                      }
                     }
                   }
                 }
@@ -1331,7 +1467,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                       try
                       {
                         String catMin = formatter.format(new Double(catVal));
-                        String catMax = formatter.format(new Double(catMaxVal));
+                        String catMax;
+                        if(rangeAllMax)
+                        {
+                          catMax = "ALLGREATERTHAN";
+                        }
+                        else
+                        {
+                          catMax = formatter.format(new Double(catMaxVal));
+                        }
                         catTitle = catMin.concat(" - ").concat(catMax);
                       }
                       catch (Exception e)
@@ -1377,14 +1521,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                           )
                                       )
                                   ), 
-                                  node(OGC, "PropertyIsBetween").child(
-                                      node(OGC, "PropertyName").text(attribute),
-                                      node(OGC, "LowerBoundary").child(
-                                          node(OGC, "Literal").text(catVal)),
-                                      node(OGC, "UpperBoundary").child(
-                                          node(OGC, "Literal").text(catMaxVal)
-                                      )
-                                  )
+                                  this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                               )
                           )
                       ),
@@ -1494,15 +1631,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   String minVal = rangeVals[0];
                   String maxVal = rangeVals[1];
                   otherNotNode.child(
-                      node(OGC, "PropertyIsBetween").child(
-                          node(OGC, "PropertyName").text(attribute),
-                          node(OGC, "LowerBoundary").child(
-                              node(OGC, "Literal").text(minVal)
-                          ),
-                          node(OGC, "UpperBoundary").child(
-                              node(OGC, "Literal").text(maxVal)
-                          )
-                      )
+                      this.getCategoryRangeNode(attribute, minVal, maxVal, rangeAllMin, rangeAllMax)
                   );
                   
                   wrapperAndNode.child(otherNotNode);
@@ -1572,10 +1701,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                         )
                     )
                 ).build(root);
-                
-                
-                
-                
               }
             }
           }
