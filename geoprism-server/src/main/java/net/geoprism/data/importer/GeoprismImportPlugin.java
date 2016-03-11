@@ -497,7 +497,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
   @Override
   public String getModuleIdentifier()
   {
-    return "Geodashboard";
+    return "Geoprism";
   }
 
 }

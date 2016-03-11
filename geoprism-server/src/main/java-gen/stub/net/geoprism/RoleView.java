@@ -36,11 +36,11 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 {
   private static final long  serialVersionUID       = -875685428;
 
-  public static final String GEODASHBOARD_NAMESPACE = "geoprism";
+  public static final String GEOPRISM_NAMESPACE = "geoprism";
 
-  public static final String ADMIN_NAMESPACE        = GEODASHBOARD_NAMESPACE + ".admin";
+  public static final String ADMIN_NAMESPACE        = GEOPRISM_NAMESPACE + ".admin";
 
-  public static final String DASHBOARD_NAMESPACE    = GEODASHBOARD_NAMESPACE + ".dashboard";
+  public static final String DASHBOARD_NAMESPACE    = GEOPRISM_NAMESPACE + ".dashboard";
 
   public RoleView()
   {
@@ -131,7 +131,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
     List<Roles> list = new LinkedList<Roles>();
 
     RolesQuery query = new RolesQuery(new QueryFactory());
-    query.WHERE(query.getRoleName().LIKE(GEODASHBOARD_NAMESPACE + "%"));
+    query.WHERE(query.getRoleName().LIKE(GEOPRISM_NAMESPACE + "%"));
     query.ORDER_BY_ASC(query.getRoleName());
 
     OIterator<? extends Roles> it = query.getIterator();

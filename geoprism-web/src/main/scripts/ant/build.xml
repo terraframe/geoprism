@@ -19,7 +19,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<project name="Geodashboard Web" default="deploy_presentation_files">
+<project name="Geoprism Web" default="deploy_presentation_files">
 
 	<!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
 

@@ -100,6 +100,6 @@ com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
     }
   });
     
-  com.runwaysdk.geodashboard.ontology.Classifier.getAllProblems(request);      
+  net.geoprism.ontology.Classifier.getAllProblems(request);      
 });
 </script>

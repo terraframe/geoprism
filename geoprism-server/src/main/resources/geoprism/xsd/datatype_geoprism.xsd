@@ -21,7 +21,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:redefine schemaLocation="datatype_gis.xsd">
 
-    <!-- Geodashboard Module -->
+    <!-- Geoprism Module -->
 
     <xs:complexType name="create">
       <xs:complexContent>
