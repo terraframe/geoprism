@@ -48,7 +48,7 @@
     "noproblems-msg" : "There are no known classifier issues"
   });
   
-  Mojo.Meta.newClass('com.runwaysdk.geodashboard.ontology.RefreshQueue', {
+  Mojo.Meta.newClass('net.geoprism.ontology.RefreshQueue', {
     Instance : {
       initialize : function(tree, ids) {
         this._tree = tree;
@@ -190,7 +190,7 @@
           var okHandler = Mojo.Util.bind(this, function() {
             var request = new Mojo.ClientRequest({
               onSuccess : function(idsToUpdate) {
-                var queue = new com.runwaysdk.geodashboard.ontology.RefreshQueue(that, idsToUpdate);
+                var queue = new net.geoprism.ontology.RefreshQueue(that, idsToUpdate);
                 queue.start();
                     
                 that.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, false);}); 
@@ -205,7 +205,7 @@
                   
             this.doForNodeAndAllChildren(movedNode, function(node){that.setNodeBusy(node, true);});
                 
-            com.runwaysdk.geodashboard.ontology.Classifier.makeSynonym(request, movedNodeId, targetNodeId);            
+            net.geoprism.ontology.Classifier.makeSynonym(request, movedNodeId, targetNodeId);            
           });          
           
           dialog.appendContent(that.localize("mergeConfirmation"));
@@ -289,7 +289,7 @@
             }
           });
           
-          Mojo.Util.invokeControllerAction("com.runwaysdk.geodashboard.ontology.ClassifierSynonym", "getDirectDescendants", {parentId: parentId}, cr);
+          Mojo.Util.invokeControllerAction("net.geoprism.ontology.ClassifierSynonym", "getDirectDescendants", {parentId: parentId}, cr);
         }
         else {
           this.$refreshTerm(termId, callback, nodes);
@@ -331,7 +331,7 @@
         var parentId = this.__getRunwayIdFromNode(targetNode.parent);
           
         new com.runwaysdk.ui.RunwayControllerFormDialog({
-          type: "com.runwaysdk.geodashboard.ontology.ClassifierSynonym",
+          type: "net.geoprism.ontology.ClassifierSynonym",
           action: "create",
           actionParams: {classifierId: parentId},
           width: 730,
@@ -369,7 +369,7 @@
         this.setNodeBusy(targetNode, true);
           
         new com.runwaysdk.ui.RunwayControllerFormDialog({
-          type: "com.runwaysdk.geodashboard.ontology.ClassifierSynonym",
+          type: "net.geoprism.ontology.ClassifierSynonym",
           action: "update",
           viewParams: {id: targetId},
           width: 730,
@@ -402,7 +402,7 @@
         this.setNodeBusy(targetNode, true);
           
         new com.runwaysdk.ui.RunwayControllerFormDialog({
-          type: "com.runwaysdk.geodashboard.ontology.ClassifierSynonym",
+          type: "net.geoprism.ontology.ClassifierSynonym",
           action: "delete",
           dto: dto,
           onSuccess : function(response) {
@@ -511,7 +511,7 @@
           }
         });
                     
-        com.runwaysdk.geodashboard.ontology.Classifier.deleteClassifierProblem(request, problemId);
+        net.geoprism.ontology.Classifier.deleteClassifierProblem(request, problemId);
       },
         
 
@@ -549,7 +549,7 @@
           }
         });
         
-        com.runwaysdk.geodashboard.ontology.Classifier.getAllProblems(request);
+        net.geoprism.ontology.Classifier.getAllProblems(request);
       },
       
       
@@ -604,7 +604,7 @@
             }              
           });
            
-          com.runwaysdk.geodashboard.ontology.Classifier.getClassifierTree(request, termId);
+          net.geoprism.ontology.Classifier.getClassifierTree(request, termId);
         }
         else {
           for(var i = 0; i < nodes.length; i++) {

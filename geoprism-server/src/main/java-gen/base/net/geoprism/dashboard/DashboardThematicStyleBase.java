@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 051457)
+@com.runwaysdk.business.ClassSignature(hash = 2047207828)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -69,8 +69,7 @@ public abstract class DashboardThematicStyleBase extends net.geoprism.dashboard.
   public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
-  public static java.lang.String STYLECONDITION = "styleCondition";
-  private static final long serialVersionUID = 1450051457;
+  private static final long serialVersionUID = 2047207828;
   
   public DashboardThematicStyleBase()
   {
@@ -1217,22 +1216,6 @@ public abstract class DashboardThematicStyleBase extends net.geoprism.dashboard.
     {
       setValue(SECONDARYCATEGORIES, value);
     }
-  }
-  
-  public String getStyleConditionId()
-  {
-    return getValue(STYLECONDITION);
-  }
-  
-  public void validateStyleCondition()
-  {
-    this.validateAttribute(STYLECONDITION);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getStyleConditionMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardThematicStyle.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(STYLECONDITION);
   }
   
   protected String getDeclaredType()

@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 162908360)
+@com.runwaysdk.business.ClassSignature(hash = 580850842)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -50,7 +50,7 @@ public abstract class ClassifierSynonymBase extends com.runwaysdk.business.ontol
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 162908360;
+  private static final long serialVersionUID = 580850842;
   
   public ClassifierSynonymBase()
   {

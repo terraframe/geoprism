@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -295586723)
+@com.runwaysdk.business.ClassSignature(hash = 145113931)
 public abstract class ClassifierProblemTypeMasterDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.ClassifierProblemTypeMaster";
-  private static final long serialVersionUID = -295586723;
+  private static final long serialVersionUID = 145113931;
   
   protected ClassifierProblemTypeMasterDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

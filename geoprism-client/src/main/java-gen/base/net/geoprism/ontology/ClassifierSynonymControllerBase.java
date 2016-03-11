@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -378295287)
+@com.runwaysdk.business.ClassSignature(hash = -1522389388)
 public class ClassifierSynonymControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.ontology.ClassifierSynonymController";

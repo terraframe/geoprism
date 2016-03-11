@@ -45,6 +45,7 @@ import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.DashboardThematicStyle;
 import net.geoprism.dashboard.condition.wrapper.And;
 import net.geoprism.dashboard.condition.wrapper.Category;
+import net.geoprism.dashboard.condition.wrapper.Condition;
 import net.geoprism.dashboard.condition.wrapper.Equal;
 import net.geoprism.dashboard.condition.wrapper.Gradient;
 import net.geoprism.dashboard.condition.wrapper.GreaterThan;
@@ -79,7 +80,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.form.web.condition.Condition;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.transport.conversion.ConversionException;
 

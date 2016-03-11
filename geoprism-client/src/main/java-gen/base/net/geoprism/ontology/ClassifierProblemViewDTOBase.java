@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -2036203152)
+@com.runwaysdk.business.ClassSignature(hash = 912924407)
 public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.ClassifierProblemView";
-  private static final long serialVersionUID = -2036203152;
+  private static final long serialVersionUID = 912924407;
   
   protected ClassifierProblemViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {

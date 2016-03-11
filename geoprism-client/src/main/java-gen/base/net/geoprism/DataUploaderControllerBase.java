@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 143958759)
+@com.runwaysdk.business.ClassSignature(hash = -816152000)
 public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataUploaderController";

@@ -31,7 +31,7 @@ import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class ClassifierSynonymController extends ClassifierSynonymControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR = "/WEB-INF/com/runwaysdk/geodashboard/ontology/ClassifierSynonym/";
+  public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierSynonym/";
 
   public static final String LAYOUT  = "WEB-INF/templates/layout.jsp";
 

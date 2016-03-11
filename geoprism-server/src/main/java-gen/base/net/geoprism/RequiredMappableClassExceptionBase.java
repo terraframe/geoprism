@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1343169651)
+@com.runwaysdk.business.ClassSignature(hash = 828118266)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,7 +31,7 @@ public abstract class RequiredMappableClassExceptionBase extends com.runwaysdk.b
   public final static String CLASS = "net.geoprism.RequiredMappableClassException";
   public static java.lang.String DATASETLABEL = "dataSetLabel";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 1343169651;
+  private static final long serialVersionUID = 828118266;
   
   public RequiredMappableClassExceptionBase()
   {

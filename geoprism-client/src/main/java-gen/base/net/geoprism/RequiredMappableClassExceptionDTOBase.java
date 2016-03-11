@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1404400371)
+@com.runwaysdk.business.ClassSignature(hash = 752206714)
 public abstract class RequiredMappableClassExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.RequiredMappableClassException";
-  private static final long serialVersionUID = 1404400371;
+  private static final long serialVersionUID = 752206714;
   
   public RequiredMappableClassExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {

@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 893674973)
+@com.runwaysdk.business.ClassSignature(hash = -489982773)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,7 +32,7 @@ public abstract class ClassifierProblemTypeMasterBase extends com.runwaysdk.syst
   public static java.lang.String DESCRIPTION = "description";
   private com.runwaysdk.business.Struct description = null;
   
-  private static final long serialVersionUID = 893674973;
+  private static final long serialVersionUID = -489982773;
   
   public ClassifierProblemTypeMasterBase()
   {

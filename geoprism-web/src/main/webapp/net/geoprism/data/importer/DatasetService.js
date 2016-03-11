@@ -57,7 +57,7 @@
     service.cancelImport = function(configuration, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
           
-      com.runwaysdk.geodashboard.DataUploaderController.cancelImport(request, JSON.stringify(configuration));    	
+      net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));    	
     }
     
     service.getAll = function(onSuccess, onFailure) {

@@ -35,11 +35,11 @@ import com.runwaysdk.web.json.JSONController;
 
 public class AdminController extends AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR   = "/WEB-INF/com/runwaysdk/geodashboard/admin/";
+  public static final String JSP_DIR   = "/WEB-INF/net/geoprism/admin/";
 
   public static final String LAYOUT    = "/WEB-INF/templates/layout.jsp";
 
-  public static final String INDEX_JSP = "/com/runwaysdk/geodashboard/jsp/index.jsp";
+  public static final String INDEX_JSP = "/net/geoprism/jsp/index.jsp";
 
   public AdminController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {

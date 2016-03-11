@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1910879372)
+@com.runwaysdk.business.ClassSignature(hash = 638192482)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.ontology;
 public class ClassifierProblemTypeMasterQueryDTO extends com.runwaysdk.system.EnumerationMasterQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1910879372;
+private static final long serialVersionUID = 638192482;
 
   protected ClassifierProblemTypeMasterQueryDTO(String type)
   {

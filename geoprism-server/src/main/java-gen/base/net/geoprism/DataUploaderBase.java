@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 558465304)
+@com.runwaysdk.business.ClassSignature(hash = 418602737)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
 {
   public final static String CLASS = "net.geoprism.DataUploader";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 558465304;
+  private static final long serialVersionUID = 418602737;
   
   public DataUploaderBase()
   {
