@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<mappings>
+  <map uri="" forward="/index.jsp"/>
+  
+  <map uri="DashboardViewer" controller="net.geoprism.dashboard.DashboardMapController">
+    <action method="createMapForSession" uri=""/>
+  </map>
+
+  <map uri="login" forward="/login.jsp"/>
+  <map uri="loginRedirect" forward="/loginRedirect.jsp"/>
+  <map uri="account" controller="net.geoprism.AdminController">
+  	<action method="account" uri=""/> 
+  </map>
+
+  <map uri="menu" controller="net.geoprism.UserMenuController">
+    <action method="menu" uri=""/>    
+  </map>
+  
+  <map uri="dashboards" controller="net.geoprism.UserMenuController">
+    <action method="dashboards" uri=""/>    
+  </map>
+  
+  <map uri="mapthumb" controller="net.geoprism.UserMenuController">
+  	<action method=".*" uri="${method}" />
+  </map>
+
+  <map uri="session" controller="net.geoprism.SessionController">
+    <action method=".*" uri="${method}"/>
+  </map>
+  
+  <map uri="admin" controller="net.geoprism.AdminController">
+    <action method=".*" uri="${method}"/>    
+  </map>
+  <map uri="report" controller="net.geoprism.report.ReportItemController">
+    <action method=".*" uri="${method}"/>    
+  </map>
+  
+  
+</mappings>

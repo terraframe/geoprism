@@ -1,0 +1,122 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdTerm isAbstract="false" description="Classifier" hasDeterministicId="true" removable="false"
+	      name="net.geoprism.ontology.Classifier" label="Classifier"
+	      table="classifier" publish="true" extendable="true"
+	      generateController="true">
+	      <mdMethod static="true" description="Returns the Root Classifier" name="getRoot" label="getRoot" returnType="net.geoprism.ontology.Classifier">
+	      </mdMethod>
+	      <mdMethod static="true" name="create" label="create" description="Creates a new Classifier and appends it to a parent." returnType="com.runwaysdk.business.ontology.TermAndRel">
+	        <mdParameter order="0" description="A Classifier to apply and relate." name="dto" label="A Classifier to apply and relate." type="net.geoprism.ontology.Classifier" />
+	        <mdParameter order="1" description="parentId" name="parentId" label="The id of the parent." type="java.lang.String" />
+	      </mdMethod>
+	      <attributes>
+	        <char removable="true" label="Unique Id"
+	          description="Classifier id" name="classifierId" size="100" immutable="false"
+	          required="true" indexType="non-unique index"/>
+	        <char removable="true" label="Package"
+	          description="ClassifierPackage" name="classifierPackage" size="255" immutable="false"
+	          required="true" indexType="non-unique index"/>
+	      </attributes>
+	    </mdTerm>
+    
+	    <object key="ROOT" type="net.geoprism.ontology.Classifier">
+	      <attribute name="classifierId" value="ROOT" />
+	      <attribute name="classifierPackage" value="ROOT" />
+	      <attributeStruct name="displayLabel">
+	        <attribute name="defaultLocale" value="ROOT" />
+	      </attributeStruct>
+	    </object>
+	    
+	    <mdTermRelationship name="net.geoprism.ontology.ClassifierIsARelationship"
+	      isAbstract="false" description="Classifier IsA Relationship" hasDeterministicId="true"
+	      label="Classifier IsA Relationship" generateController="false" associationType="TREE"
+	      table="classifier_is_a_relationship">
+	      <parent cardinality="*"
+	        name="net.geoprism.ontology.Classifier" method="IsAParent" />
+	      <child cardinality="*" name="net.geoprism.ontology.Classifier"
+	        method="IsAChild" />
+	    </mdTermRelationship>
+	    
+	    <mdTerm isAbstract="false" description="Classifier Synonym" hasDeterministicId="true" removable="false"
+	      name="net.geoprism.ontology.ClassifierSynonym" label="Classifier Synonym"
+	      table="classifier_synonym" publish="true" extendable="true"
+	      generateController="true">
+	      <mdMethod static="true" name="create" label="create" description="Creates a new Synonym and assignes it to the given Classifier." returnType="net.geoprism.ontology.ClassifierSynonym">
+	        <mdParameter order="0" description="The classifier that has the synonym" name="classifier" label="The classifier that has the synonym" type="net.geoprism.ontology.Classifier" />
+	        <mdParameter order="1" description="The new synonym" name="synonym" label="The new synonym" type="net.geoprism.ontology.ClassifierSynonym" />
+	      </mdMethod>
+	      <attributes>
+	        <reference name="classifier" label="Classifier" required="true" type="net.geoprism.ontology.Classifier" />
+	      </attributes>
+	    </mdTerm>
+
+ 	    <mdTermRelationship name="net.geoprism.ontology.ClassifierHasSynonym"
+	      isAbstract="false" description="Classifier Has Synonym" hasDeterministicId="true"
+	      label="Classifier Has Synonym" generateController="false" associationType="TREE">
+	      <parent cardinality="1"
+	        name="net.geoprism.ontology.Classifier" method="IsSynonymFor" />
+	      <child cardinality="*" name="net.geoprism.ontology.ClassifierSynonym"
+	        method="HasSynonym" />
+	    </mdTermRelationship>
+ 
+        <mdWarning
+          name="net.geoprism.ontology.PossibleAmbiguousSynonym"
+          label="Possible Ambiguous Synonym"
+          description="Raised when a synonym is added to a classifier term where a parent or a child classifier may have a synonym with the same label. This can cause ambiguity when matching terms."
+          message="A classifier term [{classifierLabel}] already has synonym [{synonymLabel}]. This can create ambiguity when trying match values to a classifier term.">
+         <attributes>
+           <char name="classifierLabel" label="Reason" size="255" />
+           <char name="synonymLabel" label="DataType" size="255" />
+         </attributes>
+       </mdWarning>
+	       
+    </create>
+    <update>
+      <mdController name="net.geoprism.ontology.ClassifierController" >
+        <mdAction name="create" isPost="true" isQuery="false">
+          <mdParameter order="0" name="dto" type="net.geoprism.ontology.Classifier" />
+          <create>
+            <mdParameter order="1" name="parentId" type="java.lang.String" />
+          </create>
+        </mdAction>
+        <create>
+          <mdAction name="viewCreate" isPost="true" isQuery="false">
+          </mdAction>
+          <mdAction name="viewUpdate" isPost="true" isQuery="false">
+            <mdParameter order="0" name="id" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="getDirectDescendants" isPost="true" isQuery="false">
+            <mdParameter order="0" name="parentId" type="java.lang.String" />
+            <mdParameter order="1" name="pageNum" type="java.lang.Integer" />
+            <mdParameter order="2" name="pageSize" type="java.lang.Integer" />
+          </mdAction>
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

@@ -1,0 +1,261 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.runwaysdk</groupId>
+    <artifactId>geoprism</artifactId>
+    <version>1.01.0005</version>
+  </parent>
+
+  <artifactId>geoprism-shapefile-importer</artifactId>
+  <packaging>jar</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net repository</name>
+      <url>http://download.java.net/maven/2</url>
+    </repository>
+  </repositories>
+  
+  <distributionManagement>
+    <repository>
+      <id>terraframe-releases</id>
+      <name>terraframe-releases</name>
+      <url>${mvn.server.url}content/repositories/releases/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <id>terraframe-snapshots</id>
+      <name>terraframe-snapshots</name>
+      <url>${mvn.server.url}content/repositories/snapshots/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>geoprism-server</artifactId>
+      <version>1.01.0005</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>ui</artifactId>
+      <version>3.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.core.databinding</groupId>
+      <artifactId>beans</artifactId>
+      <version>1.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse.core</groupId>
+      <artifactId>commands</artifactId>
+      <version>3.5.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse.core</groupId>
+      <artifactId>contenttype</artifactId>
+      <version>3.4.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse.core</groupId>
+      <artifactId>databinding</artifactId>
+      <version>1.2.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse.core</groupId>
+      <artifactId>expressions</artifactId>
+      <version>3.4.100</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse</groupId>
+      <artifactId>help</artifactId>
+      <version>3.4.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+      <version>4.0.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse</groupId>
+      <artifactId>jface</artifactId>
+      <version>3.5.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mod4j.org.eclipse.ui</groupId>
+      <artifactId>workbench</artifactId>
+      <version>3.5.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>20040117.000000</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>swt-windows-x86</id>
+      <activation>
+        <os>
+          <name>Windows</name>
+          <family>windows</family>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-win32</artifactId>
+          <version>4.3</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>swt-mac-x86</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-macosx</artifactId>
+          <version>4.3</version>
+      </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>swt-mac-64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-macosx64</artifactId>
+          <version>4.3</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>swt-linux</id>
+      <activation>
+        <os>
+          <family>unix</family>
+          <name>!mac os x</name>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse</groupId>
+          <artifactId>swt-linux</artifactId>
+          <version>4.3</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <!-- Weave Aspects -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>${aspectj.plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <aspectLibraries>
+            <aspectLibrary>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-server</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <complianceLevel>${maven.compiler.target}</complianceLevel>
+          <fork>true</fork>
+          <meminitial>512m</meminitial>
+          <maxmem>1024m</maxmem>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

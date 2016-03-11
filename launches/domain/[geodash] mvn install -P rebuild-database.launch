@@ -16,5 +16,5 @@
 <mapEntry key="MAVEN_OPTS" value="-Xms512m -Xmx2048m -XX:MaxPermSize=256m"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms512m&#10;-Xmx2048m&#10;-XX:MaxPermSize=256m"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/geodashboard}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/geoprism}"/>
 </launchConfiguration>

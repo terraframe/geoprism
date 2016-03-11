@@ -25,19 +25,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.runwaysdk</groupId>
-  <artifactId>geodashboard</artifactId>
+  <artifactId>geoprism</artifactId>
   <version>1.01.0005</version>
   <packaging>pom</packaging>
 
-  <name>Geo dashboard</name>
-  <description>The root pom for geodashboard.</description>
+  <name>Geoprism</name>
+  <description>The root pom for geoprism.</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
 
   <modules>
-    <module>geodashboard-server</module>
-    <module>geodashboard-common</module>
-    <module>geodashboard-client</module>
-    <module>geodashboard-web</module>
+    <module>geoprism-server</module>
+    <module>geoprism-common</module>
+    <module>geoprism-client</module>
+    <module>geoprism-web</module>
   </modules>
 
   <properties>
@@ -149,20 +149,7 @@
             <exclude>**/.keyStore</exclude>
 
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
-            <exclude>**/webapp/jstree/**</exclude>
-            <exclude>**/webapp/leaflet/**</exclude>
-            <exclude>**/webapp/openlayers/**</exclude>
-            <exclude>**/webapp/leaflet_plugins/**</exclude>
-            <exclude>**/webapp/jquery/**</exclude>
-            <exclude>**/webapp/jquerytree/**</exclude>
-            <exclude>**/webapp/jquery-colorpicker/**</exclude>
-            <exclude>**/webapp/cldrjs-0.4.0/**</exclude>
-            <exclude>**/webapp/bootstrap/**</exclude>
-            <exclude>**/webapp/font-awesome-font-icons/**</exclude>
-            <exclude>**/webapp/globalize-1.0.0-alpha.17/**</exclude>
-            <exclude>**/webapp/com/runwaysdk/geodashboard/fonts/**</exclude>
-            <exclude>**/webapp/ie.js</exclude>
-            <exclude>**/webapp/angular/**</exclude>
+            <exclude>**/webapp/3rd-party/**</exclude>
           </excludes>
           <properties>
             <name>${project.name}</name>

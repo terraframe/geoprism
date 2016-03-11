@@ -1,0 +1,80 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+div#databrowser {
+	
+}
+
+.geoprism-databrowser {
+  display: table;
+  min-height:500px;
+}
+
+.geoprism-databrowser-treesection {
+	display: table-cell;
+	padding: 2em;
+	min-width: 300px;
+	vertical-align:top;
+	border:1px solid;
+  border-radius:6px;
+  text-align:center;
+}
+
+.geoprism-databrowser-treetitle {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.geoprism-databrowser-tree {
+  text-align: left;
+  margin-top: 13px;
+  height: 450px;
+  overflow: auto;
+}
+
+.geoprism-databrowser-tablesection {
+	display: table-cell;
+	text-align: center;
+	padding: 2em;
+	width: 100%;
+	border:1px solid;
+  border-radius:6px;
+  overflow: auto;
+}
+
+.geoprism-databrowser-tabletitle {
+	text-align: center;
+	font-size: 20px;
+  font-weight: bold;
+}
+
+.geoprism-databrowser-table {
+	margin-top: 13px;
+}
+
+.dataTables_wrapper{
+	overflow: auto;
+	max-height: 600px;
+}
+
+.geoprism-databrowser-table select {
+	height: 31px;
+}
+}
