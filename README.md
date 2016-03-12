@@ -1,11 +1,11 @@
-# Runway GeoDashboard
+# Geoprism
 
-Runway GeoDashboard is an integrated platform for data management and visualization for use as an App layer on top of RunwaySDK. Together RunwaySDK and Runway GeoDashboard provide an advanced toolset to help maintain data integrity while allowing users to generate interactive maps and dashboards on the fly.  
+Geoprism is an integrated platform for data management and visualization for use as an App layer on top of RunwaySDK. Together RunwaySDK and Geoprism provide an advanced toolset to help maintain data integrity while allowing users to generate interactive maps and dashboards on the fly.  
 
 ### An Ontological Approach to GIS Development
-By utilizing an ontological approach to software development Runway GeoDashboard enables the utilization of almost any data set even if no geometries exist for data points.  This is one of the great strengths of Runway GeoDashboard as it allows for analysing and visuzlizing data in a geographic context even when geometry information is lacking.  Additionally, ontologies and geo-ontologies allow for navigating relationship hierarchies (including spatial) where such relationships would typically be computationally derived from geometric relationships or manually assigned by an individual.  
+By utilizing an ontological approach to software development Geoprism enables the utilization of almost any data set even if no geometries exist for data points.  This is one of the great strengths of Runway GeoDashboard as it allows for analysing and visuzlizing data in a geographic context even when geometry information is lacking.  Additionally, ontologies and geo-ontologies allow for navigating relationship hierarchies (including spatial) where such relationships would typically be computationally derived from geometric relationships or manually assigned by an individual.  
 
-### Important Concepts of Runway GeoDashboard
+### Important Concepts of Geoprism
 In GeoDashboard a Universal represents a feature set type to which data points can be related (EX: Countries, States, or Cities).  A GeoEntity represents the actual geographic feature for a Universal (EX: USA, Colorado, or Denver).  In essence, a Universal defines a geographic heirarchy to which GeoEntities are assigned.  Relationships are then defined between data injested into the system and one or more GeoNodes which in turn have a relationship to one or more Universals.
 
 
