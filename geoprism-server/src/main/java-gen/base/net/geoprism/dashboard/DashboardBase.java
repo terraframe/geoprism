@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 195503348)
+@com.runwaysdk.business.ClassSignature(hash = 1079984053)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -53,7 +53,7 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TODATE = "toDate";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 195503348;
+  private static final long serialVersionUID = 1079984053;
   
   public DashboardBase()
   {
@@ -748,6 +748,18 @@ public abstract class DashboardBase extends com.runwaysdk.business.Business impl
   {
     Dashboard _instance = Dashboard.get(id);
     return _instance.getDashboardDefinition();
+  }
+  
+  public java.lang.String getDashboardInformation()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.Dashboard.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getDashboardInformation(java.lang.String id)
+  {
+    Dashboard _instance = Dashboard.get(id);
+    return _instance.getDashboardInformation();
   }
   
   public com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String text, java.lang.Integer limit)

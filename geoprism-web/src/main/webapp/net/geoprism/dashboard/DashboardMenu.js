@@ -75,8 +75,7 @@
     }
     
     controller.cloneDashboard = function(dashboardId) {
-        var dashboardForm = new net.geoprism.dashboardrdForm(controller, dashboardId);
-        dashboardForm.open();
+      $scope.$emit('cloneDashboard', {dashboardId : dashboardId, elementId : '#container'});    	
     }
     
     controller.remove = function(dashboardId) {
@@ -211,7 +210,7 @@
     controller.getDashboards();	
   }
 
-  angular.module("dashboard-menu", ["dashboard-service", "dashboard-builder", "data-uploader"]);
+  angular.module("dashboard-menu", ["dashboard-service", "dashboard-builder", "data-uploader", "dashboard-clone-form"]);
   angular.module("dashboard-menu")
    .controller('DashboardMenuController', DashboardMenuController)
 })();

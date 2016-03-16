@@ -29,7 +29,8 @@
     <div class="row-holder" ng-repeat="match in sheet.matches track by $index">
       <div class="button-holder">
         {{match.label}}            
-        <input type="button" value="+" class="btn btn-primary set-location-btn pull-right"  ng-click="ctrl.select(match)" title="<gdb:localize key="dataUploader.selectDataset"/>" />
+        <input style="margin-left: 5px;" type="button" value="-" class="btn btn-primary set-location-btn pull-right"  ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>" />
+        <input type="button" value="+" class="btn btn-primary set-location-btn pull-right"  ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>" />
       </div>    
     </div>  
   </div> 

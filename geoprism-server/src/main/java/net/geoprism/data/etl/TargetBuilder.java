@@ -27,6 +27,7 @@ import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.DataUploader;
 import net.geoprism.MappableClass;
+import net.geoprism.data.browser.DataBrowserUtil;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.GeoEntityUtil;
@@ -78,6 +79,7 @@ import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
 import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeReference;
+import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -120,6 +122,18 @@ public class TargetBuilder
           TargetBinding tBinding = sBinding.getTargetBinding();
 
           this.target.addDefinition(tBinding.getDefinition());
+
+          /*
+           * Delete the existing data if required
+           */
+          boolean replace = sheet.has("replaceExisting") && sheet.getBoolean("replaceExisting");
+
+          if (replace)
+          {
+            MdBusiness mdBusiness = tBinding.getTargetBusiness();
+
+            DataBrowserUtil.deleteData(mdBusiness.definesType());
+          }
         }
         else
         {

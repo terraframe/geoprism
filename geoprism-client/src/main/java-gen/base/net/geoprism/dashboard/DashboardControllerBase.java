@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 451832951)
+@com.runwaysdk.business.ClassSignature(hash = 1221174496)
 public class DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.dashboard.DashboardController";
@@ -95,6 +77,20 @@ public class DashboardControllerBase implements com.runwaysdk.generation.loader.
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardController.failCancel");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId, java.lang.String:label", post=true)
+  public void clone(java.lang.String dashboardId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardController.clone");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId, java.lang.String:label", post=true)
+  public void failClone(java.lang.String dashboardId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardController.failClone");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.dashboard.DashboardDTO:dto", post=true)

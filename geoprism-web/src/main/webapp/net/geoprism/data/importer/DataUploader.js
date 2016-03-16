@@ -20,9 +20,12 @@
   function MatchPageController($scope, datasetService) {
     var controller = this;
     
-    controller.select = function(match) {
+    controller.select = function(match, replace) {
       var onSuccess = function(result) {
-        $scope.$emit('loadConfiguration', {sheet: result.datasets});
+    	var sheet = result.datasets;
+    	sheet.replaceExisting = replace;
+    	
+        $scope.$emit('loadConfiguration', {sheet: sheet});
           
         $scope.$apply();
       }

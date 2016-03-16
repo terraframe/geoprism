@@ -297,8 +297,6 @@
     </div>
   </c:if>  
   
-  <div id="clone-container"></div>  
-  
   <div id="container" ng-controller="DashboardMenuController as ctrl"  ng-cloak>
     <header id="header">
       <p class="text-right">
@@ -458,5 +456,7 @@
     <builder-dialog></builder-dialog>
     
     <uploader-dialog></uploader-dialog>
+    
+    <clone-form></clone-form>
   </div>
 </body>

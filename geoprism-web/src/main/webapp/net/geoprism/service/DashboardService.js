@@ -122,8 +122,7 @@
       var layerId = feature.layerId;
       var geoId = feature.geoId;
 
-      net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId);   
- 	
+      net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId); 	
     }
     
     service.hasReport = function(dashboardId, onSuccess, onFailure) {
@@ -142,6 +141,18 @@
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
             
       com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
+    }
+    
+    service.cloneDashboard = function(dashboardId, label, elementId, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+    
+      net.geoprism.dashboard.DashboardController.clone(request, dashboardId, label);                    
+    }
+    
+    service.newClone = function(dashboardId, elementId, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+      
+      net.geoprism.dashboard.DashboardController.newClone(request, dashboardId);    
     }
     
     service.getClassifierTree = function(mdAttributeId, onSuccess, onFailure) {

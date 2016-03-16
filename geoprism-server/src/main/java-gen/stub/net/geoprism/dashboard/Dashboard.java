@@ -119,11 +119,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   private static class ThumbnailThread implements Runnable, Reloadable
   {
-    private Dashboard          dashboard;
+    private Dashboard      dashboard;
 
     private GeoprismUser[] users;
 
-    private String             sessionId;
+    private String         sessionId;
 
     public ThumbnailThread(String sessionId, Dashboard dashboard, GeoprismUser... users)
     {
@@ -550,14 +550,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     BusinessQuery bQuery = factory.businessQuery(mdClass.definesType());
     AttributeChar selectable = null;
-    
-    if(mdAttributeConcrete instanceof MdAttributeCharacterDAOIF)
+
+    if (mdAttributeConcrete instanceof MdAttributeCharacterDAOIF)
     {
       selectable = bQuery.aCharacter(mdAttributeConcrete.definesAttribute());
     }
     else
     {
-      selectable = bQuery.aText(mdAttributeConcrete.definesAttribute());      
+      selectable = bQuery.aText(mdAttributeConcrete.definesAttribute());
     }
 
     ValueQuery query = new ValueQuery(factory);
@@ -1000,8 +1000,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   /*
-   * Gets all active geoprism users in the system who are not Administrators and whether they already have access to
-   * a given dashboard.
+   * Gets all active geoprism users in the system who are not Administrators and whether they already have access to a
+   * given dashboard.
    */
   @Override
   public String getAllDashboardUsersJSON()
@@ -1618,62 +1618,38 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return "";
   }
 
-  public static String getAvailableDashboardsAsJSON(String dashboardId)
+  @Override
+  public String getDashboardInformation()
   {
-    DashboardQuery query = Dashboard.getSortedDashboards();
-    OIterator<? extends Dashboard> iterator = query.getIterator();
-
     try
     {
-      JSONArray dashboards = new JSONArray();
-      boolean first = true;
-
-      JSONObject response = new JSONObject();
-
-      while (iterator.hasNext())
-      {
-        Dashboard dashboard = iterator.next();
-
-        JSONObject object = new JSONObject();
-        object.put("dashboardId", dashboard.getId());
-        object.put("label", dashboard.getDisplayLabel().getValue());
-        object.put("description", dashboard.getDescription().getValue());
-
-        List<GeoEntity> countries = dashboard.getCountries();
-
-        JSONArray areas = new JSONArray();
-
-        for (GeoEntity country : countries)
-        {
-          areas.put(country.getDisplayLabel().getValue());
-        }
-
-        object.put("focusAreas", areas);
-
-        dashboards.put(object);
-
-        if (first || dashboard.getId().equals(dashboardId))
-        {
-          response.put("state", dashboard.toJSON());
-
-          first = false;
-        }
-      }
-
-      response.put("dashboards", dashboards);
-      response.put("editDashboard", GeoprismUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
-
-      return response.toString();
+      return this.getDashboardInformationJSON().toString();
     }
     catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }
-    finally
+  }
+
+  public JSONObject getDashboardInformationJSON() throws JSONException
+  {
+    JSONObject object = new JSONObject();
+    object.put("dashboardId", this.getId());
+    object.put("label", this.getDisplayLabel().getValue());
+    object.put("description", this.getDescription().getValue());
+
+    List<GeoEntity> countries = this.getCountries();
+
+    JSONArray areas = new JSONArray();
+
+    for (GeoEntity country : countries)
     {
-      iterator.close();
+      areas.put(country.getDisplayLabel().getValue());
     }
 
+    object.put("focusAreas", areas);
+
+    return object;
   }
 
   public MetadataWrapper getMetadataWrapper(MdClassDAOIF mdClass)
@@ -1869,5 +1845,49 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         it.close();
       }
     }
+  }
+
+  public static String getAvailableDashboardsAsJSON(String dashboardId)
+  {
+    DashboardQuery query = Dashboard.getSortedDashboards();
+    OIterator<? extends Dashboard> iterator = query.getIterator();
+
+    try
+    {
+      JSONArray dashboards = new JSONArray();
+      boolean first = true;
+
+      JSONObject response = new JSONObject();
+
+      while (iterator.hasNext())
+      {
+        Dashboard dashboard = iterator.next();
+
+        JSONObject object = dashboard.getDashboardInformationJSON();
+
+        dashboards.put(object);
+
+        if (first || dashboard.getId().equals(dashboardId))
+        {
+          response.put("state", dashboard.toJSON());
+
+          first = false;
+        }
+      }
+
+      response.put("dashboards", dashboards);
+      response.put("editDashboard", GeoprismUser.hasAccess(AccessConstants.EDIT_DASHBOARD));
+
+      return response.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    finally
+    {
+      iterator.close();
+    }
+
   }
 }

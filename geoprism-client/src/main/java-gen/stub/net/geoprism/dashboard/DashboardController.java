@@ -22,6 +22,10 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import net.geoprism.JSONControllerUtil;
+
+import org.json.JSONObject;
+
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
 public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -182,10 +186,41 @@ public class DashboardController extends DashboardControllerBase implements com.
   @Override
   public void newClone(String dashboardId) throws IOException, ServletException
   {
-    DashboardDTO dashboard = DashboardDTO.get(this.getClientRequest(), dashboardId);
+    try
+    {
+      DashboardDTO dashboard = DashboardDTO.get(this.getClientRequest(), dashboardId);
 
-    req.setAttribute("dashboard", dashboard);
+      JSONObject object = new JSONObject();
+      object.put("label", dashboard.getDisplayLabel().getValue());
+      object.put("id", dashboard.getId());
 
-    render("newClone.jsp");
+      JSONObject response = new JSONObject();
+      response.put("dashboard", object);
+
+      JSONControllerUtil.writeReponse(this.resp, response);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  @Override
+  public void clone(String dashboardId, String label) throws IOException, ServletException
+  {
+    try
+    {
+      DashboardDTO dashboard = DashboardDTO.clone(this.getClientRequest(), dashboardId, label);
+
+      JSONObject response = new JSONObject(dashboard.getDashboardInformation());
+      response.put("id", dashboard.getId());
+      response.put("isLastDashboard", true);
+
+      JSONControllerUtil.writeReponse(this.resp, response);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
   }
 }
