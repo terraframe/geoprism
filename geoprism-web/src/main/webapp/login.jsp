@@ -58,6 +58,12 @@
   			transform: translateY(-50%);
 		}
 		
+		#logo_gp {
+		    display: block;
+		    margin: 0 auto;
+		    width: 200px;
+    }
+		
 		#geoprism-landing-top-div{
 	    	border-bottom: grey solid 3px;
 			/* height: 30%; */
@@ -202,6 +208,7 @@
 			<img id="logo" src="net/geoprism/images/splash_logo.png" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
+		    <img id="logo_gp" src="net/geoprism/images/geoprism_banner.png" alt="logo" />
 		    <img id="background-img" src="net/geoprism/images/theme_background.png" alt="background" />
 		
 			<div id="geoprism-landing-footer">
