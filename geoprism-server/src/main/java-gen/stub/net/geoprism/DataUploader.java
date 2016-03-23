@@ -24,21 +24,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import net.geoprism.data.etl.ConfigurationBuilder;
-import net.geoprism.data.etl.Converter;
-import net.geoprism.data.etl.ConverterIF;
-import net.geoprism.data.etl.DataSetBuilder;
-import net.geoprism.data.etl.DataSetBuilderIF;
+import net.geoprism.data.etl.DefinitionBuilder;
 import net.geoprism.data.etl.ExcelSourceBinding;
-import net.geoprism.data.etl.SourceContextIF;
+import net.geoprism.data.etl.ImportResponseIF;
+import net.geoprism.data.etl.ImportRunnable;
 import net.geoprism.data.etl.SourceDefinitionIF;
-import net.geoprism.data.etl.TargetContextIF;
 import net.geoprism.data.etl.TargetDefinitionIF;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
 import net.geoprism.data.etl.excel.ExcelSheetReader;
 import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
 import net.geoprism.data.etl.excel.InvalidExcelFileException;
-import net.geoprism.data.etl.excel.SourceContentHandler;
+import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.gis.geoserver.SessionPredicate;
 import net.geoprism.localization.LocalizationFacade;
 
@@ -53,25 +49,52 @@ import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.VaultProperties;
-import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.ReservedWords;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.LocatedIn;
+import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = -1960517297;
+  private static final KeyGeneratorIF GENERATOR        = new SeedKeyGenerator();
+
+  private static final long           serialVersionUID = -1960517297;
 
   public DataUploader()
   {
     super();
+  }
+
+  @Transaction
+  public static void createGeoEntity(String parentId, String universalId, String label)
+  {
+    Universal universal = Universal.get(universalId);
+    GeoEntity parent = GeoEntity.get(parentId);
+
+    GeoEntity entity = new GeoEntity();
+    entity.setUniversal(universal);
+    entity.setGeoId(GENERATOR.generateKey(""));
+    entity.getDisplayLabel().setDefaultValue(label);
+    entity.apply();
+
+    entity.addLink(parent, LocatedIn.CLASS);
+  }
+
+  @Transaction
+  public static void createGeoEntitySynonym(String entityId, String label)
+  {
+    Synonym synonym = new Synonym();
+    synonym.getDisplayLabel().setValue(label);
+    
+    Synonym.create(synonym, entityId);
   }
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)
@@ -196,81 +219,16 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
       File file = new File(directory, filename);
 
-      String result = DataUploader.importData(configuration, file);
+      ImportResponseIF response = new ImportRunnable(configuration, file).run();
 
-      FileUtils.deleteDirectory(directory);
-
-      return result;
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-    catch (IOException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-  }
-
-  @Transaction
-  private static String importData(String configuration, File file)
-  {
-    try
-    {
-      /*
-       * First create the data types from the configuration
-       */
-      DataSetBuilderIF builder = new DataSetBuilder(configuration);
-      builder.build();
-
-      /*
-       * Create and import the view objects from the configuration
-       */
-      SourceContextIF sContext = builder.getSourceContext();
-      TargetContextIF tContext = builder.getTargetContext();
-
-      ConverterIF converter = new Converter(tContext);
-
-      FileInputStream istream = new FileInputStream(file);
-
-      try
+      if (!response.hasProblems())
       {
-        SourceContentHandler handler = new SourceContentHandler(converter, sContext);
-        ExcelDataFormatter formatter = new ExcelDataFormatter();
-
-        ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-        reader.process(istream);
-      }
-      finally
-      {
-        istream.close();
+        FileUtils.deleteDirectory(directory);
       }
 
-      JSONArray datasets = new JSONArray();
-
-      List<TargetDefinitionIF> definitions = tContext.getDefinitions();
-
-      for (TargetDefinitionIF definition : definitions)
-      {
-        if (definition.isNew())
-        {
-          String type = definition.getTargetType();
-
-          MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
-          MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
-
-          datasets.put(mClass.toJSON());
-        }
-      }
-
-      // Return the new data set definition
-      return datasets.toString();
+      return response.toJSON().toString();
     }
-    catch (RunwayException | SmartException e)
-    {
-      throw e;
-    }
-    catch (Exception e)
+    catch (JSONException | IOException e)
     {
       throw new ProgrammingErrorException(e);
     }
@@ -293,11 +251,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       FileUtils.deleteDirectory(directory);
     }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-    catch (IOException e)
+    catch (JSONException | IOException e)
     {
       throw new ProgrammingErrorException(e);
     }
@@ -312,7 +266,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       SourceDefinitionIF sDefinition = binding.getDefinition(sheetName);
       TargetDefinitionIF tDefinition = binding.getTargetBinding().getDefinition();
 
-      ConfigurationBuilder builder = new ConfigurationBuilder(sDefinition, tDefinition);
+      DefinitionBuilder builder = new DefinitionBuilder(sDefinition, tDefinition);
       JSONObject configuration = builder.getConfiguration();
 
       return configuration.toString();
@@ -430,5 +384,4 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
     return part;
   }
-
 }

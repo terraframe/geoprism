@@ -120,6 +120,8 @@ public class TargetDefinition implements TargetDefinitionIF
       {
         field.persist(binding);
       }
+
+      this.setNew(false);
     }
   }
 }

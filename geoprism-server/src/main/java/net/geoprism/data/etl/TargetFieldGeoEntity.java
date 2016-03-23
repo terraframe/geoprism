@@ -20,6 +20,7 @@ package net.geoprism.data.etl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +29,12 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoEntityProblem;
-import com.runwaysdk.system.gis.geo.GeoEntityProblemType;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -78,7 +77,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     {
       this.universal = universal;
     }
-    
+
     public String getLabel()
     {
       return label;
@@ -87,9 +86,11 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
   private ArrayList<UniversalAttribute> attributes;
 
+  private String                        id;
+
   private GeoEntity                     root;
 
-  private String                        id;
+  private Universal                     rootUniversal;
 
   public TargetFieldGeoEntity()
   {
@@ -110,6 +111,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   public void setRoot(GeoEntity root)
   {
     this.root = root;
+    this.rootUniversal = root.getUniversal();
   }
 
   public void addUniversalAttribute(String attributeName, String label, Universal universal)
@@ -153,8 +155,6 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    */
   private GeoEntity getOrCreateLocation(GeoEntity root, List<String> labels)
   {
-    Universal rootUniversal = root.getUniversal();
-
     GeoEntity parent = root;
 
     for (int i = 0; i < attributes.size(); i++)
@@ -176,16 +176,17 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
           if (entity == null)
           {
-            entity = new GeoEntity();
-            entity.setUniversal(universal);
-            entity.setGeoId(this.generateGeoId());
-            entity.getDisplayLabel().setDefaultValue(label);
-            entity.apply();
-
-            entity.addLink(parent, LocatedIn.CLASS);
-
-            // Create a new geo entity problem
-            GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);
+            throw new ProgrammingErrorException("Unknown geo entity");
+//            entity = new GeoEntity();
+//            entity.setUniversal(universal);
+//            entity.setGeoId(this.generateGeoId());
+//            entity.getDisplayLabel().setDefaultValue(label);
+//            entity.apply();
+//
+//            entity.addLink(parent, LocatedIn.CLASS);
+//
+//            // Create a new geo entity problem
+//            GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);
           }
 
           parent = entity;
@@ -286,5 +287,67 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     object.put("id", this.id);
 
     return object;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.geoprism.data.etl.TargetFieldGeoEntityIF#getLocationProblem(com.runwaysdk.business.Transient,
+   * com.runwaysdk.system.gis.geo.Universal)
+   */
+  @Override
+  public LocationProblemIF getLocationProblem(Transient source, Universal universal)
+  {
+    GeoEntity parent = this.root;
+
+    boolean valid = true;
+
+    List<String> context = new LinkedList<String>();
+
+    for (UniversalAttribute attribute : attributes)
+    {
+      /*
+       * Only validate up until the desired universal
+       */
+      if (valid)
+      {
+        String label = source.getValue(attribute.getAttributeName());
+
+        Universal entityUniversal = attribute.getUniversal();
+
+        if (label != null && label.length() > 0)
+        {
+          if (parent.getUniversalId().equals(entityUniversal.getId()))
+          {
+            if (!label.equals(parent.getDisplayLabel().getValue()))
+            {
+              return new LocationProblem(label, context, parent, entityUniversal);
+            }
+          }
+          else
+          {
+            GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
+
+            if (entity == null)
+            {
+              return new LocationProblem(label, context, parent, entityUniversal);
+            }
+            else
+            {
+              parent = entity;
+            }
+          }
+        }
+
+        context.add(label);
+
+//        if (universal.getId().equals(entityUniversal.getId()))
+//        {
+//          valid = false;
+//        }
+      }
+    }
+
+    return null;
   }
 }

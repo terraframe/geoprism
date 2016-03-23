@@ -18,19 +18,12 @@
  */
 package net.geoprism.data.etl;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.runwaysdk.business.Business;
-
-public interface TargetContextIF
+public interface LocationProblemIF
 {
-  public Business newBusiness(String sourceType);
+  public JSONObject toJSON() throws JSONException;
 
-  public String getType(String sourceType);
-
-  public List<TargetFieldIF> getFields(String sourceType);
-
-  public List<TargetDefinitionIF> getDefinitions();
-
-  public TargetDefinitionIF getDefinition(String sourceType);
+  public String getKey();
 }

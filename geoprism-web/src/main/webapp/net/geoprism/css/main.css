@@ -4008,6 +4008,14 @@ div.secondary-box label {
     padding-top: 1px;
   }
 	
+	.modal-form .inline-value {
+    float: left;
+    position: relative;
+    min-width: 150px;
+    padding-right: 5px;
+    padding-top: 1px;
+  }
+	
 	.modal-form .inline-text input[type="text"] {
     background: #EEE none repeat scroll 0% 0%;
     border: 1px solid #AAA;

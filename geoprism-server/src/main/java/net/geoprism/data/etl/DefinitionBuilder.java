@@ -26,13 +26,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ConfigurationBuilder
+public class DefinitionBuilder
 {
   private SourceDefinitionIF source;
 
   private TargetDefinitionIF target;
 
-  public ConfigurationBuilder(SourceDefinitionIF source, TargetDefinitionIF target)
+  public DefinitionBuilder(SourceDefinitionIF source, TargetDefinitionIF target)
   {
     this.source = source;
     this.target = target;

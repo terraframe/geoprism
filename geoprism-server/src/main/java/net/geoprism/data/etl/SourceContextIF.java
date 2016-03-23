@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.Collection;
+
 import com.runwaysdk.business.Transient;
 
 public interface SourceContextIF
@@ -29,4 +31,6 @@ public interface SourceContextIF
   public SourceFieldIF getFieldByName(String sheetName, String columnName);
 
   public SourceFieldIF getFieldByLabel(String sheetName, String label);
+
+  public Collection<SourceDefinitionIF> getDefinitions();
 }

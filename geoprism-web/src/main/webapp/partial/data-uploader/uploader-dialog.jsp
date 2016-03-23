@@ -47,6 +47,7 @@
               <location-page ng-if="page.current == 'LOCATION'"></location-page>
               <coordinate-page ng-if="page.current == 'COORDINATE'"></coordinate-page>
               <summary-page ng-if="page.current == 'SUMMARY'"></summary-page>
+              <geo-validation-page ng-if="page.current == 'GEO-VALIDATION'"></geo-validation-page>
             </section>            
           </fieldset>
           <div class="row-holder" >
@@ -54,7 +55,7 @@
             <div class="holder">
               <div class="button-holder" fire-on-ready>
                 <input
-                  ng-if="page.current != 'INITIAL' && page.current != 'MATCH'"      
+                  ng-if="page.snapshots.length > 0"      
                   type="button"
                   value="<gdb:localize key="dataUploader.previous"/>"
                   class="btn btn-primary" 
@@ -62,7 +63,7 @@
                   ng-disabled="busy"
                 />
                 <input
-                  ng-if="page.current != 'SUMMARY' && page.current != 'MATCH'"      
+                  ng-if="page.current != 'SUMMARY' && page.current != 'MATCH' && page.current != 'GEO-VALIDATION'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.next"/>"
                   class="btn btn-primary" 
@@ -78,7 +79,7 @@
                   ng-disabled="form.$invalid || busy"
                 />                
                 <input 
-                  ng-if="page.current == 'SUMMARY'"
+                  ng-if="page.current == 'SUMMARY' || page.current == 'GEO-VALIDATION'"
                   type="button"
                   value="<gdb:localize key="dataUploader.import"/>"
                   class="btn btn-primary" 

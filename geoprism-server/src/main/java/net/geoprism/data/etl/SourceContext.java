@@ -94,4 +94,9 @@ public class SourceContext implements SourceContextIF
     }
   }
 
+  @Override
+  public Collection<SourceDefinitionIF> getDefinitions()
+  {
+    return this.sheets.values();
+  }
 }

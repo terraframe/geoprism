@@ -39,9 +39,15 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.query.AttributeReference;
+import com.runwaysdk.query.CONCAT;
+import com.runwaysdk.query.Coalesce;
+import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
@@ -472,5 +478,36 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     }
 
     throw new ProgrammingErrorException("Country universal has more than one corresponding geo entity");
+  }
+
+  public static ValueQuery getGeoEntitySuggestions(String parentId, String universalId, String text, Integer limit)
+  {
+    ValueQuery query = new ValueQuery(new QueryFactory());
+
+    GeoEntityQuery entityQuery = new GeoEntityQuery(query);
+
+    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+
+    SelectableChar id = entityQuery.getId();
+    Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
+    Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
+    SelectableChar geoId = entityQuery.getGeoId();
+
+    CONCAT label = F.CONCAT(F.CONCAT(F.CONCAT(F.CONCAT(geoLabel, " ("), F.CONCAT(universalLabel, ")")), " : "), geoId);
+    label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
+
+    query.SELECT(id, label);
+    query.WHERE(label.LIKEi("%" + text + "%"));
+    query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+    query.AND(entityQuery.getUniversal().EQ(universalId));
+    query.AND(aptQuery.getParentTerm().EQ(parentId));
+
+    query.ORDER_BY_ASC(geoLabel);
+
+    query.restrictRows(limit, 1);
+
+    return query;
   }
 }

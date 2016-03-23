@@ -30,6 +30,20 @@ import com.runwaysdk.web.json.JSONRunwayExceptionDTO;
 
 public class JSONControllerUtil
 {
+  public static void writeReponse(HttpServletResponse resp) throws IOException
+  {
+    JSONReturnObject ret = new JSONReturnObject();
+    ret.setReturnValue("");
+
+    String content = ret.getJSON().toString();
+    byte[] bytes = content.getBytes("UTF-8");
+
+    resp.setStatus(200);
+    resp.setContentType("application/json");
+
+    JSONControllerUtil.writeOutputStream(resp, bytes);
+  }
+
   public static void writeReponse(HttpServletResponse resp, Object returnValue) throws IOException
   {
     JSONReturnObject ret = new JSONReturnObject();

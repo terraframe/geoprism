@@ -25,7 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
@@ -78,12 +77,9 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      String datasets = DataUploaderDTO.importData(request, configuration);
+      String result = DataUploaderDTO.importData(request, configuration);
 
-      JSONObject object = new JSONObject();
-      object.put("datasets", new JSONArray(datasets));
-
-      JSONControllerUtil.writeReponse(this.resp, object.toString());
+      JSONControllerUtil.writeReponse(this.resp, new JSONObject(result));
     }
     catch (Throwable t)
     {
@@ -121,6 +117,40 @@ public class DataUploaderController extends DataUploaderControllerBase implement
       object.put("datasets", new JSONObject(configuration));
 
       JSONControllerUtil.writeReponse(this.resp, object.toString());
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void createGeoEntity(String parentId, String universalId, String label) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void createGeoEntitySynonym(String entityId, String label) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+
+      JSONControllerUtil.writeReponse(this.resp);
     }
     catch (Throwable t)
     {

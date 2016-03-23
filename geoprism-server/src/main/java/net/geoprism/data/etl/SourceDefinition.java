@@ -157,6 +157,9 @@ public class SourceDefinition implements SourceDefinitionIF
       {
         field.persist(source);
       }
+      
+      this.setNew(false);
+      this.setId(source.getId());
     }
   }
 }

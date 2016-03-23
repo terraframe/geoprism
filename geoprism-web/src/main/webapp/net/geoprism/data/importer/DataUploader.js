@@ -17,19 +17,129 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+  function GeoValidationProblemController($scope, datasetService) {
+    var controller = this;
+    
+    controller.getGeoEntitySuggestions = function( request, response ) {
+      var limit = 20;
+      
+      var onSuccess = function(query){
+        var resultSet = query.getResultSet()
+                                      
+        var results = [];
+                    
+        $.each(resultSet, function( index, result ) {
+          var label = result.getValue('displayLabel');
+          var id = result.getValue('id');
+                      
+          results.push({'label':label, 'value':label, 'id':id});
+        });
+                    
+        response( results );
+      };      
+            
+      var onFailure = function(e){
+        console.log(e);
+      };
+         
+      var text = request.term;
+        
+      datasetService.getGeoEntitySuggestions($scope.problem.parentId, $scope.problem.universalId, text, limit, onSuccess, onFailure);
+    }
+    
+    controller.createSynonym = function() {
+      
+      var onSuccess = function(query){
+      };      
+      
+      datasetService.createGeoEntitySynonym($scope.problem.synonym, $scope.problem.label, '#uploader-overlay', onSuccess);
+    }
+    
+    controller.createEntity = function() {
+      
+      var onSuccess = function(query){
+      };      
+      
+      datasetService.createGeoEntity($scope.problem.parentId, $scope.problem.universalId, $scope.problem.label, '#uploader-overlay', onSuccess);
+    }
+    
+    $scope.$watch('problem.synonym', function(){
+      controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));
+    }, true);
+  }
+  
+  function GeoValidationProblem() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/geo-validation-problem.jsp',
+      scope: {
+        problem : '=' 
+      },
+      controller : GeoValidationProblemController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs, ctrl) {
+        var input = $(element).find(".synonym");
+          
+        input.autocomplete({
+          source: ctrl.getGeoEntitySuggestions,
+          select: function(event, ui) {
+            scope.problem.synonym = ui.item.id;
+            
+            scope.$apply();
+          }, 
+          change : function(event, ui) {
+            var value = input.val();
+                
+            if(value == null || value == '') {                
+              scope.problem.synonym = null;
+            }
+          },
+          minLength: 2
+        });
+      }
+    }   
+  }
+	
+  function GeoValidationPageController($scope, datasetService) {
+    var controller = this;
+    
+    $scope.$watch('problems', function(){
+      $scope.form.$setValidity("size",  ($scope.problems.length > null));
+    }, true);
+
+    // Remove the global validation on the form
+    $scope.$on('pagePrev', function(event, data){
+      $scope.form.$setValidity("size",  true);
+    });       
+  }
+  
+  function GeoValidationPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/geo-validation-page.jsp',
+      scope: true,
+      controller : GeoValidationPageController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }
+  
   function MatchPageController($scope, datasetService) {
     var controller = this;
     
     controller.select = function(match, replace) {
       var onSuccess = function(result) {
-    	var sheet = result.datasets;
-    	sheet.replaceExisting = replace;
-    	
+        var sheet = result.datasets;
+        sheet.replaceExisting = replace;
+        
         $scope.$emit('loadConfiguration', {sheet: sheet});
-          
+        
         $scope.$apply();
       }
-        
+      
       datasetService.getSavedConfiguration(match.id, $scope.sheet.name, '#uploader-div', onSuccess);      
     }
   }
@@ -588,9 +698,19 @@
     
     controller.persist = function() {
       var onSuccess = function(result) {
-        controller.clear();
+        if(result.success) {        	
+          controller.clear();
           
-        $scope.$emit('closeUploader', {datasets:result.datasets});
+          $scope.$emit('closeUploader', {datasets:result.datasets});          
+        }
+        else {        	
+          $scope.page.current = 'GEO-VALIDATION';
+          $scope.page.snapshots = [];
+          
+          $scope.sheets = result.sheets;
+          $scope.sheet = $scope.sheets[0];
+          $scope.problems = result.problems;
+        }
         
         $scope.$apply();
       }
@@ -828,6 +948,8 @@
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchPage', MatchPage)
+   .directive('geoValidationPage', GeoValidationPage)
+   .directive('geoValidationProblem', GeoValidationProblem)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)
    .directive('coordinatePage', CoordinatePage)

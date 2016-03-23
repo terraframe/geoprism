@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -816152000)
+@com.runwaysdk.business.ClassSignature(hash = -1769191066)
 public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataUploaderController";
@@ -95,6 +95,34 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCancelImport");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:universalId, java.lang.String:label", post=true)
+  public void createGeoEntity(java.lang.String parentId, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.createGeoEntity");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:universalId, java.lang.String:label", post=true)
+  public void failCreateGeoEntity(java.lang.String parentId, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCreateGeoEntity");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:entityId, java.lang.String:label", post=true)
+  public void createGeoEntitySynonym(java.lang.String entityId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.createGeoEntitySynonym");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:entityId, java.lang.String:label", post=true)
+  public void failCreateGeoEntitySynonym(java.lang.String entityId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCreateGeoEntitySynonym");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.controller.MultipartFileParameter:file", post=true)

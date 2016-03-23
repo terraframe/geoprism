@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1705656207)
+@com.runwaysdk.business.ClassSignature(hash = -1397502841)
 public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.DataUploader";
-  private static final long serialVersionUID = -1705656207;
+  private static final long serialVersionUID = -1397502841;
   
   protected DataUploaderDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -40,6 +40,22 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{configuration};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "cancelImport", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void createGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String universalId, java.lang.String label)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{parentId, universalId, label};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "createGeoEntity", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void createGeoEntitySynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String entityId, java.lang.String label)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{entityId, label};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "createGeoEntitySynonym", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

@@ -42,14 +42,8 @@
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
     }
     
-    service.importData = function(configuration, element, onSuccess, onFailure) {
-      var success = function(response) {
-        var result = JSON.parse(response);
-      	
-        onSuccess(result);
-      };
-    	
-      var request = runwayService.createStandbyRequest(element, success, onFailure);
+    service.importData = function(configuration, element, onSuccess, onFailure) {    	
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
       net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
     }
@@ -65,7 +59,6 @@
     
       net.geoprism.DataSetController.getAll(request);
     }
-    
     
     service.getSavedConfiguration = function(id, sheetName, element, onSuccess, onFailure) {
       var success = function(response) {
@@ -83,6 +76,24 @@
       var request = runwayService.createStandbyRequest(element, success, onFailure);
       
       net.geoprism.DataSetController.remove(request, id);
+    }
+    
+    service.getGeoEntitySuggestions = function(parentId, universalId, text, limit, onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+    
+      net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
+    }
+    
+    service.createGeoEntitySynonym = function(entityId, label, element, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+        
+      net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
+    }
+    
+    service.createGeoEntity = function(parentId, universalId, label, element, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      
+      net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }
     
     return service;  

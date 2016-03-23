@@ -274,6 +274,7 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
     types.add(DataUploaderController.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -283,6 +284,7 @@ public class JavascriptUtil implements Reloadable
     Set<String> types = new HashSet<String>();
     types.add(DataSetController.CLASS);
     types.add(DataUploaderController.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
