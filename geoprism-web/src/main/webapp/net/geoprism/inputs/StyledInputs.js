@@ -285,6 +285,45 @@
     };
   };
   
+  function CallbackAutoComplete($timeout) {
+    return {
+      restrict: "A",
+      scope:{
+        source : "&",
+        setter : "&"
+      },
+      link: function (scope, element, attr, ngModel) {
+        
+        $timeout(function(){
+        	
+          $(element).autocomplete({
+            source: scope.source(),
+            minLength: 1,
+            select: function(event, ui) {
+              scope.setter()(ui.item.id);
+                
+              scope.$apply();
+            }, 
+            change : function(event, ui) {
+              var value = element.val();
+                    
+              if(value == null || value == '') {                
+                scope.setter()(null);
+               
+               scope.$apply();
+              }
+            }
+          });          
+        }, 500); 
+        
+        // Clean up the auto-complete widget on destroy
+        scope.$on("$destroy",function handleDestroyEvent() {
+          $(element).autocomplete( "destroy" );
+        });        
+      }
+    };
+  };
+  
   function ShowOnReady() {
     return {
       restrict: "A",
@@ -544,6 +583,7 @@
     .directive('fireOnReady', FireOnReady)
     .directive('numberOnly', NumberOnly)
     .directive('integerOnly', IntegerOnly)
+    .directive('callbackAutoComplete', CallbackAutoComplete)
     .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('modalDialog', ModalDialog)
     .directive('isolateForm', IsolateForm);    

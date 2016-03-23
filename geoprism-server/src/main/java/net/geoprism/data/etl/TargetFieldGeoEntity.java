@@ -319,9 +319,11 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
         {
           if (parent.getUniversalId().equals(entityUniversal.getId()))
           {
-            if (!label.equals(parent.getDisplayLabel().getValue()))
+            GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
+
+            if (entity == null)
             {
-              return new LocationProblem(label, context, parent, entityUniversal);
+              return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
             }
           }
           else

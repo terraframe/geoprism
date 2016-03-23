@@ -32,5 +32,8 @@
     <div class="error-message">
       <p ng-show="form.$error.size"><gdb:localize key="dataUploader.existingProblems"/></p>
     </div>          
+    <div>
+      <p ng-show="!form.$error.size"><gdb:localize key="dataUploader.noLocationProblem"/></p>
+    </div>          
   </div>  
 </div>

@@ -21,18 +21,23 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div class="row-holder">    
-  <hr>
-  <ng-form name="ctrl.problemForm" isolate-form>
-    <div class="inline-value">
-      <span ng-repeat="context in problem.context">
-        {{context}}
-      </span>        
+  <div ng-if="!problem.resolved">
+    <hr>
+    <div class="error-message" ng-repeat="error in errors track by $index">
+      <p >{{error}}</p>
     </div>
-    <div class="inline-value">{{problem.label}}</div>
-    <div class="inline-text">
-      <input class="synonym" name="{{::$index + '-name'}}" type="text" autocomplete="on" ng-required="true"></input>
-    </div>
-    <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.createSynonym"/>" class="btn btn-primary" ng-click="ctrl.createSynonym()" ng-disabled="ctrl.problemForm.$invalid" /></div>
-    <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.createNewEntity"/>" class="btn" ng-click="ctrl.createEntity()" /></div>
-  </ng-form>
+    <ng-form name="ctrl.problemForm" isolate-form>
+      <div class="inline-value">
+        <span ng-repeat="context in problem.context">
+          {{context}}
+        </span>        
+      </div>
+      <div class="inline-value">{{problem.label}}</div>
+      <div class="inline-text">
+        <input class="synonym" name="{{::$index + '-name'}}" type="text" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.setSynonym"></input>
+      </div>
+      <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.createSynonym"/>" class="btn btn-primary" ng-click="ctrl.createSynonym()" ng-disabled="ctrl.problemForm.$invalid" /></div>
+      <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.createNewEntity"/>" class="btn" ng-click="ctrl.createEntity()" /></div>
+    </ng-form>
+  </div>
 </div>

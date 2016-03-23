@@ -19,6 +19,7 @@
 (function(){
   function GeoValidationProblemController($scope, datasetService) {
     var controller = this;
+    $scope.problem.synonym = null;
     
     controller.getGeoEntitySuggestions = function( request, response ) {
       var limit = 20;
@@ -47,28 +48,54 @@
       datasetService.getGeoEntitySuggestions($scope.problem.parentId, $scope.problem.universalId, text, limit, onSuccess, onFailure);
     }
     
+    controller.setSynonym = function(value) {
+      $scope.problem.synonym = value;
+      
+      controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+    }
+    
     controller.createSynonym = function() {
       
-      var onSuccess = function(query){
-      };      
+      var onSuccess = function(){
+        $scope.problem.resolved = true;
+        
+        $scope.$apply();
+      };
       
-      datasetService.createGeoEntitySynonym($scope.problem.synonym, $scope.problem.label, '#uploader-overlay', onSuccess);
+      var onFailure = function(e){
+        $scope.errors = [];
+        $scope.errors.push(e.localizedMessage);
+                   
+        $scope.$apply();
+      };
+      
+      $scope.errors = undefined;
+      
+      datasetService.createGeoEntitySynonym($scope.problem.synonym, $scope.problem.label, '#uploader-overlay', onSuccess, onFailure);
     }
     
     controller.createEntity = function() {
       
-      var onSuccess = function(query){
-      };      
+      var onSuccess = function(){
+        $scope.problem.resolved = true;
+          
+        $scope.$apply();    	  
+      };
       
-      datasetService.createGeoEntity($scope.problem.parentId, $scope.problem.universalId, $scope.problem.label, '#uploader-overlay', onSuccess);
-    }
-    
-    $scope.$watch('problem.synonym', function(){
-      controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));
-    }, true);
+      var onFailure = function(e){
+        $scope.errors = [];
+        $scope.errors.push(e.localizedMessage);
+                     
+        $scope.$apply();
+      };
+        
+      $scope.errors = undefined;
+      
+      datasetService.createGeoEntity($scope.problem.parentId, $scope.problem.universalId, $scope.problem.label, '#uploader-overlay', onSuccess, onFailure);
+    }    
   }
   
-  function GeoValidationProblem() {
+  function GeoValidationProblem($timeout) {
     return {
       restrict: 'E',
       replace: true,
@@ -79,24 +106,9 @@
       controller : GeoValidationProblemController,
       controllerAs : 'ctrl',      
       link: function (scope, element, attrs, ctrl) {
-        var input = $(element).find(".synonym");
-          
-        input.autocomplete({
-          source: ctrl.getGeoEntitySuggestions,
-          select: function(event, ui) {
-            scope.problem.synonym = ui.item.id;
-            
-            scope.$apply();
-          }, 
-          change : function(event, ui) {
-            var value = input.val();
-                
-            if(value == null || value == '') {                
-              scope.problem.synonym = null;
-            }
-          },
-          minLength: 2
-        });
+        $timeout(function(){
+          ctrl.problemForm.$setValidity("synonym-length",  false);      	
+        }, 0);
       }
     }   
   }
@@ -104,8 +116,18 @@
   function GeoValidationPageController($scope, datasetService) {
     var controller = this;
     
+    controller.hasProblems = function() {
+      for(var i = 0; i < $scope.problems.length; i++) {
+        if(!$scope.problems[i].resolved) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
     $scope.$watch('problems', function(){
-      $scope.form.$setValidity("size",  ($scope.problems.length > null));
+      $scope.form.$setValidity("size",  (!controller.hasProblems()));
     }, true);
 
     // Remove the global validation on the form
