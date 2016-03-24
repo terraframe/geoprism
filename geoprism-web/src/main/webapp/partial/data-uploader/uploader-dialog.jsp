@@ -24,8 +24,23 @@
 <div>
   <modal-dialog modal="uploader-div" overlay="uploader-overlay" ng-if="show">
     <div role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
+      	
+      	<div class="uploader-step-indicator-container" ng-if="page.current != 'MATCH' && !updateExistingDataset">
+	      	<ol class="wizard-progress clearfix">
+			    <li ng-class="{'active-step' : page.current == step.page}" ng-repeat="step in userSteps track by $index">
+			        <span class="step-name">{{step.label}}</span>
+			        <span class="visuallyhidden">Step </span><span class="step-num">{{$index + 1}}</span>
+			    </li>
+			</ol>
+		</div>
+      
       <div class="heading">
-        <h1 class="ui-dialog-title"><gdb:localize key="dataUploader.title"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
       </div>
       <form name="form" class="modal-form">
         <div ng-if="errors.length > 0" class="error-container">
@@ -38,8 +53,8 @@
             </div>
           </div>
         </div>
-        <div class="" style="">
-          <fieldset class="">
+        <div>
+          <fieldset>
             <section class="form-container">
               <match-page ng-if="page.current == 'MATCH'"></match-page>            
               <name-page ng-if="page.current == 'INITIAL'"></name-page>
@@ -54,13 +69,20 @@
             <div class="holder">
               <div class="button-holder" fire-on-ready>
                 <input
-                  ng-if="page.current != 'INITIAL' && page.current != 'MATCH'"      
+                  type="button"
+                  value="<gdb:localize key="dashboard.Cancel"/>"
+                  class="btn btn-default" 
+                  ng-click="ctrl.cancel()"
+                  ng-disabled="busy"                  
+                />
+                <input
+                  ng-if="page.current != 'MATCH'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.previous"/>"
                   class="btn btn-primary" 
                   ng-click="ctrl.prev()"
                   ng-disabled="busy"
-                />
+                /> 
                 <input
                   ng-if="page.current != 'SUMMARY' && page.current != 'MATCH'"      
                   type="button"
@@ -84,14 +106,7 @@
                   class="btn btn-primary" 
                   ng-click="ctrl.persist()"
                   ng-disabled="form.$invalid || busy"
-                />      
-                <input
-                  type="button"
-                  value="<gdb:localize key="dashboard.Cancel"/>"
-                  class="btn btn-default" 
-                  ng-click="ctrl.cancel()"
-                  ng-disabled="busy"                  
-                />
+                />     
               </div>
             </div>
           </div>          

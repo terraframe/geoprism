@@ -143,17 +143,17 @@
               <div class="button-holder">
                 <input
                   type="button"
-                  value="<gdb:localize key="dashboard.Ok"/>"
-                  class="btn btn-primary" 
-                  ng-click="ctrl.persist()"
-                  ng-disabled="form.$invalid || busy"
-                  />
-                <input
-                  type="button"
                   value="<gdb:localize key="dashboard.Cancel"/>"
                   class="btn btn-default" 
                   ng-click="ctrl.cancel()"
                   ng-disabled="busy"                  
+                  />
+                <input
+                  type="button"
+                  value="<gdb:localize key="dashboard.Ok"/>"
+                  class="btn btn-primary" 
+                  ng-click="ctrl.persist()"
+                  ng-disabled="form.$invalid || busy"
                   />
               </div>
             </div>

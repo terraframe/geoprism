@@ -85,6 +85,34 @@
       net.geoprism.DataSetController.remove(request, id);
     }
     
+    //
+    // Used to structure the data uploader steps widget
+    // config - Configuration array containing additional steps. Can be an empty array.
+    //
+    service.getUploaderSteps = function(config){
+    	var basicSteps = [ {"label": "Name & Country", "page":"INITIAL"},
+    			    		  {"label": "Field Configuration", "page":"FIELDS"},
+    			    		  {"label": "Summary", "page":"SUMMARY"} ];
+    	var locationStep = {"label": "Text Location Configuration", "page":"LOCATION"};
+    	var coordinateStep = {"label": "Coordinate Configuration", "page":"COORDINATE"};
+    	var problemResStep = {"label": "Problem Resolution"}; 
+    	
+    	if(config.indexOf("LOCATION") !== -1 && config.indexOf("COORDINATE") !== -1){
+	    	basicSteps.splice(2, 2, locationStep, coordinateStep);
+	    	basicSteps.splice(5, 1, problemResStep);
+    	}
+    	else if(config.indexOf("LOCATION") !== -1){
+	    	basicSteps.splice(2, 1, locationStep);
+	    	basicSteps.splice(4, 1, problemResStep);
+    	}
+    	else if(config.indexOf("COORDINATE") !== -1){
+	    	basicSteps.splice(2, 1, coordinateStep);
+	    	basicSteps.splice(4, 1, problemResStep);
+    	}
+
+    	return basicSteps;
+    }
+    
     return service;  
   }
   

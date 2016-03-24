@@ -74,6 +74,8 @@
           }
         }
       }
+      
+      $scope.hasLocation = false;
     }    
   
     controller.isUniqueLabel = function(label) {
@@ -98,9 +100,42 @@
       
     controller.accept = function(field) {
       field.accepted = true;
+      if(field.type === "LOCATION" || field.type === 'COORDINATE'){
+    	  controller.setLocationSelected(field.type);
+      }
+      else{
+    	  controller.setLocationSelected([]);
+      }
+    	  
+    }
+    
+    controller.setLocationSelected = function(locationType) {
+    	var locationTypeArr = [];
+    	
+    	if(locationType && locationType.length > 0){
+    		locationTypeArr.push(locationType);
+    		
+    		for(var i=0; i<$scope.sheet.fields.length; i++){
+        		var field = $scope.sheet.fields[i];
+        		if((field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE") && field.type !== locationType && locationTypeArr.indexOf(field.type) === -1 ){
+        			locationTypeArr.push(field.type);
+        		}
+        	}
+    	}
+    	else{
+        	for(var i=0; i<$scope.sheet.fields.length; i++){
+        		var field = $scope.sheet.fields[i];
+        		if(field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE" && locationTypeArr.indexOf(field.type) === -1){
+        			locationTypeArr.push(field.type);
+        		}
+        	}
+    	}
+    	
+    	$scope.$emit('hasLocationEvent', locationTypeArr);
     }
     
     controller.initialize();
+    
   }
   
   function AttributesPage() {
@@ -561,6 +596,24 @@
   function UploaderDialogController($scope, $rootScope, datasetService) {
     var controller = this;
     
+    // AttributePageController emit's event when user toggles attribute types between location and non-location types
+    $scope.$on('hasLocationEvent', function(event, locationType) { 
+    	$scope.locationType = locationType;
+    	
+    	if(locationType.length === 1 && locationType[0] === "LOCATION"){
+    		$scope.userSteps = datasetService.getUploaderSteps(["LOCATION"]);
+    	}
+    	else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
+    		$scope.userSteps = datasetService.getUploaderSteps(["COORDINATE"]);
+    	}
+    	else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LONGITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
+    		$scope.userSteps = datasetService.getUploaderSteps(["LOCATION", "COORDINATE"]);
+    	}
+    	else{
+    		$scope.userSteps = datasetService.getUploaderSteps([]);
+    	}
+    });
+    
     // Flag indicating if the modal and all of its elements should be destroyed
     $scope.show = false;    
     
@@ -639,6 +692,10 @@
       $scope.sheet.coordinates = {ids:[], values : {}};    
       $scope.errors = [];      
       $scope.show = true;
+      $scope.locationType = []; 
+      $scope.updateExistingDataset = false;
+      
+      $scope.userSteps = datasetService.getUploaderSteps([]);
       
       $scope.page = {
         snapshots : [],     
@@ -656,6 +713,12 @@
       // State machine
       if($scope.page.current == 'MATCH') {
         $scope.page.current = 'INITIAL';      
+        
+        var snapshot = {
+            page : 'MATCH',
+            sheet : angular.copy($scope.sheet)        
+        };
+        $scope.page.snapshots.push(snapshot);
       }
       else if($scope.page.current == 'INITIAL') {
         // Go to fields page  
@@ -667,6 +730,11 @@
         };
         $scope.page.snapshots.push(snapshot);
         
+        // re-set the step indicator since the snapshot re-sets the attributes page
+        $scope.locationType = []; 
+        $scope.userSteps = datasetService.getUploaderSteps([]);
+        
+        // TODO: Determine if this is needed.  I can't find anywhere that this broadcast event is ever caught and used
         $scope.$broadcast('nextPage', {});
       }
       else if($scope.page.current == 'FIELDS') {
@@ -725,6 +793,8 @@
     	  
         $scope.page.current = snapshot.page;          
         $scope.sheet = snapshot.sheet;
+        
+        $scope.updateExistingDataset = false;
       }        
     }
     
@@ -760,7 +830,8 @@
     
     $scope.$on('loadConfiguration', function(event, data){
       // Go to summary page
-      $scope.page.current = 'SUMMARY';      
+      $scope.page.current = 'SUMMARY';  
+      $scope.updateExistingDataset = true;
         
       var snapshot = {
         page : 'MATCH',
@@ -768,11 +839,8 @@
       };        
       $scope.page.snapshots.push(snapshot);
 
-      angular.copy(data.sheet, $scope.sheet)
-      
-      event.stopPropigation();
+      angular.copy(data.sheet, $scope.sheet);
     });
-
   } 
   
   function UploaderDialog() {
