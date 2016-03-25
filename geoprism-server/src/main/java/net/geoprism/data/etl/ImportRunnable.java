@@ -92,15 +92,12 @@ public class ImportRunnable
 
       for (TargetDefinitionIF definition : definitions)
       {
-        if (definition.isNew())
-        {
-          String type = definition.getTargetType();
+        String type = definition.getTargetType();
 
-          MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
-          MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
+        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
+        MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
 
-          datasets.put(mClass.toJSON());
-        }
+        datasets.put(mClass.toJSON());
       }
 
       // Return the new data set definition
@@ -140,7 +137,7 @@ public class ImportRunnable
   {
     LocationValidator converter = new LocationValidator(tContext);
 
-//    while (!converter.isFinished())
+    // while (!converter.isFinished())
     {
       converter.next();
 

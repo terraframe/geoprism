@@ -39,11 +39,14 @@ public class TargetDefinition implements TargetDefinitionIF
 
   private boolean                        isNew;
 
+  private boolean                        isApplied;
+
   public TargetDefinition()
   {
     this.fieldMap = new HashMap<String, TargetFieldIF>();
     this.labelMap = new HashMap<String, TargetFieldIF>();
     this.isNew = true;
+    this.isApplied = false;
   }
 
   public String getSourceType()
@@ -75,6 +78,16 @@ public class TargetDefinition implements TargetDefinitionIF
   public boolean isNew()
   {
     return this.isNew;
+  }
+  
+  public boolean isApplied()
+  {
+    return isApplied;
+  }
+  
+  public void setApplied(boolean isApplied)
+  {
+    this.isApplied = isApplied;
   }
 
   public void addField(TargetFieldIF field)
@@ -121,7 +134,7 @@ public class TargetDefinition implements TargetDefinitionIF
         field.persist(binding);
       }
 
-      this.setNew(false);
+      this.setApplied(true);
     }
   }
 }

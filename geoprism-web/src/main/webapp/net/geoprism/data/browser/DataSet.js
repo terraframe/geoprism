@@ -106,8 +106,22 @@
     
     controller.addDatasets = function(datasets) {
       for(var i = 0; i < datasets.length; i++) {
-        $scope.datasets.push(datasets[i]);
+        var dataset = datasets[i];
+      
+        if(!controller.exists(dataset)) {
+          $scope.datasets.push(dataset);        
+        }
       }
+    }
+    
+    controller.exists = function(dataset) {
+      for(var i = 0; i < $scope.datasets.length; i++) {
+        if($scope.datasets[i].id == dataset.id) {
+          return true;
+        }
+      }
+      
+      return false;
     }
     
     $scope.$on('closeUploader', function(event, data){    

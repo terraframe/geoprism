@@ -88,6 +88,7 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
     definition.setSourceType(sourceView.definesType());
     definition.setTargetType(targetBusiness.definesType());
     definition.setNew(false);
+    definition.setApplied(true);
 
     List<TargetFieldBinding> fields = this.getFields();
 

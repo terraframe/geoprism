@@ -96,12 +96,12 @@ public abstract class TargetFieldCoordinate extends TargetField implements Targe
 
   protected Coordinate getCoordinate(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
-    Double latitude = new Double(source.getValue(this.getLatitudeSourceAttributeName()));
-    Double longitude = new Double(source.getValue(this.getLongitudeSourceAttributeName()));
+    String latitude = source.getValue(this.getLatitudeSourceAttributeName());
+    String longitude = source.getValue(this.getLongitudeSourceAttributeName());
 
-    if (latitude != null && longitude != null)
+    if (latitude != null && longitude != null && latitude.length() > 0 && longitude.length() > 0)
     {
-      return new Coordinate(longitude, latitude);
+      return new Coordinate(new Double(longitude), new Double(latitude));
     }
 
     return null;

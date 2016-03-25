@@ -115,6 +115,7 @@ public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.ru
     definition.setSheetName(sheetName);
     definition.setCountry(country.getId());
     definition.setNew(false);
+    definition.setApplied(true);
     definition.setId(this.getId());
 
     List<ExcelFieldBinding> fields = this.getFields();
@@ -123,6 +124,7 @@ public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.ru
     {
       definition.addField(field.getSourceField());
     }
+    
     return definition;
   }
 

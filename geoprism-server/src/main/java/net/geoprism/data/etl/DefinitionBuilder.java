@@ -48,7 +48,7 @@ public class DefinitionBuilder
     object.put("attributes", this.getAttributes());
     object.put("coordinates", this.getCoordinates());
 
-    if (!source.isNew())
+    if (!source.isNew() || source.isApplied())
     {
       object.put("existing", source.getId());
     }

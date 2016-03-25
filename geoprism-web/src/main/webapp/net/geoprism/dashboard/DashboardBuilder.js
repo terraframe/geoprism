@@ -133,12 +133,35 @@
       $scope.showWidgetType = typeName;
     }
     
-    controller.addTypes = function(types) {
+    controller.addDatasets = function(datasets) {
+    	
       if($scope.dashboard != null) {
-        for(var i = 0; i < types.length; i++) {
-          $scope.dashboard.options.types.push(types[i]);
+        for(var i = 0; i < datasets.length; i++) {
         }
       }
+    }
+    
+    controller.addDatasets = function(datasets) {
+      if($scope.dashboard != null) {
+    	
+        for(var i = 0; i < datasets.length; i++) {
+          var dataset = datasets[i];
+        
+          if(!controller.exists(dataset)) {
+            $scope.dashboard.options.types.push(dataset);
+          }
+        }
+      }
+    }
+      
+    controller.exists = function(dataset) {
+      for(var i = 0; i < $scope.dashboard.options.types.length; i++) {
+        if($scope.dashboard.options.types[i].id == dataset.id) {
+          return true;
+        }
+      }
+        
+      return false;
     }
     
     /*
@@ -181,7 +204,7 @@
     $rootScope.$on('closeUploader', function(event, data){
     	
       if(data.datasets != null) {
-        controller.addTypes(data.datasets);    	  
+        controller.addDatasets(data.datasets);    	  
       }
       
       $scope.hidden = false;

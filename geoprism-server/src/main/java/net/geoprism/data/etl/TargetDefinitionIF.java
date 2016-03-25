@@ -35,4 +35,6 @@ public interface TargetDefinitionIF
   public void persist();
   
   public boolean isNew();
+  
+  public boolean isApplied();
 }

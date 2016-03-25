@@ -42,4 +42,5 @@ public interface SourceDefinitionIF
 
   public void persist();
 
+  public boolean isApplied();
 }

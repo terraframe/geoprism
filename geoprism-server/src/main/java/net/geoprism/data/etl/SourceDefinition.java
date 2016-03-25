@@ -40,6 +40,8 @@ public class SourceDefinition implements SourceDefinitionIF
 
   private boolean                        isNew;
 
+  private boolean                        isApplied;
+
   private String                         id;
 
   private String                         country;
@@ -49,6 +51,7 @@ public class SourceDefinition implements SourceDefinitionIF
     this.fieldMap = new HashMap<String, SourceFieldIF>();
     this.labelMap = new HashMap<String, SourceFieldIF>();
     this.isNew = true;
+    this.isApplied = false;
   }
 
   public void setId(String id)
@@ -105,6 +108,17 @@ public class SourceDefinition implements SourceDefinitionIF
   {
     return this.isNew;
   }
+  
+  @Override
+  public boolean isApplied()
+  {
+    return this.isApplied;
+  }
+  
+  public void setApplied(boolean isApplied)
+  {
+    this.isApplied = isApplied;
+  }
 
   @Override
   public String getLabel()
@@ -157,8 +171,8 @@ public class SourceDefinition implements SourceDefinitionIF
       {
         field.persist(source);
       }
-      
-      this.setNew(false);
+
+      this.setApplied(true);      
       this.setId(source.getId());
     }
   }
