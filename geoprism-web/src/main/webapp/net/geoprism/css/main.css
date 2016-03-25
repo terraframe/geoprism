@@ -4204,6 +4204,10 @@ div.secondary-box label {
 	border-color: lightgrey;
 }
 
+.wizard-progress .status-li-disabled > .step-num::after{
+	background: lightgrey;
+}
+
 .wizard-progress .step-name {
     display: table-cell;
     height: 32px;
@@ -4273,6 +4277,9 @@ div.secondary-box label {
 }
 
 
+.modal-form .form-container .table.table-bordered{
+	font-size: 12px;
+}
 
     
 

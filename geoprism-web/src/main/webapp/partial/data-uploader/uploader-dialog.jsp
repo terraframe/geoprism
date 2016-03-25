@@ -27,7 +27,7 @@
       	
       	<div class="uploader-step-indicator-container" ng-if="page.current != 'MATCH' && !updateExistingDataset">
 	      	<ol class="wizard-progress clearfix">
-			    <li ng-class="{'active-step' : page.current == step.page}" ng-repeat="step in userSteps track by $index">
+			    <li ng-class="{'active-step' : page.current == step.page, 'status-li-disabled' : $index < currentStep}" ng-repeat="step in userSteps track by $index">
 			        <span class="step-name">{{step.label}}</span>
 			        <span class="visuallyhidden">Step </span><span class="step-num">{{$index + 1}}</span>
 			    </li>
@@ -36,6 +36,7 @@
       
       <div class="heading">
         <h1 class="ui-dialog-title" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
@@ -56,7 +57,8 @@
         <div>
           <fieldset>
             <section class="form-container">
-              <match-page ng-if="page.current == 'MATCH'"></match-page>            
+              <match-page ng-if="page.current == 'MATCH'"></match-page>  
+              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'"></beginning-info-page>            
               <name-page ng-if="page.current == 'INITIAL'"></name-page>
               <attributes-page ng-if="page.current == 'FIELDS'"></attributes-page>
               <location-page ng-if="page.current == 'LOCATION'"></location-page>

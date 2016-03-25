@@ -47,6 +47,26 @@
     }   
   }
   
+  
+  function BeginningInfoPageController($scope, datasetService) {
+    var controller = this;
+    
+  }
+  
+  
+  function BeginningInfoPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/beginning-info-page.jsp',
+      scope: true,
+      controller : BeginningInfoPageController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }
+  
   function NamePage() {
     return {
       restrict: 'E',
@@ -117,7 +137,7 @@
     		
     		for(var i=0; i<$scope.sheet.fields.length; i++){
         		var field = $scope.sheet.fields[i];
-        		if((field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE") && field.type !== locationType && locationTypeArr.indexOf(field.type) === -1 ){
+        		if(((field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE") && field.type !== locationType) && locationTypeArr.indexOf(field.type) === -1 ){
         			locationTypeArr.push(field.type);
         		}
         	}
@@ -125,7 +145,7 @@
     	else{
         	for(var i=0; i<$scope.sheet.fields.length; i++){
         		var field = $scope.sheet.fields[i];
-        		if(field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE" && locationTypeArr.indexOf(field.type) === -1){
+        		if((field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE") && locationTypeArr.indexOf(field.type) === -1){
         			locationTypeArr.push(field.type);
         		}
         	}
@@ -606,7 +626,7 @@
     	else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
     		$scope.userSteps = datasetService.getUploaderSteps(["COORDINATE"]);
     	}
-    	else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LONGITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
+    	else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LATITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
     		$scope.userSteps = datasetService.getUploaderSteps(["LOCATION", "COORDINATE"]);
     	}
     	else{
@@ -712,13 +732,16 @@
     controller.next = function() {
       // State machine
       if($scope.page.current == 'MATCH') {
-        $scope.page.current = 'INITIAL';      
+        $scope.page.current = 'BEGINNING-INFO';      
         
         var snapshot = {
             page : 'MATCH',
             sheet : angular.copy($scope.sheet)        
         };
         $scope.page.snapshots.push(snapshot);
+      }
+      else if($scope.page.current == 'BEGINNING-INFO') {
+    	$scope.page.current = 'INITIAL';  
       }
       else if($scope.page.current == 'INITIAL') {
         // Go to fields page  
@@ -733,6 +756,7 @@
         // re-set the step indicator since the snapshot re-sets the attributes page
         $scope.locationType = []; 
         $scope.userSteps = datasetService.getUploaderSteps([]);
+        $scope.currentStep = 1;
         
         // TODO: Determine if this is needed.  I can't find anywhere that this broadcast event is ever caught and used
         $scope.$broadcast('nextPage', {});
@@ -741,14 +765,17 @@
         if(controller.hasLocationField()) {
           // Go to location attribute page
           $scope.page.current = 'LOCATION';      
+          $scope.currentStep = 3;
         }
         else if (controller.hasCoordinateField()) {
           // Go to coordinate page
-          $scope.page.current = 'COORDINATE';      
+          $scope.page.current = 'COORDINATE';   
+          $scope.currentStep = 3;
         }
         else {
           // Go to summary page
-          $scope.page.current = 'SUMMARY';      
+          $scope.page.current = 'SUMMARY'; 
+          $scope.currentStep = 3;
         }
         
         var snapshot = {
@@ -756,15 +783,19 @@
           sheet : angular.copy($scope.sheet)        
         };
         $scope.page.snapshots.push(snapshot);
+        
+        $scope.currentStep = 2;
       }
       else if($scope.page.current == 'LOCATION') {
         if (controller.hasCoordinateField()) {
           // Go to coordinate page
-          $scope.page.current = 'COORDINATE';      
+          $scope.page.current = 'COORDINATE'; 
+          $scope.currentStep = 3;
         }
         else {
           // Go to summary page
-          $scope.page.current = 'SUMMARY';      
+          $scope.page.current = 'SUMMARY';    
+          $scope.currentStep = 3;
         }
         
         var snapshot = {
@@ -775,7 +806,14 @@
       }
       else if($scope.page.current == 'COORDINATE') {
         // Go to summary page
-        $scope.page.current = 'SUMMARY';      
+        $scope.page.current = 'SUMMARY';  
+        
+        if(controller.hasLocationField()) {
+        	$scope.currentStep = 4;
+        }
+        else{
+        	$scope.currentStep = 3;
+        }
         
         var snapshot = {
           page : 'COORDINATE',
@@ -795,7 +833,39 @@
         $scope.sheet = snapshot.sheet;
         
         $scope.updateExistingDataset = false;
-      }        
+      }     
+      
+      
+      if($scope.page.current === "SUMMARY"){
+    	  var stepCt = 4;
+    	  if (!controller.hasCoordinateField()) {
+    		  stepCt = stepCt - 1;
+    	  }
+    	  
+    	  if(!controller.hasLocationField()) {
+    		  stepCt = stepCt - 1;
+    	  }
+    	  
+    	  $scope.currentStep = stepCt;
+      }
+      else if($scope.page.current === "COORDINATE"){
+    	  var stepCt = 3;
+    	  if(!controller.hasLocationField()) {
+    		  stepCt = stepCt - 1;
+    	  }
+    	  
+    	  $scope.currentStep = stepCt;
+      }
+      else if($scope.page.current === "LOCATION"){
+    	  $scope.currentStep = 2;
+      }
+      else if($scope.page.current === "FIELDS"){
+    	  $scope.currentStep = 1;
+      }
+      else if($scope.page.current === "INITIAL"){
+    	  
+      }
+      
     }
     
     controller.hasLocationField = function() {
@@ -896,6 +966,7 @@
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchPage', MatchPage)
+   .directive('beginningInfoPage', BeginningInfoPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)
    .directive('coordinatePage', CoordinatePage)

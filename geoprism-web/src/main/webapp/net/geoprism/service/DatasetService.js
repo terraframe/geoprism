@@ -98,16 +98,16 @@
     	var problemResStep = {"label": "Problem Resolution"}; 
     	
     	if(config.indexOf("LOCATION") !== -1 && config.indexOf("COORDINATE") !== -1){
-	    	basicSteps.splice(2, 2, locationStep, coordinateStep);
-	    	basicSteps.splice(5, 1, problemResStep);
+	    	basicSteps.splice(2, 0, locationStep, coordinateStep);
+	    	basicSteps.splice(5, 0, problemResStep);
     	}
     	else if(config.indexOf("LOCATION") !== -1){
-	    	basicSteps.splice(2, 1, locationStep);
-	    	basicSteps.splice(4, 1, problemResStep);
+	    	basicSteps.splice(2, 0, locationStep);
+	    	basicSteps.splice(4, 0, problemResStep);
     	}
     	else if(config.indexOf("COORDINATE") !== -1){
-	    	basicSteps.splice(2, 1, coordinateStep);
-	    	basicSteps.splice(4, 1, problemResStep);
+	    	basicSteps.splice(2, 0, coordinateStep);
+	    	basicSteps.splice(4, 0, problemResStep);
     	}
 
     	return basicSteps;
