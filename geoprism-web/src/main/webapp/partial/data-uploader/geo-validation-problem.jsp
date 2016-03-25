@@ -28,12 +28,12 @@
     </div>
     <ng-form name="ctrl.problemForm" isolate-form>
       <div class="inline-value">
-        <span ng-repeat="context in problem.context">
-          {{context}}
-        </span>        
+        <ol ng-if="problem.context.length > 0">
+          <li ng-repeat="context in problem.context">{{context}}</li>        
+        </ol>
       </div>
-      <div class="inline-value">{{problem.label}}</div>
-      <div class="inline-text">
+      <div class="inline-value error-message">{{problem.label}}</div>
+      <div class="inline-combo">
         <input class="synonym" name="{{::$index + '-name'}}" type="text" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.setSynonym"></input>
       </div>
       <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.createSynonym"/>" class="btn btn-primary" ng-click="ctrl.createSynonym()" ng-disabled="ctrl.problemForm.$invalid" /></div>

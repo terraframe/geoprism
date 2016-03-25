@@ -1922,6 +1922,13 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	padding:0 11px 18px 12px;
 	position:relative;
 }
+.modal-form .wide-holder{
+	float:left;
+	width:900px;
+	border-left:1px solid #ccc;
+	padding:0 11px 18px 12px;
+	position:relative;
+}
 .modal-form .text{
 	float:left;
 	position:relative;
@@ -4009,6 +4016,14 @@ div.secondary-box label {
     padding-top: 1px;
   }
 	
+	.modal-form .inline-combo {
+    float: left;
+    position: relative;
+    width: 150px;
+    padding-right: 5px;
+    padding-top: 1px;
+  }
+	
 	.modal-form .inline-value {
     float: left;
     position: relative;
@@ -4018,6 +4033,22 @@ div.secondary-box label {
   }
 	
 	.modal-form .inline-text input[type="text"] {
+    background: #EEE none repeat scroll 0% 0%;
+    border: 1px solid #AAA;
+    margin: 0px;
+    float: left;
+    font-size: 14px;
+    color: #333;
+    box-shadow: none;
+    outline: medium none;
+    height: 32px;
+    line-height: 24px;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+  }
+  
+	.modal-form .inline-combo input[type="text"] {
     background: #EEE none repeat scroll 0% 0%;
     border: 1px solid #AAA;
     margin: 0px;

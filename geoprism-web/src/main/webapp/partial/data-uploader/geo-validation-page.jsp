@@ -21,14 +21,18 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
-  <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.locationProblems"/></strong>
-  </div>    
-  <div class="holder">
+  <div class="wide-holder">
+    <div class="row-holder">    
+      <div class="inline-value">
+        <label><gdb:localize key="dataUploader.locationContext"/></label>      
+      </div>
+      <div class="inline-value"><label><gdb:localize key="dataUploader.locationContext"/></label></div>
+      <div class="inline-value"><label><gdb:localize key="dataUploader.synonymn"/></label></div>
+      <div class="inline-value"><label><gdb:localize key="dataUploader.actions"/></label></div>
+    </div>  
     <geo-validation-problem ng-repeat="problem in problems" problem="problem"></geo-validation-problem>
   </div>
-  <div class="label-holder"></div>
-  <div class="holder">
+  <div class="wide-holder">
     <div class="error-message">
       <p ng-show="form.$error.size"><gdb:localize key="dataUploader.existingProblems"/></p>
     </div>          

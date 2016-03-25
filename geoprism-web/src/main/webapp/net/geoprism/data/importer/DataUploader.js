@@ -902,10 +902,7 @@
         // re-set the step indicator since the snapshot re-sets the attributes page
         $scope.locationType = []; 
         $scope.userSteps = datasetService.getUploaderSteps([]);
-        $scope.currentStep = 1;
-        
-        // TODO: Determine if this is needed.  I can't find anywhere that this broadcast event is ever caught and used
-        $scope.$broadcast('nextPage', {});
+        $scope.currentStep = 1;        
       }
       else if($scope.page.current == 'FIELDS') {
         if(controller.hasLocationField()) {

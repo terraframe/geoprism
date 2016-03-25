@@ -37,8 +37,7 @@
 			        <span class="visuallyhidden">Step </span><span class="step-num">{{$index + 1}}</span>
 			    </li>
 			</ol>
-		</div>
-      
+		</div>      
       <div class="heading">
         <h1 class="ui-dialog-title" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
@@ -74,8 +73,8 @@
             </section>            
           </fieldset>
           <div class="row-holder" >
-            <div class="label-holder"></div>
-            <div class="holder">
+            <div class="label-holder"></div>          
+            <div ng-class="{'holder' : page.current != 'GEO-VALIDATION', 'wide-holder' : page.current == 'GEO-VALIDATION'}">
               <div class="button-holder" fire-on-ready>
                 <input
                   type="button"
