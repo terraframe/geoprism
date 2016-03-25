@@ -653,6 +653,9 @@
       $scope.options = undefined;      
       $scope.sheet = undefined;      
       $scope.universals = undefined;
+      
+      $scope.currentStep = 0;
+      $scope.locationType = []; 
     }
 
     controller.setCountry = function(country) {
@@ -825,17 +828,21 @@
     }
     
     controller.prev = function() {
-      if($scope.page.snapshots.length > 0) {          
-        $scope.$broadcast('pagePrev', {});
-        
-        var snapshot = $scope.page.snapshots.pop();
-    	  
-        $scope.page.current = snapshot.page;          
-        $scope.sheet = snapshot.sheet;
-        
-        $scope.updateExistingDataset = false;
+      if($scope.page.snapshots.length > 0) { 
+        if($scope.page.current == 'INITIAL') {
+        	$scope.page.current = 'BEGINNING-INFO'; 
+        }
+        else{
+	        $scope.$broadcast('pagePrev', {});
+	        
+	        var snapshot = $scope.page.snapshots.pop();
+	    	  
+	        $scope.page.current = snapshot.page;          
+	        $scope.sheet = snapshot.sheet;
+	        
+	        $scope.updateExistingDataset = false;
+        }
       }     
-      
       
       if($scope.page.current === "SUMMARY"){
     	  var stepCt = 4;
