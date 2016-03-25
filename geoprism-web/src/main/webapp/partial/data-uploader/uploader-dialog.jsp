@@ -28,7 +28,12 @@
       	<div class="uploader-step-indicator-container" ng-if="page.current != 'MATCH' && !updateExistingDataset">
 	      	<ol class="wizard-progress clearfix">
 			    <li ng-class="{'active-step' : page.current == step.page, 'status-li-disabled' : $index < currentStep}" ng-repeat="step in userSteps track by $index">
-			        <span class="step-name">{{step.label}}</span>
+			        <span ng-if="step.label == '1'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
+			        <span ng-if="step.label == '2'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep2"/></span>
+			        <span ng-if="step.label == '3'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep3"/></span>
+			        <span ng-if="step.label == '4'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep4"/></span>
+			        <span ng-if="step.label == '5'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep5"/></span>
+			        <span ng-if="step.label == '6'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep6"/></span>
 			        <span class="visuallyhidden">Step </span><span class="step-num">{{$index + 1}}</span>
 			    </li>
 			</ol>

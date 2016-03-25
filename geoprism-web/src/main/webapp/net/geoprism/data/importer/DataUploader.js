@@ -741,7 +741,8 @@
         $scope.page.snapshots.push(snapshot);
       }
       else if($scope.page.current == 'BEGINNING-INFO') {
-    	$scope.page.current = 'INITIAL';  
+    	$scope.page.current = 'INITIAL'; 
+    	$scope.currentStep = -1;
       }
       else if($scope.page.current == 'INITIAL') {
         // Go to fields page  
@@ -863,7 +864,7 @@
     	  $scope.currentStep = 1;
       }
       else if($scope.page.current === "INITIAL"){
-    	  
+    	  $scope.currentStep = 0;
       }
       
     }

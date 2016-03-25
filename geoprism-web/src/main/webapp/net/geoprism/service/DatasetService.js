@@ -90,12 +90,12 @@
     // config - Configuration array containing additional steps. Can be an empty array.
     //
     service.getUploaderSteps = function(config){
-    	var basicSteps = [ {"label": "Name & Country", "page":"INITIAL"},
-    			    		  {"label": "Field Configuration", "page":"FIELDS"},
-    			    		  {"label": "Summary", "page":"SUMMARY"} ];
-    	var locationStep = {"label": "Text Location Configuration", "page":"LOCATION"};
-    	var coordinateStep = {"label": "Coordinate Configuration", "page":"COORDINATE"};
-    	var problemResStep = {"label": "Problem Resolution"}; 
+    	var basicSteps = [ {"label": "1", "page":"INITIAL"},
+    			    		  {"label": "2", "page":"FIELDS"},
+    			    		  {"label": "3", "page":"SUMMARY"} ];
+    	var locationStep = {"label": "4", "page":"LOCATION"};
+    	var coordinateStep = {"label": "5", "page":"COORDINATE"};
+    	var problemResStep = {"label": "6"}; 
     	
     	if(config.indexOf("LOCATION") !== -1 && config.indexOf("COORDINATE") !== -1){
 	    	basicSteps.splice(2, 0, locationStep, coordinateStep);

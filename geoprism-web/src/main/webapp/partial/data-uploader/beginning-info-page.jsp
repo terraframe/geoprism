@@ -27,6 +27,7 @@
   </div>
   <div class="holder">
     <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.uploadBeginningRequirementsMessage"/></p>
     	<ol>
     		<li><gdb:localize key="dataUploader.uploadBeginningRequirement1"/></li>
     		<li><gdb:localize key="dataUploader.uploadBeginningRequirement2"/></li>
