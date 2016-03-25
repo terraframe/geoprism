@@ -45,8 +45,8 @@
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="LONG"><gdb:localize key="dataUploader.long"/></option>
           <option value="DOUBLE"><gdb:localize key="dataUploader.double"/></option>
-          <option value="LONGITUDE"><gdb:localize key="dataUploader.longitude"/></option>
           <option value="LATITUDE"><gdb:localize key="dataUploader.latitude"/></option>
+          <option value="LONGITUDE"><gdb:localize key="dataUploader.longitude"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
           <option value=""><gdb:localize key="dataUploader.undefined"/></option>
         </select>      

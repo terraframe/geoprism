@@ -27,16 +27,16 @@
 		<div class="button-holder">
 			<input
 				type="button"
+				value="<gdb:localize key="dashboardViewer.cancel"/>"
+				class="btn btn-default" 
+				ng-click="cancel()()"
+				/>
+			<input
+				type="button"
 				value="<gdb:localize key="dashboardViewer.mapItButton"/>"
 				class="btn btn-primary" 
 				ng-click="persist()()"
         ng-disabled="form.$invalid"
-				/>
-			<input
-				type="button"
-				value="<gdb:localize key="dashboardViewer.cancel"/>"
-				class="btn btn-default" 
-				ng-click="cancel()()"
 				/>
 		</div>
 	</div>

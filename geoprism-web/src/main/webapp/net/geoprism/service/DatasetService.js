@@ -96,6 +96,34 @@
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }
     
+    //
+    // Used to structure the data uploader steps widget
+    // config - Configuration array containing additional steps. Can be an empty array.
+    //
+    service.getUploaderSteps = function(config){
+    	var basicSteps = [ {"label": "1", "page":"INITIAL"},
+    			    		  {"label": "2", "page":"FIELDS"},
+    			    		  {"label": "3", "page":"SUMMARY"} ];
+    	var locationStep = {"label": "4", "page":"LOCATION"};
+    	var coordinateStep = {"label": "5", "page":"COORDINATE"};
+    	var problemResStep = {"label": "6"}; 
+    	
+    	if(config.indexOf("LOCATION") !== -1 && config.indexOf("COORDINATE") !== -1){
+	    	basicSteps.splice(2, 0, locationStep, coordinateStep);
+	    	basicSteps.splice(5, 0, problemResStep);
+    	}
+    	else if(config.indexOf("LOCATION") !== -1){
+	    	basicSteps.splice(2, 0, locationStep);
+	    	basicSteps.splice(4, 0, problemResStep);
+    	}
+    	else if(config.indexOf("COORDINATE") !== -1){
+	    	basicSteps.splice(2, 0, coordinateStep);
+	    	basicSteps.splice(4, 0, problemResStep);
+    	}
+
+    	return basicSteps;
+    }
+    
     return service;  
   }
   

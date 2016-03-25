@@ -98,7 +98,8 @@ form legend{
 	  -webkit-box-shadow:none;
 	  outline:0;
 	  border-radius:0;
-	  background:#bbb;
+/* 	  background:#bbb; */
+	  background:#777777;
 	}
 	.btn:hover,
 	button.btn.ui-button.ui-widget:hover{
@@ -4162,6 +4163,132 @@ div.secondary-box label {
     .drop-active{
     	border: 3px #00bfff dashed;
     }
+    
+    
+    
+    
+.visuallyhidden {
+    display: none;
+}
+
+.uploader-step-indicator-container{
+/*     width: 765px; */
+    width: 100%;
+    text-align: center;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    margin-bottom: 75px;
+    margin-top: 40px;
+}
+
+.wizard-progress {
+	display: inline-block;
+    list-style: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.wizard-progress li {
+    float: left;
+    margin-right: 50px;
+    text-align: center;
+    position: relative;
+    width: 100px;
+    white-space: normal;
+}
+
+.wizard-progress li:last-child{
+	margin-right: 0;
+}
+
+.wizard-progress .status-li-disabled {
+	color: lightgrey;
+}
+
+.wizard-progress .status-li-disabled > .step-num{
+	border-color: lightgrey;
+}
+
+.wizard-progress .status-li-disabled > .step-num::after{
+	background: lightgrey;
+}
+
+.wizard-progress .step-name {
+    display: table-cell;
+    height: 32px;
+    vertical-align: bottom;
+    text-align: center;
+    width: 100px;
+    float: left;
+}
+
+/* .wizard-progress .active-step .step-name { */
+/* 	border: solid 1px grey; */
+/*     border-radius: 3px; */
+/* } */
+
+/* .wizard-progress .active-step .step-name:after{ */
+/* 	content: ''; */
+/*     position: absolute; */
+/*     top: 32px; */
+/*     left: 50%; */
+/*     margin-left: -10px; */
+/*     width: 0; */
+/*     height: 0; */
+/*     border-top: solid 10px #aaa; */
+/*     border-left: solid 10px transparent; */
+/*     border-right: solid 10px transparent; */
+	
+/* } */
+
+.wizard-progress .step-name-wrapper {
+    display: table-cell;
+    height: 100%;
+    vertical-align: bottom;
+}
+
+.wizard-progress .step-num {
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #aaa;
+    border-radius: 50%;
+    width: 26px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.wizard-progress .step-num:after {
+    content: "";
+    display: block;
+    background: #aaa;
+    height: 3px;
+    width: 130px;
+    position: absolute;
+    bottom: 10px;
+    left: 60px;
+}
+
+.wizard-progress li:last-of-type .step-num:after {
+    display: none;
+}
+
+.wizard-progress .active-step {
+	font-weight: bold;
+}
+
+.wizard-progress .active-step .step-num {
+    background-color: #00bfff;
+    color: white;
+}
+
+
+.modal-form .form-container .table.table-bordered{
+	font-size: 12px;
+}
+
     
 
 /*
