@@ -28,7 +28,8 @@
      "mqAerial" : "MapQuest Satellite",
      "mqHybrid" : "MapQuest Hybrid",
      "attributionELTooltip" : "Map Attribution",
-     "editFeature" : "Edit feature"
+     "editFeature" : "Edit feature",
+     "bingAerial" : "Bing Satellite"
   });
     
   var MapWidget = Mojo.Meta.newClass('net.geoprism.gis.MapWidget', {
@@ -336,7 +337,10 @@
           
           if(oLayer != null && oLayer.showing == false) {
             var map = this.getMap();
-            if(stackIndex !== null && stackIndex >= 0){
+            if(layer.layerType.toLowerCase() === "google"){
+            	// TODO: show it
+            }
+            else if(stackIndex !== null && stackIndex >= 0){
               map.getLayers().insertAt(stackIndex, oLayer);
             }
             else{
@@ -411,6 +415,11 @@
                   new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
                 );
               }
+              else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "bing"){
+            	baseObj.setSource( 
+            	  new ol.source.BingMaps(base.LAYER_SOURCE_OPTIONS)
+            	);
+              }
               
               baseObj._gdbisdefault = base.DEFAULT;
               baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
@@ -469,6 +478,70 @@
               };
                     
               layers.push(layer);
+            }
+            else if(base.LAYER_TYPE.toLowerCase() === "google"){
+                var baseObj = {visible: base.VISIBLE,
+                        isdefault: base.DEFAULT}
+                        
+                
+               var gmap = new google.maps.Map(document.getElementById('gmap'), {
+            	  disableDefaultUI: true,
+            	  keyboardShortcuts: true,
+            	  draggable: true,
+            	  disableDoubleClickZoom: false,
+            	  scrollwheel: true,
+            	  streetViewControl: false,
+            	  mapTypeId: google.maps.MapTypeId.SATELLITE
+            	});
+                
+//              var view = new ol.View({
+//          	  // make sure the view doesn't go beyond the 22 zoom levels of Google Maps
+//          	  maxZoom: 21
+//            });
+                
+                var view = this.getMap().getView();
+                
+	            view.on('change:center', function() {
+	          	  var center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
+	          	  gmap.setCenter(new google.maps.LatLng(center[1], center[0]));
+	            });
+	            view.on('change:resolution', function() {
+	          	  gmap.setZoom(view.getZoom());
+	            });
+	            
+	            var olMapDiv = document.getElementById('olmap');
+	            var map = new ol.Map({
+	            	  layers: [],
+	            	  interactions: ol.interaction.defaults({
+	            	    altShiftDragRotate: false,
+	            	    dragPan: false,
+	            	    rotate: false
+	            	  }).extend([new ol.interaction.DragPan({kinetic: null})]),
+	            	  target: olMapDiv,
+	            	  view: view
+	            	});
+	            	view.setCenter([0, 0]);
+	            	view.setZoom(1);
+	            
+	            olMapDiv.parentNode.removeChild(olMapDiv);
+	            gmap.controls[google.maps.ControlPosition.TOP_LEFT].push(olMapDiv);
+               
+               baseObj.showing = false;
+               baseObj.removable = false;
+
+               // Add the baseObj to the layer cache
+               this._cache[i] = baseObj;
+                 
+               var layer = {
+                 layerId : i,
+                 key : i,
+                 isActive : false,
+                 layerType : base.LAYER_SOURCE_TYPE,
+                 layerLabel : this.localize(base.LOCLIZATION_KEY),
+                 layerObj : map
+               };
+               
+               layers.push(layer);
             }
           }
           
@@ -675,20 +748,25 @@
             tipLabel: this.localize("attributionELTooltip")
           });
           
+          var view = new ol.View({ 
+              center: this.getCenter(), 
+              zoom: this.getZoomLevel(),
+              maxZoom: 20
+          });
+          
+          
           var map = new ol.Map({
             layers: [ ], // base maps will be added later
             controls: ol.control.defaults({ attribution: false }).extend([attribution]),
             target: this.getMapElementId(),
             loadTilesWhileInteracting: true,
             loadTilesWhileAnimating: true,
-            view: new ol.View({ 
-              center: this.getCenter(), 
-              zoom: this.getZoomLevel()
-            })
+            view: view
           });
           
+        	
           this.setMap(map);
-          this.configureMap();          
+          this.configureMap();     
         },
         
         setClickHandler : function(handler) {

@@ -4321,6 +4321,14 @@ div.secondary-box label {
 }
 
     
+    
+    
+    div.fill {
+      width: 100%;
+      height: 100%;
+    }
+    
+    
 
 /*
 * Scroll bar styling

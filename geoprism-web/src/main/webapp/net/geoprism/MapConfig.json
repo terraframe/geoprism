@@ -79,6 +79,37 @@ var MapConfig ={
     				"LAYER_SOURCE_OPTIONS":{"layer":"hyb"}
     			}
     		]
+    	},
+    	{
+    		"NAME":"Bing Aerial",
+    		"LOCLIZATION_KEY":"bingAerial",
+    		"LAYER_TYPE":"Tile",
+    		"LAYER_TYPE_OPTIONS":{"style":"Aerial"},
+    		"CUSTOM_TYPE_OPTIONS":{},
+    		"LAYER_SOURCE_TYPE":"Bing",
+    		//
+    		// This is a temporary key used for development. A new key MUST be created for each app instance.
+    		//
+    		"LAYER_SOURCE_OPTIONS":{
+            		  "key" : "AtIDOuTBFAD2ED1S-AyfTnc0qWY7g7BRwxmq7t-zteq0JUF8RwHrZ-ZSNFX400qk",
+            		  "imagerySet":"AerialWithLabels",
+            		  "maxZoom":"19"
+            		  },
+            "URL":"",
+            "DEFAULT":"false",
+            "VISIBLE":"true"
+    	},
+    	{
+    		"NAME":"Google Aerial",
+    		"LOCLIZATION_KEY":"googleSatellite",
+    		"LAYER_TYPE":"Google",
+    		"LAYER_TYPE_OPTIONS":{},
+    		"CUSTOM_TYPE_OPTIONS":{},
+    		"LAYER_SOURCE_TYPE":"Google",
+    		"LAYER_SOURCE_OPTIONS":{},
+            "URL":"",
+            "DEFAULT":"false",
+            "VISIBLE":"true"
     	}
     ]
 }
