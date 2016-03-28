@@ -72,8 +72,9 @@
   <script src="/net/geoprism/MapConfig.json"></script>
   
   <!-- Google maps API -->
-<!--   <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>   -->
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.21&key=AIzaSyAwPuAIr2I9bM8P03J6zUdaA2dy7o6AsY4"></script>
+  <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>  
+<!--   THE DEVELPER KEY BELOW NEEDS TO BE REPLACED WITH A CUSTOMER KEY -->
+<!--   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.21&key=AIzaSyAwPuAIr2I9bM8P03J6zUdaA2dy7o6AsY4"></script> -->
   
   <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
   
@@ -110,8 +111,6 @@
     <div class="bg-stretch">
       <div id="mapDivId" class="dynamicMap">
         <map-popup ng-if="dashboard.feature != null && dashboard.feature.show" feature="dashboard.feature"></map-popup>
-<!--         <div id="gmap" class="fill"></div> -->
-<!--         <div id="olmap" class="fill"></div> -->
       </div>
     </div>
   
