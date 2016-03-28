@@ -40,7 +40,7 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
   }
 
   @Override
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
     String value = source.getValue(this.getSourceAttributeName());
 
@@ -50,10 +50,10 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
 
       Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm, true);
 
-      return classifier.getId();
+      return new FieldValue(classifier.getId());
     }
 
-    return null;
+    return new FieldValue();
   }
 
   @Override

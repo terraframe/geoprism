@@ -43,7 +43,7 @@ public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFie
   }
 
   @Override
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
     Coordinate coord = super.getCoordinate(mdAttribute, source);
 
@@ -51,10 +51,10 @@ public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFie
     {
       Point point = this.getGeometryFactory().createPoint(coord);
 
-      return this.getGeometryHelper().getGeoPoint(point);
+      return new FieldValue(this.getGeometryHelper().getGeoPoint(point));
     }
 
-    return null;
+    return new FieldValue();
   }
 
   @Override

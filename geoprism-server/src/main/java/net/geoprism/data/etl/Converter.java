@@ -37,6 +37,7 @@ public class Converter implements ConverterIF
   public void create(Transient source)
   {
     Business business = this.context.newBusiness(source.getType());
+    boolean hasValues = false;
 
     List<TargetFieldIF> fields = this.context.getFields(source.getType());
 
@@ -46,14 +47,23 @@ public class Converter implements ConverterIF
 
       MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
 
-      Object value = field.getValue(mdAttribute, source);
+      FieldValue fValue = field.getValue(mdAttribute, source);
+      Object value = fValue.getValue();
 
       if (value != null)
       {
         business.setValue(attributeName, value);
       }
+
+      hasValues = hasValues || !fValue.isBlank();
     }
 
-    business.apply();
+    /*
+     * Before apply ensure that at least one source field was not blank
+     */
+    if (hasValues)
+    {
+      business.apply();
+    }
   }
 }

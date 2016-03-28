@@ -35,7 +35,7 @@ public interface TargetFieldIF
    * @param source
    * @return
    */
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source);
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source);
 
   public void persist(TargetBinding binding);
 }

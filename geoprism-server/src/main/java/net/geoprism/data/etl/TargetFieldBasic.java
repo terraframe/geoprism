@@ -37,11 +37,16 @@ public class TargetFieldBasic extends TargetField implements TargetFieldIF
   }
 
   @Override
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
     String value = source.getValue(this.getSourceAttributeName());
 
-    return value;
+    if (value != null && value.length() > 0)
+    {
+      return new FieldValue(value, false);
+    }
+
+    return new FieldValue(value, true);
   }
 
   @Override
