@@ -70,7 +70,7 @@
           controller.dashboards = response.dashboards;
           controller.dashboardId = response.state.id;
         
-          controller.setDashboardState(response.state);
+          controller.setDashboardState(response.state, true);
           
           $scope.$apply();
         }, 0);
@@ -108,7 +108,7 @@
     
     
     /* Refresh Map Function */
-    controller.refresh = function(buttonId) {
+    controller.refresh = function(buttonId, initialRender) {
       var onSuccess = function(json, dto, response) {
     	
         if(buttonId){
@@ -121,7 +121,7 @@
         var map = Mojo.Util.toObject(json);
 
         $timeout(function() {
-          controller.setMapState(map, false);
+          controller.setMapState(map, false, initialRender);
           
           controller.renderReport();
         }, 10);
@@ -201,13 +201,13 @@
       var onSuccess = function(json){
         var state = JSON.parse(json);
           
-        controller.setDashboardState(state);
+        controller.setDashboardState(state, true);
       };
         
       dashboardService.getDashboardJSON(controller.dashboardId, onSuccess);
     }
     
-    controller.setDashboardState = function(state) {
+    controller.setDashboardState = function(state, initialRender) {
       $timeout(function() {
         controller.model = state;
         controller.renderBase = true;
@@ -228,7 +228,7 @@
 
         $scope.$apply();
               
-        controller.refresh();
+        controller.refresh(null, true);
       }, 5);
     }
     
@@ -280,15 +280,15 @@
     }    
     
     controller.handleLayerEvent = function(map) {
-      controller.setMapState(map, true);
+      controller.setMapState(map, true, true);
       
       dashboardService.generateThumbnailImage(controller.dashboardId);
     }
     
-    controller.setMapState = function(map, reverse) {
+    controller.setMapState = function(map, reverse, zoomToDataExtent) {
       controller.feature = null;
 
-      if (map.bbox != null) {
+      if (map.bbox != null && zoomToDataExtent) {
         angular.copy(map.bbox, controller.bbox);
         
         controller.centerMap();
@@ -701,7 +701,7 @@
       controller.clearDashboardState();
       
       // Load the new dashboard state and refresh the map
-      controller.setDashboardState(state);
+      controller.setDashboardState(state, false);
     }
     
     /*
