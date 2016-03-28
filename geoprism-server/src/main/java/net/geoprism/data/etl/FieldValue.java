@@ -18,30 +18,50 @@
  */
 package net.geoprism.data.etl;
 
-import com.runwaysdk.business.Transient;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.util.IDGenerator;
 
-public class TargetFieldGenerated extends TargetField implements TargetFieldIF
+public class FieldValue
 {
+  /**
+   * Flag denoting if the source value for the field was blank. This may be true even if the value is not null, because
+   * the value may be derived.
+   */
+  private boolean blank;
 
-  @Override
-  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  private Object  value;
+
+  public FieldValue()
   {
-    return new FieldValue(IDGenerator.nextID(), true);
+    this(null, true);
   }
 
-  @Override
-  public void persist(TargetBinding binding)
+  public FieldValue(Object value)
   {
-    MdAttribute targetAttribute = MdAttribute.getByKey(this.getKey());
-
-    TargetFieldGeneratedBinding field = new TargetFieldGeneratedBinding();
-    field.setTarget(binding);
-    field.setTargetAttribute(targetAttribute);
-    field.setColumnLabel(this.getLabel());
-    field.apply();
+    this(value, false);
   }
 
+  public FieldValue(Object value, boolean blank)
+  {
+    this.value = value;
+    this.blank = blank;
+  }
+
+  public boolean isBlank()
+  {
+    return this.blank;
+  }
+
+  public void setBlank(boolean blank)
+  {
+    this.blank = blank;
+  }
+
+  public void setValue(Object value)
+  {
+    this.value = value;
+  }
+
+  public Object getValue()
+  {
+    return value;
+  }
 }

@@ -133,7 +133,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   }
 
   @Override
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
     List<String> labels = new ArrayList<String>();
 
@@ -144,7 +144,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     GeoEntity entity = this.getOrCreateLocation(this.root, labels);
 
-    return entity.getId();
+    return new FieldValue(entity.getId());
   }
 
   /**
@@ -177,16 +177,16 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
           if (entity == null)
           {
             throw new ProgrammingErrorException("Unknown geo entity");
-//            entity = new GeoEntity();
-//            entity.setUniversal(universal);
-//            entity.setGeoId(this.generateGeoId());
-//            entity.getDisplayLabel().setDefaultValue(label);
-//            entity.apply();
-//
-//            entity.addLink(parent, LocatedIn.CLASS);
-//
-//            // Create a new geo entity problem
-//            GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);
+            // entity = new GeoEntity();
+            // entity.setUniversal(universal);
+            // entity.setGeoId(this.generateGeoId());
+            // entity.getDisplayLabel().setDefaultValue(label);
+            // entity.apply();
+            //
+            // entity.addLink(parent, LocatedIn.CLASS);
+            //
+            // // Create a new geo entity problem
+            // GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);
           }
 
           parent = entity;
@@ -343,10 +343,10 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
         context.add(label);
 
-//        if (universal.getId().equals(entityUniversal.getId()))
-//        {
-//          valid = false;
-//        }
+        // if (universal.getId().equals(entityUniversal.getId()))
+        // {
+        // valid = false;
+        // }
       }
     }
 

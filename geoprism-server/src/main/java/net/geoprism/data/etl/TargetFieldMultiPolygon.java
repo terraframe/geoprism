@@ -27,7 +27,7 @@ import com.vividsolutions.jts.geom.Point;
 public class TargetFieldMultiPolygon extends TargetFieldCoordinate implements TargetFieldIF
 {
   @Override
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
     Coordinate coord = super.getCoordinate(mdAttribute, source);
 
@@ -35,10 +35,10 @@ public class TargetFieldMultiPolygon extends TargetFieldCoordinate implements Ta
     {
       Point point = this.getGeometryFactory().createPoint(coord);
 
-      return this.getGeometryHelper().getGeoMultiPolygon(point);
+      return new FieldValue(this.getGeometryHelper().getGeoMultiPolygon(point));
     }
 
-    return null;
+    return new FieldValue();
   }
 
   @Override

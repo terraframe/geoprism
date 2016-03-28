@@ -57,7 +57,7 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
   }
 
   @Override
-  public Object getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
+  public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
     Coordinate coord = super.getCoordinate(mdAttribute, source);
 
@@ -77,7 +77,7 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
         {
           GeoEntity entity = it.next();
 
-          return entity.getId();
+          return new FieldValue(entity.getId());
         }
       }
       finally
@@ -86,7 +86,7 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
       }
     }
 
-    return this.country.getId();
+    return new FieldValue(this.country.getId(), true);
   }
 
   @Override
