@@ -43,7 +43,8 @@ var MapConfig ={
     		"LAYER_SOURCE_OPTIONS":{},
             "URL":"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             "DEFAULT":"true",
-            "VISIBLE":"true"
+            "VISIBLE":"true",
+            "ENABLED":"true"
     	},
     	{
     		"NAME":"MapQuest",
@@ -55,7 +56,8 @@ var MapConfig ={
     		"LAYER_SOURCE_OPTIONS":{"layer":"sat"},
             "URL":"",
             "DEFAULT":"false",
-            "VISIBLE":"true"
+            "VISIBLE":"true",
+            "ENABLED":"false"
     	},
     	{
     		"NAME":"MapQuest Hybrid",
@@ -65,6 +67,7 @@ var MapConfig ={
     		"LOCLIZATION_KEY":"mqHybrid",
     		"DEFAULT":"false",
             "VISIBLE":"true",
+            "ENABLED":"false",
     		"GROUP_LAYERS":[
     			{
     				"LAYER_TYPE":"Tile",
@@ -97,19 +100,47 @@ var MapConfig ={
             		  },
             "URL":"",
             "DEFAULT":"false",
-            "VISIBLE":"true"
+            "VISIBLE":"true",
+            "ENABLED":"true"
     	},
     	{
-    		"NAME":"Google Aerial",
+    		"NAME":"Google Satellite",
     		"LOCLIZATION_KEY":"googleSatellite",
     		"LAYER_TYPE":"Google",
     		"LAYER_TYPE_OPTIONS":{},
     		"CUSTOM_TYPE_OPTIONS":{},
-    		"LAYER_SOURCE_TYPE":"Google",
+    		"LAYER_SOURCE_TYPE":"GoogleSatellite",
     		"LAYER_SOURCE_OPTIONS":{},
             "URL":"",
             "DEFAULT":"false",
-            "VISIBLE":"true"
+            "VISIBLE":"true",
+            "ENABLED":"true"
+    	},
+    	{
+    		"NAME":"Google Streets",
+    		"LOCLIZATION_KEY":"googleStreets",
+    		"LAYER_TYPE":"Google",
+    		"LAYER_TYPE_OPTIONS":{},
+    		"CUSTOM_TYPE_OPTIONS":{},
+    		"LAYER_SOURCE_TYPE":"GoogleStreets",
+    		"LAYER_SOURCE_OPTIONS":{},
+            "URL":"",
+            "DEFAULT":"false",
+            "VISIBLE":"true",
+            "ENABLED":"true"
+    	},
+    	{
+    		"NAME":"Google Terrain",
+    		"LOCLIZATION_KEY":"googleTerrain",
+    		"LAYER_TYPE":"Google",
+    		"LAYER_TYPE_OPTIONS":{},
+    		"CUSTOM_TYPE_OPTIONS":{},
+    		"LAYER_SOURCE_TYPE":"GoogleTerrain",
+    		"LAYER_SOURCE_OPTIONS":{},
+            "URL":"",
+            "DEFAULT":"false",
+            "VISIBLE":"true",
+            "ENABLED":"false"
     	}
     ]
 }

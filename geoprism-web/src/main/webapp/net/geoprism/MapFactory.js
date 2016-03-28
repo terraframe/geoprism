@@ -29,7 +29,10 @@
      "mqHybrid" : "MapQuest Hybrid",
      "attributionELTooltip" : "Map Attribution",
      "editFeature" : "Edit feature",
-     "bingAerial" : "Bing Satellite"
+     "bingAerial" : "Bing Satellite",
+     "googleSatellite" : "Google Satellite",
+     "googleStreets" : "Google Streets",
+     "googleTerrain" : "Google Terrain"
   });
     
   var MapWidget = Mojo.Meta.newClass('net.geoprism.gis.MapWidget', {
@@ -338,7 +341,7 @@
           if(oLayer != null && oLayer.showing == false) {
             var map = this.getMap();
             if(layer.layerType.toLowerCase() === "google"){
-            	// TODO: show it
+            	map.getLayers().insertAt(stackIndex, oLayer);
             }
             else if(stackIndex !== null && stackIndex >= 0){
               map.getLayers().insertAt(stackIndex, oLayer);
@@ -397,151 +400,131 @@
           
           for(var i=0; i<baseMapsArr.length; i++){
             var base = baseMapsArr[i];
-            
-            if(base.LAYER_TYPE.toLowerCase() === "tile"){
-              var baseObj = new ol.layer.Tile(
-                {visible: base.VISIBLE},
-                base.CUSTOM_TYPE_OPTIONS
-              );
-              
-              if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
-                
-                baseObj.setSource( 
-                  new ol.source.OSM(base.LAYER_SOURCE_OPTIONS)
-                );
-              }
-              else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
-                baseObj.setSource( 
-                  new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
-                );
-              }
-              else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "bing"){
-            	baseObj.setSource( 
-            	  new ol.source.BingMaps(base.LAYER_SOURCE_OPTIONS)
-            	);
-              }
-              
-              baseObj._gdbisdefault = base.DEFAULT;
-              baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
-              baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
-              baseObj.showing = false;
-              baseObj.removable = false;
-
-              // Add the baseObj to the layer cache
-              this._cache[i] = baseObj;
-                
-              var layer = {
-                layerId : i,
-                key : i,
-                isActive : false,
-                layerType : base.LAYER_SOURCE_TYPE,
-                layerLabel : this.localize(base.LOCLIZATION_KEY)
-              };
-              
-              layers.push(layer);
-            }
-            else if(base.LAYER_TYPE.toLowerCase() === "group"){
-              var layersArr = [];
-              
-              var baseObj = new ol.layer.Group(
-                  {visible: base.VISIBLE},
-                  {isdefault: base.DEFAULT},
-                  base.CUSTOM_TYPE_OPTIONS);
-              
-              for(var gi=0; gi<base.GROUP_LAYERS.length; gi++){
-                var layer = base.GROUP_LAYERS[gi];
-                
-                if(layer.LAYER_TYPE.toLowerCase() === "tile"){
-                  var layerObj =  new ol.layer.Tile(layer.LAYER_TYPE_OPTIONS);
-                  
-                  if(layer.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
-                    layerObj.setSource(new ol.source.MapQuest(layer.LAYER_SOURCE_OPTIONS));
-                  }
-                  
-                  layersArr.push(layerObj);
-                }
-              }
-              
-              baseObj.setLayers(new ol.Collection(layersArr));
-              baseObj.showing = false;
-              baseObj.removable = false;
-
-              // Add the baseObj to the layer cache
-              this._cache[i] = baseObj;              
-              
-              var layer = {
-                layerId : i,
-                key : i,
-                isActive : false,
-                layerType : base.LAYER_SOURCE_TYPE,
-                layerLabel : this.localize(base.LOCLIZATION_KEY)
-              };
-                    
-              layers.push(layer);
-            }
-            else if(base.LAYER_TYPE.toLowerCase() === "google"){
-                var baseObj = {visible: base.VISIBLE,
-                        isdefault: base.DEFAULT}
-                        
-                
-               var gmap = new google.maps.Map(document.getElementById('gmap'), {
-            	  disableDefaultUI: true,
-            	  keyboardShortcuts: true,
-            	  draggable: true,
-            	  disableDoubleClickZoom: false,
-            	  scrollwheel: true,
-            	  streetViewControl: false,
-            	  mapTypeId: google.maps.MapTypeId.SATELLITE
-            	});
-                
-//              var view = new ol.View({
-//          	  // make sure the view doesn't go beyond the 22 zoom levels of Google Maps
-//          	  maxZoom: 21
-//            });
-                
-                var view = this.getMap().getView();
-                
-	            view.on('change:center', function() {
-	          	  var center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
-	          	  gmap.setCenter(new google.maps.LatLng(center[1], center[0]));
-	            });
-	            view.on('change:resolution', function() {
-	          	  gmap.setZoom(view.getZoom());
-	            });
-	            
-	            var olMapDiv = document.getElementById('olmap');
-	            var map = new ol.Map({
-	            	  layers: [],
-	            	  interactions: ol.interaction.defaults({
-	            	    altShiftDragRotate: false,
-	            	    dragPan: false,
-	            	    rotate: false
-	            	  }).extend([new ol.interaction.DragPan({kinetic: null})]),
-	            	  target: olMapDiv,
-	            	  view: view
-	            	});
-	            	view.setCenter([0, 0]);
-	            	view.setZoom(1);
-	            
-	            olMapDiv.parentNode.removeChild(olMapDiv);
-	            gmap.controls[google.maps.ControlPosition.TOP_LEFT].push(olMapDiv);
-               
-               baseObj.showing = false;
-               baseObj.removable = false;
-
-               // Add the baseObj to the layer cache
-               this._cache[i] = baseObj;
-                 
-               var layer = {
-                 layerId : i,
-                 key : i,
-                 isActive : false,
-                 layerType : base.LAYER_SOURCE_TYPE,
-                 layerLabel : this.localize(base.LOCLIZATION_KEY),
-                 layerObj : map
-               };
-               
-               layers.push(layer);
+            if(base.ENABLED === "true"){
+	            if(base.LAYER_TYPE.toLowerCase() === "tile"){
+	              var baseObj = new ol.layer.Tile(
+	                {visible: base.VISIBLE},
+	                base.CUSTOM_TYPE_OPTIONS
+	              );
+	              
+	              if(base.LAYER_SOURCE_TYPE.toLowerCase() === "osm"){
+	                
+	                baseObj.setSource( 
+	                  new ol.source.OSM(base.LAYER_SOURCE_OPTIONS)
+	                );
+	              }
+	              else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+	                baseObj.setSource( 
+	                  new ol.source.MapQuest(base.LAYER_SOURCE_OPTIONS)
+	                );
+	              }
+	              else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "bing"){
+	            	baseObj.setSource( 
+	            	  new ol.source.BingMaps(base.LAYER_SOURCE_OPTIONS)
+	            	);
+	              }
+	              
+	              baseObj._gdbisdefault = base.DEFAULT;
+	              baseObj._gdbcustomtype = base.LAYER_SOURCE_TYPE;
+	              baseObj._gdbCustomLabel = this.localize(base.LOCLIZATION_KEY);
+	              baseObj.showing = false;
+	              baseObj.removable = false;
+	
+	              // Add the baseObj to the layer cache
+	              this._cache[i] = baseObj;
+	                
+	              var layer = {
+	                layerId : i,
+	                key : i,
+	                isActive : false,
+	                layerType : base.LAYER_SOURCE_TYPE,
+	                layerLabel : this.localize(base.LOCLIZATION_KEY)
+	              };
+	              
+	              layers.push(layer);
+	            }
+	            else if(base.LAYER_TYPE.toLowerCase() === "group"){
+	              var layersArr = [];
+	              
+	              var baseObj = new ol.layer.Group(
+	                  {visible: base.VISIBLE},
+	                  {isdefault: base.DEFAULT},
+	                  base.CUSTOM_TYPE_OPTIONS);
+	              
+	              for(var gi=0; gi<base.GROUP_LAYERS.length; gi++){
+	                var layer = base.GROUP_LAYERS[gi];
+	                
+	                if(layer.LAYER_TYPE.toLowerCase() === "tile"){
+	                  var layerObj =  new ol.layer.Tile(layer.LAYER_TYPE_OPTIONS);
+	                  
+	                  if(layer.LAYER_SOURCE_TYPE.toLowerCase() === "mapquest"){
+	                    layerObj.setSource(new ol.source.MapQuest(layer.LAYER_SOURCE_OPTIONS));
+	                  }
+	                  
+	                  layersArr.push(layerObj);
+	                }
+	              }
+	              
+	              baseObj.setLayers(new ol.Collection(layersArr));
+	              baseObj.showing = false;
+	              baseObj.removable = false;
+	
+	              // Add the baseObj to the layer cache
+	              this._cache[i] = baseObj;              
+	              
+	              var layer = {
+	                layerId : i,
+	                key : i,
+	                isActive : false,
+	                layerType : base.LAYER_SOURCE_TYPE,
+	                layerLabel : this.localize(base.LOCLIZATION_KEY)
+	              };
+	                    
+	              layers.push(layer);
+	            }
+	            else if(base.LAYER_TYPE.toLowerCase() === "google"){
+	            	var baseObj;
+	            	
+	            	if(base.LAYER_SOURCE_TYPE.toLowerCase() === "googlesatellite"){
+		                baseObj = new olgm.layer.Google(
+		                	{mapTypeId: google.maps.MapTypeId.SATELLITE},
+		                    {visible: base.VISIBLE},
+		                	{isdefault: base.DEFAULT},
+		                    base.CUSTOM_TYPE_OPTIONS
+		                 );       
+	            	}
+	            	else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "googlestreets"){
+		                baseObj = new olgm.layer.Google(
+			                    {visible: base.VISIBLE},
+			                	{isdefault: base.DEFAULT},
+			                    base.CUSTOM_TYPE_OPTIONS
+			                 );   
+	            	}
+	            	else if(base.LAYER_SOURCE_TYPE.toLowerCase() === "googleterrain"){
+		                baseObj = new olgm.layer.Google(
+		                		{mapTypeId: google.maps.MapTypeId.TERRAIN},
+			                    {visible: base.VISIBLE},
+			                	{isdefault: base.DEFAULT},
+			                    base.CUSTOM_TYPE_OPTIONS
+			                 );   
+	            	}
+	                
+	               baseObj.showing = false;
+	               baseObj.removable = false;
+	
+	               // Add the baseObj to the layer cache
+	               this._cache[i] = baseObj;
+	                 
+	               var layer = {
+	                 layerId : i,
+	                 key : i,
+	                 isActive : false,
+	                 layerType : base.LAYER_SOURCE_TYPE,
+	                 layerLabel : this.localize(base.LOCLIZATION_KEY)
+	               };
+	               
+	               layers.push(layer);
+	            }
             }
           }
           
@@ -754,19 +737,36 @@
               maxZoom: 20
           });
           
+          var mapConfig = {
+                layers: [], // base maps will be added later
+                controls: ol.control.defaults({ attribution: false }).extend([attribution]),
+                target: this.getMapElementId(),
+                loadTilesWhileInteracting: true,
+                loadTilesWhileAnimating: true,
+                view: view
+              }
           
-          var map = new ol.Map({
-            layers: [ ], // base maps will be added later
-            controls: ol.control.defaults({ attribution: false }).extend([attribution]),
-            target: this.getMapElementId(),
-            loadTilesWhileInteracting: true,
-            loadTilesWhileAnimating: true,
-            view: view
-          });
+          var googleEnabled = false;
+          var baseMaps = MapConfig._BASEMAPS;
+          for(var i=1; i<baseMaps.length; i++){
+        	  var base = baseMaps[i];
+        	  if(base.LAYER_TYPE.toLowerCase() === "google"){
+        		  googleEnabled = true;
+        		  mapConfig.interactions = olgm.interaction.defaults();
+        		  break;
+        	  }
+          }
           
+          var map = new ol.Map(mapConfig);
+          
+          if(googleEnabled){
+        	  var olGM = new olgm.OLGoogleMaps({map: map});
+        	  olGM.activate();
+          }
         	
           this.setMap(map);
           this.configureMap();     
+          
         },
         
         setClickHandler : function(handler) {
