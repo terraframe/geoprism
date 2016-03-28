@@ -154,6 +154,7 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDisplayLabelDTO.CLASS);   
     types.add(DashboardController.CLASS);
     types.add(DataUploaderController.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
