@@ -864,7 +864,7 @@
       
       $scope.page = {
         snapshots : [],     
-        current : 'INITIAL',
+        current : 'BEGINNING-INFO',
       };
       
       if($scope.sheet.matches.length > 0) {
