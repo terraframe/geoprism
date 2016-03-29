@@ -121,7 +121,7 @@
       return false;
     }
     
-    $scope.$on('closeUploader', function(event, data){    
+    $scope.$on('datasetChange', function(event, data){    
       if(data.datasets != null) {
         controller.addDatasets(data.datasets);
       }

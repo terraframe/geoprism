@@ -19,12 +19,17 @@
 package net.geoprism.data.etl;
 
 import java.util.Collection;
+import java.util.List;
+
+import net.geoprism.MappableClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 
 public class ProblemResponse implements ImportResponseIF
 {
@@ -57,14 +62,36 @@ public class ProblemResponse implements ImportResponseIF
 
   public JSONObject toJSON() throws JSONException
   {
+    /*
+     * Return a JSONArray of the datasets which were created a part of the import. Do not include datasets which have
+     * already been created.
+     */
+    JSONArray datasets = new JSONArray();
+
+    List<TargetDefinitionIF> definitions = tContext.getDefinitions();
+
+    for (TargetDefinitionIF definition : definitions)
+    {
+      if (definition.isNew())
+      {
+        String type = definition.getTargetType();
+
+        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
+        MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
+
+        datasets.put(mClass.toJSON());
+      }
+    }
+
     JSONObject object = new JSONObject();
     object.put("success", false);
     object.put("sheets", this.getSheetsJSON());
     object.put("problems", this.getProblemsJSON());
+    object.put("datasets", datasets);
 
     return object;
   }
-  
+
   @Override
   public boolean hasProblems()
   {

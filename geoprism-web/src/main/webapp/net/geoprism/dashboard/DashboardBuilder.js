@@ -201,14 +201,16 @@
       controller.load(null);
     });
     
-    $rootScope.$on('closeUploader', function(event, data){
+    $rootScope.$on('datasetChange', function(event, data){
     	
       if(data.datasets != null) {
         controller.addDatasets(data.datasets);    	  
       }
       
-      $scope.hidden = false;
-      $scope.$apply();
+      if(data.finished) {
+        $scope.hidden = false;
+        $scope.$apply();        
+      }
     }); 
     
     // Initialize an empty controller

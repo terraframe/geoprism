@@ -799,7 +799,7 @@
         if(result.success) {          
           controller.clear();
           
-          $scope.$emit('closeUploader', {datasets:result.datasets});          
+          $scope.$emit('datasetChange', {datasets:result.datasets, finished : true});          
         }
         else {          
           $scope.page.current = 'GEO-VALIDATION';
@@ -808,6 +808,8 @@
           $scope.sheets = result.sheets;
           $scope.sheet = $scope.sheets[0];
           $scope.problems = result.problems;
+          
+          $scope.$emit('datasetChange', {datasets:result.datasets, finished : false});
         }
         
         $scope.$apply();
@@ -831,7 +833,7 @@
       var onSuccess = function(result) {
         controller.clear();
           
-        $scope.$emit('closeUploader', {});                
+        $scope.$emit('datasetChange', {finished : true});                
             
         $scope.$apply();
       }
