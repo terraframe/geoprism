@@ -561,17 +561,6 @@
     var controller = this;
     
     controller.initialize = function() {        
-      $scope.coordinate = {
-        label : "",
-        latitude : "",
-        longitude : "",
-        featureLabel : "",
-        location : "",
-        featureId : "",
-        id : -1
-      };      
-      
-      $scope.latitudes = [];
       $scope.longitudes = [];
       $scope.featureLabels = [];
       $scope.locations = [];
@@ -598,7 +587,21 @@
         var field = $scope.sheet.fields[i];
         
         if(field.type == 'LATITUDE') {
-          $scope.latitudes.push(field);          
+        	
+          if(!controller.hasCoordinateField(field)) {
+            var coordinate = {
+              label : "",
+              latitude : field.label,
+              longitude : "",
+              featureLabel : "",
+              location : "",
+              featureId : "",
+              id : field.label
+            };
+            
+            $scope.sheet.coordinates.ids.push(coordinate.id);
+            $scope.sheet.coordinates.values[coordinate.id] = coordinate;                          
+          }
         }
         else if(field.type == 'LONGITUDE') {
           $scope.longitudes.push(field);          
@@ -624,49 +627,22 @@
       }
     }
     
+    controller.hasCoordinateField = function(field) {
+      for(var i = 0; i < $scope.sheet.coordinates.ids.length; i++) {
+        var id = $scope.sheet.coordinates.ids[i];
+        
+        if(id === field.label) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
     controller.isBasic = function(field) {
       return (field.type == 'TEXT' || field.type == 'LONG' || field.type == 'DOUBLE');  
     }
-    
-    controller.edit = function(coordinate) {
-      $scope.coordinate = angular.copy(coordinate);
-    }
-    
-    controller.remove = function(coordinate) {
-      if($scope.sheet.coordinates.values[coordinate.id] != null) {
         
-        delete $scope.sheet.coordinates.values[coordinate.id];        
-        $scope.sheet.coordinates.ids.splice( $.inArray(coordinate.id, $scope.sheet.coordinates.ids), 1 );
-        
-        // Update the field.selected status
-        controller.setFieldSelected();
-      }
-    }
-    
-    controller.newCoordinate = function() {
-      if($scope.coordinate.id == -1) {
-        $scope.coordinate.id = runwayService.generateId();      
-        $scope.sheet.coordinates.ids.push($scope.coordinate.id);
-        $scope.sheet.coordinates.values[$scope.coordinate.id] = {};              
-      }     
-      
-      var coordinate = $scope.sheet.coordinates.values[$scope.coordinate.id];      
-      angular.copy($scope.coordinate, coordinate);              
-      
-      $scope.coordinate = {
-        label : "",
-        latitude : "",
-        longitude : "",
-        featureLabel : "",
-        location : "",
-        featureId : "",
-        id : -1
-      };  
-      
-      // Update the field.selected status
-//      controller.setFieldSelected();
-    }
-    
     controller.isUniqueLabel = function(label) {
       if($scope.sheet != null) {
         var count = 0;
@@ -699,7 +675,7 @@
           }            
         }
         
-        if(count > 0) {
+        if(count > 1) {
           return false;
         }
       }  
@@ -910,8 +886,8 @@
         $scope.page.snapshots.push(snapshot);
       }
       else if($scope.page.current == 'BEGINNING-INFO') {
-      $scope.page.current = 'INITIAL'; 
-      $scope.currentStep = -1;
+        $scope.page.current = 'INITIAL'; 
+        $scope.currentStep = -1;
       }
       else if($scope.page.current == 'INITIAL') {
         // Go to fields page  
@@ -991,7 +967,7 @@
     }
     
     controller.prev = function() {
-      if($scope.page.current === "SUMMARY") {
+      if($scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO") {
         controller.handlePrev();    	  
       }
       else {
