@@ -769,7 +769,7 @@
     }   
   }  
 
-  function UploaderDialogController($scope, $rootScope, datasetService) {
+  function UploaderDialogController($scope, $rootScope, datasetService, runwayService) {
     var controller = this;
     
     // AttributePageController emit's event when user toggles attribute types between location and non-location types
@@ -991,6 +991,34 @@
     }
     
     controller.prev = function() {
+      if($scope.page.current === "SUMMARY") {
+        controller.handlePrev();    	  
+      }
+      else {
+        var title = com.runwaysdk.Localize.localize("dataUploader", "prevDialogTitle");
+        
+        var message = com.runwaysdk.Localize.localize("dataUploader", "prevDialogContent");
+        
+        var buttons = [];
+        buttons.push({
+          label : com.runwaysdk.Localize.localize("dataUploader", "ok"),
+          config : {class:'btn btn-primary'},
+          callback : function(){
+            controller.handlePrev();
+            
+            $scope.$apply();
+          }
+        });
+        buttons.push({
+          label : com.runwaysdk.Localize.localize("dataUploader", "cancel"),
+          config : {class:'btn'},
+        });
+        
+        runwayService.createDialog(title, message, buttons);      
+      }
+    }
+    
+    controller.handlePrev = function() {
       if($scope.page.snapshots.length > 0) { 
         if($scope.page.current == 'INITIAL') {
           $scope.page.current = 'BEGINNING-INFO'; 
@@ -1035,8 +1063,7 @@
       }
       else if($scope.page.current === "INITIAL"){
         $scope.currentStep = 0;
-      }
-      
+      }      
     }
     
     controller.hasLocationField = function() {
