@@ -51,6 +51,7 @@
         this._parser = Globalize.numberParser();
         this._formatter = Globalize.numberFormatter();    
       },
+      
       _validateInteger : function (value) {
         var number = this._parser( value );
             

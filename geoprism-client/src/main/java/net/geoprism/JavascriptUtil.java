@@ -283,9 +283,9 @@ public class JavascriptUtil implements Reloadable
   public static void loadDatasets(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-    types.add(DataSetController.CLASS);
-    types.add(DataUploaderController.CLASS);
-    types.add(GeoEntityUtilDTO.CLASS);
+//    types.add(DataSetController.CLASS);
+//    types.add(DataUploaderController.CLASS);
+//    types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

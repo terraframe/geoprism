@@ -30,7 +30,7 @@
             onFailure(e);
           }
           else {
-        	  GDB.ExceptionHandler.handleException(e);
+            GDB.ExceptionHandler.handleException(e);
           }
         }
       });
@@ -50,7 +50,7 @@
               onFailure(e);
             }
             else {
-            	GDB.ExceptionHandler.handleException(e);
+              GDB.ExceptionHandler.handleException(e);
             }
           }
         }, elementId);
@@ -171,8 +171,8 @@
             }
           }
           else if(attributeDTO instanceof com.runwaysdk.transport.attributes.AttributeEnumerationDTO) {
-        	attributeDTO.clear();
-        	
+          attributeDTO.clear();
+          
             attributeDTO.add(value);            
           }
           else {
@@ -222,30 +222,36 @@
       }      
     }
     
-    service.createDialog = function(title, content, buttons) {
-      var fac = com.runwaysdk.ui.Manager.getFactory();
-        
-      var dialog = fac.newDialog(title, {modal: true});
-      dialog.appendContent(content);
+    service.loadClass = function(type, onSuccess, onFailure) {
+      if (!Mojo.Meta.classExists(type)) {
+        var request = service.createRequest(onSuccess, onFailure);
+              
+        com.runwaysdk.Facade.importTypes(request, [type], {autoEval : true});
+      }
+      else {
+        onSuccess();
+      }
+    }
+            
+    service.loadDependencies = function(dependencies, onSuccess, onFailure) {
+      var types = [];
       
-      for(var i = 0; i < buttons.length; i++) {
-        service.addButton(dialog, buttons[i]);
+      for(var i = 0; i < dependencies.length; i++) {
+        if(!Mojo.Meta.classExists(dependencies[i])) {
+          types.push(dependencies[i]);
+        }
       }
       
-      dialog.setStyle('z-index', '99999');
-      dialog.render();    	
+      if (types.length > 0) {
+        var request = service.createRequest(onSuccess, onFailure);
+        
+        com.runwaysdk.Facade.importTypes(request, types, {autoEval : true});
+      }
+      else {
+        onSuccess();
+      }
     }
     
-    service.addButton = function(dialog, button) {
-      dialog.addButton(button.label, function() {
-        dialog.close();
-            
-        if(button.callback != null) {
-          button.callback();            
-        }
-      }, null, button.config);      
-    }
-        
     return service;  
   }
   
