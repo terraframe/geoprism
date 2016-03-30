@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DatasetController($scope, $timeout, datasetService, runwayService) {
+  function DatasetController($scope, $timeout, datasetService, localizationService, runwayService) {
     var controller = this;
     
     controller.init = function() {
@@ -43,14 +43,14 @@
     }
     
     controller.remove = function(dataset) {
-      var title = com.runwaysdk.Localize.localize("dataset", "deleteDatasetTitle", "Delete dataset");
+      var title = localizationService.localize("dataset", "deleteDatasetTitle", "Delete dataset");
 
-      var message = com.runwaysdk.Localize.localize("dataset", "removeContent", "Are you sure you want to delete the dataset [{0}]?");
+      var message = localizationService.localize("dataset", "removeContent", "Are you sure you want to delete the dataset [{0}]?");
       message = message.replace('{0}', dataset.label);
       
       var buttons = [];
       buttons.push({
-    	label : com.runwaysdk.Localize.localize("dataset", "delete", "Delete"),
+    	label : localizationService.localize("dataset", "delete", "Delete"),
     	config : {class:'btn btn-primary'},
         callback : function(){
           var onSuccess = function() {
@@ -68,7 +68,7 @@
         }                	  
       });
       buttons.push({
-        label : com.runwaysdk.Localize.localize("dataset", "cancel", "Cancel"),
+        label : localizationService.localize("dataset", "cancel", "Cancel"),
         config : {class:'btn'},
       });
       
@@ -130,7 +130,7 @@
     controller.init();
   }
 
-  angular.module("data-set", ["data-uploader", "dataset-service", "styled-inputs", 'ngFileUpload']);
+  angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "runway-service"]);
   angular.module("data-set")
   .controller('DatasetController', DatasetController)
 })();

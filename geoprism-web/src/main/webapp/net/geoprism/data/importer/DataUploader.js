@@ -1150,7 +1150,7 @@
   };  
   
   
-  angular.module("data-uploader", ["dataset-service", "styled-inputs", "runway-service"]);
+  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "runway-service"]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchPage', MatchPage)
