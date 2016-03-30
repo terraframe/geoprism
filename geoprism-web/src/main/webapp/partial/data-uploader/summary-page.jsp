@@ -21,6 +21,14 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
+  <div class="label-holder">
+    <strong> </strong>
+  </div>
+  <div class="holder">
+    <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.summary.heading.paragraph"/></p>
+    </div>
+  </div>
   <div ng-if="ctrl.hasFieldType('TEXT')">
 	  <div class="label-holder">
 	    <strong><gdb:localize key="dataUploader.summaryTextLabel"/></strong>
@@ -31,15 +39,15 @@
 	         	<thead> 
 	         		<tr>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+<%-- 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th> --%>
 	         		</tr>
 	         	</thead>
 	         	<tbody>	
 	         		<tr ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field) && field.type === 'TEXT'">
 	         			<td>{{field.label}}</td>
-	         			<td>
-	            			<div><gdb:localize key="dataUploader.text"/></div>
-	          			</td>          
+<!-- 	         			<td> -->
+<%-- 	            			<div><gdb:localize key="dataUploader.text"/></div> --%>
+<!-- 	          			</td>           -->
 	         		</tr>
 	         	</tbody>
 	         </table>
@@ -57,15 +65,15 @@
 	         	<thead> 
 	         		<tr>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+<%-- 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th> --%>
 	         		</tr>
 	         	</thead>
 	         	<tbody>	
 	         		<tr ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field) && field.type === 'CATEGORY'">
 	         			<td>{{field.label}}</td>
-	         			<td>
-	            			<div><gdb:localize key="dataUploader.category"/></div>
-	          			</td>          
+<!-- 	         			<td> -->
+<%-- 	            			<div><gdb:localize key="dataUploader.category"/></div> --%>
+<!-- 	          			</td>           -->
 	         		</tr>
 	         	</tbody>
 	         </table>
@@ -110,15 +118,15 @@
 	         	<thead> 
 	         		<tr>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+<%-- 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th> --%>
 	         		</tr>
 	         	</thead>
 	         	<tbody>	
 	         		<tr ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field) && field.type === 'BOOLEAN'">
 	         			<td>{{field.label}}</td>
-	         			<td>
-	            			<div><gdb:localize key="dataUploader.boolean"/></div>
-	          			</td>          
+<!-- 	         			<td> -->
+<%-- 	            			<div><gdb:localize key="dataUploader.boolean"/></div> --%>
+<!-- 	          			</td>           -->
 	         		</tr>
 	         	</tbody>
 	         </table>
@@ -136,15 +144,15 @@
 	         	<thead> 
 	         		<tr>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+<%-- 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th> --%>
 	         		</tr>
 	         	</thead>
 	         	<tbody>	
 	         		<tr ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field) && field.type === 'DATE'">
 	         			<td>{{field.label}}</td>
-	         			<td>
-	            			<div><gdb:localize key="dataUploader.date"/></div>
-	          			</td>          
+<!-- 	         			<td> -->
+<%-- 	            			<div><gdb:localize key="dataUploader.date"/></div> --%>
+<!-- 	          			</td>           -->
 	         		</tr>
 	         	</tbody>
 	         </table>
@@ -162,7 +170,7 @@
 	         	<thead> 
 	         		<tr>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+<%-- 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th> --%>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.textLocRefFields.label"/></th>
 	         		</tr>
 	         	</thead>
@@ -171,7 +179,7 @@
 	         		<!-- TEXT BASED LOCATION FIELDS -->
 	       			<tr ng-repeat="id in sheet.attributes.ids" ng-init="attribute = sheet.attributes.values[id]">
 	          			<td>{{attribute.label}}</td>
-	          			<td><gdb:localize key="dataUploader.summary.textLocation.label"/></td>
+<%-- 	          			<td><gdb:localize key="dataUploader.summary.textLocation.label"/></td> --%>
 	          			<td>
 			          		<table class="table table-bordered location-summary-sub-table"> 
 			          			<tbody>
@@ -198,7 +206,7 @@
 	         	<thead> 
 	         		<tr>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+<%-- 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th> --%>
 	         			<th><gdb:localize key="dataUploader.summary.tableHeading.coordLocRefFields.label"/></th>
 	         		</tr>
 	         	</thead>
@@ -207,7 +215,7 @@
 					<!-- COORDINATE LOCATION FIELDS -->
 			        <tr ng-repeat="id in sheet.coordinates.ids" ng-init="coordinate = sheet.coordinates.values[id]">
 			          	<td>{{coordinate.label}}</td>
-			          	<td><gdb:localize key="dataUploader.summary.coordinateLocation.label"/></td>
+<%-- 			          	<td><gdb:localize key="dataUploader.summary.coordinateLocation.label"/></td> --%>
 			          	<td> 
 			          		<table class="table table-bordered location-summary-sub-table"> 
 					         	<thead> 
