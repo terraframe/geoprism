@@ -53,6 +53,10 @@
             
       return null;
     }
+    
+    service.localize = function(bundle, key) {
+      return com.runwaysdk.Localize.localize(bundle, key);
+    }
 
     return service;
   }

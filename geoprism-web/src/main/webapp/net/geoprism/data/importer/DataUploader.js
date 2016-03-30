@@ -745,7 +745,7 @@
     }   
   }  
 
-  function UploaderDialogController($scope, $rootScope, datasetService, runwayService) {
+  function UploaderDialogController($scope, $rootScope, datasetService, localizationService, runwayService) {
     var controller = this;
     
     // AttributePageController emit's event when user toggles attribute types between location and non-location types
@@ -973,13 +973,13 @@
         controller.handlePrev();    	  
       }
       else {
-        var title = com.runwaysdk.Localize.localize("dataUploader", "prevDialogTitle");
+        var title = localizationService.localize("dataUploader", "prevDialogTitle");
         
-        var message = com.runwaysdk.Localize.localize("dataUploader", "prevDialogContent");
+        var message = localizationService.localize("dataUploader", "prevDialogContent");
         
         var buttons = [];
         buttons.push({
-          label : com.runwaysdk.Localize.localize("dataUploader", "ok"),
+          label : localizationService.localize("dataUploader", "ok"),
           config : {class:'btn btn-primary'},
           callback : function(){
             controller.handlePrev();
@@ -988,7 +988,7 @@
           }
         });
         buttons.push({
-          label : com.runwaysdk.Localize.localize("dataUploader", "cancel"),
+          label : localizationService.localize("dataUploader", "cancel"),
           config : {class:'btn'},
         });
         
