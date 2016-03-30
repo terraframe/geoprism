@@ -21,35 +21,35 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
-  <ng-form name="ctrl.coordinateForm" isolate-form>
+  <div ng-repeat="id in sheet.coordinates.ids" ng-init="coordinate = sheet.coordinates.values[id]">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.coordinateCreatorWidgetLabel"/></strong>
+      <strong ng-if="$index == 0"><gdb:localize key="dataUploader.coordinateCreatorWidgetLabel"/></strong>
     </div>
     <div class="holder">
       <div class="location-selector-container">
 	      <span class="text">
-	        <input ng-model="coordinate.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
+	        <input ng-model="coordinate.label" name="{{::$index + '-label'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
 	      </span>
 	      <div class="error-message">
-	        <p ng-show="ctrl.coordinateForm.label.$error.unique">
+	        <p ng-show="form[$index + '-label'].$error.unique">
 	          <gdb:localize key="dataUploader.unique"/>
 	        </p>    
 	      </div>   
 	              
 	      <div class="row-holder">
 	      	<p class="select-label"><gdb:localize key="dataUploader.latitude"/></p>
-	        <div class="box">
-	          <select class="select-area"  name="latitude" ng-model="coordinate.latitude" ng-required="true" ng-options="opt.label as opt.label for opt in latitudes">
-	            <option value=""></option>
-	          </select>
+	        <div class="inline-text" style="padding-right: 26px">
+            <input ng-model="coordinate.latitude" name="{{::$index + '-latitude'}}" ng-required="true" type="text" disabled="disabled"></input>
 	        </div>
+<!-- 
 	        <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.latFieldHelpToolTip"/>"></i>      
+ -->	        
 	      </div>
 	
 	      <div class="row-holder">
 	        <p class="select-label"><gdb:localize key="dataUploader.longitude"/></p>
 	        <div class="box">
-	          <select class="select-area"  name="longitude" ng-model="coordinate.longitude" ng-required="true" ng-options="opt.label as opt.label for opt in longitudes">
+	          <select class="select-area" name="{{::$index + '-longitude'}}" ng-model="coordinate.longitude" ng-required="true" ng-options="opt.label as opt.label for opt in longitudes">
 	            <option value=""></option>
 	          </select>
 	        </div>
@@ -59,7 +59,7 @@
 	      <div class="row-holder">
 	        <p class="select-label"><gdb:localize key="dataUploader.featureLabel"/></p>
 	        <div class="box">
-	          <select class="select-area"  name="featureLabel" ng-model="coordinate.featureLabel" ng-required="true" ng-options="opt.label as opt.label for opt in featureLabels">
+	          <select class="select-area" name="{{::$index + '-featureLabel'}}" ng-model="coordinate.featureLabel" ng-required="true" ng-options="opt.label as opt.label for opt in featureLabels">
 	            <option value=""></option>
 	          </select>
 	        </div> 
@@ -67,61 +67,30 @@
 	      </div>
 	      
 	      <div class="row-holder">
-	        <p class="select-label"><gdb:localize key="dataUploader.associatedUniversal"/></p>
-	        <div class="box">
-	          <select class="select-area" ng-model="coordinate.universal" name="universal" ng-options="opt.value as opt.label for opt in universals" ng-change="coordinate.location = null" ng-required="true">
-	            <option value=""></option>          
-	          </select>
-	        </div>   
-	        <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.assocUniversalieldHelpToolTip"/>"></i>   
-	      </div>
-	      
-	      <div class="row-holder">
 	        <p class="select-label"><gdb:localize key="dataUploader.locationAttribute"/></p>
 	        <div class="box">
-	          <select class="select-area" ng-model="coordinate.location" name="location" ng-required="true">
+	          <select class="select-area" ng-model="coordinate.location" name="{{::$index + '-location'}}" ng-change="coordinate.universal = ''" ng-required="true">
 	            <option value=""></option>          
 	            <option value="DERIVE"><gdb:localize key="dataUploader.deriveLocation"/></option>
-	            <option ng-repeat="location in locations" ng-if="location.universal == coordinate.universal" value="{{location.label}}">{{location.label}}</option>          
+	            <option ng-repeat="location in locations" value="{{location.label}}">{{location.label}}</option>          
 	          </select>          
 	        </div> 
 	        <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locAttrFieldHelpToolTip"/>"></i>     
-	      </div>
-	      <div class="row-holder">
-	        <div class="button-holder">
-	          <input type="button" value="+" class="btn btn-primary set-location-btn pull-right"  ng-click="ctrl.newCoordinate()" ng-disabled="ctrl.coordinateForm.$invalid" />
-	        </div>
-	      </div>  
-	            
+	      </div>	            
+	      
+        <div class="row-holder" ng-show="coordinate.location == 'DERIVE'">
+          <p class="select-label"><gdb:localize key="dataUploader.associatedUniversal"/></p>
+          <div class="box">
+            <select class="select-area" ng-model="coordinate.universal" name="{{::$index + '-universal'}}" ng-options="opt.value as opt.label for opt in universals" ng-required="coordinate.location == 'DERIVE'">
+              <option value=""></option>          
+            </select>
+          </div>   
+          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.assocUniversalieldHelpToolTip"/>"></i>   
+        </div>        	      
 	   </div>  <!-- end location-selector-container -->
     </div>  <!-- end holder -->
-  </ng-form>  
+  </div>
 
-  <div ng-if="sheet.coordinates.ids.length > 0">
-    <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.attributes"/></strong>
-    </div>
-    <div class="holder">
-      <div class="row-holder">
-         <div ng-repeat="id in sheet.coordinates.ids" ng-init="coordinate = sheet.coordinates.values[id]" class="location-field-info-card">
-            <h3 class="location-field-info-card-title">{{coordinate.label}}</h3>
-            <div class="cell">            
-            	<a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(coordinate)" title="<gdb:localize key="dataUploader.editToolTip"/>"></a>
-            	<a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(coordinate)" title="<gdb:localize key="dataUploader.deleteToolTip"/>"></a>
-          	</div>
-          	
-            <ul class="location-field-list-display">
-              <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.latitude"/> : {{coordinate.latitude}}</li>
-              <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.longitude"/> : {{coordinate.longitude}}</li>
-              <li><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.featureLabel"/> : {{coordinate.featureLabel}}</li>
-              <li ng-if="coordinate.location != 'DERIVE'"><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.locationAttribute"/> : {{coordinate.location}}</li>
-              <li ng-if="coordinate.location == 'DERIVE'"><i class="fa fa-check-square"></i><gdb:localize key="dataUploader.locationAttribute"/> : <gdb:localize key="dataUploader.deriveLocation"/></li>
-            </ul>   
-        </div>
-      
-      </div>  <!-- end row-holder   -->
-    </div>  <!-- end holder   -->
-  </div>  <!-- end ng-if   -->
   <div class="label-holder"></div>
   <div class="holder">
     <div class="error-message">

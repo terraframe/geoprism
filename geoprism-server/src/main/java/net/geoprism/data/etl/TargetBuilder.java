@@ -267,7 +267,10 @@ public class TargetBuilder
         JSONObject cField = values.getJSONObject(id);
         String universalId = cField.getString("universal");
 
-        lowest = this.setLowest(lowest, universalId);
+        if (universalId != null && universalId.length() > 0)
+        {
+          lowest = this.setLowest(lowest, universalId);
+        }
 
         TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
         TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);

@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DatasetController($scope, $timeout, datasetService) {
+  function DatasetController($scope, $timeout, datasetService, runwayService) {
     var controller = this;
     
     controller.init = function() {
@@ -29,7 +29,7 @@
         $scope.$apply();
       };
       
-      datasetService.getAll(onSuccess);	
+      datasetService.getAll(onSuccess);
     }
     
     controller.getIndex = function(dataset) {
@@ -43,39 +43,36 @@
     }
     
     controller.remove = function(dataset) {
-      var fac = com.runwaysdk.ui.Manager.getFactory();
-        
+      var title = com.runwaysdk.Localize.localize("dataset", "deleteDatasetTitle", "Delete dataset");
+
       var message = com.runwaysdk.Localize.localize("dataset", "removeContent", "Are you sure you want to delete the dataset [{0}]?");
       message = message.replace('{0}', dataset.label);
       
-      var onRemove = function(){
-        dialog.close();
-        
-        var onSuccess = function() {
-          // Find and remove the dataset from the datasets array         
-          var index = controller.getIndex(dataset);
-        
-          if(index != null) {
-            $scope.datasets.splice(index, 1);        
-          }
-          
-          $scope.$apply();
-        }
+      var buttons = [];
+      buttons.push({
+    	label : com.runwaysdk.Localize.localize("dataset", "delete", "Delete"),
+    	config : {class:'btn btn-primary'},
+        callback : function(){
+          var onSuccess = function() {
+            // Find and remove the dataset from the datasets array         
+            var index = controller.getIndex(dataset);
               
-        datasetService.remove(dataset.id, "#app-container" , onSuccess);            
-      }
+            if(index != null) {
+              $scope.datasets.splice(index, 1);        
+            }
+                
+            $scope.$apply();
+          }
+                    
+          datasetService.remove(dataset.id, "#app-container" , onSuccess);            
+        }                	  
+      });
+      buttons.push({
+        label : com.runwaysdk.Localize.localize("dataset", "cancel", "Cancel"),
+        config : {class:'btn'},
+      });
       
-      var onDelete = function() {
-        dialog.close();
-      }
-      
-      var title = com.runwaysdk.Localize.localize("dataset", "deleteDatasetTitle", "Delete dataset");
-      
-      var dialog = fac.newDialog(title);
-      dialog.appendContent(message);
-      dialog.addButton(com.runwaysdk.Localize.localize("dataset", "delete", "Delete"), onRemove, null, {class:'btn btn-primary'});
-      dialog.addButton(com.runwaysdk.Localize.localize("dataset", "cancel", "Cancel"), onDelete, null, {class:'btn'});            
-      dialog.render();
+      runwayService.createDialog(title, message, buttons);
     }
     
     /*
@@ -124,7 +121,7 @@
       return false;
     }
     
-    $scope.$on('closeUploader', function(event, data){    
+    $scope.$on('datasetChange', function(event, data){    
       if(data.datasets != null) {
         controller.addDatasets(data.datasets);
       }
@@ -132,7 +129,7 @@
     
     controller.init();
   }
-	
+
   angular.module("data-set", ["data-uploader", "dataset-service", "styled-inputs", 'ngFileUpload']);
   angular.module("data-set")
   .controller('DatasetController', DatasetController)

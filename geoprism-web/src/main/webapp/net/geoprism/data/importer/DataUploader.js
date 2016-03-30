@@ -561,17 +561,6 @@
     var controller = this;
     
     controller.initialize = function() {        
-      $scope.coordinate = {
-        label : "",
-        latitude : "",
-        longitude : "",
-        featureLabel : "",
-        location : "",
-        featureId : "",
-        id : -1
-      };      
-      
-      $scope.latitudes = [];
       $scope.longitudes = [];
       $scope.featureLabels = [];
       $scope.locations = [];
@@ -598,7 +587,21 @@
         var field = $scope.sheet.fields[i];
         
         if(field.type == 'LATITUDE') {
-          $scope.latitudes.push(field);          
+        	
+          if(!controller.hasCoordinateField(field)) {
+            var coordinate = {
+              label : "",
+              latitude : field.label,
+              longitude : "",
+              featureLabel : "",
+              location : "",
+              featureId : "",
+              id : field.label
+            };
+            
+            $scope.sheet.coordinates.ids.push(coordinate.id);
+            $scope.sheet.coordinates.values[coordinate.id] = coordinate;                          
+          }
         }
         else if(field.type == 'LONGITUDE') {
           $scope.longitudes.push(field);          
@@ -624,49 +627,22 @@
       }
     }
     
+    controller.hasCoordinateField = function(field) {
+      for(var i = 0; i < $scope.sheet.coordinates.ids.length; i++) {
+        var id = $scope.sheet.coordinates.ids[i];
+        
+        if(id === field.label) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
     controller.isBasic = function(field) {
       return (field.type == 'TEXT' || field.type == 'LONG' || field.type == 'DOUBLE');  
     }
-    
-    controller.edit = function(coordinate) {
-      $scope.coordinate = angular.copy(coordinate);
-    }
-    
-    controller.remove = function(coordinate) {
-      if($scope.sheet.coordinates.values[coordinate.id] != null) {
         
-        delete $scope.sheet.coordinates.values[coordinate.id];        
-        $scope.sheet.coordinates.ids.splice( $.inArray(coordinate.id, $scope.sheet.coordinates.ids), 1 );
-        
-        // Update the field.selected status
-        controller.setFieldSelected();
-      }
-    }
-    
-    controller.newCoordinate = function() {
-      if($scope.coordinate.id == -1) {
-        $scope.coordinate.id = runwayService.generateId();      
-        $scope.sheet.coordinates.ids.push($scope.coordinate.id);
-        $scope.sheet.coordinates.values[$scope.coordinate.id] = {};              
-      }     
-      
-      var coordinate = $scope.sheet.coordinates.values[$scope.coordinate.id];      
-      angular.copy($scope.coordinate, coordinate);              
-      
-      $scope.coordinate = {
-        label : "",
-        latitude : "",
-        longitude : "",
-        featureLabel : "",
-        location : "",
-        featureId : "",
-        id : -1
-      };  
-      
-      // Update the field.selected status
-//      controller.setFieldSelected();
-    }
-    
     controller.isUniqueLabel = function(label) {
       if($scope.sheet != null) {
         var count = 0;
@@ -699,7 +675,7 @@
           }            
         }
         
-        if(count > 0) {
+        if(count > 1) {
           return false;
         }
       }  
@@ -781,7 +757,7 @@
     }   
   }  
 
-  function UploaderDialogController($scope, $rootScope, datasetService) {
+  function UploaderDialogController($scope, $rootScope, datasetService, runwayService) {
     var controller = this;
     
     // AttributePageController emit's event when user toggles attribute types between location and non-location types
@@ -835,7 +811,7 @@
         if(result.success) {          
           controller.clear();
           
-          $scope.$emit('closeUploader', {datasets:result.datasets});          
+          $scope.$emit('datasetChange', {datasets:result.datasets, finished : true});          
         }
         else {          
           $scope.page.current = 'GEO-VALIDATION';
@@ -844,6 +820,8 @@
           $scope.sheets = result.sheets;
           $scope.sheet = $scope.sheets[0];
           $scope.problems = result.problems;
+          
+          $scope.$emit('datasetChange', {datasets:result.datasets, finished : false});
         }
         
         $scope.$apply();
@@ -867,7 +845,7 @@
       var onSuccess = function(result) {
         controller.clear();
           
-        $scope.$emit('closeUploader', {});                
+        $scope.$emit('datasetChange', {finished : true});                
             
         $scope.$apply();
       }
@@ -922,8 +900,8 @@
         $scope.page.snapshots.push(snapshot);
       }
       else if($scope.page.current == 'BEGINNING-INFO') {
-      $scope.page.current = 'INITIAL'; 
-      $scope.currentStep = -1;
+        $scope.page.current = 'INITIAL'; 
+        $scope.currentStep = -1;
       }
       else if($scope.page.current == 'INITIAL') {
         // Go to fields page  
@@ -1003,6 +981,34 @@
     }
     
     controller.prev = function() {
+      if($scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO") {
+        controller.handlePrev();    	  
+      }
+      else {
+        var title = com.runwaysdk.Localize.localize("dataUploader", "prevDialogTitle");
+        
+        var message = com.runwaysdk.Localize.localize("dataUploader", "prevDialogContent");
+        
+        var buttons = [];
+        buttons.push({
+          label : com.runwaysdk.Localize.localize("dataUploader", "ok"),
+          config : {class:'btn btn-primary'},
+          callback : function(){
+            controller.handlePrev();
+            
+            $scope.$apply();
+          }
+        });
+        buttons.push({
+          label : com.runwaysdk.Localize.localize("dataUploader", "cancel"),
+          config : {class:'btn'},
+        });
+        
+        runwayService.createDialog(title, message, buttons);      
+      }
+    }
+    
+    controller.handlePrev = function() {
       if($scope.page.snapshots.length > 0) { 
         if($scope.page.current == 'INITIAL') {
           $scope.page.current = 'BEGINNING-INFO'; 
@@ -1047,8 +1053,7 @@
       }
       else if($scope.page.current === "INITIAL"){
         $scope.currentStep = 0;
-      }
-      
+      }      
     }
     
     controller.hasLocationField = function() {

@@ -209,7 +209,6 @@
 			          	<td>{{coordinate.label}}</td>
 			          	<td><gdb:localize key="dataUploader.summary.coordinateLocation.label"/></td>
 			          	<td> 
-	<!-- 						<h4 class="location-summary-sub-table-heading">Location Field Configuration</h4> -->
 			          		<table class="table table-bordered location-summary-sub-table"> 
 					         	<thead> 
 					         		<tr>
@@ -221,9 +220,9 @@
 				          			<tr><td><gdb:localize key="dataUploader.latitude"/></td><td>{{coordinate.latitude}}</td></tr>
 					            	<tr><td><gdb:localize key="dataUploader.longitude"/></td><td>{{coordinate.longitude}}</td></tr>
 					            	<tr><td><gdb:localize key="dataUploader.featureLabel"/></td><td>{{coordinate.featureLabel}}</td></tr>
-					           	 	<tr><td><gdb:localize key="dataUploader.associatedUniversal"/></td><td>{{labels[coordinate.universal]}}</td></tr>
 					            	<tr ng-if="coordinate.location != 'DERIVE'"><td><gdb:localize key="dataUploader.locationAttribute"/></td><td>{{coordinate.location}}</td></tr>
 					            	<tr ng-if="coordinate.location == 'DERIVE'"><td><gdb:localize key="dataUploader.locationAttribute"/></td><td><gdb:localize key="dataUploader.deriveLocation"/></td></tr>
+			          				<tr ng-if="coordinate.location == 'DERIVE'"><td><gdb:localize key="dataUploader.associatedUniversal"/></td><td>{{labels[coordinate.universal]}}</td></tr>
 			          			</tbody>
 			          		</table>
 				        </td>      

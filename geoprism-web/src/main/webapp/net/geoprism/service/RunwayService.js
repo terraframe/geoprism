@@ -222,6 +222,29 @@
       }      
     }
     
+    service.createDialog = function(title, content, buttons) {
+      var fac = com.runwaysdk.ui.Manager.getFactory();
+        
+      var dialog = fac.newDialog(title, {modal: true});
+      dialog.appendContent(content);
+      
+      for(var i = 0; i < buttons.length; i++) {
+        service.addButton(dialog, buttons[i]);
+      }
+      
+      dialog.setStyle('z-index', '99999');
+      dialog.render();    	
+    }
+    
+    service.addButton = function(dialog, button) {
+      dialog.addButton(button.label, function() {
+        dialog.close();
+            
+        if(button.callback != null) {
+          button.callback();            
+        }
+      }, null, button.config);      
+    }
         
     return service;  
   }
