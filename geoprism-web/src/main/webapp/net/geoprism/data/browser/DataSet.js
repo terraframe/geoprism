@@ -43,14 +43,14 @@
     }
     
     controller.remove = function(dataset) {
-      var title = localizationService.localize("dataset", "deleteDatasetTitle", "Delete dataset");
+      var title = localizationService.localize("dataset", "deleteDatasetTitle");
 
-      var message = localizationService.localize("dataset", "removeContent", "Are you sure you want to delete the dataset [{0}]?");
+      var message = localizationService.localize("dataset", "removeContent");
       message = message.replace('{0}', dataset.label);
       
       var buttons = [];
       buttons.push({
-    	label : localizationService.localize("dataset", "delete", "Delete"),
+    	label : localizationService.localize("dataset", "delete"),
     	config : {class:'btn btn-primary'},
         callback : function(){
           var onSuccess = function() {
@@ -68,7 +68,7 @@
         }                	  
       });
       buttons.push({
-        label : localizationService.localize("dataset", "cancel", "Cancel"),
+        label : localizationService.localize("dataset", "cancel"),
         config : {class:'btn'},
       });
       
