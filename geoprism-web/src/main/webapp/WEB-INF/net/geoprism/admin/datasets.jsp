@@ -48,21 +48,21 @@
     </div>
   </div>
 
-  <table class="table table-bordered table-striped">    
-    <thead>
-      <tr>
-        <td>
-        </td>      
-        <td>
-          <gdb:localize key="dataset.label"/>
-        </td>
-      </tr>
-    </thead>
+  <table id="manage-datasets-table" class="table table-bordered table-striped">    
+<!--     <thead> -->
+<!--       <tr> -->
+<!--         <td> -->
+<!--         </td>       -->
+<!--         <td> -->
+<%--           <gdb:localize key="dataset.label"/> --%>
+<!--         </td> -->
+<!--       </tr> -->
+<!--     </thead> -->
     
     <tbody>
       <tr ng-repeat="dataset in datasets">
-        <td>
-          <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
+        <td class="button-column">
+          <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
         </td>
         <td>{{ dataset.label }}</td>
       </tr>
