@@ -30,8 +30,6 @@
   
   var systemFormName = "net.geoprism.system.SystemForm";
   
-  var systemFormName = "com.runwaysdk.geodashboard.system.SystemForm";
-  
   var SystemFormEvent = ClassFramework.newClass('net.geoprism.system.SystemFormBuilderEvent', {
     Constants : {
       APPLY_SUCCESS : 0,
@@ -122,7 +120,7 @@
               
               that._populateComponent(values);
               
-              var applyCallback = new com.runwaysdk.geodashboard.StandbyClientRequest({
+              var applyCallback = new net.geoprism.StandbyClientRequest({
                 onSuccess : function(user) {
                   container.close();
                   
@@ -206,7 +204,7 @@
         else if (this._emailSetting.isServerReadable())
         {
           var label = this._emailSetting.getServerMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
+          var entry = new net.geoprism.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
           form.addEntry(entry);
         }
         
@@ -222,7 +220,7 @@
         else if (this._emailSetting.isUsernameReadable())
         {
           var label = this._emailSetting.getUsernameMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
+          var entry = new net.geoprism.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
           form.addEntry(entry);
         }
           
@@ -267,7 +265,7 @@
         else if (this._emailSetting.isPortReadable())
         {
           var label = this._emailSetting.getPortMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
+          var entry = new net.geoprism.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
           form.addEntry(entry);                  
         }
         
@@ -302,7 +300,7 @@
         else if (this._emailSetting.isFromReadable())
         {
           var label = this._emailSetting.getFromMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
+          var entry = new net.geoprism.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
           form.addEntry(entry);
         }
         
@@ -340,7 +338,7 @@
         else if (this._emailSetting.isToReadable())
         {
           var label = this._emailSetting.getToMd().getDisplayLabel();        
-          var entry = new com.runwaysdk.geodashboard.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
+          var entry = new net.geoprism.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
           form.addEntry(entry);                  
         }
         

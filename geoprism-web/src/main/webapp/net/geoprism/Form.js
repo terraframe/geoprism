@@ -1119,14 +1119,14 @@
       {
         this._formList.addEntry(entry);
       },
-      addFormEntry : function(attributeMdDTO, input) {
+      addFormEntry : function(attributeMdDTO, input, tooltipText) {
         var label = attributeMdDTO.getDisplayLabel();
          
         if(attributeMdDTO.isRequired()) {
           label += " *";
         }
         
-        var entry = new net.geoprism.FormEntry(label, input);
+        var entry = new net.geoprism.FormEntry(label, input, tooltipText);
         this.addEntry(entry);        
         
         return entry;
