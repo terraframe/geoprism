@@ -747,7 +747,19 @@
           }
         }      
       }
-    }      
+    }
+    
+    controller.hasFieldType = function(type) {
+    	var fields = $scope.sheet.fields;
+    	for(var i=0; i<fields.length; i++){
+    		var field = fields[i];
+    		if(field.type.toLowerCase() === type.toLowerCase()){
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
     
     controller.isValid = function(field) {
       return !(field.type == 'LOCATION' || field.type == 'LONGITUDE' || field.type == 'LATITUDE' || field.type == 'IGNORE'  || field.type == ''); 
