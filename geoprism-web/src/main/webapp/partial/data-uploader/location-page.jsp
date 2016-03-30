@@ -21,6 +21,14 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
+    <div class="label-holder">
+	    <strong> </strong>
+	</div>
+	<div class="holder">
+	  <div class="row-holder">
+  		<p><gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/></p>
+  	  </div>
+  	</div>
   <ng-form name="ctrl.attributeForm" isolate-form ng-if="attribute != null">
     <div class="label-holder">
       <strong><gdb:localize key="dataUploader.locationCreatorWidgetLabel"/></strong>
@@ -29,7 +37,7 @@
       <div class="location-selector-container">
 	      <div class="row-holder">
 	      	<h4 class="location-select-container-heading-text"><gdb:localize key="dataUploader.locationContainerHeadingToolTip"/> {{attribute.label}}</h4>
-	      	<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/>"></i>      
+<%-- 	      	<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/>"></i>       --%>
 	      </div>
           <span class="text">
 	        <input ng-model="attribute.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
@@ -41,7 +49,10 @@
 	      </div>
 	      
 	      <div class="row-holder" ng-repeat="universal in universalOptions track by $index">
-	      	<p class="select-label">{{universal.label}} <gdb:localize key="dataUploader.selectLabelToolTip"/></p>
+	      	<div class="label-help-ico-container">
+	      		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.fieldHelp01ToolTip"/> {{universal.label}} <gdb:localize key="dataUploader.fieldHelp02ToolTip"/> {{attribute.label}} <gdb:localize key="dataUploader.fieldHelp03ToolTip"/>"></i>      
+	      		<p class="select-label">{{universal.label}} <gdb:localize key="dataUploader.selectLabelToolTip"/></p>
+	      	</div>
 	      	<div class="location-selector-box-right">
 		        <div class="box">
 		          <select class="select-area" ng-model="attribute.fields[universal.value]" name="{{::$index + '-universal'}}" ng-required="true">
@@ -50,7 +61,7 @@
 		            <option value="EXCLUDE"><gdb:localize key="dataUploader.exclude"/></option>
 		          </select>
 		        </div>
-		        <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.fieldHelp01ToolTip"/> {{universal.label}} <gdb:localize key="dataUploader.fieldHelp02ToolTip"/> {{attribute.label}} <gdb:localize key="dataUploader.fieldHelp03ToolTip"/>"></i>      
+<%-- 		        <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.fieldHelp01ToolTip"/> {{universal.label}} <gdb:localize key="dataUploader.fieldHelp02ToolTip"/> {{attribute.label}} <gdb:localize key="dataUploader.fieldHelp03ToolTip"/>"></i>       --%>
 	      	</div>
 	      </div>
       	<div class="row-holder">

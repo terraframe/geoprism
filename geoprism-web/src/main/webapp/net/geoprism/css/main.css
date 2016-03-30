@@ -2601,16 +2601,18 @@ option[selected]{ font-weight:bold}
 
 
 .fa.fa-question-circle.help-info-ico{
-	font-size: 20px;
+	font-size: 17px;
     color: #02789E;
     vertical-align: middle;
-    margin-left: -20px;
+    margin-right: 5px;
     top: 50%;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    position: absolute;
+    position: relative;
+    float: left;
 }
+
 
 .select-label{
 	float: left;
@@ -2695,6 +2697,27 @@ option[selected]{ font-weight:bold}
 
 .modal-form .holder .location-selector-container > .text {
 	margin-bottom: 10px;
+}
+
+.modal-form .holder .location-selector-container .label-help-ico-container{
+	width: 50%;
+    height: 34px;
+    float: left;
+    margin-right: 10px;
+}
+
+.location-selector-box-right{
+/* 	float: right; */
+}
+
+.modal-form .holder .location-selector-container p{
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    position: relative;
+    white-space: nowrap;
+    margin: 0;
 }
 
 h4.location-summary-sub-table-heading{
