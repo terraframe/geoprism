@@ -4323,11 +4323,17 @@ div.secondary-box label {
     
     
     
-    div.fill {
-      width: 100%;
-      height: 100%;
-    }
+#manage-datasets-table .button-column{
+	text-align: center;
+}
+
+#manage-datasets-table td{
+    vertical-align: middle;
+}
     
+#manage-datasets-table .fa.fa-trash-o.ico-remove{
+	font-size: 25px;
+}
     
 
 /*
