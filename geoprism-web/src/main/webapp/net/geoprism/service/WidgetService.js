@@ -18,11 +18,11 @@
  */
 (function(){
   
-  function JQueryService() {
+  function WidgetService() {
     var service = {};    
     
     service.animate = function(element, properties, duration, complete) {
-      $(element).animate(properties, duration, complete);            	
+      $(element).animate(properties, duration, complete);              
     }
     
     service.sortable = function(element, update) {
@@ -31,10 +31,34 @@
       });
     }
     
+    service.createDialog = function(title, content, buttons) {
+      var fac = com.runwaysdk.ui.Manager.getFactory();
+          
+      var dialog = fac.newDialog(title, {modal: true});
+      dialog.appendContent(content);
+        
+      for(var i = 0; i < buttons.length; i++) {
+        service.addButton(dialog, buttons[i]);
+      }
+        
+      dialog.setStyle('z-index', '99999');
+      dialog.render();      
+    }
+      
+    service.addButton = function(dialog, button) {
+      dialog.addButton(button.label, function() {
+        dialog.close();
+              
+        if(button.callback != null) {
+          button.callback();            
+        }
+      }, null, button.config);      
+    }
+    
     return service;
   }
   
-  angular.module("jquery-service", []);
-  angular.module("jquery-service")
-    .factory('jQueryService', JQueryService)
+  angular.module("widget-service", []);
+  angular.module("widget-service")
+    .factory('widgetService', WidgetService)
 })();

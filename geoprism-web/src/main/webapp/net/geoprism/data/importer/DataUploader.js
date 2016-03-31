@@ -557,7 +557,7 @@
     }   
   }
   
-  function CoordinatePageController($scope, runwayService) {
+  function CoordinatePageController($scope) {
     var controller = this;
     
     controller.initialize = function() {        
@@ -757,7 +757,7 @@
     }   
   }  
 
-  function UploaderDialogController($scope, $rootScope, datasetService, localizationService, runwayService) {
+  function UploaderDialogController($scope, $rootScope, datasetService, localizationService, widgetService) {
     var controller = this;
     
     // AttributePageController emit's event when user toggles attribute types between location and non-location types
@@ -1004,7 +1004,7 @@
           config : {class:'btn'},
         });
         
-        runwayService.createDialog(title, message, buttons);      
+        widgetService.createDialog(title, message, buttons);      
       }
     }
     
@@ -1150,7 +1150,7 @@
   };  
   
   
-  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "runway-service"]);
+  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "widget-service", "runway-service" ]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchPage', MatchPage)

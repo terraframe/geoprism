@@ -74,7 +74,7 @@
     }    
   }  
   
-  function TypeAccordionController($scope, $timeout, dashboardService, jQueryService) {
+  function TypeAccordionController($scope, $timeout, dashboardService, widgetService) {
     var controller = this;
 
     controller.move = function(element, event, ui) {
@@ -99,7 +99,7 @@
     controller.init = function(element) {
       // Add support for sorting the dashboard data sets    	
       if(element != null && dashboardService.canEdit()) {
-        jQueryService.sortable(element, function(e, ui){
+        widgetService.sortable(element, function(e, ui){
           controller.move(element, e, ui);
         });        
       }
@@ -124,7 +124,7 @@
     }    
   }
   
-  function AttributePanelController($scope, dashboardService, jQueryService) {
+  function AttributePanelController($scope, dashboardService, widgetService) {
     var controller = this;
     
     controller.move = function(element, event, ui) {
@@ -149,7 +149,7 @@
     
     controller.init = function(element) {
       if(element != null && dashboardService.canEdit()) {      
-        jQueryService.sortable(element, function(e, ui){
+        widgetService.sortable(element, function(e, ui){
           controller.move(element, e, ui);
         });        
       }
@@ -458,7 +458,7 @@
   }
   
   
-  angular.module("dashboard-accordion", ["dashboard-service", "jquery-service", "styled-inputs"]);
+  angular.module("dashboard-accordion", ["dashboard-service", "widget-service", "styled-inputs"]);
   angular.module('dashboard-accordion')
   .directive('locationFilter', LocationFilter)
   .directive('typeAccordion', TypeAccordion)

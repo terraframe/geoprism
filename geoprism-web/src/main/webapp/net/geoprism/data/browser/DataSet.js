@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DatasetController($scope, $timeout, datasetService, localizationService, runwayService) {
+  function DatasetController($scope, $timeout, datasetService, localizationService, widgetService) {
     var controller = this;
     
     controller.init = function() {
@@ -43,14 +43,14 @@
     }
     
     controller.remove = function(dataset) {
-      var title = localizationService.localize("dataset", "deleteDatasetTitle");
+      var title = localizationService.localize("dataset", "deleteDatasetTitle", "Delete dataset");
 
-      var message = localizationService.localize("dataset", "removeContent");
+      var message = localizationService.localize("dataset", "removeContent", "Are you sure you want to delete the dataset [{0}]?");
       message = message.replace('{0}', dataset.label);
       
       var buttons = [];
       buttons.push({
-    	label : localizationService.localize("dataset", "delete"),
+    	label : localizationService.localize("dataset", "delete", "Delete"),
     	config : {class:'btn btn-primary'},
         callback : function(){
           var onSuccess = function() {
@@ -68,11 +68,11 @@
         }                	  
       });
       buttons.push({
-        label : localizationService.localize("dataset", "cancel"),
+        label : localizationService.localize("dataset", "cancel", "Cancel"),
         config : {class:'btn'},
       });
       
-      runwayService.createDialog(title, message, buttons);
+      widgetService.createDialog(title, message, buttons);
     }
     
     /*
@@ -130,7 +130,7 @@
     controller.init();
   }
 
-  angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "runway-service"]);
+  angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "widget-service", "runway-service"]);
   angular.module("data-set")
   .controller('DatasetController', DatasetController)
 })();
