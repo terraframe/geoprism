@@ -18,7 +18,7 @@
  */
 (function(){
 	
-  function DashboardPanelController($scope, $timeout, jQueryService) {
+  function DashboardPanelController($scope, $timeout, widgetService) {
     var controller = this;
     controller.expanded = true;
     
@@ -26,28 +26,28 @@
       var speed = 500;
         
       if(controller.expanded){
-        jQueryService.animate("#dashboardMetadata", {right: "-=300"}, speed, function(){
+        widgetService.animate("#dashboardMetadata", {right: "-=300"}, speed, function(){
           controller.expanded = false;
           $scope.$apply();
         });
 
         // Report Panel background
-        jQueryService.animate("#report-viewport", {marginRight: "0px"}, speed);
+        widgetService.animate("#report-viewport", {marginRight: "0px"}, speed);
         
         // Repprt panel toolbar
-        jQueryService.animate("#report-toolbar", {marginRight: "0px"}, speed);
+        widgetService.animate("#report-toolbar", {marginRight: "0px"}, speed);
       }
       else{    	  
-        jQueryService.animate("#dashboardMetadata", {right: "+=300"}, speed, function(){
+        widgetService.animate("#dashboardMetadata", {right: "+=300"}, speed, function(){
           controller.expanded = true;
           $scope.$apply();
         });
 
         // Report Panel background
-        jQueryService.animate("#report-viewport", {marginRight: "300px"}, speed);
+        widgetService.animate("#report-viewport", {marginRight: "300px"}, speed);
             
         // Repprt panel toolbar
-        jQueryService.animate("#report-toolbar", {marginRight: "300px"}, speed);
+        widgetService.animate("#report-toolbar", {marginRight: "300px"}, speed);
       }
     }
   }
@@ -67,7 +67,7 @@
     }    
   }  
 	
-  angular.module("dashboard-panel", ["jquery-service", "dashboard-accordion"]);
+  angular.module("dashboard-panel", ["widget-service", "dashboard-accordion"]);
   angular.module('dashboard-panel')
     .directive('dashboardPanel', DashboardPanel);  
 })();

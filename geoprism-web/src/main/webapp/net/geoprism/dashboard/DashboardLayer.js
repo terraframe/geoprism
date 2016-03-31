@@ -23,7 +23,7 @@
    * MAP PANEL CONTROLLER AND WIDGET
    * 
    */
-  function MapPanelController($scope, $timeout, jQueryService) {
+  function MapPanelController($scope, $timeout, widgetService) {
     var controller = this;
     controller.expanded = true;
     
@@ -31,19 +31,19 @@
       var speed = 500;
         
       if(controller.expanded){
-        jQueryService.animate("#control-form", {left: "-=236"}, speed, function(){
+        widgetService.animate("#control-form", {left: "-=236"}, speed, function(){
           controller.expanded = false;
           $scope.$apply();
         });
         
-        jQueryService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=236"}, speed);
+        widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=236"}, speed);
       }
       else{
-        jQueryService.animate("#control-form", {left: "+=236"}, speed, function(){
+        widgetService.animate("#control-form", {left: "+=236"}, speed, function(){
             controller.expanded = true;
             $scope.$apply();
         });        
-        jQueryService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=236"}, speed);
+        widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=236"}, speed);
       }
     }
   }
@@ -476,7 +476,7 @@
     }
   }
   
-  angular.module("dashboard-layer", ["dashboard-service", "map-service", "jquery-service"]);
+  angular.module("dashboard-layer", ["dashboard-service", "map-service", "widget-service"]);
   angular.module('dashboard-layer')
     .directive('mapPanel', MapPanel)
     .directive('thematicPanel', ThematicPanel)

@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function DashboardMenuController($scope, $timeout, dashboardService) {
+  function DashboardMenuController($scope, $timeout, dashboardService, localizationService, widgetService) {
     var controller = this;
     controller.show = null;    
     
@@ -79,63 +79,47 @@
     }
     
     controller.remove = function(dashboardId) {
-      var that = this;
-      var fac = com.runwaysdk.ui.Manager.getFactory();
-      
-      var message = com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardContent", "Are you sure you want to delete dashboard [{0}]?");
+      var title = localizationService.localize("dashboardViewer", "deleteDashboardDialog");
+        
+      var message = localizationService.localize("dashboardViewer", "deleteDashboardContent");
       message = message.replace('{0}', controller.dashboards[dashboardId].label);
-          
-      var dialog = fac.newDialog(com.runwaysdk.Localize.localize("dashboardViewer", "deleteDashboardDialog", "Delete dashboard"));
-      dialog.appendContent(message);
-          
-      var Structure = com.runwaysdk.structure;
-      var tq = new Structure.TaskQueue();
-          
-      tq.addTask(new Structure.TaskIF({
-        start : function(){            
-         var cancelCallback = function() {
-            dialog.close();
-            tq.stop();
-          };
-
-          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "delete", "Delete"), function() { tq.next(); }, null, {class:'btn btn-primary'});
-          dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), cancelCallback, null, {class:'btn'});            
-          dialog.render();
-        }
-      }));
-          
-      tq.addTask(new Structure.TaskIF({
-        start : function(){
-          dialog.close();
-            
+        
+      var buttons = [];
+      buttons.push({
+        label : localizationService.localize("dashboardViewer", "delete"),
+        config : {class:'btn btn-primary'},
+        callback : function(){
           var onSuccess = function() {
-        	  
             // Remove the dashboard from the array
             var index = undefined;
-            
+                  
             for(var i = 0; i < controller.ids.length; i++) {
               var id = controller.ids[i];
-                
+                      
               if(id == dashboardId) {
                 index = i;
               }              
             }
-            
+                  
             if(index != null) {
               controller.ids.splice(index, 1);              
               delete controller.dashboards[dashboardId];
-              
+                    
               controller.toggleCreateDashboardIcon();
             }
-            
+                  
             $scope.$apply();
           };          
-          
+                
           dashboardService.removeDashboard(dashboardId, "#container", onSuccess);
         }
-      }));
-          
-      tq.start();             
+      });
+      buttons.push({
+        label : localizationService.localize("dashboardViewer", "cancel"),
+        config : {class:'btn'},
+      });
+        
+      widgetService.createDialog(title, message, buttons);
     }
     
     controller.refreshDashboard = function(dashboard) {
@@ -210,7 +194,7 @@
     controller.getDashboards();	
   }
 
-  angular.module("dashboard-menu", ["dashboard-service", "dashboard-builder", "data-uploader", "dashboard-clone-form"]);
+  angular.module("dashboard-menu", ["dashboard-service", "widget-service", "localization-service", "dashboard-builder", "data-uploader", "dashboard-clone-form"]);
   angular.module("dashboard-menu")
    .controller('DashboardMenuController', DashboardMenuController)
 })();

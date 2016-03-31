@@ -21,7 +21,7 @@
   function DatasetService(runwayService) {
     var service = {};
     
-    service.uploadSpreadsheet = function(file, element, onSuccess, onFailure) {      
+    service.uploadSpreadsheet = function(file, element, onSuccess, onFailure) {
       var success = function(response) {
         var result = JSON.parse(response);
     	
@@ -42,7 +42,7 @@
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
     }
     
-    service.importData = function(configuration, element, onSuccess, onFailure) {    	
+    service.importData = function(configuration, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
       net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
@@ -51,37 +51,19 @@
     service.cancelImport = function(configuration, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
           
-      net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));    	
-    }
-    
-    service.getAll = function(onSuccess, onFailure) {
-      var request = runwayService.createRequest(onSuccess, onFailure);
-    
-      net.geoprism.DataSetController.getAll(request);
+      net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));      
     }
     
     service.getSavedConfiguration = function(id, sheetName, element, onSuccess, onFailure) {
       var success = function(response) {
         var result = JSON.parse(response);
-          
-         onSuccess(result);
+            
+        onSuccess(result);
       };
-        
-      var request = runwayService.createStandbyRequest(element, success, onFailure);
           
-      net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
-    }
-    
-    service.remove = function(id, element, success, onFailure) {
       var request = runwayService.createStandbyRequest(element, success, onFailure);
-      
-      net.geoprism.DataSetController.remove(request, id);
-    }
-    
-    service.getGeoEntitySuggestions = function(parentId, universalId, text, limit, onSuccess, onFailure) {
-      var request = runwayService.createRequest(onSuccess, onFailure);
-    
-      net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
+            
+      net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
     }
     
     service.createGeoEntitySynonym = function(entityId, label, element, onSuccess, onFailure) {
@@ -94,6 +76,24 @@
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
+    }    
+    
+    service.getAll = function(onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+    
+      net.geoprism.DataSetController.getAll(request);
+    }
+    
+    service.remove = function(id, element, success, onFailure) {
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
+      
+      net.geoprism.DataSetController.remove(request, id);
+    }
+    
+    service.getGeoEntitySuggestions = function(parentId, universalId, text, limit, onSuccess, onFailure) {
+      var request = runwayService.createRequest(onSuccess, onFailure);
+    
+      net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
     }
     
     //
@@ -125,8 +125,9 @@
 
       return basicSteps;
     }
-    
-    return service;  
+
+	// List of runway class dependencies which must be loaded from the server
+    return runwayService.decorateService(service, ['net.geoprism.DataUploaderController', 'net.geoprism.DataSetController', 'net.geoprism.ontology.GeoEntityUtil']);  
   }
   
   angular.module("dataset-service", ["runway-service"]);
