@@ -19,102 +19,81 @@
 (function(){
 
   function DatasetService(runwayService) {
-	// List of runway class dependencies which must be loaded from the server
-    var dependencies = ['net.geoprism.DataUploaderController', 'net.geoprism.DataSetController', 'net.geoprism.ontology.GeoEntityUtil'];
-    
     var service = {};
     
     service.uploadSpreadsheet = function(file, element, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){
-        var success = function(response) {
-          var result = JSON.parse(response);
+      var success = function(response) {
+        var result = JSON.parse(response);
     	
-          onSuccess(result);
-        };
+        onSuccess(result);
+      };
       
-        var request = runwayService.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
       
-        var params = new FormData();
-        params.append('file', file);
+      var params = new FormData();
+      params.append('file', file);
 
-        /*
-         * IMPORTANT: This method cannot be invoked through the generated javascript
-         * controller because you can't pass in a FormData to the method.  Thus, we
-         * are invoking it directly through the Facade.  FormData is required for
-         * submitting file objects through javascript.
-         */
-        Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
-      });
+      /*
+       * IMPORTANT: This method cannot be invoked through the generated javascript
+       * controller because you can't pass in a FormData to the method.  Thus, we
+       * are invoking it directly through the Facade.  FormData is required for
+       * submitting file objects through javascript.
+       */
+      Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
     }
     
     service.importData = function(configuration, element, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){
-        var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
-        net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
-      });
+      net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
     }
     
     service.cancelImport = function(configuration, element, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){      
-        var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
           
-        net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));      
-      });
+      net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));      
     }
     
     service.getSavedConfiguration = function(id, sheetName, element, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){
-        var success = function(response) {
-          var result = JSON.parse(response);
+      var success = function(response) {
+        var result = JSON.parse(response);
             
-           onSuccess(result);
-        };
+        onSuccess(result);
+      };
           
-        var request = runwayService.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
             
-        net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
-      });      
+      net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
     }
     
     service.createGeoEntitySynonym = function(entityId, label, element, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){    	
-        var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
         
-        net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
-      });      
+      net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
     }
     
     service.createGeoEntity = function(parentId, universalId, label, element, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){    	    	
-        var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
-        net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
-      });            
+      net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }    
     
     service.getAll = function(onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){
-        var request = runwayService.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
     
-        net.geoprism.DataSetController.getAll(request);
-      });
+      net.geoprism.DataSetController.getAll(request);
     }
     
     service.remove = function(id, element, success, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){    	
-        var request = runwayService.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
       
-        net.geoprism.DataSetController.remove(request, id);
-      });      
+      net.geoprism.DataSetController.remove(request, id);
     }
     
     service.getGeoEntitySuggestions = function(parentId, universalId, text, limit, onSuccess, onFailure) {
-      runwayService.loadDependencies(dependencies, function(){
-        var request = runwayService.createRequest(onSuccess, onFailure);
+      var request = runwayService.createRequest(onSuccess, onFailure);
     
-        net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
-      });      
+      net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
     }
     
     //
@@ -146,8 +125,9 @@
 
       return basicSteps;
     }
-    
-    return service;  
+
+	// List of runway class dependencies which must be loaded from the server
+    return runwayService.decorateService(service, ['net.geoprism.DataUploaderController', 'net.geoprism.DataSetController', 'net.geoprism.ontology.GeoEntityUtil']);  
   }
   
   angular.module("dataset-service", ["runway-service"]);

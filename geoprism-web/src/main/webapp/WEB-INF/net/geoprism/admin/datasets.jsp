@@ -47,18 +47,10 @@
       </div>
     </div>
   </div>
+  
+  <div ng-if="datasets === null"><gdb:localize key='dataset.loadingData'/></div>
 
-  <table id="manage-datasets-table" class="table table-bordered table-striped">    
-<!--     <thead> -->
-<!--       <tr> -->
-<!--         <td> -->
-<!--         </td>       -->
-<!--         <td> -->
-<%--           <gdb:localize key="dataset.label"/> --%>
-<!--         </td> -->
-<!--       </tr> -->
-<!--     </thead> -->
-    
+  <table id="manage-datasets-table" class="table table-bordered table-striped">        
     <tbody>
       <tr ng-repeat="dataset in datasets">
         <td class="button-column">

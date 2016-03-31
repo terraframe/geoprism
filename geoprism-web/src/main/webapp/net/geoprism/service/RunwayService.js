@@ -252,7 +252,33 @@
       }
     }
     
-    return service;  
+    service.decorateFunction = function(f, dependencies) {
+      return function() {
+        var args = arguments;
+      
+        service.loadDependencies(dependencies, function() {
+          f.apply(this, args);  
+        });
+      };
+    }  
+    
+    service.decorateService = function(object, dependencies) {
+      var decorator = {};
+      
+      for (var property in object) {
+        if (object.hasOwnProperty(property)) {
+          var f = object[property];
+          
+          if(typeof f === 'function') {
+            decorator[property] = service.decorateFunction(f, dependencies);
+          }
+        }
+      }
+      
+      return decorator;    	
+    }  
+    
+    return service;
   }
   
   angular.module("runway-service", []);
