@@ -30,6 +30,7 @@
     <!-- User account CSS -->
 	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
 	<jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
+	<jwr:style src="/bundles/user-menu.css" useRandomParam="false"/>  
 	
     <!-- User account Javascript -->
 	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -37,143 +38,6 @@
 	<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
 	
 	<script type="text/javascript">${js}</script>
-  
-  <style>
-		body {
-		    background-color: black;
-		    margin: 0;
-		    min-width: 100%;
-		}
-		
-		html, body, #container {
- 		    height: 100%; 
-			overflow: hidden;
-		}
-		
-		h1 {
-		    color: maroon;
-		    margin-left: 40px;
-		} 
-		
-		#logo{
-			max-height: 100px;
-		}
-		
-		#geodash-landing-top-div{
-	    	border-bottom: grey solid 3px;
-			height: 30%; 
-			position: relative;
-			    background-color: #333;
-		}
-		
-		#geodash-landing-bottom-div{
-			overflow: hidden;
-			height: 70%;
-			overflow-y: auto;
-    		background-image: url(net/geoprism/images/theme_background.png);
-    		background-size: 100%;
-    		background-repeat: no-repeat;
-    		background-position-y: -10%;
-		}
-			
-		#geodash-landing-footer{
-			height: 100px;
-			background-color: #019edc;
-			bottom: 0px;
-    		position: absolute;
-    		width: 100%;
-    		opacity: 0.6;
-    		filter: alpha(opacity=60); /* For IE8 and earlier */
-		}
-			
-		#geodash-landing-footer h4{
-			color: white;
-			text-align: center;
-			margin-top: 42px;
-		}
-		
-		#background-img{
- 	    	width: 100%; 
- 	    	margin-top: 100px;
-		}
-		
-		#mask{
-			background-color: white;
-			width: 100%;
-    		height: 100%;
-    		position: absolute;
-			opacity: 0.70;
-    		filter: alpha(opacity=70); /* For IE8 and earlier */
-		}
-		
-		#option-container{
-    		top: 50%;
-    		margin: 0 auto;
-    		margin-left: -401px;
-    		left: 50%;
-    		position: absolute;
-    		width: 650px;
-		}
-		
-		.nav-option{
-
-		}
-		
-		.nav-icon-img{
-	    	border: solid white 5px;
-    		border-radius: 15px;
-    		cursor: pointer;
-    		background-color: white;
-		}
-		
-		.nav-icon-img:hover{
-	    	border: solid #019edc 5px;
-		}
-		
-		#dashboard-link{
-			cursor: pointer;
-		}
-		
-		.nav-icon-img-label{
-			text-align: center;
-			margin-top: 10px;
-		}
-		
-		#header{
-	    	padding: 10px;
-	    	height: 100%
-		}
-		
-		.user-command-link{
-			color: white;
-			padding: 5px;
-    		font-size: 15px;
-    		white-space: nowrap;
-  			overflow: hidden;
-		}
-		
-		.error-message{
-			color: red;
-			text-align: center;
-		}
-		
-		.vertical-center-row{
-			margin-top: 5%;
-		}
-		
-		.nav-icon-container{
-    		vertical-align: middle;
-    		width: 100%;
-    		height: 75%;
-		}
-		
-		.header-logo-row{
-			position: absolute;
-  			top: 50%;
-  			transform: translateY(-50%);
-		}
-		
-	</style>
 </head>
 <body>
 
@@ -187,21 +51,22 @@
 		<div id="geodash-landing-top-div">
 			<header id="header">
 				<div id="header-link-container" class="text-right">
-						<p class="text-right">
-				  	        <c:choose>
-							  <c:when test="${isAdmin}">
-						      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
-									<i class="user-command-link"> | </i>
-						      </c:when>
-						      <c:otherwise>
-						      </c:otherwise>
-					        </c:choose>
-					        
-					        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-							<i class="user-command-link"> | </i>
-		 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
-		 				</p>
-		 			</div>
+					<a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/></a>
+					<p id="user-link-container" class="text-right">
+<%-- 			  	        <c:choose> --%>
+<%-- 						  <c:when test="${isAdmin}"> --%>
+<%-- 					      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a> --%>
+<!-- 								<i class="user-command-link"> | </i> -->
+<%-- 					      </c:when> --%>
+<%-- 					      <c:otherwise> --%>
+<%-- 					      </c:otherwise> --%>
+<%-- 				        </c:choose> --%>
+				        
+				        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+						<i class="user-command-link"> | </i>
+	 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+	 				</p>
+	 			</div>
 				<div class="row-fluid header-logo-row">
 					<div class="hidden-xs col-md-1"></div>
        				<div class="col-md-8">

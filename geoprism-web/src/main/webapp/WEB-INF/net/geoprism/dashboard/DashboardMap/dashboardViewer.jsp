@@ -29,63 +29,63 @@
 <html ng-app="dashboard">
 
   <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="cache-control" content="max-age=0" />
-  <meta http-equiv="cache-control" content="no-cache" />
-  <meta http-equiv="expires" content="0" />
-  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-  <meta http-equiv="pragma" content="no-cache" />
-
-  <title><gdb:localize key="dashboardViewer.title"/></title>
-  
-  <!-- Tell Runway what the application context path is. -->
-  <script>
-    window.com = window.com || {};
-    window.com.runwaysdk = window.com.runwaysdk || {};
-    window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
-  </script>  
-  
-  <!-- CSS imports -->
-  <jwr:style src="/bundles/main.css" useRandomParam="false" />
-  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
-  
-  <!-- Default imports -->
-  <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
-  <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
-  <jwr:script src="/bundles/widget.js" useRandomParam="false"/>  
-  <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
-  
-  <!-- Dynamic map CSS -->
-  <jwr:style src="/net/geoprism/report/ReportTable.css" useRandomParam="false"/>  
-  <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
-  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
-  <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
-  
-  <!-- Dynamic map Javascript -->
-  <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
-  <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
-  <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
-  <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
-  
-  <script type="text/javascript">${js}</script>
-  <%-- <jwr:style src="/net/geoprism/MapConfig.json" useRandomParam="false"/>   --%>
-  <script src="/net/geoprism/MapConfig.json"></script>
-  
-  <!-- Google maps API -->
-  <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>  
-<!--   THE DEVELPER KEY BELOW NEEDS TO BE REPLACED WITH A CUSTOMER KEY -->
-<!--   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.21&key=AIzaSyAwPuAIr2I9bM8P03J6zUdaA2dy7o6AsY4"></script> -->
-  
-  <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
-  
-  <jwr:script src="/bundles/dashboard.js" useRandomParam="false"/> 
-  
-    
-  <script type="text/javascript">
-  $(document).ready(function(){
-    com.runwaysdk.ui.Manager.setFactory("JQuery");
-  });
-  </script>  
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	  <meta http-equiv="cache-control" content="max-age=0" />
+	  <meta http-equiv="cache-control" content="no-cache" />
+	  <meta http-equiv="expires" content="0" />
+	  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	  <meta http-equiv="pragma" content="no-cache" />
+	
+	  <title><gdb:localize key="dashboardViewer.title"/></title>
+	  
+	  <!-- Tell Runway what the application context path is. -->
+	  <script>
+	    window.com = window.com || {};
+	    window.com.runwaysdk = window.com.runwaysdk || {};
+	    window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+	  </script>  
+	  
+	  <!-- CSS imports -->
+	  <jwr:style src="/bundles/main.css" useRandomParam="false" />
+	  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+	  
+	  <!-- Default imports -->
+	  <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
+	  <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+	  <jwr:script src="/bundles/widget.js" useRandomParam="false"/>  
+	  <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
+	  
+	  <!-- Dynamic map CSS -->
+	  <jwr:style src="/net/geoprism/report/ReportTable.css" useRandomParam="false"/>  
+	  <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false" />
+	  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+	  <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
+	  
+	  <!-- Dynamic map Javascript -->
+	  <jwr:script src="/bundles/termtree.js" useRandomParam="false"/>
+	  <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> 
+	  <jwr:script src="/bundles/runway-controller.js" useRandomParam="false"/>
+	  <jwr:script src="/bundles/ontology.js" useRandomParam="false"/>
+	  
+	  <script type="text/javascript">${js}</script>
+	  <%-- <jwr:style src="/net/geoprism/MapConfig.json" useRandomParam="false"/>   --%>
+	  <script src="/net/geoprism/MapConfig.json"></script>
+	  
+	  <!-- Google maps API -->
+	  <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>  
+	<!--   THE DEVELPER KEY BELOW NEEDS TO BE REPLACED WITH A CUSTOMER KEY -->
+	<!--   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.21&key=AIzaSyAwPuAIr2I9bM8P03J6zUdaA2dy7o6AsY4"></script> -->
+	  
+	  <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
+	  
+	  <jwr:script src="/bundles/dashboard.js" useRandomParam="false"/> 
+	  
+	    
+	  <script type="text/javascript">
+	  $(document).ready(function(){
+	    com.runwaysdk.ui.Manager.setFactory("JQuery");
+	  });
+	  </script>  
 
   </head>
 
