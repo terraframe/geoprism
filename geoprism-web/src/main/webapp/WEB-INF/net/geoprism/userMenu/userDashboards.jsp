@@ -31,6 +31,7 @@
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
   <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
+  <jwr:style src="/bundles/user-dashboards.css" useRandomParam="false"/> 
   
   <!-- User account Javascript -->
   <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
@@ -46,248 +47,7 @@
     
   <script type="text/javascript">${js}</script>
   
-  <style>
-    body {
-        background-color: #333;
-        margin: 0;
-        min-width: 100%;
-        background-image: url(../../../../../net/geoprism/images/earth-profile.jpg);
-      background-size: cover;
-    }
-    
-    html, body, #container {
-         height: 100%; 
-      overflow: hidden;
-      overflow-y: auto;
-      background-color: rgba(51,51,51,.8);
-    }
-    
-    h1 {
-        color: maroon;
-        margin-left: 40px;
-    } 
-    
-    #header{
-        padding: 10px;
-    }
-    
-    #builder-dialog-category-widget-container{
-    }
-    
-    #builder-dialog-category-widget-container .row-holder{
-    	padding: 0;
-    }
-    
-    .user-command-link{
-      color: white;
-      padding: 5px;
-      font-size: 15px;
-    }
-    
-    .heading{
-        font-size: 35px;
-        color: white;
-        padding: 20px;
-    }
-    
-    .error-message{
-      color: red;
-      text-align: center;
-    }
-    
-    .thumbnail{
-      background-color: #eee;
-    }
-    .thumbnail:hover{
-      background-color: #fff;
-    }
-    
-    .thumbnail:hover a img{
-      	opacity: 1;
-    	filter: alpha(opacity=100); 
-    }
-    
-    .thumbnail:hover a i{
-      	opacity: 1;
-        filter: alpha(opacity=100); 
-    }
-    
-    .thumbnail:hover a .frame-box{
-      	opacity: 1;
-        filter: alpha(opacity=100); 
-    }
-    
-	a.btn, .btn:active, .btn:focus {
-		padding: 2px 4px 2px 4px;
-	}
-	
-	.caption a:hover{
-		color: grey;
-	}
-	
-	.caption p{
-		color: grey;
-	}
-	
-	.dashboard-card-ico-button-container{
-    	padding: 10px 4px 0px 4px;
-    	z-index: 100;
-    	right: 0;
-    	margin-right: 0;
-    	border-top: 1px solid lightgrey;
-    	background-color: transparent;
-	}
-	
-	.dashboard-card-ico-button-container:hover{
-/* 		background-color: rgba(255,255,255,.9); */
-	}
-	
-	.dashboard-thumbnail-ico-group{
-		text-align: right;
-		white-space: nowrap;
-	}
-	
-	.dashboard-thumbnail-subtext{
-	    float: left;
-    	color: grey;
-    	font-size: 14px;
-	}
-	
-	.dashboard-thumbnail-subtext i {
-		margin-right: 4px;
-	}
-	
-	/* this part of the card is clickable but i don't want to confuse users by 
-	 having the cursor apear like the fucus area links to a separate page' */
-	.dashboard-thumbnail-subtext:hover{
-		cursor: default;
-	}
-	
-	.fa.fa-globe.focus-area{
-    	color: #bababa;
-    	cursor: pointer;
-	}
-	
-	.fa.fa-clone.ico-dashboard{
-    	color: #bababa;
-    	cursor: pointer;
-	}
-	
-	.fa.fa-trash-o.ico-remove{
-    	color: #bababa;
-    	cursor: pointer;
-	}
-	
-	.dashboard-thumnail-ico-ctrl{
-		font-size: 20px !important;
-		padding-left: 5px;
-		vertical-align: middle;
-	}
-	
-	.dashboard-thumbnail-subtext.focus-area-label i {
-		padding-left: 0;
-	}
-	
-	.dashboard-thumnail-ico-ctrl:hover {
-		color: #00bfff !important;
-	}
-	
-	.focus-area-label{
-    	max-width: 50%;
-    	white-space: nowrap;
-    	overflow: hidden;
-    }
-    
-    .dashboard-focus-area-label-mask{
-  		background: linear-gradient(to left, rgba(255,255,255,1), rgba(225, 255, 255, 0));  
-    	height: 19px;
-    	width: 35%;
-    	position: absolute;
-    	opacity: 0; /* set to hidden initially when thumbnail is semi-transparent */
-    	transition: opacity .25s;
-        -webkit-transition: opacity .25s;
-    }
-    
-    .dashboard-focus-area-label-mask-grey{
-    	background: linear-gradient(to left, rgba(238,238,238,1), rgba(225, 255, 255, 0));  
-    	height: 19px;
-    	width: 35%;
-    	position: absolute;
-    	opacity: 1; /* set visible initially when thumbnail is semi-transparent (i.e. grey) */
-    	transition: opacity .25s;
-        -webkit-transition: opacity .25s;
-    }
-    
-    .thumbnail:hover .dashboard-focus-area-label-mask{
-       	background: linear-gradient(to left, rgba(255,255,255,1), rgba(225, 255, 255, 0));   
-		opacity: 1;  
-        filter: alpha(opacity=100); 
-    }
-    
-    .thumbnail:hover .dashboard-focus-area-label-mask-grey{
-      	opacity: 0;  
-        filter: alpha(opacity=0);   
-	}
-    
-    img{
-      width: 100%;
-      border-radius: 4px;
-      opacity: 0.6;
-        filter: alpha(opacity=60); 
-        transition: opacity .25s ease-in-out;
-        -moz-transition: opacity .2s ease-in-out;
-        -webkit-transition: opacity .2s ease-in-out;
-    }
-    
-    /* font-awesome icon */
-    i.fa.fa-plus{
-      font-size: 70px;
-        padding: 40px;
-        font-weight: normal;
-        color: darkgrey;
-        opacity: 0.6;
-        filter: alpha(opacity=60); 
-        transition: opacity .25s ease-in-out;
-        -moz-transition: opacity .2s ease-in-out;
-        -webkit-transition: opacity .2s ease-in-out;
-    }
-    
-    .frame-box:hover i,
-    .frame-box:hover::before, 
-    .frame-box:hover::after, 
-    .frame-box:hover>:first-child::before, 
-    .frame-box:hover>:first-child::after{
-    	color: #00bfff;
-    	border-color:#00bfff;
-    	opacity: 1;
-    }
-    
-    
-    .frame-box {
-      position:relative;
-      opacity: 0.6;
-        filter: alpha(opacity=60); 
-        transition: opacity .25s ease-in-out;
-        -moz-transition: opacity .2s ease-in-out;
-        -webkit-transition: opacity .2s ease-in-out;
-    }
-    .frame-box:before, .frame-box:after, .frame-box>:first-child:before, .frame-box>:first-child:after {
-        position:absolute; content:' ';
-        width:35px; height: 35px;
-        border-color:darkgrey; 
-        border-style:solid; 
-        border-radius: 4px;
-    }
-    .frame-box:before {top:0;left:0;border-width: 6px 0 0 6px}
-    .frame-box:after {top:0;right:0;border-width: 6px 6px 0 0}
-    .frame-box>:first-child:before {bottom:0;right:0;border-width: 0 6px 6px 0}
-    .frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 6px 6px}    
-  </style>
-  
   <jwr:script src="/bundles/builder.js" useRandomParam="false"/>   
-  
-  
-  
 </head>
 <body ng-app="dashboard-menu">
 
@@ -299,20 +59,23 @@
   
   <div id="container" ng-controller="DashboardMenuController as ctrl"  ng-cloak>
     <header id="header">
-      <p class="text-right">
-        <c:choose>
-          <c:when test="${isAdmin}">
-            <a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a>
-            <i class="user-command-link"> | </i>
-          </c:when>
-          <c:otherwise>
-          </c:otherwise>
-        </c:choose>
-       
-        <a id="account-btn" ng-click="ctrl.account()" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-        <i class="user-command-link"> | </i>
-        <a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
-      </p>
+    	<div id="header-link-container" class="text-right">
+	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>"><img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/></a>
+	      <p id="user-link-container" class="text-right">
+<%-- 	        <c:choose> --%>
+<%-- 	          <c:when test="${isAdmin}"> --%>
+<%-- 	            <a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a> --%>
+<!-- 	            <i class="user-command-link"> | </i> -->
+<%-- 	          </c:when> --%>
+<%-- 	          <c:otherwise> --%>
+<%-- 	          </c:otherwise> --%>
+<%-- 	        </c:choose> --%>
+	       
+	        <a id="account-btn" ng-click="ctrl.account()" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+	        <i class="user-command-link"> | </i>
+	        <a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+	      </p>
+	    </div>
       <div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
     </header>
     

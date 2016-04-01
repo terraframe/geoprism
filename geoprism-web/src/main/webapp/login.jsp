@@ -33,160 +33,32 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <%--   <title><gdb:localize key="login.title" /></title> --%>
+
+  <link rel="stylesheet" type="text/css" href="3rd-party/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/net/geoprism/css/login.css">
   
-	<style>
-		body {
-		    background-color: #333;
-		    margin: 0;
-		}
-		
-		html, body, #container {
- 		    height: 100%; 
-			overflow: hidden;
-		}
-		
-		h1 {
-		    color: maroon;
-		    margin-left: 40px;
-		} 
-		
-		#logo{
-	    	margin-left: 50px;
-	    	width: 250px;
-	    	position: absolute;
-  			top: 50%;
-  			transform: translateY(-50%);
-		}
-		
-		#geoprism-landing-top-div{
-	    	border-bottom: grey solid 3px;
-			/* height: 30%; */
-			height: 200px;
-			position: relative;
-		}
-		
-		#geoprism-landing-bottom-div{
-			overflow: hidden;
-		}
-		
-		#login-btn{
-			right: 10px;
-			top: 5px;
-    		position: absolute;
-		}
-		
-		/* unvisited link */
-		a:link {
-		    color: grey;
-		    text-decoration: none;
-		    font-size: 18px;
-		}
-		
-		/* visited link */
-		a:visited {
-		    color: grey;
-		}
-		
-		/* mouse over link */
-		a:hover {
-		    color: darkgrey;
-		}
-		
-		/* selected link */
-		a:active {
-		    color: darkgrey;
-		}
-		
-		#geoprism-landing-footer{
-			height: 100px;
-			background-color: #019edc;
-			bottom: 0px;
-    		position: absolute;
-    		width: 100%;
-    		opacity: 0.6;
-    		filter: alpha(opacity=60); /* For IE8 and earlier */
-		}
-		
-		#login-form{
-			float: right;
-			width: 250px;
-		}
-		
-		#login-form input{
-			width: 150px;
-			float: left;
-    		margin-top: 10px;
-    		background-color: #9F9D9D;
-    		border: none;
-    		padding: 3px;
-		}
-		
-		.login-button{
-			text-decoration: none;
-    		border: none;
-    		background-color: transparent;
-    		color: white;
-    		cursor: pointer;
-    		font-size: 16px;
-		}
-		
-		.login-button:hover{
-			color: grey;
-		}
-		
-		.login-submit{
-    		margin: 0 0 0 0;
-    		position: absolute;
-    		right: 30px;
-   			top: 43px;
-		}
-		
-		#geoprism-landing-footer h4{
-			color: white;
-			text-align: center;
-			margin-top: 42px;
-		}
-		
-		#background-img{
- 	    	width: 100%; 
- 	    	margin-top: 100px;
-		}
-		
-		
-		.error-message{
-			color: red;
-			text-align: center;
-		}
-		
-	</style>
-	<title><gdb:localize key="login.title" /> </title>	
+  <title><gdb:localize key="login.title" /> </title>	
 </head>
 <body>
   
-  <c:if test="${not empty param.errorMessage}">
-    <div class="error-message">
-      <p>${param.errorMessage}</p>
-    </div>
-  </c:if>
-  
-  
   <div id="container">
-	
 		<div id="geoprism-landing-top-div">
 	    	<header id="header">
 				  <form id="login-form" method="post" action="session/login" class="login">
-				  	  <div>
-						<p>
-<%-- 					  <label> <gdb:localize key="login.username" />: </label> --%>
-						  <mjl:input param="username" type="text" id="login" />
-						</p>
-						<p>
-<%-- 					  <label> <gdb:localize key="login.password" />: </label> --%>
-						  <mjl:input param="password" type="password" id="password" value="" />
-						</p>
-					
+				  
+				      <c:if test="${not empty param.errorMessage}">
+    					<div class="error-message">
+      						<p>${param.errorMessage}</p>
+    					</div>
+  					  </c:if>
+  
+				  	  <div id="login-input-container">
+				  	  	<div>
+						  <input name="username" type="text" placeholder="<gdb:localize key="login.username"/>" id="login" />
+						  <input name="password" type="password" placeholder="<gdb:localize key="login.password"/>" id="password" value="" />
+						</div>
 					    <p class="login-submit">
-					      <button type="submit" class="login-button"><gdb:localize key="login.button" /></button>
+					      <button type="submit" class="login-button"><i class="fa fa-sign-in"></i><gdb:localize key="login.button" /></button>
 					    </p>
 					 </div>
 				
@@ -195,13 +67,12 @@
 				<!--       <a class="forgot-password" href="index.html">Forgot your password?</a> -->
 				<!--       <label class="remember-me">&nbsp;Remember me<input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever"/></label> -->
 				<!--     </div> -->
-				
-				<!--     --> 
 				  </form>
 	    	</header>
 			<img id="logo" src="net/geoprism/images/splash_logo.png" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
+		    <img id="logo_gp" src="net/geoprism/images/geoprism_banner.png" alt="logo" />
 		    <img id="background-img" src="net/geoprism/images/theme_background.png" alt="background" />
 		
 			<div id="geoprism-landing-footer">

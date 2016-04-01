@@ -178,6 +178,17 @@ public class SessionFilter implements Filter, Reloadable
       return true;
     }
     
+    // Allow CSS files for the login page
+    if (uri.endsWith(".css"))
+    {
+      return true;
+    }
+    
+    if (uri.contains("font-awesome") || uri.contains("fontawesome"))
+    {
+      return true;
+    }
+    
     // Allow images for the login page
     if (uri.endsWith(".png"))
     {
