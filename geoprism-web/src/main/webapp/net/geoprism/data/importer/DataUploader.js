@@ -24,28 +24,29 @@
     controller.getGeoEntitySuggestions = function( request, response ) {
       var limit = 20;
       
-      var onSuccess = function(query){
-        var resultSet = query.getResultSet()
-                                      
-        var results = [];
-                    
-        $.each(resultSet, function( index, result ) {
-          var label = result.getValue('displayLabel');
-          var id = result.getValue('id');
-                      
-          results.push({'label':label, 'value':label, 'id':id});
-        });
-                    
-        response( results );
-      };      
+      var connection = {
+        onSuccess : function(query){
+          var resultSet = query.getResultSet()
             
-      var onFailure = function(e){
-        console.log(e);
+          var results = [];
+            
+          $.each(resultSet, function( index, result ) {
+            var label = result.getValue('displayLabel');
+            var id = result.getValue('id');
+              
+            results.push({'label':label, 'value':label, 'id':id});
+          });
+            
+          response( results );
+        },
+        onFailure : function(e){
+          console.log(e);
+        }
       };
-         
+      
       var text = request.term;
         
-      datasetService.getGeoEntitySuggestions($scope.problem.parentId, $scope.problem.universalId, text, limit, onSuccess, onFailure);
+      datasetService.getGeoEntitySuggestions(connection, $scope.problem.parentId, $scope.problem.universalId, text, limit);
     }
     
     controller.setSynonym = function(value) {
@@ -55,43 +56,45 @@
     }
     
     controller.createSynonym = function() {
-      
-      var onSuccess = function(){
-        $scope.problem.resolved = true;
-        
-        $scope.$apply();
-      };
-      
-      var onFailure = function(e){
-        $scope.errors = [];
-        $scope.errors.push(e.localizedMessage);
-                   
-        $scope.$apply();
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(){
+          $scope.problem.resolved = true;
+         
+          $scope.$apply();
+        },
+        onFailure : function(e){
+         $scope.errors = [];
+         $scope.errors.push(e.localizedMessage);
+         
+         $scope.$apply();
+        }        
       };
       
       $scope.errors = undefined;
       
-      datasetService.createGeoEntitySynonym($scope.problem.synonym, $scope.problem.label, '#uploader-overlay', onSuccess, onFailure);
+      datasetService.createGeoEntitySynonym(connection, $scope.problem.synonym, $scope.problem.label);
     }
     
     controller.createEntity = function() {
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(){
+          $scope.problem.resolved = true;
       
-      var onSuccess = function(){
-        $scope.problem.resolved = true;
-          
-        $scope.$apply();        
-      };
+          $scope.$apply();        
+        },
+        onFailure : function(e){
+          $scope.errors = [];
+          $scope.errors.push(e.localizedMessage);
       
-      var onFailure = function(e){
-        $scope.errors = [];
-        $scope.errors.push(e.localizedMessage);
-                     
-        $scope.$apply();
+          $scope.$apply();
+        }      
       };
         
       $scope.errors = undefined;
       
-      datasetService.createGeoEntity($scope.problem.parentId, $scope.problem.universalId, $scope.problem.label, '#uploader-overlay', onSuccess, onFailure);
+      datasetService.createGeoEntity(connection, $scope.problem.parentId, $scope.problem.universalId, $scope.problem.label);
     }    
   }
   
@@ -153,16 +156,19 @@
     var controller = this;
     
     controller.select = function(match, replace) {
-      var onSuccess = function(result) {
-        var sheet = result.datasets;
-        sheet.replaceExisting = replace;
-        
-        $scope.$emit('loadConfiguration', {sheet: sheet});
-        
-        $scope.$apply();
-      }
+      var connection = {
+        elementId : '#uploader-div',
+        onSuccess : function(result) {
+          var sheet = result.datasets;
+          sheet.replaceExisting = replace;
       
-      datasetService.getSavedConfiguration(match.id, $scope.sheet.name, '#uploader-div', onSuccess);      
+          $scope.$emit('loadConfiguration', {sheet: sheet});
+      
+          $scope.$apply();
+        }    		  
+      };
+      
+      datasetService.getSavedConfiguration(connection, match.id, $scope.sheet.name);      
     }
   }
   
@@ -180,7 +186,7 @@
   }
   
   
-  function BeginningInfoPageController($scope, datasetService) {
+  function BeginningInfoPageController($scope) {
     var controller = this;
     
   }
@@ -807,59 +813,61 @@
     }
     
     controller.persist = function() {
-      var onSuccess = function(result) {
-        if(result.success) {          
-          controller.clear();
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(result) {
+          if(result.success) {          
+            controller.clear();
           
-          $scope.$emit('datasetChange', {datasets:result.datasets, finished : true});          
+            $scope.$emit('datasetChange', {datasets:result.datasets, finished : true});          
+          }
+          else {          
+            $scope.page.current = 'GEO-VALIDATION';
+            $scope.page.snapshots = [];
+          
+            $scope.sheets = result.sheets;
+            $scope.sheet = $scope.sheets[0];
+            $scope.problems = result.problems;
+          
+            $scope.$emit('datasetChange', {datasets:result.datasets, finished : false});
+          }
+         
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.message);
+         
+          $scope.$apply();
         }
-        else {          
-          $scope.page.current = 'GEO-VALIDATION';
-          $scope.page.snapshots = [];
-          
-          $scope.sheets = result.sheets;
-          $scope.sheet = $scope.sheets[0];
-          $scope.problems = result.problems;
-          
-          $scope.$emit('datasetChange', {datasets:result.datasets, finished : false});
-        }
-        
-        $scope.$apply();
-      }
-        
-      var onFailure = function(e){
-        $scope.errors.push(e.message);
-        
-        $scope.$apply();
-      };             
-
+      };
       // Reset the file Errors
       $scope.configuration.sheets[0] = $scope.sheet;
       
       $scope.errors = [];
       
-      datasetService.importData($scope.configuration, '#uploader-overlay', onSuccess, onFailure);      
+      datasetService.importData(connection, $scope.configuration);      
     }
     
     controller.cancel = function() {
-      var onSuccess = function(result) {
-        controller.clear();
-          
-        $scope.$emit('datasetChange', {finished : true});                
-            
-        $scope.$apply();
-      }
-            
-      var onFailure = function(e){
-        $scope.errors.push(e.message);
-            
-        $scope.$apply();
-      };             
-
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(result) {
+          controller.clear();
+         
+          $scope.$emit('datasetChange', {finished : true});                
+         
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.message);
+         
+          $scope.$apply();
+        }             
+      };
       // Reset the file Errors
       $scope.errors = [];
           
-      datasetService.cancelImport($scope.configuration, '#uploader-overlay', onSuccess, onFailure);
+      datasetService.cancelImport(connection, $scope.configuration);
     }
     
     controller.load = function(information, options) {

@@ -54,7 +54,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
         object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
         object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
 
-        JSONControllerUtil.writeReponse(this.resp, object.toString());
+        JSONControllerUtil.writeReponse(this.resp, object);
       }
       finally
       {
@@ -116,7 +116,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
       JSONObject object = new JSONObject();
       object.put("datasets", new JSONObject(configuration));
 
-      JSONControllerUtil.writeReponse(this.resp, object.toString());
+      JSONControllerUtil.writeReponse(this.resp, object);
     }
     catch (Throwable t)
     {
