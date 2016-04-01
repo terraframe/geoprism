@@ -116,7 +116,7 @@
     }
 
 	// List of runway class dependencies which must be loaded from the server
-    return runwayService.decorateService(service, ['net.geoprism.DataUploaderController', 'net.geoprism.DataSetController', 'net.geoprism.ontology.GeoEntityUtil']);  
+    return service;  
   }
   
   angular.module("dataset-service", ["runway-service"]);
