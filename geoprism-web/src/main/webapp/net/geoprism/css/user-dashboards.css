@@ -181,7 +181,7 @@ a.btn, .btn:active, .btn:focus {
 }
 
 .focus-area-label{
-   	max-width: 50%;
+   	max-width: 40%;
    	white-space: nowrap;
    	overflow: hidden;
 }
@@ -189,7 +189,7 @@ a.btn, .btn:active, .btn:focus {
 .dashboard-focus-area-label-mask{
  		background: linear-gradient(to left, rgba(255,255,255,1), rgba(225, 255, 255, 0));  
    	height: 19px;
-   	width: 35%;
+   	width: 40%;
    	position: absolute;
    	opacity: 0; /* set to hidden initially when thumbnail is semi-transparent */
 	transition: opacity .25s;
@@ -199,7 +199,7 @@ a.btn, .btn:active, .btn:focus {
 .dashboard-focus-area-label-mask-grey{
 	background: linear-gradient(to left, rgba(238,238,238,1), rgba(225, 255, 255, 0));  
 	height: 19px;
-	width: 35%;
+	width: 40%;
 	position: absolute;
 	opacity: 1; /* set visible initially when thumbnail is semi-transparent (i.e. grey) */
    	transition: opacity .25s;
