@@ -21,15 +21,15 @@
     var controller = this;
     
     controller.init = function() {
-      var onSuccess = function(json) {
-        var response = JSON.parse(json);
-        
-        $scope.datasets = response.datasets;
-        
-        $scope.$apply();
-      };
+      var connection = {
+        onSuccess : function(response) {
+          $scope.datasets = response.datasets;
+            
+          $scope.$apply();
+        } 
+      };      
       
-      datasetService.getAll(onSuccess);
+      datasetService.getAll(connection);
     }
     
     controller.getIndex = function(dataset) {
@@ -53,18 +53,21 @@
     	label : localizationService.localize("dataset", "delete", "Delete"),
     	config : {class:'btn btn-primary'},
         callback : function(){
-          var onSuccess = function() {
-            // Find and remove the dataset from the datasets array         
-            var index = controller.getIndex(dataset);
-              
-            if(index != null) {
-              $scope.datasets.splice(index, 1);        
+          var connection = {
+            elementId : '#app-container',
+            onSuccess : function() {
+              // Find and remove the dataset from the datasets array         
+              var index = controller.getIndex(dataset);
+                        
+              if(index != null) {
+                $scope.datasets.splice(index, 1);        
+              }
+                          
+              $scope.$apply();
             }
-                
-            $scope.$apply();
-          }
+          };
                     
-          datasetService.remove(dataset.id, "#app-container" , onSuccess);            
+          datasetService.remove(connection, dataset.id);            
         }                	  
       });
       buttons.push({
@@ -79,26 +82,27 @@
      * Data Upload Section
      */
     controller.uploadFile = function(files) {
-      var onSuccess = function(result) {
-        
-        $scope.$emit('dataUpload', {information:result.information, options:result.options});            
-        
-        // Hide modal, but preserve the elements and values        
-        $scope.hidden = true;
-        $scope.$apply();
-      }
-      
-      var onFailure = function(e){
-        $scope.errors.push(e.message);
-                         
-        $scope.$apply();
+      var connection = {
+        elementId : '#app-container',
+        onSuccess : function(result) {               
+          $scope.$emit('dataUpload', {information:result.information, options:result.options});            
                 
-        $('#app-container').parent().parent().animate({ scrollTop: 0 }, 'slow');
-      };             
-
+          // Hide modal, but preserve the elements and values        
+          $scope.hidden = true;
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.message);
+          
+          $scope.$apply();
+          
+          $('#app-container').parent().parent().animate({ scrollTop: 0 }, 'slow');
+        }
+      };
+    	
       // Reset the file Errors
       $scope.errors = [];
-      datasetService.uploadSpreadsheet(files[0], '#builder-div', onSuccess, onFailure);
+      datasetService.uploadSpreadsheet(connection, files[0]);
     }    
     
     controller.addDatasets = function(datasets) {

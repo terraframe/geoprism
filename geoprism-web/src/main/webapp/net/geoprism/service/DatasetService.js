@@ -21,14 +21,9 @@
   function DatasetService(runwayService) {
     var service = {};
     
-    service.uploadSpreadsheet = function(file, element, onSuccess, onFailure) {
-      var success = function(response) {
-        var result = JSON.parse(response);
+    service.uploadSpreadsheet = function(connection, file) {
     	
-        onSuccess(result);
-      };
-      
-      var request = runwayService.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createConnectionRequest(connection);
       
       var params = new FormData();
       params.append('file', file);
@@ -42,56 +37,50 @@
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
     }
     
-    service.importData = function(configuration, element, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    service.importData = function(connection, configuration) {
+      var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
     }
     
-    service.cancelImport = function(configuration, element, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    service.cancelImport = function(connection, configuration) {
+      var request = runwayService.createConnectionRequest(connection);
           
       net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));      
     }
     
-    service.getSavedConfiguration = function(id, sheetName, element, onSuccess, onFailure) {
-      var success = function(response) {
-        var result = JSON.parse(response);
-            
-        onSuccess(result);
-      };
-          
-      var request = runwayService.createStandbyRequest(element, success, onFailure);
+    service.getSavedConfiguration = function(connection, id, sheetName) {
+      var request = runwayService.createConnectionRequest(connection);
             
       net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
     }
     
-    service.createGeoEntitySynonym = function(entityId, label, element, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    service.createGeoEntitySynonym = function(connection, entityId, label) {
+      var request = runwayService.createConnectionRequest(connection);
         
       net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
     }
     
-    service.createGeoEntity = function(parentId, universalId, label, element, onSuccess, onFailure) {
-      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
+    service.createGeoEntity = function(connection, parentId, universalId, label) {
+      var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }    
     
-    service.getAll = function(onSuccess, onFailure) {
-      var request = runwayService.createRequest(onSuccess, onFailure);
+    service.getAll = function(connection) {
+      var request = runwayService.createConnectionRequest(connection);
     
       net.geoprism.DataSetController.getAll(request);
     }
     
-    service.remove = function(id, element, success, onFailure) {
-      var request = runwayService.createStandbyRequest(element, success, onFailure);
+    service.remove = function(connection, id) {
+      var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataSetController.remove(request, id);
     }
     
-    service.getGeoEntitySuggestions = function(parentId, universalId, text, limit, onSuccess, onFailure) {
-      var request = runwayService.createRequest(onSuccess, onFailure);
+    service.getGeoEntitySuggestions = function(connection, parentId, universalId, text, limit) {
+      var request = runwayService.createConnectionRequest(connection);
     
       net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
     }

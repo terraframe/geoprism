@@ -46,7 +46,7 @@ public class DataSetController extends DataSetControllerBase implements com.runw
       JSONObject object = new JSONObject();
       object.put("datasets", new JSONArray(datasets));
 
-      JSONControllerUtil.writeReponse(this.resp, object.toString());
+      JSONControllerUtil.writeReponse(this.resp, object);
     }
     catch (Throwable t)
     {
