@@ -21,14 +21,26 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
+  <div class="label-holder"></div>
+  <div class="holder">
+    <div class="row-holder">
+      <p><gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/></p>
+    </div>
+  </div>
+
+  <div ng-if="unassignedFields.length > 0">
     <div class="label-holder">
-	    <strong> </strong>
-	</div>
-	<div class="holder">
-	  <div class="row-holder">
-  		<p><gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/></p>
-  	  </div>
-  	</div>
+      <strong><gdb:localize key="dataUploader.unassignedLocationFields"/></strong>
+    </div>
+    <div class="holder">
+      <div class="row-holder">
+        <div ng-repeat="field in unassignedFields" class="location-selector-container">
+          <h3 class="location-field-info-card-title">{{field.label}}</h3>
+        </div>
+      </div> <!-- end row-holder -->
+    </div> <!-- end holder -->
+  </div> 
+  	
   <ng-form name="ctrl.attributeForm" isolate-form ng-if="attribute != null">
     <div class="label-holder">
       <strong><gdb:localize key="dataUploader.locationCreatorWidgetLabel"/></strong>
@@ -80,9 +92,9 @@
     <div class="holder">
       <div class="row-holder">
         
-        <div ng-repeat="id in sheet.attributes.ids" ng-init="attribute = sheet.attributes.values[id]" class="location-field-info-card">
+        <div ng-repeat="id in sheet.attributes.ids" ng-init="attribute = sheet.attributes.values[id]" class="location-selector-container">
             <h3 class="location-field-info-card-title">{{attribute.label}}</h3>
-            <div class="cell">            
+            <div class="cell" style="float: right;">            
             	<a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(attribute)" title="<gdb:localize key="dataUploader.editToolTip"/>"></a>
             	<a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(attribute)" title="<gdb:localize key="dataUploader.deleteToolTip"/>"></a>
           	</div>
@@ -97,6 +109,7 @@
       </div> <!-- end row-holder -->
     </div> <!-- end holder -->
   </div> <!-- end ng-if -->
+  
   <div class="label-holder"></div>
   <div class="holder">
     <div class="error-message">
