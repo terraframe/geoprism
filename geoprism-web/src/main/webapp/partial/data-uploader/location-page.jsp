@@ -51,7 +51,7 @@
 	      	<h4 class="location-select-container-heading-text"><gdb:localize key="dataUploader.locationContainerHeadingToolTip"/> {{attribute.label}}</h4>
 <%-- 	      	<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/>"></i>       --%>
 	      </div>
-          <span class="text">
+        <span class="text">
 	        <input ng-model="attribute.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
 	      </span>
 	      <div class="error-message">
@@ -59,7 +59,9 @@
 	          <gdb:localize key="dataUploader.unique"/>
 	        </p>    
 	      </div>
-	      
+	      <div class="row-holder">
+	        <hr>
+	      </div>	      
 	      <div class="row-holder" ng-repeat="universal in universalOptions track by $index">
 	      	<div class="label-help-ico-container">
 	      		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.fieldHelp01ToolTip"/> {{universal.label}} <gdb:localize key="dataUploader.fieldHelp02ToolTip"/> {{attribute.label}} <gdb:localize key="dataUploader.fieldHelp03ToolTip"/>"></i>      
@@ -98,7 +100,9 @@
             	<a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(attribute)" title="<gdb:localize key="dataUploader.editToolTip"/>"></a>
             	<a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(attribute)" title="<gdb:localize key="dataUploader.deleteToolTip"/>"></a>
           	</div>
-          	
+          	<div class="row-holder">
+          	  <hr>
+          	</div>
             <ul class="location-field-list-display">
               <li class="" ng-repeat="universal in universals track by $index" ng-if="attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE'">
                 <i class="fa fa-check-square"></i>{{attribute.fields[universal.value]}}            
