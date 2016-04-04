@@ -30,7 +30,7 @@
           controller.ids = [];
           controller.dashboards = {};
           controller.editDashboard = response.editDashboard;
-          controller.isInExistingRow = true;
+          controller.isInExistingRow = (response.dashboards.length > 0);
           
           for(var i = 0; i < response.dashboards.length; i++) {
             var dashboard = response.dashboards[i];
