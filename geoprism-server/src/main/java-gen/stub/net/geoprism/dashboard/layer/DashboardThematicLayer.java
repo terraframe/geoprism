@@ -19,6 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -128,7 +129,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     {
       this.applyAll(style, mapId, strategy, conditions);
     }
-    catch(com.runwaysdk.dataaccess.database.DuplicateDataDatabaseException e)
+    catch (com.runwaysdk.dataaccess.database.DuplicateDataDatabaseException e)
     {
       throw new DuplicateLayerException(e);
     }
@@ -270,94 +271,76 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
   public static String getOptionsJSON(String thematicAttributeId, String dashboardId)
   {
-    Dashboard dashboard = Dashboard.get(dashboardId);
-    MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
-    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
-
-    String[] fonts = DashboardThematicStyle.getSortedFonts();
-    OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
-    String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr);
-
-    JSONArray aggStrategiesJSON = new JSONArray();
-    GeoNode[] geoNodes = dashboard.getGeoNodes(tAttr);
-    for (GeoNode geoNode : geoNodes)
+    try
     {
-      JSONObject nodeObj = new JSONObject();
-      String nodeId = geoNode.getId();
-      String nodeType = geoNode.getType();
-      String nodeLabel = geoNode.getDisplayLabelAttribute().getDisplayLabel().toString();
+      Dashboard dashboard = Dashboard.get(dashboardId);
+      MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
+      MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
 
-      try
+      String[] fonts = DashboardThematicStyle.getSortedFonts();
+      OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
+      String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr);
+
+      JSONArray aggStrategiesJSON = new JSONArray();
+      GeoNode[] geoNodes = dashboard.getGeoNodes(tAttr);
+
+      for (GeoNode geoNode : geoNodes)
       {
+        String nodeId = geoNode.getId();
+        String nodeType = geoNode.getType();
+        String nodeLabel = geoNode.getDisplayLabelAttribute().getDisplayLabel().getValue();
+
+        List<AggregationStrategyView> strategies = Arrays.asList(AggregationStrategyView.getAggregationStrategies(geoNode));
+        Collections.reverse(strategies);
+
+        JSONArray aggregationStrategies = new JSONArray();
+
+        for (AggregationStrategyView strategy : strategies)
+        {
+          aggregationStrategies.put(strategy.toJSON());
+        }
+
+        JSONObject nodeObj = new JSONObject();
         nodeObj.put("nodeId", nodeId);
         nodeObj.put("nodeType", nodeType);
         nodeObj.put("nodeLabel", nodeLabel);
+        nodeObj.put("aggregationStrategies", aggregationStrategies);
+
+        aggStrategiesJSON.put(nodeObj);
       }
-      catch (JSONException e)
+
+      JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);
+      JSONObject attributeType = getMdAttributeType(tAttr);
+      String attrDataType = getCategoryType(mdAttribute);
+
+      // Set possible layer types based on attribute type
+      Map<String, String> layerTypes = new LinkedHashMap<String, String>();
+      MdAttributeConcrete mdAttributeConcrete = getMdAttributeConcrete(tAttr);
+
+      if (mdAttributeConcrete instanceof MdAttributeDate)
       {
-        throw new ProgrammingErrorException(e);
+        layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
+        layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
       }
-
-      JSONArray aggArr = new JSONArray();
-      AggregationStrategyView[] aggStrategies = AggregationStrategyView.getAggregationStrategies(geoNode);
-
-      for (AggregationStrategyView aggStrat : aggStrategies)
+      else if (mdAttributeConcrete instanceof MdAttributeTerm || mdAttributeConcrete instanceof MdAttributeText || mdAttributeConcrete instanceof MdAttributeCharacter)
       {
-        try
-        {
-          aggArr.put(aggStrat.toJSON());
-        }
-        catch (JSONException e)
-        {
-          throw new ProgrammingErrorException(e);
-        }
+        layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
+        layerTypes.put(AllLayerType.CATEGORYPOINT.getEnumName(), AllLayerType.CATEGORYPOINT.getDisplayLabel());
+        layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
+        layerTypes.put(AllLayerType.CATEGORYPOLYGON.getEnumName(), AllLayerType.CATEGORYPOLYGON.getDisplayLabel());
       }
-
-      try
+      else
       {
-        nodeObj.put("aggregationStrategies", aggArr);
+        layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
+        layerTypes.put(AllLayerType.GRADIENTPOINT.getEnumName(), AllLayerType.GRADIENTPOINT.getDisplayLabel());
+        layerTypes.put(AllLayerType.CATEGORYPOINT.getEnumName(), AllLayerType.CATEGORYPOINT.getDisplayLabel());
+        layerTypes.put(AllLayerType.BUBBLE.getEnumName(), AllLayerType.BUBBLE.getDisplayLabel());
+        layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
+        layerTypes.put(AllLayerType.GRADIENTPOLYGON.getEnumName(), AllLayerType.GRADIENTPOLYGON.getDisplayLabel());
+        layerTypes.put(AllLayerType.CATEGORYPOLYGON.getEnumName(), AllLayerType.CATEGORYPOLYGON.getDisplayLabel());
       }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
 
-      aggStrategiesJSON.put(nodeObj);
-    }
-
-    JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);
-    JSONObject attributeType = getMdAttributeType(tAttr);
-    String attrDataType = getCategoryType(mdAttribute);
-
-    // Set possible layer types based on attribute type
-    Map<String, String> layerTypes = new LinkedHashMap<String, String>();
-    MdAttributeConcrete mdAttributeConcrete = getMdAttributeConcrete(tAttr);
-    if (mdAttributeConcrete instanceof MdAttributeDate)
-    {
-      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
-    }
-    else if (mdAttributeConcrete instanceof MdAttributeTerm || mdAttributeConcrete instanceof MdAttributeText || mdAttributeConcrete instanceof MdAttributeCharacter)
-    {
-      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOINT.getEnumName(), AllLayerType.CATEGORYPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOLYGON.getEnumName(), AllLayerType.CATEGORYPOLYGON.getDisplayLabel());
-    }
-    else
-    {
-      layerTypes.put(AllLayerType.BASICPOINT.getEnumName(), AllLayerType.BASICPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.GRADIENTPOINT.getEnumName(), AllLayerType.GRADIENTPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOINT.getEnumName(), AllLayerType.CATEGORYPOINT.getDisplayLabel());
-      layerTypes.put(AllLayerType.BUBBLE.getEnumName(), AllLayerType.BUBBLE.getDisplayLabel());
-      layerTypes.put(AllLayerType.BASICPOLYGON.getEnumName(), AllLayerType.BASICPOLYGON.getDisplayLabel());
-      layerTypes.put(AllLayerType.GRADIENTPOLYGON.getEnumName(), AllLayerType.GRADIENTPOLYGON.getDisplayLabel());
-      layerTypes.put(AllLayerType.CATEGORYPOLYGON.getEnumName(), AllLayerType.CATEGORYPOLYGON.getDisplayLabel());
-    }
-
-    JSONObject json = new JSONObject();
-    try
-    {
+      JSONObject json = new JSONObject();
       json.put("aggregations", formatAggregationMethods(aggregations));
       json.put("aggegationStrategies", aggStrategiesJSON);
       json.put("fonts", new JSONArray(Arrays.asList(fonts)));
@@ -381,18 +364,18 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       pointTypes.put("CROSS");
       pointTypes.put("X");
       json.put("pointTypes", pointTypes);
+
+      if (aggStrategiesJSON.length() == 0)
+      {
+        throw new MissingLocationAttributeException();
+      }
+
+      return json.toString();
     }
     catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }
-
-    if (aggStrategiesJSON.length() == 0)
-    {
-      throw new MissingLocationAttributeException();
-    }
-
-    return json.toString();
   }
 
   private static JSONArray formatAggregationMethods(OIterator<? extends AggregationType> aggregations)

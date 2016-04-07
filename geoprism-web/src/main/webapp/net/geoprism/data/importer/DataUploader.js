@@ -359,7 +359,7 @@
             $scope.locationFields[field.universal] = [];
           }
             
-          $scope.locationFields[field.universal].push(field);            
+          $scope.locationFields[field.universal].push(field);          
         }
       }
       
@@ -406,6 +406,23 @@
       
       return null;
     }
+    
+    controller.refreshUnassignedFields = function() {
+      /*
+       * Reset the unassigned field array
+       */
+      $scope.unassignedFields = [];
+      
+      if($scope.attribute != null) {
+        for(var i = 0; i < $scope.sheet.fields.length; i++) {     
+          var field = $scope.sheet.fields[i]
+              
+          if(field.type == 'LOCATION' && !field.selected && field.name != $scope.attribute.name) {
+            $scope.unassignedFields.push(field);
+          }
+        }                      	  
+      }
+    }
       
     controller.remove = function(attribute) {
       if($scope.sheet.attributes.values[attribute.id] != null) {
@@ -416,11 +433,17 @@
         // Update the field.selected status
         controller.setFieldSelected();
         
-        controller.newAttribute();
+        if($scope.attribute == null) {
+          controller.newAttribute();
+        } 
+        else {
+          controller.refreshUnassignedFields();
+        }
       }
     }
     
     controller.newAttribute = function() {
+    	
       if($scope.attribute != null) {      
         if($scope.attribute.id == -1) {
           $scope.attribute.id = runwayService.generateId();
@@ -443,6 +466,7 @@
         
         $scope.attribute = {
           label : field.label,
+          name : field.name,
           universal : universal.value,
           fields : {},
           id : -1
@@ -450,11 +474,13 @@
 
         controller.addField(field);
       
-        controller.setUniversalOptions(field);
+        controller.setUniversalOptions(field);        
       }
       else {
         $scope.attribute = null;
       }
+      
+      controller.refreshUnassignedFields();
     }
     
     controller.addField = function(field) {
@@ -479,16 +505,17 @@
     
     controller.setFieldSelected = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
-      var field = $scope.sheet.fields[i]
+        var field = $scope.sheet.fields[i]
       
-      if(field.type == 'LOCATION') {
-          field.selected = controller.isSelected(field);        
-      }
+        if(field.type == 'LOCATION') {
+          field.selected = controller.isSelected(field);          
+        }
         else {
           field.selected = false;                
         }
       }          
     }
+    
     
     controller.isSelected = function(field) {
       for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {

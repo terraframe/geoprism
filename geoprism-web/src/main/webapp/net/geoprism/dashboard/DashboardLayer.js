@@ -46,6 +46,14 @@
         widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=236"}, speed);
       }
     }
+    
+    controller.exportMap = function() {
+      $scope.$emit('exportMap', {});          
+    }
+    
+    controller.centerMap = function() {
+      $scope.$emit('centerMap', {});                
+    }
   }
   
   function MapPanel() {

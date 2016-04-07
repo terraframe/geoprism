@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import net.geoprism.dashboard.DuplicateLayerExceptionBase;
 
 
 public class DuplicateLayerException extends DuplicateLayerExceptionBase implements com.runwaysdk.generation.loader.Reloadable

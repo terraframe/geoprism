@@ -41,68 +41,68 @@
   
   
   function StyleCategoryListController($scope) {
-	  var controller = this;
-	  
-	  $scope.toggleMin = function(event){
-		  this.category.val = "";
-		  this.category.rangeAllMin = !($(event.target).hasClass("active"));
-	  }
-	  
-	  $scope.toggleMax = function(event){
-		  this.category.valMax = "";
-		  this.category.rangeAllMax = !($(event.target).hasClass("active"));
-	  }
-	  
-	  $scope.categoryCheck = function(){
-		  
-		  if(this.category.isRangeCat && this.category.val && this.category.valMax){
-			  return false;
-		  }
-		  else if(this.category.isRangeCat && this.category.rangeAllMin && this.category.valMax){
-			  return false;
-		  }
-		  else if(this.category.isRangeCat && this.category.rangeAllMax && this.category.val){
-			  return false;
-		  }
-		  else if(this.category.isRangeCat && !this.category.val && this.category.valMax){
-			  return true;
-		  }
-		  else if(this.category.isRangeCat && this.category.val && !this.category.valMax){
-			  return true;
-		  }
-	  }
-	  
+    var controller = this;
+    
+    $scope.toggleMin = function(event){
+      this.category.val = "";
+      this.category.rangeAllMin = !($(event.target).hasClass("active"));
+    }
+    
+    $scope.toggleMax = function(event){
+      this.category.valMax = "";
+      this.category.rangeAllMax = !($(event.target).hasClass("active"));
+    }
+    
+    $scope.categoryCheck = function(){
+      
+      if(this.category.isRangeCat && this.category.val && this.category.valMax){
+        return false;
+      }
+      else if(this.category.isRangeCat && this.category.rangeAllMin && this.category.valMax){
+        return false;
+      }
+      else if(this.category.isRangeCat && this.category.rangeAllMax && this.category.val){
+        return false;
+      }
+      else if(this.category.isRangeCat && !this.category.val && this.category.valMax){
+        return true;
+      }
+      else if(this.category.isRangeCat && this.category.val && !this.category.valMax){
+        return true;
+      }
+    }
+    
       $scope.$watch("categories.rangeCategoriesEnabled", function(newValue, oldValue) {
-      	var scopeRef = $scope;
-      	var cats = scopeRef.categories.catLiElems;
-      	
-      	// update the other category
-      	if(newValue){
-      		scopeRef.categories.other.isRangeCat = true;
-      	}
-      	else{
-      		scopeRef.categories.other.isRangeCat = false;
-      	}
-      	
-      	// update the value categories
-  		for(var i=0; i<cats.length; i++){
-  			var cat = cats[0];
-  			if(newValue){
-  				cat.isRangeCat = true;
-      		}
-  			else{
-      			cat.isRangeCat = false;
-      			
-      			// make sure min category isn't disabled if set in widget and toggled back to basic categories
-      			// we really only need to reset the min val but i'm resetting max to be consistent
-          		if(cat.rangeAllMin){
-          			cat.rangeAllMin = false;
-          		}
-          		if(cat.rangeAllMax){
-          			cat.rangeAllMax = false;
-          		}
-      		}
-      	}
+        var scopeRef = $scope;
+        var cats = scopeRef.categories.catLiElems;
+        
+        // update the other category
+        if(newValue){
+          scopeRef.categories.other.isRangeCat = true;
+        }
+        else{
+          scopeRef.categories.other.isRangeCat = false;
+        }
+        
+        // update the value categories
+      for(var i=0; i<cats.length; i++){
+        var cat = cats[0];
+        if(newValue){
+          cat.isRangeCat = true;
+          }
+        else{
+            cat.isRangeCat = false;
+            
+            // make sure min category isn't disabled if set in widget and toggled back to basic categories
+            // we really only need to reset the min val but i'm resetting max to be consistent
+              if(cat.rangeAllMin){
+                cat.rangeAllMin = false;
+              }
+              if(cat.rangeAllMax){
+                cat.rangeAllMax = false;
+              }
+          }
+        }
       }); 
   }
   
@@ -120,7 +120,7 @@
 //      
 //      return '#'+c;
       var nodes = $scope.nodes();
-    	
+      
       return controller.rainbow(nodes.length, controller.count++);
     }  
     
@@ -220,14 +220,14 @@
           slide : false,
           selectable : false,
           onCreateLi: function(node, $li) {
-        	/*
-        	 * IMPORTANT : onCreateLi is called for all nodes everytime a new node is added.
-        	 * So if node 1 is added then its called on node 1. If then node 2 is added it 
-        	 * is called for node 1 and then node 2. If node 3 is added it is then called
-        	 * for node 1, node 2, and then node 3. Thus when attaching the color picker
-        	 * make sure it is in a way that the color picker gets destroyed when a node is
-        	 * replaced.
-        	 */        	  
+          /*
+           * IMPORTANT : onCreateLi is called for all nodes everytime a new node is added.
+           * So if node 1 is added then its called on node 1. If then node 2 is added it 
+           * is called for node 1 and then node 2. If node 3 is added it is then called
+           * for node 1, node 2, and then node 3. Thus when attaching the color picker
+           * make sure it is in a way that the color picker gets destroyed when a node is
+           * replaced.
+           */            
             if(!node.phantom) {
               // Load the value from the model
               var category = ctrl.getCategory(node);
@@ -405,11 +405,11 @@
         controller : LayerTypesController,
         controllerAs : 'ctrl',
         link: function (scope, element, attrs) {
-        	
-        	// Adjusting the layer-types scroll setting on load
-        	$timeout(function(){
-        		$(".style04 > .type-tabs")[0].scrollLeft = $('#'+scope.layerModel.layerType).position().left;
-        	}, 1000);
+          
+          // Adjusting the layer-types scroll setting on load
+          $timeout(function(){
+            $(".style04 > .type-tabs")[0].scrollLeft = $('#'+scope.layerModel.layerType).position().left;
+          }, 1000);
         }
       };    
    };
@@ -457,11 +457,11 @@
     
     controller.onAttributeChange = function() {
       controller.ready = false;
-    	
+      
       var attribute = $scope.styleModel.secondaryAggregation.attribute;
-    	
+      
       if(attribute.id != 'NONE') {
-    	
+      
         $('#secondary-aggregation-container').html("");
         
         // Reset the aggregation categories
@@ -493,7 +493,7 @@
           $("#secondaryAggregation").show();
           
           controller.ready = true;          
-        }, 50);    	  
+        }, 50);        
       }
     }
     
@@ -646,7 +646,7 @@
     controller.clear = function() {
       /**
        * Layer agnostic properties
-       */	
+       */  
       $scope.show = false;          
       $scope.errors = [];
       $scope.state = null;
@@ -659,7 +659,7 @@
     }
     
     controller.load = function(response) {
-      $scope.dynamicDataModel = response.dynamicDataModel;    	
+      $scope.dynamicDataModel = response.dynamicDataModel;      
       $scope.layerModel = response.layer;
       $scope.styleModel = response.style;
       $scope.categoryWidget = response.categoryWidget;
@@ -675,6 +675,11 @@
       
     $scope.setAggregationStrategyOptions = function(aggregations){
       $scope.dynamicDataModel.aggregationStrategyOptions = aggregations;
+      
+      // Set the value as the first option
+      if($scope.dynamicDataModel.aggregationStrategyOptions.length > 0) {
+        $scope.dynamicDataModel.aggregationStrategy = $scope.dynamicDataModel.aggregationStrategyOptions[0].value;
+      }
     };
                 
       /**
@@ -845,12 +850,12 @@
          
     controller.newInstance = function(mdAttributeId, mapId) {
       var onSuccess = function(response) {
-    	  
-    	// setting a simple default layer name for new layers
-    	if(response.layer.nameLabel.length === 0){
-    		response.layer.nameLabel = response.layer.attributeLabel;
-    	}
-    	
+        
+      // setting a simple default layer name for new layers
+      if(response.layer.nameLabel.length === 0){
+        response.layer.nameLabel = response.layer.attributeLabel;
+      }
+      
         controller.load(response);
                   
         $scope.show = true;
@@ -953,7 +958,7 @@
     controller.clear = function() {
       /*
        * Clear all model objects
-       */     	
+       */       
       $scope.show = false;  // Flag if the modal should be processed
       $scope.ready = false;
       $scope.errors = [];
@@ -966,14 +971,14 @@
     }
     
     controller.apply = function() {
-      var onSuccess = function(layer) {    	  
+      var onSuccess = function(layer) {        
         controller.clear();            
         $scope.$apply();
         
         if(layer != null) {
           var map = {};
           map.refLayers = [JSON.parse(layer)];
-        	
+          
           $scope.$emit('layerChange', {map:map});
         }
       }
@@ -1074,7 +1079,7 @@
       replace: true,
       templateUrl: '/partial/layer/reference-layer.jsp',    
       scope: {
-    	  
+        
       },
       controller : ReferenceLayerController,
       controllerAs : 'ctrl',

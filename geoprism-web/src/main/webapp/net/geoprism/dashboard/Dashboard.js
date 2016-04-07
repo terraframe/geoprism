@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function DashboardController($scope, $rootScope, $compile, $timeout, dashboardService, mapService) {
+  function DashboardController($scope, $rootScope, $compile, $timeout, dashboardService, localizationService, mapService) {
     var controller = this;
     
     /* Getting the $compile method reference for use with later functions  */
@@ -437,7 +437,7 @@
     controller.getMapExtent = function() {
       var mapBounds = {};
       
-      var mapExtent = mapService.getCurrentBounds(net.geoprism.dashboardMap.SRID);
+      var mapExtent = mapService.getCurrentBounds('EPSG:4326');
       mapBounds.left = mapExtent._southWest.lng;
       mapBounds.bottom = mapExtent._southWest.lat;
       mapBounds.right = mapExtent._northEast.lng;
@@ -469,8 +469,8 @@
       var activeBaseMapStr = JSON.stringify(activeBaseMap);
             
       if(activeBaseMap.LAYER_SOURCE_TYPE.toLowerCase() !== "osm"){        
-        var title = com.runwaysdk.Localize.get("rWarning", "Warning");
-        var message = com.runwaysdk.Localize.localize("dashboard", "InvalidBaseMap");
+        var title = localizationService.localize("dashboard", "warning");
+        var message = localizationService.localize("dashboard", "InvalidBaseMap");
         
         GDB.ExceptionHandler.renderDialog(title, message);            
       }
@@ -517,9 +517,7 @@
       
         /* Localize the value if needed */
         if(typeof attributeValue === 'number'){
-          var formatter = Globalize.numberFormatter();  
-              
-          info.attributeValue = formatter(attributeValue);
+          info.attributeValue = localizationService.formatNumber(attributeValue);
         }
         else if(attributeValue != null && !isNaN(Date.parse(attributeValue.substring(0, attributeValue.length - 1)))){
           var slicedAttr = attributeValue.substring(0, attributeValue.length - 1);
@@ -592,7 +590,7 @@
         window.location.href = url;    
       }
       else {
-        var message = com.runwaysdk.Localize.localize("dashboard", "MissingReport");                    
+        var message = localizationService.localize("dashboard", "MissingReport");                    
           
         GDB.ExceptionHandler.handleException(message);        
       }
@@ -750,10 +748,25 @@
      */ 
     $scope.$on('exportReport', function(event, data) {
       controller.exportReport(data.format);
-    });        
+    });   
+    
+    /*
+     * Map Events
+     */    
+    $scope.$on('exportMap', function(event, data) {
+      controller.exportMap();
+        
+      event.stopPropagation();
+    });
+      
+    $scope.$on('centerMap', function(event, data) {
+      controller.centerMap();
+        
+      event.stopPropagation();
+    });
   }
   
-  angular.module("dashboard", ["dashboard-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-layer-form", "dashboard-builder", "data-uploader"]);
+  angular.module("dashboard", ["dashboard-service", "localization-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-layer-form", "dashboard-builder", "data-uploader"]);
   angular.module("dashboard")
    .controller('DashboardController', DashboardController)
 })();

@@ -57,6 +57,11 @@
     service.localize = function(bundle, key) {
       return com.runwaysdk.Localize.localize(bundle, key);
     }
+    
+    service.get = function(key) {
+      return com.runwaysdk.Localize.get(key);
+    }
+    
 
     return service;
   }
