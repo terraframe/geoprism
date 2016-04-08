@@ -146,9 +146,13 @@
             <artifactId>cargo-maven2-plugin</artifactId>
             <version>1.4.15</version>
             <configuration>
-              <containerId>tomcat8x</containerId>
-              <containerUrl>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.zip</containerUrl>
               <container>
+                <containerId>tomcat8x</containerId>
+                <artifactInstaller>
+                  <groupId>org.apache.tomcat</groupId>
+                  <artifactId>tomcat</artifactId>
+                  <version>8.0.23</version>
+                </artifactInstaller>
                 <timeout>480000</timeout>
               </container>
               <configuration>
