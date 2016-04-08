@@ -55,7 +55,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.12</version>
+      <version>2.0.13-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -133,10 +133,10 @@
     </profile>
 
     <profile>
-      <id>geodash-cargo-run</id>
+      <id>cargo-run-debug</id>
       <activation>
         <property>
-          <name>geodash-cargo-run</name>
+          <name>cargo-run-debug</name>
         </property>
       </activation>
       <build>
@@ -145,42 +145,33 @@
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven2-plugin</artifactId>
             <version>1.4.15</version>
-            <executions>
-              <execution>
-                <id>geodash-cargo-run</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
             <configuration>
+              <containerId>tomcat8x</containerId>
+              <containerUrl>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.zip</containerUrl>
               <container>
                 <timeout>480000</timeout>
-                <containerId>tomcat8x</containerId>
-                <zipUrlInstaller>
-                  <url>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.zip</url>
-                </zipUrlInstaller>
               </container>
               <configuration>
                 <properties>
                   <cargo.servlet.port>8443</cargo.servlet.port>
                   <cargo.protocol>https</cargo.protocol>
                   <cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
-                  <cargo.tomcat.connector.sslProtocol>TLSv1,TLSv1.1,TLSv1.2</cargo.tomcat.connector.sslProtocol>
+                  <cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
                   <cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
                   <cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
                   <cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
                   <cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
                   <cargo.jvmargs>
                     -Xmx5120M
-                    -server
+                    -Xdebug
+                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
                     -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
                     -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
                     -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
                     -Djavax.net.ssl.trustStore=/${project.basedir}/src/test/resources/tomcat.truststore
                     -Djavax.net.ssl.trustStorePassword=2v8hVW2rPFncN6m
-                    -Djava.rmi.server.hostname=127.0.0.1                    
+                    -Djava.rmi.server.hostname=127.0.0.1
+                    -Dbirt-server=true
                   </cargo.jvmargs>
                 </properties>
               </configuration>
@@ -190,7 +181,7 @@
                   <artifactId>geoprism-web</artifactId>
                   <type>war</type>
                   <properties>
-                    <context>geoprism</context>
+                    <context>ROOT</context>
                   </properties>
                 </deployable>
                 <deployable>
@@ -203,6 +194,15 @@
                 </deployable>
               </deployables>
             </configuration>
+            <executions>
+              <execution>
+                <id>cargo-run</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

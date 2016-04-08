@@ -19,36 +19,26 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<project name="Geoprism Web" default="deploy_presentation_files">
+<project name="geoprism Web" default="deploy_presentation_files">
+  
+  <!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
 
-	<!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
+  <property name="tomcat" value="tomcat8x" /> 
+  <property name="projectName" value="ROOT" />  
+  <property name="project.webapp.root" value="${basedir}/src/main/webapp" />
 
-	<property name="projectName" value="geoprism" />	
-	<property name="project.webapp.root" value="${basedir}/src/main/webapp" />
-    <property name="runway.webapp.root" value="/home/jlewis/development/Runway-SDK/runwaysdk-web"></property>
-	
-	<!-- 
-	  richard <property name="runway.webapp.root" value="/Users/terraframe/Documents/workspace/runway-sdk/runwaysdk-web"></property>
-    smethie <property name="runway.webapp.root" value="/home/jsmethie/git/Runway-SDK/runwaysdk-web"></property>
-    lewis   <property name="runway.webapp.root" value="/home/jlewis/development/Runway-SDK/runwaysdk-web"></property>
-	-->
+  <target name="deploy_presentation_files">
 
-	<target name="deploy_presentation_files">
+    <!-- Copy from geoprism Web -->
+    <echo message="Copying from ${geoprism.webapp.root} to ${basedir}/target/cargo/configurations/${tomcat}/webapps/${projectName}" />
+    <copy todir="${basedir}/target/cargo/configurations/${tomcat}/webapps/${projectName}" verbose="false" overwrite="true">
+      <fileset dir="${geoprism.webapp.root}" includes="**/*.jsp" />
+      <fileset dir="${geoprism.webapp.root}" includes="**/*.js" />
+      <fileset dir="${geoprism.webapp.root}" includes="**/*.css" />
+    </copy>
+    
+    <echo message="Finished" />
 
-		<echo message="Copying from ${project.webapp.root}" />
-		
-		<copy todir="target/cargo/configurations/tomcat8x/webapps/${projectName}">
-			<fileset dir="${project.webapp.root}" includes="**/*" />
-		</copy>
-
-		<echo message="Copying from ${runway.webapp.root}/src/main/webapp/com/runwaysdk to target/cargo/configurations/tomcat8x/webapps/${projectName}/com/runwaysdk/" />
-
-		<copy todir="target/cargo/configurations/tomcat8x/webapps/${projectName}/com/runwaysdk/">
-			<fileset dir="${runway.webapp.root}/src/main/webapp/com/runwaysdk" includes="**/*" />
-		</copy>		
-		
-		<echo message="Finished" />
-
-	</target>
+  </target>
 
 </project>

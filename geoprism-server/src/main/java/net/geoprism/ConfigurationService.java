@@ -48,6 +48,11 @@ public class ConfigurationService implements Reloadable
       {
         configurations.add(it.next());
       }
+
+      if (configurations.size() == 0)
+      {
+        configurations.add(new DefaultConfiguration());
+      }
     }
     catch (ServiceConfigurationError serviceError)
     {

@@ -48,7 +48,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-server</artifactId>
-      <version>2.0.12</version>
+      <version>2.0.13-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
@@ -94,17 +94,22 @@
       <artifactId>gt-image</artifactId>
       <version>${geotools.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-wms</artifactId>
-      <version>${geotools.version}</version>
-    </dependency>
+  <dependency>
+    <groupId>org.geotools</groupId>
+    <artifactId>gt-wms</artifactId>
+    <version>${geotools.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-java-sdk-s3</artifactId>
+    <version>1.10.66</version>
+  </dependency>
 
-    <dependency>
-      <groupId>net.coobird</groupId>
-      <artifactId>thumbnailator</artifactId>
-      <version>[0.4, 0.5)</version>
-    </dependency>
+  <dependency>
+    <groupId>net.coobird</groupId>
+    <artifactId>thumbnailator</artifactId>
+    <version>[0.4, 0.5)</version>
+  </dependency>
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->

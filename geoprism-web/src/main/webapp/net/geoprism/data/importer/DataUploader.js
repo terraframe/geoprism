@@ -259,8 +259,6 @@
       return true;
     }
     
-    
-      
     controller.accept = function(field) {
       field.accepted = true;
       
@@ -793,24 +791,6 @@
   function UploaderDialogController($scope, $rootScope, datasetService, localizationService, widgetService) {
     var controller = this;
     
-    // AttributePageController emit's event when user toggles attribute types between location and non-location types
-    $scope.$on('hasLocationEvent', function(event, locationType) { 
-      $scope.locationType = locationType;
-      
-      if(locationType.length === 1 && locationType[0] === "LOCATION"){
-        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION"]);
-      }
-      else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
-        $scope.userSteps = datasetService.getUploaderSteps(["COORDINATE"]);
-      }
-      else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LATITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
-        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION", "COORDINATE"]);
-      }
-      else{
-        $scope.userSteps = datasetService.getUploaderSteps([]);
-      }
-    });
-    
     // Flag indicating if the modal and all of its elements should be destroyed
     $scope.show = false;    
     
@@ -1133,6 +1113,24 @@
       $scope.page.snapshots.push(snapshot);
 
       angular.copy(data.sheet, $scope.sheet);
+    });
+    
+    // AttributePageController emit's event when user toggles attribute types between location and non-location types
+    $scope.$on('hasLocationEvent', function(event, locationType) { 
+      $scope.locationType = locationType;
+      
+      if(locationType.length === 1 && locationType[0] === "LOCATION"){
+        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION"]);
+      }
+      else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
+        $scope.userSteps = datasetService.getUploaderSteps(["COORDINATE"]);
+      }
+      else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LATITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
+        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION", "COORDINATE"]);
+      }
+      else{
+        $scope.userSteps = datasetService.getUploaderSteps([]);
+      }
     });
   } 
   

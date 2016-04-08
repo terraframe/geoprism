@@ -1,0 +1,65 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <createOrUpdate>
+      <object key="Roles.geoprism.admin.Administrator" type="com.runwaysdk.system.Roles">
+        <attribute name="roleName" value="geoprism.admin.Administrator"/>
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Administrator"/>
+        </attributeStruct>
+      </object>
+      <object key="Roles.geoprism.admin.DashboardBuilder" type="com.runwaysdk.system.Roles">
+        <attribute name="roleName" value="geoprism.admin.DashboardBuilder"/>
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Dashboard builder"/>
+        </attributeStruct>
+      </object>
+      <object key="Roles.geoprism.DecisionMaker" type="com.runwaysdk.system.Roles">
+        <attribute name="roleName" value="geoprism.DecisionMaker"/>
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Decision maker"/>
+        </attributeStruct>
+      </object>
+      <object key="Users.admin" type="net.geoprism.GeoprismUser">
+        <attribute name="firstName" value="admin"/>
+        <attribute name="lastName" value="admin"/>
+        <attribute name="email" value="admin@noreply.com"/>
+        <attribute name="username" value="admin"/>
+        <attribute name="password" value="_nm8P4gfdWxGqNRQ#8"/>
+        <attribute name="sessionLimit" value="5000"/>
+      </object>
+    </createOrUpdate>
+    <permissions>
+      <user userName="admin">
+        <assignedRole roleName="geoprism.admin.Administrator"/>
+      </user>
+      <role roleName="geoprism.admin.Administrator">
+        <superRole roleName="Administrator"/>
+      </role>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="Users.admin" type="net.geoprism.GeoprismUser"/>
+    </delete>
+  </undoIt>
+</version>

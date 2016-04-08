@@ -21,8 +21,15 @@ package net.geoprism.context;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import net.geoprism.data.LocalEndpoint;
+import net.geoprism.data.LocationImporter;
+import net.geoprism.data.XMLEndpoint;
+import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.importer.GeoprismImportPlugin;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +43,17 @@ import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.XMLImporter;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.LocatedIn;
+import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.util.ServerInitializerFacade;
 
-public abstract class PatchingContextListener implements Reloadable, ServerContextListener
+public class PatchingContextListener implements Reloadable, ServerContextListener
 {
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
@@ -62,8 +76,8 @@ public abstract class PatchingContextListener implements Reloadable, ServerConte
 
       InputStream[] xmlFilesIS = InstallerCP.buildMetadataInputStreamList();
 
-      XMLImporter x = new XMLImporter(schema, xmlFilesIS);
-      x.toDatabase();
+      XMLImporter importer = new XMLImporter(schema, xmlFilesIS);
+      importer.toDatabase();
 
       ServerInitializerFacade.rebuild();
     }
@@ -87,8 +101,10 @@ public abstract class PatchingContextListener implements Reloadable, ServerConte
   }
 
   @Transaction
-  protected void patchMetadata()
+  protected boolean patchMetadata()
   {
+    LocalProperties.setSkipCodeGenAndCompile(true);
+
     String[] modules = this.getModules();
 
     for (String module : modules)
@@ -105,6 +121,27 @@ public abstract class PatchingContextListener implements Reloadable, ServerConte
         logger.error("Metadata schema files were not found! Unable to import schemas.");
       }
     }
+
+    /*
+     * Rebuild the all path tables if required
+     */
+    boolean initialized = Classifier.getStrategy().isInitialized();
+
+    Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
+    Universal.getStrategy().initialize(AllowedIn.CLASS);
+    GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
+
+    /*
+     * Load location data
+     */
+    ProjectDataConfiguration configuration = new ProjectDataConfiguration();
+
+    XMLEndpoint endpoint = new LocalEndpoint(new File("/home/terraframe/git/e3rrl/e3rrl-test/src/test/resources/countries"));
+
+    LocationImporter importer = new XMLLocationImporter(endpoint);
+    importer.loadProjectData(configuration);
+
+    return initialized;
   }
 
   @Override

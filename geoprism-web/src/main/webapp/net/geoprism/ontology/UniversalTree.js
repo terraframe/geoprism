@@ -51,7 +51,7 @@
         config = config || {};
         this._config = config;
         
-        config.exportMenuType = "net.geoprism.ontologylExportMenu";
+        config.exportMenuType = "net.geoprism.ontology.UniversalExportMenu";
         
         this.$initialize(config);
         
