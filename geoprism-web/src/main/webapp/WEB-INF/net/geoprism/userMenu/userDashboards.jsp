@@ -60,7 +60,12 @@
   <div id="container" ng-controller="DashboardMenuController as ctrl"  ng-cloak>
     <header id="header">
     	<div id="header-link-container" class="text-right">
-	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>"><img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/></a>
+	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
+	        <c:if test="${not empty miniLogoFilePath}" >
+            <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/>
+          </c:if>
+	        <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
+	      </a>
 	      <p id="user-link-container" class="text-right">
 <%-- 	        <c:choose> --%>
 <%-- 	          <c:when test="${isAdmin}"> --%>

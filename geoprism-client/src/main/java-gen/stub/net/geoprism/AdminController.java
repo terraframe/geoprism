@@ -188,6 +188,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void system() throws java.io.IOException, javax.servlet.ServletException
   {
     String sessionId = this.getClientSession().getSessionId();
+    
     String metadataES = "{className:" + EmailSettingDTO.CLASS + ", methodName:'getDefault', declaredTypes: []}";
     String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
     this.req.setAttribute("emailSetting", serializedES);
@@ -195,7 +196,20 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String metadataUsr = "{className:" + GeoprismUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
     String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
     this.req.setAttribute("user", serializedUsr);
-
+    
+    String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
+    if (bannerFile != null)
+    {
+      this.req.setAttribute("bannerFilePath", bannerFile);
+      this.req.setAttribute("bannerFileName", bannerFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
+    String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
+    if (miniLogoFile != null)
+    {
+      this.req.setAttribute("miniLogoFilePath", miniLogoFile);
+      this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
+    
     JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
 
     render("system.jsp");

@@ -51,7 +51,12 @@
 		<div id="geodash-landing-top-div">
 			<header id="header">
 				<div id="header-link-container" class="text-right">
-					<a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/></a>
+					<a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
+					  <c:if test="${not empty miniLogoFilePath}" >
+					    <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/>
+					  </c:if>
+					  <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
+					</a>
 					<p id="user-link-container" class="text-right">
 <%-- 			  	        <c:choose> --%>
 <%-- 						  <c:when test="${isAdmin}"> --%>
@@ -70,7 +75,7 @@
 				<div class="row-fluid header-logo-row">
 					<div class="hidden-xs col-md-1"></div>
        				<div class="col-md-8">
-       					<img id="logo" class="pull-left img-responsive" src="net/geoprism/images/splash_logo.png" alt="logo"/>
+       					<img id="logo" class="pull-left img-responsive" src="${bannerFilePath}" alt="logo"/>
        				</div>
        				<div class="hidden-xs col-md-3"></div>
 		 		</div>
