@@ -294,8 +294,6 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
     private static final String LABEL     = "label";
 
-    private static final String COUNTRY   = "country";
-
     private static final String TYPE_TAG  = "type";
 
     private static final String REMOVABLE = "removable";
