@@ -37,6 +37,7 @@ import net.geoprism.data.XMLLocationImporter;
 
 import org.xml.sax.Attributes;
 
+import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -483,11 +484,13 @@ public class GeoprismImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
+      LocalProperties.setSkipCodeGenAndCompile(true);
+
       ProjectDataConfiguration configuration = new ProjectDataConfiguration();
 
       XMLEndpoint endpoint = new LocalEndpoint(new File("/home/terraframe/git/e3rrl/e3rrl-test/src/test/resources/countries"));
 
-      LocationImporter importer = new XMLLocationImporter(endpoint);
+      LocationImporter importer = new XMLLocationImporter(endpoint, false);
       importer.loadProjectData(configuration);
     }
   }

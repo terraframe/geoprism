@@ -49,9 +49,17 @@ public class XMLLocationImporter implements LocationImporter
 
   private XMLEndpoint   endpoint;
 
+  private boolean       rebuild;
+
   public XMLLocationImporter(XMLEndpoint endpoint)
   {
+    this(endpoint, true);
+  }
+
+  public XMLLocationImporter(XMLEndpoint endpoint, boolean rebuild)
+  {
     this.endpoint = endpoint;
+    this.rebuild = rebuild;
   }
 
   @Override
@@ -72,7 +80,7 @@ public class XMLLocationImporter implements LocationImporter
       }
     }
 
-    if (additive)
+    if (rebuild && additive)
     {
       /*
        * New locations may have been added: We must re-initialize the all paths tables
@@ -90,12 +98,12 @@ public class XMLLocationImporter implements LocationImporter
     boolean additive = false;
 
     Set<Date> timestamps = this.getTimestamps();
-    
+
     /*
      * First: Load the universals
      */
     additive = this.loadUniversals(country, version, timestamps) || additive;
-    
+
     /*
      * Second: Load the entities
      */
