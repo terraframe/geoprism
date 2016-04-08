@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="net.geoprism.SystemLogoSingleton">
+      <mdBusiness name="net.geoprism.SystemLogoSingleton" label="SystemLogoSingleton" generateController="true">
         <attributes>
           <char name="bannerVaultId" label="bannerVaultId" size="255"/>
           <char name="miniLogoVaultId" label="miniLogoVaultId" size="255"/>
@@ -44,11 +44,26 @@
         </mdMethod>
       </mdBusiness>
     </create>
-    <update></update>
+    <update>
+      <mdController name="net.geoprism.SystemLogoSingletonController" label="Logo Controller">
+        <create>
+	        <mdAction name="uploadBanner" label="uploadBanner" isPost="true" isQuery="false">
+	          <mdParameter name="banner" label="banner" order="0" type="com.runwaysdk.controller.MultipartFileParameter" />
+	        </mdAction>
+	        <mdAction name="viewUploadBanner" label="viewUploadBanner">
+	        </mdAction>
+	        <mdAction name="uploadMiniLogo" label="uploadMiniLogo" isPost="true" isQuery="false">
+	          <mdParameter name="miniLogo" label="miniLogo" order="0" type="com.runwaysdk.controller.MultipartFileParameter" />
+	        </mdAction>
+	        <mdAction name="viewUploadMiniLogo" label="viewUploadMiniLogo" />
+        </create>
+      </mdController>
+    </update>
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.SystemBannerSingleton" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.SystemLogoSingleton" type="com.runwaysdk.system.metadata.MdBusiness" />
+      <object key="net.geoprism.SystemLogoSingletonController" type="com.runwaysdk.system.metadata.MdController" />
     </delete>
   </undoIt>
 </version>

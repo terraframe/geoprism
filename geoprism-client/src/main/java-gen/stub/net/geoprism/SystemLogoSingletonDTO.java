@@ -18,15 +18,21 @@
  */
 package net.geoprism;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.input.TeeInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.util.FileIO;
 
 public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
@@ -37,6 +43,13 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
   private static File bannerCache = null;
   
   private static File miniLogoCache = null;
+  
+  private static final String IMAGES_TEMP_DIR = "uploaded_images";
+  
+  public static final String getImagesTempDir(HttpServletRequest request)
+  {
+     return request.getContextPath() + "/" + IMAGES_TEMP_DIR + "/";
+  }
   
   final static Logger logger = LoggerFactory.getLogger(SystemLogoSingletonDTO.class);
   
@@ -64,10 +77,28 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
    * @param fileStream
    * @param fileName
    */
-  public static void uploadBannerCached(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
+  public static void uploadBannerAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    bannerCache = null;
-    SystemLogoSingletonDTOBase.uploadBanner(clientRequest, fileStream, fileName);
+    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on the server.
+    String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
+    new File(tempDir).mkdir();
+    bannerCache = new File(tempDir, fileName);
+    
+    FileOutputStream fos;
+    TeeInputStream teeIS;
+    try
+    {
+      fos = new FileOutputStream(bannerCache);
+      BufferedOutputStream buffer = new BufferedOutputStream(fos);
+      teeIS = new TeeInputStream(fileStream, buffer);
+    }
+    catch (FileNotFoundException e)
+    {
+      logger.error("Error creating image file [" + fileName + "].", e);
+      return;
+    }
+    
+    SystemLogoSingletonDTOBase.uploadBanner(clientRequest, teeIS, fileName);
   }
   
   /**
@@ -78,26 +109,47 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
    * @param fileStream
    * @param fileName
    */
-  public static void uploadMiniLogoCached(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
+  public static void uploadMiniLogoAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    miniLogoCache = null;
-    SystemLogoSingletonDTOBase.uploadMiniLogo(clientRequest, fileStream, fileName);
+    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on the server.
+    String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
+    new File(tempDir).mkdir();
+    miniLogoCache = new File(tempDir, fileName);
+    
+    FileOutputStream fos;
+    TeeInputStream teeIS;
+    try
+    {
+      fos = new FileOutputStream(miniLogoCache);
+      BufferedOutputStream buffer = new BufferedOutputStream(fos);
+      teeIS = new TeeInputStream(fileStream, buffer);
+    }
+    catch (FileNotFoundException e)
+    {
+      logger.error("Error creating image file [" + fileName + "].", e);
+      return;
+    }
+    
+    SystemLogoSingletonDTOBase.uploadMiniLogo(clientRequest, teeIS, fileName);
   }
   
   /**
-   * Calling this method will give you a path to a file on the system that will contain the uploaded banner, if it exists.
-   * If the file does exist, it will be cached client-side. Subsequent calls will return the client-side cached file. The
-   * underlying operating system may delete this cached file at any time, causing the file to be fetched from the server again.
-   * If no banner has been uploaded this method will return null.
+   * Calling this method will give you an img src path ready for use in html that will contain the uploaded logo,
+   *  if one has been uploaded. If the file does exist, it will be cached client-side. Subsequent calls will return the client-side
+   *  cached file. This file may be deleted and refetched from the server again at any point. If no banner has been uploaded this
+   *  method will return null.
+   * 
+   * TODO: The cache needs to be cleared on an interval (say every 6 hours or so) if there are multiple client machines
+   *         because uploading a logo from one client will not populate on the other client until the cache is cleared.
    * 
    * @param clientRequest
-   * @return a file path or null
+   * @return a file or null
    */
-  public static String getBannerFilePath(ClientRequestIF clientRequest)
+  public static String getBannerFileFromCache(ClientRequestIF clientRequest, HttpServletRequest request)
   {
     if (bannerCache != null)
     {
-      return bannerCache.getAbsolutePath();
+      return getImagesTempDir(request) + bannerCache.getName();
     }
     
     InputStream stream = SystemLogoSingletonDTOBase.getBannerFile(clientRequest);
@@ -106,28 +158,44 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
     String fileName = SystemLogoSingletonDTOBase.getBannerFilename(clientRequest);
     if (fileName == null) { return null; }
     
-    File tempFile = genericGetCachedLogo(clientRequest, fileName, stream);
-    if (tempFile == null) { return null; }
+    // Write the file to our temp dir
+    String tempDir = LocalProperties.getJspDir() + "/../" + IMAGES_TEMP_DIR;
+    new File(tempDir).mkdir();
+    bannerCache = new File(tempDir, fileName);
     
-    bannerCache = tempFile;
+    FileOutputStream fos;
+    try
+    {
+      fos = new FileOutputStream(bannerCache);
+      BufferedOutputStream buffer = new BufferedOutputStream(fos);
+      FileIO.write(buffer, stream);
+    }
+    catch (IOException e)
+    {
+      logger.error("Error creating image file [" + fileName + "].", e);
+      return null;
+    }
     
-    return bannerCache.getAbsolutePath();
+    return getImagesTempDir(request) + bannerCache.getName();
   }
   
   /**
-   * Calling this method will give you a path to a file on the system that will contain the uploaded mini logo, if it exists.
-   * If the file does exist, it will be cached client-side. Subsequent calls will return the client-side cached file. The
-   * underlying operating system may delete this cached file at any time, causing the file to be fetched from the server again.
-   * If no mini logo has been uploaded this method will return null.
+   * Calling this method will give you an img src path ready for use in html that will contain the uploaded logo,
+   *  if one has been uploaded. If the file does exist, it will be cached client-side. Subsequent calls will return the client-side
+   *  cached file. This file may be deleted and refetched from the server again at any point. If no logo has been uploaded this
+   *  method will return null.
+   * 
+   * TODO: The cache needs to be cleared on an interval (say every 6 hours or so) if there are multiple client machines
+   *         because uploading a logo from one client will not populate on the other client until the cache is cleared.
    * 
    * @param clientRequest
    * @return a file path or null
    */
-  public static String getMiniLogoFilePath(ClientRequestIF clientRequest)
+  public static String getMiniLogoFileFromCache(ClientRequestIF clientRequest, HttpServletRequest request)
   {
     if (miniLogoCache != null)
     {
-      return miniLogoCache.getAbsolutePath();
+      return getImagesTempDir(request) + miniLogoCache.getName();
     }
     
     InputStream stream = SystemLogoSingletonDTOBase.getMiniLogoFile(clientRequest);
@@ -136,36 +204,24 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
     String fileName = SystemLogoSingletonDTOBase.getMiniLogoFilename(clientRequest);
     if (fileName == null) { return null; }
     
-    File tempFile = genericGetCachedLogo(clientRequest, fileName, stream);
-    if (tempFile == null) { return null; }
+    // Write the file to our temp dir
+    String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
+    new File(tempDir).mkdir();
+    miniLogoCache = new File(tempDir, fileName);
     
-    miniLogoCache = tempFile;
-    
-    return miniLogoCache.getAbsolutePath();
-  }
-  
-  private static File genericGetCachedLogo(ClientRequestIF clientRequest, String fileName, InputStream stream)
-  {
-    String fileNoExt = fileName;
-    String extension = "";
-    int index = fileName.lastIndexOf('.');
-    if (index != -1)
-    {
-      fileNoExt = fileName.substring(0, index);
-      extension = fileName.substring(index + 1);
-    }
-    
-    File tempFile = null;
+    FileOutputStream fos;
     try
     {
-      tempFile = File.createTempFile(fileNoExt, extension);
-      FileIO.write(new FileOutputStream(tempFile), stream);
+      fos = new FileOutputStream(miniLogoCache);
+      BufferedOutputStream buffer = new BufferedOutputStream(fos);
+      FileIO.write(buffer, stream);
     }
     catch (IOException e)
     {
-      logger.error("Error happened while trying to create a temp file for the logo.", e);
+      logger.error("Error creating image file [" + fileName + "].", e);
+      return null;
     }
     
-    return tempFile;
+    return getImagesTempDir(request) + miniLogoCache.getName();
   }
 }

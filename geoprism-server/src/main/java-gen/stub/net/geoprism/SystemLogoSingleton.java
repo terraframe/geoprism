@@ -75,7 +75,20 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
    */
   public static java.io.InputStream getBannerFile()
   {
+    if (getInstance().getBannerVaultId().equals("")) { return null; }
+    
     return VaultFileDAO.get(getInstance().getBannerVaultId()).getFileStream();
+  }
+  
+  /**
+   * MdMethod
+   * Called to fetch the current mini logo file.
+   */
+  public static java.io.InputStream getMiniLogoFile()
+  {
+    if (getInstance().getMiniLogoVaultId().equals("")) { return null; }
+    
+    return VaultFileDAO.get(getInstance().getMiniLogoVaultId()).getFileStream();
   }
   
   private void checkVaultPermissions(VaultFile entity, Operation operation)
@@ -115,8 +128,9 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
   public static void uploadBanner(InputStream fileStream, String fileName)
   {
     SystemLogoSingleton instance = getInstance(); 
-    String vaultFileId = instance.genericLogoUpload(fileStream, fileName);
+    String vaultFileId = instance.genericLogoUpload(fileStream, fileName, instance.getBannerVaultId());
     
+    instance.lock();
     instance.setBannerVaultId(vaultFileId);
     instance.apply();
   }
@@ -128,8 +142,9 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
   public static void uploadMiniLogo(InputStream fileStream, String fileName)
   {
     SystemLogoSingleton instance = getInstance(); 
-    String vaultFileId = instance.genericLogoUpload(fileStream, fileName);
+    String vaultFileId = instance.genericLogoUpload(fileStream, fileName, instance.getMiniLogoVaultId());
     
+    instance.lock();
     instance.setMiniLogoVaultId(vaultFileId);
     instance.apply();
   }
@@ -146,14 +161,12 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
     return vfile.getFileName() + "." + vfile.getExtension();
   }
   
-  private String genericLogoUpload(InputStream fileStream, String fileName)
+  private String genericLogoUpload(InputStream fileStream, String fileName, String vaultId)
   {
     if (fileStream == null)
     {
       return null;
     }
-    
-    boolean isNew = this.isNew() && !this.isAppliedToDB();
     
     String fileNoExt = fileName;
     String extension = "";
@@ -167,7 +180,7 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
     VaultFile vaultFile;
     VaultFileDAO vaultFileDAO;
     
-    if (isNew)
+    if (vaultId.equals(""))
     {
       /*
        * Create a new vault file
@@ -182,7 +195,7 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
       /*
        * Update the existing vault file
        */
-      vaultFile = VaultFile.lock(this.getBannerVaultId());
+      vaultFile = VaultFile.lock(vaultId);
       vaultFileDAO = (VaultFileDAO) BusinessFacade.getEntityDAO(vaultFile);
 
       this.checkVaultPermissions(vaultFile, Operation.WRITE);
