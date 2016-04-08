@@ -133,10 +133,10 @@
     </profile>
 
     <profile>
-      <id>cargo-run-debug</id>
+      <id>geoprism-cargo-run-debug</id>
       <activation>
         <property>
-          <name>cargo-run-debug</name>
+          <name>geoprism-cargo-run-debug</name>
         </property>
       </activation>
       <build>

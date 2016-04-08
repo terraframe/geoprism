@@ -1,14 +1,3 @@
 {
-  "countries":[
-    {
-      "key":"zambia",
-      "version":"1.0",
-      "format":"xml"
-    },
-    {
-      "key":"sierra-leone",
-      "version":"1.0",
-      "format":"xml"
-    }
-  ]
+  "countries":[]
 }
