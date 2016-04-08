@@ -125,7 +125,7 @@
                   <filtering>false</filtering>
                 </resource>
                 <!-- <resource> <directory>src/main/resources</directory> </resource> -->
-              </webResources>              
+              </webResources>
             </configuration>
           </plugin>
         </plugins>
@@ -312,6 +312,27 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+             <tasks if="configuration.dir">
+                <echo message="Copying from ${configuration.dir} to ${project.build.directory}/classes/" />
+
+                <copy todir="${project.build.directory}/classes" verbose="true" overwrite="true">
+                  <fileset dir="${configuration.dir}" />
+                </copy>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.8</version>
         <executions>
@@ -402,5 +423,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
