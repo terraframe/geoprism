@@ -30,6 +30,7 @@
             <xs:element name="dashboard" type="dashboard" />
             <xs:element name="mappableClass" type="mappableClass" />
             <xs:element name="unzipperTask" type="unzipperTask" />
+            <xs:element name="locationTask" type="locationTask" />
           </xs:choice>
         </xs:extension>
       </xs:complexContent>
@@ -94,6 +95,9 @@
 
   <xs:complexType name="unzipperTask">
     <xs:attribute name="path" type="xs:anyURI" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="locationTask">
   </xs:complexType>
 
 </xs:schema>

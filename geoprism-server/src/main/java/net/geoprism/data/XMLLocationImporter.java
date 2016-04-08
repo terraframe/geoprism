@@ -90,16 +90,16 @@ public class XMLLocationImporter implements LocationImporter
     boolean additive = false;
 
     Set<Date> timestamps = this.getTimestamps();
-
+    
     /*
      * First: Load the universals
      */
-    additive = additive || this.loadUniversals(country, version, timestamps);
-
+    additive = this.loadUniversals(country, version, timestamps) || additive;
+    
     /*
      * Second: Load the entities
      */
-    additive = additive || this.loadGeoEntities(country, version, timestamps);
+    additive = this.loadGeoEntities(country, version, timestamps) || additive;
 
     return additive;
   }

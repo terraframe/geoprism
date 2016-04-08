@@ -25,10 +25,15 @@ import java.util.List;
 import net.geoprism.ClassUniversalQuery;
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.context.ProjectDataConfiguration;
 import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardBuilder;
 import net.geoprism.dashboard.DashboardQuery;
 import net.geoprism.dashboard.DashboardTypeInfo;
+import net.geoprism.data.LocalEndpoint;
+import net.geoprism.data.LocationImporter;
+import net.geoprism.data.XMLEndpoint;
+import net.geoprism.data.XMLLocationImporter;
 
 import org.xml.sax.Attributes;
 
@@ -434,7 +439,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       }
 
       MdClass mdClass = MdClass.get(_mdClass.getId());
-      
+
       MappableClass mClass = new MappableClass();
       mClass.setWrappedMdClass(mdClass);
       mClass.apply();
@@ -470,6 +475,25 @@ public class GeoprismImportPlugin implements ImportPluginIF
     }
   }
 
+  private static class LocationTaskHandler extends TagHandler
+  {
+    public LocationTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      ProjectDataConfiguration configuration = new ProjectDataConfiguration();
+
+      XMLEndpoint endpoint = new LocalEndpoint(new File("/home/terraframe/git/e3rrl/e3rrl-test/src/test/resources/countries"));
+
+      LocationImporter importer = new XMLLocationImporter(endpoint);
+      importer.loadProjectData(configuration);
+    }
+  }
+
   private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
   {
     private static final String DASHBOARD_TAG      = "dashboard";
@@ -478,11 +502,14 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
     private static final String UNZIPPER_TASK_TAG  = "unzipperTask";
 
+    private static final String LOCATION_TASK_TAG  = "locationTask";
+
     public PluginHandlerFactory(ImportManager manager)
     {
       this.addHandler(DASHBOARD_TAG, new DashboardHandler(manager));
       this.addHandler(MAPPABLE_CLASS_TAG, new MappableClassHandler(manager));
       this.addHandler(UNZIPPER_TASK_TAG, new UnzipperTaskHandler(manager));
+      this.addHandler(LOCATION_TASK_TAG, new LocationTaskHandler(manager));
     }
   }
 
