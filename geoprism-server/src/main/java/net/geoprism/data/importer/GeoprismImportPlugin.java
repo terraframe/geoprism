@@ -30,10 +30,10 @@ import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardBuilder;
 import net.geoprism.dashboard.DashboardQuery;
 import net.geoprism.dashboard.DashboardTypeInfo;
-import net.geoprism.data.LocalEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
+import net.geoprism.data.aws.AmazonEndpoint;
 
 import org.xml.sax.Attributes;
 
@@ -488,7 +488,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
       ProjectDataConfiguration configuration = new ProjectDataConfiguration();
 
-      XMLEndpoint endpoint = new LocalEndpoint(new File("/home/terraframe/git/e3rrl/e3rrl-test/src/test/resources/countries"));
+      XMLEndpoint endpoint = new AmazonEndpoint();
 
       LocationImporter importer = new XMLLocationImporter(endpoint, false);
       importer.loadProjectData(configuration);

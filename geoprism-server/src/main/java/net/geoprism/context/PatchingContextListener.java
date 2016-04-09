@@ -22,10 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.geoprism.data.LocalEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
+import net.geoprism.data.aws.AmazonEndpoint;
 import net.geoprism.data.importer.GeoprismImportPlugin;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
@@ -132,7 +132,7 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
      */
     ProjectDataConfiguration configuration = new ProjectDataConfiguration();
 
-    XMLEndpoint endpoint = new LocalEndpoint(new File("/home/terraframe/git/e3rrl/e3rrl-test/src/test/resources/countries"));
+    XMLEndpoint endpoint = new AmazonEndpoint();
 
     LocationImporter importer = new XMLLocationImporter(endpoint);
     importer.loadProjectData(configuration);
