@@ -41,15 +41,15 @@ import com.runwaysdk.vault.VaultFileDAOIF;
  */
 public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static SystemLogoSingleton instance = null;
-  
-  private static final long serialVersionUID = 1806816568;
-  
+  private static SystemLogoSingleton instance         = null;
+
+  private static final long          serialVersionUID = 1806816568;
+
   public SystemLogoSingleton()
   {
     super();
   }
-  
+
   public static synchronized SystemLogoSingleton getInstance()
   {
     if (instance == null)
@@ -68,29 +68,35 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
     }
     return instance;
   }
-  
+
   /**
-   * MdMethod
-   * Called to fetch the current banner file.
+   * MdMethod Called to fetch the current banner file.
    */
   public static java.io.InputStream getBannerFile()
   {
-    if (getInstance().getBannerVaultId().equals("")) { return null; }
-    
-    return VaultFileDAO.get(getInstance().getBannerVaultId()).getFileStream();
+    SystemLogoSingleton instance = getInstance();
+
+    if (instance == null || instance.getBannerVaultId().equals(""))
+    {
+      return null;
+    }
+
+    return VaultFileDAO.get(instance.getBannerVaultId()).getFileStream();
   }
-  
+
   /**
-   * MdMethod
-   * Called to fetch the current mini logo file.
+   * MdMethod Called to fetch the current mini logo file.
    */
   public static java.io.InputStream getMiniLogoFile()
   {
-    if (getInstance().getMiniLogoVaultId().equals("")) { return null; }
-    
+    if (getInstance().getMiniLogoVaultId().equals(""))
+    {
+      return null;
+    }
+
     return VaultFileDAO.get(getInstance().getMiniLogoVaultId()).getFileStream();
   }
-  
+
   private void checkVaultPermissions(VaultFile entity, Operation operation)
   {
     SessionIF session = Session.getCurrentSession();
@@ -108,66 +114,62 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
       }
     }
   }
-  
+
   /**
-   * MdMethod
-   * Called to get the filename of the persisted banner. Kind of a hack to get around the fact that we can't return both
-   * an input stream and also the name of the file.
+   * MdMethod Called to get the filename of the persisted banner. Kind of a hack to get around the fact that we can't
+   * return both an input stream and also the name of the file.
    */
   public static java.lang.String getBannerFilename()
   {
     VaultFileDAOIF vfile = VaultFileDAO.get(getInstance().getBannerVaultId());
-    
+
     return vfile.getFileName() + "." + vfile.getExtension();
   }
-  
+
   /**
-   * MdMethod
-   * Called to persist a new banner logo.
+   * MdMethod Called to persist a new banner logo.
    */
   public static void uploadBanner(InputStream fileStream, String fileName)
   {
-    SystemLogoSingleton instance = getInstance(); 
+    SystemLogoSingleton instance = getInstance();
     String vaultFileId = instance.genericLogoUpload(fileStream, fileName, instance.getBannerVaultId());
-    
+
     instance.lock();
     instance.setBannerVaultId(vaultFileId);
     instance.apply();
   }
-  
+
   /**
-   * MdMethod
-   * Called to persist a new mini logo.
+   * MdMethod Called to persist a new mini logo.
    */
   public static void uploadMiniLogo(InputStream fileStream, String fileName)
   {
-    SystemLogoSingleton instance = getInstance(); 
+    SystemLogoSingleton instance = getInstance();
     String vaultFileId = instance.genericLogoUpload(fileStream, fileName, instance.getMiniLogoVaultId());
-    
+
     instance.lock();
     instance.setMiniLogoVaultId(vaultFileId);
     instance.apply();
   }
-  
+
   /**
-   * MdMethod
-   * Called to get the filename of the persisted mini logo. Kind of a hack to get around the fact that we can't return both
-   * an input stream and also the name of the file.
+   * MdMethod Called to get the filename of the persisted mini logo. Kind of a hack to get around the fact that we can't
+   * return both an input stream and also the name of the file.
    */
   public static java.lang.String getMiniLogoFilename()
   {
     VaultFileDAOIF vfile = VaultFileDAO.get(getInstance().getMiniLogoVaultId());
-    
+
     return vfile.getFileName() + "." + vfile.getExtension();
   }
-  
+
   private String genericLogoUpload(InputStream fileStream, String fileName, String vaultId)
   {
     if (fileStream == null)
     {
       return null;
     }
-    
+
     String fileNoExt = fileName;
     String extension = "";
     int index = fileName.lastIndexOf('.');
@@ -176,10 +178,10 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
       fileNoExt = fileName.substring(0, index);
       extension = fileName.substring(index + 1);
     }
-    
+
     VaultFile vaultFile;
     VaultFileDAO vaultFileDAO;
-    
+
     if (vaultId.equals(""))
     {
       /*
@@ -200,14 +202,14 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
 
       this.checkVaultPermissions(vaultFile, Operation.WRITE);
     }
-    
+
     vaultFile.setValue(VaultFileInfo.FILE_NAME, fileNoExt);
     vaultFile.setValue(VaultFileInfo.EXTENSION, extension);
     vaultFileDAO.setSize(0);
     vaultFile.apply();
     vaultFileDAO.putFile(fileStream); // putFile will call apply for us
-    
+
     return vaultFile.getId();
   }
-  
+
 }

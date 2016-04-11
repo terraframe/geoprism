@@ -21,7 +21,7 @@ package net.geoprism;
 @com.runwaysdk.business.ClassSignature(hash = -1602277397)
 public class SessionControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String                       CLASS            = "com.runwaysdk.defaults.LoginController";
+  public static final String                       CLASS            = "com.runwaysdk.defaults.SessionController";
 
   protected javax.servlet.http.HttpServletRequest  req;
 
@@ -90,32 +90,46 @@ public class SessionControllerBase implements com.runwaysdk.generation.loader.Re
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
 
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void form() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.form");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void failForm(java.lang.String username, java.lang.String password) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.failForm");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters = "java.lang.String:username, java.lang.String:password", post = true)
   public void login(java.lang.String username, java.lang.String password) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.LoginController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.LoginController.login");
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.login");
   }
 
   @com.runwaysdk.controller.ActionParameters(parameters = "java.lang.String:username, java.lang.String:password", post = true)
   public void failLogin(java.lang.String username, java.lang.String password) throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.LoginController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.LoginController.failLogin");
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.failLogin");
   }
 
   @com.runwaysdk.controller.ActionParameters(parameters = "", post = false)
   public void logout() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.LoginController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.LoginController.logout");
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.logout");
   }
 
   @com.runwaysdk.controller.ActionParameters(parameters = "", post = false)
   public void failLogout() throws java.io.IOException, javax.servlet.ServletException
   {
-    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.LoginController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.LoginController.failLogout");
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.failLogout");
   }
 
 }

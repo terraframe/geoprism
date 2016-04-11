@@ -142,12 +142,7 @@ public class SessionFilter implements Filter, Reloadable
   {
     String uri = req.getRequestURI();
 
-    // They're allowed to hit the login view page, otherwise its a redirect loop
-    if (uri.equals(req.getContextPath() + "/login"))
-    {
-      return true;
-    }
-    
+    // They're allowed to hit the login view page, otherwise its a redirect loop    
     if (uri.equals(req.getContextPath() + "/loginRedirect"))
     {
       return true;
@@ -160,7 +155,12 @@ public class SessionFilter implements Filter, Reloadable
     }
 
     // They can also invoke the login action on SessionController @
-    // session/login
+    // session/form and session/login
+    if (uri.equals(req.getContextPath() + "/session/form"))
+    {
+      return true;
+    }
+    
     if (uri.equals(req.getContextPath() + "/session/login"))
     {
       return true;
@@ -196,7 +196,7 @@ public class SessionFilter implements Filter, Reloadable
     }
     
     // Login/Logout requests for mojax/mojo extensions.
-    if (uri.endsWith(SessionController.LOGIN_ACTION) || uri.endsWith(SessionController.LOGOUT_ACTION))
+    if (uri.endsWith(SessionController.LOGIN_ACTION) || uri.endsWith(SessionController.LOGOUT_ACTION)  || uri.endsWith(SessionController.FORM_ACTION))
     {
       return true;
     }

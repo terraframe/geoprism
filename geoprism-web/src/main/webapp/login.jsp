@@ -24,10 +24,6 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
-<%@ page import="net.geoprism.SystemLogoSingletonDTO" %>
-<%@ page import="com.runwaysdk.ClientSession" %>
-<%@ page import="com.runwaysdk.constants.CommonProperties" %>
-
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -38,7 +34,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <%--   <title><gdb:localize key="login.title" /></title> --%>
 
-  <link rel="stylesheet" type="text/css" href="3rd-party/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/3rd-party/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/net/geoprism/css/login.css">
   
   <title><gdb:localize key="login.title" /> </title>	
@@ -48,13 +44,11 @@
   <div id="container">
 		<div id="geoprism-landing-top-div">
 	    	<header id="header">
-				  <form id="login-form" method="post" action="session/login" class="login">
+				  <form id="login-form" method="post" action="login" class="login">
 				  
-				      <c:if test="${not empty param.errorMessage}">
     					<div class="error-message">
-      						<p>${param.errorMessage}</p>
+      						<p>${errorMessage}</p>
     					</div>
-  					  </c:if>
   
 				  	  <div id="login-input-container">
 				  	  	<div>
@@ -74,29 +68,12 @@
 				  </form>
 	    	</header>
 	    	
-	    	<%!
-		      String printBannerSrc(HttpServletRequest request)
-		      {
-	    	    ClientSession session = ClientSession.createAnonymousSession(new java.util.Locale[]{CommonProperties.getDefaultLocale()});
-		        com.runwaysdk.constants.ClientRequestIF clientRequest = session.getRequest();
-		      
-		        String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(clientRequest, request);
-		        if (bannerFile != null)
-		        {
-		          return bannerFile;
-		        }
-		        else
-		        {
-		          String webappRoot = request.getContextPath() + "/";
-		          return webappRoot + "net/geoprism/images/splash_logo.png";
-		        }
-		      }
-        %>
-			<img id="logo" src="<%= printBannerSrc(request) %>" alt="logo" />
+
+			<img id="logo" src="<%= request.getAttribute("banner") %>" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
-		    <img id="logo_gp" src="net/geoprism/images/geoprism_banner.png" alt="logo" />
-		    <img id="background-img" src="net/geoprism/images/theme_background.png" alt="background" />
+		    <img id="logo_gp" src="/net/geoprism/images/geoprism_banner.png" alt="logo" />
+		    <img id="background-img" src="/net/geoprism/images/theme_background.png" alt="background" />
 		
 			<div id="geoprism-landing-footer">
 				<h4><gdb:localize key="login.footerMessage"/></h4>
