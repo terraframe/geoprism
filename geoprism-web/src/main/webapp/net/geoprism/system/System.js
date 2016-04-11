@@ -97,11 +97,200 @@
         return com.runwaysdk.Localize.localize(systemFormName, key);      
       },
       
-      render : function(container, readOnly) {
-        var form = this._build(readOnly);
-        var that = this;
+      render : function(container, readOnly, formType) {
+        this._build(container, readOnly, formType);
+      },
+      
+      _build : function(container, readOnly, formType) {
+        var outer = this.getFactory().newElement("div");
         
-        container.appendContent(form);
+        var that = this;
+        var errors = new com.runwaysdk.structure.HashSet();
+        
+        if (formType !== "email")
+        {
+          // Banner
+          var banner = $(document.getElementById("form.banner"));
+          banner.show();
+          var rwBanner = this.getFactory().newElement(banner[0]);
+          var bannerHeader = this._newHeader(this.localize('banner_sectionHeader'));
+          bannerHeader.setId("bannerHeader");
+          rwBanner.insertBefore(bannerHeader, rwBanner.getChildren()[0]);
+          rwBanner.insertBefore(this.getFactory().newElement("div", {innerHTML: this.localize("banner_description"), id: "bannerDescription"}), rwBanner.getChildren()[1]);
+          outer.appendChild(rwBanner);
+          
+          // MiniLogo
+          var miniLogo = $(document.getElementById("form.miniLogo"));
+          miniLogo.show();
+          var rwMiniLogo = this.getFactory().newElement(miniLogo[0]);
+          var miniLogoHeader = this._newHeader(this.localize('miniLogo_sectionHeader'));
+          miniLogoHeader.setId("miniLogoHeader");
+          rwMiniLogo.insertBefore(miniLogoHeader, rwMiniLogo.getChildren()[0]);
+          rwMiniLogo.insertBefore(this.getFactory().newElement("div", {innerHTML: this.localize("miniLogo_description"), id: "miniLogoDescription"}), rwMiniLogo.getChildren()[1]);
+          outer.appendChild(rwMiniLogo);
+        }
+        
+        // Email Section Header
+        var form = new Form();
+        form.appendElement(this._newHeader(this.localize('email_sectionHeader')));
+        
+        // Email description
+        form.appendElement(this.getFactory().newElement("div", {innerHTML: this.localize("email_description")}));
+        
+        // Email Fields
+        if (!readOnly && this._emailSetting.isServerWritable())
+        {
+          var serverInput = FormEntry.newInput('text', 'server', {attributes:{type:'text', id:'server'}});
+          serverInput.setValue(this._emailSetting ? this._emailSetting.getServer() : "");
+          form.addFormEntry(this._emailSetting.getServerMd(), serverInput, this.localize("email_serverTooltip"));
+          
+          var requiredField = function() { that._requiredField(serverInput.getValue(), serverInput.getId(), form, errors); };
+          serverInput.addEventListener('blur', requiredField);
+        }
+        else if (this._emailSetting.isServerReadable())
+        {
+          var label = this._emailSetting.getServerMd().getDisplayLabel();        
+          var entry = new net.geoprism.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
+          form.addEntry(entry);
+        }
+        
+        if (!readOnly && this._emailSetting.isUsernameWritable())
+        {
+          var userNameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
+          userNameInput.setValue(this._emailSetting ? this._emailSetting.getUsername() : "");
+          form.addFormEntry(this._emailSetting.getUsernameMd(), userNameInput, this.localize("email_usernameTooltip"));
+          
+          var requiredField = function() { that._requiredField(userNameInput.getValue(), userNameInput.getId(), form, errors); };
+          userNameInput.addEventListener('blur', requiredField);
+        }
+        else if (this._emailSetting.isUsernameReadable())
+        {
+          var label = this._emailSetting.getUsernameMd().getDisplayLabel();        
+          var entry = new net.geoprism.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
+          form.addEntry(entry);
+        }
+          
+        if (!readOnly && this._emailSetting.isPasswordWritable())
+        {
+          var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
+          passwordInput.setValue(this._emailSetting ? this._emailSetting.getPassword() : "");
+          form.addFormEntry(this._emailSetting.getPasswordMd(), passwordInput, this.localize("email_passwordTooltip"));
+          
+          var requiredField = function() { that._requiredField(passwordInput.getValue(), passwordInput.getId(), form, errors); };
+          passwordInput.addEventListener('blur', requiredField);
+        }
+        
+        if (!readOnly && this._emailSetting.isPortWritable())
+        {
+          var portInput = FormEntry.newInput('text', 'port', {attributes:{type:'text', id:'port'}});
+          portInput.setValue(this._emailSetting ? this._emailSetting.getPort() : "");
+          form.addFormEntry(this._emailSetting.getPortMd(), portInput, this.localize("email_portTooltip"));
+          
+          var requiredField = function() {
+          	document.getElementById('user-submit').disabled = true;
+
+          	var val = portInput.getValue();
+          	
+            if(val == null || val === "" || !$.isNumeric(val))
+            {
+              form.getEntry(portInput.getId()).addInlineError(that.localize('nonNumeric'));   
+              errors.add(portInput.getId());
+            }
+            else
+            {
+              form.getEntry(portInput.getId()).removeInlineError();
+              errors.remove(portInput.getId());
+              if (errors.isEmpty())
+              {
+                document.getElementById('user-submit').disabled = false;
+              }
+            }
+          };
+          portInput.addEventListener('blur', requiredField);
+        }
+        else if (this._emailSetting.isPortReadable())
+        {
+          var label = this._emailSetting.getPortMd().getDisplayLabel();        
+          var entry = new net.geoprism.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
+          form.addEntry(entry);                  
+        }
+        
+        if (!readOnly && this._emailSetting.isFromWritable())
+        {
+          var fromInput = FormEntry.newInput('text', 'from', {attributes:{type:'text', id:'from'}});
+          fromInput.setValue(this._emailSetting ? this._emailSetting.getFrom() : "");
+          form.addFormEntry(this._emailSetting.getFromMd(), fromInput, this.localize("email_fromTooltip"));
+          
+          var validateEmail = Mojo.Util.bind(this, function()
+          {
+            document.getElementById('user-submit').disabled = true;
+            
+            if (!this._isValidEmail(fromInput.getValue()))              
+            {
+              form.getEntry(fromInput.getId()).addInlineError(this.localize('email_invalidEmail'));          
+              errors.add(fromInput.getId());
+            }
+            else
+            {
+              form.getEntry(fromInput.getId()).removeInlineError();
+              errors.remove(fromInput.getId());
+              if (errors.isEmpty())
+              {
+                document.getElementById('user-submit').disabled = false;   
+              }
+            }
+          });
+                
+          fromInput.addEventListener('blur', validateEmail);
+        }
+        else if (this._emailSetting.isFromReadable())
+        {
+          var label = this._emailSetting.getFromMd().getDisplayLabel();        
+          var entry = new net.geoprism.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
+          form.addEntry(entry);
+        }
+        
+        if (!readOnly && this._emailSetting.isToWritable())
+        {
+          var toInput = FormEntry.newInput('text', 'to', {attributes:{type:'text', id:'to'}});
+          toInput.setValue(this._emailSetting ? this._emailSetting.getTo() : "");
+          form.addFormEntry(this._emailSetting.getToMd(), toInput, this.localize("email_toTooltip"));
+          
+          var validateEmail = Mojo.Util.bind(this, function()
+          {
+            if(toInput.getValue() !== '')
+            {
+              document.getElementById('user-submit').disabled = true;
+
+              if(!this._isValidEmailList(toInput.getValue()))              
+              {
+                form.getEntry(toInput.getId()).addInlineError(this.localize('email_invalidEmail'));
+                errors.add(toInput.getId());
+              }
+              else
+              {
+                form.getEntry(toInput.getId()).removeInlineError();
+                errors.remove(toInput.getId());
+                if (errors.isEmpty())
+                {
+                  document.getElementById('user-submit').disabled = false;
+                }
+              }
+            }
+          });
+            
+          toInput.addEventListener('blur', validateEmail);
+        }
+        else if (this._emailSetting.isToReadable())
+        {
+          var label = this._emailSetting.getToMd().getDisplayLabel();        
+          var entry = new net.geoprism.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
+          form.addEntry(entry);                  
+        }
+        outer.appendChild(form);
+        
+        container.setForm(form);
+        container.appendChild(outer);
         
         // Add some cancel/edit/submit buttons
         if (this._emailSetting.isWritable())
@@ -169,7 +358,7 @@
           else
           {
             var editCallback = function() {
-              that.fireEvent(SystemFormEvent.ON_EDIT, that._emailSetting, container);            	
+              that.fireEvent(SystemFormEvent.ON_EDIT, that._emailSetting, container);             
             };
           
             container.addButton(that.localize("edit"), editCallback, null, {id:'user-edit', class:'btn btn-primary'});
@@ -179,170 +368,8 @@
         {
           container.addButton(that.localize("close"), function(){container.close();}, null, {id:'user-cancel', class:'btn btn-primary'});            
         }
-      },
-      
-      _build : function(readOnly) {
-        var form = new Form();
-        var that = this;
-        var errors = new com.runwaysdk.structure.HashSet();
         
-        // Section Header
-        form.appendElement(this._newHeader(this.localize('sectionHeader')));
-        
-        // Cool description
-        form.appendElement(this.getFactory().newElement("div", {innerHTML: this.localize("description")}));
-        
-        if (!readOnly && this._emailSetting.isServerWritable())
-        {
-          var serverInput = FormEntry.newInput('text', 'server', {attributes:{type:'text', id:'server'}});
-          serverInput.setValue(this._emailSetting ? this._emailSetting.getServer() : "");
-          form.addFormEntry(this._emailSetting.getServerMd(), serverInput, this.localize("serverTooltip"));
-          
-          var requiredField = function() { that._requiredField(serverInput.getValue(), serverInput.getId(), form, errors); };
-          serverInput.addEventListener('blur', requiredField);
-        }
-        else if (this._emailSetting.isServerReadable())
-        {
-          var label = this._emailSetting.getServerMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('server', label, this._emailSetting ? this._emailSetting.getServer() : "");
-          form.addEntry(entry);
-        }
-        
-        if (!readOnly && this._emailSetting.isUsernameWritable())
-        {
-          var userNameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
-          userNameInput.setValue(this._emailSetting ? this._emailSetting.getUsername() : "");
-          form.addFormEntry(this._emailSetting.getUsernameMd(), userNameInput, this.localize("usernameTooltip"));
-          
-          var requiredField = function() { that._requiredField(userNameInput.getValue(), userNameInput.getId(), form, errors); };
-          userNameInput.addEventListener('blur', requiredField);
-        }
-        else if (this._emailSetting.isUsernameReadable())
-        {
-          var label = this._emailSetting.getUsernameMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('userName', label, this._emailSetting ? this._emailSetting.getUsername() : "");
-          form.addEntry(entry);
-        }
-          
-        if (!readOnly && this._emailSetting.isPasswordWritable())
-        {
-          var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
-          passwordInput.setValue(this._emailSetting ? this._emailSetting.getPassword() : "");
-          form.addFormEntry(this._emailSetting.getPasswordMd(), passwordInput, this.localize("passwordTooltip"));
-          
-          var requiredField = function() { that._requiredField(passwordInput.getValue(), passwordInput.getId(), form, errors); };
-          passwordInput.addEventListener('blur', requiredField);
-        }
-        
-        if (!readOnly && this._emailSetting.isPortWritable())
-        {
-          var portInput = FormEntry.newInput('text', 'port', {attributes:{type:'text', id:'port'}});
-          portInput.setValue(this._emailSetting ? this._emailSetting.getPort() : "");
-          form.addFormEntry(this._emailSetting.getPortMd(), portInput, this.localize("portTooltip"));
-          
-          var requiredField = function() {
-          	document.getElementById('user-submit').disabled = true;
-
-          	var val = portInput.getValue();
-          	
-            if(val == null || val === "" || !$.isNumeric(val))
-            {
-              form.getEntry(portInput.getId()).addInlineError(that.localize('nonNumeric'));   
-              errors.add(portInput.getId());
-            }
-            else
-            {
-              form.getEntry(portInput.getId()).removeInlineError();
-              errors.remove(portInput.getId());
-              if (errors.isEmpty())
-              {
-                document.getElementById('user-submit').disabled = false;
-              }
-            }
-          };
-          portInput.addEventListener('blur', requiredField);
-        }
-        else if (this._emailSetting.isPortReadable())
-        {
-          var label = this._emailSetting.getPortMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('port', label, this._emailSetting ? this._emailSetting.getPort() : "");
-          form.addEntry(entry);                  
-        }
-        
-        if (!readOnly && this._emailSetting.isFromWritable())
-        {
-          var fromInput = FormEntry.newInput('text', 'from', {attributes:{type:'text', id:'from'}});
-          fromInput.setValue(this._emailSetting ? this._emailSetting.getFrom() : "");
-          form.addFormEntry(this._emailSetting.getFromMd(), fromInput, this.localize("fromTooltip"));
-          
-          var validateEmail = Mojo.Util.bind(this, function()
-          {
-            document.getElementById('user-submit').disabled = true;
-            
-            if (!this._isValidEmail(fromInput.getValue()))              
-            {
-              form.getEntry(fromInput.getId()).addInlineError(this.localize('invalidEmail'));          
-              errors.add(fromInput.getId());
-            }
-            else
-            {
-              form.getEntry(fromInput.getId()).removeInlineError();
-              errors.remove(fromInput.getId());
-              if (errors.isEmpty())
-              {
-                document.getElementById('user-submit').disabled = false;   
-              }
-            }
-          });
-                
-          fromInput.addEventListener('blur', validateEmail);
-        }
-        else if (this._emailSetting.isFromReadable())
-        {
-          var label = this._emailSetting.getFromMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('from', label, this._emailSetting ? this._emailSetting.getFrom() : "");
-          form.addEntry(entry);
-        }
-        
-        if (!readOnly && this._emailSetting.isToWritable())
-        {
-          var toInput = FormEntry.newInput('text', 'to', {attributes:{type:'text', id:'to'}});
-          toInput.setValue(this._emailSetting ? this._emailSetting.getTo() : "");
-          form.addFormEntry(this._emailSetting.getToMd(), toInput, this.localize("toTooltip"));
-          
-          var validateEmail = Mojo.Util.bind(this, function()
-          {
-            if(toInput.getValue() !== '')
-            {
-              document.getElementById('user-submit').disabled = true;
-
-              if(!this._isValidEmailList(toInput.getValue()))              
-              {
-                form.getEntry(toInput.getId()).addInlineError(this.localize('invalidEmail'));
-                errors.add(toInput.getId());
-              }
-              else
-              {
-                form.getEntry(toInput.getId()).removeInlineError();
-                errors.remove(toInput.getId());
-                if (errors.isEmpty())
-                {
-                  document.getElementById('user-submit').disabled = false;
-                }
-              }
-            }
-          });
-            
-          toInput.addEventListener('blur', validateEmail);
-        }
-        else if (this._emailSetting.isToReadable())
-        {
-          var label = this._emailSetting.getToMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('to', label, this._emailSetting ? this._emailSetting.getTo() : "");
-          form.addEntry(entry);                  
-        }
-        
-        return form;
+        return outer;
       },
         
       _newHeader : function(displayLabel) {
@@ -456,11 +483,13 @@
       
     Instance : {
         
-      initialize : function(emailSetting, user) {
+      initialize : function(emailSetting, user, banner, miniLogo) {
       	this._user = user;
       	this._emailSetting = emailSetting;
         this._footer = null;
-                  
+        this._banner = banner;
+        this._miniLogo = miniLogo;
+        
         this.$initialize("div");
         
         this._configuator = new net.geoprism.system.SystemFormConfiguator();
@@ -497,23 +526,33 @@
           
         this._footer.appendChild(button);
       },
-      appendContent : function(form) 
+      setForm : function(form)
       {
         this._form = form;
-        
-        this.appendChild(form);
       },
       getParentNode : function()
       {
     	  return this.getRawEl();  
       },
-      reload : function(user, readOnly)
+      reload : function(user, readOnly, formType)
       {
-    	this.setInnerHTML('');
-    	this._footer = null;
+        // Save those reusable html forms
+        $(document.getElementById("bannerHeader")).remove();
+        $(document.getElementById("bannerDescription")).remove();
+        $(document.getElementById("miniLogoHeader")).remove();
+        $(document.getElementById("miniLogoDescription")).remove();
+        var banner = $(document.getElementById("form.banner"));
+        banner.hide();
+        this.getFactory().newElement(document.getElementById("body")).appendChild(this.getFactory().newElement(banner[0]));
+        var miniLogo = $(document.getElementById("form.miniLogo"));
+        miniLogo.hide();
+        this.getFactory().newElement(document.getElementById("body")).appendChild(this.getFactory().newElement(miniLogo[0]));
+        
+    	  this.setInnerHTML('');
+    	  this._footer = null;
     	  
         var builder = this._configuator.get(this.getFactory(), user, null);
-        builder.render(this, readOnly);
+        builder.render(this, readOnly, formType);
         builder.addListener(this);            	    	  
       },
       handleEvent : function(e) {
@@ -523,7 +562,7 @@
         if(e.getEventType() === SystemFormEvent.ON_EDIT) {
           var lockCallback = new net.geoprism.StandbyClientRequest({
             onSuccess : function(user) {
-              that.reload(user, false);
+              that.reload(user, false, "email");
             },
             onFailure : function(ex) {
               that.handleException(ex);

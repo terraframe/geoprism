@@ -20,15 +20,36 @@
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
+
 <%@ page import="com.runwaysdk.constants.DeployProperties" %>
+<%@ page import="net.geoprism.SystemLogoSingletonDTO" %>
+<%@ page import="com.runwaysdk.ClientSession" %>
+<%@ page import="com.runwaysdk.constants.CommonProperties" %>
 
 
 <gdb:localize var="page_title" key="splash.pagetitle" />
 
-<% String webappRoot = request.getContextPath() + "/"; %> 
+       <%!
+          String printBannerSrc(HttpServletRequest request)
+          {
+            ClientSession session = ClientSession.createAnonymousSession(new java.util.Locale[]{CommonProperties.getDefaultLocale()});
+            com.runwaysdk.constants.ClientRequestIF clientRequest = session.getRequest();
+          
+            String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(clientRequest, request);
+            if (bannerFile != null)
+            {
+              return bannerFile;
+            }
+            else
+            {
+              String webappRoot = request.getContextPath() + "/";
+              return webappRoot + "net/geoprism/images/splash_logo.png";
+            }
+          }
+       %>
 
 <gdb:localize var="logoalt" key="splash.logoalt" />
-<img id="logo" style="max-width:250px;" src="<%out.print(webappRoot);%>net/geoprism/images/splash_logo.png" alt="${logoalt}">
+<img id="logo" style="max-width:250px;" src="<%= printBannerSrc(request) %>" alt="${logoalt}">
 
 <br/>
 <br/>

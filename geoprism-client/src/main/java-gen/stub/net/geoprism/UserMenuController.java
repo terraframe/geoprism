@@ -62,6 +62,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
     this.req.setAttribute("dashboards", dashboards);
     this.req.setAttribute("isAdmin", this.userIsAdmin());
+    setLogoReqAttrs();
 
     render(DASHBOARDS);
   }
@@ -116,8 +117,33 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
 
     this.req.setAttribute("isAdmin", this.userIsAdmin());
+    setLogoReqAttrs();
 
     render(MENU);
+  }
+  
+  private void setLogoReqAttrs()
+  {
+    String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
+    if (bannerFile != null)
+    {
+      this.req.setAttribute("bannerFilePath", bannerFile);
+    }
+    else
+    {
+      this.req.setAttribute("bannerFilePath", "net/geoprism/images/splash_logo.png");
+    }
+    
+    String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
+    if (miniLogoFile != null)
+    {
+      this.req.setAttribute("miniLogoFilePath", miniLogoFile);
+    }
+    else
+    {
+      // For now, let's just not display the mini logo if it doesn't exist.
+//      this.req.setAttribute("miniLogoFilePath", "net/geoprism/images/splash_logo_icon.png");
+    }
   }
 
   private boolean userIsAdmin()

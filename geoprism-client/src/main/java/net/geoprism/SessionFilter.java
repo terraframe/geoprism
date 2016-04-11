@@ -190,7 +190,7 @@ public class SessionFilter implements Filter, Reloadable
     }
     
     // Allow images for the login page
-    if (uri.endsWith(".png"))
+    if (uri.endsWith(".png") || uri.endsWith(".jpg") || uri.endsWith(".bmp") || uri.endsWith(".jpeg") || uri.endsWith(".gif") || uri.endsWith(".svg"))
     {
       return true;
     }

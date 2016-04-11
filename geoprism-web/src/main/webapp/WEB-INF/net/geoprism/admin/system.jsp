@@ -35,10 +35,64 @@
 <jwr:script src="/bundles/system.js" useRandomParam="false"/>
 <script type="text/javascript">${js}</script>
 
+<!-- These 2 forms will be moved by the System.js -->
+<form enctype="multipart/form-data" method="POST" name="form.name" action="/../net.geoprism.SystemLogoSingletonController.uploadBanner.mojo" style="display: none;" id="form.banner" class="submit-form">
+  <fieldset class="net-geoprism-FormList">
+    <section class="form-container">
+        <c:if test="${not empty bannerFilePath}" >
+          <div class="field-row clearfix">
+            <label for="preview"><gdb:localize key="net.geoprism.system.SystemForm.banner_uploadPreviewLabel" /></label>
+            <img id="preview" style="width: 250px;" src="${bannerFilePath}" alt="Uploaded Banner" />
+            <div id="preview-error" class="error-message"></div>
+          </div>
+        </c:if>
+        <c:if test="${not empty bannerFileName}" >
+          <div class="field-row clearfix">
+            <label for="bannerNameLabel"><gdb:localize key="net.geoprism.system.SystemForm.banner_fileNameLabel" /></label>
+            <label id="bannerName">${bannerFileName}</label>
+            <div id="bannerName-error" class="error-message"></div>
+          </div>
+        </c:if>
+      <div class="field-row clearfix">
+        <label for="bannerImage">* <gdb:localize key="net.geoprism.system.SystemForm.banner_imageLabel" /></label>
+        <mjl:input param="banner" type="file" id="bannerImage" />
+        <div id="bannerImage-error" class="error-message"></div>
+      </div>
+    </section>
+  </fieldset>
+  <input name="net.geoprism.SystemLogoSingletonController.uploadBanner.button" id="8kgsqzqjkm1djn9esg4kiquus9aw075x" style="float:none;" class="btn btn-primary" type="submit" value="Upload">
+</form>
+<form enctype="multipart/form-data" method="POST" name="form.name" action="/../net.geoprism.SystemLogoSingletonController.uploadMiniLogo.mojo" style="display: none;" id="form.miniLogo" class="submit-form">
+  <fieldset class="net-geoprism-FormList">
+    <section class="form-container">
+        <c:if test="${not empty miniLogoFilePath}" >
+          <div class="field-row clearfix">
+            <label for="preview"><gdb:localize key="net.geoprism.system.SystemForm.miniLogo_uploadPreviewLabel" /></label>
+            <img id="preview" src="${miniLogoFilePath}" style="height: 30px;" alt="Uploaded Mini Logo" />
+            <div id="preview-error" class="error-message"></div>
+          </div>
+        </c:if>
+        <c:if test="${not empty miniLogoFileName}" >
+          <div class="field-row clearfix">
+            <label for="miniLogoNameLabel"><gdb:localize key="net.geoprism.system.SystemForm.miniLogo_fileNameLabel" /></label>
+            <label id="miniLogoName">${miniLogoFileName}</label>
+            <div id="miniLogoName-error" class="error-message"></div>
+          </div>
+        </c:if>
+      <div class="field-row clearfix">
+        <label for="miniLogoImage">* <gdb:localize key="net.geoprism.system.SystemForm.miniLogo_imageLabel" /></label>
+        <mjl:input param="miniLogo" type="file" id="miniLogoImage" />
+        <div id="miniLogoImage-error" class="error-message"></div>
+      </div>      
+    </section>
+  </fieldset>
+  <input name="net.geoprism.SystemLogoSingletonController.uploadBanner.button" id="8kgsqzqjkm1djn9esg4kiquus9aw075x" style="float:none;" class="btn btn-primary" type="submit" value="Upload">
+</form>
+
 
 </head>
 
-<body>
+<body id="body">
 
 <div id="systemForm"></div>
 
@@ -48,7 +102,7 @@
   var emailSetting = new net.geoprism.EmailSetting(${emailSetting}.returnValue[0]);
   var user = new net.geoprism.GeoprismUser(${user}.returnValue[0]);
   
-  var sf = new net.geoprism.system.SystemForm(emailSetting, user);  
+  var sf = new net.geoprism.system.SystemForm(emailSetting, user);
   sf.render("#systemForm");
 </script>
 

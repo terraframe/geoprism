@@ -24,6 +24,10 @@
 <%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
+<%@ page import="net.geoprism.SystemLogoSingletonDTO" %>
+<%@ page import="com.runwaysdk.ClientSession" %>
+<%@ page import="com.runwaysdk.constants.CommonProperties" %>
+
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -69,7 +73,26 @@
 				<!--     </div> -->
 				  </form>
 	    	</header>
-			<img id="logo" src="net/geoprism/images/splash_logo.png" alt="logo" />
+	    	
+	    	<%!
+		      String printBannerSrc(HttpServletRequest request)
+		      {
+	    	    ClientSession session = ClientSession.createAnonymousSession(new java.util.Locale[]{CommonProperties.getDefaultLocale()});
+		        com.runwaysdk.constants.ClientRequestIF clientRequest = session.getRequest();
+		      
+		        String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(clientRequest, request);
+		        if (bannerFile != null)
+		        {
+		          return bannerFile;
+		        }
+		        else
+		        {
+		          String webappRoot = request.getContextPath() + "/";
+		          return webappRoot + "net/geoprism/images/splash_logo.png";
+		        }
+		      }
+        %>
+			<img id="logo" src="<%= printBannerSrc(request) %>" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
 		    <img id="logo_gp" src="net/geoprism/images/geoprism_banner.png" alt="logo" />
