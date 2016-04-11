@@ -18,8 +18,7 @@
  */
 package net.geoprism.ontology;
 
-
-@com.runwaysdk.business.ClassSignature(hash = 1904852304)
+@com.runwaysdk.business.ClassSignature(hash = 1894505883)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
