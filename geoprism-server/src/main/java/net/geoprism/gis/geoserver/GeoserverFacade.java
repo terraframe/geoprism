@@ -238,4 +238,15 @@ public class GeoserverFacade implements Reloadable
     return getService().getBBOX(views);
   }
 
+  /**
+   * Calculates the bounding box of all the layers.
+   * 
+   * @param views
+   * @return double[] {minx, miny, maxx, maxy}
+   */
+  public static double[] getExpandedBBOX(List<String> views, double expandVal)
+  {
+    return getService().getExpandedBBOX(views, expandVal);
+  }
+  
 }

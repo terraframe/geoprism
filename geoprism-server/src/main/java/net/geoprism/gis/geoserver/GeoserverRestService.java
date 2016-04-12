@@ -612,7 +612,72 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     {
       iter.close();
     }
+  }
 
+  @Override
+  public double[] getExpandedBBOX(List<String> views, double expandVal)
+  {
+    // collect all the views and extend the bounding box
+    ValueQuery union = new ValueQuery(new QueryFactory());
+    if (views.size() == 1)
+    {
+      String view = views.iterator().next();
+      union.SELECT(union.aSQLClob(GeoserverFacade.GEOM_COLUMN, GeoserverFacade.GEOM_COLUMN, GeoserverFacade.GEOM_COLUMN));
+      union.FROM(view, view);
+    }
+    else if (views.size() > 1)
+    {
+      ValueQuery[] unionVQs = new ValueQuery[views.size()];
+
+      for (int i = 0; i < unionVQs.length; i++)
+      {
+        String view = views.get(i);
+        ValueQuery vq = new ValueQuery(union.getQueryFactory());
+        vq.SELECT(vq.aSQLClob(GeoserverFacade.GEOM_COLUMN, GeoserverFacade.GEOM_COLUMN, GeoserverFacade.GEOM_COLUMN));
+        vq.FROM(view, view);
+
+        unionVQs[i] = vq;
+      }
+
+      union.UNION_ALL(unionVQs);
+    }
+    else
+    {
+      throw new MapLayerException("The map has no layers");
+    }
+
+    ValueQuery collected = new ValueQuery(union.getQueryFactory());
+    collected.SELECT(collected.aSQLAggregateClob("collected", "ST_Expand(ST_Collect(" + GeoserverFacade.GEOM_COLUMN + "), " + expandVal + ")", "collected"));
+    collected.FROM("(" + union.getSQL() + ")", "unioned");
+
+    ValueQuery outer = new ValueQuery(union.getQueryFactory());
+    outer.SELECT(union.aSQLAggregateDouble("minx", "st_xmin(collected)"), union.aSQLAggregateDouble("miny", "st_ymin(collected)"), union.aSQLAggregateDouble("maxx", "st_xmax(collected)"), union.aSQLAggregateDouble("maxy", "st_ymax(collected)"));
+
+    outer.FROM("(" + collected.getSQL() + ")", "collected");
+
+    OIterator<? extends ValueObject> iter = outer.getIterator();
+
+    try
+    {
+      ValueObject o = iter.next();
+
+      double[] bbox = new double[4];
+      bbox[MINX_INDEX] = Double.parseDouble(o.getValue("minx"));
+      bbox[MINY_INDEX] = Double.parseDouble(o.getValue("miny"));
+      bbox[MAXX_INDEX] = Double.parseDouble(o.getValue("maxx"));
+      bbox[MAXY_INDEX] = Double.parseDouble(o.getValue("maxy"));
+
+      return bbox;
+    }
+    catch (Exception e)
+    {
+      return null;
+      // throw new NoLayerDataException();
+    }
+    finally
+    {
+      iter.close();
+    }
   }
 
 }
