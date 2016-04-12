@@ -28,6 +28,7 @@ import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
 import net.geoprism.data.importer.GeoprismImportPlugin;
 import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierAllPathsTableQuery;
 import net.geoprism.ontology.ClassifierIsARelationship;
 
 import org.slf4j.Logger;
@@ -42,7 +43,10 @@ import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.XMLImporter;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
@@ -126,7 +130,22 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
     Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
     Universal.getStrategy().initialize(AllowedIn.CLASS);
     GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
+    
+    if (new UniversalAllPathsTableQuery(new QueryFactory()).getCount() == 0)
+    {
+      Universal.getStrategy().reinitialize(AllowedIn.CLASS);
+    }
 
+    if (new GeoEntityAllPathsTableQuery(new QueryFactory()).getCount() == 0)
+    {
+      GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
+    }
+    
+    if (new ClassifierAllPathsTableQuery(new QueryFactory()).getCount() == 0)
+    {
+      Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
+    }
+    
     /*
      * Load location data
      */
