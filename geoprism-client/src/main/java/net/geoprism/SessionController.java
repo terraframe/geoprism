@@ -39,6 +39,8 @@ public class SessionController extends SessionControllerBase implements Reloadab
 {
   public static final long   serialVersionUID = 1234283350799L;
 
+  public static final String FORM_ACTION      = SessionController.class.getName() + ".form" + MdActionInfo.ACTION_SUFFIX;
+
   public static final String LOGIN_ACTION     = SessionController.class.getName() + ".login" + MdActionInfo.ACTION_SUFFIX;
 
   public static final String LOGOUT_ACTION    = SessionController.class.getName() + ".logout" + MdActionInfo.ACTION_SUFFIX;
@@ -49,13 +51,59 @@ public class SessionController extends SessionControllerBase implements Reloadab
   }
 
   @Override
+  public void form() throws IOException, ServletException
+  {
+    String errorMessage = this.req.getParameter("errorMessage");
+
+    this.form(errorMessage);
+  }
+
+  private void form(String errorMessage) throws IOException, ServletException
+  {
+    String banner = this.req.getContextPath() + "/" + "net/geoprism/images/splash_logo.png";
+
+    try
+    {
+      ClientSession session = ClientSession.createAnonymousSession(new Locale[] { CommonProperties.getDefaultLocale() });
+
+      try
+      {
+        ClientRequestIF clientRequest = session.getRequest();
+
+        String cache = SystemLogoSingletonDTO.getBannerFileFromCache(clientRequest, this.req);
+
+        if (cache != null)
+        {
+          banner = cache;
+        }
+      }
+      finally
+      {
+        session.logout();
+      }
+    }
+    catch (Exception e)
+    {
+      // Use the original banner location
+    }
+
+    if (errorMessage != null)
+    {
+      req.setAttribute("errorMessage", errorMessage);
+    }
+
+    req.setAttribute("banner", banner);
+    req.getRequestDispatcher("/login.jsp").forward(req, resp);
+  }
+
+  @Override
   public void login(String username, String password) throws IOException, ServletException
   {
     if (username != null)
     {
       username = username.trim();
     }
-    
+
     try
     {
       // Ensure the server context has been initialized
@@ -79,14 +127,18 @@ public class SessionController extends SessionControllerBase implements Reloadab
     catch (Throwable t)
     {
       String message = t.getLocalizedMessage() == null ? t.getMessage() : t.getLocalizedMessage();
-      resp.sendRedirect(req.getContextPath() + "/login?errorMessage=" + URLEncoder.encode(message, EncodingConstants.ENCODING));
+      resp.sendRedirect(req.getContextPath() + "/session/form?errorMessage=" + URLEncoder.encode(message, EncodingConstants.ENCODING));
+
+      // this.form(message);
     }
   }
 
   @Override
   public void failLogin(String username, String password) throws IOException, ServletException
   {
-    resp.sendRedirect(req.getContextPath() + "/login?errorMessage=" + URLEncoder.encode("Unable to login", EncodingConstants.ENCODING));
+    // this.form("Unable to login");
+
+    resp.sendRedirect(req.getContextPath() + "/session/form?errorMessage=" + URLEncoder.encode("Unable to login", EncodingConstants.ENCODING));
   }
 
   @Override
@@ -102,6 +154,6 @@ public class SessionController extends SessionControllerBase implements Reloadab
     req.getSession().removeAttribute(ClientConstants.CLIENTSESSION);
     req.getSession().invalidate();
 
-    resp.sendRedirect(req.getContextPath() + "/login");
+    resp.sendRedirect(req.getContextPath() + "/session/form");
   }
 }

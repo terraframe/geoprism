@@ -31,6 +31,7 @@
             <xs:element name="mappableClass" type="mappableClass" />
             <xs:element name="unzipperTask" type="unzipperTask" />
             <xs:element name="locationTask" type="locationTask" />
+            <xs:element name="initializeTask" type="initializeTask" />
           </xs:choice>
         </xs:extension>
       </xs:complexContent>
@@ -98,6 +99,9 @@
   </xs:complexType>
 
   <xs:complexType name="locationTask">
+  </xs:complexType>
+
+  <xs:complexType name="initializeTask">
   </xs:complexType>
 
 </xs:schema>

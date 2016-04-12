@@ -26,7 +26,6 @@
     <action method="createMapForSession" uri=""/>
   </map>
 
-  <map uri="login" forward="/login.jsp"/>
   <map uri="loginRedirect" forward="/loginRedirect.jsp"/>
   <map uri="account" controller="net.geoprism.AdminController">
   	<action method="account" uri=""/> 

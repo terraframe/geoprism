@@ -34,6 +34,7 @@ import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
+import net.geoprism.ontology.Classifier;
 
 import org.xml.sax.Attributes;
 
@@ -59,8 +60,11 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdTypeDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 
@@ -495,15 +499,35 @@ public class GeoprismImportPlugin implements ImportPluginIF
     }
   }
 
+  private static class InitializeTaskHandler extends TagHandler
+  {
+    public InitializeTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      Universal.getStrategy().initialize(AllowedIn.CLASS);
+
+      GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
+
+      Classifier.getStrategy().initialize(LocatedIn.CLASS);
+    }
+  }
+
   private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
   {
-    private static final String DASHBOARD_TAG      = "dashboard";
+    private static final String DASHBOARD_TAG       = "dashboard";
 
-    private static final String MAPPABLE_CLASS_TAG = "mappableClass";
+    private static final String MAPPABLE_CLASS_TAG  = "mappableClass";
 
-    private static final String UNZIPPER_TASK_TAG  = "unzipperTask";
+    private static final String UNZIPPER_TASK_TAG   = "unzipperTask";
 
-    private static final String LOCATION_TASK_TAG  = "locationTask";
+    private static final String LOCATION_TASK_TAG   = "locationTask";
+
+    private static final String INITIALIZE_TASK_TAG = "initializeTask";
 
     public PluginHandlerFactory(ImportManager manager)
     {
@@ -511,6 +535,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       this.addHandler(MAPPABLE_CLASS_TAG, new MappableClassHandler(manager));
       this.addHandler(UNZIPPER_TASK_TAG, new UnzipperTaskHandler(manager));
       this.addHandler(LOCATION_TASK_TAG, new LocationTaskHandler(manager));
+      this.addHandler(INITIALIZE_TASK_TAG, new InitializeTaskHandler(manager));
     }
   }
 

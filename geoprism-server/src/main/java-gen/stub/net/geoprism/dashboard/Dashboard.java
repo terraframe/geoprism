@@ -358,6 +358,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     super.apply();
 
+    Roles role = this.getDashboardRole();
+    role.lock();
+    role.getDisplayLabel().setValue(this.getDisplayLabel().getValue());
+    role.apply();
+
     if (isNew)
     {
       DashboardMap map = new DashboardMap();

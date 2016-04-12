@@ -6,6 +6,10 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-client-2.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-common-2.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-gis-client-2.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-gis-common-2.0.13.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-1.9.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher-1.9.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance-1.0.jar"/>
@@ -34,10 +38,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/junit-4.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.17.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rmiio-2.0.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-client-2.0.3-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-common-2.0.3-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-gis-client-2.0.3-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/runwaysdk-gis-common-2.0.3-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.6.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-log4j12-1.6.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/string-1.1.0.jar"/>

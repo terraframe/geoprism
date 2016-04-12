@@ -35,43 +35,44 @@ import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.util.FileIO;
 
-public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
- implements com.runwaysdk.generation.loader.Reloadable
+public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = -1855290440;
-  
-  private static File bannerCache = null;
-  
-  private static File miniLogoCache = null;
-  
-  private static final String IMAGES_TEMP_DIR = "uploaded_images";
-  
+  private static final long   serialVersionUID = -1855290440;
+
+  private static File         bannerCache      = null;
+
+  private static File         miniLogoCache    = null;
+
+  private static final String IMAGES_TEMP_DIR  = "uploaded_images";
+
   public static final String getImagesTempDir(HttpServletRequest request)
   {
-     return request.getContextPath() + "/" + IMAGES_TEMP_DIR + "/";
+    return request.getContextPath() + "/" + IMAGES_TEMP_DIR + "/";
   }
-  
+
   final static Logger logger = LoggerFactory.getLogger(SystemLogoSingletonDTO.class);
-  
+
   public SystemLogoSingletonDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(clientRequest);
   }
-  
+
   /**
-  * Copy Constructor: Duplicates the values and attributes of the given BusinessDTO into a new DTO.
-  * 
-  * @param businessDTO The BusinessDTO to duplicate
-  * @param clientRequest The clientRequest this DTO should use to communicate with the server.
-  */
+   * Copy Constructor: Duplicates the values and attributes of the given BusinessDTO into a new DTO.
+   * 
+   * @param businessDTO
+   *          The BusinessDTO to duplicate
+   * @param clientRequest
+   *          The clientRequest this DTO should use to communicate with the server.
+   */
   protected SystemLogoSingletonDTO(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
   }
-  
+
   /**
-   * Uploads a banner file to the server for persistance. Calling this method will also populate the client-side cache for
-   * future calls to getBannerFilePath.
+   * Uploads a banner file to the server for persistance. Calling this method will also populate the client-side cache
+   * for future calls to getBannerFilePath.
    * 
    * @param clientRequest
    * @param fileStream
@@ -79,11 +80,12 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
    */
   public static void uploadBannerAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on the server.
+    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on
+    // the server.
     String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
     new File(tempDir).mkdir();
     bannerCache = new File(tempDir, fileName);
-    
+
     FileOutputStream fos;
     TeeInputStream teeIS;
     try
@@ -97,13 +99,13 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
       logger.error("Error creating image file [" + fileName + "].", e);
       return;
     }
-    
+
     SystemLogoSingletonDTOBase.uploadBanner(clientRequest, teeIS, fileName);
   }
-  
+
   /**
-   * Uploads a mini logo file to the server for persistance. Calling this method will also populate the client-side cache for
-   * future calls to getMiniLogoFilePath.
+   * Uploads a mini logo file to the server for persistance. Calling this method will also populate the client-side
+   * cache for future calls to getMiniLogoFilePath.
    * 
    * @param clientRequest
    * @param fileStream
@@ -111,11 +113,12 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
    */
   public static void uploadMiniLogoAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on the server.
+    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on
+    // the server.
     String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
     new File(tempDir).mkdir();
     miniLogoCache = new File(tempDir, fileName);
-    
+
     FileOutputStream fos;
     TeeInputStream teeIS;
     try
@@ -129,18 +132,18 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
       logger.error("Error creating image file [" + fileName + "].", e);
       return;
     }
-    
+
     SystemLogoSingletonDTOBase.uploadMiniLogo(clientRequest, teeIS, fileName);
   }
-  
+
   /**
-   * Calling this method will give you an img src path ready for use in html that will contain the uploaded logo,
-   *  if one has been uploaded. If the file does exist, it will be cached client-side. Subsequent calls will return the client-side
-   *  cached file. This file may be deleted and refetched from the server again at any point. If no banner has been uploaded this
-   *  method will return null.
+   * Calling this method will give you an img src path ready for use in html that will contain the uploaded logo, if one
+   * has been uploaded. If the file does exist, it will be cached client-side. Subsequent calls will return the
+   * client-side cached file. This file may be deleted and refetched from the server again at any point. If no banner
+   * has been uploaded this method will return null.
    * 
    * TODO: The cache needs to be cleared on an interval (say every 6 hours or so) if there are multiple client machines
-   *         because uploading a logo from one client will not populate on the other client until the cache is cleared.
+   * because uploading a logo from one client will not populate on the other client until the cache is cleared.
    * 
    * @param clientRequest
    * @return a file or null
@@ -151,18 +154,24 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
     {
       return getImagesTempDir(request) + bannerCache.getName();
     }
-    
+
     InputStream stream = SystemLogoSingletonDTOBase.getBannerFile(clientRequest);
-    if (stream == null) { return null; }
-    
+    if (stream == null)
+    {
+      return null;
+    }
+
     String fileName = SystemLogoSingletonDTOBase.getBannerFilename(clientRequest);
-    if (fileName == null) { return null; }
-    
+    if (fileName == null)
+    {
+      return null;
+    }
+
     // Write the file to our temp dir
     String tempDir = LocalProperties.getJspDir() + "/../" + IMAGES_TEMP_DIR;
     new File(tempDir).mkdir();
     bannerCache = new File(tempDir, fileName);
-    
+
     FileOutputStream fos;
     try
     {
@@ -175,18 +184,18 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
       logger.error("Error creating image file [" + fileName + "].", e);
       return null;
     }
-    
+
     return getImagesTempDir(request) + bannerCache.getName();
   }
-  
+
   /**
-   * Calling this method will give you an img src path ready for use in html that will contain the uploaded logo,
-   *  if one has been uploaded. If the file does exist, it will be cached client-side. Subsequent calls will return the client-side
-   *  cached file. This file may be deleted and refetched from the server again at any point. If no logo has been uploaded this
-   *  method will return null.
+   * Calling this method will give you an img src path ready for use in html that will contain the uploaded logo, if one
+   * has been uploaded. If the file does exist, it will be cached client-side. Subsequent calls will return the
+   * client-side cached file. This file may be deleted and refetched from the server again at any point. If no logo has
+   * been uploaded this method will return null.
    * 
    * TODO: The cache needs to be cleared on an interval (say every 6 hours or so) if there are multiple client machines
-   *         because uploading a logo from one client will not populate on the other client until the cache is cleared.
+   * because uploading a logo from one client will not populate on the other client until the cache is cleared.
    * 
    * @param clientRequest
    * @return a file path or null
@@ -197,18 +206,24 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
     {
       return getImagesTempDir(request) + miniLogoCache.getName();
     }
-    
+
     InputStream stream = SystemLogoSingletonDTOBase.getMiniLogoFile(clientRequest);
-    if (stream == null) { return null; }
-    
+    if (stream == null)
+    {
+      return null;
+    }
+
     String fileName = SystemLogoSingletonDTOBase.getMiniLogoFilename(clientRequest);
-    if (fileName == null) { return null; }
-    
+    if (fileName == null)
+    {
+      return null;
+    }
+
     // Write the file to our temp dir
     String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
     new File(tempDir).mkdir();
     miniLogoCache = new File(tempDir, fileName);
-    
+
     FileOutputStream fos;
     try
     {
@@ -221,7 +236,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
       logger.error("Error creating image file [" + fileName + "].", e);
       return null;
     }
-    
+
     return getImagesTempDir(request) + miniLogoCache.getName();
   }
 }
