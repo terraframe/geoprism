@@ -83,7 +83,7 @@
      */
     controller.uploadFile = function(files) {
       var connection = {
-        elementId : '#app-container',
+        elementId : '#innerFrameHtml',
         onSuccess : function(result) {               
           $scope.$emit('dataUpload', {information:result.information, options:result.options});            
                 
