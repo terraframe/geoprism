@@ -19,27 +19,29 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
+<?xml version="1.0"?>
 <sidebar>
   <link-list>
-      <item name="Log_out" uri="session/logout" synch="true" />
-      <item name="Account" uri="admin/account" synch="false" />
-      <item name="User_Dashboards" uri="dashboards" synch="true" classes="link-viewer" />
+    <item name="Log_out" uri="session/logout" synch="true" />
+    <item name="Account" uri="admin/account" synch="false" />
+    <item name="User_Dashboards" uri="dashboards" synch="true" classes="link-viewer" />
   </link-list>
   <nav-list>
-    <item name="System_Configuration" uri="admin/system" />
-  
-    <item name="Account_Management" uri="admin/users" />
 
-    <item name="GIS_Management">
-      <item name="Manage_Universals" uri="admin/universal" />
-      <item name="Manage_Geoentities" uri="admin/geoentity" />
+    <item name="System_Configuration" uri="admin/system" roles="geoprism.admin.Administrator" />
+
+    <item name="Account_Management" uri="admin/users" roles="geoprism.admin.Administrator" />
+
+    <item name="GIS_Management" roles="geoprism.admin.Administrator">
+      <item name="Manage_Universals" uri="admin/universal" roles="geoprism.admin.Administrator" />
+      <item name="Manage_Geoentities" uri="admin/geoentity" roles="geoprism.admin.Administrator" />
     </item>
 
-    <item name="Datatype_Management">
-      <item name="Term_Ontology_Admin" uri="admin/ontologies" />
-      <item name="Data_Browser" uri="admin/databrowser" />
+    <item name="Datatype_Management" roles="geoprism.admin.Administrator">
+      <item name="Term_Ontology_Admin" uri="admin/ontologies" roles="geoprism.admin.Administrator" />
+      <item name="Data_Browser" uri="admin/databrowser" roles="geoprism.admin.Administrator" />
+      <item name="Data_Sets" uri="admin/datasets" roles="geoprism.admin.Administrator" />
     </item>
-
-    <item name="Job_Scheduler" uri="admin/scheduler" />
   </nav-list>
+
 </sidebar>

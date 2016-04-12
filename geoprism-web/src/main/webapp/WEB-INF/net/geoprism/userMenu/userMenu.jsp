@@ -75,7 +75,7 @@
 				<div class="row-fluid header-logo-row">
 					<div class="hidden-xs col-md-1"></div>
        				<div class="col-md-8">
-       					<img id="logo" class="pull-left img-responsive" src="${bannerFilePath}" alt="logo"/>
+       					<img id="logo" class="pull-left img-responsive" src="${banner}" alt="logo"/>
        				</div>
        				<div class="hidden-xs col-md-3"></div>
 		 		</div>

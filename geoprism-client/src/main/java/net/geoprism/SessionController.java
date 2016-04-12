@@ -60,39 +60,13 @@ public class SessionController extends SessionControllerBase implements Reloadab
 
   private void form(String errorMessage) throws IOException, ServletException
   {
-    String banner = this.req.getContextPath() + "/" + "net/geoprism/images/splash_logo.png";
-
-    try
-    {
-      ClientSession session = ClientSession.createAnonymousSession(new Locale[] { CommonProperties.getDefaultLocale() });
-
-      try
-      {
-        ClientRequestIF clientRequest = session.getRequest();
-
-        String cache = SystemLogoSingletonDTO.getBannerFileFromCache(clientRequest, this.req);
-
-        if (cache != null)
-        {
-          banner = cache;
-        }
-      }
-      finally
-      {
-        session.logout();
-      }
-    }
-    catch (Exception e)
-    {
-      // Use the original banner location
-    }
-
+    CachedImageUtil.setBannerPath(this.req, this.resp);
+    
     if (errorMessage != null)
     {
       req.setAttribute("errorMessage", errorMessage);
     }
-
-    req.setAttribute("banner", banner);
+    
     req.getRequestDispatcher("/login.jsp").forward(req, resp);
   }
 

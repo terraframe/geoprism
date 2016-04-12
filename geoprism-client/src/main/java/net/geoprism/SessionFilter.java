@@ -20,6 +20,8 @@ package net.geoprism;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -66,16 +68,6 @@ public class SessionFilter implements Filter, Reloadable
     // let it through.
     if (clientSession != null && clientSession.getRequest().isLoggedIn())
     {
-      String uri = httpReq.getRequestURI();
-
-      // They're already logged in, but they're trying to login again? Redirect
-      // to the index.
-      // if (uri.equals(httpReq.getContextPath() + "/login") || uri.equals(httpReq.getContextPath() + "/session/login"))
-      // {
-      // httpRes.sendRedirect(httpReq.getContextPath());
-      // return;
-      // }
-
       try
       {
         req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
@@ -142,63 +134,64 @@ public class SessionFilter implements Filter, Reloadable
   {
     String uri = req.getRequestURI();
 
-    // They're allowed to hit the login view page, otherwise its a redirect loop    
-    if (uri.equals(req.getContextPath() + "/loginRedirect"))
-    {
-      return true;
-    }
-    
-    // Allow direct hitting of all page resources in login directories.
-    if (uri.contains("/net/geoprism/login"))
-    {
-      return true;
-    }
+    List<String> endpoints = new LinkedList<String>();
+
+    // They're allowed to hit the login view page, otherwise its a redirect loop
+    endpoints.add("loginRedirect");
 
     // They can also invoke the login action on SessionController @
     // session/form and session/login
-    if (uri.equals(req.getContextPath() + "/session/form"))
+    endpoints.add("session/form");
+    endpoints.add("session/login");
+
+    for (String endpoint : endpoints)
     {
-      return true;
+      if (uri.equals(req.getContextPath() + "/" + endpoint))
+      {
+        return true;
+      }
     }
+
+    List<String> directories = new LinkedList<String>();
+    directories.add("jquery");
+    directories.add("font-awesome");
+    directories.add("fontawesome");
+
+    // Allow direct hitting of all page resources in login directories.
+    directories.add("/net/geoprism/login");
     
-    if (uri.equals(req.getContextPath() + "/session/login"))
+    // Directory of uploaded images
+    directories.add("uploaded_images/");
+
+    for (String directory : directories)
     {
-      return true;
+      if (uri.contains(directory))
+      {
+        return true;
+      }
     }
-    
-    // Allow images for the login page
-    if (uri.contains("jquery"))
-    {
-      return true;
-    }
-    
-    // Allow style files for GIS maps
-    if (uri.endsWith(".sld"))
-    {
-      return true;
-    }
-    
-    // Allow CSS files for the login page
-    if (uri.endsWith(".css"))
-    {
-      return true;
-    }
-    
-    if (uri.contains("font-awesome") || uri.contains("fontawesome"))
-    {
-      return true;
-    }
-    
-    // Allow images for the login page
-    if (uri.endsWith(".png") || uri.endsWith(".jpg") || uri.endsWith(".bmp") || uri.endsWith(".jpeg") || uri.endsWith(".gif") || uri.endsWith(".svg"))
-    {
-      return true;
-    }
-    
+
+    List<String> extensions = new LinkedList<String>();
+    extensions.add(".sld");
+    extensions.add(".css");
+    extensions.add(".png");
+    extensions.add(".jpg");
+    extensions.add(".bmp");
+    extensions.add(".jpeg");
+    extensions.add(".gif");
+    extensions.add(".svg");
+
     // Login/Logout requests for mojax/mojo extensions.
-    if (uri.endsWith(SessionController.LOGIN_ACTION) || uri.endsWith(SessionController.LOGOUT_ACTION)  || uri.endsWith(SessionController.FORM_ACTION))
+    extensions.add(SessionController.LOGIN_ACTION);
+    extensions.add(SessionController.LOGOUT_ACTION);
+    extensions.add(SessionController.FORM_ACTION);
+
+    for (String extension : extensions)
     {
-      return true;
+      if (uri.endsWith(extension))
+      {
+        return true;
+      }
     }
 
     return false;
