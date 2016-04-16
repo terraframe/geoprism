@@ -188,7 +188,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void system() throws java.io.IOException, javax.servlet.ServletException
   {
     String sessionId = this.getClientSession().getSessionId();
-    
+
     String metadataES = "{className:" + EmailSettingDTO.CLASS + ", methodName:'getDefault', declaredTypes: []}";
     String serializedES = JSONController.invokeMethod(sessionId, metadataES, null, "[]");
     this.req.setAttribute("emailSetting", serializedES);
@@ -196,7 +196,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     String metadataUsr = "{className:" + GeoprismUserDTO.CLASS + ", methodName:'getCurrentUser', declaredTypes: []}";
     String serializedUsr = JSONController.invokeMethod(sessionId, metadataUsr, null, "[]");
     this.req.setAttribute("user", serializedUsr);
-    
+
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
     {
@@ -209,7 +209,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
       this.req.setAttribute("miniLogoFilePath", miniLogoFile);
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
-    
+
     JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
 
     render("system.jsp");
@@ -233,6 +233,14 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   public void failDatasets() throws IOException, ServletException
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }
+
+  @Override
+  public void main() throws IOException, ServletException
+  {
+    CachedImageUtil.setBannerPath(this.req, this.resp);
+
+    this.req.getRequestDispatcher("/jsp/mainContent.jsp").forward(this.req, this.resp);
   }
 
 }

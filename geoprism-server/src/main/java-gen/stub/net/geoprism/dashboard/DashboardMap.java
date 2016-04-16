@@ -395,11 +395,33 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
   public JSONArray getExpandedMapLayersBBox(DashboardLayer[] layers, double expandVal)
   {
-
     JSONArray bboxArr = new JSONArray();
     Dashboard dashboard = this.getDashboard();
 
-    if (dashboard != null)
+    if (layers.length > 0)
+    {
+      List<String> views = new LinkedList<String>();
+
+      for (DashboardLayer layer : layers)
+      {
+        views.add(layer.getViewName());
+      }
+
+      try
+      {
+        double[] bbox = GeoserverFacade.getExpandedBBOX(views, expandVal);
+
+        bboxArr.put(bbox[0]);
+        bboxArr.put(bbox[1]);
+        bboxArr.put(bbox[2]);
+        bboxArr.put(bbox[3]);
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
+    }
+    else if (dashboard != null)
     {
       List<GeoEntity> countries = dashboard.getCountries();
 
@@ -842,7 +864,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return baseMapImage;
   }
 
-  private BufferedImage getBaseMapCanvas(int mapWidth, int mapHeight, String left, String bottom, String right, String top, String baseType)
+  public BufferedImage getBaseMapCanvas(int mapWidth, int mapHeight, String left, String bottom, String right, String top, String baseType)
   {
     BufferedImage image = null;
 

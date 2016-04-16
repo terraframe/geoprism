@@ -174,4 +174,10 @@ public class NullGeoserverService implements GeoserverService
     return new double[] { 0, 0, 0, 0 };
   }
 
+  @Override
+  public double[] getExpandedBBOX(List<String> views, double expandVal)
+  {
+    return new double[] { 0, 0, 0, 0 };
+  }
+
 }

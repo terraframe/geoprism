@@ -122,9 +122,12 @@ public class LocalEndpoint implements XMLEndpoint
 
     File[] files = directory.listFiles(filter);
 
-    for (File file : files)
+    if (files != null)
     {
-      paths.add(file.getAbsolutePath());
+      for (File file : files)
+      {
+        paths.add(file.getAbsolutePath());
+      }
     }
 
     return paths;

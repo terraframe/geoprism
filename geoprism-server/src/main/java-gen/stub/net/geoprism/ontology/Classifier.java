@@ -45,6 +45,7 @@ import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -128,7 +129,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(sfTermToMatch));
 
     classifierQ.WHERE(OR.get(classifierQ.getDisplayLabel().localize().EQ(sfTermToMatch), classifierQ.hasSynonym(synonymQ)).AND(classifierQ.EQ(allPathsQ.getChildTerm())));
-    
+
     OIterator<? extends Classifier> i = classifierQ.getIterator();
     try
     {
@@ -282,14 +283,14 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       }
 
       QueryFactory qf = new QueryFactory();
-  
+
       ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
       ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
-  
+
       carQ.WHERE(carQ.parentId().EQ(mdAttributeTermDAO.getId()));
 
       classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
-  
+
       OIterator<? extends Classifier> i = classifierRootQ.getIterator();
       try
       {

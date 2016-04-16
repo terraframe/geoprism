@@ -121,20 +121,13 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
     render(MENU);
   }
-  
-  private void setLogoReqAttrs()
+
+  private void setLogoReqAttrs() throws IOException, ServletException
   {
-    String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
-    if (bannerFile != null)
-    {
-      this.req.setAttribute("bannerFilePath", bannerFile);
-    }
-    else
-    {
-      this.req.setAttribute("bannerFilePath", "net/geoprism/images/splash_logo.png");
-    }
-    
+    CachedImageUtil.setBannerPath(this.req, this.resp);
+
     String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
+
     if (miniLogoFile != null)
     {
       this.req.setAttribute("miniLogoFilePath", miniLogoFile);
@@ -142,7 +135,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     else
     {
       // For now, let's just not display the mini logo if it doesn't exist.
-//      this.req.setAttribute("miniLogoFilePath", "net/geoprism/images/splash_logo_icon.png");
+      // this.req.setAttribute("miniLogoFilePath", "net/geoprism/images/splash_logo_icon.png");
     }
   }
 

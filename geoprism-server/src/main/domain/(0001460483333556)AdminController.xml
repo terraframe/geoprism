@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,26 +17,18 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-
-<%@ page import="com.runwaysdk.constants.DeployProperties" %>
-<%@ page import="net.geoprism.SystemLogoSingletonDTO" %>
-<%@ page import="com.runwaysdk.ClientSession" %>
-<%@ page import="com.runwaysdk.constants.CommonProperties" %>
-
-
-<gdb:localize var="page_title" key="splash.pagetitle" />
-
-<gdb:localize var="logoalt" key="splash.logoalt" />
-<img id="logo" style="max-width:250px;" src="<%= request.getAttribute("banner") %>" alt="${logoalt}">
-
-<br/>
-<br/>
-
-<header id="header">
-  <h1><gdb:localize key="splash.header" /></h1>
-</header>
-
-<p><gdb:localize key="splash.powered" /></p>
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdController name="net.geoprism.AdminController">
+        <create>
+          <mdAction name="main" label="Main" isPost="false" isQuery="false"></mdAction>
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

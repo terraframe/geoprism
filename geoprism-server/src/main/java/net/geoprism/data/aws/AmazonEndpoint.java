@@ -27,6 +27,8 @@ import java.util.List;
 import net.geoprism.data.XMLEndpoint;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
@@ -41,6 +43,8 @@ import com.runwaysdk.util.IDGenerator;
 
 public class AmazonEndpoint implements XMLEndpoint
 {
+  private static Logger logger = LoggerFactory.getLogger(AmazonEndpoint.class);
+
   private String getPrefix(String country, String version, String type)
   {
     return "counties/" + country + "/xml/" + version + "/" + type + "/";
@@ -116,34 +120,40 @@ public class AmazonEndpoint implements XMLEndpoint
   {
     List<String> files = new LinkedList<String>();
 
-    AmazonS3 s3Client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
-
-    ListObjectsRequest request = new ListObjectsRequest();
-    request = request.withBucketName("geodashboarddata");
-    request = request.withPrefix(prefix);
-
-    ObjectListing listing;
-
-    do
+    try
     {
-      listing = s3Client.listObjects(request);
+      AmazonS3 s3Client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
 
-      List<S3ObjectSummary> summaries = listing.getObjectSummaries();
+      ListObjectsRequest request = new ListObjectsRequest();
+      request = request.withBucketName("geodashboarddata");
+      request = request.withPrefix(prefix);
 
-      for (S3ObjectSummary summary : summaries)
+      ObjectListing listing;
+
+      do
       {
-        String key = summary.getKey();
+        listing = s3Client.listObjects(request);
 
-        if (key.endsWith(".xml.gz"))
+        List<S3ObjectSummary> summaries = listing.getObjectSummaries();
+
+        for (S3ObjectSummary summary : summaries)
         {
-          files.add(key);
-        }
-      }
+          String key = summary.getKey();
 
-      request.setMarker(listing.getNextMarker());
-    } while (listing != null && listing.isTruncated());
+          if (key.endsWith(".xml.gz"))
+          {
+            files.add(key);
+          }
+        }
+
+        request.setMarker(listing.getNextMarker());
+      } while (listing != null && listing.isTruncated());
+    }
+    catch (Exception e)
+    {
+      logger.error("Unable to retrieve files", e);
+    }
 
     return files;
   }
-
 }

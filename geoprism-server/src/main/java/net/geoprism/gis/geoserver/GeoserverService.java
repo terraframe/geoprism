@@ -141,4 +141,12 @@ public interface GeoserverService extends Reloadable
    * @return double[] {minx, miny, maxx, maxy}
    */
   public double[] getBBOX(String... views);
+
+  /**
+   * Calculates the expanded bounding box of all the database views.
+   * 
+   * @param views List of view names
+   * @return double[] {minx, miny, maxx, maxy}
+   */
+  public double[] getExpandedBBOX(List<String> views, double expandVal);
 }

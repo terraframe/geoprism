@@ -20,10 +20,14 @@ package net.geoprism;
 
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.constants.VaultFileInfo;
+import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.CreatePermissionException;
@@ -41,6 +45,8 @@ import com.runwaysdk.vault.VaultFileDAOIF;
  */
 public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.runwaysdk.generation.loader.Reloadable
 {
+  private static Logger logger = LoggerFactory.getLogger(SystemLogoSingleton.class);
+
   private static SystemLogoSingleton instance         = null;
 
   private static final long          serialVersionUID = 1806816568;
@@ -81,7 +87,16 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
       return null;
     }
 
-    return VaultFileDAO.get(instance.getBannerVaultId()).getFileStream();
+    try
+    {
+      return VaultFileDAO.get(instance.getBannerVaultId()).getFileStream();
+    }
+    catch (FileReadException e)
+    {
+      logger.error("Unable to retrieve banner file", e);
+      
+      return null;
+    }
   }
 
   /**
@@ -94,7 +109,16 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
       return null;
     }
 
-    return VaultFileDAO.get(getInstance().getMiniLogoVaultId()).getFileStream();
+    try
+    {
+      return VaultFileDAO.get(getInstance().getMiniLogoVaultId()).getFileStream();
+    }
+    catch (FileReadException e)
+    {
+      logger.error("Unable to retrieve mini logo file", e);
+      
+      return null;
+    }
   }
 
   private void checkVaultPermissions(VaultFile entity, Operation operation)

@@ -1337,7 +1337,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     // Ordering the layers from the default map
     DashboardLayer[] orderedLayers = dashMap.getOrderedLayers();
-    JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .5);
+    JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .2);
 
     // Get bounds of the map
     try
@@ -1369,30 +1369,16 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     mapBaseGraphic.fillRect(0, 0, width, height);
     mapBaseGraphic.drawImage(base, 0, 0, null);
 
-    // Get base map
-    String activeBaseMap = dashMap.getActiveBaseMap();
-    if (activeBaseMap.length() > 0)
+    // Ticket #412: Get base map
+    String baseType = "osm";
+
+    if (baseType.length() > 0)
     {
-      String baseType = null;
-      try
-      {
-        JSONObject activeBaseObj = new JSONObject(activeBaseMap);
-        baseType = activeBaseObj.getString("LAYER_SOURCE_TYPE");
-      }
-      catch (JSONException e)
-      {
-        String error = "Could not parse active base map JSON.";
-        throw new ProgrammingErrorException(error, e);
-      }
+      BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top), baseType);
 
-      if (baseType.length() > 0)
+      if (baseMapImage != null)
       {
-        BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top));
-
-        if (baseMapImage != null)
-        {
-          mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
-        }
+        mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
       }
     }
 
