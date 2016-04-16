@@ -45,7 +45,10 @@
     "cancel" : "Cancel",
     "mergeTitle" : "Merge confirmation",
     "accept" : "Confirm as new classifier",
-    "noproblems-msg" : "There are no known classifier issues"
+    "noproblems-msg" : "There are no known classifier issues",
+    "restoreSynonym" : "Restore Synonym",    
+    "restoreTitle" : "Restore confirmation",
+    "restoreConfirmation" : "Are you sure you want to restore this synoymn to a classifier?"    
   });
   
   Mojo.Meta.newClass('net.geoprism.ontology.RefreshQueue', {
@@ -108,6 +111,7 @@
           var items = [];
           items.push({label:this.localize("updateSynonym"), id:"edit", handler:Mojo.Util.bind(this, this.__onUpdateSynonym)});          
           items.push({label:this.localize("deleteSynonym"), id:"delete", handler:Mojo.Util.bind(this, this.__onDeleteSynonym)});          
+          items.push({label:this.localize("restoreSynonym"), id:"restore", handler:Mojo.Util.bind(this, this.__onRestoreSynonym)});          
             
           return items;
         }
@@ -419,6 +423,41 @@
         }).render();
       },
         
+      __onRestoreSynonym : function(contextMenu, contextMenuItem, mouseEvent) {
+        var that = this;
+        var targetNode = contextMenu.getTarget();
+        var dto = this.termCache[this.__getRunwayIdFromNode(targetNode)];
+                    
+        // User clicks restore on context menu //
+        var dialog = that.getFactory().newDialog(that.localize("restoreTitle"), {modal: false, width: 350, height: 200, resizable: false});
+
+        var okHandler = Mojo.Util.bind(this, function() {
+          var request = new Mojo.ClientRequest({
+            onSuccess : function(idsToUpdate) {
+              var queue = new net.geoprism.ontology.RefreshQueue(that, idsToUpdate);
+              queue.start();
+                    
+              that.doForNodeAndAllChildren(targetNode, function(node){that.setNodeBusy(node, false);}); 
+            },
+            onFailure : function(ex) {
+              that.doForNodeAndAllChildren(targetNode, function(node){that.setNodeBusy(node, false);});
+              that.handleException(ex);
+            }
+          });
+            
+          dialog.close();
+          
+          this.doForNodeAndAllChildren(targetNode, function(node){that.setNodeBusy(node, true);});
+                
+          net.geoprism.ontology.Classifier.restoreSynonym(request, dto.getId());
+        });          
+          
+        dialog.appendContent(that.localize("restoreConfirmation"));
+        dialog.addButton(that.localize("ok"), okHandler, null, {"class": "btn btn-primary"});
+        dialog.addButton(that.localize("cancel"), function(){dialog.close();}, null, {"class": "btn"});
+        dialog.render();
+      },
+      
       /**
        * Creates the "Synonyms" node and then loads the synonyms under it.
        */
