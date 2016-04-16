@@ -3,20 +3,23 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import net.geoprism.TermSynonymRelationship;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.ontology.TermAndRel;
@@ -123,5 +126,42 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
   public static Term getRoot()
   {
     return Classifier.getRoot();
+  }
+
+  @Transaction
+  public Classifier[] restore()
+  {
+    String value = this.getDisplayLabel().getValue();
+
+    List<Classifier> list = new LinkedList<Classifier>();
+
+    List<? extends Classifier> sources = this.getAllIsSynonymFor().getAll();
+
+    for (Classifier source : sources)
+    {
+      Classifier classifier = new Classifier();
+      classifier.setClassifierId(value);
+      classifier.setClassifierPackage(source.getClassifierPackage());
+      classifier.getDisplayLabel().setValue(value);
+      classifier.apply();
+
+      List<? extends Classifier> parents = source.getAllIsAParent().getAll();
+
+      for (Classifier parent : parents)
+      {
+        classifier.addLink(parent, ClassifierIsARelationship.CLASS);
+      }
+
+      /*
+       * Restore the original value in the data records in case of a role back
+       */
+      TermSynonymRelationship.restoreSynonymData(classifier, this.getId(), Classifier.CLASS);
+
+      list.add(classifier);
+    }
+
+    this.delete();
+
+    return list.toArray(new Classifier[list.size()]);
   }
 }

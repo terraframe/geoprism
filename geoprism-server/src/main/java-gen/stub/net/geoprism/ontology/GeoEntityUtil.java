@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -26,6 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.geoprism.KeyGeneratorIF;
+import net.geoprism.TermSynonymRelationship;
+import net.geoprism.data.importer.SeedKeyGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,12 +58,12 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
-import com.runwaysdk.system.gis.geo.SynonymRelationship;
-import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
 
 public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long serialVersionUID = -395452858;
+  private static final KeyGeneratorIF generator        = new SeedKeyGenerator();
+
+  private static final long           serialVersionUID = -395452858;
 
   public GeoEntityUtil()
   {
@@ -114,31 +116,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   @Transaction
   public static Synonym makeSynonym(GeoEntity source, GeoEntity destination)
   {
-    // Copy over all synonyms
-    SynonymRelationshipQuery query = new SynonymRelationshipQuery(new QueryFactory());
-    query.WHERE(query.getParent().EQ(source));
-
-    OIterator<? extends SynonymRelationship> it = query.getIterator();
-
-    try
-    {
-      while (it.hasNext())
-      {
-        SynonymRelationship sRelationship = it.next();
-
-        Synonym sSynonymn = sRelationship.getChild();
-        String synonymName = sSynonymn.getDisplayLabel().getValue();
-
-        createSynonym(destination, synonymName);
-
-        sSynonymn.delete();
-      }
-    }
-    finally
-    {
-      it.close();
-    }
-
     // Delete all problems for the source geo entity so that they aren't transfered over to the destination entity
     GeoEntityProblemQuery problemQuery = new GeoEntityProblemQuery(new QueryFactory());
     problemQuery.WHERE(problemQuery.getGeoEntity().EQ(source));
@@ -158,16 +135,59 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       iterator.close();
     }
 
+    Synonym synonym = createSynonym(destination, source.getDisplayLabel().getValue());
+
+    /*
+     * Log the original synonym value in the data records in case of a role back
+     */
+    TermSynonymRelationship.logSynonymData(source, synonym.getId(), GeoEntity.CLASS);
+
     // Copy over any synonyms to the destination and delete the originals
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
-    BusinessDAOFactory.floatObjectIdReferences(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
-
-    Synonym synonym = createSynonym(destination, source.getDisplayLabel().getValue());
+    BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
 
     return synonym;
+  }
+
+  @Transaction
+  public static String[] restoreSynonym(String synonymId)
+  {
+    List<String> ids = new LinkedList<String>();
+
+    Synonym synonym = Synonym.get(synonymId);
+    String value = synonym.getDisplayLabel().getValue();
+
+    List<? extends GeoEntity> sources = synonym.getAllGeoEntity().getAll();
+
+    for (GeoEntity source : sources)
+    {
+      GeoEntity entity = new GeoEntity();
+      entity.setUniversal(source.getUniversal());
+      entity.setGeoId(generator.generateKey(""));
+      entity.getDisplayLabel().setValue(value);
+      entity.apply();
+
+      List<? extends GeoEntity> parents = source.getAllLocatedIn().getAll();
+
+      for (GeoEntity parent : parents)
+      {
+        entity.addLink(parent, LocatedIn.CLASS);
+      }
+
+      /*
+       * Restore the original value in the data records in case of a role back
+       */
+      TermSynonymRelationship.restoreSynonymData(entity, synonym.getId(), LocatedIn.CLASS);
+
+      ids.add(entity.getId());
+    }
+
+    synonym.delete();
+
+    return ids.toArray(new String[ids.size()]);
   }
 
   private static Synonym createSynonym(GeoEntity destination, String synonymName)

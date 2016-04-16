@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -23,6 +21,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import net.geoprism.TermSynonymRelationship;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
@@ -45,7 +45,6 @@ import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -99,7 +98,48 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   {
     ClassifierProblem.deleteProblems(this);
 
+    /*
+     * Delete all synonyms
+     */
+    List<? extends ClassifierSynonym> synonyms = this.getAllHasSynonym().getAll();
+
+    for (ClassifierSynonym synonym : synonyms)
+    {
+      synonym.delete();
+    }
+
     super.delete();
+
+    /*
+     * Delete all orphaned children
+     */
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierQuery query = new ClassifierQuery(factory);
+    query.WHERE(query.NOT_IN_isAParent());
+    query.AND(query.getId().NE(Classifier.getRoot().getId()));
+
+    OIterator<? extends Classifier> iterator = null;
+
+    try
+    {
+      iterator = query.getIterator();
+
+      List<? extends Classifier> classifiers = iterator.getAll();
+
+      for (Classifier classifier : classifiers)
+      {
+        classifier.delete();
+      }
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
+
   }
 
   /**
@@ -309,6 +349,22 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   @Transaction
+  public static String[] restoreSynonym(String synonymId)
+  {
+    ClassifierSynonym synonym = ClassifierSynonym.get(synonymId);
+    Classifier[] classifiers = synonym.restore();
+
+    List<String> ids = new LinkedList<String>();
+
+    for (Classifier classifier : classifiers)
+    {
+      ids.add(classifier.getId());
+    }
+
+    return ids.toArray(new String[ids.size()]);
+  }
+
+  @Transaction
   public static String[] makeSynonym(String sourceId, String destinationId)
   {
     Classifier source = Classifier.get(sourceId);
@@ -345,31 +401,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   @Transaction
   public static ClassifierSynonym makeSynonym(Classifier source, Classifier destination)
   {
-    // Copy over all synonyms
-    ClassifierHasSynonymQuery query = new ClassifierHasSynonymQuery(new QueryFactory());
-    query.WHERE(query.getParent().EQ(source));
-
-    OIterator<? extends ClassifierHasSynonym> it = query.getIterator();
-
-    try
-    {
-      while (it.hasNext())
-      {
-        ClassifierHasSynonym sRelationship = it.next();
-
-        ClassifierSynonym sSynonymn = sRelationship.getChild();
-        String synonymName = sSynonymn.getDisplayLabel().getValue();
-
-        createSynonym(destination, synonymName);
-
-        sSynonymn.delete();
-      }
-    }
-    finally
-    {
-      it.close();
-    }
-
     // Delete all problems for the source geo classifier so that they aren't transfered over to the destination
     // classifier
     ClassifierProblemQuery problemQuery = new ClassifierProblemQuery(new QueryFactory());
@@ -390,12 +421,22 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       iterator.close();
     }
 
-    // Copy over any synonyms to the destination and delete the originals
+    /*
+     * Create the new synonym
+     */
+    ClassifierSynonym synonym = createSynonym(destination, source.getDisplayLabel().getValue());
+
+    /*
+     * Log the original synonym value in the data records in case of a role back
+     */
+    TermSynonymRelationship.logSynonymData(source, synonym.getId(), Classifier.CLASS);
+
+    /*
+     * Copy over any synonyms to the destination and delete the originals
+     */
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
-    BusinessDAOFactory.floatObjectIdReferences(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
-
-    ClassifierSynonym synonym = createSynonym(destination, source.getDisplayLabel().getValue());
+    BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
 

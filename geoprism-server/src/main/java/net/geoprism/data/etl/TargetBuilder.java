@@ -27,9 +27,11 @@ import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.DataUploader;
 import net.geoprism.MappableClass;
+import net.geoprism.TermSynonymRelationship;
 import net.geoprism.data.browser.DataBrowserUtil;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.ontology.ClassifierSynonym;
 import net.geoprism.ontology.GeoEntityUtil;
 
 import org.json.JSONArray;
@@ -393,6 +395,20 @@ public class TargetBuilder
       field.setUniversal(Universal.get(universalId));
       field.setCountry(country);
 
+      /*
+       * Create the synonym restore attribute
+       */
+      MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
+      synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
+      synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+      synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
+      synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+      synonymAttribute.apply();
+
+      RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+      synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
+      synonymRelationship.apply();
+
       return field;
     }
 
@@ -484,6 +500,20 @@ public class TargetBuilder
       field.setKey(key);
       field.setSourceAttributeName(sourceAttributeName);
       field.setPackageName(key);
+
+      /*
+       * Create the synonym restore attribute
+       */
+      MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
+      synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
+      synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+      synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
+      synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+      synonymAttribute.apply();
+
+      RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+      synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
+      synonymRelationship.apply();
 
       return field;
     }
@@ -587,6 +617,20 @@ public class TargetBuilder
         }
       }
     }
+
+    /*
+     * Create the synonym restore attribute
+     */
+    MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
+    synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
+    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
+    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+    synonymAttribute.apply();
+
+    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+    synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
+    synonymRelationship.apply();
 
     return field;
   }
