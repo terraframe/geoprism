@@ -118,6 +118,17 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   @Transaction
   public static Synonym makeSynonym(GeoEntity source, GeoEntity destination)
   {
+    /*
+     * Ensure that the source destination doesn't have any geometry data
+     */
+    if (source.getGeoMultiPolygon() != null)
+    {
+      GeometrySynonymException exception = new GeometrySynonymException();
+      exception.setEntityLabel(source.getDisplayLabel().getValue());
+      
+      throw exception;
+    }
+
     // Delete all problems for the source geo entity so that they aren't transfered over to the destination entity
     GeoEntityProblemQuery problemQuery = new GeoEntityProblemQuery(new QueryFactory());
     problemQuery.WHERE(problemQuery.getGeoEntity().EQ(source));
@@ -177,7 +188,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       for (GeoEntity parent : parents)
       {
         entity.addLink(parent, LocatedIn.CLASS);
-        
+
         ids.add(parent.getId());
       }
 
