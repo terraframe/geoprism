@@ -26,7 +26,30 @@
         <child cardinality="1" name="com.runwaysdk.system.metadata.MdAttributeReference" method="SynonymAttribute"/>
       </mdRelationship>
     </create>
-    <update></update>
+    <permissions>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdRelationshipPermission type="net.geoprism.TermSynonymRelationship">
+            <operation name="ALL" />
+          </mdRelationshipPermission>      
+        </grant>
+      </role>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdRelationshipPermission type="net.geoprism.TermSynonymRelationship">
+            <operation name="ALL" />
+          </mdRelationshipPermission>      
+        </grant>
+      </role>      
+      <role roleName="geoprism.DecisionMaker">
+        <grant>
+          <mdRelationshipPermission type="net.geoprism.TermSynonymRelationship">
+            <operation name="READ" />
+            <operation name="READ_ALL_ATTRIBUTES" />
+          </mdRelationshipPermission>      
+        </grant>
+      </role>
+    </permissions>    
   </doIt>
   <undoIt>
     <delete></delete>
