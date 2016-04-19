@@ -54,7 +54,7 @@
     	config : {class:'btn btn-primary'},
         callback : function(){
           var connection = {
-            elementId : '#app-container',
+            elementId : '#innerFrameHtml',
             onSuccess : function() {
               // Find and remove the dataset from the datasets array         
               var index = controller.getIndex(dataset);
