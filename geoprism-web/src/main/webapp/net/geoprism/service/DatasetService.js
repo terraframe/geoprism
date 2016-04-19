@@ -97,7 +97,7 @@
       
       var locationStep = {"label": "4", "page":"LOCATION"};
       var coordinateStep = {"label": "5", "page":"COORDINATE"};
-      var problemResStep = {"label": "6"}; 
+      var problemResStep = {"label": "6", "page":"GEO-VALIDATION"}; 
       
       if(config.indexOf("LOCATION") !== -1 && config.indexOf("COORDINATE") !== -1){
         basicSteps.splice(2, 0, locationStep, coordinateStep);

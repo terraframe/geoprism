@@ -831,6 +831,16 @@
           else {          
             $scope.page.current = 'GEO-VALIDATION';
             $scope.page.snapshots = [];
+            
+            if(controller.hasLocationField() && controller.hasCoordinateField()) {
+            	$scope.currentStep = 5;
+            }
+            else if(controller.hasLocationField() || controller.hasCoordinateField()) {
+          		$scope.currentStep = 4;
+       		}
+        	else{
+          		$scope.currentStep = 3;
+        	}
           
             $scope.sheets = result.sheets;
             $scope.sheet = $scope.sheets[0];
