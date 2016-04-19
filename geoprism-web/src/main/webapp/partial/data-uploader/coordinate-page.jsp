@@ -51,11 +51,14 @@
 	      	    <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.longFieldHelpToolTip"/>"></i>
 	        	<p class="select-label"><gdb:localize key="dataUploader.longitude"/></p>
 	        </div>
-	        <div class="box">
+	        <div class="box" ng-if="longitudes.length != 1">
 	          <select class="select-area" name="{{::$index + '-longitude'}}" ng-model="coordinate.longitude" ng-required="true" ng-options="opt.label as opt.label for opt in longitudes">
 	            <option value=""></option>
 	          </select>
 	        </div>
+          <div class="inline-text" style="padding-right: 26px" ng-if="longitudes.length == 1">
+            <input ng-model="coordinate.longitude" name="{{::$index + '-longitude'}}" ng-required="true" type="text" disabled="disabled"></input>
+          </div>
 	      </div>
 	
 	      <div class="row-holder">

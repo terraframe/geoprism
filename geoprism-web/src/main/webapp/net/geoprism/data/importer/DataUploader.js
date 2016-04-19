@@ -645,6 +645,20 @@
         }
       }
       
+      /*
+       * If there is only 1 longitude field then set that value
+       * automatically and don't give the user a drop-down that
+       * they need to select from
+       */
+      if($scope.longitudes.length == 1) {
+        for(var i = 0; i < $scope.sheet.coordinates.ids.length; i++) {
+          var id = $scope.sheet.coordinates.ids[i];
+          var coordinate = $scope.sheet.coordinates.values[id];          
+          
+          coordinate.longitude = $scope.longitudes[0].label;
+        }
+      }
+      
       if($scope.sheet.attributes != null) {
         for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
           var id = $scope.sheet.attributes.ids[i];
