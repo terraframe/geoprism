@@ -407,7 +407,7 @@
         $timeout(function(){
           // Hook up the color picker
           $(element).colpick({
-            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
             onShow:function(colPickObj){
               var that = this;
                   
@@ -433,7 +433,10 @@
                     
               scope.model = value;                        
               scope.$apply();
-            }
+            },
+            onSubmit:function() {
+              $(element).colpickHide();
+            }            
           });
         }, 0);       
         
@@ -459,7 +462,7 @@
         $timeout(function(){
           // Hook up the color picker
           $(element).colpick({
-            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
+//            submit:0,  // removes the "ok" button which allows verification of selection and memory for last color
             onShow:function(colPickObj){
               var that = this;
                 
@@ -485,6 +488,9 @@
                 
               scope.category.color = value;                        
               scope.$apply();
+            },
+            onSubmit:function() {
+              $(element).colpickHide();
             }
           });
         }, 0);       
