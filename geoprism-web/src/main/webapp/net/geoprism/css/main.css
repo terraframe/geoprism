@@ -4358,6 +4358,25 @@ div.secondary-box label {
 #manage-datasets-table .fa.fa-trash-o.ico-remove{
 	font-size: 25px;
 }
+
+
+.fa-stack-1x.fa-stack-text.file-text.fa.fa-plus,
+.fa-stack-1x.fa-stack-text.file-text.fa.fa-minus {
+	padding-top: 2px;
+	font-size: 11px;
+}
+
+.fa-stack-1x, .fa-stack-2x{
+	width: 99% !important;
+}
+
+li.list-group-item{
+	background-color: rgba(255,255,255,0.75);
+}
+
+li.list-group-item:hover {
+    border-width: 2px;
+}
     
 
 /*

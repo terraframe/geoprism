@@ -23,15 +23,32 @@
 
 <div>
   <div class="label-holder">
+    <strong> </strong>
+  </div>
+  <div class="holder">
+    <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.titleUploadToExistingOrNewSubtitle"/></p>
+    </div>
+  </div>
+  
+  <div class="label-holder">
     <strong><gdb:localize key="dataUploader.existingDataset"/></strong>
   </div>
   <div class="holder">
-    <div class="row-holder" ng-repeat="match in sheet.matches track by $index">
-      <div class="button-holder">
-        {{match.label}}            
-        <input style="margin-left: 5px;" type="button" value="-" class="btn btn-primary set-location-btn pull-right"  ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>" />
-        <input type="button" value="+" class="btn btn-primary set-location-btn pull-right"  ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>" />
-      </div>    
-    </div>  
+  	<ul class="list-group">   
+        <li class="list-group-item" ng-repeat="match in sheet.matches track by $index">
+        	{{match.label}}            
+  		
+  		    <a href="#" class="fa-stack fa-1x pull-right" ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>">
+    			<i class="fa fa-file-o fa-stack-2x"></i>
+      			<i class="fa-stack-1x fa-stack-text file-text fa fa-minus"></i>
+  			</a>
+  			<a href="#" class="fa-stack fa-1x pull-right" ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>">
+    			<i class="fa fa-file-o fa-stack-2x"></i>
+      			<i class="fa-stack-1x fa-stack-text file-text fa fa-plus"></i>
+  			</a>
+
+  		</li>
+    </ul>
   </div> 
 </div>
