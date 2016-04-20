@@ -19,7 +19,9 @@
 package net.geoprism.ontology;
 
 import java.sql.Savepoint;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +50,8 @@ import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -99,6 +103,18 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   @Transaction
   public void delete()
   {
+    this.delete(new TreeSet<Classifier>(new Comparator<Classifier>()
+    {
+      @Override
+      public int compare(Classifier o1, Classifier o2)
+      {
+        return o1.getId().compareTo(o2.getId());
+      }
+    }));
+  }
+
+  private void delete(Set<Classifier> orphans)
+  {
     ClassifierProblem.deleteProblems(this);
 
     /*
@@ -128,12 +144,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     {
       iterator = query.getIterator();
 
-      List<? extends Classifier> classifiers = iterator.getAll();
-
-      for (Classifier classifier : classifiers)
-      {
-        classifier.delete();
-      }
+      orphans.addAll(iterator.getAll());
     }
     finally
     {
@@ -143,6 +154,15 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       }
     }
 
+    Iterator<Classifier> it = orphans.iterator();
+
+    if (it.hasNext())
+    {
+      Classifier classifier = it.next();
+      it.remove();
+
+      classifier.delete(orphans);
+    }
   }
 
   /**
@@ -432,7 +452,21 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     /*
      * Log the original synonym value in the data records in case of a role back
      */
-    TermSynonymRelationship.logSynonymData(source, synonym.getId(), Classifier.CLASS);
+    if (synonym != null)
+    {
+      TermSynonymRelationship.logSynonymData(source, synonym.getId(), Classifier.CLASS);
+    }
+    else
+    {
+      String label = source.getDisplayLabel().getValue();
+
+      List<ClassifierSynonym> synonyms = ClassifierSynonym.getSynonyms(destination, label);
+
+      for (ClassifierSynonym existingSynonym : synonyms)
+      {
+        TermSynonymRelationship.logSynonymData(source, existingSynonym.getId(), GeoEntity.CLASS);
+      }
+    }
 
     /*
      * Copy over any synonyms to the destination and delete the originals
