@@ -44,18 +44,24 @@
    			<li class="dropdown navigation-dropdown">      
    				<a href="#" class="fa fa-bars opener-drop dropdown-toggle dropdown-toggle-compact pull-right" ></a>
 	    		<ul class="dropdown-menu navigation-menu pull-right">
-       				<li>
-       					<i class="fa fa-home"></i> 
-       					<a href="/menu"><gdb:localize key="dashboardViewer.userMenuLinkLabel"/></a>
-       				</li>
-       				<li>
-       					<i class="fa fa-th"></i> 
-       					<a href="/dashboards"><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></a>
-       				</li>
-           			<li ng-if="dashboard.canEdit()">
-           				<i class="fa fa-lock"></i>
-           				<a href="/"><gdb:localize key="dashboardViewer.administrationLinkLabel"/></a>
-           			</li>
+	    			<a href="/menu">
+	       				<li>
+	       					<i class="fa fa-home"></i> 
+	       					<p ><gdb:localize key="dashboardViewer.userMenuLinkLabel"/></p>
+	       				</li>
+       				</a>
+       				<a href="/dashboards">
+	       				<li>
+	       					<i class="fa fa-th"></i> 
+	       					<p><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></p>
+	       				</li>
+	       			</a>
+	       			<a href="/">
+	           			<li ng-if="dashboard.canEdit()">
+	           				<i class="fa fa-lock"></i>
+	           				<p><gdb:localize key="dashboardViewer.administrationLinkLabel"/></p>
+	           			</li>
+           			</a>
        			</ul>
        		</li>
        	</ul>

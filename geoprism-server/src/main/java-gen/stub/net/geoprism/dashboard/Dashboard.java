@@ -420,6 +420,18 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
         MappableClass.assign(this, types);
       }
+
+      /*
+       * If this is a new instance always give the current user permissions to the dashboard
+       */
+      if (this.isNew())
+      {
+        String roleId = this.getDashboardRoleId();
+        UserDAOIF user = Session.getCurrentSession().getUser();
+
+        RoleDAO roleDAO = RoleDAO.get(roleId).getBusinessDAO();
+        roleDAO.assignMember(user);
+      }
     }
     catch (JSONException e)
     {

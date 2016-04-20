@@ -1333,6 +1333,16 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	display: inline-block;
 	color:#333;
 }
+.dropdown-menu li p{
+	padding: 3px 7px 2px;
+    display: inline-block;
+    color: #333;
+    margin: 0;
+}
+.dropdown-menu li i.fa.fa-home{
+	font-size: 19px;
+	line-height: 13px;
+}
 .dropdown-menu li:hover,
 .dropdown-menu li:focus{
 	color:#333;
@@ -2669,6 +2679,11 @@ option[selected]{ font-weight:bold}
     width: initial;
 }
 
+.location-selector-container .cell{
+	width: inherit;
+}
+.location-selector-container .cell .fa.fa-pencil.ico-edit,
+.location-selector-container .cell .fa.fa-trash-o.ico-remove,
 .location-field-info-card .cell .fa.fa-pencil.ico-edit,
 .location-field-info-card .cell .fa.fa-trash-o.ico-remove{
 	font-size: 20px;
@@ -2682,7 +2697,7 @@ option[selected]{ font-weight:bold}
     color: grey;
 }
 
-.location-field-info-card > .location-field-list-display i {
+.location-field-list-display.location-field-list-display i {
     font-size: 20px;
     vertical-align: middle;
     color: grey;
@@ -4051,6 +4066,7 @@ div.secondary-box label {
 	.modal-form .inline-value {
     float: left;
     position: relative;
+    width: 150px;
     min-width: 150px;
     padding-right: 5px;
     padding-top: 1px;
@@ -4072,7 +4088,7 @@ div.secondary-box label {
     width: 100%;
   }
   
-	.modal-form .inline-combo input[type="text"] {
+  .modal-form .inline-combo input[type="text"] {
     background: #EEE none repeat scroll 0% 0%;
     border: 1px solid #AAA;
     margin: 0px;
@@ -4088,7 +4104,11 @@ div.secondary-box label {
     width: 100%;
   }
   
-	.modal-form .inline-number {
+  .modal-form .inline-combo input[type="text"]:focus {
+  	border-color:#019edc;
+  }
+  
+  .modal-form .inline-number {
     float: left;
     position: relative;
     width: 70px;
@@ -4374,8 +4394,22 @@ li.list-group-item{
 	background-color: rgba(255,255,255,0.75);
 }
 
+li.list-group-item a{
+	bottom: 2px;
+}
+
 li.list-group-item:hover {
-    border-width: 2px;
+/*     border-width: 2px; */
+    background-color: #F6F6F6;
+}
+
+.inline-value > .btn{
+	height: 32px;
+}
+
+.inline-value.error-message{
+	text-align: left;
+	margin-top: 6px;
 }
     
 

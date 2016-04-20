@@ -69,7 +69,7 @@
 	      	</div>
 	      	<div class="location-selector-box-right">
 		        <div class="box">
-		          <select class="select-area" ng-model="attribute.fields[universal.value]" name="{{::$index + '-universal'}}" ng-required="true">
+		          <select class="select-area" ng-model="attribute.fields[universal.value]" ng-change="ctrl.change(attribute.fields)" name="{{::$index + '-universal'}}" ng-required="true">
 		            <option value=""></option>          
 		            <option ng-repeat="field in locationFields[universal.value]" value="{{field.label}}">{{field.label}}</option>   
 		            <option value="EXCLUDE"><gdb:localize key="dataUploader.exclude"/></option>
@@ -101,7 +101,7 @@
             	<a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(attribute)" title="<gdb:localize key="dataUploader.deleteToolTip"/>"></a>
           	</div>
           	<div class="row-holder">
-          	  <hr>
+<!--           	  <hr> -->
           	</div>
             <ul class="location-field-list-display">
               <li class="" ng-repeat="universal in universals track by $index" ng-if="attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE'">

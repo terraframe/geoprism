@@ -374,7 +374,7 @@
           for(var j = 0; j < fields.length; j++) {
             var field = fields[j];
             
-            if(!field.selected) {              
+            if(!field.assigned) {              
               return {field:field, universal:universal};
             }
           }
@@ -405,7 +405,7 @@
       return null;
     }
     
-    controller.refreshUnassignedFields = function() {
+    controller.refreshUnassignedFields = function(selectedFields) {
       /*
        * Reset the unassigned field array
        */
@@ -415,7 +415,7 @@
         for(var i = 0; i < $scope.sheet.fields.length; i++) {     
           var field = $scope.sheet.fields[i]
               
-          if(field.type == 'LOCATION' && !field.selected && field.name != $scope.attribute.name) {
+          if(field.type == 'LOCATION' && !field.assigned && field.name != $scope.attribute.name && selectedFields.indexOf(field.name) === -1 ) {
             $scope.unassignedFields.push(field);
           }
         }                      	  
@@ -428,14 +428,14 @@
         delete $scope.sheet.attributes.values[attribute.id];        
         $scope.sheet.attributes.ids.splice( $.inArray(attribute.id, $scope.sheet.attributes.ids), 1 );
         
-        // Update the field.selected status
-        controller.setFieldSelected();
+        // Update the field.assigned status
+        controller.setFieldAssigned();
         
         if($scope.attribute == null) {
           controller.newAttribute();
         } 
         else {
-          controller.refreshUnassignedFields();
+          controller.refreshUnassignedFields([]);
         }
       }
     }
@@ -452,8 +452,8 @@
         var attribute = $scope.sheet.attributes.values[$scope.attribute.id];      
         angular.copy($scope.attribute, attribute);              
         
-        // Update the field.selected status
-        controller.setFieldSelected();
+        // Update the field.assigned status
+        controller.setFieldAssigned();
       }
       
       var location = controller.getNextLocationField();      
@@ -478,7 +478,7 @@
         $scope.attribute = null;
       }
       
-      controller.refreshUnassignedFields();
+      controller.refreshUnassignedFields([]);
     }
     
     controller.addField = function(field) {
@@ -501,21 +501,21 @@
       }
     }
     
-    controller.setFieldSelected = function() {
+    controller.setFieldAssigned = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
         var field = $scope.sheet.fields[i]
       
         if(field.type == 'LOCATION') {
-          field.selected = controller.isSelected(field);          
+          field.assigned = controller.isAssigned(field);          
         }
         else {
-          field.selected = false;                
+          field.assigned = false;                
         }
       }          
     }
     
     
-    controller.isSelected = function(field) {
+    controller.isAssigned = function(field) {
       for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
         var id = $scope.sheet.attributes.ids[i];
         var attribute = $scope.sheet.attributes.values[id];
@@ -570,6 +570,16 @@
     $scope.$on('pagePrev', function(event, data){
       $scope.form.$setValidity("size",  true);
     });   
+    
+    controller.change = function(selectedFields){
+    	var selectedFieldsArr = [];
+    	for (var key in selectedFields) {
+    		  if (selectedFields.hasOwnProperty(key)) {
+    		    selectedFieldsArr.push(selectedFields[key]);
+    		  }
+    		}
+    	controller.refreshUnassignedFields(selectedFieldsArr);
+    }
     
     // Initialize the scope
     controller.initialize();
@@ -642,6 +652,20 @@
         }
         else if(controller.isBasic(field)) {
           $scope.featureIds.push(field);          
+        }
+      }
+      
+      /*
+       * If there is only 1 longitude field then set that value
+       * automatically and don't give the user a drop-down that
+       * they need to select from
+       */
+      if($scope.longitudes.length == 1) {
+        for(var i = 0; i < $scope.sheet.coordinates.ids.length; i++) {
+          var id = $scope.sheet.coordinates.ids[i];
+          var coordinate = $scope.sheet.coordinates.values[id];          
+          
+          coordinate.longitude = $scope.longitudes[0].label;
         }
       }
       

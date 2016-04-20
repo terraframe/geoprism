@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1095554551)
+@com.runwaysdk.business.ClassSignature(hash = -519416284)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
-  private static final long serialVersionUID = -1095554551;
+  private static final long serialVersionUID = -519416284;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -80,6 +80,14 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{sourceId, destinationId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "makeSynonym", _declaredTypes);
+    return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String[] restoreSynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String synonymId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{synonymId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "restoreSynonym", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

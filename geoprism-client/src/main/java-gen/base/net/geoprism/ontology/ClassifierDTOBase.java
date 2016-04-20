@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1774194078)
+@com.runwaysdk.business.ClassSignature(hash = -294861867)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.Classifier";
-  private static final long serialVersionUID = -1774194078;
+  private static final long serialVersionUID = -294861867;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -550,6 +550,14 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{sourceId, destinationId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "makeSynonym", _declaredTypes);
+    return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String[] restoreSynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String synonymId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{synonymId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "restoreSynonym", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

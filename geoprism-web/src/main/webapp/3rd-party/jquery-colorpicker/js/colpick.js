@@ -299,6 +299,8 @@ For usage and examples: colpick.com/plugin
 				setSelector(col, cal.get(0));
 				setHue(col, cal.get(0));
 				setNewColor(col, cal.get(0));
+
+				cal.data('colpick').onChange.apply(cal.parent(), [col, hsbToHex(col), hsbToRgb(col), cal.data('colpick').el, 0]);
 			};
 		return {
 			init: function (opt) {

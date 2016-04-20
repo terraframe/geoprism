@@ -18,6 +18,11 @@
  */
 package net.geoprism.ontology;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import net.geoprism.TermSynonymRelationship;
+
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.ontology.TermAndRel;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -123,5 +128,42 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
   public static Term getRoot()
   {
     return Classifier.getRoot();
+  }
+
+  @Transaction
+  public Classifier[] restore()
+  {
+    String value = this.getDisplayLabel().getValue();
+
+    List<Classifier> list = new LinkedList<Classifier>();
+
+    List<? extends Classifier> sources = this.getAllIsSynonymFor().getAll();
+
+    for (Classifier source : sources)
+    {
+      Classifier classifier = new Classifier();
+      classifier.setClassifierId(value);
+      classifier.setClassifierPackage(source.getClassifierPackage());
+      classifier.getDisplayLabel().setValue(value);
+      classifier.apply();
+
+      List<? extends Classifier> parents = source.getAllIsAParent().getAll();
+
+      for (Classifier parent : parents)
+      {
+        classifier.addLink(parent, ClassifierIsARelationship.CLASS);
+
+        list.add(parent);
+      }
+
+      /*
+       * Restore the original value in the data records in case of a role back
+       */
+      TermSynonymRelationship.restoreSynonymData(classifier, this.getId(), Classifier.CLASS);
+    }
+
+    this.delete();
+
+    return list.toArray(new Classifier[list.size()]);
   }
 }

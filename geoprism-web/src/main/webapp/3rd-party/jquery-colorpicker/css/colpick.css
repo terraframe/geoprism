@@ -6,7 +6,7 @@ colpick Color Picker / colpick.com
 .colpick {
 	position: absolute;
 	width: 346px;
-	height: 170px;
+	height: 180px;
 	overflow: hidden;
 	display: none;
 	font-family: Arial, Helvetica, sans-serif;

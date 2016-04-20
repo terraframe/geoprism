@@ -34,6 +34,9 @@
 
   <properties>
     <geoserver.version>2.5.0.1</geoserver.version>
+    <db.name>geoprism</db.name>
+    <db.user>geoprism</db.user>
+    <db.port>5432</db.port>    
   </properties>
 
   <dependencies>
@@ -55,7 +58,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.13</version>
+      <version>2.0.15</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -207,6 +210,101 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>geoprism-package-deployable</id>
+      <activation>
+        <property>
+          <name>geoprism-package-deployable</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+              <packagingExcludes>
+                <!-- Source/class project jars must be excluded for reloaded to work -->
+                **/geoprism-common*.jar,
+                **/geoprism-client*.jar,
+                **/geoprism-server*.jar,
+                <!-- Exclude all jars provided by tomcat -->
+                **/catalina*.jar,
+                **/servlet-api*.jar,
+                **/annotations-api*.jar
+              </packagingExcludes>
+              <webResources>
+                <resource>
+                  <directory>src/deployed/resources</directory>
+                  <targetPath>WEB-INF/classes</targetPath>
+                  <filtering>true</filtering>
+                </resource>
+                <!-- <resource> <directory>src/main/resources</directory> </resource> -->
+              </webResources>
+              <overlays>
+                <overlay>
+                  <!-- empty groupId/artifactId represents the current build -->
+                </overlay>
+              </overlays>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <id>geoprism-package-deployable</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+
+                    <!-- Create the database dump -->
+                    <exec executable="/usr/bin/pg_dump">
+                      <arg value="-U${db.user}" />
+                      <arg value="-p${db.port}" />
+                      <arg value="-Fp" />
+                      <arg value="-npublic" />
+                      <arg value="-O" />
+                      <arg value="-f${project.basedir}/src/main/installer/geoprism.backup" />
+                      <arg value="${db.name}" />
+                    </exec>
+
+                    <!-- Copy the up to date war file over to ide -->
+                    <copy file="${project.build.directory}/geoprism.war" todir="${project.basedir}/src/main/installer" />
+
+                    <!-- Create a tar file of all of the needed files -->
+                    <tar destfile="${project.build.directory}/geoprism.tar" basedir="${project.basedir}/src/main/installer/" />
+                    <gzip destfile="${project.build.directory}/geoprism.tar.gz" src="${project.build.directory}/geoprism.tar" />
+
+                    <!-- Delete the database dump, war, and tar -->
+                    <delete file="${project.basedir}/src/main/installer/geoprism.backup" />
+                    <delete file="${project.basedir}/src/main/installer/geoprism.war" />
+                    <delete file="${project.build.directory}/geoprism.tar" />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>1.4.1</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant-commons-net</artifactId>
+                <version>1.8.1</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>

@@ -77,6 +77,9 @@
           dialog.render();
         }
         else {
+          $scope.busy = false;            
+          $scope.$apply();
+        	
           controller.applyWithOptions();
         }
       };    

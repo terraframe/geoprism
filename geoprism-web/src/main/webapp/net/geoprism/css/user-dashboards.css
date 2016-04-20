@@ -105,9 +105,9 @@ h1 {
     filter: alpha(opacity=100); 
 }
    
-a.btn, .btn:active, .btn:focus {
-	padding: 2px 4px 2px 4px;
-}
+/* a.btn, .btn:active, .btn:focus { */
+/* 	padding: 2px 4px 2px 4px; */
+/* } */
 
 .caption a:hover{
 	color: grey;
@@ -228,7 +228,7 @@ img{
 }
    
    /* font-awesome icon */
-i.fa.fa-plus{
+.new-dashboard-btn i.fa.fa-plus{
   font-size: 70px;
     padding: 40px;
     font-weight: normal;
@@ -241,6 +241,7 @@ i.fa.fa-plus{
 }
 
 .frame-box:hover i,
+.frame-box:hover .inner-frame-box i,
 .frame-box:hover::before, 
 .frame-box:hover::after, 
 .frame-box:hover>:first-child::before, 

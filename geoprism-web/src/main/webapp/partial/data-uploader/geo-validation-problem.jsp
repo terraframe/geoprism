@@ -22,7 +22,7 @@
 
 <div class="row-holder">    
   <div ng-if="!problem.resolved">
-    <hr>
+<!--     <hr> -->
     <div class="error-message" ng-repeat="error in errors track by $index">
       <p >{{error}}</p>
     </div>
