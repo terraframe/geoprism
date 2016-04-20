@@ -60,6 +60,8 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
+import com.runwaysdk.system.gis.geo.SynonymQuery;
+import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
 
 public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -125,7 +127,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       GeometrySynonymException exception = new GeometrySynonymException();
       exception.setEntityLabel(source.getDisplayLabel().getValue());
-      
+
       throw exception;
     }
 
@@ -153,7 +155,21 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     /*
      * Log the original synonym value in the data records in case of a role back
      */
-    TermSynonymRelationship.logSynonymData(source, synonym.getId(), GeoEntity.CLASS);
+    if (synonym != null)
+    {
+      TermSynonymRelationship.logSynonymData(source, synonym.getId(), GeoEntity.CLASS);
+    }
+    else
+    {
+      String label = source.getDisplayLabel().getValue();
+
+      List<? extends Synonym> synonyms = GeoEntityUtil.getSynonyms(destination, label);
+
+      for (Synonym existingSynonym : synonyms)
+      {
+        TermSynonymRelationship.logSynonymData(source, existingSynonym.getId(), GeoEntity.CLASS);
+      }
+    }
 
     // Copy over any synonyms to the destination and delete the originals
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
@@ -542,5 +558,33 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     query.restrictRows(limit, 1);
 
     return query;
+  }
+
+  public static List<Synonym> getSynonyms(GeoEntity destination, String label)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    SynonymRelationshipQuery rQuery = new SynonymRelationshipQuery(factory);
+    rQuery.WHERE(rQuery.parentId().EQ(destination.getId()));
+
+    SynonymQuery sQuery = new SynonymQuery(factory);
+    sQuery.WHERE(sQuery.geoEntity(rQuery));
+    sQuery.AND(sQuery.getDisplayLabel().localize().EQ(label));
+
+    OIterator<? extends Synonym> iterator = null;
+
+    try
+    {
+      iterator = sQuery.getIterator();
+
+      return new LinkedList<Synonym>(iterator.getAll());
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
   }
 }

@@ -166,4 +166,32 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
 
     return list.toArray(new Classifier[list.size()]);
   }
+
+  public static List<ClassifierSynonym> getSynonyms(Classifier destination, String label)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierHasSynonymQuery rQuery = new ClassifierHasSynonymQuery(factory);
+    rQuery.WHERE(rQuery.parentId().EQ(destination.getId()));
+
+    ClassifierSynonymQuery sQuery = new ClassifierSynonymQuery(factory);
+    sQuery.WHERE(sQuery.isSynonymFor(rQuery));
+    sQuery.AND(sQuery.getDisplayLabel().localize().EQ(label));
+
+    OIterator<? extends ClassifierSynonym> iterator = null;
+
+    try
+    {
+      iterator = sQuery.getIterator();
+
+      return new LinkedList<ClassifierSynonym>(iterator.getAll());
+    }
+    finally
+    {
+      if (iterator != null)
+      {
+        iterator.close();
+      }
+    }
+  }
 }

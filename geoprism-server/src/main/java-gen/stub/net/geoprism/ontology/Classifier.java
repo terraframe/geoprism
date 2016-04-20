@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -48,6 +50,8 @@ import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
@@ -448,7 +452,21 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     /*
      * Log the original synonym value in the data records in case of a role back
      */
-    TermSynonymRelationship.logSynonymData(source, synonym.getId(), Classifier.CLASS);
+    if (synonym != null)
+    {
+      TermSynonymRelationship.logSynonymData(source, synonym.getId(), Classifier.CLASS);
+    }
+    else
+    {
+      String label = source.getDisplayLabel().getValue();
+
+      List<ClassifierSynonym> synonyms = ClassifierSynonym.getSynonyms(destination, label);
+
+      for (ClassifierSynonym existingSynonym : synonyms)
+      {
+        TermSynonymRelationship.logSynonymData(source, existingSynonym.getId(), GeoEntity.CLASS);
+      }
+    }
 
     /*
      * Copy over any synonyms to the destination and delete the originals
