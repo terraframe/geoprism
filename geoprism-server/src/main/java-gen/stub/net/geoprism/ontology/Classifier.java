@@ -3,23 +3,23 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
 import java.sql.Savepoint;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -99,6 +99,18 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   @Transaction
   public void delete()
   {
+    this.delete(new TreeSet<Classifier>(new Comparator<Classifier>()
+    {
+      @Override
+      public int compare(Classifier o1, Classifier o2)
+      {
+        return o1.getId().compareTo(o2.getId());
+      }
+    }));
+  }
+
+  private void delete(Set<Classifier> orphans)
+  {
     ClassifierProblem.deleteProblems(this);
 
     /*
@@ -128,12 +140,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     {
       iterator = query.getIterator();
 
-      List<? extends Classifier> classifiers = iterator.getAll();
-
-      for (Classifier classifier : classifiers)
-      {
-        classifier.delete();
-      }
+      orphans.addAll(iterator.getAll());
     }
     finally
     {
@@ -143,6 +150,15 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       }
     }
 
+    Iterator<Classifier> it = orphans.iterator();
+
+    if (it.hasNext())
+    {
+      Classifier classifier = it.next();
+      it.remove();
+
+      classifier.delete(orphans);
+    }
   }
 
   /**
