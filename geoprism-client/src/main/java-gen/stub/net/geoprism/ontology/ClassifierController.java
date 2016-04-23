@@ -19,6 +19,7 @@
 package net.geoprism.ontology;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.TermAndRelDTO;
 import com.runwaysdk.controller.ErrorUtility;
@@ -75,12 +76,39 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONArray array = new JSONArray();
 
       TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentId, new String[] { ClassifierIsARelationshipDTO.CLASS });
-      for (TermAndRelDTO tnr : tnrs)
+      
+      JSONObject page = new JSONObject();
+
+      if (pageNum != null && pageSize != null && pageNum > 0 && pageSize > 0)
       {
-        array.put(tnr.toJSON());
+        int startIndex = Math.max(0, (( pageNum - 1 ) * pageSize));
+        int endIndex = Math.min( ( pageNum * pageSize ), tnrs.length);
+        int maxPages = ( (int) tnrs.length / pageSize ) + 1;
+
+        for (int i = startIndex; i < endIndex; i++)
+        {
+          TermAndRelDTO tnr = tnrs[i];
+
+          array.put(tnr.toJSON());
+        }
+
+        page.put("pageNumber", pageNum);
+        page.put("maxPages", maxPages);
+      }
+      else
+      {
+        for (TermAndRelDTO tnr : tnrs)
+        {
+          array.put(tnr.toJSON());
+        }
+
+        page.put("pageNumber", pageNum);
+        page.put("maxPages", 0);
       }
 
-      resp.getWriter().print(new JSONReturnObject(array).toString());
+      page.put("values", array);
+
+      resp.getWriter().print(new JSONReturnObject(page).toString());
     }
     catch (Throwable t)
     {

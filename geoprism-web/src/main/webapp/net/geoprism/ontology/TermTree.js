@@ -842,28 +842,37 @@
        * is binded to tree.contextmenu, called when the user right clicks on a node.
        */
       __onNodeRightClick : function(e) {
-        var $tree = $(this.getRawEl());
-        $tree.tree('selectNode', e.node);
         
-        var items = this._createNodeRightClickMenu(e);
-        
-        var cm = this.getFactory().newContextMenu(e.node);
-        
-        for(var i = 0; i < items.length; i++) {
-          var item = items[i];
+        if(e.node != null && e.node.pagination) {
+          var termId = e.node.termId;
+          var pageNumber = e.node.pageNumber;
           
-          var menuItem = cm.addItem(item.label, item.id, item.handler);
-          
-          if (e.node.termBusy || item.enabled === false) {
-            menuItem.setEnabled(false);
-          }
+          this.refreshTerm(termId, null, null, pageNumber);
         }
-        
-        cm.render();
-        
-        cm.addDestroyEventListener(function() {
-          $tree.tree("selectNode", null);
-        });
+        else {            
+          var $tree = $(this.getRawEl());
+          $tree.tree('selectNode', e.node);
+            
+          var items = this._createNodeRightClickMenu(e);
+            
+          var cm = this.getFactory().newContextMenu(e.node);
+            
+          for(var i = 0; i < items.length; i++) {
+            var item = items[i];
+              
+            var menuItem = cm.addItem(item.label, item.id, item.handler);
+              
+            if (e.node.termBusy || item.enabled === false) {
+              menuItem.setEnabled(false);
+            }
+          }
+            
+          cm.render();
+            
+          cm.addDestroyEventListener(function() {
+            $tree.tree("selectNode", null);
+          });
+        }
       },
       
       isNodeBusy : function(node)
@@ -1027,7 +1036,7 @@
           var termId = this.__getRunwayIdFromNode(targetNode);
               
           this.refreshTerm(termId, null, [targetNode]);
-        }        
+        }
       },
       
       _createNodeMoveMenu : function(event) {        
@@ -1212,7 +1221,9 @@
         $(this.getRawEl()).tree("removeNode", node);
         
         // Remove the node from the term-node mapping
-        this._nodeMap.removeNodeMapping(node.runwayId, node.id);
+        if(node.runwayId != null) {
+          this._nodeMap.removeNodeMapping(node.runwayId, node.id);        	
+        }
       },
       
       /**
@@ -1226,8 +1237,10 @@
        * @param nodes
        *     List of nodes to update with the refreshed term data.  If this is null then
        *     all nodes corresponding to the termId will be refreshed. 
+       * @param pageNum
+       *     Optional pageNum parameter
        */
-      refreshTerm : function(termId, callback, nodes) {
+      refreshTerm : function(termId, callback, nodes, pageNum) {
         var that = this;
         
         this.setTermBusy(termId, true);
@@ -1235,7 +1248,10 @@
         var request = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
-            var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            
+            var page = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            var objArray = com.runwaysdk.DTOUtil.convertToType(page.values);
+            
             var termAndRels = [];
             for (var i = 0; i < objArray.length; ++i) {
               termAndRels.push(that.__responseToTNR(objArray[i]));
@@ -1257,6 +1273,15 @@
               }
             }
             
+            // Add prev page pagination
+            if(page.pageNumber > 1) {
+              for (var iNode = 0; iNode < nodes.length; ++iNode) {
+                var node = nodes[iNode];
+                    
+                that.__createPaginationNode("...", termId, (page.pageNumber -1), node);                
+              }              
+            }
+            
             // Create a node for every term we got from the server.
             for (var i = 0; i < termAndRels.length; ++i) {
               var childId = termAndRels[i].getTerm().getId();
@@ -1270,6 +1295,15 @@
                 var node = nodes[iNode];
                 that.__createTreeNode(childId, node);                
               }
+            }
+            
+            // Add next page pagination
+            if(page.pageNumber < page.maxPages) {
+              for (var iNode = 0; iNode < nodes.length; ++iNode) {
+                var node = nodes[iNode];
+                
+                that.__createPaginationNode("...", termId, (page.pageNumber + 1), node);                
+              }            	
             }
             
             that.setTermBusy(termId, false);
@@ -1296,7 +1330,11 @@
           }
         });
         
-        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, request);
+        if(pageNum == null) {
+          pageNum = 1;
+        }
+        
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: pageNum, pageSize: 200}, request);
       },
       
       /**
@@ -1441,6 +1479,26 @@
               }
             }
           }
+        }
+      },
+      
+      __createPaginationNode : function(label, termId, pageNumber, parentNode) {
+        var that = this;
+        var tree = $(that.getRawEl());
+        
+        var config = {
+          label: label,
+          id: Mojo.Util.generateId(),
+          pagination: true,
+          pageNumber: pageNumber,
+          termId: termId
+        }        
+        
+        if (parentNode == null || parentNode == undefined) {
+          node = tree.tree('appendNode',config);
+        }
+        else {
+          node = tree.tree('appendNode', config, parentNode);
         }
       },
       

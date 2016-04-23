@@ -483,7 +483,7 @@
        *     List of nodes to update with the refreshed term data.  If this is null then
        *     all nodes corresponding to the termId will be refreshed. 
        */
-      refreshTerm : function(termId, callback, nodes) {
+      refreshTerm : function(termId, callback, nodes, pageNum) {
         var that = this;
         var id = termId;
         
@@ -540,7 +540,7 @@
           Mojo.Util.invokeControllerAction("com.runwaysdk.system.gis.geo.Synonym", "getDirectDescendants", {parentId: parentId}, cr);
         }
         else {
-          this.$refreshTerm(termId, callback, nodes);
+          this.$refreshTerm(termId, callback, nodes, pageNum);
         }
       },
       

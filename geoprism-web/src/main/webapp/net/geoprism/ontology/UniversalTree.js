@@ -261,7 +261,7 @@
        *     List of nodes to update with the refreshed term data.  If this is null then
        *     all nodes corresponding to the termId will be refreshed. 
        */
-      refreshTerm : function(termId, callback, nodes) {
+      refreshTerm : function(termId, callback, nodes, pageNum) {
         var that = this;
         
         this.setTermBusy(termId, true);
@@ -269,7 +269,10 @@
         var myCallback = new Mojo.ClientRequest({
           onSuccess : function(responseText) {
             var json = Mojo.Util.getObject(responseText);
-            var objArray = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            
+            var page = com.runwaysdk.DTOUtil.convertToType(json.returnValue);
+            var objArray = com.runwaysdk.DTOUtil.convertToType(page.values);
+            
             var termAndRels = [];
             for (var i = 0; i < objArray.length; ++i) {
               termAndRels.push(that.__responseToTNR(objArray[i]));
@@ -288,6 +291,15 @@
               for (var i=0; i < children.length; i++) {
                 that.removeNode(children[i]);
               }
+            }
+            
+            // Add prev page pagination
+            if(page.pageNumber > 1) {
+              for (var iNode = 0; iNode < nodes.length; ++iNode) {
+                var node = nodes[iNode];
+                    
+                that.__createPaginationNode("Prev Page", termId, (page.pageNumber -1), node);                
+              }              
             }
             
             // Create a node for every term we got from the server.
@@ -324,6 +336,15 @@
               }
             }
             
+            // Add next page pagination
+            if(page.pageNumber < page.maxPages) {
+              for (var iNode = 0; iNode < nodes.length; ++iNode) {
+                var node = nodes[iNode];
+                
+                that.__createPaginationNode("Next Page", termId, (page.pageNumber + 1), node);                
+              }            	
+            }            
+            
             that.setTermBusy(termId, false);
             
             if (callback != null && Mojo.Util.isFunction(callback.onSuccess))
@@ -348,7 +369,11 @@
           }
         });
         
-        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: 0, pageSize: 0}, myCallback);
+        if(pageNum == null) {
+          pageNum = 1;
+        }
+        
+        Mojo.Util.invokeControllerAction(this._config.termType, "getDirectDescendants", {parentId: termId, relationshipTypes: this._config.relationshipTypes, pageNum: pageNum, pageSize: 200}, myCallback);
       },
       
       _getRootTermId : function() {
