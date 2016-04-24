@@ -156,7 +156,7 @@
                   <artifactId>tomcat</artifactId>
                   <version>8.0.23</version>
                 </artifactInstaller>
-                <timeout>480000</timeout>
+                <timeout>10000000</timeout>
               </container>
               <configuration>
                 <properties>
