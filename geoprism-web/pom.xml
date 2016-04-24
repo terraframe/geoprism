@@ -33,7 +33,7 @@
   <description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
 
   <properties>
-    <geoserver.version>2.5.0.1</geoserver.version>
+    <geoserver.version>2.5.0.0.1</geoserver.version>
     <db.name>geoprism</db.name>
     <db.user>geoprism</db.user>
     <db.port>5432</db.port>    
