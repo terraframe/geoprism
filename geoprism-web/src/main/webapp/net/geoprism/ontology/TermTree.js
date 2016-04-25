@@ -1491,7 +1491,8 @@
           id: Mojo.Util.generateId(),
           pagination: true,
           pageNumber: pageNumber,
-          termId: termId
+          termId: termId,
+          dragAndDrop : false          
         }        
         
         if (parentNode == null || parentNode == undefined) {
