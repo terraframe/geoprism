@@ -61,9 +61,9 @@
     <header id="header">
     	<div id="header-link-container" class="text-right">
 	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
-	        <c:if test="${not empty miniLogoFilePath}" >
-            <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/>
-          </c:if>
+<%-- 	        <c:if test="${not empty miniLogoFilePath}" > --%>
+<%--             <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
+<%--           </c:if> --%>
 	        <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
 	      </a>
 	      <p id="user-link-container" class="text-right">
