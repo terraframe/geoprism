@@ -28,6 +28,15 @@
 <head>
   <gdb:localize var="page_title" key="login.header"/>
   
+	<c:choose>
+		<c:when test="${not empty miniLogoFilePath}" >
+			<link rel="icon" href="${miniLogoFilePath}"/>
+		</c:when>
+		<c:otherwise>
+			<link rel="icon" href="/net/geoprism/images/splash_logo_icon.png"/>
+		</c:otherwise>
+	</c:choose>
+  
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
   <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  

@@ -59,6 +59,19 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet();
 
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
+    
+    String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
+    if (bannerFile != null)
+    {
+      this.req.setAttribute("bannerFilePath", bannerFile);
+      this.req.setAttribute("bannerFileName", bannerFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
+    String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
+    if (miniLogoFile != null)
+    {
+      this.req.setAttribute("miniLogoFilePath", miniLogoFile);
+      this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
 
     this.req.setAttribute("dashboards", dashboards);
     this.req.setAttribute("isAdmin", this.userIsAdmin());
@@ -115,6 +128,19 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   public void menu() throws IOException, ServletException
   {
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
+    
+    String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
+    if (bannerFile != null)
+    {
+      this.req.setAttribute("bannerFilePath", bannerFile);
+      this.req.setAttribute("bannerFileName", bannerFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
+    String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
+    if (miniLogoFile != null)
+    {
+      this.req.setAttribute("miniLogoFilePath", miniLogoFile);
+      this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
 
     this.req.setAttribute("isAdmin", this.userIsAdmin());
     setLogoReqAttrs();

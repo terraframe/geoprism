@@ -28,6 +28,7 @@ import net.geoprism.AccessConstants;
 import net.geoprism.FileDownloadUtil;
 import net.geoprism.GeoprismUserDTO;
 import net.geoprism.JavascriptUtil;
+import net.geoprism.SystemLogoSingletonDTO;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 
 import com.runwaysdk.constants.ClientRequestIF;
@@ -194,6 +195,13 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     req.setAttribute("workspace", GeoserverProperties.getWorkspace());
     req.setAttribute("editDashboard", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
     req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
+    
+    String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
+    if (miniLogoFile != null)
+    {
+      this.req.setAttribute("miniLogoFilePath", miniLogoFile);
+      this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
+    }
 
     JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 
