@@ -20,8 +20,6 @@ package net.geoprism.data.importer;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.List;
-import java.util.Map;
 
 import com.runwaysdk.generation.loader.Reloadable;
 
@@ -52,16 +50,14 @@ public class LocatedInBean implements Reloadable
   /**
    * PropertyChangeSupport
    */
-  private PropertyChangeSupport                   propertyChangeSupport;
+  private PropertyChangeSupport propertyChangeSupport;
 
-  private BuildTypes                              option;
+  private BuildTypes            option;
 
   /**
    * Percent of area two entites must over lap before one is considered located in the other.
    */
-  private int                                     overlapPercent;
-
-  private Map<String, List<Pair<String, String>>> paths;
+  private int                   overlapPercent;
 
   public LocatedInBean()
   {
@@ -99,10 +95,5 @@ public class LocatedInBean implements Reloadable
   public void setOverlapPercent(int overlapPercent)
   {
     propertyChangeSupport.firePropertyChange("overlapPercent", this.overlapPercent, this.overlapPercent = overlapPercent);
-  }
-
-  public Map<String, List<Pair<String, String>>> getPaths()
-  {
-    return this.paths;
   }
 }
