@@ -20,7 +20,6 @@ package net.geoprism.data;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -31,34 +30,28 @@ import org.apache.commons.io.FileUtils;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.util.IDGenerator;
 
-public class LocalEndpoint implements XMLEndpoint
+public class CachedEndpoint implements XMLEndpoint
 {
-  private File root;
+  private XMLEndpoint endpoint;
 
-  public LocalEndpoint(File root)
-  {
-    this.root = root;
-  }
+  private File        cacheDirectory;
 
-  private String getPrefix(String country, String version, String type)
+  public CachedEndpoint(XMLEndpoint endpoint, File cacheDirectory)
   {
-    return country + File.separator + "xml" + File.separator + version + File.separator + type + File.separator;
+    this.endpoint = endpoint;
+    this.cacheDirectory = cacheDirectory;
   }
 
   @Override
   public List<String> listUniversalKeys(String country, String version)
   {
-    String prefix = this.getPrefix(country, version, "universals");
-
-    return this.listFiles(prefix);
+    return this.endpoint.listUniversalKeys(country, version);
   }
 
   @Override
   public List<String> listGeoEntityKeys(String country, String version)
   {
-    String prefix = this.getPrefix(country, version, "geoentities");
-
-    return this.listFiles(prefix);
+    return this.endpoint.listGeoEntityKeys(country, version);
   }
 
   @Override
@@ -75,18 +68,38 @@ public class LocalEndpoint implements XMLEndpoint
   @Override
   public void copyFiles(File directory, List<String> paths, boolean preserveDirectories)
   {
+    if (!this.cacheDirectory.exists())
+    {
+      this.cacheDirectory.mkdirs();
+    }
+
+    List<String> pathsToRetrieve = new LinkedList<String>();
+
+    for (String path : paths)
+    {
+      if (!new File(this.cacheDirectory, path).exists())
+      {
+        pathsToRetrieve.add(path);
+      }
+    }
+
+    if (pathsToRetrieve.size() > 0)
+    {
+      this.endpoint.copyFiles(this.cacheDirectory, pathsToRetrieve, true);
+    }
+
     try
     {
       List<File> files = new LinkedList<File>();
 
       for (String path : paths)
       {
-        InputStream istream = new FileInputStream(new File(this.root, path));
+        InputStream istream = new FileInputStream(new File(this.cacheDirectory, path));
 
         try
         {
-          String targetPath = this.getTargetPath(preserveDirectories, path);
-          File file = new File(directory, targetPath);
+          String name = new File(path).getName();
+          File file = new File(directory, name);
 
           FileUtils.copyInputStreamToFile(istream, file);
 
@@ -103,45 +116,5 @@ public class LocalEndpoint implements XMLEndpoint
     {
       throw new ProgrammingErrorException(e);
     }
-  }
-
-  private String getTargetPath(boolean preserveDirectories, String key)
-  {
-    if (preserveDirectories)
-    {
-      return key;
-    }
-    else
-    {
-      return new File(key).getName();
-    }
-  }
-
-  private List<String> listFiles(String prefix)
-  {
-    LinkedList<String> paths = new LinkedList<String>();
-
-    FilenameFilter filter = new FilenameFilter()
-    {
-      @Override
-      public boolean accept(File dir, String name)
-      {
-        return name.endsWith(".xml.gz");
-      }
-    };
-
-    File directory = new File(this.root, prefix);
-
-    File[] files = directory.listFiles(filter);
-
-    if (files != null)
-    {
-      for (File file : files)
-      {
-        paths.add(this.root.toURI().relativize(file.toURI()).getPath());
-      }
-    }
-
-    return paths;
   }
 }

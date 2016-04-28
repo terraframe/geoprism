@@ -30,6 +30,7 @@ import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardBuilder;
 import net.geoprism.dashboard.DashboardQuery;
 import net.geoprism.dashboard.DashboardTypeInfo;
+import net.geoprism.data.CachedEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
@@ -492,10 +493,22 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
       ProjectDataConfiguration configuration = new ProjectDataConfiguration();
 
-      XMLEndpoint endpoint = new AmazonEndpoint();
+      XMLEndpoint endpoint = this.getEndpoint();
 
       LocationImporter importer = new XMLLocationImporter(endpoint, false);
       importer.loadProjectData(configuration);
+    }
+    
+    private XMLEndpoint getEndpoint()
+    {
+      String cacheDirectory = System.getProperty("endpoint.cache");
+
+      if (cacheDirectory != null)
+      {
+        return new CachedEndpoint(new AmazonEndpoint(), new File(cacheDirectory));
+      }
+
+      return new AmazonEndpoint();
     }
   }
 

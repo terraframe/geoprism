@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.geoprism.data.CachedEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
@@ -130,7 +131,7 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
     Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
     Universal.getStrategy().initialize(AllowedIn.CLASS);
     GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
-    
+
     if (new UniversalAllPathsTableQuery(new QueryFactory()).getCount() == 0)
     {
       Universal.getStrategy().reinitialize(AllowedIn.CLASS);
@@ -140,18 +141,18 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
     {
       GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
     }
-    
+
     if (new ClassifierAllPathsTableQuery(new QueryFactory()).getCount() == 0)
     {
       Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
     }
-    
+
     /*
      * Load location data
      */
     ProjectDataConfiguration configuration = new ProjectDataConfiguration();
 
-    XMLEndpoint endpoint = new AmazonEndpoint();
+    XMLEndpoint endpoint = this.getEndpoint();
 
     LocationImporter importer = new XMLLocationImporter(endpoint);
     importer.loadProjectData(configuration);
@@ -163,5 +164,17 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
   public void shutdown()
   {
 
+  }
+
+  private XMLEndpoint getEndpoint()
+  {
+    String cacheDirectory = System.getProperty("endpoint.cache");
+
+    if (cacheDirectory != null)
+    {
+      return new CachedEndpoint(new AmazonEndpoint(), new File(cacheDirectory));
+    }
+
+    return new AmazonEndpoint();
   }
 }

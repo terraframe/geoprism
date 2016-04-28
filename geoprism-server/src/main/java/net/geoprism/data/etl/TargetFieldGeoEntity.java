@@ -24,18 +24,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.geoprism.ontology.NonUniqueEntityResultException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -197,25 +199,19 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     return parent;
   }
 
-  private String generateGeoId()
-  {
-    // TODO Use a different geo id generator
-    return IDGenerator.nextID();
-  }
-
   private GeoEntity findGeoEntity(GeoEntity parent, Universal universal, String label)
   {
     QueryFactory factory = new QueryFactory();
 
-    LocatedInQuery lQuery = new LocatedInQuery(factory);
-    lQuery.WHERE(lQuery.parentId().EQ(parent.getId()));
+    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(parent));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);
     synonymQuery.WHERE(synonymQuery.getDisplayLabel().localize().EQ(label));
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.getUniversal().EQ(universal));
-    query.AND(query.locatedIn(lQuery));
+    query.AND(query.getId().EQ(aptQuery.getChildTerm().getId()));
     query.AND(OR.get(query.getDisplayLabel().localize().EQ(label), query.synonym(synonymQuery)));
 
     OIterator<? extends GeoEntity> iterator = query.getIterator();
@@ -228,9 +224,12 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
         if (iterator.hasNext())
         {
-          // TODO Give a better error message
-
-          throw new RuntimeException("Ambigious entity with the label [" + label + "] and universal [" + universal + "]");
+          NonUniqueEntityResultException e = new NonUniqueEntityResultException();
+          e.setLabel(label);
+          e.setUniversal(universal.getDisplayLabel().getValue());
+          e.setParent(parent.getDisplayLabel().getValue());
+          
+          throw e;
         }
 
         return entity;
@@ -300,8 +299,6 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   {
     GeoEntity parent = this.root;
 
-    boolean valid = true;
-
     List<String> context = new LinkedList<String>();
 
     for (UniversalAttribute attribute : attributes)
@@ -309,45 +306,37 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       /*
        * Only validate up until the desired universal
        */
-      if (valid)
+      String label = source.getValue(attribute.getAttributeName());
+
+      Universal entityUniversal = attribute.getUniversal();
+
+      if (label != null && label.length() > 0)
       {
-        String label = source.getValue(attribute.getAttributeName());
-
-        Universal entityUniversal = attribute.getUniversal();
-
-        if (label != null && label.length() > 0)
+        if (parent.getUniversalId().equals(entityUniversal.getId()))
         {
-          if (parent.getUniversalId().equals(entityUniversal.getId()))
-          {
-            GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
+          GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
 
-            if (entity == null)
-            {
-              return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
-            }
+          if (entity == null)
+          {
+            return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
+          }
+        }
+        else
+        {
+          GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
+
+          if (entity == null)
+          {
+            return new LocationProblem(label, context, parent, entityUniversal);
           }
           else
           {
-            GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
-
-            if (entity == null)
-            {
-              return new LocationProblem(label, context, parent, entityUniversal);
-            }
-            else
-            {
-              parent = entity;
-            }
+            parent = entity;
           }
         }
-
-        context.add(label);
-
-        // if (universal.getId().equals(entityUniversal.getId()))
-        // {
-        // valid = false;
-        // }
       }
+
+      context.add(label);
     }
 
     return null;

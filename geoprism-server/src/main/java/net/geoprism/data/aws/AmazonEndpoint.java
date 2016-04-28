@@ -72,13 +72,13 @@ public class AmazonEndpoint implements XMLEndpoint
     File directory = new File(FileUtils.getTempDirectory(), IDGenerator.nextID());
     directory.mkdirs();
 
-    this.copyFiles(directory, keys);
+    this.copyFiles(directory, keys, false);
 
     return directory;
   }
 
   @Override
-  public void copyFiles(File directory, List<String> keys)
+  public void copyFiles(File directory, List<String> keys, boolean preserveDirectories)
   {
     try
     {
@@ -96,8 +96,9 @@ public class AmazonEndpoint implements XMLEndpoint
 
         try
         {
-          String name = new File(key).getName();
-          File file = new File(directory, name);
+          String targetPath = this.getTargetPath(preserveDirectories, key);
+
+          File file = new File(directory, targetPath);
 
           FileUtils.copyInputStreamToFile(istream, file);
 
@@ -113,6 +114,18 @@ public class AmazonEndpoint implements XMLEndpoint
     catch (IOException e)
     {
       throw new ProgrammingErrorException(e);
+    }
+  }
+
+  private String getTargetPath(boolean preserveDirectories, String key)
+  {
+    if (preserveDirectories)
+    {
+      return key;
+    }
+    else
+    {
+      return new File(key).getName();
     }
   }
 

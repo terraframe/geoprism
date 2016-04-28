@@ -48,8 +48,10 @@ public interface XMLEndpoint
    *          The directory in which to copy the files
    * @param keys
    *          List of endpoint file keys used to retrieve the files from the endpoint
+   * @param preserveSubdirectories
+   *          Flag indicating if subdirectories should be preserved
    */
-  public void copyFiles(File directory, List<String> keys);
+  public void copyFiles(File directory, List<String> keys, boolean preserveSubdirectories);
 
   /**
    * Copies all files into the a generated temp directory

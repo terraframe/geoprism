@@ -166,7 +166,7 @@ public class XMLLocationImporter implements LocationImporter
 
       try
       {
-        this.endpoint.copyFiles(directory, list);
+        this.endpoint.copyFiles(directory, list, false);
 
         VersioningUnzipper.processZipDir(directory.getAbsolutePath());
 

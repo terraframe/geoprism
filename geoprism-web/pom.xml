@@ -156,7 +156,7 @@
                   <artifactId>tomcat</artifactId>
                   <version>8.0.23</version>
                 </artifactInstaller>
-                <timeout>480000</timeout>
+                <timeout>1480000</timeout>
               </container>
               <configuration>
                 <properties>
@@ -179,6 +179,7 @@
                     -Djavax.net.ssl.trustStorePassword=2v8hVW2rPFncN6m
                     -Djava.rmi.server.hostname=127.0.0.1
                     -Dbirt-server=true
+                    -Dendpoint.cache=/${project.basedir}/cache
                   </cargo.jvmargs>
                 </properties>
               </configuration>
