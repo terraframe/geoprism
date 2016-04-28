@@ -53,7 +53,7 @@
           <div class="label-holder">
             <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
           </div>
-          <div class="holder">
+          <div ng-class="{'holder' : page.current != 'GEO-VALIDATION', 'wide-holder' : page.current == 'GEO-VALIDATION'}">
             <div ng-repeat="error in errors">
               <p class="error-message">{{error}}</p>
             </div>
