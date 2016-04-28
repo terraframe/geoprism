@@ -38,6 +38,15 @@
 	
 	  <title><gdb:localize key="dashboardViewer.title"/></title>
 	  
+	  	<c:choose>
+			<c:when test="${not empty miniLogoFilePath}" >
+				<link rel="icon" href="${miniLogoFilePath}"/>
+			</c:when>
+			<c:otherwise>
+				<link rel="icon" href="/net/geoprism/images/splash_logo_icon.png"/>
+			</c:otherwise>
+		</c:choose>
+	  
 	  <!-- Tell Runway what the application context path is. -->
 	  <script>
 	    window.com = window.com || {};

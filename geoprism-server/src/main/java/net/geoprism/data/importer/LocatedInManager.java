@@ -20,7 +20,10 @@ package net.geoprism.data.importer;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.geoprism.data.importer.LocatedInBean.BuildTypes;
 import net.geoprism.localization.LocalizationFacade;
@@ -29,15 +32,20 @@ import com.runwaysdk.ProblemException;
 import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestState;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 
 public class LocatedInManager extends TaskObservable implements UncaughtExceptionHandler, Reloadable
 {
@@ -221,7 +229,9 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
   {
     this.fireStartTask(LocalizationFacade.getFromBundles("builder.prepareComputation"), -1);
 
-    LocatedInBuilder builder = new LocatedInBuilder(bean.getOption(), bean.getOverlapPercent());
+    Map<String, List<Pair<String, String>>> paths = this.getDefaultPaths();
+
+    LocatedInBuilder builder = new LocatedInBuilder(bean.getOption(), bean.getOverlapPercent(), paths);
     ComputeLocatedInRunner runner = new ComputeLocatedInRunner(builder);
     builder.setup();
 
@@ -292,6 +302,55 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
     }
 
     return runner.getList();
+  }
+
+  private Map<String, List<Pair<String, String>>> getDefaultPaths()
+  {
+    // sql.append("  SELECT DISTINCT ai.child_id " + CHILD_CLASS + ",\n");
+    // sql.append("         ai.parent_id " + PARENT_CLASS + ",\n");
+    // sql.append("         root.child_id " + ROOT_CLASS + "\n");
+    // sql.append("  FROM " + allowedIn + " AS ai, \n");
+    // sql.append("  " + allowedIn + " AS root \n");
+    // sql.append("  JOIN " + uapt + " AS uapt ON root.child_id = uapt.child_term \n");
+    // sql.append("  WHERE ai.child_id = uapt.parent_term \n");
+    // sql.append(");\n");
+    //
+    // sql.append("DELETE from universals \n");
+    // sql.append("WHERE " + CHILD_CLASS + " = 'i3n7tzda2ow04gquixyagr7ngfi101ezi1vpa2tywfkq0wgqelwt6ay8b49cnbch'\n");
+    // sql.append("AND " + ROOT_CLASS + " = 'ik8lufs0102vbtpwjydai205wtkssne8i1vpa2tywfkq0wgqelwt6ay8b49cnbch';\n");
+
+    Map<String, List<Pair<String, String>>> paths = new HashMap<String, List<Pair<String, String>>>();
+
+    List<? extends Universal> universals = new UniversalQuery(new QueryFactory()).getIterator().getAll();
+
+    for (Universal universal : universals)
+    {
+      String universalId = universal.getId();
+      paths.put(universalId, new LinkedList<Pair<String, String>>());
+
+      QueryFactory factory = new QueryFactory();
+
+      UniversalAllPathsTableQuery uaptQuery = new UniversalAllPathsTableQuery(factory);
+      uaptQuery.WHERE(uaptQuery.getChildTerm().EQ(universal));
+
+      AllowedInQuery aiQuery = new AllowedInQuery(factory);
+      aiQuery.WHERE(aiQuery.parentId().EQ(uaptQuery.getChildTerm().getId()));
+
+      List<? extends AllowedIn> relationships = aiQuery.getIterator().getAll();
+
+      for (AllowedIn relationship : relationships)
+      {
+        String childId = relationship.getChildId();
+        String parentId = relationship.getParentId();
+
+        if (! ( universalId.equals("ik8lufs0102vbtpwjydai205wtkssne8i1vpa2tywfkq0wgqelwt6ay8b49cnbch") && childId.equals("i3n7tzda2ow04gquixyagr7ngfi101ezi1vpa2tywfkq0wgqelwt6ay8b49cnbch") ))
+        {
+          paths.get(universalId).add(new Pair<String, String>(childId, parentId));
+        }
+      }
+    }
+
+    return paths;
   }
 
   private void processInvalidGeometries(LocatedInBuilder builder, GISImportLoggerIF logger)

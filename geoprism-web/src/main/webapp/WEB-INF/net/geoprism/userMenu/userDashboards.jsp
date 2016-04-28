@@ -28,6 +28,15 @@
 <head>
   <gdb:localize var="page_title" key="login.header"/>
   
+	<c:choose>
+		<c:when test="${not empty miniLogoFilePath}" >
+			<link rel="icon" href="${miniLogoFilePath}"/>
+		</c:when>
+		<c:otherwise>
+			<link rel="icon" href="/net/geoprism/images/splash_logo_icon.png"/>
+		</c:otherwise>
+	</c:choose>
+  
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
   <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
@@ -61,9 +70,9 @@
     <header id="header">
     	<div id="header-link-container" class="text-right">
 	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
-	        <c:if test="${not empty miniLogoFilePath}" >
-            <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/>
-          </c:if>
+<%-- 	        <c:if test="${not empty miniLogoFilePath}" > --%>
+<%--             <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
+<%--           </c:if> --%>
 	        <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
 	      </a>
 	      <p id="user-link-container" class="text-right">

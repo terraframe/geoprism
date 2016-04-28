@@ -18,6 +18,7 @@
 //						 being active on map render.  We currently hide/show layers by adding/removing them from the map.
 //						 The visible prop sets whether that layer is visible when already added to the map as an alternative
 //						 to the method we are using.  Unless we change our mechanism this should always be true. 
+//  "ENABLED" - (boolean) Whether the layer option should be included in the application deployment. 
 //
 ////
 
@@ -114,7 +115,7 @@ var MapConfig ={
             "URL":"",
             "DEFAULT":"false",
             "VISIBLE":"true",
-            "ENABLED":"true"
+            "ENABLED":"false"
     	},
     	{
     		"NAME":"Google Streets",
@@ -127,7 +128,7 @@ var MapConfig ={
             "URL":"",
             "DEFAULT":"false",
             "VISIBLE":"true",
-            "ENABLED":"true"
+            "ENABLED":"false"
     	},
     	{
     		"NAME":"Google Terrain",

@@ -38,6 +38,8 @@
   <link rel="stylesheet" type="text/css" href="/net/geoprism/css/login.css">
   
   <title><gdb:localize key="login.title" /> </title>	
+  
+  <link rel="icon" href="/net/geoprism/images/splash_logo_icon.png">
 </head>
 <body>
   

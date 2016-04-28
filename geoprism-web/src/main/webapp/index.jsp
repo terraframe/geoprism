@@ -34,6 +34,15 @@
 
   <title>${page_title}</title>
   
+  	<c:choose>
+		<c:when test="${not empty miniLogoFilePath}" >
+			<link rel="icon" href="${miniLogoFilePath}"/>
+		</c:when>
+		<c:otherwise>
+			<link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png"/>
+		</c:otherwise>
+	</c:choose>
+  
   <jwr:style src="/bundles/main.css" useRandomParam="false" />  
   <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
   

@@ -3218,6 +3218,9 @@ span.select-area span.center {
 	.jqtree-loading{
 		background: url(../images/busy.gif) no-repeat;
 	}
+	.jqtree-tree .jqtree-element .jqtree-title{
+		margin-left: 0;
+	}
 
 /** 
 * 
