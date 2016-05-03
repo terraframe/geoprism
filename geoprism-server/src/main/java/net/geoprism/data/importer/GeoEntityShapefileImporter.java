@@ -22,6 +22,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +53,7 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
+import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -114,7 +116,12 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
    * Map between a feature id and its geo entity
    */
   private Map<String, String> entityIdMap;
-
+  
+  /**
+   * Synonym for the entity
+   */
+  private List<String>        synonyms;
+  
   /**
    * @param url
    *          URL of the shapefile
@@ -127,6 +134,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
     this.helper = new GeometryHelper();
     this.root = GeoEntity.getRoot();
     this.entityIdMap = new HashMap<String, String>();
+    this.synonyms = new ArrayList<String>();
   }
 
   public GeoEntityShapefileImporter(File file) throws MalformedURLException
@@ -192,6 +200,16 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
   public void setParentType(String parentType)
   {
     this.parentType = parentType;
+  }
+  
+  public List<String> getSynonms()
+  {
+    return synonyms;
+  }
+  
+  public void setSynonym(String synonym)
+  {
+    this.synonyms.add(synonym);
   }
 
   /**
@@ -367,9 +385,19 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       entity.getDisplayLabel().setValue(entityName);
       entity.setUniversal(universal);
       entity.setGeoId(geoId);
+      
       try
       {
         entity.apply();
+        
+        synonyms = getSynonms();
+        for(String synonym : synonyms)
+        {
+          Synonym syn = new Synonym();
+          syn.getDisplayLabel().setDefaultValue(feature.getAttribute(synonym).toString());
+          syn.getDisplayLabel().setValue(feature.getAttribute(synonym).toString());
+          Synonym.create(syn, entity.getId());
+        }
       }
       catch (Exception e)
       {
