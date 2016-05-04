@@ -47,7 +47,7 @@ public class AmazonEndpoint implements XMLEndpoint
 
   private String getPrefix(String country, String version, String type)
   {
-    return "counties/" + country + "/xml/" + version + "/" + type + "/";
+    return "deployable_countries/" + country + "/xml/" + version + "/" + type + "/";
   }
 
   @Override
