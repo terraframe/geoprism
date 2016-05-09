@@ -1,0 +1,72 @@
+{
+  "exports": [
+    "ol.Map",
+    "ol.Map#*",
+    "ol.View",
+    "ol.View#*",
+    "ol.extent.applyTransform",
+    "ol.proj.getTransform",
+    "ol.source.MapQuest",
+    "ol.source.BingMaps",
+    "ol.layer.Group",
+    "ol.layer.Group#*",
+    "ol.Collection",
+    "ol.Collection#*",
+    "ol.layer.Image",
+    "ol.layer.Image#*",
+    "ol.source.ImageWMS",
+    "ol.control.Attribution",
+    "ol.control.Attribution#*",
+    "ol.Attribution",
+    "ol.Attribution#*",
+    "ol.Overlay",
+    "ol.Overlay#*",
+    "ol.control.defaults",
+    "ol.layer.Tile",
+    "ol.layer.Tile#*",
+    "ol.source.OSM",
+    "ol.source.OSM#*",
+    "ol.interaction.defaults",
+    "ol.interaction.DragPan",
+    "ol.interaction.DragPan#*",
+    "ol.layer.Layer",
+    "ol.layer.Layer#*",
+    "ol.layer.Base",
+    "ol.layer.Base#*",
+    "ol.layer.Vector",
+    "ol.layer.Vector#*"
+  ],
+  "compile": {
+    "externs": [
+      "externs/bingmaps.js",
+      "externs/closure-compiler.js",
+      "externs/geojson.js",
+      "externs/oli.js",
+      "externs/olx.js",
+      "externs/proj4js.js",
+      "externs/tilejson.js",
+      "externs/topojson.js"
+    ],
+    "define": [
+      "goog.array.ASSUME_NATIVE_FUNCTIONS=true",
+      "goog.dom.ASSUME_STANDARDS_MODE=true",
+      "goog.json.USE_NATIVE_JSON=true",
+      "goog.DEBUG=false",
+      "ol.ENABLE_DOM=true",
+      "ol.ENABLE_WEBGL=true",
+      "ol.ENABLE_PROJ4JS=true",
+      "ol.ENABLE_IMAGE=true",
+      "ol.ENABLE_VECTOR=true"
+    ],
+    "jscomp_off": [
+      "unknownDefines"
+    ],
+    "extra_annotation_name": [
+      "api", "observable"
+    ],
+    "compilation_level": "ADVANCED_OPTIMIZATIONS",
+    "use_types_for_optimization": true,
+    "manage_closure_dependencies": true
+  }
+}
+
