@@ -118,11 +118,6 @@
               </packagingExcludes>
               <webResources>
                 <resource>
-                  <directory>src/deployed/resources</directory>
-                  <targetPath>WEB-INF/classes</targetPath>
-                  <filtering>true</filtering>
-                </resource>
-                <resource>
                   <directory>src/deployed/ebextensions</directory>
                   <targetPath>.ebextensions</targetPath>
                   <filtering>false</filtering>
@@ -130,6 +125,28 @@
                 <!-- <resource> <directory>src/main/resources</directory> </resource> -->
               </webResources>
             </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>package-deployable-filemerge</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>net.geoprism.FileMerger</mainClass>
+                  <arguments>
+                    <argument>--baseDir=${project.build.directory}/classes</argument>
+                    <argument>--overrideDir=${project.basedir}/src/deployed/resources</argument>
+                    <argument>--exportDir=${project.build.directory}/classes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
@@ -216,6 +233,40 @@
       </build>
     </profile>
     <profile>
+      <id>config.dir.filemerge</id>
+      <activation>
+        <property>
+          <name>configuration.dir</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+					  <groupId>org.codehaus.mojo</groupId>
+					  <artifactId>exec-maven-plugin</artifactId>
+					  <version>1.4.0</version>
+					  <executions>
+					    <execution>
+					      <id>config.dir.filemerge</id>
+					      <phase>prepare-package</phase>
+					      <goals>
+					        <goal>java</goal>
+					      </goals>
+					      <configuration>
+		              <mainClass>net.geoprism.FileMerger</mainClass>
+		              <arguments>
+		                <argument>--baseDir=${project.build.directory}/classes</argument>
+		                <argument>--overrideDir=${configuration.dir}</argument>
+		                <argument>--exportDir=${project.build.directory}/classes</argument>
+		              </arguments>
+		            </configuration>
+					    </execution>
+					  </executions>
+					</plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>geoprism-package-deployable</id>
       <activation>
         <property>
@@ -253,6 +304,28 @@
                 </overlay>
               </overlays>
             </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>package-deployable-filemerge</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>net.geoprism.FileMerger</mainClass>
+                  <arguments>
+                    <argument>--baseDir=${project.build.directory}/classes</argument>
+                    <argument>--overrideDir=${project.basedir}/src/deployed/resources</argument>
+                    <argument>--exportDir=${project.build.directory}/classes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -411,27 +484,6 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-             <tasks if="configuration.dir">
-                <echo message="Copying from ${configuration.dir} to ${project.build.directory}/classes/" />
-
-                <copy todir="${project.build.directory}/classes" verbose="true" overwrite="true">
-                  <fileset dir="${configuration.dir}" />
-                </copy>
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.8</version>
         <executions>
@@ -448,21 +500,21 @@
                   <artifactId>geoprism-common</artifactId>
                   <version>1.01.0005</version>
                   <type>jar</type>
-                  <excludes>**/*.java,**/*.properties</excludes>
+                  <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geoprism-client</artifactId>
                   <version>1.01.0005</version>
                   <type>jar</type>
-                  <excludes>**/*.java,**/*.properties</excludes>
+                  <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
                   <artifactId>geoprism-server</artifactId>
                   <version>1.01.0005</version>
                   <type>jar</type>
-                  <excludes>**/*.java,**/*.properties</excludes>
+                  <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>com.runwaysdk</groupId>
@@ -487,13 +539,6 @@
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
-                  <artifactId>geoprism-server</artifactId>
-                  <version>1.01.0005</version>
-                  <type>jar</type>
-                  <includes>**/messages*.properties,**/geoserver*.properties</includes>
                 </artifactItem>
               </artifactItems>
               <includes>**/*</includes>

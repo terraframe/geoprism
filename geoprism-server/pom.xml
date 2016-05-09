@@ -31,6 +31,7 @@
 
   <name>Geoprism server</name>
   <description>The back-end database server for Geoprism</description>
+  <url>http://www.terraframe.com/products/runwaysdk</url>
 
   <properties>
     <!-- Specify your development root database credentials here. -->

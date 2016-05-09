@@ -111,7 +111,7 @@ public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExport
         String attributeName = matcher[0];
         String universalKey = matcher[1];
         Integer index = Integer.parseInt(matcher[2]);
-
+        
         Cell cell = _row.getCell(column.getIndex());
         String value = ExcelUtil.getString(cell);
 
