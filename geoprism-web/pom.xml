@@ -388,15 +388,7 @@
   <build>
     <!-- Just for convenience, this stops us from having to add the version when we hit our webapp. -->
     <finalName>geoprism</finalName>
-
-    <!-- This tells maven to resolve variables in our properties files. -->
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
+    
     <plugins>
       <!-- Weave Aspects -->
       <plugin>
@@ -466,11 +458,6 @@
             **/*servlet-api*.jar,
             **/*annotations-api*.jar
           </packagingExcludes>
-          <webResources>
-            <resource>
-              <directory>src/main/resources</directory>
-            </resource>
-          </webResources>
           <overlays>
             <overlay>
               <!-- empty groupId/artifactId represents the current build -->
