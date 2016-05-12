@@ -20,6 +20,7 @@ package net.geoprism;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.commons.cli.CommandLine;
@@ -36,8 +37,6 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
-
-import com.runwaysdk.configuration.RunwayConfigurationException;
 /**
  * This class performs merge operations between files or directories. This is designed for use in the build system for custom resource merging.
  * 
@@ -218,15 +217,30 @@ public class FileMerger
         .configure(params.fileBased()
             .setFile(export));
     
-    Configuration interpolated = this.cconfig.interpolatedConfiguration();
     Configuration exportConfig = exportBuilder.getConfiguration();
     
-    Iterator<String> i = interpolated.getKeys();
+    Iterator<String> i = this.cconfig.getKeys();
     while (i.hasNext())
     {
       String key = i.next();
-      String value = interpolated.get(String.class, key);
-      exportConfig.setProperty(key,value);
+      
+      Object value = this.cconfig.getProperty(key);
+      if (value instanceof String)
+      {
+        exportConfig.setProperty(key, value);
+      }
+      else if (value instanceof ArrayList)
+      {
+        @SuppressWarnings("rawtypes")
+        ArrayList values = (ArrayList) value;
+        
+        System.out.println("WARNING: Multiple values found in [" + base.getAbsolutePath() + "] for key [" + key + "]. Values = " + value.toString());
+        exportConfig.setProperty(key, values.get(values.size()-1));
+      }
+      else
+      {
+        throw new RuntimeException("Unknown property type [" + value.getClass().getName() + "] + [" + value.toString() + "].");
+      }
     }
     
     exportBuilder.save();

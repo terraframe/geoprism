@@ -119,7 +119,7 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
       }
       else
       {
-        logger.error("Metadata schema files were not found! Unable to import schemas.");
+        logger.error("Metadata schema files were not found at [" + metadata.getAbsolutePath() + "]! Unable to import schemas.");
       }
     }
 
