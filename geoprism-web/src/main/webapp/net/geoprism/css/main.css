@@ -2290,7 +2290,7 @@ select{
 	    100% 100%;
 	background-repeat: no-repeat;
 	
-		height: 31px;
+		height: 31px !important;
     
 	background-position:
 	    calc(100% - 10px) calc(1em + 1px), 
