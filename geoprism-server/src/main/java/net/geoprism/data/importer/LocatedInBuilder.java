@@ -21,6 +21,10 @@ package net.geoprism.data.importer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.geoprism.data.importer.LocatedInBean.BuildTypes;
 
@@ -33,8 +37,6 @@ import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
@@ -42,58 +44,54 @@ import com.runwaysdk.system.metadata.MdEntity;
 
 public class LocatedInBuilder implements Reloadable
 {
-  private BuildTypes          type;
+  public static final String            CHILD_ID                   = "child_id";
 
-  private int                 percent;
+  public static final String            PARENT_ID                  = "parent_id";
 
-  private volatile boolean    inProgress;
+  public static final String            PROCESSED                  = "processed";
 
-  public static final String  CHILD_ID                   = "child_id";
+  public static final String            TOTAL                      = "total";
 
-  public static final String  PARENT_ID                  = "parent_id";
+  public static final String            FAILED_ENTITY_ID           = "id";
 
-  public static final String  PROCESSED                  = "processed";
+  private static final String           UNIVERSALS_TABLE           = "universals";
 
-  public static final String  TOTAL                      = "total";
+  private static final String           ENTITIES_TABLE             = "entities";
 
-  public static final String  FAILED_ENTITY_ID           = "id";
+  private static final String           FAILED_ENTITIES_TABLE      = "failed_entities";
 
-  private static final String UNIVERSALS_TABLE           = "universals";
+  private static final String           CHILD_PARENT_TYPE          = "child_parent";
 
-  private static final String ENTITIES_TABLE             = "entities";
+  private static final String           DERIVE_LOCATED_IN_FUNC     = "derive_located_in";
 
-  private static final String FAILED_ENTITIES_TABLE      = "failed_entities";
+  private static final String           DERIVE_LOCATED_IN_REC_FUNC = "derive_located_in_rec";
 
-  private static final String CHILD_PARENT_TYPE          = "child_parent";
+  private static final String           GEO_TOTAL_SEQ              = "geo_total";
 
-  private static final String DERIVE_LOCATED_IN_FUNC     = "derive_located_in";
+  private static final String           GEO_PROGRESS_SEQ           = "geo_progres";
 
-  private static final String DERIVE_LOCATED_IN_REC_FUNC = "derive_located_in_rec";
+  private static final String           POSTGRES_SEQ_LAST_VALUE    = "last_value";
 
-  private static final String GEO_TOTAL_SEQ              = "geo_total";
+  private static final String           PARENT_CLASS               = "parent_class";
 
-  private static final String GEO_PROGRESS_SEQ           = "geo_progres";
+  private static final String           CHILD_CLASS                = "child_class";
 
-  private static final String POSTGRES_SEQ_LAST_VALUE    = "last_value";
+  private static final String           ROOT_CLASS                 = "root_class";
 
-  private static final String PARENT_CLASS               = "parent_class";
+  private BuildTypes                    type;
 
-  private static final String CHILD_CLASS                = "child_class";
+  private int                           percent;
 
-  @Request
-  public static void main(String[] args)
-  {
-    LocatedInBuilder b = new LocatedInBuilder(BuildTypes.REBUILD_ALL, 80);
-    b.setup();
-    b.deriveLocatedIn();
-    b.cleanup();
-  }
+  private Map<String, List<PathOption>> paths;
 
-  public LocatedInBuilder(BuildTypes type, int percent)
+  private volatile boolean              inProgress;
+
+  public LocatedInBuilder(BuildTypes type, int percent, Map<String, List<PathOption>> paths)
   {
     this.type = type;
     this.percent = percent;
     this.inProgress = false;
+    this.paths = paths;
   }
 
   private void createTables()
@@ -109,8 +107,6 @@ public class LocatedInBuilder implements Reloadable
       String geoMultiPolygonAttr = LocatedInQueryUtil.getColumnName(GeoEntity.getGeoMultiPolygonMd());
       String geoDataAttr = LocatedInQueryUtil.getColumnName(GeoEntity.getWktMd());
 
-      String allowedIn = MdEntity.getMdEntity(AllowedIn.CLASS).getTableName();
-
       stmt = conn.createStatement();
       StringBuffer sql = new StringBuffer();
 
@@ -119,13 +115,28 @@ public class LocatedInBuilder implements Reloadable
 
       // dereference all universals for allowed_in lookup
       sql.append("DROP TABLE IF EXISTS " + UNIVERSALS_TABLE + ";\n");
-      sql.append("CREATE TABLE " + UNIVERSALS_TABLE + " AS (\n");
-      sql.append("  SELECT ai.child_id " + CHILD_CLASS + ",\n");
-      sql.append("         ai.parent_id " + PARENT_CLASS + "\n");
-      sql.append("  FROM " + allowedIn + " AS ai \n");
-      sql.append(");\n");
 
-      sql.append("CREATE INDEX parent_child_ind ON " + UNIVERSALS_TABLE + "(" + CHILD_CLASS + ", " + PARENT_CLASS + ");\n");
+      sql.append("CREATE TABLE " + UNIVERSALS_TABLE + " (");
+      sql.append("  " + ROOT_CLASS + " character(64) NOT NULL,\n");
+      sql.append("  " + CHILD_CLASS + " character(64) NOT NULL,\n");
+      sql.append("  " + PARENT_CLASS + " character(64) NOT NULL);\n");
+
+      // sql.append("DROP TABLE IF EXISTS " + UNIVERSALS_TABLE + ";\n");
+      // sql.append("CREATE TABLE " + UNIVERSALS_TABLE + " AS (\n");
+      // sql.append("  SELECT DISTINCT ai.child_id " + CHILD_CLASS + ",\n");
+      // sql.append("         ai.parent_id " + PARENT_CLASS + ",\n");
+      // sql.append("         root.child_id " + ROOT_CLASS + "\n");
+      // sql.append("  FROM " + allowedIn + " AS ai, \n");
+      // sql.append("  " + allowedIn + " AS root \n");
+      // sql.append("  JOIN " + uapt + " AS uapt ON root.child_id = uapt.child_term \n");
+      // sql.append("  WHERE ai.child_id = uapt.parent_term \n");
+      // sql.append(");\n");
+      //
+      // sql.append("DELETE from universals \n");
+      // sql.append("WHERE " + CHILD_CLASS + " = 'i3n7tzda2ow04gquixyagr7ngfi101ezi1vpa2tywfkq0wgqelwt6ay8b49cnbch'\n");
+      // sql.append("AND " + ROOT_CLASS + " = 'ik8lufs0102vbtpwjydai205wtkssne8i1vpa2tywfkq0wgqelwt6ay8b49cnbch';\n");
+
+      sql.append("CREATE INDEX parent_child_ind ON " + UNIVERSALS_TABLE + "(" + CHILD_CLASS + ", " + PARENT_CLASS + ", " + ROOT_CLASS + ");\n");
 
       // collect all geometry valid entities
       sql.append("DROP TABLE IF EXISTS " + ENTITIES_TABLE + ";\n");
@@ -227,7 +238,7 @@ public class LocatedInBuilder implements Reloadable
 
     // Define the function which create the derived located in recursive values
     sql.append("CREATE OR REPLACE FUNCTION " + DERIVE_LOCATED_IN_REC_FUNC + "(");
-    sql.append("  pctThreshold integer, childId " + ENTITIES_TABLE + "." + id + "%TYPE, univ " + ENTITIES_TABLE + ".univ%TYPE)\n");
+    sql.append("  pctThreshold integer, childId " + ENTITIES_TABLE + "." + id + "%TYPE, univ " + ENTITIES_TABLE + ".univ%TYPE, root " + ENTITIES_TABLE + ".univ%TYPE)\n");
     sql.append("RETURNS SETOF " + CHILD_PARENT_TYPE + " AS \n");
     sql.append("$BODY$\n");
     sql.append("DECLARE\n");
@@ -236,7 +247,7 @@ public class LocatedInBuilder implements Reloadable
     sql.append("  foundMatch boolean;\n");
     sql.append("BEGIN\n");
     sql.append("  BEGIN\n");
-    sql.append("    FOR parentMd IN SELECT " + PARENT_CLASS + " FROM " + UNIVERSALS_TABLE + " WHERE " + CHILD_CLASS + " = univ\n");
+    sql.append("    FOR parentMd IN SELECT " + PARENT_CLASS + " FROM " + UNIVERSALS_TABLE + " AS uni WHERE uni." + CHILD_CLASS + " = univ AND uni." + ROOT_CLASS + " = root\n");
     sql.append("    LOOP\n");
     sql.append("      foundMatch := false;\n");
     sql.append("      FOR matched IN SELECT child." + id + " " + CHILD_ID + ", parents." + id + " " + PARENT_ID + "\n");
@@ -253,7 +264,7 @@ public class LocatedInBuilder implements Reloadable
     sql.append("        RETURN QUERY SELECT matched." + CHILD_ID + ", matched." + PARENT_ID + ";\n");
     sql.append("      END LOOP;\n");
     sql.append("      IF foundMatch = false THEN\n");
-    sql.append("        RETURN QUERY SELECT * FROM " + DERIVE_LOCATED_IN_REC_FUNC + "(pctThreshold, childId, parentMd);\n");
+    sql.append("        RETURN QUERY SELECT * FROM " + DERIVE_LOCATED_IN_REC_FUNC + "(pctThreshold, childId, parentMd, root);\n");
     sql.append("      END IF;\n");
     sql.append("    END LOOP;\n");
     sql.append("  EXCEPTION WHEN OTHERS THEN\n");
@@ -279,14 +290,14 @@ public class LocatedInBuilder implements Reloadable
     sql.append("    WHEN 1, 2 THEN\n");
     sql.append("      FOR childRow IN SELECT * FROM " + ENTITIES_TABLE + "\n");
     sql.append("      LOOP\n");
-    sql.append("        RETURN QUERY SELECT * FROM " + DERIVE_LOCATED_IN_REC_FUNC + "(pctThreshold, childRow." + id + ", childRow.univ);\n");
+    sql.append("        RETURN QUERY SELECT * FROM " + DERIVE_LOCATED_IN_REC_FUNC + "(pctThreshold, childRow." + id + ", childRow.univ, childRow.univ);\n");
     sql.append("        perform nextval('" + GEO_PROGRESS_SEQ + "');\n");
     sql.append("      END LOOP;\n");
     sql.append("    WHEN 3 THEN\n");
     sql.append("      FOR childRow IN SELECT * FROM " + ENTITIES_TABLE + " e INNER JOIN (\n");
     sql.append("        SELECT " + id + " FROM " + ENTITIES_TABLE + " EXCEPT SELECT " + RelationshipDAOIF.CHILD_ID_COLUMN + " FROM " + locatedIn + ") orphaned \n" + " ON orphaned." + id + " = e." + id + "\n");
     sql.append("      LOOP\n");
-    sql.append("        RETURN QUERY SELECT * FROM " + DERIVE_LOCATED_IN_FUNC + "_rec(pctThreshold, childRow." + id + ", childRow.univ);\n");
+    sql.append("        RETURN QUERY SELECT * FROM " + DERIVE_LOCATED_IN_FUNC + "_rec(pctThreshold, childRow." + id + ", childRow.univ, childRow.univ);\n");
     sql.append("        perform nextval('" + GEO_PROGRESS_SEQ + "');\n");
     sql.append("      END LOOP;\n");
     sql.append("    ELSE\n");
@@ -341,6 +352,70 @@ public class LocatedInBuilder implements Reloadable
   {
     createTables();
     buildFunction();
+    populateTables();
+  }
+
+  private void populateTables()
+  {
+    Connection conn = Database.getConnection();
+    Statement stmt = null;
+
+    try
+    {
+      StringBuffer sql = new StringBuffer();
+
+      Set<Entry<String, List<PathOption>>> entries = this.paths.entrySet();
+
+      for (Entry<String, List<PathOption>> entry : entries)
+      {
+        this.addOption(sql, entry.getValue());
+      }
+
+      stmt = conn.createStatement();
+      stmt.execute(sql.toString());
+      conn.commit();
+    }
+    catch (SQLException e)
+    {
+      RunwayLogUtil.logToLevel(LogLevel.ERROR, "Error occured while creating the database tables used for the located in builder", e);
+      Database.throwDatabaseException(e);
+    }
+    finally
+    {
+      try
+      {
+        if (stmt != null)
+        {
+          stmt.close();
+        }
+      }
+      catch (SQLException sqlEx2)
+      {
+        Database.throwDatabaseException(sqlEx2);
+      }
+
+      try
+      {
+        Database.closeConnection(conn);
+      }
+      catch (SQLException e)
+      {
+        Database.throwDatabaseException(e);
+      }
+    }
+  }
+
+  private void addOption(StringBuffer buffer, List<PathOption> paths)
+  {
+    for (PathOption option : paths)
+    {
+      if (option.isEnabled())
+      {
+        buffer.append("INSERT INTO " + UNIVERSALS_TABLE + " VALUES ('" + option.getRoot() + "', '" + option.getChildId() + "', '" + option.getParentId() + "');\n");
+
+        this.addOption(buffer, option.getParents());
+      }
+    }
   }
 
   public OIterator<ValueObject> getFailedEntities()
@@ -392,7 +467,7 @@ public class LocatedInBuilder implements Reloadable
       sql += "drop sequence " + GEO_TOTAL_SEQ + ";";
       sql += "drop sequence " + GEO_PROGRESS_SEQ + ";";
       sql += "drop function " + DERIVE_LOCATED_IN_FUNC + "(integer, integer);";
-      sql += "drop function " + DERIVE_LOCATED_IN_REC_FUNC + "(integer, " + ENTITIES_TABLE + ".id%TYPE, " + ENTITIES_TABLE + ".univ%TYPE);";
+      sql += "drop function " + DERIVE_LOCATED_IN_REC_FUNC + "(integer, " + ENTITIES_TABLE + ".id%TYPE, " + ENTITIES_TABLE + ".univ%TYPE, " + ENTITIES_TABLE + ".univ%TYPE);";
       sql += "drop type " + CHILD_PARENT_TYPE + ";";
       sql += "drop table " + ENTITIES_TABLE + ";";
       sql += "drop table " + UNIVERSALS_TABLE + ";";
