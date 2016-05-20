@@ -20,8 +20,6 @@ package net.geoprism.ontology;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-
 import org.json.JSONArray;
 
 import com.runwaysdk.business.ontology.TermAndRelDTO;

@@ -29,10 +29,10 @@
     <ng-form name="ctrl.problemForm" isolate-form>
       <div class="inline-value">
         <ol ng-if="problem.context.length > 0">
-          <li ng-repeat="context in problem.context">{{context}}</li>        
+          <li ng-repeat="context in problem.context">{{context.label}} ({{context.universal}})</li>        
         </ol>
       </div>
-      <div class="inline-value error-message">{{problem.label}}</div>
+      <div class="inline-value error-message">{{problem.label}} ({{problem.universalLabel}})</div>
       <div class="inline-combo">
         <input class="synonym" name="{{::$index + '-name'}}" type="text" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.setSynonym"></input>
       </div>

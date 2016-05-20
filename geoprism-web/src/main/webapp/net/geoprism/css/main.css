@@ -3189,7 +3189,11 @@ span.select-area span.center {
 	
 	.gdb-attr-filter ul.jqtree-tree .jqtree-title {
 	    color: #B9B9B9;
+	    text-indent: -1em;
+	    padding-left: 3.3em;
+	    display: inherit;	    
 	}
+	
 
 	.style-options-block > .check-block > .chk-area {
 		margin-top: 10px;
@@ -4414,7 +4418,7 @@ li.list-group-item:hover {
 	text-align: left;
 	margin-top: 6px;
 }
-    
+
 
 /*
 * Scroll bar styling

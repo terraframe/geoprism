@@ -228,7 +228,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
           e.setLabel(label);
           e.setUniversal(universal.getDisplayLabel().getValue());
           e.setParent(parent.getDisplayLabel().getValue());
-          
+
           throw e;
         }
 
@@ -299,13 +299,10 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   {
     GeoEntity parent = this.root;
 
-    List<String> context = new LinkedList<String>();
+    List<JSONObject> context = new LinkedList<JSONObject>();
 
     for (UniversalAttribute attribute : attributes)
     {
-      /*
-       * Only validate up until the desired universal
-       */
       String label = source.getValue(attribute.getAttributeName());
 
       Universal entityUniversal = attribute.getUniversal();
@@ -336,7 +333,18 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
         }
       }
 
-      context.add(label);
+      try
+      {
+        JSONObject object = new JSONObject();
+        object.put("label", label);
+        object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
+
+        context.add(object);
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
     }
 
     return null;
