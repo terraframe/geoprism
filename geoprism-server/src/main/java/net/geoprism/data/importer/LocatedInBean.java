@@ -20,8 +20,20 @@ package net.geoprism.data.importer;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.geo.UniversalQuery;
 
 /**
  * Bean which holds all data required for rebuilding the located in table;
@@ -50,19 +62,22 @@ public class LocatedInBean implements Reloadable
   /**
    * PropertyChangeSupport
    */
-  private PropertyChangeSupport propertyChangeSupport;
+  private PropertyChangeSupport         propertyChangeSupport;
 
-  private BuildTypes            option;
+  private BuildTypes                    option;
 
   /**
    * Percent of area two entites must over lap before one is considered located in the other.
    */
-  private int                   overlapPercent;
+  private int                           overlapPercent;
+
+  private Map<String, List<PathOption>> paths;
 
   public LocatedInBean()
   {
     this.option = null;
     this.overlapPercent = 80;
+    this.paths = LocatedInBean.buildDefaultPaths();
 
     this.propertyChangeSupport = new PropertyChangeSupport(this);
   }
@@ -96,4 +111,106 @@ public class LocatedInBean implements Reloadable
   {
     propertyChangeSupport.firePropertyChange("overlapPercent", this.overlapPercent, this.overlapPercent = overlapPercent);
   }
+
+  public Map<String, List<PathOption>> getPaths()
+  {
+    return this.paths;
+  }
+
+  public static Map<String, List<PathOption>> buildDefaultPaths()
+  {
+    Universal root = Universal.getRoot();
+
+    Map<String, PathOption> map = new LinkedHashMap<String, PathOption>();
+
+    List<? extends Universal> universals = new UniversalQuery(new QueryFactory()).getIterator().getAll();
+
+    for (Universal universal : universals)
+    {
+      // Parent-map : Map of nodes which have the key as a parent
+      Map<String, List<PathOption>> parentMap = new LinkedHashMap<String, List<PathOption>>();
+
+      // Child-map : Map of nodes which have the key as a child
+      Map<String, List<PathOption>> childMap = new LinkedHashMap<String, List<PathOption>>();
+
+      String universalId = universal.getId();
+
+      QueryFactory factory = new QueryFactory();
+
+      UniversalAllPathsTableQuery parentQuery = new UniversalAllPathsTableQuery(factory);
+      parentQuery.WHERE(parentQuery.getChildTerm().EQ(universal));
+      parentQuery.AND(parentQuery.getParentTerm().NE(root));
+      parentQuery.AND(parentQuery.getParentTerm().NE(universal));
+
+      UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+      aptQuery.WHERE(aptQuery.getChildTerm().EQ(universal));
+
+      AllowedInQuery aiQuery = new AllowedInQuery(factory);
+      aiQuery.WHERE(aiQuery.getParent().EQ(parentQuery.getParentTerm()));
+      aiQuery.AND(aiQuery.getChild().EQ(aptQuery.getParentTerm()));
+
+      List<? extends AllowedIn> relationships = aiQuery.getIterator().getAll();
+
+      for (AllowedIn relationship : relationships)
+      {
+        String id = relationship.getId();
+        String key = universalId + "-" + id;
+        String parentId = relationship.getParentId();
+        String childId = relationship.getChildId();
+
+        PathOption node = new PathOption(universalId, relationship);
+
+        map.putIfAbsent(key, node);
+
+        parentMap.putIfAbsent(parentId, new LinkedList<PathOption>());
+        parentMap.get(parentId).add(node);
+
+        childMap.putIfAbsent(childId, new LinkedList<PathOption>());
+        childMap.get(childId).add(node);
+
+        // Link this node to its children
+        if (parentMap.containsKey(childId))
+        {
+          List<PathOption> children = parentMap.get(childId);
+
+          for (PathOption child : children)
+          {
+            node.addChild(child);
+            child.addParent(node);
+          }
+        }
+
+        // Link this node to its parents
+        if (childMap.containsKey(parentId))
+        {
+          List<PathOption> parents = childMap.get(parentId);
+
+          for (PathOption parent : parents)
+          {
+            node.addParent(parent);
+            parent.addChild(node);
+          }
+        }
+      }
+    }
+
+    Map<String, List<PathOption>> paths = new LinkedHashMap<String, List<PathOption>>();
+
+    Set<Entry<String, PathOption>> entries = map.entrySet();
+
+    for (Entry<String, PathOption> entry : entries)
+    {
+      PathOption option = entry.getValue();
+
+      if (option.getChildren().size() == 0)
+      {
+        paths.putIfAbsent(option.getRoot(), new LinkedList<PathOption>());
+
+        paths.get(option.getRoot()).add(option);
+      }
+    }
+
+    return paths;
+  }
+
 }

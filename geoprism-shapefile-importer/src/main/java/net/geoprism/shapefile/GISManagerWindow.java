@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Monitor;
 
 import com.runwaysdk.dataaccess.cache.globalcache.ehcache.CacheShutdown;
@@ -82,7 +83,7 @@ public class GISManagerWindow extends ApplicationWindow implements Reloadable
     Display display = parent.getDisplay();
     Monitor monitor = display.getPrimaryMonitor();
 
-    parent.getShell().setSize(300, 100);
+    parent.getShell().setSize(350, 100);
     parent.getShell().setText(Localizer.getMessage("GISI"));
     parent.getShell().setImage(ImageDescriptor.createFromURL(Object.class.getResource("/icons/globe.png")).createImage());
 
@@ -101,11 +102,12 @@ public class GISManagerWindow extends ApplicationWindow implements Reloadable
     {
       Universal[] universals = this.getUniversals();
 
-      Composite container = new Composite(parent, SWT.NONE);
-      container.setLayout(new FillLayout());
+      Group group = new Group(parent, SWT.SHADOW_ETCHED_OUT);
+      group.setText(Localizer.getMessage("Actions")); 
+      group.setLayout(new FillLayout());
 
-      new ActionContributionItem(new ImportShapefileAction(universals)).fill(container);
-      new ActionContributionItem(new BuildLocatedInAction()).fill(container);
+      new ActionContributionItem(new ImportShapefileAction(universals)).fill(group);
+      new ActionContributionItem(new BuildLocatedInAction()).fill(group);
     }
     catch (Throwable e)
     {

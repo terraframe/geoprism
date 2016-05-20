@@ -22,7 +22,6 @@ import net.geoprism.shapefile.LocalizedWizardDialog;
 import net.geoprism.shapefile.Localizer;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -33,7 +32,6 @@ public class BuildLocatedInAction extends Action implements Reloadable
   public BuildLocatedInAction()
   {
     this.setText(Localizer.getMessage("BUILD_LOCATED_IN"));
-    this.setImageDescriptor(ImageDescriptor.createFromURL(Object.class.getResource("/icons/natural-wonders-tree.png")));
   }
 
   @Override

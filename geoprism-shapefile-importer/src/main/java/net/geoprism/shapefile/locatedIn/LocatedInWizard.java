@@ -83,7 +83,8 @@ public class LocatedInWizard extends Wizard implements Reloadable
    */
   public void addPages()
   {
-    addPage(new LocatedInPage(bean));
+    this.addPage(new LocatedInPage(bean));
+    this.addPage(new PathFilterPage(bean));
   }
 
   /*

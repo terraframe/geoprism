@@ -221,7 +221,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
   {
     this.fireStartTask(LocalizationFacade.getFromBundles("builder.prepareComputation"), -1);
 
-    LocatedInBuilder builder = new LocatedInBuilder(bean.getOption(), bean.getOverlapPercent());
+    LocatedInBuilder builder = new LocatedInBuilder(bean.getOption(), bean.getOverlapPercent(), bean.getPaths());
     ComputeLocatedInRunner runner = new ComputeLocatedInRunner(builder);
     builder.setup();
 

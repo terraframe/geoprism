@@ -111,7 +111,7 @@ public class LocatedInPage extends WizardPage implements PropertyChangeListener,
 
     overlapPercent.addListener(SWT.Selection, new OverlapListener());
 
-    setControl(composite);
+    this.setControl(composite);
 
     this.bind(option, "option");
     this.bind(overlapPercent, "overlapPercent");
