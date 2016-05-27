@@ -19,9 +19,11 @@
 package net.geoprism;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -29,13 +31,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.configuration2.CompositeConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.FileBasedConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 /**
  * This class performs merge operations between files or directories. This is designed for use in the build system for custom resource merging.
@@ -44,9 +39,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class FileMerger
 {
-  private CompositeConfiguration cconfig;
-  
-  public static void main(String[] args) throws ConfigurationException, ParseException, IOException
+  public static void main(String[] args) throws ParseException, IOException
   {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
@@ -112,7 +105,7 @@ public class FileMerger
     
   }
   
-  public void mergeDirectories(File base, File override, File export) throws ConfigurationException, IOException
+  public void mergeDirectories(File base, File override, File export) throws IOException
   {
     if (!export.exists())
     {
@@ -135,7 +128,7 @@ public class FileMerger
     }
   }
   
-  public void mergeFile(File base, File override, File export) throws ConfigurationException, IOException
+  public void mergeFile(File base, File override, File export) throws IOException
   {
     if (base == null || !base.exists())
     {
@@ -182,7 +175,7 @@ public class FileMerger
     }
   }
   
-  public void mergeProperties(File base, File override, File export) throws ConfigurationException, IOException
+  public void mergeProperties(File base, File override, File export) throws IOException
   {
     if (!export.exists())
     {
@@ -197,52 +190,28 @@ public class FileMerger
       return;
     }
     
-    Parameters params = new Parameters();
-    FileBasedConfigurationBuilder<FileBasedConfiguration> baseBuilder =
-        new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-        .configure(params.fileBased()
-            .setFile(base));
+    Properties baseProps = new Properties();
+    baseProps.load(new FileInputStream(base));
     
-    FileBasedConfigurationBuilder<FileBasedConfiguration> overrideBuilder =
-        new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-        .configure(params.fileBased()
-            .setFile(override));
+    Properties overrideProps = new Properties();
+    overrideProps.load(new FileInputStream(override));
     
-    this.cconfig = new CompositeConfiguration();
-    this.cconfig.addConfiguration(overrideBuilder.getConfiguration());
-    this.cconfig.addConfiguration(baseBuilder.getConfiguration());
-    
-    FileBasedConfigurationBuilder<FileBasedConfiguration> exportBuilder =
-        new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-        .configure(params.fileBased()
-            .setFile(export));
-    
-    Configuration exportConfig = exportBuilder.getConfiguration();
-    
-    Iterator<String> i = this.cconfig.getKeys();
+    Iterator<Object> i = overrideProps.keySet().iterator();
     while (i.hasNext())
     {
-      String key = i.next();
+      String key = (String) i.next();
       
-      Object value = this.cconfig.getProperty(key);
-      if (value instanceof String)
+      String value = overrideProps.getProperty(key);
+      if (value.equals("$REMOVE$"))
       {
-        exportConfig.setProperty(key, value);
-      }
-      else if (value instanceof ArrayList)
-      {
-        @SuppressWarnings("rawtypes")
-        ArrayList values = (ArrayList) value;
-        
-        System.out.println("WARNING: Multiple values found in [" + base.getAbsolutePath() + "] for key [" + key + "]. Values = " + value.toString());
-        exportConfig.setProperty(key, values.get(values.size()-1));
+        baseProps.remove(key);
       }
       else
       {
-        throw new RuntimeException("Unknown property type [" + value.getClass().getName() + "] + [" + value.toString() + "].");
+        baseProps.setProperty(key, value);
       }
     }
     
-    exportBuilder.save();
+    baseProps.store(new FileOutputStream(export), null);
   }
 }
