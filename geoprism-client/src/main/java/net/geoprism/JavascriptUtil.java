@@ -36,6 +36,7 @@ import net.geoprism.dashboard.DashboardStyleDTO;
 import net.geoprism.dashboard.DashboardThematicStyleDTO;
 import net.geoprism.dashboard.GeometryAggregationStrategyDTO;
 import net.geoprism.dashboard.UniversalAggregationStrategyDTO;
+import net.geoprism.dashboard.layer.CategoryIconController;
 import net.geoprism.dashboard.layer.DashboardLayerController;
 import net.geoprism.dashboard.layer.DashboardLayerDTO;
 import net.geoprism.dashboard.layer.DashboardLayerViewDTO;
@@ -151,7 +152,7 @@ public class JavascriptUtil implements Reloadable
     types.add(RoleViewDTO.CLASS);
     types.add(GeoprismUserDTO.CLASS);
     types.add(DashboardDTO.CLASS);
-    types.add(DashboardDisplayLabelDTO.CLASS);   
+    types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
     types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
@@ -169,7 +170,7 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
-  
+
   public static void loadSystemBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -180,7 +181,6 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
-
 
   public static void loadUniversalBundle(ClientRequestIF request, HttpServletRequest req)
   {
@@ -212,7 +212,7 @@ public class JavascriptUtil implements Reloadable
     types.add(ClassifierController.CLASS);
     types.add(TermUtilDTO.CLASS);
     types.add(ClassifierSynonymDTO.CLASS);
-    types.add(ClassifierSynonymDisplayLabelDTO.CLASS);    
+    types.add(ClassifierSynonymDisplayLabelDTO.CLASS);
     types.add(ClassifierExportMenuDTO.CLASS);
     types.add(ClassifierProblemViewDTO.CLASS);
     types.add(ClassifierProblemDTO.CLASS);
@@ -256,6 +256,7 @@ public class JavascriptUtil implements Reloadable
     types.add(AllAggregationTypeDTO.CLASS);
     types.add(AggregationTypeDTO.CLASS);
     types.add(DataUploaderController.CLASS);
+    types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -279,13 +280,21 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
-    
+
   public static void loadDatasets(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
     types.add(DataSetController.CLASS);
     types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+
+  public static void loadIcons(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

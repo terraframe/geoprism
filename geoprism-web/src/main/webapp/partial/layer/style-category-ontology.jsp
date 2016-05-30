@@ -30,7 +30,7 @@
           <div class="text category-input-container">
             <p><gdb:localize key="Other"/></p>
           </div>
-          <simple-color-picker category="categories.other" scroll="#layer-modal"></simple-color-picker>
+          <styled-category category="categories.other" scroll="#layer-modal"></styled-category>
         </div>
       </li>
     </ul>

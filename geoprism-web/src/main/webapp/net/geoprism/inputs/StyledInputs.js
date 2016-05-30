@@ -501,7 +501,7 @@
       }
     }    
   }
-
+  
   function IsolateForm() {
     return {
       restrict: 'A',
@@ -572,8 +572,7 @@
         };
       }
     };
-  }
-  
+  }  
   
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")

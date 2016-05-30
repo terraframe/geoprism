@@ -42,7 +42,9 @@
       }
         
       dialog.setStyle('z-index', '99999');
-      dialog.render();      
+      dialog.render();
+      
+      return dialog;
     }
       
     service.addButton = function(dialog, button) {

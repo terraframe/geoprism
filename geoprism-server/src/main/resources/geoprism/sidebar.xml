@@ -40,6 +40,7 @@
       <item name="Term_Ontology_Admin" uri="admin/ontologies" roles="geoprism.admin.Administrator" />
       <item name="Data_Browser" uri="admin/databrowser" roles="geoprism.admin.Administrator" />
       <item name="Data_Sets" uri="admin/datasets" roles="geoprism.admin.Administrator" />
+      <item name="Icons" uri="admin/icons" roles="geoprism.admin.Administrator" />
     </item>
   </nav-list>
 

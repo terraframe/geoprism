@@ -112,13 +112,6 @@
     controller.count = 0;
     
     controller.randomColor = function(){
-//      var c = '';
-//      
-//      while (c.length < 6) {
-//        c += (Math.random()).toString(16).substr(-6).substr(-1);
-//      }
-//      
-//      return '#'+c;
       var nodes = $scope.nodes();
       
       return controller.rainbow(nodes.length, controller.count++);
@@ -238,7 +231,8 @@
               var childScope = scope.$new(true);
               childScope.category = category;
               
-              var html = $compile('<simple-color-picker category="category" scroll="#layer-modal"></simple-color-picker>')(childScope);
+//              var html = $compile('<simple-color-picker category="category" scroll="#layer-modal"></simple-color-picker>')(childScope);
+              var html = $compile('<styled-category category="category" scroll="#layer-modal"></styled-category>')(childScope);
 
               // Add the color icon for category ontology nodes              
               $li.find('> div').append(html);
@@ -1085,11 +1079,88 @@
       controllerAs : 'ctrl',
       link: function (scope, element, attrs) {
       }
-    };    
-  };  
+    }    
+  }  
+  
+  function StyledCategoryPopupController($scope, categoryIconService) {
+    var controller = this;
+    
+    controller.init = function() {
+      var connection = {
+        onSuccess : function(response) {
+          $scope.icons = response.icons;
+                    
+          $scope.$apply();
+        } 
+      };      
+              
+      categoryIconService.getAll(connection);
+    }
+    
+    controller.init();
+  }
+  
+  function StyledCategoryPopup($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/styled-category-popup.jsp',
+      scope: {
+        category:'='
+      },
+      controller : StyledCategoryPopupController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }  
+  
+  function StyledCategoryController($scope, $compile, localizationService, widgetService) {
+    var controller = this;
+      
+    controller.configure = function() {
+
+      var title = localizationService.localize("layer.category", "configure", "Configure category");
+      var html = '<styled-category-popup category="category"></styled-category-popup>';
+
+      var buttons = [];
+      buttons.push({
+        label : localizationService.localize("layer.category", "ok", "Ok"),
+        config : {class:'btn'},
+        callback : function(){
+        }                	  
+      });
+      
+      var dialog = widgetService.createDialog(title, html, buttons);
+
+      var childScope = $scope.$new(true);
+      childScope.category = $scope.category;
+
+      $compile(dialog.getRawNode())(childScope);
+    }    
+  }
+    
+  function StyledCategory($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl : '/partial/layer/styled-category.jsp',
+      scope: {
+        category:'=',
+        scroll:'@',
+      },
+      controller : StyledCategoryController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+         
+      }
+    }    
+  }  
    
-  angular.module("dashboard-layer-form", ["layer-form-service", "styled-inputs"]);
+  angular.module("dashboard-layer-form", ["layer-form-service", "category-icon-service", "styled-inputs"]);
   angular.module("dashboard-layer-form")
+    .directive('styledCategory', StyledCategory)  
+    .directive('styledCategoryPopup', StyledCategoryPopup)    
     .directive('styleCategoryList', StyleCategoryList)
     .directive('styleCategoryOntology', StyleCategoryOntology)
     .directive('styleBasicFill', StyleBasicFill)
