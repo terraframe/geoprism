@@ -46,5 +46,10 @@
         </tr>
       </tbody>
     </table>
+    
+    <div id="document-link-container">
+    	<a href="../../net/geoprism/docs/{{feature.featureDisplayName}} Product.pdf" style="display:block;"><i style="margin-right:5px;" class="fa fa-file-pdf-o" aria-hidden="true"></i>Device Description</a>
+    	<a href="/docs/{{feature.featureDisplayName}}_oneline.pdf" style="display:block;"><i style="margin-right:5px;" class="fa fa-file-pdf-o" aria-hidden="true"></i>One-Line Diagram</a>
+    </div>
   </div>         
 </div>
