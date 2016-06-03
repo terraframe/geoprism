@@ -513,6 +513,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 		display: block;
 		margin-left: 7px;
 	}
+	
 
 .submit-form .checks-frame label{
 	width:auto;
@@ -4419,6 +4420,19 @@ li.list-group-item:hover {
 	margin-top: 6px;
 }
 
+
+	#category-icon-modal-container .check-block label {
+		line-height: 32px;
+	}
+	
+	#category-icon-modal-container .select-box {
+		height: 31px;
+	}
+	
+	#category-icon-modal-container .cell-holder {
+		margin-top: 5px;
+	}
+	
 
 /*
 * Scroll bar styling

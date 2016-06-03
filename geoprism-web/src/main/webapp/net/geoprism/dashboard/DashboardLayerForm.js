@@ -231,8 +231,8 @@
               var childScope = scope.$new(true);
               childScope.category = category;
               
-//              var html = $compile('<simple-color-picker category="category" scroll="#layer-modal"></simple-color-picker>')(childScope);
-              var html = $compile('<styled-category category="category" scroll="#layer-modal"></styled-category>')(childScope);
+              var html = $compile('<styled-category category="category" scroll="#layer-modal"></styled-category>  <simple-color-picker category="category" scroll="#layer-modal"></simple-color-picker>')(childScope);
+//              var html = $compile('<styled-category category="category" scroll="#layer-modal"></styled-category>')(childScope);
 
               // Add the color icon for category ontology nodes              
               $li.find('> div').append(html);
@@ -669,11 +669,6 @@
       
     $scope.setAggregationStrategyOptions = function(aggregations){
       $scope.dynamicDataModel.aggregationStrategyOptions = aggregations;
-      
-      // Set the value as the first option
-      if($scope.dynamicDataModel.aggregationStrategyOptions.length > 0) {
-        $scope.dynamicDataModel.aggregationStrategy = $scope.dynamicDataModel.aggregationStrategyOptions[0].value;
-      }
     };
                 
       /**

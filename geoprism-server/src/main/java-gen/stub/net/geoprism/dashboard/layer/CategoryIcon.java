@@ -31,7 +31,10 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.VaultFile;
+import com.runwaysdk.vault.VaultDAO;
+import com.runwaysdk.vault.VaultDAOIF;
 import com.runwaysdk.vault.VaultFileDAO;
+import com.runwaysdk.vault.VaultFileDAOIF;
 
 public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -49,6 +52,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
       JSONObject object = new JSONObject();
       object.put("label", this.getDisplayLabel().getValue());
       object.put("id", this.getId());
+      object.put("filePath", this.getFilePath());
 
       return object;
     }
@@ -56,6 +60,19 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+  
+  public String getFilePath()
+  {
+    VaultFileDAOIF file = VaultFileDAO.get(this.getImageId());
+    VaultDAOIF vault = VaultDAO.get(file.getVaultReference());
+    
+    String rootPath = vault.getVaultPath();
+    String filePath = file.getVaultFilePath();
+    
+    String path = rootPath + filePath + file.getVaultFileName();
+    
+    return path;
   }
 
   @Transaction

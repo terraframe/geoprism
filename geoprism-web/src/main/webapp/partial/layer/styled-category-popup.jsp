@@ -18,17 +18,31 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<div>
+
+<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
+
+<div id="category-icon-modal-container">
   <div class="cell">
-    <styled-check-box model="category.enableIcon" name="style.enableIcon" label="Enable icon"></styled-check-box>
+    <styled-check-box model="category.enableIcon" name="style.enableIcon" label="<gdb:localize key="DashboardThematicLayer.form.enableIcon"/>"></styled-check-box>
   </div>
-  <div class="cell">
-    <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>             
-  </div>
-  <div class="cell">
+<!--   <div class="cell"> -->
+<!--     <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>              -->
+<!--   </div> -->
+
+  <div class="select-box">
     <select class="method-select" ng-model="category.icon" ng-options="opt.id as opt.label for opt in icons">
       <option value=""></option>    
     </select>
   </div>
+<!--   <div class="fill-block"> -->
+    <div class="cell-holder">
+      <div class="cell">
+        <label for="custom-icon-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
+        <div class="text">
+          <input id="custom-icon-radius-select" name="category.iconSize" type="text" ng-model="category.iconSize" placeholder="{{category.iconSize}}" required integer-only></input>
+        </div>
+      </div>
+    </div>
+<!--   </div> -->
 
 </div>

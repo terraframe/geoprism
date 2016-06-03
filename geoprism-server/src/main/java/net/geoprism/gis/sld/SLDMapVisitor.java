@@ -58,6 +58,7 @@ import net.geoprism.dashboard.condition.wrapper.LessThanOrEqual;
 import net.geoprism.dashboard.condition.wrapper.NotEqual;
 import net.geoprism.dashboard.condition.wrapper.Or;
 import net.geoprism.dashboard.condition.wrapper.Primitive;
+import net.geoprism.dashboard.layer.CategoryIcon;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.gis.wrapper.AttributeType;
 import net.geoprism.gis.wrapper.FeatureStrategy;
@@ -82,6 +83,10 @@ import org.w3c.dom.Node;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.transport.conversion.ConversionException;
+import com.runwaysdk.vault.VaultDAO;
+import com.runwaysdk.vault.VaultDAOIF;
+import com.runwaysdk.vault.VaultFileDAO;
+import com.runwaysdk.vault.VaultFileDAOIF;
 
 /**
  * Traverses an object graph of map Component objects and creates an SLD document.
@@ -459,7 +464,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                         node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
                             node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(currentCatMin)),
                             node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(currentCatMax))))),
-                            this.getSymbolNode(wkn, currentColorHex, fillOpacity, stroke, width, strokeOpacity, radius)
+                            this.getSymbolNode(wkn, currentColorHex, fillOpacity, stroke, width, strokeOpacity, radius, false, "")
                             
                 ).build(root);
   
@@ -583,7 +588,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           String currentLayerName = tLayer.getName(); //this.visitor.currentLayer.getName();
           String wkn = dTStyle.getCategoryPointWellKnownName();
             
-          // ontology logic
           String cats = dTStyle.getCategoryPointStyles();
           if (cats.length() > 0)
           {
@@ -592,6 +596,12 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             // SLD for all the categories scraped from the client
             for (int i = 0; i < catsArrJSON.length(); i++)
             {
+              boolean enableIcon = false;
+              String iconId = null;
+              CategoryIcon icon = null;
+              String iconPath = null;
+              int iconSize = 20;
+              
               try
               {
                 JSONObject thisObj = catsArrJSON.getJSONObject(i);
@@ -599,6 +609,36 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 catTitle = catVal;
                 catColor = thisObj.getString("color");
                 isOntologyCat = thisObj.getBoolean("isOntologyCat");
+                
+                if(thisObj.has("enableIcon"))
+                {
+                  enableIcon = thisObj.getBoolean("enableIcon");
+                  
+                  if(enableIcon)
+                  {
+                    try
+                    {
+                      iconId = thisObj.getString("icon");
+                      iconSize = thisObj.getInt("iconSize");
+                    }
+                    catch(JSONException e)
+                    {
+                      throw new ProgrammingErrorException(e);
+                    }
+                    
+                    try
+                    {
+                      icon = CategoryIcon.get(iconId);
+                      iconPath =  icon.getFilePath();
+                    }
+                    catch (Exception e)
+                    {
+                      //throw new ProgrammingErrorException(e);
+                      
+                      enableIcon = false; // to force the default point symbol
+                    }
+                  }
+                }
 
                 if (isOntologyCat == false)
                 {
@@ -705,7 +745,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                               this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                           )
                       ),
-                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)
+                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius, false, "")
                                   
                       ).build(root);
                 }
@@ -737,7 +777,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                     )
                                 )
                             ),
-                            this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                            this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, iconSize, enableIcon, iconPath)).build(root);
                 }
                 
                 //
@@ -793,7 +833,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                        wrapperAndNode
                                    )
                                ),
-                               this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                               this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius, false, "")).build(root);
                      }
                      else
                      {
@@ -816,15 +856,17 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                                node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
                                                node(OGC, "Not").child(
                                                    otherOrNode.child(
-                                                   node(OGC, "Or").child(
-                                                   node(OGC, "PropertyIsNull").child(
-                                                       node(OGC, "PropertyName").text(attribute)))
+//                                                   node(OGC, "Or").child(
+                                                       node(OGC, "PropertyIsNull").child(
+                                                           node(OGC, "PropertyName").text(attribute)
+                                                       )
+//                                                   )
                                                        
                                                    )
                                                )
                                            )
                                        ),
-                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius)).build(root);
+                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius, false, "")).build(root);
                      }
                    
                 }
@@ -1067,24 +1109,39 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
     }
     
-    private NodeBuilder getSymbolNode(String wellKnownType, String fill, Double fillOpacity, String strokeColor, int width, Double strokeOpacity, int radius)
+    private NodeBuilder getSymbolNode(String wellKnownType, String fill, Double fillOpacity, String strokeColor, int width, Double strokeOpacity, int radius, boolean customIcon, String iconPath)
     {
-      NodeBuilder symbolNode = node("PointSymbolizer").child(
-                    node("Graphic").child(
-                        node("Mark").child(
-                            node("WellKnownName").text(wellKnownType),
-                            node("Fill").child(
-                                css("fill", fill),
-                                css("fill-opacity", fillOpacity)),
-                            node("Stroke").child(
-                                css("stroke", strokeColor), 
-                                css("stroke-width", width),
-                                css("stroke-opacity", strokeOpacity)
-                                )
-                            ), 
-                            node("Size").text(radius))
-                            
-                );
+      NodeBuilder symbolNode;
+      
+      if(customIcon)
+      {
+        symbolNode = node("PointSymbolizer").child(
+            node("Graphic").child(
+              node("ExternalGraphic").child(
+                  node("OnlineResource xlink:type='simple' xlink:href='file://"+ iconPath +"'"),
+                  node("Format").text("image/png")
+                ), 
+                node("Size").text(radius))
+          );
+      }
+      else
+      {
+        symbolNode = node("PointSymbolizer").child(
+          node("Graphic").child(
+            node("Mark").child(
+              node("WellKnownName").text(wellKnownType),
+              node("Fill").child(
+                css("fill", fill),
+                css("fill-opacity", fillOpacity)),
+              node("Stroke").child(
+                css("stroke", strokeColor), 
+                css("stroke-width", width),
+                css("stroke-opacity", strokeOpacity)
+                )
+              ), 
+              node("Size").text(radius))
+        );
+      }
       
       return symbolNode;
     }
@@ -2075,7 +2132,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   {
     this.map = map;
 
-    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
+    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:xlink", "http://www.w3.org/1999/xlink").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
 
     for (Layer layer : map.getLayers())
     {
@@ -2086,7 +2143,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   @Override
   public void visit(ThematicLayer layer)
   {
-    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
+    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:xlink", "http://www.w3.org/1999/xlink").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
 
     // We're starting a new layer so clear the prior structures
     this.parents.clear();
@@ -2114,7 +2171,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   public void visit(ReferenceLayer layer)
   {
     
-    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
+    this.root = this.node("StyledLayerDescriptor").attr("xmlns", "http://www.opengis.net/sld").attr("xmlns:xlink", "http://www.w3.org/1999/xlink").attr("xmlns:sld", "http://www.opengis.net/sld").attr("xmlns:ogc", "http://www.opengis.net/ogc").attr("xmlns:gml", "http://www.opengis.net/gml").attr("version", "1.0.0").build(this.doc);
 
     // We're starting a new layer so clear the prior structures
     this.parents.clear();

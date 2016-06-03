@@ -19,6 +19,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
+
 <a href="#" style="float:right; height:20px; padding: 0px; margin-right:15px; border:none;">
-  <span class="ico" ng-click="ctrl.configure()">Configure</span>
+  <span class="ico" ng-click="ctrl.configure()"><gdb:localize key="DashboardThematicLayer.form.category.configure.label"/></span>
 </a>

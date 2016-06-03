@@ -34,6 +34,16 @@
       categoryIconService.getAll(connection);
     }
     
+    controller.setDroppedStatus = function(file) {
+    	$scope.dropActive = true;
+    	$scope.icon = {"label": cleanFileName(file[0]),"file":file[0]}
+    	
+    	function cleanFileName(file){
+    		var name = file.name;
+    		return name.replace(".png", "");
+    	}
+    }
+    
     controller.getIndex = function(icon) {
       for(var i = 0; i < $scope.icons.length; i++) {
         if($scope.icons[i].id === icon.id) {

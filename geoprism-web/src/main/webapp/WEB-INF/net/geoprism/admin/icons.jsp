@@ -48,33 +48,70 @@
     </div>
   </div>
   
+  <table id="manage-datasets-table" class="table table-bordered table-striped">        
+    <tbody>
+      <tr ng-repeat="icon in icons">
+        <td class="button-column">
+          <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
+        </td>
+        <td>
+        	{{ icon.label }}
+        	<img style="margin-left:20px;width:42px;height:42px;" alt="{{ icon.label }}" src="{{icon.filePath}}" class="thumb">
+        </td>
+      </tr>
+    </tbody>    
+  </table>
+  
+<!--   <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setDroppedStatus($files)" ngf-drop="ctrl.setDroppedStatus($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready> -->
+<!--     <div class="drop-box"> -->
+<!--       <div class="inner-drop-box"> -->
+<!--         <i class="fa fa-cloud-upload"> -->
+<%--           <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p> --%>
+<!--         </i> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+  
+
   <form class="modal-form" name="form">
     <div class="modal-dialog">
       <div class="modal-content">
         <fieldset>
           <div class="row-holder">
             <div class="holder" >
-              <label ><gdb:localize key="category.icon.label"/></label>
+              <label><gdb:localize key="category.icon.label"/></label>
               <span class="text">
                 <input type="text" ng-model="icon.label" name="label" required>
               </span>
             </div>
           </div>
           <div class="row-holder">
-            <div class="holder" >
-              <label ><gdb:localize key="category.icon.file"/></label>
+            <div class="holder">
+<%--               <label><gdb:localize key="category.icon.file"/></label> --%>
               <span class="text">
-                <input type="file" ng-show="!icon.file" ngf-select ng-model="icon.file" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
-                
-                <img style="width:64px;height:64px;" ng-show="form.file.$valid" ngf-thumbnail="icon.file" class="thumb">
-                <button ng-click="icon.file = null" ng-show="icon.file"><gdb:localize key="category.icon.remove"/></button>                
+              
+                  <div class="drop-box-container" ng-show="!icon.file" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setDroppedStatus($files)" ngf-drop="ctrl.setDroppedStatus($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
+				    <div class="drop-box">
+				      <div class="inner-drop-box">
+				        <i class="fa fa-cloud-upload">
+				          <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p>
+				        </i>
+				      </div>
+				    </div>
+				  </div>
+				  
+                <input style="display:none;" type="file" ng-show="!icon.file" ngf-select ng-model="icon.file" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
+                <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" ng-show="icon.file" title="Remove this icon so another icon can be added instead"></a>           
+<%--                 <button ng-click="icon.file = null" ng-show="icon.file"><gdb:localize key="category.icon.remove"/></button> --%>
+                <img style="width:42px;height:42px;margin-left:10px;" ng-show="form.file.$valid" ngf-thumbnail="icon.file" class="thumb">
               </span>
             </div>
           </div>
           <div class="row-holder">
             <div class="holder">
               <div class="button-holder">
-                <input type="button" value="<gdb:localize key="dashboardViewer.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="form.$invalid" />
+              <input type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" />
+<%--                 <input type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="form.$invalid" /> --%>
               </div>
             </div>
           </div>
@@ -84,17 +121,7 @@
   </form>
   
   <div ng-if="icons === null"><gdb:localize key='dataset.loadingData'/></div>
-
-  <table id="manage-datasets-table" class="table table-bordered table-striped">        
-    <tbody>
-      <tr ng-repeat="icon in icons">
-        <td class="button-column">
-          <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
-        </td>
-        <td>{{ icon.label }}</td>
-      </tr>
-    </tbody>    
-  </table>
+  
 </div>
 
 <script type="text/javascript">
