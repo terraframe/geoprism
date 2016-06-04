@@ -1117,14 +1117,26 @@
 
       var title = localizationService.localize("layer.category", "configure", "Configure category");
       var html = '<styled-category-popup category="category"></styled-category-popup>';
-
+      
+      var originalState = {enableIcon:$scope.category.enableIcon, categoryIcon:$scope.category.icon, categoryIconSize:$scope.category.iconSize}
+      
       var buttons = [];
-      buttons.push({
-        label : localizationService.localize("layer.category", "ok", "Ok"),
-        config : {class:'btn'},
-        callback : function(){
-        }                	  
-      });
+      buttons.push(
+	    {
+          label : localizationService.localize("layer.category", "cancel", "Cancel"),
+          config : {class:'btn'},
+          callback : function(){
+        	  $scope.category.enableIcon = originalState.enableIcon;
+        	  $scope.category.icon = originalState.categoryIcon;
+        	  $scope.category.iconSize = originalState.categoryIconSize;
+          }
+	    }, 
+        {
+    	  label : localizationService.localize("layer.category", "ok", "Ok"),
+    	  config : {class:'btn'},
+    	  callback : function(){}
+      	}
+      );
       
       var dialog = widgetService.createDialog(title, html, buttons);
 

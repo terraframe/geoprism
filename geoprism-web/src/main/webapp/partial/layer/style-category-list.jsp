@@ -44,14 +44,16 @@
         
         <!-- Other category -->
         <li>
-          <div class="category-container" ng-show="(categories.otherEnabled && showOther == 'true')">
-            <div class="text category-input-container">
-              <input class="category-input" ng-disabled="true" type="text" placeholder="<gdb:localize key="Other"/>"></input>
-            </div>
-            <div class="cell">
-              <styled-color-picker model="categories.other.color" scroll="#layer-modal"></styled-color-picker>             
-            </div>
-          </div>          
+	        <div class="other-cat-container" ng-show="categories.otherEnabled && showOther == 'true'">
+	          <div class="category-container">
+	            <div class="text category-input-container">
+	              <input class="category-input" ng-disabled="true" type="text" placeholder="<gdb:localize key="Other"/>"></input>
+	            </div>
+	            <div class="cell">
+	              <styled-color-picker model="categories.other.color" scroll="#layer-modal"></styled-color-picker>             
+	            </div>
+	          </div> 
+	        </div>         
         </li>
       </ul>
     </div>

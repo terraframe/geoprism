@@ -600,7 +600,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               String iconId = null;
               CategoryIcon icon = null;
               String iconPath = null;
-              int iconSize = 20;
+              int categoryRadius = radius;
               
               try
               {
@@ -619,7 +619,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                     try
                     {
                       iconId = thisObj.getString("icon");
-                      iconSize = thisObj.getInt("iconSize");
+                      categoryRadius = thisObj.getInt("iconSize");
                     }
                     catch(JSONException e)
                     {
@@ -745,7 +745,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                               this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                           )
                       ),
-                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius, false, "")
+                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, false, "")
                                   
                       ).build(root);
                 }
@@ -777,7 +777,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                     )
                                 )
                             ),
-                            this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, iconSize, enableIcon, iconPath)).build(root);
+                            this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, enableIcon, iconPath)).build(root);
                 }
                 
                 //
