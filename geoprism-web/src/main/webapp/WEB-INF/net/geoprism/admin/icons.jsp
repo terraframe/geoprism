@@ -77,7 +77,7 @@
           <div class="row-holder">
             <div class="holder">
               <span class="text">
-                <div class="drop-box-container" ng-show="!icon.file" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setFile($files)" ngf-drop="ctrl.setFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
+                <div class="drop-box-container" ng-show="!icon.file" accept="image/png" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setFile($files)" ngf-drop="ctrl.setFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
                   <div class="drop-box">
                     <div class="inner-drop-box">
                       <i class="fa fa-cloud-upload">
@@ -87,8 +87,11 @@
                   </div>
                 </div>
                 <div ng-show="icon.file">
-                  <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="Remove this icon so another icon can be added instead"></a>           
+                  <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
                   <img style="width:42px;height:42px;margin-left:10px;" ngf-thumbnail="icon.file" class="thumb">
+                  <span ng-show="ctrl.form.$error.file" style="float: right;">
+                    <p class="error-message"><gdb:localize key="category.icon.badFileType"/></p>
+                  </span>
                 </div>				  
               </span>
             </div>

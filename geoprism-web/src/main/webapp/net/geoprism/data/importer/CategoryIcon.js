@@ -146,8 +146,8 @@
       return false;
     }
     
-    $scope.$watch('icon.file', function(value){
-      ctrl.form.file.$valid = (value != null);
+    $scope.$watch('icon.file', function(file){
+      controller.form.$setValidity('file', (file != null) && (file.type == 'image/png'));
     }, true);
     
     controller.init();
