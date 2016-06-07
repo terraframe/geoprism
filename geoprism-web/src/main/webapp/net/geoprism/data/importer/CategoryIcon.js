@@ -34,14 +34,24 @@
       categoryIconService.getAll(connection);
     }
     
-    controller.setDroppedStatus = function(file) {
-    	$scope.dropActive = true;
-    	$scope.icon = {"label": cleanFileName(file[0]),"file":file[0]}
-    	
-    	function cleanFileName(file){
-    		var name = file.name;
-    		return name.replace(".png", "");
-    	}
+    controller.cleanFileName = function(file){
+      var name = file.name;
+      
+      return name.replace(".png", "");
+    }
+    
+    controller.setFile = function(files) {
+      if(files.length > 0) {
+        var file = files[0];
+      
+        if($scope.icon.label == null || $scope.icon.label == '') {
+          var label = controller.cleanFileName(file);
+                  
+          $scope.icon.label = label;
+        }
+        
+        $scope.icon.file= file;        
+      }
     }
     
     controller.getIndex = function(icon) {
@@ -62,8 +72,8 @@
       
       var buttons = [];
       buttons.push({
-    	label : localizationService.localize("category.icon", "delete", "Delete"),
-    	config : {class:'btn btn-primary'},
+      label : localizationService.localize("category.icon", "delete", "Delete"),
+      config : {class:'btn btn-primary'},
         callback : function(){
           var connection = {
             elementId : '#innerFrameHtml',
@@ -80,7 +90,7 @@
           };
                     
           categoryIconService.remove(connection, icon.id);            
-        }                	  
+        }                    
       });
       buttons.push({
         label : localizationService.localize("category.icon", "cancel", "Cancel"),
@@ -110,7 +120,7 @@
           $('#app-container').parent().parent().animate({ scrollTop: 0 }, 'slow');
         }
       };
-    	
+      
       // Reset the file Errors
       $scope.errors = [];
       categoryIconService.create(connection, $scope.icon.file, $scope.icon.label);
@@ -135,6 +145,10 @@
       
       return false;
     }
+    
+    $scope.$watch('icon.file', function(value){
+      ctrl.form.file.$valid = (value != null);
+    }, true);
     
     controller.init();
   }
