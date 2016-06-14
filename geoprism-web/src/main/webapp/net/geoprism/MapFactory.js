@@ -779,13 +779,13 @@
           if(layers.length > 0) {
             var point = e.pixel;
             var coordinate = e.coordinate;
-          
+
             var x = parseInt(point[0]);
             var y = parseInt(point[1]);
                         
             // Construct a GetFeatureInfo request URL given a point
             var size = this.getMapSize();
-            var mapBbox = this.getCurrentBoundsAsString(MapWidget.DATASRID);
+            var mapBbox = this.getCurrentBoundsAsString(MapWidget.MAPSRID);
             var layerMap = {};
 
             var layerStringList = '';
@@ -818,7 +818,7 @@
               INFO_FORMAT:'application/json',
               EXCEPTIONS:'APPLICATION/VND.OGC.SE_XML',
               SERVICE:'WMS',
-              SRS:MapWidget.DATASRID,              
+              SRS:MapWidget.MAPSRID,              
               VERSION:'1.1.1',
               height:size.y,
               width:size.x,
@@ -828,8 +828,9 @@
               LAYERS:"geoprism:"+ layerStringList,
               QUERY_LAYERS:"geoprism:"+ layerStringList,
               TYPENAME:"geoprism:"+ layerStringList
+              //PROPERTYNAME:"displaylabel,geoid," + layer.aggregationAttribute.toLowerCase()
             };
-                
+             
             var url = window.location.origin+"/geoserver/" + workspace +"/wms?" + $.param(params);
                   
             $.ajax({

@@ -875,10 +875,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       try
       {
         //
-        // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
+        // Currently we are using the WMS service from http://ows.terrestris.de/dienste.html#wms
+        // because this one http://irs.gis-lab.info/ is un-reliable and most web services are offered as
         // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
-        url = new URL("http://irs.gis-lab.info/?layers=osm&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+        url = new URL("http://ows.terrestris.de/osm/service?layers=OSM-WMS&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
       }
       catch (MalformedURLException e)
       {
@@ -917,7 +918,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       for (Layer layer : WMSUtils.getNamedLayers(capabilities))
       {
-        if (layer.getName().toLowerCase().trim().equals("osm"))
+        if (layer.getName().toLowerCase().trim().equals("osm-wms"))
         {
           request.addLayer(layer);
         }
@@ -926,6 +927,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       GetMapResponse response = null;
       try
       {
+        System.out.println(request.getFinalURL());
         response = (GetMapResponse) wms.issueRequest(request);
       }
       catch (ServiceException e)
