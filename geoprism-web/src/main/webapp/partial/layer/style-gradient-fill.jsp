@@ -43,5 +43,17 @@
         </select>        
       </div>
     </div>
+    <div class="cell gradient-buckets-size">
+      <label><gdb:localize key="DashboardThematicLayer.form.gradientNumCategories"/></label>
+      <div class="text">
+        <select class="tab-select" ng-model="numberOfCategories" convert-to-number>
+          <c:forEach step="1" begin="1" end="100" var="size">
+            <option value="${size}">${size}</option>
+          </c:forEach>        
+        </select>        
+      </div>
+    </div>
+    
   </div>
 </div>
+

@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 331303700)
+@com.runwaysdk.business.ClassSignature(hash = 2115883788)
 public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboard.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardThematicStyle";
-  private static final long serialVersionUID = 331303700;
+  private static final long serialVersionUID = 2115883788;
   
   protected DashboardThematicStyleDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -82,6 +82,9 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
   public static java.lang.String GRADIENTPOLYGONSTROKE = "gradientPolygonStroke";
   public static java.lang.String GRADIENTPOLYGONSTROKEOPACITY = "gradientPolygonStrokeOpacity";
   public static java.lang.String GRADIENTPOLYGONSTROKEWIDTH = "gradientPolygonStrokeWidth";
+  public static java.lang.String NUMBUBBLESIZECATEGORIES = "numBubbleSizeCategories";
+  public static java.lang.String NUMGRADIENTPOINTCATEGORIES = "numGradientPointCategories";
+  public static java.lang.String NUMGRADIENTPOLYGONCATEGORIES = "numGradientPolygonCategories";
   public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
@@ -1452,6 +1455,117 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getGradientPolygonStrokeWidthMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(GRADIENTPOLYGONSTROKEWIDTH).getAttributeMdDTO();
+  }
+  
+  public Integer getNumBubbleSizeCategories()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(NUMBUBBLESIZECATEGORIES));
+  }
+  
+  public void setNumBubbleSizeCategories(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(NUMBUBBLESIZECATEGORIES, "");
+    }
+    else
+    {
+      setValue(NUMBUBBLESIZECATEGORIES, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isNumBubbleSizeCategoriesWritable()
+  {
+    return isWritable(NUMBUBBLESIZECATEGORIES);
+  }
+  
+  public boolean isNumBubbleSizeCategoriesReadable()
+  {
+    return isReadable(NUMBUBBLESIZECATEGORIES);
+  }
+  
+  public boolean isNumBubbleSizeCategoriesModified()
+  {
+    return isModified(NUMBUBBLESIZECATEGORIES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getNumBubbleSizeCategoriesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(NUMBUBBLESIZECATEGORIES).getAttributeMdDTO();
+  }
+  
+  public Integer getNumGradientPointCategories()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(NUMGRADIENTPOINTCATEGORIES));
+  }
+  
+  public void setNumGradientPointCategories(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(NUMGRADIENTPOINTCATEGORIES, "");
+    }
+    else
+    {
+      setValue(NUMGRADIENTPOINTCATEGORIES, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isNumGradientPointCategoriesWritable()
+  {
+    return isWritable(NUMGRADIENTPOINTCATEGORIES);
+  }
+  
+  public boolean isNumGradientPointCategoriesReadable()
+  {
+    return isReadable(NUMGRADIENTPOINTCATEGORIES);
+  }
+  
+  public boolean isNumGradientPointCategoriesModified()
+  {
+    return isModified(NUMGRADIENTPOINTCATEGORIES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getNumGradientPointCategoriesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(NUMGRADIENTPOINTCATEGORIES).getAttributeMdDTO();
+  }
+  
+  public Integer getNumGradientPolygonCategories()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(NUMGRADIENTPOLYGONCATEGORIES));
+  }
+  
+  public void setNumGradientPolygonCategories(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(NUMGRADIENTPOLYGONCATEGORIES, "");
+    }
+    else
+    {
+      setValue(NUMGRADIENTPOLYGONCATEGORIES, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public boolean isNumGradientPolygonCategoriesWritable()
+  {
+    return isWritable(NUMGRADIENTPOLYGONCATEGORIES);
+  }
+  
+  public boolean isNumGradientPolygonCategoriesReadable()
+  {
+    return isReadable(NUMGRADIENTPOLYGONCATEGORIES);
+  }
+  
+  public boolean isNumGradientPolygonCategoriesModified()
+  {
+    return isModified(NUMGRADIENTPOLYGONCATEGORIES);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getNumGradientPolygonCategoriesMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(NUMGRADIENTPOLYGONCATEGORIES).getAttributeMdDTO();
   }
   
   @SuppressWarnings("unchecked")

@@ -101,7 +101,10 @@ public class DashboardThematicStyle extends DashboardThematicStyleBase implement
       json.put("secondaryAggregationType", this.getSecondaryAggregationType());
       json.put("secondaryAttribute", this.getSecondaryAttributeId());
       json.put("secondaryCategories", this.getSecondaryCategories());
-
+      json.put("numGradientPolygonCategories", this.getNumGradientPolygonCategories());
+      json.put("numGradientPointCategories", this.getNumGradientPointCategories());
+      json.put("numBubbleSizeCategories", this.getNumBubbleSizeCategories());
+      
       json.put("aggregationMap", DashboardStyle.getAggregationJSON());
 
       return json;

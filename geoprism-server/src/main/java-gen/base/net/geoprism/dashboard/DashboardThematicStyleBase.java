@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 2047207828)
+@com.runwaysdk.business.ClassSignature(hash = 822931852)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -66,10 +66,13 @@ public abstract class DashboardThematicStyleBase extends net.geoprism.dashboard.
   public static java.lang.String GRADIENTPOLYGONSTROKE = "gradientPolygonStroke";
   public static java.lang.String GRADIENTPOLYGONSTROKEOPACITY = "gradientPolygonStrokeOpacity";
   public static java.lang.String GRADIENTPOLYGONSTROKEWIDTH = "gradientPolygonStrokeWidth";
+  public static java.lang.String NUMBUBBLESIZECATEGORIES = "numBubbleSizeCategories";
+  public static java.lang.String NUMGRADIENTPOINTCATEGORIES = "numGradientPointCategories";
+  public static java.lang.String NUMGRADIENTPOLYGONCATEGORIES = "numGradientPolygonCategories";
   public static java.lang.String SECONDARYAGGREGATIONTYPE = "secondaryAggregationType";
   public static java.lang.String SECONDARYATTRIBUTE = "secondaryAttribute";
   public static java.lang.String SECONDARYCATEGORIES = "secondaryCategories";
-  private static final long serialVersionUID = 2047207828;
+  private static final long serialVersionUID = 822931852;
   
   public DashboardThematicStyleBase()
   {
@@ -1109,6 +1112,90 @@ public abstract class DashboardThematicStyleBase extends net.geoprism.dashboard.
     else
     {
       setValue(GRADIENTPOLYGONSTROKEWIDTH, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Integer getNumBubbleSizeCategories()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(NUMBUBBLESIZECATEGORIES));
+  }
+  
+  public void validateNumBubbleSizeCategories()
+  {
+    this.validateAttribute(NUMBUBBLESIZECATEGORIES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getNumBubbleSizeCategoriesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(NUMBUBBLESIZECATEGORIES);
+  }
+  
+  public void setNumBubbleSizeCategories(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(NUMBUBBLESIZECATEGORIES, "");
+    }
+    else
+    {
+      setValue(NUMBUBBLESIZECATEGORIES, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Integer getNumGradientPointCategories()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(NUMGRADIENTPOINTCATEGORIES));
+  }
+  
+  public void validateNumGradientPointCategories()
+  {
+    this.validateAttribute(NUMGRADIENTPOINTCATEGORIES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getNumGradientPointCategoriesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(NUMGRADIENTPOINTCATEGORIES);
+  }
+  
+  public void setNumGradientPointCategories(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(NUMGRADIENTPOINTCATEGORIES, "");
+    }
+    else
+    {
+      setValue(NUMGRADIENTPOINTCATEGORIES, java.lang.Integer.toString(value));
+    }
+  }
+  
+  public Integer getNumGradientPolygonCategories()
+  {
+    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(NUMGRADIENTPOLYGONCATEGORIES));
+  }
+  
+  public void validateNumGradientPolygonCategories()
+  {
+    this.validateAttribute(NUMGRADIENTPOLYGONCATEGORIES);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF getNumGradientPolygonCategoriesMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardThematicStyle.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeIntegerDAOIF)mdClassIF.definesAttribute(NUMGRADIENTPOLYGONCATEGORIES);
+  }
+  
+  public void setNumGradientPolygonCategories(Integer value)
+  {
+    if(value == null)
+    {
+      setValue(NUMGRADIENTPOLYGONCATEGORIES, "");
+    }
+    else
+    {
+      setValue(NUMGRADIENTPOLYGONCATEGORIES, java.lang.Integer.toString(value));
     }
   }
   

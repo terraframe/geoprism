@@ -190,7 +190,7 @@
         relationshipType : '',
         thematicAttributeDataType : '',
         availableFonts : [],
-        geoNodes : [],
+        geoNodes : []
       };
       
       dynamicDataModel.aggregationMethods = options.aggregations;
@@ -350,7 +350,10 @@
                   {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false}]        
           
         },
-        styleCondition : ''
+        styleCondition : '',
+        numBubbleSizeCategories : 5,
+        numGradientPointCategories : 5,
+        numGradientPolygonCategories : 5
       };
       
       // Populate the values of style from the server DTO

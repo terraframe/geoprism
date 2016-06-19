@@ -51,6 +51,7 @@ public interface ThematicStyle extends Style
   public void setBubbleRotation(Integer rotation);
   public Integer getBubbleRotation();
   public Boolean getBubbleContinuousSize();
+  public Integer getNumBubbleSizeCategories();
 
   public String getGradientPolygonMinFill();
   public void setGradientPolygonMinFill(String fill);
@@ -60,6 +61,7 @@ public interface ThematicStyle extends Style
   public String getGradientPolygonStroke();
   public Integer getGradientPolygonStrokeWidth();
   public Double getGradientPolygonStrokeOpacity();
+  public Integer getNumGradientPolygonCategories();
   
   public Integer getGradientPointSize();
   public String getGradientPointMinFill();
@@ -68,6 +70,7 @@ public interface ThematicStyle extends Style
   public String getGradientPointStroke();
   public Integer getGradientPointStrokeWidth();
   public Double getGradientPointStrokeOpacity();
+  public Integer getNumGradientPointCategories();
   
   public Integer getCategoryPointSize();
   public String getGradientPointWellKnownName();

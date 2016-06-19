@@ -382,7 +382,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
       else if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOINT)
       {
-        int numCategories;
+        int numCategories = 5; // 5 is the default
         double categoryLen;
         
         if(this.style instanceof ThematicStyle)
@@ -419,7 +419,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           }
           else
           {
-            numCategories = 10;
+            numCategories = tStyle.getNumGradientPointCategories();
             categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
           }
   
@@ -1079,7 +1079,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
       else
       {
-        int numCategories;
+        int numCategories = 5; // 5 is the default
         if (minSize == maxSize || minAttrVal == maxAttrVal)
         {
           // min/max are the same suggesting there is only one feature (i.e. gradient on a single polygon)
@@ -1087,7 +1087,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         }
         else
         {
-          numCategories = 10;
+          numCategories = tStyle.getNumBubbleSizeCategories();
         }
 
         double categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
@@ -1383,7 +1383,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       if (this.visitor.currentLayer.getFeatureStrategy() == FeatureStrategy.GRADIENTPOLYGON)
       {
-        int numCategories;
+        int numCategories = 5; // 5 is the default
         double categoryLen;
         
         if(this.style instanceof ThematicStyle)
@@ -1418,7 +1418,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           }
           else
           {
-            numCategories = 10;
+            numCategories = tStyle.getNumGradientPolygonCategories();
             categoryLen = ( maxAttrVal - minAttrVal ) / numCategories;
           }
   

@@ -2466,6 +2466,17 @@ option[selected]{ font-weight:bold}
 	margin-left: 0px;
 	margin-top: 10px;	
 }
+.modal-form .point-gradient .cell-holder .gradient-buckets-size{
+	float:left;
+	width:62px;
+	position:relative;
+	margin-top: 10px;	
+}
+
+.modal-form .fill-block .cell-holder .cell.bubble-buckets-size{
+	margin-left: 0;
+	margin-top: 10px;
+}
 .modal-form .cell-holder .cell:first-child{margin:0;}
 .modal-form .label-holder.style04{padding-top:96px;}
 .modal-form .cell-holder{overflow:hidden;}

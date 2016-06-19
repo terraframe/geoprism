@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -2086117173)
+@com.runwaysdk.business.ClassSignature(hash = -675750973)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -685,6 +685,57 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.GRADIENTPOLYGONSTROKEWIDTH, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories()
+  {
+    return getNumBubbleSizeCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.NUMBUBBLESIZECATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.NUMBUBBLESIZECATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories()
+  {
+    return getNumGradientPointCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOINTCATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOINTCATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories()
+  {
+    return getNumGradientPolygonCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOLYGONCATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.getComponentQuery().get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOLYGONCATEGORIES, alias, displayLabel);
+
+  }
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType()
   {
     return getSecondaryAggregationType(null);
@@ -919,6 +970,15 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories();
+    public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias);
+    public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories();
+    public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories();
+    public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias, String displayLabel);
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType();
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType(String alias);
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType(String alias, String displayLabel);
@@ -1592,6 +1652,57 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.GRADIENTPOLYGONSTROKEWIDTH, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories()
+  {
+    return getNumBubbleSizeCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMBUBBLESIZECATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMBUBBLESIZECATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories()
+  {
+    return getNumGradientPointCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOINTCATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOINTCATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories()
+  {
+    return getNumGradientPolygonCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOLYGONCATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOLYGONCATEGORIES, alias, displayLabel);
+
+  }
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType()
   {
     return getSecondaryAggregationType(null);
@@ -1791,6 +1902,15 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
     public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth();
     public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth(String alias);
     public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories();
+    public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias);
+    public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories();
+    public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories();
+    public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias);
+    public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias, String displayLabel);
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType();
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType(String alias);
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType(String alias, String displayLabel);
@@ -2511,6 +2631,57 @@ public  class DashboardThematicStyleQuery extends net.geoprism.dashboard.Dashboa
   public com.runwaysdk.query.SelectableInteger getGradientPolygonStrokeWidth(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.GRADIENTPOLYGONSTROKEWIDTH, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories()
+  {
+    return getNumBubbleSizeCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMBUBBLESIZECATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumBubbleSizeCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMBUBBLESIZECATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories()
+  {
+    return getNumGradientPointCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOINTCATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPointCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOINTCATEGORIES, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories()
+  {
+    return getNumGradientPolygonCategories(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOLYGONCATEGORIES, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableInteger getNumGradientPolygonCategories(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableInteger)this.get(net.geoprism.dashboard.DashboardThematicStyle.NUMGRADIENTPOLYGONCATEGORIES, alias, displayLabel);
 
   }
   public net.geoprism.dashboard.AggregationTypeQuery.AllAggregationTypeQueryIF getSecondaryAggregationType()

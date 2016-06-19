@@ -284,7 +284,8 @@
       scope: {
         minFill:'=',
         maxFill:'=',
-        opacity:'='
+        opacity:'=',
+        numberOfCategories:'='
       },
       controller : StyleController,
       controllerAs : 'ctrl',
@@ -434,6 +435,12 @@
   function LayerTypesStyleController($scope, $timeout, $compile, layerFormService, localizationService) {
     var controller = this;  
     controller.ready = true;
+    
+    // The number of size categories can not exceed the number of size options in the given bubble size
+    // range (i.e. maxSize - minSize + 1). 
+    controller.getMaxBubbleBucketSize = function(){
+    	return $scope.styleModel.bubbleMaxSize - $scope.styleModel.bubbleMinSize + 1;
+    }
     
     /**
      * Setter for dynamic secondary aggregation methods which are updated on
@@ -1184,5 +1191,14 @@
     .directive('legendOptions', LegendOptions)
     .directive('formActionButtons', FormActionButtons)
     .directive('thematicLayer', ThematicLayer)
-    .directive('referenceLayer', ReferenceLayer);
+    .directive('referenceLayer', ReferenceLayer)
+    .filter('range', function() {
+    	  return function(input, min, max) {
+    		    min = parseInt(min); //Make string input int
+    		    max = parseInt(max);
+    		    for (var i=min; i<max; i++)
+    		      input.push(i);
+    		    return input;
+    		  };
+    });
 })();
