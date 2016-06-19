@@ -20,6 +20,12 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<a ng-show="!category.enableIcon" href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
-  <span class="ico ontology-category-color-icon ontology-other-color-icon" ng-style="::{'background' : category.color}" style="border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;"></span>
-</a>
+<div ng-switch="category.enableIcon" class="term-tree-icon-wrapper" style="float:right;" >
+	<a ng-switch-when="true" href="#" class="" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+	  <img style="width:20px;height:20px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ category.icon }}" alt="Icon">
+	</a>
+	<a ng-switch-when="false" href="#" class="color-choice" style="float:right; width:20px; height:20px; padding: 0px; margin-right:15px; border:none;">
+	  <span class="ico ontology-category-color-icon ontology-other-color-icon" ng-style="::{'background' : category.color}" style="border:1px solid #ccc; width:20px; height:20px; float:right; cursor:pointer;"></span>
+	</a>
+</div>
+

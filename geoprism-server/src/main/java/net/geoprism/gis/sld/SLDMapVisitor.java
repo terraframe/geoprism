@@ -509,8 +509,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             JSONArray array = tStyle.getSecondaryAttributeCategoriesAsJSON();
             for (int i = 0; i < array.length(); i++)
             {
+              Boolean isRangeCat = false;
               JSONObject category = array.getJSONObject(i);
-              Boolean isRangeCat = category.getBoolean("isRangeCat");
               Boolean catOtherCat = category.getBoolean("otherCat");
               String catMaxVal = null;
               Boolean rangeAllMin = false;
@@ -518,9 +518,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               String catVal = category.getString(ThematicStyle.VAL);
               String color = category.getString(ThematicStyle.COLOR);
               
-              if(catOtherCat == false && isRangeCat == true)
+              if(catOtherCat == false && category.has("isRangeCat") && category.getBoolean("isRangeCat") == true)
               {
                 catMaxVal = category.getString("valMax");
+                isRangeCat = category.getBoolean("isRangeCat"); 
                 
                 if(catVal.length() == 0)
                 {

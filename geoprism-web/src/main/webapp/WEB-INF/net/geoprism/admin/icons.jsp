@@ -56,7 +56,10 @@
         </td>
         <td>
         	{{ icon.label }}
-        	<img style="margin-left:20px;width:42px;height:42px;" alt="{{ icon.label }}" src="{{icon.filePath}}" class="thumb">
+<!--         	<img style="margin-left:20px;width:42px;height:42px;" alt="{{ icon.label }}" src="{{icon.filePath}}" class="thumb"> -->
+<!--        		REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
+       		<img style="margin-left:20px;width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}" alt="Icon">
+       		
         </td>
       </tr>
     </tbody>    

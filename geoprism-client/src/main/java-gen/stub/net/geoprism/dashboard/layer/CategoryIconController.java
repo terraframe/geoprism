@@ -18,18 +18,27 @@
  */
 package net.geoprism.dashboard.layer;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 
 import net.geoprism.JSONControllerUtil;
+import net.geoprism.dashboard.DashboardDTO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
+import com.runwaysdk.system.VaultFileDTO;
+import com.runwaysdk.util.FileIO;
 
 public class CategoryIconController extends CategoryIconControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -104,4 +113,53 @@ public class CategoryIconController extends CategoryIconControllerBase implement
       JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
     }
   }
+  
+  @Override
+  public void getCategoryIconImage(String iconId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+    
+    InputStream iconStream = null;
+    CategoryIconDTO icon = CategoryIconDTO.get(request, iconId);
+    VaultFileDTO iconImage = icon.getImage();
+    String rootPath = iconImage.getVaultPath();
+    String fileName = iconImage.getFileName();
+    String vaultFileName = iconImage.getVaultName();
+    String fileExtension = iconImage.getFileExtension();
+    
+    //TODO: obviously dynamically set the root vault directory
+    String fullImagePath = "/home/jlewis/git/geoprism/geoprism-server/target/vault/" + rootPath + "/" + vaultFileName;
+    
+    try
+    {
+//      InputStream istream = iconImage.get  getThumbnailStream();
+      iconStream = new FileInputStream(new File(fullImagePath));
+      try
+      {
+        resp.setContentType("image/png");
+
+        ServletOutputStream ostream = resp.getOutputStream();
+
+        try
+        {
+          FileIO.write(ostream, iconStream);
+
+          ostream.flush();
+        }
+        finally
+        {
+          ostream.close();
+        }
+      }
+      finally
+      {
+        iconStream.close();
+      }
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
+  
 }
