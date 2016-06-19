@@ -62,18 +62,7 @@
     </tbody>    
   </table>
   
-<!--   <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setDroppedStatus($files)" ngf-drop="ctrl.setDroppedStatus($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready> -->
-<!--     <div class="drop-box"> -->
-<!--       <div class="inner-drop-box"> -->
-<!--         <i class="fa fa-cloud-upload"> -->
-<%--           <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p> --%>
-<!--         </i> -->
-<!--       </div> -->
-<!--     </div> -->
-<!--   </div> -->
-  
-
-  <form class="modal-form" name="form">
+  <form class="modal-form" name="ctrl.form">
     <div class="modal-dialog">
       <div class="modal-content">
         <fieldset>
@@ -87,31 +76,30 @@
           </div>
           <div class="row-holder">
             <div class="holder">
-<%--               <label><gdb:localize key="category.icon.file"/></label> --%>
               <span class="text">
-              
-                  <div class="drop-box-container" ng-show="!icon.file" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setDroppedStatus($files)" ngf-drop="ctrl.setDroppedStatus($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
-				    <div class="drop-box">
-				      <div class="inner-drop-box">
-				        <i class="fa fa-cloud-upload">
-				          <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p>
-				        </i>
-				      </div>
-				    </div>
-				  </div>
-				  
-                <input style="display:none;" type="file" ng-show="!icon.file" ngf-select ng-model="icon.file" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
-                <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" ng-show="icon.file" title="Remove this icon so another icon can be added instead"></a>           
-<%--                 <button ng-click="icon.file = null" ng-show="icon.file"><gdb:localize key="category.icon.remove"/></button> --%>
-                <img style="width:42px;height:42px;margin-left:10px;" ng-show="form.file.$valid" ngf-thumbnail="icon.file" class="thumb">
+                <div class="drop-box-container" ng-show="!icon.file" accept="image/png" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setFile($files)" ngf-drop="ctrl.setFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
+                  <div class="drop-box">
+                    <div class="inner-drop-box">
+                      <i class="fa fa-cloud-upload">
+                        <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p>
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div ng-show="icon.file">
+                  <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
+                  <img style="width:42px;height:42px;margin-left:10px;" ngf-thumbnail="icon.file" class="thumb">
+                  <span ng-show="ctrl.form.$error.file" style="float: right;">
+                    <p class="error-message"><gdb:localize key="category.icon.badFileType"/></p>
+                  </span>
+                </div>				  
               </span>
             </div>
           </div>
           <div class="row-holder">
             <div class="holder">
               <div class="button-holder">
-              <input type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" />
-<%--                 <input type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="form.$invalid" /> --%>
+                <input type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />
               </div>
             </div>
           </div>
