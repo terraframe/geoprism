@@ -4408,7 +4408,40 @@ li.list-group-item:hover {
 	    padding: 5px 7px;
 	    background: #eee;
 	}
-
+	
+	.ontology-category-input-container .term-tree-icon-wrapper{
+		float: right;
+	}
+	
+	.ontology-category-input-container .term-tree-icon-wrapper a{
+		float:right; 
+		height:20px; 
+		line-height:20px; 
+		padding: 0px; 
+		margin-right:15px; 
+		border:none;
+	}
+	
+	.ontology-category-input-container .term-tree-icon{
+		float:right; 
+		width:20px; 
+		height:20px; 
+		padding: 0px; 
+		margin-right:15px; 
+		border:none;
+	}
+	
+	.ontology-category-input-container .term-tree-config-link{
+		float:right;
+		padding: 0;
+		line-height: 20px;
+		vertical-align: middle;
+	}
+	
+	.ontology-category-input-container .term-tree-buttons-wrapper{
+		float:right;
+	}
+	
 /*
 * Scroll bar styling
 *

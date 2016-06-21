@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -1897547674)
+@com.runwaysdk.business.ClassSignature(hash = -1845032955)
 public abstract class CategoryIconDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.CategoryIcon";
-  private static final long serialVersionUID = -1897547674;
+  private static final long serialVersionUID = -1845032955;
   
   protected CategoryIconDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -493,6 +493,22 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "getAllAsJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public final java.io.InputStream getIcon()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "getIcon", _declaredTypes);
+    return (java.io.InputStream) getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final java.io.InputStream getIcon(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "getIcon", _declaredTypes);
+    return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final void remove(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)

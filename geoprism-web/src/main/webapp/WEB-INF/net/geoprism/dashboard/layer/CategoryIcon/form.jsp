@@ -18,17 +18,17 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<div class="term-tree-buttons-wrapper">
-
-	<a ng-show="geomType == 'POINT'" class="term-tree-config-link" href="#">
-	  <span class="ico" ng-click="ctrl.configure()"><gdb:localize key="DashboardThematicLayer.form.category.configure.label"/></span>
-	</a>
-	
-	<div class="term-tree-icon-wrapper" >
-		<a ng-show="geomType == 'POINT' && category.enableIcon" href="#" class="term-tree-icon">
-	  		<img style="width:20px;height:20px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ category.icon }}" alt="Icon">
-		</a>
-		<simple-color-picker ng-show="!category.enableIcon" category="category" scroll="#layer-modal"></simple-color-picker>
-	</div>
-</div>
+<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<mjl:component item="${item}" param="dto">
+  <mjl:dt attribute="displayLabel">
+    <mjl:input param="displayLabel" type="text" />
+  </mjl:dt>
+  <mjl:dt attribute="image">
+    <mjl:select valueAttribute="id" param="image" var="current" items="${_image}">
+      <mjl:option>
+        ${current.keyName}
+      </mjl:option>
+    </mjl:select>
+  </mjl:dt>
+</mjl:component>

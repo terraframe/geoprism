@@ -663,34 +663,30 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 catTitle = catVal;
                 catColor = thisObj.getString("color");
                 isOntologyCat = thisObj.getBoolean("isOntologyCat");
+                enableIcon = thisObj.getBoolean("enableIcon");
                 
-                if(thisObj.has("enableIcon"))
+                if(enableIcon)
                 {
-                  enableIcon = thisObj.getBoolean("enableIcon");
-                  
-                  if(enableIcon)
+                  try
                   {
-                    try
-                    {
-                      iconId = thisObj.getString("icon");
-                      categoryRadius = thisObj.getInt("iconSize");
-                    }
-                    catch(JSONException e)
-                    {
-                      throw new ProgrammingErrorException(e);
-                    }
+                    iconId = thisObj.getString("icon");
+                    categoryRadius = thisObj.getInt("iconSize");
+                  }
+                  catch(JSONException e)
+                  {
+                    throw new ProgrammingErrorException(e);
+                  }
+                  
+                  try
+                  {
+                    icon = CategoryIcon.get(iconId);
+                    iconPath =  icon.getFilePath();
+                  }
+                  catch (Exception e)
+                  {
+                    //throw new ProgrammingErrorException(e);
                     
-                    try
-                    {
-                      icon = CategoryIcon.get(iconId);
-                      iconPath =  icon.getFilePath();
-                    }
-                    catch (Exception e)
-                    {
-                      //throw new ProgrammingErrorException(e);
-                      
-                      enableIcon = false; // to force the default point symbol
-                    }
+                    enableIcon = false; // to force the default point symbol
                   }
                 }
 
@@ -799,7 +795,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                               this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                           )
                       ),
-                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, false, "")
+                      this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, enableIcon, iconPath)
                                   
                       ).build(root);
                 }
@@ -887,7 +883,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                        wrapperAndNode
                                    )
                                ),
-                               this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius, false, "")).build(root);
+                               this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, enableIcon, iconPath)).build(root);
                      }
                      else
                      {
@@ -920,7 +916,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                                )
                                            )
                                        ),
-                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, radius, false, "")).build(root);
+                                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, enableIcon, iconPath)).build(root);
                      }
                    
                 }

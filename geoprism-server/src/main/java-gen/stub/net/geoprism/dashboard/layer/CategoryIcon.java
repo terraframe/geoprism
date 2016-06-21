@@ -44,6 +44,14 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
   {
     super();
   }
+  
+  @Override
+  public InputStream getIcon()
+  {
+    VaultFileDAOIF file = VaultFileDAO.get(this.getImageId());
+    
+    return file.getFileStream();
+  }
 
   public JSONObject toJSON()
   {

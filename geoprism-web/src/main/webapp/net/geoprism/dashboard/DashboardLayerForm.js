@@ -168,7 +168,7 @@
       var color = controller.randomColor();
       
       // Category doesn't exist.  Create one.
-      var category = {"id":termId, "val":node.name,"color":color,"isOntologyCat":true,"otherEnabled":false,"otherCat":false};
+      var category = {"id":termId, "val":node.name,"color":color,"isOntologyCat":true,"otherEnabled":false,"otherCat":false,"enableIcon":false,"geomType":""};
       $scope.categories.catLiElems.push(category);  
       
       return category;
@@ -184,7 +184,8 @@
       scope: {
         nodes : '&',
         categories : '=',
-        showOther : '@'        
+        showOther : '@',
+        geomType : '='
       },
       controller : StyleCategoryOntologyController,
       controllerAs : 'ctrl',
@@ -231,8 +232,7 @@
               var childScope = scope.$new(true);
               childScope.category = category;
               
-              var html = $compile('<styled-category category="category" scroll="#layer-modal"></styled-category>  <simple-color-picker category="category" scroll="#layer-modal"></simple-color-picker>')(childScope);
-//              var html = $compile('<styled-category category="category" scroll="#layer-modal"></styled-category>')(childScope);
+              var html = $compile('<styled-category geom-type="'+attrs.geomType+'" category="category" scroll="#layer-modal"></styled-category>')(childScope);
 
               // Add the color icon for category ontology nodes              
               $li.find('> div').append(html);
@@ -468,13 +468,13 @@
         // Reset the aggregation categories
         $scope.styleModel.secondaryAggregation.otherEnabled = false;
         $scope.styleModel.secondaryAggregation.rangeCategoriesEnabled = false;
-        $scope.styleModel.secondaryAggregation.other = {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true};
+        $scope.styleModel.secondaryAggregation.other = {"val":"","color":"#737678","isOntologyCat":false,"otherEnabled":true,"otherCat":true,"enableIcon":false,"geomType":"POINT"};
         $scope.styleModel.secondaryAggregation.catLiElems = [
-           {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-           {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-           {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-           {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false},
-           {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false}
+           {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+           {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+           {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+           {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+           {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"}
         ];        
             
         controller.setSecondaryAggregationMethods(attribute.type);
@@ -1162,6 +1162,7 @@
       scope: {
         category:'=',
         scroll:'@',
+        geomType:'='
       },
       controller : StyledCategoryController,
       controllerAs : 'ctrl',

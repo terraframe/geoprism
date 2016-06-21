@@ -21,6 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div class="ontology-category-input-container">
+
   <div class="ontology-tree"></div>
   
   <div class="other-cat-container" ng-show="categories.otherEnabled && showOther == 'true'">
@@ -30,9 +31,7 @@
           <div class="text category-input-container">
             <p><gdb:localize key="Other"/></p>
           </div>
-<!--           <styled-category category="categories.other" scroll="#layer-modal"></styled-category> -->
-		  <styled-category category="categories.other" scroll="#layer-modal"></styled-category>
-          <simple-color-picker category="categories.other" scroll="#layer-modal"></simple-color-picker>
+		  <styled-category geom-type="geomType" category="categories.other" scroll="#layer-modal"></styled-category>
         </div>
       </li>
     </ul>

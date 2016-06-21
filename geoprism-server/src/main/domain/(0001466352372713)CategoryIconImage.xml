@@ -29,6 +29,13 @@
 		    </mdAction> 
       	</create>
       </mdController>
+      
+      <mdBusiness name="net.geoprism.dashboard.layer.CategoryIcon">
+      	<create>
+       		<mdMethod name="getIcon" label="Get the icon image" returnType="java.io.InputStream">
+		    </mdMethod> 
+      	</create>
+      </mdBusiness>
     </update>
   </doIt>
   <undoIt>

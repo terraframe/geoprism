@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = 1501304550)
+@com.runwaysdk.business.ClassSignature(hash = -1276819835)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -45,7 +45,7 @@ public abstract class CategoryIconBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1501304550;
+  private static final long serialVersionUID = -1276819835;
   
   public CategoryIconBase()
   {
@@ -429,6 +429,18 @@ public abstract class CategoryIconBase extends com.runwaysdk.business.Business i
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIcon.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.io.InputStream getIcon()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIcon.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.io.InputStream getIcon(java.lang.String id)
+  {
+    CategoryIcon _instance = CategoryIcon.get(id);
+    return _instance.getIcon();
   }
   
   public static void remove(java.lang.String id)
