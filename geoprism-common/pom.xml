@@ -46,22 +46,12 @@
       <version>2.0.16</version>
     </dependency>
     
-    <dependency>
-		  <groupId>org.apache.commons</groupId>
-		  <artifactId>commons-configuration2</artifactId>
-		  <version>2.0</version>
-		</dependency>
 		<dependency>
       <groupId>commons-cli</groupId>
       <artifactId>commons-cli</artifactId>
       <version>1.3.1</version>
       <type>jar</type>
     </dependency>
-    <dependency>
-	    <groupId>commons-beanutils</groupId>
-	    <artifactId>commons-beanutils</artifactId>
-	    <version>1.9.2</version>
-		</dependency>
     
     <dependency>
       <groupId>it.geosolutions</groupId>
@@ -84,6 +74,43 @@
       <version>2.7</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>package-deployable</id>
+      <activation>
+        <property>
+          <name>package-deployable</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>package-deployable-filemerge</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>net.geoprism.FileMerger</mainClass>
+                  <arguments>
+                    <argument>--baseDir=${project.build.directory}/classes</argument>
+                    <argument>--overrideDir=${project.basedir}/src/deployed/resources</argument>
+                    <argument>--exportDir=${project.build.directory}/classes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <build>
     <!-- This tells maven to resolve variables in our properties files. -->

@@ -20,6 +20,7 @@ package net.geoprism;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.TeeInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,27 +82,29 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
    */
   public static void uploadBannerAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on
-    // the server.
     String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
     new File(tempDir).mkdir();
     bannerCache = new File(tempDir, fileName);
 
-    FileOutputStream fos;
-    TeeInputStream teeIS;
     try
     {
-      fos = new FileOutputStream(bannerCache);
+      // Write the file locally to our cache
+      FileOutputStream fos = new FileOutputStream(bannerCache);
       BufferedOutputStream buffer = new BufferedOutputStream(fos);
-      teeIS = new TeeInputStream(fileStream, buffer);
+      IOUtils.copy(fileStream, buffer);
+      buffer.close();
+      fos.close();
+      
+      // Send the cache file to the server for vault persistance.
+      FileInputStream serverInput = new FileInputStream(bannerCache);
+      SystemLogoSingletonDTOBase.uploadBanner(clientRequest, serverInput, fileName);
+      serverInput.close();
     }
-    catch (FileNotFoundException e)
+    catch (IOException e)
     {
       logger.error("Error creating image file [" + fileName + "].", e);
       return;
     }
-
-    SystemLogoSingletonDTOBase.uploadBanner(clientRequest, teeIS, fileName);
   }
 
   /**
@@ -113,27 +117,29 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
    */
   public static void uploadMiniLogoAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    // Split the image input stream into a tee stream. The split will write to 2 files: our temp file and the vault on
-    // the server.
     String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
     new File(tempDir).mkdir();
     miniLogoCache = new File(tempDir, fileName);
-
-    FileOutputStream fos;
-    TeeInputStream teeIS;
+    
     try
     {
-      fos = new FileOutputStream(miniLogoCache);
+      // Write the file locally to our cache
+      FileOutputStream fos = new FileOutputStream(miniLogoCache);
       BufferedOutputStream buffer = new BufferedOutputStream(fos);
-      teeIS = new TeeInputStream(fileStream, buffer);
+      IOUtils.copy(fileStream, buffer);
+      buffer.close();
+      fos.close();
+      
+      // Send the cache file to the server for vault persistance.
+      FileInputStream serverInput = new FileInputStream(miniLogoCache);
+      SystemLogoSingletonDTOBase.uploadMiniLogo(clientRequest, serverInput, fileName);
+      serverInput.close();
     }
-    catch (FileNotFoundException e)
+    catch (IOException e)
     {
       logger.error("Error creating image file [" + fileName + "].", e);
       return;
     }
-
-    SystemLogoSingletonDTOBase.uploadMiniLogo(clientRequest, teeIS, fileName);
   }
 
   /**
