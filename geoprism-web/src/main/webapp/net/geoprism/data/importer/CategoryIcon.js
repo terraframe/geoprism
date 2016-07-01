@@ -37,6 +37,7 @@
     controller.cleanFileName = function(file){
       var name = file.name;
       
+      // TODO: remove this assumption
       return name.replace(".png", "");
     }
     
@@ -50,7 +51,7 @@
           $scope.icon.label = label;
         }
         
-        $scope.icon.file= file;        
+        $scope.icon.file = file;        
       }
     }
     
