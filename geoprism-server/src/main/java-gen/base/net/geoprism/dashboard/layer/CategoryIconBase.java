@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -1276819835)
+@com.runwaysdk.business.ClassSignature(hash = 1254570753)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -45,7 +45,7 @@ public abstract class CategoryIconBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1276819835;
+  private static final long serialVersionUID = 1254570753;
   
   public CategoryIconBase()
   {
@@ -419,6 +419,18 @@ public abstract class CategoryIconBase extends com.runwaysdk.business.Business i
     return (CategoryIcon) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
+  public java.lang.String applyWithFile(java.lang.String fileName, java.io.InputStream fileStream)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIcon.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String applyWithFile(java.lang.String id, java.lang.String fileName, java.io.InputStream fileStream)
+  {
+    CategoryIcon _instance = CategoryIcon.get(id);
+    return _instance.applyWithFile(fileName, fileStream);
+  }
+  
   public static java.lang.String create(java.lang.String fileName, java.io.InputStream fileStream, java.lang.String label)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIcon.java";
@@ -429,6 +441,18 @@ public abstract class CategoryIconBase extends com.runwaysdk.business.Business i
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIcon.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.lang.String getAsJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIcon.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getAsJSON(java.lang.String id)
+  {
+    CategoryIcon _instance = CategoryIcon.get(id);
+    return _instance.getAsJSON();
   }
   
   public java.io.InputStream getIcon()

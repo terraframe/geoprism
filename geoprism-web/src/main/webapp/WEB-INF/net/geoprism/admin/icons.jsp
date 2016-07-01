@@ -52,16 +52,20 @@
     <tbody>
       <tr ng-repeat="icon in icons">
         <td class="button-column">
-          <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
+          <span>
+            <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
+            <a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(icon)" title="<gdb:localize key="category.icon.editTooltip"/>"></a>                     
+          </span>
         </td>
         <td>
         	{{ icon.label }}
-<!--         	<img style="margin-left:20px;width:42px;height:42px;" alt="{{ icon.label }}" src="{{icon.filePath}}" class="thumb"> -->
-<!--        		REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
-       		<img style="margin-left:20px;width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}" alt="Icon">
-       		
         </td>
-      </tr>
+        <td>
+<!--          <img style="margin-left:20px;width:42px;height:42px;" alt="{{ icon.label }}" src="{{icon.filePath}}" class="thumb"> -->
+<!--            REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
+          <img style="margin-left:20px;width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}" alt="Icon">                  
+        </td>
+      </tr>      
     </tbody>    
   </table>
   

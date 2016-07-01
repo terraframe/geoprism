@@ -64,6 +64,24 @@
       return null;
     }
     
+    controller.edit = function(icon) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function() {
+          // Find and remove the dataset from the datasets array         
+          var index = controller.getIndex(icon);
+                            
+          if(index != null) {
+            $scope.icons.splice(index, 1);        
+          }
+                              
+          $scope.$apply();
+        }
+      };
+                        
+      categoryIconService.edit(connection, icon.id);            
+    }
+    
     controller.remove = function(icon) {
       var title = localizationService.localize("category.icon", "deleteTitle", "Delete category icon");
 
