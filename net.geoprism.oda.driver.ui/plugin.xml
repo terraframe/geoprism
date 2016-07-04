@@ -62,7 +62,7 @@
       <dataSourceUI
             id="%oda.data.source.id">
          <newDataSourceWizard
-               pageClass="net.geoprism.oda.driver.ui.profilenet.geoprism.GeodashboardSelectionWizardPage"
+               pageClass="net.geoprism.oda.driver.ui.profile.GeodashboardSelectionWizardPage"
                includesProgressMonitor="false"
                pageTitle="%wizard.data.source.page.title"
                windowTitle="%wizard.window.title">
@@ -80,7 +80,7 @@
          <dataSetPage
                displayName="%wizard.data.set.page.title"
                icon="icons/datasetpage.ico"
-               wizardPageClass="net.geoprism.oda.driver.ui.editorsnet.geoprism.GeodashboardDataSetEditorPage"
+               wizardPageClass="net.geoprism.oda.driver.ui.editors.GeoprismDataSetEditorPage"
                path="/"
                id="net.geoprism.oda.driver.dataSet.page1">
          </dataSetPage>

@@ -45,7 +45,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     super();
   }
 
-  @Override
+  //@Override
   public InputStream getIcon()
   {
     VaultFileDAOIF file = VaultFileDAO.get(this.getImageId());
@@ -53,7 +53,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     return file.getFileStream();
   }
 
-  @Override
+  //@Override
   public String getAsJSON()
   {
     return this.toJSON().toString();
@@ -89,7 +89,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     return path;
   }
 
-  @Override
+  //@Override
   @Transaction
   public String applyWithFile(String path, InputStream fileStream)
   {
