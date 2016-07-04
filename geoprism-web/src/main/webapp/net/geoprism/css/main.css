@@ -1570,7 +1570,7 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	border-width:1px 0 0;
 	border-color:rgba(0,0,0,0.2);
 	overflow-y:auto;
-	max-height:calc(100% - 115px);
+	max-height:calc(100% - 120px);
 }
 .sales-accortion.panel-group .panel .panel{
 	border:solid;
@@ -1815,6 +1815,7 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	height: 28px;
 	padding: 6px 7px 5px;
 	margin: 0px;
+	margin-bottom:10px;
 	float: left;
 	font-size: 13px;
 	line-height: 15px;
