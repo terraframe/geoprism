@@ -40,7 +40,7 @@ public class CategoryIconController extends CategoryIconControllerBase implement
     super(req, resp, isAsynchronous);
   }
 
-  @Override
+  
   public void create(MultipartFileParameter file, String label) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
@@ -70,7 +70,64 @@ public class CategoryIconController extends CategoryIconControllerBase implement
     }
   }
 
-  @Override
+  
+  public void apply(String id, MultipartFileParameter file, String label) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      CategoryIconDTO icon = CategoryIconDTO.get(request, id);
+      icon.getDisplayLabel().setValue(label);
+
+      if (file != null)
+      {
+        String filename = file.getFilename();
+        InputStream stream = file.getInputStream();
+
+        try
+        {
+//          icon.applyWithFile(filename, stream);
+        }
+        finally
+        {
+          /*
+           * Just in case the stream isn't closed by the server method
+           */
+          stream.close();
+        }
+      }
+      else
+      {
+        icon.apply();
+      }
+
+//      JSONControllerUtil.writeReponse(this.resp, new JSONObject(icon.getAsJSON()));
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  
+  public void edit(String iconId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      CategoryIconDTO icon = CategoryIconDTO.lock(request, iconId);
+
+//      JSONControllerUtil.writeReponse(this.resp, new JSONObject(icon.getAsJSON()));
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  
   public void getAll() throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
@@ -90,7 +147,7 @@ public class CategoryIconController extends CategoryIconControllerBase implement
     }
   }
 
-  @Override
+  
   public void remove(String id) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
@@ -106,15 +163,15 @@ public class CategoryIconController extends CategoryIconControllerBase implement
       JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
     }
   }
+
   
-  @Override
   public void getCategoryIconImage(String iconId) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
-    
+
     InputStream iconStream = null;
     CategoryIconDTO icon = CategoryIconDTO.get(request, iconId);
-    
+
     try
     {
       iconStream = icon.getIcon();
@@ -144,5 +201,5 @@ public class CategoryIconController extends CategoryIconControllerBase implement
       throw new IOException(e);
     }
   }
-  
+
 }

@@ -21,6 +21,12 @@ package net.geoprism.oda.driver;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.geoprism.report.BirtConstants;
+import net.geoprism.report.PairViewDTO;
+import net.geoprism.report.RemoteQuery;
+import net.geoprism.report.RemoteQueryIF;
+import net.geoprism.report.ReportItemDTO;
+
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IResultSet;
 import org.eclipse.datatools.connectivity.oda.OdaException;
@@ -28,11 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import net.geoprism.report.BirtConstants;
-import net.geoprism.report.PairViewDTO;
-import net.geoprism.report.RemoteQuery;
-import net.geoprism.report.RemoteQueryIF;
-import net.geoprism.report.ReportItemDTO;
 
 public class QueryFacade
 {

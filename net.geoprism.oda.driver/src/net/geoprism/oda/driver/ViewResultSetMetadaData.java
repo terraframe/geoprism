@@ -21,10 +21,11 @@ package net.geoprism.oda.driver;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.geoprism.report.PairViewDTO;
+
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
-import net.geoprism.report.PairViewDTO;
 import com.runwaysdk.transport.metadata.AttributeBooleanMdDTO;
 import com.runwaysdk.transport.metadata.AttributeCharacterMdDTO;
 import com.runwaysdk.transport.metadata.AttributeDateMdDTO;

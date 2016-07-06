@@ -25,6 +25,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.geoprism.report.PairViewDTO;
+
 import org.eclipse.datatools.connectivity.oda.IBlob;
 import org.eclipse.datatools.connectivity.oda.IClob;
 import org.eclipse.datatools.connectivity.oda.IResultSet;
@@ -36,7 +38,6 @@ import com.runwaysdk.constants.MdAttributeDateUtil;
 import com.runwaysdk.constants.MdAttributeDoubleUtil;
 import com.runwaysdk.constants.MdAttributeIntegerUtil;
 import com.runwaysdk.constants.MdAttributeTimeUtil;
-import net.geoprism.report.PairViewDTO;
 
 public class ArrayResultSet implements IResultSet
 {

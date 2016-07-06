@@ -44,13 +44,19 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
   {
     super();
   }
-  
-  @Override
+
+  //@Override
   public InputStream getIcon()
   {
     VaultFileDAOIF file = VaultFileDAO.get(this.getImageId());
-    
+
     return file.getFileStream();
+  }
+
+  //@Override
+  public String getAsJSON()
+  {
+    return this.toJSON().toString();
   }
 
   public JSONObject toJSON()
@@ -69,22 +75,23 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   public String getFilePath()
   {
     VaultFileDAOIF file = VaultFileDAO.get(this.getImageId());
     VaultDAOIF vault = VaultDAO.get(file.getVaultReference());
-    
+
     String rootPath = vault.getVaultPath();
     String filePath = file.getVaultFilePath();
-    
+
     String path = rootPath + filePath + file.getVaultFileName();
-    
+
     return path;
   }
 
+  //@Override
   @Transaction
-  public static String create(String path, InputStream fileStream, String label)
+  public String applyWithFile(String path, InputStream fileStream)
   {
     int index = path.lastIndexOf('.');
 
@@ -103,18 +110,35 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
       entity.apply();
       file.putFile(fileStream);
 
+      this.setImage(entity);
+      this.apply();
+
+      return this.getAsJSON();
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Bad filename: No extension");
+    }
+  }
+
+  @Transaction
+  public static String create(String path, InputStream fileStream, String label)
+  {
+    try
+    {
       CategoryIcon icon = new CategoryIcon();
       icon.getDisplayLabel().setValue(label);
-      icon.setImage(entity);
-      icon.apply();
+      String json = icon.applyWithFile(path, fileStream);
 
       JSONArray icons = new JSONArray();
-      icons.put(icon.toJSON());
+      icons.put(new JSONObject(json));
 
       return icons.toString();
     }
-
-    throw new ProgrammingErrorException("Bad filename: No extension");
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 
   @Transaction

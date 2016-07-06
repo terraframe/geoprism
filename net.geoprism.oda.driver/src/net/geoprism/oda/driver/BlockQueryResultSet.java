@@ -23,6 +23,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 
+import net.geoprism.report.RemoteQuery;
+import net.geoprism.report.RemoteQueryIF;
+import net.geoprism.report.ReportItemDTO;
+
 import org.eclipse.datatools.connectivity.oda.IBlob;
 import org.eclipse.datatools.connectivity.oda.IClob;
 import org.eclipse.datatools.connectivity.oda.IResultSet;
@@ -30,9 +34,6 @@ import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import net.geoprism.report.RemoteQuery;
-import net.geoprism.report.RemoteQueryIF;
-import net.geoprism.report.ReportItemDTO;
 
 public class BlockQueryResultSet implements IResultSet
 {

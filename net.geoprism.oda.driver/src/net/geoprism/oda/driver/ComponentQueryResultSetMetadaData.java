@@ -21,13 +21,13 @@ package net.geoprism.oda.driver;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
-import org.eclipse.datatools.connectivity.oda.OdaException;
-
 import net.geoprism.report.AttributeCharacterMetadataIF;
 import net.geoprism.report.AttributeDecMetadataIF;
 import net.geoprism.report.AttributeMetadataIF;
 import net.geoprism.report.RemoteQueryIF;
+
+import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
+import org.eclipse.datatools.connectivity.oda.OdaException;
 
 public class ComponentQueryResultSetMetadaData implements IResultSetMetaData
 {
