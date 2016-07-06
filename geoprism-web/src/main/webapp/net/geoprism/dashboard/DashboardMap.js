@@ -32,6 +32,11 @@
       return false;
     }
     
+    controller.zoomToFeatureExtent = function() {
+    	var selectedFeatureInfo = dashboardService.getSelectedFeatureInfo();
+    	mapService.zoomToFeatureExtent(selectedFeatureInfo);
+    }
+    
     controller.editData = function() {
               
       var onSuccess = function(json) {

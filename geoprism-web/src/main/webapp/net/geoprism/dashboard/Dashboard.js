@@ -504,7 +504,9 @@
      * <private> - internal method
      */
     controller.onMapClick = function(e) {
-    
+      
+      mapService.clearOverlays();
+    	
       var layers = controller.getThematicLayers();
       
       mapService.getFeatureInfo(layers, e, controller.setFeatureInfo);        

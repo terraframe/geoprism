@@ -83,6 +83,11 @@
       service.map.clearOverlays();
     }
     
+    service.zoomToFeatureExtent = function(feature){
+    	service.map.zoomToFeatureExtent(feature);
+    	this.clearOverlays(); // the popup doesn't shift appropriately to the new position so clear it
+    }
+    
     return service;
   }
   
