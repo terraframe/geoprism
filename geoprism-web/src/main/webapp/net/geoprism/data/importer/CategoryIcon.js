@@ -21,7 +21,7 @@
     var controller = this;
     
     controller.init = function() {
-      $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+      $scope.icon = {id:'', label:'', file:null, timeStamp:new Date().getTime()};
       
       var connection = {
         onSuccess : function(response) {
@@ -71,7 +71,7 @@
     }
     
     controller.cancel = function() {
-        $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+        $scope.icon = {id:'', label:'', file:null, timeStamp:new Date().getTime()};
         $scope.editIcon = null;
         $scope.$apply();
     }
@@ -84,7 +84,7 @@
         	var tempFile = {name:icon.label, type:icon.type, filePath:icon.filePath, fileReference:"NONE"}
             
         	$scope.editIcon = icon.id;
-            $scope.icon = {label:icon.label, file:tempFile};
+            $scope.icon = {id:icon.id, label:icon.label, file:tempFile};
             $scope.$apply();
         }
       };
@@ -106,14 +106,14 @@
           var connection = {
             elementId : '#innerFrameHtml',
             onSuccess : function() {
-              // Find and remove the dataset from the datasets array         
+                       
               var index = controller.getIndex(icon);
                         
               if(index != null) {
                 $scope.icons.splice(index, 1);        
               }
               
-              $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+              $scope.icon = {id:'', label:'', file:null, timeStamp:new Date().getTime()};
               $scope.editIcon = null;
                           
               $scope.$apply();
@@ -141,7 +141,7 @@
           controller.addCategoryIcons(result);
           
           $scope.editIcon = null;
-          $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+          $scope.icon = {id:'', label:'', file:null, timeStamp:new Date().getTime()};
           $scope.$apply();
         },
         onFailure : function(e){
@@ -169,7 +169,7 @@
           controller.updateCategoryIcons([result]);
           
           $scope.editIcon = null;
-          $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+          $scope.icon = {id:'', label:'', file:null, timeStamp:new Date().getTime()};
           $scope.$apply();
         },
         onFailure : function(e){

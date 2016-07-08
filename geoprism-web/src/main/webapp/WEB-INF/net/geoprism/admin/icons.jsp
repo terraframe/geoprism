@@ -62,7 +62,7 @@
         </td>
         <td class="icon-thumbnail-column">
 <!--      REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
-          <img style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
+          <img ng-if="icon.id && icon.id.length > 0" style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
         </td>
       </tr>      
     </tbody>    
@@ -96,7 +96,7 @@
                   <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
                   
 				  <!-- For display only when editing an icon-->
-                  <img ng-show="editIcon && icon.file.filePath" style="width:42px;height:42px;margin-left:10px;" ng-src="/iconimage/getCategoryIconImage?iconId={{ editIcon }}&''" class="thumb">
+                  <img ng-if="icon.id && icon.id.length > 0 && editIcon && icon.file.filePath" style="width:42px;height:42px;margin-left:10px;" ng-src="/iconimage/getCategoryIconImage?iconId={{ editIcon }}&''" class="thumb">
                   
                   <!-- Actual uploaded file preview -->
                   <img style="width:42px;height:42px;margin-left:10px;" ngf-thumbnail="icon.file" class="thumb">
