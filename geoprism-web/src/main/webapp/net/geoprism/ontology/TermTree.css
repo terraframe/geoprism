@@ -122,20 +122,20 @@ span.jqtree_common.jqtree-title {
     color: rgb(255, 255, 255);
 }
 
-ul.jqtree_common li:first-child {
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li:first-child {
 	margin-top:5px;
 	margin-bottom:5px;
 }
-ul.jqtree_common li:last-child {
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li:last-child {
 	margin-top:5px;
 	margin-bottom:5px;
 }
-ul.jqtree_common li div span:first-child {
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li div span:first-child {
 	padding: 5px 10px 5px 10px;
     background: #eee;
     border-radius: 3px;
 }
-ul.jqtree_common li div span:first-child:hover {
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li div span:first-child:hover {
     background: lightgrey;
 }
 
