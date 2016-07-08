@@ -53,17 +53,16 @@
       <tr ng-repeat="icon in icons">
         <td class="button-column">
           <span>
-            <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
             <a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(icon)" title="<gdb:localize key="category.icon.editTooltip"/>"></a>                     
+            <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
           </span>
         </td>
-        <td>
+        <td class="icon-label-column">
         	{{ icon.label }}
         </td>
-        <td>
-<!--          <img style="margin-left:20px;width:42px;height:42px;" alt="{{ icon.label }}" src="{{icon.filePath}}" class="thumb"> -->
-<!--            REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
-          <img style="margin-left:20px;width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}" alt="Icon">                  
+        <td class="icon-thumbnail-column">
+<!--      REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
+          <img style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
         </td>
       </tr>      
     </tbody>    
@@ -95,7 +94,13 @@
                 </div>
                 <div ng-show="icon.file">
                   <a href="#" style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
+                  
+				  <!-- For display only when editing an icon-->
+                  <img ng-show="editIcon && icon.file.filePath" style="width:42px;height:42px;margin-left:10px;" ng-src="/iconimage/getCategoryIconImage?iconId={{ editIcon }}&''" class="thumb">
+                  
+                  <!-- Actual uploaded file preview -->
                   <img style="width:42px;height:42px;margin-left:10px;" ngf-thumbnail="icon.file" class="thumb">
+                  
                   <span ng-show="ctrl.form.$error.file" style="float: right;">
                     <p class="error-message"><gdb:localize key="category.icon.badFileType"/></p>
                   </span>
@@ -106,7 +111,10 @@
           <div class="row-holder">
             <div class="holder">
               <div class="button-holder">
-                <input type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />
+                <input ng-show="!editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />
+                
+                <input ng-show="editIcon" type="button" value="Cancel" class="btn btn-default" ng-click="ctrl.cancel()" />
+                <input ng-show="editIcon" type="button" value="Update" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
               </div>
             </div>
           </div>

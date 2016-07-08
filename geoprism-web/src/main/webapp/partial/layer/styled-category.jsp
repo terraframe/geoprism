@@ -27,7 +27,7 @@
 	
 	<div class="term-tree-icon-wrapper" >
 		<a ng-show="geomType == 'POINT' && category.enableIcon" href="#" class="term-tree-icon">
-	  		<img style="width:20px;height:20px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ category.icon }}" alt="Icon">
+	  		<img style="width:20px;height:20px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ category.icon }}&''" alt="Icon">
 		</a>
 		<simple-color-picker ng-show="!category.enableIcon" category="category" scroll="#layer-modal"></simple-color-picker>
 	</div>

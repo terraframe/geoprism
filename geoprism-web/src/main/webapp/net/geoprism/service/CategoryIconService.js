@@ -38,6 +38,26 @@
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.dashboard.layer.CategoryIconController.create.mojax', request, params);
     }
     
+    service.apply = function(connection, id, file, label) {
+    	
+        var request = runwayService.createConnectionRequest(connection);
+        
+        var params = new FormData();
+        params.append('id', id);
+        if(file.fileReference !== "NONE"){
+        	params.append('file', file);
+        }
+        params.append('label', label)
+
+        /*
+         * IMPORTANT: This method cannot be invoked through the generated javascript
+         * controller because you can't pass in a FormData to the method.  Thus, we
+         * are invoking it directly through the Facade.  FormData is required for
+         * submitting file objects through javascript.
+         */
+        Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.dashboard.layer.CategoryIconController.apply.mojax', request, params);
+    }    
+    
     service.getAll = function(connection) {
       var request = runwayService.createConnectionRequest(connection);
     
@@ -48,6 +68,19 @@
       var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.dashboard.layer.CategoryIconController.remove(request, id);
+    }
+    
+    service.edit = function(connection, id) {
+      var request = runwayService.createConnectionRequest(connection);
+        
+      net.geoprism.dashboard.layer.CategoryIconController.edit(request, id);
+    }
+    
+    service.getImage = function(connection, id) {
+    	
+    	var request = runwayService.createConnectionRequest(connection);
+        
+        net.geoprism.dashboard.layer.CategoryIconController.getCategoryIconImage(request, id);
     }
     
     return service;  

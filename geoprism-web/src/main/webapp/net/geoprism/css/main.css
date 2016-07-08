@@ -4338,6 +4338,7 @@ div.secondary-box label {
     
 #manage-datasets-table .button-column{
 	text-align: center;
+	width: 15%;
 }
 
 #manage-datasets-table td{
@@ -4346,6 +4347,16 @@ div.secondary-box label {
     
 #manage-datasets-table .fa.fa-trash-o.ico-remove{
 	font-size: 25px;
+}
+
+#manage-datasets-table .fa.fa-pencil.ico-edit{
+	font-size: 25px;
+	float: none;
+}
+
+#manage-datasets-table .icon-thumbnail-column {
+    text-align: center;
+    width: 15%
 }
 
 

@@ -21,10 +21,14 @@
     var controller = this;
     
     controller.init = function() {
-      $scope.icon = {label:'', file:null};
+      $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
       
       var connection = {
         onSuccess : function(response) {
+          for(var i=0; i<response.icons.length; i++){
+        	  //timestamps are only needed to force angular re-render of image get request
+        	  response.icons[i].timeStamp = new Date().getTime(); 
+          }
           $scope.icons = response.icons;
             
           $scope.$apply();
@@ -51,6 +55,7 @@
           $scope.icon.label = label;
         }
         
+        $scope.icon.type = file.type;
         $scope.icon.file = file;        
       }
     }
@@ -65,18 +70,22 @@
       return null;
     }
     
+    controller.cancel = function() {
+        $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+        $scope.editIcon = null;
+        $scope.$apply();
+    }
+    
     controller.edit = function(icon) {
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function() {
-          // Find and remove the dataset from the datasets array         
-          var index = controller.getIndex(icon);
-                            
-          if(index != null) {
-            $scope.icons.splice(index, 1);        
-          }
-                              
-          $scope.$apply();
+
+        	var tempFile = {name:icon.label, type:icon.type, filePath:icon.filePath, fileReference:"NONE"}
+            
+        	$scope.editIcon = icon.id;
+            $scope.icon = {label:icon.label, file:tempFile};
+            $scope.$apply();
         }
       };
                         
@@ -103,6 +112,9 @@
               if(index != null) {
                 $scope.icons.splice(index, 1);        
               }
+              
+              $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+              $scope.editIcon = null;
                           
               $scope.$apply();
             }
@@ -128,7 +140,8 @@
         onSuccess : function(result) {               
           controller.addCategoryIcons(result);
           
-          $scope.icon = {label:'', file:null};
+          $scope.editIcon = null;
+          $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
           $scope.$apply();
         },
         onFailure : function(e){
@@ -145,14 +158,54 @@
       categoryIconService.create(connection, $scope.icon.file, $scope.icon.label);
     }    
     
+    
+    /*
+     * Apply edits to an icon
+     */
+    controller.apply = function() {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(result) {               
+          controller.updateCategoryIcons([result]);
+          
+          $scope.editIcon = null;
+          $scope.icon = {label:'', file:null, timeStamp:new Date().getTime()};
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.message);
+          
+          $scope.$apply();
+          
+          $('#app-container').parent().parent().animate({ scrollTop: 0 }, 'slow');
+        }
+      };
+      
+      // Reset the file Errors
+      $scope.errors = [];
+      categoryIconService.apply(connection, $scope.editIcon, $scope.icon.file, $scope.icon.label);
+    }    
+    
     controller.addCategoryIcons = function(icons) {
       for(var i = 0; i < icons.length; i++) {
         var icon = icons[i];
+        //timestamps are only needed to force angular re-render of image get request
+        icon.timeStamp = new Date().getTime(); 
       
         if(!controller.exists(icon)) {
           $scope.icons.push(icon);        
         }
       }
+    }
+    
+    controller.updateCategoryIcons = function(icons) {
+        for(var i = 0; i < icons.length; i++) {
+          var icon = icons[i];
+        
+          if(controller.exists(icon)) {
+        	controller.updateIcon(icon);        
+          }
+        }
     }
     
     controller.exists = function(icon) {
@@ -165,13 +218,24 @@
       return false;
     }
     
+    controller.updateIcon = function(icon) {
+	    for(var i = 0; i < $scope.icons.length; i++) {
+	      if($scope.icons[i].id == icon.id) {
+	    	  //timestamps are only needed to force angular re-render of image get request
+	    	  icon.timeStamp = new Date().getTime();
+	    	  $scope.icons[i] = icon;
+	      }
+	    }
+    }
+    
     $scope.$watch('icon.file', function(file){
-      controller.form.$setValidity('file', (file != null) && (file.type == 'image/png'));
+      controller.form.$setValidity('file', (file != null) && (file.type == 'image/png' || $scope.editIcon));
     }, true);
     
     controller.init();
   }
-
+  
+  
   angular.module("category-icon", ['ngFileUpload', "category-icon-service", "localization-service", "widget-service", "runway-service"]);
   angular.module("category-icon")
   .controller('CategoryIconController', CategoryIconController)
