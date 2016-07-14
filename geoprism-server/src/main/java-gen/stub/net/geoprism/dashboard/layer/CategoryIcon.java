@@ -18,6 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.json.JSONArray;
@@ -83,8 +84,18 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
 
     String rootPath = vault.getVaultPath();
     String filePath = file.getVaultFilePath();
+    if(!rootPath.endsWith("/") || !filePath.startsWith("/"))
+    {
+      rootPath += "/";
+    }
 
     String path = rootPath + filePath + file.getVaultFileName();
+    
+//    File validateFile = new File(path);
+//    if(!validateFile.exists())
+//    {
+//       new ProgrammingErrorException("Icon file doesn't exist at the given location:  " + path);
+//    }
 
     return path;
   }

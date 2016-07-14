@@ -1117,7 +1117,7 @@
     }    
   }  
   
-  function StyledCategoryController($scope, $compile, localizationService, widgetService) {
+  function StyledCategoryController($scope, $compile, localizationService, widgetService, categoryIconService) {
     var controller = this;
       
     controller.configure = function() {
@@ -1125,17 +1125,22 @@
       var title = localizationService.localize("layer.category", "configure", "Configure category");
       var html = '<styled-category-popup category="category"></styled-category-popup>';
       
-      var originalState = {enableIcon:$scope.category.enableIcon, categoryIcon:$scope.category.icon, categoryIconSize:$scope.category.iconSize}
+      var defaultState = categoryIconService.getDefaultIconModel();
       
+      // Set the defaults for the widget
+      $scope.category.enableIcon = $scope.category.enableIcon;
+	  $scope.category.icon = $scope.category.enableIcon && $scope.category.icon ? $scope.category.icon : defaultState.icon;
+	  $scope.category.iconSize = $scope.category.iconSize ? $scope.category.iconSize : defaultState.iconSize;
+	  
       var buttons = [];
       buttons.push(
 	    {
           label : localizationService.localize("layer.category", "cancel", "Cancel"),
           config : {class:'btn'},
           callback : function(){
-        	  $scope.category.enableIcon = originalState.enableIcon;
-        	  $scope.category.icon = originalState.categoryIcon;
-        	  $scope.category.iconSize = originalState.categoryIconSize;
+        	  $scope.category.enableIcon = defaultState.enableIcon;
+        	  $scope.category.icon = defaultState.icon;
+        	  $scope.category.iconSize = defaultState.iconSize;
           }
 	    }, 
         {
@@ -1151,6 +1156,19 @@
       childScope.category = $scope.category;
 
       $compile(dialog.getRawNode())(childScope);
+      
+      
+      $scope.$watch("category.enableIcon", function(newValue, oldValue) {
+          if(!newValue) {    
+        	  
+            var defaultState = categoryIconService.getDefaultIconModel();
+            
+            // Clear the widget if unchecking the enable icon option
+            $scope.category.enableIcon = defaultState.enableIcon;
+      	  	$scope.category.icon = defaultState.icon;
+      	  	$scope.category.iconSize = defaultState.iconSize;
+          }
+      }); 
     }    
   }
     

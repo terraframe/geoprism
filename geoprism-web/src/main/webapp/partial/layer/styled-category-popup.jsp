@@ -29,13 +29,13 @@
 <!--     <styled-color-picker model="category.color" scroll="#layer-modal"></styled-color-picker>              -->
 <!--   </div> -->
 
-  <div class="select-box">
+  <div ng-show="category.enableIcon" class="select-box">
     <select class="method-select" ng-model="category.icon" ng-options="opt.id as opt.label for opt in icons">
       <option value=""></option>    
     </select>
   </div>
 <!--   <div class="fill-block"> -->
-    <div class="cell-holder">
+    <div ng-show="category.enableIcon" class="cell-holder">
       <div class="cell">
         <label for="custom-icon-radius-select"><gdb:localize key="DashboardLayer.form.size"/></label>
         <div class="text">

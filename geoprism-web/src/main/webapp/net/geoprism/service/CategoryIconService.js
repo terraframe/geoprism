@@ -83,6 +83,10 @@
         net.geoprism.dashboard.layer.CategoryIconController.getCategoryIconImage(request, id);
     }
     
+    service.getDefaultIconModel = function() {
+    	return {enableIcon:false, icon:"", iconSize:50};
+    }
+    
     return service;  
   }
   
