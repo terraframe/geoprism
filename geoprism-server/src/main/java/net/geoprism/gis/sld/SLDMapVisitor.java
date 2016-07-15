@@ -662,8 +662,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 catVal = thisObj.getString("val");
                 catTitle = catVal;
                 catColor = thisObj.getString("color");
-                isOntologyCat = thisObj.getBoolean("isOntologyCat");
-                enableIcon = thisObj.getBoolean("enableIcon");
+                isOntologyCat = getOrAppendJSONBooleanProperty("isOntologyCat", thisObj, false); 
+                enableIcon = getOrAppendJSONBooleanProperty("enableIcon", thisObj, false);
                 
                 if(enableIcon)
                 {
@@ -2419,6 +2419,64 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     // TODO Auto-generated method stub
 
   }
+  
+  /**
+   * Rather than throwing an error if a json object doesn't have an expected property we will 
+   * append the property with an empty valu or a default
+   * @param prop
+   * @param jsonObj
+   * @param defaultValue
+   * @return
+   */
+  public static String getOrAppendJSONStringProperty(String prop, JSONObject jsonObj, String defaultValue)
+  {
+    if( !jsonObj.has(prop) )
+    {
+      try
+      {
+        jsonObj.put(prop, defaultValue);
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException("Couldn't append the json property [ "+ prop +" ] to the json object [ "+jsonObj+" ].", e);
+      }
+    }
+    
+    try
+    {
+      return jsonObj.getString(prop);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException("Couldn't parse the json property [ "+ prop +" ] from the json object [ "+jsonObj+" ].", e);
+    }
+  }
+  
+  
+  public static boolean getOrAppendJSONBooleanProperty(String prop, JSONObject jsonObj, boolean defaultValue)
+  {
+    if( !jsonObj.has(prop) )
+    {
+      try
+      {
+        jsonObj.put(prop, defaultValue);
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException("Couldn't append the json property [ "+ prop +" ] to the json object [ "+jsonObj+" ].", e);
+      }
+    }
+    
+    try
+    {
+      return jsonObj.getBoolean(prop);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException("Couldn't parse the json property [ "+ prop +" ] from the json object [ "+jsonObj+" ].", e);
+    }
+  }
+  
   
   public static HashMap<Integer, Color> interpolateColor(int numCategories, FeatureStrategy featureStrategy, Style style)
   {
