@@ -47,6 +47,10 @@
     service.getDashboard = function() {
       return service.dashboard;
     };
+    
+    service.getSelectedFeatureInfo = function() {
+    	return service.getDashboard().feature;
+    }
         
     service.updateLegend = function(layer, onSuccess, onFailure) {
       if(service.canEdit()) {

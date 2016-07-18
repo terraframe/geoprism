@@ -83,7 +83,7 @@ public class ImportRunnable
       this.importData(file, sContext, tContext);
 
       /*
-       * Return a JSONArray of the datasets which were created a part of the import. Do not include datasets which have
+       * Return a JSONArray of the datasets which were created as part of the import. Do not include datasets which have
        * already been created.
        */
       JSONArray datasets = new JSONArray();

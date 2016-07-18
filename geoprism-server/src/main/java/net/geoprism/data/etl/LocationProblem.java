@@ -29,15 +29,15 @@ import com.runwaysdk.system.gis.geo.Universal;
 
 public class LocationProblem implements LocationProblemIF, Comparable<LocationProblemIF>
 {
-  private String       label;
+  private String           label;
 
-  private List<String> context;
+  private List<JSONObject> context;
 
-  private GeoEntity    parent;
+  private GeoEntity        parent;
 
-  private Universal    universal;
+  private Universal        universal;
 
-  public LocationProblem(String label, List<String> context, GeoEntity parent, Universal universal)
+  public LocationProblem(String label, List<JSONObject> context, GeoEntity parent, Universal universal)
   {
     this.label = label;
     this.context = context;
@@ -57,6 +57,7 @@ public class LocationProblem implements LocationProblemIF, Comparable<LocationPr
     object.put("label", label);
     object.put("parentId", parent.getId());
     object.put("universalId", universal.getId());
+    object.put("universalLabel", universal.getDisplayLabel().getValue());
     object.put("context", new JSONArray(context));
 
     return object;

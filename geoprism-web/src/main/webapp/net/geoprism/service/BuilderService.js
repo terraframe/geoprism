@@ -49,46 +49,54 @@
     
     service.loadDashboard = function(dashboardId, onSuccess, onFailure) {
       
-      var request = runwayService.createRequest(function(json, dto) {
+      /*
+       * Second: Get all options
+       */
+      var request = runwayService.createRequest(function(json, dto) {    	  
         service.dto = dto;
-      
+    	  
         var object = JSON.parse(json);
-    
+        
         var result = {};
         // Populate the list of country options  
         // ORDER MATTERS for this array of field names. Fields will be added to the form in order.
         var attributeNames = ['displayLabel', 'description', 'name'];
-        
+            
         if(dto.isNewInstance()) {
           attributeNames = ['displayLabel', 'description'];
         }        
-        
+            
         result.fields = runwayService.getFields(service.dto, attributeNames);      
-        
+            
         // Overwrite name field options       
         if(!dto.isNewInstance()) {
           result.fields[2].writable = dto.isNewInstance();              
         }
-        
+            
         result.object = object;
-      
+          
         onSuccess(result);
-        
+           
       }, onFailure);
       
-      if(dashboardId != null) {
-        var dto = new net.geoprism.dashboard.Dashboard();
-        dto.id = dashboardId;
-        dto.newInstance = false;
-        dto.attributeMap.id.value = dashboardId;
       
-        dto.getDashboardDefinition(request);
+      if(dashboardId != null) {
+          
+        /*
+         * First: Lock the dashboard object
+         */
+        var lockRequest = runwayService.createRequest(function(dto){          
+          dto.getDashboardDefinition(request);
+        });
+                
+        net.geoprism.dashboard.Dashboard.lock(lockRequest, dashboardId);
       }
       else {
         var dto = new net.geoprism.dashboard.Dashboard();
         dto.getDashboardDefinition(request);
       }
     }
+    
     
     return service;  
   }

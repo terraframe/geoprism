@@ -46,5 +46,7 @@
         </tr>
       </tbody>
     </table>
+    
+    <a href="#" ng-click="ctrl.zoomToFeatureExtent()"><gdb:localize key="net.geoprism.gis.DynamicMap.zoomToFeatureBtnLabel"/></a>
   </div>         
 </div>

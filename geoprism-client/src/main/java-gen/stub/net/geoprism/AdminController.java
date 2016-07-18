@@ -234,6 +234,21 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   {
     this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
   }
+  
+  
+  @Override
+  public void icons() throws IOException, ServletException
+  {
+    JavascriptUtil.loadIcons(this.getClientRequest(), this.req);
+
+    render("icons.jsp");
+  }
+  
+  @Override
+  public void failIcons() throws IOException, ServletException
+  {
+    this.req.getRequestDispatcher(INDEX_JSP).forward(req, resp);
+  }  
 
   @Override
   public void main() throws IOException, ServletException
@@ -242,5 +257,4 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
 
     this.req.getRequestDispatcher("/jsp/mainContent.jsp").forward(this.req, this.resp);
   }
-
 }

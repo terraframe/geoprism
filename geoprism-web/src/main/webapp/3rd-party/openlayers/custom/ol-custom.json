@@ -6,7 +6,7 @@
     "ol.View#*",
     "ol.extent.applyTransform",
     "ol.proj.getTransform",
-    "ol.source.MapQuest",
+    "ol.proj.transform",
     "ol.source.BingMaps",
     "ol.layer.Group",
     "ol.layer.Group#*",
@@ -34,7 +34,11 @@
     "ol.layer.Base",
     "ol.layer.Base#*",
     "ol.layer.Vector",
-    "ol.layer.Vector#*"
+    "ol.layer.Vector#*",
+    "ol.geom.MultiPolygon",
+    "ol.geom.MultiPolygon#*",
+    "ol.geom.Point",
+    "ol.geom.Point#*"
   ],
   "compile": {
     "externs": [

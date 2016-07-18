@@ -35,7 +35,6 @@ body{
 
 body.iFrameBody {
 	overflow: hidden; /* This ensures the report panel doesn't force a scroll bar on render */
-/* 	overflow-y: auto; */
 	background-color: inherit;
 }
 
@@ -98,7 +97,6 @@ form legend{
 	  -webkit-box-shadow:none;
 	  outline:0;
 	  border-radius:0;
-/* 	  background:#bbb; */
 	  background:#777777;
 	}
 	.btn:hover,
@@ -338,17 +336,12 @@ form legend{
 		font-size:13px;
 		line-height:18px;
 		color:#8c0000;
-		/*width:150px; */
 	  word-wrap: break-word;
 	}
 	.submit-form select{
 		float:left;
 		width:269px;
 	}
-
-/* .submit-form .label-text, .submit-form label { */
-/* 	width: 225px; */
-/* } */
 
 
 /* hide original element */
@@ -513,6 +506,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 		display: block;
 		margin-left: 7px;
 	}
+	
 
 .submit-form .checks-frame label{
 	width:auto;
@@ -588,13 +582,6 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	font-size:12px;
 	line-height:18px;
 }
-/*.ui-widget-content,
-.ui-datepicker{
-	width:202px;
-	padding:10px 10px 8px;
-	border-color:#bbb;
-	background:#eee;
-}*/
 .ui-corner-all,
 .ui-corner-bottom,
 .ui-corner-right,
@@ -623,13 +610,6 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 }
 .ui-datepicker .ui-datepicker-prev{left:0;}
 .ui-datepicker .ui-datepicker-next{right:0;}
-
-/* This CSS screws up the x button on dialogs */
-/* .ui-widget-header .ui-icon{
-  width:7px;
-  height:11px;
-  background:url(../images/sprite.png) no-repeat -87px 0;
-} */
 
 .ui-datepicker table{
 	margin:0;
@@ -980,7 +960,6 @@ a.blueactive,
 	top:23px;
 	z-index:10;
 	width:230px;
-	/*padding:0 48px 0 0;*/
 	margin:0;
 }
 .control-form .info-box{
@@ -1025,7 +1004,6 @@ a.blueactive,
 		background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
 		float: left;
 		display: block;
-		/* 	margin-right: 7px; */
 		margin-top: 0 !important;
 	}
 	.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget {
@@ -1173,7 +1151,6 @@ a.fa.fa-pencil.ico-edit:focus{
 }
 
 a.fa.fa-plus.referenceLayer.ico-enable{
-/*   font-size: 15px; */
   margin-right: 5px;
   float: left;
   color: #bababa;
@@ -1183,7 +1160,6 @@ a.fa.fa-plus.referenceLayer.ico-enable{
     display: inline-block;
     font-size: 13px;
     padding: 2px;
-    /* color: #019edc; */
 }
 a.fa.fa-plus.referenceLayer.ico-enable:hover,
 a.fa.fa-plus.referenceLayer.ico-enable:focus{
@@ -1594,7 +1570,7 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	border-width:1px 0 0;
 	border-color:rgba(0,0,0,0.2);
 	overflow-y:auto;
-	max-height:calc(100% - 115px);
+	max-height:calc(100% - 120px);
 }
 .sales-accortion.panel-group .panel .panel{
 	border:solid;
@@ -1656,7 +1632,6 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	float:left;
 	padding:7px 5px 6px 17px;
 	color:#fff;
-/* 	width:235px; */
 	position:relative;
 	max-width: 235px;
 }
@@ -1840,6 +1815,7 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	height: 28px;
 	padding: 6px 7px 5px;
 	margin: 0px;
+	margin-bottom:10px;
 	float: left;
 	font-size: 13px;
 	line-height: 15px;
@@ -2030,7 +2006,6 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	overflow:hidden;
 }
 .modal-form .cell.style02{
-/* 	width:92px; */
 	width: 250px;
 	margin:0;
 }
@@ -2065,7 +2040,6 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 }
 
 .select-font-select.select-area{
-/* 	width:92px !important; */
 	width: 100% !important;
 	height:28px;
 	margin:0;
@@ -2102,7 +2076,6 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 }
 	
 .font-select .select-area{
-/* 	width:92px !important; */
 	height:28px;
 	margin:0;
 	font-size:13px;
@@ -2137,7 +2110,6 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 }
 
 .select-font-select.select-area{
-/* 	width:92px !important; */
 	width: 100% !important;
 	height:28px;
 	margin:0;
@@ -2250,8 +2222,6 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 .modal-form .select-box{
 	float:left;
 	min-width:100px;
-/* 	max-width: 150px; */
-/* 	width:102px; */
 	position:relative;
 	overflow:hidden;
 	padding: 1px;
@@ -2290,7 +2260,7 @@ select{
 	    100% 100%;
 	background-repeat: no-repeat;
 	
-		height: 31px;
+		height: 31px !important;
     
 	background-position:
 	    calc(100% - 10px) calc(1em + 1px), 
@@ -2369,7 +2339,6 @@ option[selected]{ font-weight:bold}
     padding-right: 10px;
 }
 .nav-tabs.type-tabs li{
-/* 	float:left; */
   border:none;
   border: none;
   padding: 0;
@@ -2498,6 +2467,17 @@ option[selected]{ font-weight:bold}
 	margin-left: 0px;
 	margin-top: 10px;	
 }
+.modal-form .point-gradient .cell-holder .gradient-buckets-size{
+	float:left;
+	width:62px;
+	position:relative;
+	margin-top: 10px;	
+}
+
+.modal-form .fill-block .cell-holder .cell.bubble-buckets-size{
+	margin-left: 0;
+	margin-top: 10px;
+}
 .modal-form .cell-holder .cell:first-child{margin:0;}
 .modal-form .label-holder.style04{padding-top:96px;}
 .modal-form .cell-holder{overflow:hidden;}
@@ -2514,9 +2494,7 @@ option[selected]{ font-weight:bold}
 .modal-form .tab-content>.tab-pane{padding:9px 0 22px 2px;}
 .modal-form .tab-pane .cell label{margin-bottom:5px;}
 .modal-form .tab-pane .text input[type="text"]{
-/* 	height:28px; */
 	height:31px;
-/* 	background:#fff; */
 	font-size:12px;
 	line-height:15px;
 	color:#333;
@@ -2641,11 +2619,6 @@ option[selected]{ font-weight:bold}
     margin-right: 5px;
 }
 
-/* .location-selector-box-left{ */
-/* 	width: 40%; */
-/* } */
-
-
 .modal-form .button-holder .btn.btn-primary.set-location-btn{
 	min-width: 25px;
     font-size: 31px;
@@ -2705,10 +2678,9 @@ option[selected]{ font-weight:bold}
 }
 
 .modal-form .holder .location-selector-container{
-/* 	width: 50%; */
 	border: solid 2px lightgrey;
-  padding: 10px;
-  margin-top: 2px;
+  	padding: 10px;
+  	margin-top: 2px;
 }
 
 .modal-form .holder .location-selector-container > .text {
@@ -2720,10 +2692,6 @@ option[selected]{ font-weight:bold}
     height: 34px;
     float: left;
     margin-right: 10px;
-}
-
-.location-selector-box-right{
-/* 	float: right; */
 }
 
 .modal-form .holder .location-selector-container p{
@@ -2947,7 +2915,6 @@ h4.location-summary-sub-table-heading{
 	padding: 2px;
 	margin-bottom: 0;
 	margin-top: 0;
-/* 	margin: 0 auto; */
 	margin-left: 35%;
 	background: rgba(0,0,0,0.8);
 	border: solid black 2px;
@@ -2963,7 +2930,6 @@ h4.location-summary-sub-table-heading{
 }
 
 #report-viewport{
-/* 	background-color: #FFF; */
 	height: 0px;
 	border-top: 1px solid #000;
 	overflow-y: scroll;
@@ -3035,15 +3001,12 @@ span.select-area span.center {
 	}
 	
 	.fa.fa-cog.ico-dashboard-options {
-/* 		margin-left: 5px; */
-/* 		vertical-align: bottom; */
   		font-size: 14px;
   		color: #bababa;
   		cursor: pointer;
 	}
 	
 	.nav-bar .fa.fa-cog.ico-dashboard-options{
-/* 		margin-left: 5px; */
 		vertical-align: bottom;
 	}
 	
@@ -3168,9 +3131,6 @@ span.select-area span.center {
     	border-top: solid lightgrey 1px;
 	}
 	
-	div.builder-data-set {
-/*     	width: 75%; */
-	}
 
 /** 
 * 
@@ -3189,7 +3149,11 @@ span.select-area span.center {
 	
 	.gdb-attr-filter ul.jqtree-tree .jqtree-title {
 	    color: #B9B9B9;
+	    text-indent: -1em;
+	    padding-left: 3.3em;
+	    display: inherit;	    
 	}
+	
 
 	.style-options-block > .check-block > .chk-area {
 		margin-top: 10px;
@@ -3220,6 +3184,9 @@ span.select-area span.center {
 	}
 	.jqtree-tree .jqtree-element .jqtree-title{
 		margin-left: 0;
+	}
+	.ontology-category-input-container ul.jqtree-tree .jqtree-element{
+		cursor: default;
 	}
 
 /** 
@@ -3401,7 +3368,6 @@ span.select-area span.center {
 		border: solid black 1px;
 		z-index: 999;
 		cursor: move;
-		/* 	margin: 5px 5px 5px auto; */
 	}
 	
 	#collapse-legend.accordion-body.in{
@@ -3486,7 +3452,6 @@ span.select-area span.center {
 	}
 	
 	.legend-image {
-/* 		margin-right: 10px; */
 		float: left;
 	}
 	
@@ -3496,7 +3461,6 @@ span.select-area span.center {
 *
 */
 	.modal-form .category-block {
-/* 		height: 240px; */
 		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 		padding: 0;
@@ -3504,6 +3468,10 @@ span.select-area span.center {
 	
 	div.text.category-input-container {
 		width: 275px;
+	}
+	
+	.other-cat-container div.text.category-input-container {
+		width: 137px;
 	}
 	
 	.modal-form .text input[type="text"]{
@@ -3521,7 +3489,6 @@ span.select-area span.center {
 		background: #a6e53b;
 		width: 28px;
 		height: 28px;
-		/* margin: 2px; */
 		top: 0px;
 		border: 1px solid #aaa;
 	}
@@ -3539,6 +3506,12 @@ span.select-area span.center {
 	
 	#cat-other-basic-label{
 		margin-left: 1.5em;
+	}
+	
+	.other-cat-container .other-cat .category-container .category-input-container p {
+		margin: 0;
+    	vertical-align: middle;
+    	line-height: 20px;
 	}
 	
 	#collapse000 {
@@ -3800,7 +3773,6 @@ div.secondary-box label {
 
 #tree{
   width: 50%;
-/*   background-color: red; */
   float: left;
   padding: 10px;
 }
@@ -3808,7 +3780,6 @@ div.secondary-box label {
 #problem-panel{
   margin-left: 50%;
   width: 50%;
-/*   background-color: green; */
   padding: 10px;
   border: rgb(190, 190, 190) solid 2px;
   border-radius: 5px;
@@ -3958,7 +3929,6 @@ div.secondary-box label {
 	  width:100%;
 	  height:100%;
 	  background-color: rgba(255,255,255,0.3);
-/* 	  display: none; REMOVE LATER */
 	}
 	
 	.ng-modal-dialog {
@@ -4030,9 +4000,6 @@ div.secondary-box label {
 	a.opener-link.checkbox-label{
 		margin-left: 0;
 		margin-top: 5px;
-	}
-	.checkbox-label{
-/* 		clear: both;	 */
 	}
 	
 	
@@ -4250,7 +4217,6 @@ div.secondary-box label {
 }
 
 .uploader-step-indicator-container{
-/*     width: 765px; */
     width: 100%;
     text-align: center;
     left: 0;
@@ -4372,6 +4338,7 @@ div.secondary-box label {
     
 #manage-datasets-table .button-column{
 	text-align: center;
+	width: 15%;
 }
 
 #manage-datasets-table td{
@@ -4380,6 +4347,16 @@ div.secondary-box label {
     
 #manage-datasets-table .fa.fa-trash-o.ico-remove{
 	font-size: 25px;
+}
+
+#manage-datasets-table .fa.fa-pencil.ico-edit{
+	font-size: 25px;
+	float: none;
+}
+
+#manage-datasets-table .icon-thumbnail-column {
+    text-align: center;
+    width: 15%
 }
 
 
@@ -4414,8 +4391,69 @@ li.list-group-item:hover {
 	text-align: left;
 	margin-top: 6px;
 }
-    
 
+
+	#category-icon-modal-container .check-block label {
+		line-height: 32px;
+	}
+	
+	#category-icon-modal-container .select-box {
+		height: 31px;
+	}
+	
+	#category-icon-modal-container .cell-holder {
+		margin-top: 5px;
+	}
+	
+	
+	#category-icon-modal-container #custom-icon-radius-select {
+	    border: 1px solid #aaa;
+	    width: 50%;
+	    margin: 0;
+	    float: left;
+	    box-shadow: none;
+	    outline: none;
+	    height: 31px;
+	    font-size: 12px;
+	    line-height: 15px;
+	    color: #333;
+	    padding: 5px 7px;
+	    background: #eee;
+	}
+	
+	.ontology-category-input-container .term-tree-icon-wrapper{
+		float: right;
+	}
+	
+	.ontology-category-input-container .term-tree-icon-wrapper a{
+		float:right; 
+		height:20px; 
+		line-height:20px; 
+		padding: 0px; 
+		margin-right:15px; 
+		border:none;
+	}
+	
+	.ontology-category-input-container .term-tree-icon{
+		float:right; 
+		width:20px; 
+		height:20px; 
+		padding: 0px; 
+		margin-right:15px; 
+		border:none;
+	}
+	
+	.ontology-category-input-container .term-tree-config-link{
+		float:right;
+		padding: 0;
+		line-height: 20px;
+		vertical-align: middle;
+	}
+	
+	.ontology-category-input-container .term-tree-buttons-wrapper{
+		float:right;
+	}
+	
 /*
 * Scroll bar styling
 *

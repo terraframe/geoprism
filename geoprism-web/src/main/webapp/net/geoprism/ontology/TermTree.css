@@ -16,7 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 /**
+**
+**  JSTree 
+**
+*/
+
+ /**
  * Relationships
  */
   /* Allowed In */
@@ -77,6 +84,16 @@
 	border-color: #019edc;
 }
 
+
+
+/**
+**
+**  JQTree 
+**
+*/
+
+
+
 .jqtree-checkbox.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget{
 /* 	  margin-right: 10px; */
 /* 	  width: auto; */
@@ -103,6 +120,23 @@ span.jqtree_common.jqtree-title {
  
 .gdb-attr-filter ul.jqtree-tree .jqtree-toggler {
     color: rgb(255, 255, 255);
+}
+
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li:first-child {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li:last-child {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li div span:first-child {
+	padding: 5px 10px 5px 10px;
+    background: #eee;
+    border-radius: 3px;
+}
+.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li div span:first-child:hover {
+    background: lightgrey;
 }
 
 /* Hide jsTrees context menu */

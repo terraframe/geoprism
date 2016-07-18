@@ -36,7 +36,7 @@
     <geoserver.version>2.5.0.0.1</geoserver.version>
     <db.name>geoprism</db.name>
     <db.user>geoprism</db.user>
-    <db.port>5432</db.port>    
+    <db.port>5432</db.port>
   </properties>
 
   <dependencies>
@@ -114,9 +114,15 @@
                 <!-- Exclude all jars provided by tomcat -->
                 **/*catalina*.jar,
                 **/*servlet-api*.jar,
-                **/*annotations-api*.jar
+                **/*annotations-api*.jar,
+                <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
+                **/aspectjtools*.jar
               </packagingExcludes>
               <webResources>
+                <resource>
+                  <directory>${keystore.dir}</directory>
+                  <targetPath>.ebextensions</targetPath>
+                </resource>
                 <resource>
                   <directory>src/deployed/ebextensions</directory>
                   <targetPath>.ebextensions</targetPath>
@@ -124,12 +130,29 @@
                 </resource>
                 <!-- <resource> <directory>src/main/resources</directory> </resource> -->
               </webResources>
-              <overlays>
-                <overlay>
-                  <!-- empty groupId/artifactId represents the current build -->
-                </overlay>
-              </overlays>
             </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>package-deployable-filemerge</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>net.geoprism.FileMerger</mainClass>
+                  <arguments>
+                    <argument>--baseDir=${project.build.directory}/classes</argument>
+                    <argument>--overrideDir=${configuration.dir}</argument>
+                    <argument>--exportDir=${project.build.directory}/classes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
@@ -225,27 +248,27 @@
       <build>
         <plugins>
           <plugin>
-					  <groupId>org.codehaus.mojo</groupId>
-					  <artifactId>exec-maven-plugin</artifactId>
-					  <version>1.4.0</version>
-					  <executions>
-					    <execution>
-					      <id>config.dir.filemerge</id>
-					      <phase>prepare-package</phase>
-					      <goals>
-					        <goal>java</goal>
-					      </goals>
-					      <configuration>
-		              <mainClass>net.geoprism.FileMerger</mainClass>
-		              <arguments>
-		                <argument>--baseDir=${project.build.directory}/classes</argument>
-		                <argument>--overrideDir=${configuration.dir}</argument>
-		                <argument>--exportDir=${project.build.directory}/classes</argument>
-		              </arguments>
-		            </configuration>
-					    </execution>
-					  </executions>
-					</plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>config.dir.filemerge</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>net.geoprism.FileMerger</mainClass>
+                  <arguments>
+                    <argument>--baseDir=${project.build.directory}/classes</argument>
+                    <argument>--overrideDir=${configuration.dir}</argument>
+                    <argument>--exportDir=${project.build.directory}/classes</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -254,7 +277,7 @@
   <build>
     <!-- Just for convenience, this stops us from having to add the version when we hit our webapp. -->
     <finalName>geoprism</finalName>
-    
+
     <plugins>
       <!-- Weave Aspects -->
       <plugin>
@@ -322,7 +345,9 @@
             <!-- Exclude all jars provided by tomcat -->
             **/*catalina*.jar,
             **/*servlet-api*.jar,
-            **/*annotations-api*.jar
+            **/*annotations-api*.jar,
+            <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
+            **/aspectjtools*.jar
           </packagingExcludes>
           <overlays>
             <overlay>

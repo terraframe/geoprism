@@ -66,7 +66,7 @@
     <dependency>
       <groupId>org.eclipse.birt.runtime</groupId>
       <artifactId>org.eclipse.birt.runtime</artifactId>
-      <version>4.4.0</version>
+      <version>4.4.2</version>
       <exclusions>
         <exclusion>
           <artifactId>org.apache.batik.pdf</artifactId>
@@ -75,9 +75,14 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.birt.runtime</groupId>
+       <artifactId>org.eclipse.core.runtime</artifactId>
+       <version>3.10.0.v20140318-2214</version>
+    </dependency>    
+    <dependency>
       <groupId>net.geoprism</groupId>
       <artifactId>oda.driver</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
     </dependency>
 
     <dependency>

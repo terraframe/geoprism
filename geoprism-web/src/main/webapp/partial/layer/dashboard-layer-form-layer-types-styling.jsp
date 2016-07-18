@@ -36,7 +36,7 @@
       <div class="tab-pane" id="tab006gradientpoint" ng-class="{ 'active' : layerModel.layerType == 'GRADIENTPOINT' }">
       
         <!-- POINT GRADIENT FILL -->
-        <style-gradient-fill min-fill="styleModel.gradientPointMinFill" max-fill="styleModel.gradientPointMaxFill" opacity="styleModel.gradientPointFillOpacity" class="point-gradient"></style-gradient-fill>
+        <style-gradient-fill min-fill="styleModel.gradientPointMinFill" max-fill="styleModel.gradientPointMaxFill" opacity="styleModel.gradientPointFillOpacity" number-of-categories="styleModel.numGradientPointCategories" class="point-gradient"></style-gradient-fill>
         
         <!-- POINT GRADIENT STROKE -->
         <style-stroke class="stroke-block" stroke="styleModel.gradientPointStroke" stroke-width="styleModel.gradientPointStrokeWidth" stroke-opacity="styleModel.gradientPointStrokeOpacity"></style-stroke>
@@ -73,10 +73,10 @@
           <div class="category-block" id="category-point-colors-container">
 
             <!-- RENDER ONTOLOGY TREE DATA  -->
-            <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
+            <style-category-ontology ng-if="dynamicDataModel.isOntologyAttribute" geom-type="'POINT'" categories="categoryWidget.basicPointCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
             
             <!-- RENDER BASIC CATEGORIES -->
-            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
+            <style-category-list ng-if="!dynamicDataModel.isOntologyAttribute" geom-type="'POINT'" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
           </div>
         </div>
         
@@ -138,7 +138,19 @@
                 <input id="f77" name="style.bubbleMaxSize" type="text" ng-model="styleModel.bubbleMaxSize"></input>
               </div>
             </div>
+            <div ng-show="!styleModel.bubbleContinuousSize" class="cell bubble-buckets-size">
+		      <label><gdb:localize key="DashboardThematicLayer.form.gradientNumCategories"/></label>
+		      <div class="text">
+		        <select class="tab-select" ng-model="styleModel.numBubbleSizeCategories" ng-options="n for n in [] | range:1:ctrl.getMaxBubbleBucketSize()">
+<%-- 		          <c:forEach step="1" begin="1" end="50" var="size"> --%>
+<%-- 		            <option value="${size}">${size}</option> --%>
+<%-- 		          </c:forEach>         --%>
+		        </select>        
+		      </div>
+		    </div>
+		    
             <styled-check-box model="styleModel.bubbleContinuousSize" label="<gdb:localize key="DashboardThematicLayer.form.continuousSize"/>"></styled-check-box>
+          
           </div>
         </div>
         
@@ -196,9 +208,9 @@
       <!-- GRADIENT POLYGON -->
       <div class="tab-pane" id="tab004gradientpolygon" ng-class="{ 'active' : layerModel.layerType == 'GRADIENTPOLYGON' }">
         <!-- POINT GRADIENT FILL -->
-        <style-gradient-fill min-fill="styleModel.gradientPolygonMinFill" max-fill="styleModel.gradientPolygonMaxFill" opacity="styleModel.gradientPolygonFillOpacity" class="point-gradient"></style-gradient-fill>
+        <style-gradient-fill min-fill="styleModel.gradientPolygonMinFill" max-fill="styleModel.gradientPolygonMaxFill" opacity="styleModel.gradientPolygonFillOpacity" number-of-categories="styleModel.numGradientPolygonCategories" class="point-gradient"></style-gradient-fill>
         
-        <!-- POINT GRADIENT STROKE -->
+        <!-- POLYGON GRADIENT STROKE -->
         <style-stroke class="stroke-block" stroke="styleModel.gradientPolygonStroke" stroke-width="styleModel.gradientPolygonStrokeWidth" stroke-opacity="styleModel.gradientPolygonStrokeOpacity"></style-stroke>        
       </div>
       
@@ -222,7 +234,7 @@
           </div>
         </div>
       
-        <!-- POINT CATEGORY STROKE -->        
+        <!-- POLYGON CATEGORY STROKE -->        
         <style-stroke class="stroke-block" stroke="styleModel.categoryPolygonStroke" stroke-width="styleModel.categoryPolygonStrokeWidth" stroke-opacity="styleModel.categoryPolygonStrokeOpacity"></style-stroke>
       </div>    
     </div> <!--  end style container  -->

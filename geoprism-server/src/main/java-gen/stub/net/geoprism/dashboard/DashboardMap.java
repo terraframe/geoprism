@@ -872,13 +872,24 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     {
       // TODO: Only add base map based on user settings (i.e. if OSM is enabled)
       URL url = null;
+      String wmsLayerName = "osm";
       try
       {
         //
         // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
         // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
-        url = new URL("http://irs.gis-lab.info/?layers=osm&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+        url = new URL("http://irs.gis-lab.info/?layers="+wmsLayerName+"&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+
+        //
+        // BACKUP SERVICE
+        // Currently we are using the WMS service from http://ows.terrestris.de/dienste.html#wms
+        // because this one http://irs.gis-lab.info/ is un-reliable and most web services are offered as
+        // Tiled Map Services (TMS) which are not directly consumable by geotools.
+        //
+        //wmsLayerName = "osm-wms";
+        //url = new URL("http://ows.terrestris.de/osm/service?layers="+wmsLayerName+"&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+
       }
       catch (MalformedURLException e)
       {
@@ -917,7 +928,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       for (Layer layer : WMSUtils.getNamedLayers(capabilities))
       {
-        if (layer.getName().toLowerCase().trim().equals("osm"))
+        if (layer.getName().toLowerCase().trim().equals(wmsLayerName))
         {
           request.addLayer(layer);
         }
@@ -926,6 +937,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       GetMapResponse response = null;
       try
       {
+        System.out.println(request.getFinalURL());
         response = (GetMapResponse) wms.issueRequest(request);
       }
       catch (ServiceException e)

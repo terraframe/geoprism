@@ -31,7 +31,6 @@ import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.web.WebClientSession;
 
 public class CachedImageUtil implements Reloadable
 {

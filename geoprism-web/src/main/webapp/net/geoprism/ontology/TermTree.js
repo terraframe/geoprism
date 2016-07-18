@@ -1278,7 +1278,7 @@
               for (var iNode = 0; iNode < nodes.length; ++iNode) {
                 var node = nodes[iNode];
                     
-                that.__createPaginationNode("...", termId, (page.pageNumber -1), node);                
+                that.__createPaginationNode("<<", termId, (page.pageNumber -1), node);                
               }              
             }
             
@@ -1302,7 +1302,7 @@
               for (var iNode = 0; iNode < nodes.length; ++iNode) {
                 var node = nodes[iNode];
                 
-                that.__createPaginationNode("...", termId, (page.pageNumber + 1), node);                
+                that.__createPaginationNode(">>", termId, (page.pageNumber + 1), node);                
               }            	
             }
             

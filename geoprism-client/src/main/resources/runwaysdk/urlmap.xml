@@ -42,6 +42,10 @@
   <map uri="mapthumb" controller="net.geoprism.UserMenuController">
   	<action method=".*" uri="${method}" />
   </map>
+  
+  <map uri="iconimage" controller="net.geoprism.dashboard.layer.CategoryIconController">
+  	<action method=".*" uri="${method}" />
+  </map>
 
   <map uri="session" controller="net.geoprism.SessionController">
     <action method=".*" uri="${method}"/>

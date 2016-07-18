@@ -504,7 +504,9 @@
      * <private> - internal method
      */
     controller.onMapClick = function(e) {
-    
+      
+      mapService.clearOverlays();
+    	
       var layers = controller.getThematicLayers();
       
       mapService.getFeatureInfo(layers, e, controller.setFeatureInfo);        
@@ -560,6 +562,18 @@
         
         var onSuccess = function(html){
           $( "#report-content" ).html(html);
+          
+          //
+          // Removing empty chart container div's from the report area
+          //
+          var chartEls = $("#__BIRT_ROOT").find("div")
+          for(var i=0; i<chartEls.length; i++){
+        	  var thisChart = chartEls[i];
+        	  var thisClass = $(thisChart).attr('class');
+        	  if(thisClass && thisClass.indexOf("style_") !== -1){
+        		  $(thisChart).hide();
+        	  }
+          }
         };
         
         dashboardService.runReport(controller.dashboardId, JSON.stringify(configuration), "#report-viewport", onSuccess);

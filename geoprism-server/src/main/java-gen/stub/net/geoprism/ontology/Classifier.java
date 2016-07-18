@@ -51,7 +51,6 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable

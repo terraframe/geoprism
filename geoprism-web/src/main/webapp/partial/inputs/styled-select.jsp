@@ -22,10 +22,6 @@
 
 
 <div class="select-box">
-	
-<!--    <select class="method-select" ng-model="model"> -->
-<!--      	<option ng-repeat="opt in options track by opt[value]" value="{{opt.value}}">{{ctrl.cache[opt.value]}}</option> -->
-<!--    </select> -->
    
    <select class="method-select" ng-options="opt[value] as opt[label] for opt in options" ng-model="model"></select>
    

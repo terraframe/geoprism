@@ -676,7 +676,7 @@
           var map = this.getMap();
           
           if(center && zoomLevel){
-            map.getView().setCenter(center, MapWidget.DATASRID, MapWidget.MAPSRID);
+            map.getView().setCenter(ol.proj.transform(center, MapWidget.DATASRID, MapWidget.MAPSRID));
             map.getView().setZoom(zoomLevel);
           }
           else if(bounds){
@@ -769,23 +769,78 @@
           
         },
         
+        zoomToFeatureExtent : function(featureJSON) {
+        	var that = this;
+        	var map = this.getMap();
+        	
+        	var callback = function(featureResponse){
+	            var featureType = featureResponse.features[0].geometry.type.toLowerCase();
+	            if(featureType === "multipolygon"){
+	            	var featureGeom = new ol.geom.MultiPolygon(featureResponse.features[0].geometry.coordinates)
+	                var featureGeomExtent = featureGeom.getExtent();
+	                var featureGeomExtentFormatted = [featureGeomExtent[3], featureGeomExtent[0], featureGeomExtent[1], featureGeomExtent[2]];
+	                that.setView(featureGeomExtentFormatted, null, null);
+	            }
+	            else if(featureType === "point"){
+	            	var featureGeom = new ol.geom.Point(featureResponse.features[0].geometry.coordinates);
+	            	var featureGeomCenter = featureGeom.getCoordinates();
+	            	var featureGeomCenterFormatted = [featureGeomCenter[1], featureGeomCenter[0]];
+	            	that.setView(null, featureGeomCenterFormatted, 15);
+	            }
+        	}
+        	
+        	this.getWFSFeature(callback, featureJSON);
+        },
+        
         setClickHandler : function(handler) {
           var map = this.getMap();
           
           map.on('click', handler);
         },
         
+        /**
+         * Gets a WFS feature from a given layer
+         * 
+         * @param callback
+         * @param featureJSON - json object defining the feature to return
+         */
+        getWFSFeature : function(callback, featureJSON) {
+        	
+        	var params = {
+                    REQUEST:'GetFeature',
+                    SERVICE:'WFS',
+                    VERSION:'2.0.0',
+                    TYPENAMES:"geoprism:"+ featureJSON.layerViewName,
+                    CQL_FILTER : "geoid='"+ featureJSON.geoId + "'",
+                    //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
+                    outputFormat : 'application/json'
+              };
+    	
+              var url = window.location.origin+"/geoserver/" + "geoprism" +"/wfs?" + $.param(params);
+              
+              $.ajax({
+                  url: url,
+                  context: document.body 
+                }).done(function(response) {
+                
+                  if(response.totalFeatures > 0) {
+                    callback(response);
+                  }
+                });
+                  
+        },
+        
         getFeatureInfo : function(workspace, layers, e, callback) {
           if(layers.length > 0) {
             var point = e.pixel;
             var coordinate = e.coordinate;
-          
+
             var x = parseInt(point[0]);
             var y = parseInt(point[1]);
                         
             // Construct a GetFeatureInfo request URL given a point
             var size = this.getMapSize();
-            var mapBbox = this.getCurrentBoundsAsString(MapWidget.DATASRID);
+            var mapBbox = this.getCurrentBoundsAsString(MapWidget.MAPSRID);
             var layerMap = {};
 
             var layerStringList = '';
@@ -818,7 +873,7 @@
               INFO_FORMAT:'application/json',
               EXCEPTIONS:'APPLICATION/VND.OGC.SE_XML',
               SERVICE:'WMS',
-              SRS:MapWidget.DATASRID,              
+              SRS:MapWidget.MAPSRID,              
               VERSION:'1.1.1',
               height:size.y,
               width:size.x,
@@ -828,8 +883,9 @@
               LAYERS:"geoprism:"+ layerStringList,
               QUERY_LAYERS:"geoprism:"+ layerStringList,
               TYPENAME:"geoprism:"+ layerStringList
+              //PROPERTYNAME:"displaylabel,geoid," + layer.aggregationAttribute.toLowerCase()
             };
-                
+             
             var url = window.location.origin+"/geoserver/" + workspace +"/wms?" + $.param(params);
                   
             $.ajax({
@@ -841,6 +897,7 @@
                   
                 /* The response will return only 1 feature */
                 var feature = response.features[0];
+                var featureId = feature.id;
                 var viewName = feature.id.substring(0, feature.id.indexOf('.'));
                 
                 var layer = layerMap[viewName];
@@ -851,14 +908,17 @@
                 var featureDisplayName = feature.properties.displaylabel;
                 var geoId = feature.properties.geoid;
                 var attributeValue = feature.properties[attributeName];
-              
+                
                 var info = {
                   layerDisplayName : layerDisplayName,
+                  layerViewName : viewName,
                   aggregationMethod : aggregationMethod,
+                  featureId : featureId,
                   featureDisplayName : featureDisplayName,
                   attributeValue : attributeValue,
                   geoId : geoId,
                   coordinate : coordinate,
+                  featureGeom : feature.geometry,
                   layerId : layer.layerId,
                   aggregationStrategy : layer.aggregationStrategy
                 };  

@@ -190,7 +190,7 @@
         relationshipType : '',
         thematicAttributeDataType : '',
         availableFonts : [],
-        geoNodes : [],
+        geoNodes : []
       };
       
       dynamicDataModel.aggregationMethods = options.aggregations;
@@ -341,16 +341,19 @@
           method : {},
           otherEnabled : false,
           rangeCategoriesEnabled : false,
-          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":true},
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":true,"enableIcon":false,"geomType":"POINT"},
           catLiElems : [
-                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false},
-                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false}]        
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"otherEnabled":false,"otherCat":false,"enableIcon":false,"geomType":"POINT"}]        
           
         },
-        styleCondition : ''
+        styleCondition : '',
+        numBubbleSizeCategories : 5,
+        numGradientPointCategories : 5,
+        numGradientPolygonCategories : 5
       };
       
       // Populate the values of style from the server DTO
@@ -380,25 +383,25 @@
         basicPointCatOptionsObj : {
           otherEnabled : true,      
           rangeCategoriesEnabled : false,
-          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":true},
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":true,"enableIcon":false,"geomType":"POINT"},
           catLiElems : [
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"}
           ]
         },
         polygonCatOptionsObj : {
           otherEnabled : true,
           rangeCategoriesEnabled : false,
-          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true},
+          other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"otherEnabled":true,"otherCat":true,"geomType":"POLYGON"},
           catLiElems:[
-                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false}
+                  {"val":"","color":"#1b9e77","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"geomType":"POLYGON"},
+                  {"val":"","color":"#d95f02","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"geomType":"POLYGON"},
+                  {"val":"","color":"#7570b3","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"geomType":"POLYGON"},
+                  {"val":"","color":"#e7298a","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"geomType":"POLYGON"},
+                  {"val":"","color":"#66a61e","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"geomType":"POLYGON"}
           ]
         }
       };
@@ -417,13 +420,13 @@
         method : {},
         otherEnabled : false,
         rangeCategoriesEnabled : false,
-        other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":true},
+        other : {"val":"","color":"#737678","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":true,"enableIcon":false,"geomType":"POINT"},
         catLiElems : [
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false},
-          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false}          
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"},
+          {"val":"","color":"#000000","isOntologyCat":false,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false,"geomType":"POINT"}          
         ]
       };
       
