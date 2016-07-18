@@ -115,8 +115,8 @@
                 **/*catalina*.jar,
                 **/*servlet-api*.jar,
                 **/*annotations-api*.jar,
-                <!-- Exclude runtime build jars -->
-                **/*aspectjtools*.jar
+                <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
+                **/aspectjtools*.jar
               </packagingExcludes>
               <webResources>
                 <resource>
@@ -346,8 +346,8 @@
             **/*catalina*.jar,
             **/*servlet-api*.jar,
             **/*annotations-api*.jar,
-            <!-- Exclude runtime build jars -->
-            **/*aspectjtools*.jar
+            <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
+            **/aspectjtools*.jar
           </packagingExcludes>
           <overlays>
             <overlay>
