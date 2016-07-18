@@ -114,13 +114,15 @@
                 <!-- Exclude all jars provided by tomcat -->
                 **/*catalina*.jar,
                 **/*servlet-api*.jar,
-                **/*annotations-api*.jar
+                **/*annotations-api*.jar,
+                <!-- Exclude runtime build jars -->
+                **/*aspectjtools*.jar
               </packagingExcludes>
               <webResources>
                 <resource>
                   <directory>${keystore.dir}</directory>
                   <targetPath>.ebextensions</targetPath>
-                </resource>                            
+                </resource>
                 <resource>
                   <directory>src/deployed/ebextensions</directory>
                   <targetPath>.ebextensions</targetPath>
@@ -343,7 +345,9 @@
             <!-- Exclude all jars provided by tomcat -->
             **/*catalina*.jar,
             **/*servlet-api*.jar,
-            **/*annotations-api*.jar
+            **/*annotations-api*.jar,
+            <!-- Exclude runtime build jars -->
+            **/*aspectjtools*.jar
           </packagingExcludes>
           <overlays>
             <overlay>
