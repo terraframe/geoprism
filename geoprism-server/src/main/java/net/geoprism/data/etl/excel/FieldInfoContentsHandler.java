@@ -101,7 +101,7 @@ public class FieldInfoContentsHandler implements SheetHandler
         {
           if (this.scale > 0)
           {
-            object.put("precision", this.precision);
+            object.put("precision", (this.precision + this.scale));
             object.put("scale", this.scale);
             object.put("type", ColumnType.DOUBLE.name());
           }
@@ -250,8 +250,14 @@ public class FieldInfoContentsHandler implements SheetHandler
       {
         BigDecimal decimal = new BigDecimal(contentValue).stripTrailingZeros();
 
-        attribute.setScale(decimal.scale());
-        attribute.setPrecision(decimal.precision());
+        /*
+         * Precision is the total number of digits. Scale is the number of digits after the decimal place.
+         */
+        int precision = decimal.precision();
+        int scale = decimal.scale();
+
+        attribute.setPrecision(precision - scale);
+        attribute.setScale(scale);
       }
     }
   }
