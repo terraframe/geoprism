@@ -120,7 +120,7 @@
       $scope.show = true;
     }
     
-    controller.load = function(dashboardId) {
+    controller.load = function(dashboardId, element) {
         
       var onSuccess = function(result) {
         
@@ -129,7 +129,7 @@
         $scope.$apply();
       }
                
-      builderService.loadDashboard(dashboardId, onSuccess);    
+      builderService.loadDashboard(dashboardId, element, onSuccess);    
     }
     
     controller.setCategoryWidgetType = function(typeName) {
@@ -198,11 +198,11 @@
      * Event Listeners
      */
     $rootScope.$on('editDashboard', function(event, data){
-      controller.load(data.dashboardId);
+      controller.load(data.dashboardId, data.element);
     });
     
     $rootScope.$on('newDashboard', function(event, data){
-      controller.load(null);
+      controller.load(null, data.element);
     });
     
     $rootScope.$on('datasetChange', function(event, data){
