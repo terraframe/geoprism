@@ -4350,14 +4350,51 @@ div.secondary-box label {
 }
 
 #manage-datasets-table .fa.fa-pencil.ico-edit{
-	font-size: 25px;
+	font-size: 20px;
 	float: none;
+	color: #bababa;
+    margin-left: -35px;
+    margin-top: 6px;
 }
 
 #manage-datasets-table .icon-thumbnail-column {
     text-align: center;
     width: 15%
 }
+
+#manage-datasets-table input[readonly] {
+	float: left;
+    width: 269px;
+    height: 32px;
+    margin: 0 11px 0 0;
+    padding: 6px 10px;
+    font-size: 14px;
+    line-height: 18px;
+    color: #333;
+    border: 1px solid #ddd;
+    background: #eeeeee;
+    outline: none;
+}
+#manage-datasets-table input[readonly]:hover,
+#manage-datasets-table input[readonly]:focus {
+	cursor: pointer;	
+/* 	border: 1px solid #bbb; */
+	border: 1px solid #00bfff;
+}
+
+#manage-datasets-table tr td button {
+	vertical-align: middle;
+}
+
+#manage-datasets-table input[readonly] + .fa.fa-pencil.ico-edit {
+	display: none;
+	color: #bababa;
+}
+#manage-datasets-table input[readonly]:hover + .fa.fa-pencil.ico-edit {
+	display: inline-block;
+}
+
+
 
 
 .fa-stack-1x.fa-stack-text.file-text.fa.fa-plus,

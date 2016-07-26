@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 812593671)
+@com.runwaysdk.business.ClassSignature(hash = 29337521)
 public class DataSetControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataSetController";
@@ -81,6 +81,20 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
   public com.runwaysdk.ClientSession getClientSession()
   {
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:datasetJSON", post=true)
+  public void applyDatasetUpdate(java.lang.String datasetJSON) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.applyDatasetUpdate");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:datasetJSON", post=true)
+  public void failApplyDatasetUpdate(java.lang.String datasetJSON) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failApplyDatasetUpdate");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=true)

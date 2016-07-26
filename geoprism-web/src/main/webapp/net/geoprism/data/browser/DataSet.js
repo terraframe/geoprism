@@ -42,6 +42,47 @@
       return null;
     }
     
+    controller.apply = function(dataset) {
+    	
+    	
+    	 var connection = {
+       	        elementId : '#innerFrameHtml',
+       	        onSuccess : function(dataset) {
+       	          console.log(dataset);
+       	          var index = controller.getIndex(dataset);
+       	          var ds = $scope.datasets[index];
+       	          ds.label = dataset.label;
+       	          
+       	          ds.editMode = false;
+       	          $scope.$apply();
+       	        }
+       	  };
+          datasetService.applyDatasetUpdate(connection, dataset);  
+    	
+    }
+    
+    controller.setDatasetState = function(dataset) {
+    	dataset.editMode = true;
+    	if(!$scope.orignialDatasetState){
+    		$scope.orignialDatasetState = angular.copy(dataset);
+    	}
+    }
+    
+    controller.cancelDatasetEdit = function(dataset) {
+	    dataset.label = $scope.orignialDatasetState.label;
+	    dataset.editMode = false;
+    	$scope.orignialDatasetState = null;
+    }
+    
+    controller.datasetElementHover = function($event) {
+    	if($event.target.readOnly){
+    		$scope. datasetListInputTitle = localizationService.localize("dataset", "datasetListInputTitle", "Click to edit this datasets name");
+    	}
+    	else{
+    		$scope. datasetListInputTitle = "";
+    	}
+    }
+    
     controller.remove = function(dataset) {
       var title = localizationService.localize("dataset", "deleteDatasetTitle", "Delete dataset");
 

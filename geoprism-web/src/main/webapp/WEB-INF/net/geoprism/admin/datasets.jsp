@@ -37,12 +37,12 @@
 
   <h2> <gdb:localize key="dataset.title"/> </h2>
   
-  <div ng-if="errors.length > 0" class="error-container">
+  <div ng-if="errors.length > 0" class="error-container" ng-cloak>
     <div class="label-holder">
       <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
     </div>
     <div class="holder">
-      <div ng-repeat="error in errors">
+      <div ng-repeat="error in errors" >
         <p class="error-message">{{error}}</p>
       </div>
     </div>
@@ -52,11 +52,17 @@
 
   <table id="manage-datasets-table" class="table table-bordered table-striped">        
     <tbody>
-      <tr ng-repeat="dataset in datasets">
+      <tr ng-repeat="dataset in datasets" ng-cloak>
         <td class="button-column">
           <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
         </td>
-        <td>{{ dataset.label }}</td>
+        <td class="submit-form">
+        	<input class="dataset-list-input" type="text" name="test" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="ctrl.setDatasetState(dataset)" ng-readonly="!dataset.editMode">
+        		<i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
+        	</input>
+        	<button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)"><gdb:localize key="dataset.submit"/></button>
+        	<button type="button" class="btn btn-default" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.cancelDatasetEdit(dataset)"><gdb:localize key="dataset.cancel"/></button>
+        </td>
       </tr>
     </tbody>    
   </table>

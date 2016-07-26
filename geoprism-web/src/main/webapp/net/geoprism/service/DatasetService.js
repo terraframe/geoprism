@@ -79,6 +79,18 @@
       net.geoprism.DataSetController.remove(request, id);
     }
     
+    service.edit = function(connection, id) {
+    	var request = runwayService.createConnectionRequest(connection);
+    
+    	net.geoprism.DataSetController.edit(request, id);
+    }
+    
+    service.applyDatasetUpdate = function(connection, dataset) {
+    	var request = runwayService.createConnectionRequest(connection);
+    
+    	net.geoprism.DataSetController.applyDatasetUpdate(request, JSON.stringify(dataset));
+    }
+    
     service.getGeoEntitySuggestions = function(connection, parentId, universalId, text, limit) {
       var request = runwayService.createConnectionRequest(connection);
     

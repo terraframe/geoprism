@@ -43,6 +43,9 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.BusinessInfo;
+import com.runwaysdk.constants.MdAttributeLocalInfo;
+import com.runwaysdk.constants.MdTypeInfo;
+import com.runwaysdk.dataaccess.EntityDAO;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributePrimitiveDAOIF;
@@ -679,6 +682,22 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       throw new ProgrammingErrorException(e);
     }
   }
+  
+  @Override
+  public String getAsJSON()
+  {
+    JSONObject dataset = null;
+    try
+    {
+      dataset = this.toJSON();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    
+    return dataset.toString();
+  }
 
   public static String getAllAsJSON()
   {
@@ -700,6 +719,41 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       throw new ProgrammingErrorException(e);
     }
   }
+  
+//  @Transaction
+//  @Authenticate
+//  public static void edit(String id)
+//  {
+//    MappableClass mClass = MappableClass.get(id);
+//    
+//  }
+  
+  @Transaction
+  public static void applyDatasetUpdate(String dataset)
+  {
+    JSONObject dsJSONObj = null;
+    String dsLabel = null;
+    String dsId = null;
+    try
+    {
+      dsJSONObj = new JSONObject(dataset);
+      dsId = dsJSONObj.getString("id");
+      dsLabel = dsJSONObj.getString("label");
+    }
+    catch (JSONException e1)
+    {
+      throw new ProgrammingErrorException(e1);
+    }
+    
+    MappableClass ds = MappableClass.get(dsId);
+    
+    MdClassDAOIF mdClass = (MdClassDAOIF) MdClassDAO.get(ds.getWrappedMdClassId());
+    EntityDAO entityDAO = mdClass.getEntityDAO();
+    entityDAO.setStructValue(MdTypeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, dsLabel);
+    entityDAO.apply();
+    
+  }
+  
 
   @Transaction
   @Authenticate
