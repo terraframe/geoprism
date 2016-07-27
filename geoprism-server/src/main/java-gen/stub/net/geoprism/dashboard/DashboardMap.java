@@ -410,11 +410,18 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       try
       {
         double[] bbox = GeoserverFacade.getExpandedBBOX(views, expandVal);
-
-        bboxArr.put(bbox[0]);
-        bboxArr.put(bbox[1]);
-        bboxArr.put(bbox[2]);
-        bboxArr.put(bbox[3]);
+        
+        if(bbox != null)
+        {
+          bboxArr.put(bbox[0]);
+          bboxArr.put(bbox[1]);
+          bboxArr.put(bbox[2]);
+          bboxArr.put(bbox[3]);
+        }
+        else
+        {
+          return null;
+        }
       }
       catch (JSONException e)
       {
@@ -1008,8 +1015,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       // Generates map overlays and combines them into a single map image
       for (DashboardLayer layer : orderedLayers)
       {
-        // if (layer instanceof DashboardThematicLayer)
-        // {
+        
         Graphics2D newOverlayBaseGraphic = null;
         Graphics2D mapLayerGraphic2d = null;
 
@@ -1069,7 +1075,6 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
             mapLayerGraphic2d.dispose();
           }
         }
-        // }
       }
     }
     finally
