@@ -57,7 +57,7 @@
           <a href="#" class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
         </td>
         <td class="submit-form">
-        	<input class="dataset-list-input" type="text" name="test" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="ctrl.setDatasetState(dataset)" ng-readonly="!dataset.editMode">
+        	<input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="ctrl.setDatasetState(dataset)" ng-readonly="!dataset.editMode">
         		<i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
         	</input>
         	<button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)"><gdb:localize key="dataset.submit"/></button>

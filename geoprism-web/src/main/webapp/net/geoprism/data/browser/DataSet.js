@@ -76,10 +76,10 @@
     
     controller.datasetElementHover = function($event) {
     	if($event.target.readOnly){
-    		$scope. datasetListInputTitle = localizationService.localize("dataset", "datasetListInputTitle", "Click to edit this datasets name");
+    		$scope.datasetListInputTitle = localizationService.localize("dataset", "datasetListInputTitle", "Click to edit this datasets name");
     	}
     	else{
-    		$scope. datasetListInputTitle = "";
+    		$scope.datasetListInputTitle = "";
     	}
     }
     

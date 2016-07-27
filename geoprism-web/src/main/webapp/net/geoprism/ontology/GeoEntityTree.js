@@ -596,6 +596,10 @@
               tooltipClass: "geoentity-problem-tooltip"
             });
           }
+          
+          if(node.pagination){
+        	  $li.addClass("pagination-btn");
+          }
         }
       },
       
