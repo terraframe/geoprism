@@ -52,6 +52,7 @@ import net.geoprism.RoleView;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 import net.geoprism.dashboard.layer.DashboardLayer;
+import net.geoprism.dashboard.layer.UnsupportedAggregationException;
 import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
 import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
@@ -1170,6 +1171,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
           throw new ProgrammingErrorException(error, e);
         }
       }
+    }
+    
+    if(aggregatable && nodesArr.length() == 0)
+    {
+      throw new UnsupportedAggregationException();
     }
 
     return nodesArr.toString();

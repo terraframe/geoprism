@@ -28,8 +28,12 @@
             <reference name="wrappedMdAttribute" type="com.runwaysdk.system.metadata.MdAttribute" label="MdAttribute" required="true" indexType="unique index" />
           </attributes>
         </create>
-      </mdBusiness>      
-      
+      </mdBusiness>
+
+      <mdException name="net.geoprism.dashboard.layer.UnsupportedAggregationException" label="Unsupported aggregation exception"
+        message="Dataset does not support rendering ratio data">
+      </mdException>
+
       <patchMappableClassTask />
     </create>
     <permissions>
@@ -37,25 +41,25 @@
         <grant>
           <mdRelationshipPermission type="net.geoprism.MappableAttribute">
             <operation name="ALL" />
-          </mdRelationshipPermission>      
+          </mdRelationshipPermission>
         </grant>
       </role>
       <role roleName="geoprism.admin.DashboardBuilder">
         <grant>
           <mdRelationshipPermission type="net.geoprism.MappableAttribute">
             <operation name="ALL" />
-          </mdRelationshipPermission>      
+          </mdRelationshipPermission>
         </grant>
-      </role>      
+      </role>
       <role roleName="geoprism.DecisionMaker">
         <grant>
           <mdRelationshipPermission type="net.geoprism.MappableAttribute">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
-          </mdRelationshipPermission>      
+          </mdRelationshipPermission>
         </grant>
       </role>
-    </permissions>        
+    </permissions>
   </doIt>
   <undoIt>
     <delete>
