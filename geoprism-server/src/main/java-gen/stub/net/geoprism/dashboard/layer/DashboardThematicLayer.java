@@ -151,7 +151,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     wrapper.FROM(getViewName(), "");
     
     List<Selectable> selectables = new LinkedList<Selectable>();
-    AllLayerType layerType = this.getLayerType().get(0);
 
     //
     // Only number types can be used
