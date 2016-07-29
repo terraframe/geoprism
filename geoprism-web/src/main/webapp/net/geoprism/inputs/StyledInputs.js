@@ -54,7 +54,7 @@
         }
         
         if(attrs.style) {
-          scope.style = attrs.style;
+          scope.chkstyle = scope.$eval(attrs.style);
         }
       }
     }    
