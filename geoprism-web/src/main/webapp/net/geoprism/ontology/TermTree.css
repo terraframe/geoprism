@@ -130,12 +130,12 @@ span.jqtree_common.jqtree-title {
 	margin-top:5px;
 	margin-bottom:5px;
 }
-.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li div span:first-child {
+.pagination-btn div span {
 	padding: 5px 10px 5px 10px;
     background: #eee;
     border-radius: 3px;
 }
-.net-geoprism-ontology-GeoEntityTree.net-geoprism-ontology-TermTree.com-runwaysdk-ui-factory-runway-Widget ul.jqtree_common li div span:first-child:hover {
+.pagination-btn div span:hover {
     background: lightgrey;
 }
 
