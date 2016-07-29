@@ -144,18 +144,30 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
 
     HashMap<String, Double> minMaxMap = new HashMap<String, Double>();
+    String thematicAttrType = this.getMdAttribute().getType();
 
     QueryFactory f = new QueryFactory();
     ValueQuery wrapper = new ValueQuery(f);
     wrapper.FROM(getViewName(), "");
-
+    
     List<Selectable> selectables = new LinkedList<Selectable>();
     AllLayerType layerType = this.getLayerType().get(0);
-    if (layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENTPOLYGON || layerType == AllLayerType.GRADIENTPOINT)
-    {
 
+    //
+    // Only number types can be used
+    //
+    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || 
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") ||
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") ||
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") ||
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
+    {
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
       selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Could not calculate the min/max value of a non-numeric attribute");
     }
 
     selectables.add(wrapper.aSQLAggregateLong("totalResults", "COUNT(*)"));
