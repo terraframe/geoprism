@@ -104,6 +104,7 @@ public class FieldInfoContentsHandler implements SheetHandler
             object.put("precision", (this.precision + this.scale));
             object.put("scale", this.scale);
             object.put("type", ColumnType.DOUBLE.name());
+            object.put("ratio", false);            
           }
           else
           {

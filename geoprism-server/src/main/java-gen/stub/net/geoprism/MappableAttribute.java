@@ -18,9 +18,14 @@
  */
 package net.geoprism;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdClass;
 
 public class MappableAttribute extends MappableAttributeBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -33,8 +38,13 @@ public class MappableAttribute extends MappableAttributeBase implements com.runw
 
   public static MappableAttribute getMappableAttribute(MdAttributeDAOIF mdAttribute)
   {
+    return getMappableAttribute(mdAttribute.getId());
+  }
+
+  private static MappableAttribute getMappableAttribute(String id)
+  {
     MappableAttributeQuery query = new MappableAttributeQuery(new QueryFactory());
-    query.WHERE(query.getWrappedMdAttribute().EQ(mdAttribute.getId()));
+    query.WHERE(query.getWrappedMdAttribute().EQ(id));
 
     OIterator<? extends MappableAttribute> it = query.getIterator();
 
@@ -51,5 +61,32 @@ public class MappableAttribute extends MappableAttributeBase implements com.runw
     {
       it.close();
     }
+  }
+
+  public static List<MappableAttribute> getMappableAttributes(MdClass mdClass)
+  {
+    List<MappableAttribute> list = new LinkedList<MappableAttribute>();
+
+    OIterator<? extends MdAttribute> mdAttributes = mdClass.getAllAttribute();
+
+    try
+    {
+      while (mdAttributes.hasNext())
+      {
+        MdAttribute mdAttribute = mdAttributes.next();
+        MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(mdAttribute.getId());
+
+        if (mAttribute != null)
+        {
+          list.add(mAttribute);
+        }
+      }
+    }
+    finally
+    {
+      mdAttributes.close();
+    }
+
+    return list;
   }
 }

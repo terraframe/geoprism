@@ -71,7 +71,6 @@ import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributePointDAO;
-import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -599,8 +598,7 @@ public class TargetBuilder
 
   private Boolean getAggregatable(JSONObject cField) throws JSONException
   {
-    Boolean aggregatable = cField.has("aggregatable") ? cField.getBoolean("aggregatable") : true;
-    return aggregatable;
+    return cField.has("ratio") ? !cField.getBoolean("ratio") : true;
   }
 
   private TargetFieldIF createMdGeoEntity(MdClassDAO mdClass, String sheetName, GeoEntity country, JSONObject cAttribute) throws JSONException

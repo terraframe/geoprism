@@ -175,6 +175,16 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     super.delete();
 
     /*
+     * Delete the corresponding MappableAttributes
+     */
+    List<MappableAttribute> mAttributes = MappableAttribute.getMappableAttributes(mdClass);
+
+    for (MappableAttribute mAttribute : mAttributes)
+    {
+      mAttribute.delete();
+    }
+
+    /*
      * Delete all of the data views which reference this type
      */
     List<String> viewNames = Database.getReferencingViews(MdElementDAO.getMdElementDAO(mdClass.definesType()));
@@ -682,7 +692,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   @Override
   public String getAsJSON()
   {
@@ -695,7 +705,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       throw new ProgrammingErrorException(e);
     }
-    
+
     return dataset.toString();
   }
 
@@ -719,15 +729,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       throw new ProgrammingErrorException(e);
     }
   }
-  
-//  @Transaction
-//  @Authenticate
-//  public static void edit(String id)
-//  {
-//    MappableClass mClass = MappableClass.get(id);
-//    
-//  }
-  
+
+  // @Transaction
+  // @Authenticate
+  // public static void edit(String id)
+  // {
+  // MappableClass mClass = MappableClass.get(id);
+  //
+  // }
+
   @Transaction
   public static void applyDatasetUpdate(String dataset)
   {
@@ -744,16 +754,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       throw new ProgrammingErrorException(e1);
     }
-    
+
     MappableClass ds = MappableClass.get(dsId);
-    
+
     MdClassDAOIF mdClass = (MdClassDAOIF) MdClassDAO.get(ds.getWrappedMdClassId());
     EntityDAO entityDAO = mdClass.getEntityDAO();
     entityDAO.setStructValue(MdTypeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, dsLabel);
     entityDAO.apply();
-    
+
   }
-  
 
   @Transaction
   @Authenticate

@@ -90,7 +90,7 @@
       </div>
       <div class="inline-check" ng-if="field.type == 'DOUBLE'">
         <label><gdb:localize key="dataUploader.ratio"/></label>
-        <styled-check-box model="field.aggregatable" name="{{::$index + 'field.aggregatable'}" style="{'margin': '5px 0px 0 0'}"></styled-check-box>
+        <styled-check-box model="field.ratio" name="{{::$index + 'field.ratio'}" style="{'margin': '5px 0px 0 0'}"></styled-check-box>
       </div>
       <div class="inline-error-message">
         <p ng-show="form[$index + '-name'].$error.unique">
