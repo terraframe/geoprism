@@ -20,11 +20,18 @@ package net.geoprism.data.etl;
 
 public abstract class TargetField implements TargetFieldIF
 {
-  private String name;
+  private String  name;
 
-  private String label;
+  private String  label;
 
-  private String key;
+  private String  key;
+
+  private Boolean aggregatable;
+
+  public TargetField()
+  {
+    this.aggregatable = true;
+  }
 
   @Override
   public String getKey()
@@ -57,5 +64,16 @@ public abstract class TargetField implements TargetFieldIF
   public String getName()
   {
     return this.name;
+  }
+
+  @Override
+  public Boolean getAggregatable()
+  {
+    return this.aggregatable;
+  }
+
+  public void setAggregatable(Boolean aggregatable)
+  {
+    this.aggregatable = aggregatable;
   }
 }

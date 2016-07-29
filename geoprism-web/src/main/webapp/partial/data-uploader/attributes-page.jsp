@@ -88,12 +88,11 @@
         <label><gdb:localize key="dataUploader.scale"/></label>
         <input ng-model="field.scale" name="{{::$index + 'scale'}}" ng-required="true" type="text" integer-only></input>
       </div>
+      <div class="inline-check" ng-if="field.type == 'DOUBLE'">
+        <label><gdb:localize key="dataUploader.ratio"/></label>
+        <styled-check-box model="field.aggregatable" name="{{::$index + 'field.aggregatable'}" label="" style="{margin: 5px 0px 0 0}"></styled-check-box>
+      </div>
       <div class="inline-error-message">
-<!-- 
-        <p ng-show="form[$index + '-name'].$error.required || form[$index + '-type'].$error.required || form[$index + '-universal'].$error.required">
-          <gdb:localize key="dashboard.Required"/>
-        </p>    
- -->      
         <p ng-show="form[$index + '-name'].$error.unique">
           <gdb:localize key="dataUploader.unique"/>
         </p>    

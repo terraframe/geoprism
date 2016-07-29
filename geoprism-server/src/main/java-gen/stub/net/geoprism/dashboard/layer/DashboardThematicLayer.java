@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.geoprism.MappableAttribute;
 import net.geoprism.QueryUtil;
 import net.geoprism.dashboard.AggregationStrategy;
 import net.geoprism.dashboard.AggregationStrategyView;
@@ -276,10 +277,13 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       Dashboard dashboard = Dashboard.get(dashboardId);
       MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
       MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
+      
+      MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(mdAttribute);
+      Boolean aggregatable = mAttribute.getAggregatable();
 
       String[] fonts = DashboardThematicStyle.getSortedFonts();
       OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
-      String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr);
+      String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr, aggregatable);
 
       JSONArray aggStrategiesJSON = new JSONArray();
       GeoNode[] geoNodes = dashboard.getGeoNodes(tAttr);
@@ -290,23 +294,27 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         String nodeType = geoNode.getType();
         String nodeLabel = geoNode.getDisplayLabelAttribute().getDisplayLabel().getValue();
 
-        List<AggregationStrategyView> strategies = Arrays.asList(AggregationStrategyView.getAggregationStrategies(geoNode));
-        Collections.reverse(strategies);
+        List<AggregationStrategyView> strategies = Arrays.asList(AggregationStrategyView.getAggregationStrategies(geoNode, aggregatable));
 
-        JSONArray aggregationStrategies = new JSONArray();
-
-        for (AggregationStrategyView strategy : strategies)
+        if (strategies.size() > 0)
         {
-          aggregationStrategies.put(strategy.toJSON());
+          Collections.reverse(strategies);
+
+          JSONArray aggregationStrategies = new JSONArray();
+
+          for (AggregationStrategyView strategy : strategies)
+          {
+            aggregationStrategies.put(strategy.toJSON());
+          }
+
+          JSONObject nodeObj = new JSONObject();
+          nodeObj.put("nodeId", nodeId);
+          nodeObj.put("nodeType", nodeType);
+          nodeObj.put("nodeLabel", nodeLabel);
+          nodeObj.put("aggregationStrategies", aggregationStrategies);
+
+          aggStrategiesJSON.put(nodeObj);
         }
-
-        JSONObject nodeObj = new JSONObject();
-        nodeObj.put("nodeId", nodeId);
-        nodeObj.put("nodeType", nodeType);
-        nodeObj.put("nodeLabel", nodeLabel);
-        nodeObj.put("aggregationStrategies", aggregationStrategies);
-
-        aggStrategiesJSON.put(nodeObj);
       }
 
       JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);

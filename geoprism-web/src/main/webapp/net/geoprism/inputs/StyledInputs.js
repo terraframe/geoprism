@@ -52,6 +52,10 @@
         if(attrs.name) {
           scope.name = attrs.name;
         }
+        
+        if(attrs.style) {
+          scope.style = attrs.style;
+        }
       }
     }    
   }  

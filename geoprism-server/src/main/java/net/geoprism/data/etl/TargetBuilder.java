@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.DataUploader;
+import net.geoprism.MappableAttribute;
 import net.geoprism.MappableClass;
 import net.geoprism.TermSynonymRelationship;
 import net.geoprism.data.browser.DataBrowserUtil;
@@ -70,6 +71,7 @@ import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributePointDAO;
+import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -303,9 +305,10 @@ public class TargetBuilder
     /*
      * Create the MappableClass
      */
+    MdClass mdClass = MdClass.getMdClass(mdBusiness.definesType());
+
     MappableClass mClass = new MappableClass();
-    mClass.setWrappedMdClass(MdClass.getMdClass(mdBusiness.definesType()));
-//    mClass.set
+    mClass.setWrappedMdClass(mdClass);
     mClass.apply();
 
     mClass.addUniversal(lowest).apply();
@@ -313,6 +316,18 @@ public class TargetBuilder
     for (GeoNode node : nodes)
     {
       mClass.addGeoNode(node).apply();
+    }
+
+    List<TargetFieldIF> fields = definition.getFields();
+
+    for (TargetFieldIF field : fields)
+    {
+      MdAttribute mdAttribute = MdAttribute.getByKey(field.getKey());
+
+      MappableAttribute mAttribute = new MappableAttribute();
+      mAttribute.setWrappedMdAttribute(mdAttribute);
+      mAttribute.setAggregatable(field.getAggregatable());
+      mAttribute.apply();
     }
 
     /*
@@ -377,6 +392,7 @@ public class TargetBuilder
       String latitude = cCoordinate.getString("latitude");
       String longitude = cCoordinate.getString("longitude");
       String universalId = cCoordinate.getString("universal");
+      Boolean aggregatable = this.getAggregatable(cCoordinate);
 
       String attributeName = this.generateAttributeName(label) + "Entity";
 
@@ -395,6 +411,7 @@ public class TargetBuilder
       field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
       field.setUniversal(Universal.get(universalId));
       field.setCountry(country);
+      field.setAggregatable(aggregatable);
 
       /*
        * Create the synonym restore attribute
@@ -456,6 +473,7 @@ public class TargetBuilder
     String attributeName = this.generateAttributeName(label);
     String sourceAttributeName = this.source.getFieldByName(sheetName, columnName).getAttributeName();
     String key = mdClass.definesType() + "." + attributeName;
+    Boolean aggregatable = this.getAggregatable(cField);
 
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
@@ -501,6 +519,7 @@ public class TargetBuilder
       field.setKey(key);
       field.setSourceAttributeName(sourceAttributeName);
       field.setPackageName(key);
+      field.setAggregatable(aggregatable);
 
       /*
        * Create the synonym restore attribute
@@ -573,14 +592,22 @@ public class TargetBuilder
     field.setLabel(label);
     field.setKey(key);
     field.setSourceAttributeName(sourceAttributeName);
+    field.setAggregatable(aggregatable);
 
     return field;
+  }
+
+  private Boolean getAggregatable(JSONObject cField) throws JSONException
+  {
+    Boolean aggregatable = cField.has("aggregatable") ? cField.getBoolean("aggregatable") : true;
+    return aggregatable;
   }
 
   private TargetFieldIF createMdGeoEntity(MdClassDAO mdClass, String sheetName, GeoEntity country, JSONObject cAttribute) throws JSONException
   {
     String label = cAttribute.getString("label");
     String universalId = cAttribute.getString("universal");
+    Boolean aggregatable = this.getAggregatable(cAttribute);    
     String attributeName = this.generateAttributeName(label);
 
     MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
@@ -601,6 +628,7 @@ public class TargetBuilder
     field.setLabel(label);
     field.setKey(mdClass.definesType() + "." + attributeName);
     field.setRoot(country);
+    field.setAggregatable(aggregatable);
 
     JSONObject fields = cAttribute.getJSONObject("fields");
 
@@ -641,6 +669,7 @@ public class TargetBuilder
     String label = cCoordinate.getString("label");
     String latitude = cCoordinate.getString("latitude");
     String longitude = cCoordinate.getString("longitude");
+    Boolean aggregatable = this.getAggregatable(cCoordinate);
 
     String attributeName = this.generateAttributeName(label) + "MultiPolygon";
 
@@ -658,6 +687,7 @@ public class TargetBuilder
     field.setKey(mdClass.definesType() + "." + attributeName);
     field.setLatitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, latitude).getAttributeName());
     field.setLongitudeSourceAttributeName(this.source.getFieldByLabel(sheetName, longitude).getAttributeName());
+    field.setAggregatable(aggregatable);
 
     return field;
   }
@@ -667,6 +697,7 @@ public class TargetBuilder
     String label = cCoordinate.getString("label");
     String latitude = cCoordinate.getString("latitude");
     String longitude = cCoordinate.getString("longitude");
+    Boolean aggregatable = this.getAggregatable(cCoordinate);
 
     String attributeName = this.generateAttributeName(label) + "Point";
 
@@ -689,6 +720,7 @@ public class TargetBuilder
     field.setLatitudeLabel(latField.getLabel());
     field.setLongitudeSourceAttributeName(longField.getAttributeName());
     field.setLongitudeLabel(latField.getLabel());
+    field.setAggregatable(aggregatable);
 
     return field;
   }

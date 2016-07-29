@@ -23,13 +23,28 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 
 public interface TargetFieldIF
 {
+  /**
+   * @return Name of the MdAttribute of the target field
+   */
   public String getName();
 
+  /**
+   * @return Key of the MdAttribute of the target field
+   */
   public String getKey();
 
+  /**
+   * @return Label of the target field
+   */
   public String getLabel();
 
   /**
+   * @return Flag indicates if the target field can be aggregated
+   */
+  public Boolean getAggregatable();
+
+  /**
+   * Gets the value from the source object for the given MdAttribute
    * 
    * @param mdAttribute
    * @param source
@@ -37,5 +52,11 @@ public interface TargetFieldIF
    */
   public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source);
 
+  /**
+   * Persists the definition of the TargetField to the database
+   * 
+   * @param binding
+   */
   public void persist(TargetBinding binding);
+
 }
