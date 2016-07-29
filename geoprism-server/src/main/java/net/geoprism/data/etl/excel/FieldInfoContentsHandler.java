@@ -88,6 +88,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       JSONObject object = new JSONObject();
       object.put("name", this.name);
       object.put("label", this.name);
+      object.put("aggregatable", true);
 
       if (this.dataTypes.size() == 1)
       {

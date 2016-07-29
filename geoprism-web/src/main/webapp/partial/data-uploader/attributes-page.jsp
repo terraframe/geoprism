@@ -89,7 +89,7 @@
         <input ng-model="field.scale" name="{{::$index + 'scale'}}" ng-required="true" type="text" integer-only></input>
       </div>
       <div class="inline-check" ng-if="field.type == 'DOUBLE'">
-        <label><gdb:localize key="dataUploader.ratio"/></label>
+        <label><gdb:localize key="dataUploader.aggregatable"/></label>
         <styled-check-box model="field.aggregatable" name="{{::$index + 'field.aggregatable'}" style="{'margin': '5px 0px 0 0'}"></styled-check-box>
       </div>
       <div class="inline-error-message">
