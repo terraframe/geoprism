@@ -23,8 +23,11 @@ import java.net.URI;
 import java.util.List;
 
 import net.geoprism.ClassUniversalQuery;
+import net.geoprism.MappableAttribute;
+import net.geoprism.MappableAttributeQuery;
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.MappableClassQuery;
 import net.geoprism.context.ProjectDataConfiguration;
 import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardBuilder;
@@ -67,6 +70,8 @@ import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeQuery;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class GeoprismImportPlugin implements ImportPluginIF
@@ -448,6 +453,23 @@ public class GeoprismImportPlugin implements ImportPluginIF
       mClass.setWrappedMdClass(mdClass);
       mClass.apply();
 
+      OIterator<? extends MdAttribute> mdAttributes = mdClass.getAllAttribute();
+
+      try
+      {
+        for (MdAttribute mdAttribute : mdAttributes)
+        {
+          MappableAttribute mAttribute = new MappableAttribute();
+          mAttribute.setWrappedMdAttribute(mdAttribute);
+          mAttribute.setAggregatable(true);
+          mAttribute.apply();
+        }
+      }
+      finally
+      {
+        mdAttributes.close();
+      }
+
       return mClass;
     }
 
@@ -498,7 +520,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       LocationImporter importer = new XMLLocationImporter(endpoint, false);
       importer.loadProjectData(configuration);
     }
-    
+
     private XMLEndpoint getEndpoint()
     {
       String cacheDirectory = System.getProperty("endpoint.cache");
@@ -530,17 +552,74 @@ public class GeoprismImportPlugin implements ImportPluginIF
     }
   }
 
+  private static class PatchMappableClassTaskHandler extends TagHandler
+  {
+    public PatchMappableClassTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      QueryFactory factory = new QueryFactory();
+
+      MappableAttributeQuery mAttributeQuery = new MappableAttributeQuery(factory);
+
+      MdAttributeQuery attributeQuery = new MdAttributeQuery(factory);
+      attributeQuery.WHERE(attributeQuery.EQ(mAttributeQuery.getWrappedMdAttribute()));
+
+      MappableClassQuery mClassQuery = new MappableClassQuery(factory);
+      mClassQuery.WHERE(mClassQuery.getWrappedMdClass().NOT_IN_attribute(attributeQuery));
+
+      OIterator<? extends MappableClass> it = mClassQuery.getIterator();
+
+      try
+      {
+        while (it.hasNext())
+        {
+          MappableClass mClass = it.next();
+          MdClass mdClass = mClass.getWrappedMdClass();
+
+          OIterator<? extends MdAttribute> mdAttributes = mdClass.getAllAttribute();
+
+          try
+          {
+            for (MdAttribute mdAttribute : mdAttributes)
+            {
+              MappableAttribute mAttribute = new MappableAttribute();
+              mAttribute.setWrappedMdAttribute(mdAttribute);
+              mAttribute.setAggregatable(true);
+              mAttribute.apply();
+            }
+          }
+          finally
+          {
+            mdAttributes.close();
+          }
+        }
+      }
+      finally
+      {
+        it.close();
+      }
+
+    }
+  }
+
   private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
   {
-    private static final String DASHBOARD_TAG       = "dashboard";
+    private static final String DASHBOARD_TAG                 = "dashboard";
 
-    private static final String MAPPABLE_CLASS_TAG  = "mappableClass";
+    private static final String MAPPABLE_CLASS_TAG            = "mappableClass";
 
-    private static final String UNZIPPER_TASK_TAG   = "unzipperTask";
+    private static final String UNZIPPER_TASK_TAG             = "unzipperTask";
 
-    private static final String LOCATION_TASK_TAG   = "locationTask";
+    private static final String LOCATION_TASK_TAG             = "locationTask";
 
-    private static final String INITIALIZE_TASK_TAG = "initializeTask";
+    private static final String INITIALIZE_TASK_TAG           = "initializeTask";
+
+    private static final String PATCH_MAPPABLE_CLASS_TASK_TAG = "patchMappableClassTask";
 
     public PluginHandlerFactory(ImportManager manager)
     {
@@ -549,6 +628,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       this.addHandler(UNZIPPER_TASK_TAG, new UnzipperTaskHandler(manager));
       this.addHandler(LOCATION_TASK_TAG, new LocationTaskHandler(manager));
       this.addHandler(INITIALIZE_TASK_TAG, new InitializeTaskHandler(manager));
+      this.addHandler(PATCH_MAPPABLE_CLASS_TASK_TAG, new PatchMappableClassTaskHandler(manager));
     }
   }
 

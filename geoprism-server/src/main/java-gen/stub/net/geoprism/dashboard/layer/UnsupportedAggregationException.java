@@ -16,64 +16,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data.etl;
+package net.geoprism.dashboard.layer;
 
-public abstract class TargetField implements TargetFieldIF
+public class UnsupportedAggregationException extends UnsupportedAggregationExceptionBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private String  name;
-
-  private String  label;
-
-  private String  key;
-
-  private Boolean aggregatable;
-
-  public TargetField()
+  private static final long serialVersionUID = 1025619836;
+  
+  public UnsupportedAggregationException()
   {
-    this.aggregatable = true;
+    super();
   }
-
-  @Override
-  public String getKey()
+  
+  public UnsupportedAggregationException(java.lang.String developerMessage)
   {
-    return this.key;
+    super(developerMessage);
   }
-
-  public void setKey(String key)
+  
+  public UnsupportedAggregationException(java.lang.String developerMessage, java.lang.Throwable cause)
   {
-    this.key = key;
+    super(developerMessage, cause);
   }
-
-  @Override
-  public String getLabel()
+  
+  public UnsupportedAggregationException(java.lang.Throwable cause)
   {
-    return this.label;
+    super(cause);
   }
-
-  public void setLabel(String label)
-  {
-    this.label = label;
-  }
-
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  @Override
-  public String getName()
-  {
-    return this.name;
-  }
-
-  @Override
-  public Boolean getAggregatable()
-  {
-    return this.aggregatable;
-  }
-
-  public void setAggregatable(Boolean aggregatable)
-  {
-    this.aggregatable = aggregatable;
-  }
+  
 }

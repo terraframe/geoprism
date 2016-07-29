@@ -55,46 +55,49 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
   {
     GeoNode node = GeoNode.get(nodeId);
 
-    return AggregationStrategyView.getAggregationStrategies(node);
+    return AggregationStrategyView.getAggregationStrategies(node, null);
   }
 
-  public static AggregationStrategyView[] getAggregationStrategies(GeoNode node)
+  public static AggregationStrategyView[] getAggregationStrategies(GeoNode node, Boolean aggregatable)
   {
     List<AggregationStrategyView> list = new LinkedList<AggregationStrategyView>();
 
-    MappableClassGeoNodeQuery query = new MappableClassGeoNodeQuery(new QueryFactory());
-    query.WHERE(query.getChild().EQ(node));
-
-    OIterator<? extends MappableClassGeoNode> iterator = query.getIterator();
-
-    try
+    if (aggregatable)
     {
-      MappableClassGeoNode relationship = iterator.next();
-      MappableClass wrapper = relationship.getParent();
+      MappableClassGeoNodeQuery query = new MappableClassGeoNodeQuery(new QueryFactory());
+      query.WHERE(query.getChild().EQ(node));
 
-      List<? extends Universal> lowests = wrapper.getAllUniversal().getAll();
+      OIterator<? extends MappableClassGeoNode> iterator = query.getIterator();
 
-      for (Universal lowest : lowests)
+      try
       {
-        Universal root = Universal.getRoot();
+        MappableClassGeoNode relationship = iterator.next();
+        MappableClass wrapper = relationship.getParent();
 
-        Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
+        List<? extends Universal> lowests = wrapper.getAllUniversal().getAll();
 
-        for (Term universal : universals)
+        for (Universal lowest : lowests)
         {
-          AggregationStrategyView view = new AggregationStrategyView();
-          view.setAggregationType(UniversalAggregationStrategy.CLASS);
-          view.setValue(universal.getId());
-          view.setDisplayLabel(universal.getDisplayLabel().getValue());
-          view.setAvailableGeometryTypes(new JSONArray().toString());
+          Universal root = Universal.getRoot();
 
-          list.add(view);
+          Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
+
+          for (Term universal : universals)
+          {
+            AggregationStrategyView view = new AggregationStrategyView();
+            view.setAggregationType(UniversalAggregationStrategy.CLASS);
+            view.setValue(universal.getId());
+            view.setDisplayLabel(universal.getDisplayLabel().getValue());
+            view.setAvailableGeometryTypes(new JSONArray().toString());
+
+            list.add(view);
+          }
         }
       }
-    }
-    finally
-    {
-      iterator.close();
+      finally
+      {
+        iterator.close();
+      }
     }
 
     if (node instanceof GeoNodeGeometry)
@@ -107,7 +110,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
       view.setDisplayLabel(label);
 
       JSONArray geomTypesJSONArr = new JSONArray();
-      
+
       MdAttribute geomAttr = node.getGeometryAttribute();
       if (geomAttr != null)
       {

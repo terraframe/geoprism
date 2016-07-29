@@ -88,6 +88,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       JSONObject object = new JSONObject();
       object.put("name", this.name);
       object.put("label", this.name);
+      object.put("aggregatable", true);
 
       if (this.dataTypes.size() == 1)
       {
@@ -104,6 +105,7 @@ public class FieldInfoContentsHandler implements SheetHandler
             object.put("precision", (this.precision + this.scale));
             object.put("scale", this.scale);
             object.put("type", ColumnType.DOUBLE.name());
+            object.put("ratio", false);            
           }
           else
           {

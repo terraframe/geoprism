@@ -4086,6 +4086,14 @@ div.secondary-box label {
     padding-top: 1px;
   }
 	
+  .modal-form .inline-check {
+    float: left;
+    position: relative;
+    width: 30px;
+    padding-right: 5px;
+    padding-top: 1px;
+  }
+	
 	.modal-form .inline-number input[type="text"] {
     background: #EEE none repeat scroll 0% 0%;
     border: 1px solid #AAA;

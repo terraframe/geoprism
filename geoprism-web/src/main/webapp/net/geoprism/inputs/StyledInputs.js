@@ -52,6 +52,10 @@
         if(attrs.name) {
           scope.name = attrs.name;
         }
+        
+        if(attrs.style) {
+          scope.chkstyle = scope.$eval(attrs.style);
+        }
       }
     }    
   }  

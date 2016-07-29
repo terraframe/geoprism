@@ -52,6 +52,7 @@ import net.geoprism.RoleView;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 import net.geoprism.dashboard.layer.DashboardLayer;
+import net.geoprism.dashboard.layer.UnsupportedAggregationException;
 import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
 import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
@@ -109,6 +110,7 @@ import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -1144,23 +1146,36 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public String getGeoNodesJSON(MdAttribute thematicAttribute)
   {
+    return this.getGeoNodesJSON(thematicAttribute, true);
+  }
+
+  public String getGeoNodesJSON(MdAttribute thematicAttribute, Boolean aggregatable)
+  {
     JSONArray nodesArr = new JSONArray();
     GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
     for (GeoNode node : nodes)
     {
-      try
+      if (aggregatable || ( node instanceof GeoNodeGeometry ))
       {
-        JSONObject nodeJSON = new JSONObject();
-        nodeJSON.put("id", node.getId());
-        nodeJSON.put("type", node.getType());
-        nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
-        nodesArr.put(nodeJSON);
+        try
+        {
+          JSONObject nodeJSON = new JSONObject();
+          nodeJSON.put("id", node.getId());
+          nodeJSON.put("type", node.getType());
+          nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
+          nodesArr.put(nodeJSON);
+        }
+        catch (JSONException e)
+        {
+          String error = "Could not build GeoNode JSON.";
+          throw new ProgrammingErrorException(error, e);
+        }
       }
-      catch (JSONException e)
-      {
-        String error = "Could not build GeoNode JSON.";
-        throw new ProgrammingErrorException(error, e);
-      }
+    }
+    
+    if(aggregatable && nodesArr.length() == 0)
+    {
+      throw new UnsupportedAggregationException();
     }
 
     return nodesArr.toString();
