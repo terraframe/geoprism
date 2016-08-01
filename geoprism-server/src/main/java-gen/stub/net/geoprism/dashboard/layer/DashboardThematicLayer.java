@@ -277,9 +277,9 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       Dashboard dashboard = Dashboard.get(dashboardId);
       MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
       MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
-      
+
       MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(mdAttribute);
-      Boolean aggregatable = mAttribute.getAggregatable();
+      Boolean aggregatable = ( mAttribute != null ? mAttribute.getAggregatable() : true );
 
       String[] fonts = DashboardThematicStyle.getSortedFonts();
       OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();

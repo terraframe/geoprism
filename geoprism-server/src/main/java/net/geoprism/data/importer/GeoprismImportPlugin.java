@@ -564,13 +564,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
     {
       QueryFactory factory = new QueryFactory();
 
-      MappableAttributeQuery mAttributeQuery = new MappableAttributeQuery(factory);
-
-      MdAttributeQuery attributeQuery = new MdAttributeQuery(factory);
-      attributeQuery.WHERE(attributeQuery.EQ(mAttributeQuery.getWrappedMdAttribute()));
-
       MappableClassQuery mClassQuery = new MappableClassQuery(factory);
-      mClassQuery.WHERE(mClassQuery.getWrappedMdClass().NOT_IN_attribute(attributeQuery));
 
       OIterator<? extends MappableClass> it = mClassQuery.getIterator();
 
