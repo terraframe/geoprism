@@ -4,3 +4,6 @@
 /.settings
 /lib/
 /plugins/
+/vault
+/bin
+
