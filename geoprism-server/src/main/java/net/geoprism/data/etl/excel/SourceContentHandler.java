@@ -20,12 +20,12 @@ package net.geoprism.data.etl.excel;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.geoprism.ExceptionUtil;
 import net.geoprism.data.etl.ColumnType;
 import net.geoprism.data.etl.ConverterIF;
 import net.geoprism.data.etl.SourceContextIF;
@@ -34,7 +34,6 @@ import net.geoprism.data.etl.SourceFieldIF;
 import org.apache.poi.ss.util.CellReference;
 
 import com.runwaysdk.business.Transient;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 public class SourceContentHandler implements SheetHandler
 {
@@ -120,11 +119,24 @@ public class SourceContentHandler implements SheetHandler
   @Override
   public void endRow()
   {
-    if (this.view != null)
+    try
     {
-      this.converter.create(this.view);
 
-      this.view = null;
+      if (this.view != null)
+      {
+        this.converter.create(this.view);
+
+        this.view = null;
+      }
+    }
+    catch (Exception e)
+    {
+      // Wrap all exceptions with information about the cell and row
+      ExcelObjectException exception = new ExcelObjectException();
+      exception.setRow(new Long(this.rowNum));
+      exception.setMsg(ExceptionUtil.getLocalizedException(e));
+
+      throw exception;
     }
   }
 
@@ -147,45 +159,50 @@ public class SourceContentHandler implements SheetHandler
   @Override
   public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
-    if (cellType.equals(ColumnType.FORMULA))
+    try
     {
-      throw new ExcelFormulaException();
-    }
-    
-    if (this.rowNum == 0)
-    {
-      if (!cellType.equals(ColumnType.TEXT))
+      if (cellType.equals(ColumnType.FORMULA))
       {
-        throw new InvalidHeaderRowException();
+        throw new ExcelFormulaException();
       }
 
-      this.setColumnName(cellReference, formattedValue);
-    }
-    else if (this.view != null)
-    {
-      String columnName = this.getColumnName(cellReference);
-      SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
-      String attributeName = field.getAttributeName();
+      if (this.rowNum == 0)
+      {
+        if (!cellType.equals(ColumnType.TEXT))
+        {
+          throw new InvalidHeaderRowException();
+        }
 
-      if (field.getType().equals(ColumnType.LONG))
-      {
-        formattedValue = this.nFormat.format(Double.parseDouble(contentValue));
+        this.setColumnName(cellReference, formattedValue);
       }
-      else if (field.getType().equals(ColumnType.DATE))
+      else if (this.view != null)
       {
-        try
+        String columnName = this.getColumnName(cellReference);
+        SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
+        String attributeName = field.getAttributeName();
+
+        if (field.getType().equals(ColumnType.LONG))
+        {
+          formattedValue = this.nFormat.format(Double.parseDouble(contentValue));
+        }
+        else if (field.getType().equals(ColumnType.DATE))
         {
           Date date = this.dateTimeFormat.parse(contentValue);
 
           formattedValue = this.dateFormat.format(date);
         }
-        catch (ParseException e)
-        {
-          throw new ProgrammingErrorException(e);
-        }
-      }
 
-      this.view.setValue(attributeName, formattedValue);
+        this.view.setValue(attributeName, formattedValue);
+      }
+    }
+    catch (Exception e)
+    {
+      // Wrap all exceptions with information about the cell and row
+      ExcelValueException exception = new ExcelValueException();
+      exception.setCell(cellReference);
+      exception.setMsg(ExceptionUtil.getLocalizedException(e));
+
+      throw exception;
     }
   }
 
