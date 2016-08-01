@@ -4,10 +4,9 @@
 <stringAttribute key="M2_GOALS" value="clean install"/>
 <booleanAttribute key="M2_NON_RECURSIVE" value="false"/>
 <booleanAttribute key="M2_OFFLINE" value="false"/>
-<stringAttribute key="M2_PROFILES" value="package-deployable"/>
+<stringAttribute key="M2_PROFILES" value="geoprism-package-deployable"/>
 <listAttribute key="M2_PROPERTIES">
-<listEntry value="configuration.dir=/home/jlewis/git/geoprism-platform/Customer_Projects/DSEDP"/>
-<listEntry value="keystore.dir=/home/jlewis/git/geoprism-platform/security/official"/>
+<listEntry value="configuration.dir=/home/jlewis/git/geoprism-platform/Customer_Projects/embolden"/>
 </listAttribute>
 <stringAttribute key="M2_RUNTIME" value="EMBEDDED"/>
 <booleanAttribute key="M2_SKIP_TESTS" value="false"/>
@@ -21,5 +20,5 @@
 </mapAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms512m&#10;-Xmx2048m&#10;-XX:MaxPermSize=256m"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/e3rrl}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:/geoprism}"/>
 </launchConfiguration>
