@@ -371,7 +371,7 @@
         WIDTH:25,        
         HEIGHT:25,        
         TRANSPARENT:true,
-        LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
+        LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;forceLabels:on;",      
         LAYER: mapService.getWorkspace() + ":" + layer.viewName
       };
 
