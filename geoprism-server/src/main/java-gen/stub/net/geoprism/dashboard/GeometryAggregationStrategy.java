@@ -25,6 +25,7 @@ import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.wrapper.FeatureType;
+import net.geoprism.localization.LocalizationFacade;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -125,6 +126,7 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
     Selectable geom = entityQuery.get(columnName, GeoserverFacade.GEOM_COLUMN);
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
+    geom.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles("column.geometry"));    
 
     geometryQuery.SELECT_DISTINCT(geoId2, geom);
 
@@ -133,6 +135,7 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
     {
       Attribute attribute = valueQuery.get(selectable.getResultAttributeName());
       attribute.setColumnAlias(selectable.getColumnAlias());
+      attribute.setUserDefinedDisplayLabel(selectable.getUserDefinedDisplayLabel());
 
       outerQuery.SELECT(attribute);
     }
@@ -140,6 +143,7 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
     // Add the geometry selectable from the geometry query to the outer query
     Attribute geomAttribute = geometryQuery.get(GeoserverFacade.GEOM_COLUMN);
     geomAttribute.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
+    geomAttribute.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles("column.geometry"));    
 
     outerQuery.SELECT(geomAttribute);
 

@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1634084241)
+@com.runwaysdk.business.ClassSignature(hash = 64552958)
 public class DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.dashboard.DashboardMapController";
@@ -151,6 +151,20 @@ public class DashboardMapControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMapController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMapController.failEdit");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mapId, java.lang.String:state, java.lang.String:layerId", post=false)
+  public void exportLayerData(java.lang.String mapId, java.lang.String state, java.lang.String layerId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMapController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMapController.exportLayerData");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mapId, java.lang.String:state, java.lang.String:layerId", post=false)
+  public void failExportLayerData(java.lang.String mapId, java.lang.String state, java.lang.String layerId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMapController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.DashboardMapController.failExportLayerData");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mapId, java.lang.String:outFileName, java.lang.String:outFileFormat, java.lang.String:mapBounds, java.lang.String:mapSize, java.lang.String:activeBaseMap", post=false)

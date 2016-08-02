@@ -134,6 +134,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
           Attribute secondaryAttribute = secondaryQuery.get(secondaryMdAttribute.definesAttribute());
           secondaryAttribute.setColumnAlias(secondaryMdAttribute.definesAttribute());
+          secondaryAttribute.setUserDefinedDisplayLabel(secondaryMdAttribute.getDisplayLabel(Session.getCurrentLocale()));
 
           innerQuery.SELECT(secondaryAttribute);
           innerQuery.WHERE(thematicGeoId.LEFT_JOIN_EQ(secondaryGeoId));
@@ -266,7 +267,9 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
             ClassifierQuery classifierQ = new ClassifierQuery(winFuncQuery);
             winFuncQuery.WHERE(classifierQ.EQ(thematicTerm));
+            
             thematicAttr = classifierQ.getDisplayLabel().localize();
+            thematicAttr.setUserDefinedDisplayLabel(mdAttributeTermDAOIF.getDisplayLabel(Session.getCurrentLocale()));
           }
         }
 
