@@ -33,6 +33,7 @@
           <div class="cell" ng-if="ctrl.canEdit()">            
             <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove(layer.layerId)" title="<gdb:localize key="dashboardViewer.deleteLayerTooltip"/>"></a>
             <a href="#" class="fa fa-pencil ico-edit" ng-click="ctrl.edit(layer.layerId)" title="<gdb:localize key="dashboardViewer.editLayerTooltip"/>"></a>
+            <a href="#" class="fa fa-download ico-edit" ng-click="ctrl.exportLayerData(layer.layerId)" title="<gdb:localize key="dashboardViewer.export"/>"></a>
           </div>
         </div>
       </div>      

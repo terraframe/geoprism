@@ -95,6 +95,10 @@
       $scope.$emit('editThematicLayer', {layerId:layerId});
     }
     
+    controller.exportLayerData = function(layerId) {
+      $scope.$emit('exportLayerData', {layerId:layerId});
+    }
+    
     controller.remove = function(layerId) {    
       var onSuccess =  function(){
           

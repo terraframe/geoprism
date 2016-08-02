@@ -32,6 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -64,12 +66,14 @@ import net.geoprism.dashboard.layer.DashboardThematicLayer;
 import net.geoprism.dashboard.layer.HasLayer;
 import net.geoprism.dashboard.layer.HasLayerQuery;
 import net.geoprism.dashboard.query.MdAttributeViewPredicate;
+import net.geoprism.data.etl.excel.ValueQueryExcelExporter;
 import net.geoprism.gis.geoserver.GeoserverBatch;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.gis.wrapper.MapVisitor;
 import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.util.Iterables;
+import net.geoprism.util.Predicate;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -83,6 +87,7 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.geotools.data.ows.Layer;
 import org.geotools.data.ows.WMSCapabilities;
 import org.geotools.data.wms.WMSUtils;
@@ -112,6 +117,8 @@ import com.runwaysdk.query.F;
 import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableGeometry;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -165,6 +172,70 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     GeoserverFacade.pushUpdates(batch);
 
     return getMapJSON("republish=false");
+  }
+
+  @Override
+  public InputStream exportLayerData(String state, String layerId)
+  {
+    DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(state);
+
+    DashboardLayer layer = DashboardLayer.get(layerId);
+    layer.setConditions(Arrays.asList(conditions));
+
+    ValueQuery query = layer.getViewQuery();
+
+    Predicate<Selectable> predicate = new Predicate<Selectable>()
+    {
+      @Override
+      public boolean evaulate(Selectable selectable)
+      {
+        if ( ( selectable instanceof SelectableGeometry ) || selectable.getUserDefinedAlias().equals(GeoEntity.GEOID))
+        {
+          return false;
+        }
+
+        return true;
+      }
+    };
+
+    /*
+     * Export the query to an excel file and pipe it back to the controller
+     */
+    PipedInputStream istream = new PipedInputStream();
+
+    Thread thread = new Thread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        try
+        {
+          PipedOutputStream ostream = new PipedOutputStream(istream);
+
+          try
+          {
+            SXSSFWorkbook workbook = new SXSSFWorkbook();
+            workbook.setCompressTempFiles(true);
+
+            ValueQueryExcelExporter exporter = new ValueQueryExcelExporter(query, layer.getName(), predicate, workbook);
+            exporter.write(ostream);
+          }
+          finally
+          {
+            ostream.close();
+          }
+        }
+        catch (IOException e)
+        {
+          log.error(e);
+        }
+      }
+    });
+    thread.setDaemon(true);
+    thread.start();
+
+    // Check for exceptions
+    return istream;
   }
 
   @Transaction
@@ -410,8 +481,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       try
       {
         double[] bbox = GeoserverFacade.getExpandedBBOX(views, expandVal);
-        
-        if(bbox != null)
+
+        if (bbox != null)
         {
           bboxArr.put(bbox[0]);
           bboxArr.put(bbox[1]);
@@ -886,7 +957,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
         // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
-        url = new URL("http://irs.gis-lab.info/?layers="+wmsLayerName+"&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+        url = new URL("http://irs.gis-lab.info/?layers=" + wmsLayerName + "&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
 
         //
         // BACKUP SERVICE
@@ -894,8 +965,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         // because this one http://irs.gis-lab.info/ is un-reliable and most web services are offered as
         // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
-        //wmsLayerName = "osm-wms";
-        //url = new URL("http://ows.terrestris.de/osm/service?layers="+wmsLayerName+"&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+        // wmsLayerName = "osm-wms";
+        // url = new
+        // URL("http://ows.terrestris.de/osm/service?layers="+wmsLayerName+"&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
 
       }
       catch (MalformedURLException e)
@@ -1015,7 +1087,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       // Generates map overlays and combines them into a single map image
       for (DashboardLayer layer : orderedLayers)
       {
-        
+
         Graphics2D newOverlayBaseGraphic = null;
         Graphics2D mapLayerGraphic2d = null;
 
