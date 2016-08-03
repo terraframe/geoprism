@@ -47,6 +47,7 @@ import org.json.JSONObject;
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.ontology.TermAndRel;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -74,7 +75,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Transaction
-  public static void createGeoEntity(String parentId, String universalId, String label)
+  public static String createGeoEntity(String parentId, String universalId, String label)
   {
     Universal universal = Universal.get(universalId);
     GeoEntity parent = GeoEntity.get(parentId);
@@ -86,15 +87,19 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     entity.apply();
 
     entity.addLink(parent, LocatedIn.CLASS);
+    
+    return entity.getId();
   }
 
   @Transaction
-  public static void createGeoEntitySynonym(String entityId, String label)
+  public static String createGeoEntitySynonym(String entityId, String label)
   {
     Synonym synonym = new Synonym();
     synonym.getDisplayLabel().setValue(label);
     
-    Synonym.create(synonym, entityId);
+    TermAndRel tr = Synonym.create(synonym, entityId);
+    
+    return tr.getTerm().getId();
   }
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)
