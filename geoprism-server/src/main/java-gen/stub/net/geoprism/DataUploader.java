@@ -87,19 +87,32 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     entity.apply();
 
     entity.addLink(parent, LocatedIn.CLASS);
-    
+
     return entity.getId();
   }
 
   @Transaction
   public static String createGeoEntitySynonym(String entityId, String label)
   {
-    Synonym synonym = new Synonym();
-    synonym.getDisplayLabel().setValue(label);
-    
-    TermAndRel tr = Synonym.create(synonym, entityId);
-    
-    return tr.getTerm().getId();
+    try
+    {
+      GeoEntity entity = GeoEntity.get(entityId);
+
+      Synonym synonym = new Synonym();
+      synonym.getDisplayLabel().setValue(label);
+
+      TermAndRel tr = Synonym.create(synonym, entityId);
+
+      JSONObject object = new JSONObject();
+      object.put("synonymId", tr.getTerm().getId());
+      object.put("label", entity.getDisplayLabel().getValue());
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)

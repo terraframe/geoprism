@@ -153,10 +153,9 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      String synonymId = DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+      String response = DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
 
-      JSONObject object = new JSONObject();
-      object.put("synonymId", synonymId);
+      JSONObject object = new JSONObject(response);
 
       JSONControllerUtil.writeReponse(this.resp, object);
     }

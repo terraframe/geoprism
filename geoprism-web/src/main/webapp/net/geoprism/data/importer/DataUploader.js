@@ -62,7 +62,8 @@
           $scope.problem.resolved = true;
           $scope.problem.action = {
             name : 'SYNONYM',
-            synonymId : response.synonymId
+            synonymId : response.synonymId,
+            label : response.label
           };
          
           $scope.$apply();

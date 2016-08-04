@@ -41,6 +41,12 @@
         <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.createNewEntity"/>" class="btn" ng-click="ctrl.createEntity()" /></div>
       </div>
       <div ng-if="problem.resolved">
+        <div class="inline-value" ng-if="problem.action.name == 'ENTITY'">
+          <gdb:localize key="dataUploader.resolvedEntity"/>
+        </div>      
+        <div class="inline-value" ng-if="problem.action.name == 'SYNONYM'">
+          <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
+        </div>      
         <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.undo"/>" class="btn btn-primary" ng-click="ctrl.undoAction()"/></div>
       </div>
     </ng-form>
