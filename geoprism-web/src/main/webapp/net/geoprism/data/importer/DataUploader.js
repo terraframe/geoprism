@@ -919,13 +919,12 @@
       // Reset the file Errors
       $scope.errors = [];
           
-      datasetService.cancelImport(connection, $scope.configuration);
+      datasetService.cancelImport(connection, datasetService.getDatasetConfiguration());
     }
     
     controller.load = function(information, options) {
       $scope.options = options;
       
-//      $scope.configuration = information;
       datasetService.setDatasetConfiguration(information);
       var config = datasetService.getDatasetConfiguration();
       
