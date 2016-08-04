@@ -1131,7 +1131,8 @@ a.fa.fa-trash-o.ico-remove:focus{
 	margin:5px 13px 0 0;
 }
 
-a.fa.fa-pencil.ico-edit{
+a.fa.fa-pencil.ico-edit,
+a.fa.fa-download.ico-edit{
   font-size: 16px;
   margin-right: 5px;
   margin-top: 0px;
@@ -1141,7 +1142,10 @@ a.fa.fa-pencil.ico-edit{
 }
 
 a.fa.fa-pencil.ico-edit:hover,
-a.fa.fa-pencil.ico-edit:focus{
+a.fa.fa-pencil.ico-edit:focus,
+a.fa.fa-download.ico-edit:hover,
+a.fa.fa-download.ico-edit:focus
+{
 	color: #00bfff;
 }
 

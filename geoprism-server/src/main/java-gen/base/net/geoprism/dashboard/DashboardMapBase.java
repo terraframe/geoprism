@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1589116032)
+@com.runwaysdk.business.ClassSignature(hash = -644280490)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -44,7 +44,7 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1589116032;
+  private static final long serialVersionUID = -644280490;
   
   public DashboardMapBase()
   {
@@ -511,6 +511,18 @@ public abstract class DashboardMapBase extends com.runwaysdk.business.Business i
   public static DashboardMap getByKey(String key)
   {
     return (DashboardMap) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public java.io.InputStream exportLayerData(java.lang.String state, java.lang.String layerId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.DashboardMap.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.io.InputStream exportLayerData(java.lang.String id, java.lang.String state, java.lang.String layerId)
+  {
+    DashboardMap _instance = DashboardMap.get(id);
+    return _instance.exportLayerData(state, layerId);
   }
   
   public java.io.InputStream generateMapImageExport(java.lang.String outFileFormat, java.lang.String mapBounds, java.lang.String mapSize, java.lang.String activeBaseMap)

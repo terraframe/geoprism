@@ -38,6 +38,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
@@ -81,6 +82,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
     SelectableSingle label = this.geoEntityQuery.getDisplayLabel().localize(mdAttribute.definesAttribute());
     label.setColumnAlias(GeoEntity.DISPLAYLABEL);
     label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
 
     return label;
   }
@@ -94,7 +96,8 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
     Selectable geoId = this.geoEntityQuery.getGeoId(mdAttribute.definesAttribute());
     geoId.setUserDefinedAlias(GeoEntity.GEOID);
     geoId.setColumnAlias(GeoEntity.GEOID);
-
+    geoId.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
+    
     return geoId;
   }
 

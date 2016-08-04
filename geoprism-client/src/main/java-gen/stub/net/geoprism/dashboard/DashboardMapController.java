@@ -29,6 +29,7 @@ import net.geoprism.FileDownloadUtil;
 import net.geoprism.GeoprismUserDTO;
 import net.geoprism.JavascriptUtil;
 import net.geoprism.SystemLogoSingletonDTO;
+import net.geoprism.dashboard.layer.DashboardLayerDTO;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 
 import com.runwaysdk.constants.ClientRequestIF;
@@ -195,7 +196,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     req.setAttribute("workspace", GeoserverProperties.getWorkspace());
     req.setAttribute("editDashboard", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DASHBOARD));
     req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
-    
+
     String miniLogoFile = SystemLogoSingletonDTO.getMiniLogoFileFromCache(this.getClientRequest(), this.req);
     if (miniLogoFile != null)
     {
@@ -234,6 +235,34 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     {
       ErrorUtility.prepareThrowable(e, req, resp, false);
       this.failExportMap(mapId, outFileName, outFileFormat, mapBounds, mapSize, activeBaseMap);
+    }
+  }
+
+  @Override
+  public void exportLayerData(String mapId, String state, String layerId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
+      DashboardLayerDTO layer = DashboardLayerDTO.get(request, layerId);
+      String layerName = layer.getNameLabel().getValue();
+
+      InputStream istream = map.exportLayerData(state, layerId);
+
+      try
+      {
+        FileDownloadUtil.writeFile(resp, layerName, "xlsx", istream, "application/xlsx");
+      }
+      finally
+      {
+        istream.close();
+      }
+    }
+    catch (Exception e)
+    {
+      ErrorUtility.prepareThrowable(e, req, resp, false);
     }
   }
 }

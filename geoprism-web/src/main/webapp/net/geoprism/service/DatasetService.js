@@ -76,6 +76,7 @@
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }    
     
+
     service.addLocationExclusion = function(locationExclusionObj) {
     	var config = this.getDatasetConfiguration();
      	if(config.locationExclusions){
@@ -85,6 +86,18 @@
     		config.locationExclusions = [locationExclusionObj];
     	}
     }
+
+    service.deleteGeoEntity = function(connection, entityId) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.deleteGeoEntity(request, entityId);
+    }    
+    
+    service.deleteGeoEntitySynonym = function(connection, synonymId) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.deleteGeoEntitySynonym(request, synonymId);
+    }    
     
     service.getAll = function(connection) {
       var request = runwayService.createConnectionRequest(connection);

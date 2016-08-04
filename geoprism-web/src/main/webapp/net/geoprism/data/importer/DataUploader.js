@@ -58,8 +58,13 @@
     controller.createSynonym = function() {
       var connection = {
         elementId : '#uploader-overlay',
-        onSuccess : function(){
+        onSuccess : function(response){
           $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'SYNONYM',
+            synonymId : response.synonymId,
+            label : response.label
+          };
          
           $scope.$apply();
         },
@@ -79,8 +84,12 @@
     controller.createEntity = function() {
       var connection = {
         elementId : '#uploader-overlay',
-        onSuccess : function(){
+        onSuccess : function(response){
           $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'ENTITY',
+            entityId : response.entityId
+          };
       
           $scope.$apply();        
         },
@@ -97,6 +106,7 @@
       datasetService.createGeoEntity(connection, $scope.problem.parentId, $scope.problem.universalId, $scope.problem.label);
     }
     
+
     controller.ignoreDataAtLocation = function() {
     	var locationLabel = $scope.problem.label;
     	var universal = $scope.problem.universalId;
@@ -104,8 +114,39 @@
     	$scope.problem.resolved = true;
     	
     	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
+	}
+
+    controller.undoAction = function() {
+      if($scope.problem.resolved) {
+    	  
+        var connection = {
+          elementId : '#uploader-overlay',
+          onSuccess : function(response){
+            $scope.problem.resolved = false;
+            $scope.problem.synonym = null;
+            
+            controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+            
+            $scope.$apply();        
+          },
+          onFailure : function(e){
+            $scope.errors = [];
+            $scope.errors.push(e.localizedMessage);
+                
+            $scope.$apply();
+          }      
+        };
+    	
+        var action = $scope.problem.action;
+        
+        if(action.name == 'ENTITY')  {
+          datasetService.deleteGeoEntity(connection, action.entityId);          
+        }
+        else {
+          datasetService.deleteGeoEntitySynonym(connection, action.synonymId);                    
+        }
+      }
     }
-  }
   
   function GeoValidationProblem($timeout) {
     return {
