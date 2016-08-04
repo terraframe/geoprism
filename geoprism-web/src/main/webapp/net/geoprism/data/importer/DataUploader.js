@@ -113,11 +113,19 @@
     	
     	$scope.problem.resolved = true;
     	
+	    $scope.problem.action = {
+            name : 'IGNOREATLOCATION',
+            label : locationLabel
+        };
+    	
     	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
 	}
     
 
     controller.undoAction = function() {
+      var locationLabel = $scope.problem.label;
+      var universal = $scope.problem.universalId;
+      
       if($scope.problem.resolved) {
     	  
         var connection = {
@@ -142,6 +150,10 @@
         
         if(action.name == 'ENTITY')  {
           datasetService.deleteGeoEntity(connection, action.entityId);          
+        }
+        else if(action.name == 'IGNOREATLOCATION'){
+        	$scope.problem.resolved = false;
+        	datasetService.removeLocationExclusion({"universal":universal, "locationLabel":locationLabel});
         }
         else {
           datasetService.deleteGeoEntitySynonym(connection, action.synonymId);                    
