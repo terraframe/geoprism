@@ -39,6 +39,7 @@
         </div>
         <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.createSynonym"/>" class="btn btn-primary" ng-click="ctrl.createSynonym()" ng-disabled="ctrl.problemForm.$invalid" /></div>
         <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.createNewEntity"/>" class="btn" ng-click="ctrl.createEntity()" /></div>
+        <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.ignoreAtLocation"/>" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" class="btn" ng-click="ctrl.ignoreDataAtLocation()" /></div>
       </div>
       <div ng-if="problem.resolved">
         <div class="inline-value" ng-if="problem.action.name == 'ENTITY'">
@@ -49,9 +50,6 @@
         </div>      
         <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.undo"/>" class="btn btn-primary" ng-click="ctrl.undoAction()"/></div>
       </div>
-      <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.createSynonym"/>" class="btn btn-primary" ng-click="ctrl.createSynonym()" ng-disabled="ctrl.problemForm.$invalid" /></div>
-      <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.createNewEntity"/>" class="btn" ng-click="ctrl.createEntity()" /></div>
-      <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.ignoreAtLocation"/>" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" class="btn" ng-click="ctrl.ignoreDataAtLocation()" /></div>
     </ng-form>
   </div>
 </div>
