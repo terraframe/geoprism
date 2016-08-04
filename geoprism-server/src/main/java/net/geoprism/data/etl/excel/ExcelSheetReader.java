@@ -53,7 +53,7 @@ public class ExcelSheetReader
     this.formatter = formatter;
   }
 
-  public void process(InputStream stream) throws Exception
+  public void process(InputStream stream, String configuration) throws Exception
   {
     try
     {
@@ -72,7 +72,7 @@ public class ExcelSheetReader
         {
           String sheetName = iter.getSheetName();
 
-          this.handler.startSheet(sheetName);
+          this.handler.startSheet(sheetName, configuration);
 
           InputSource sheetSource = new InputSource(sheet);
           ContentHandler handler = new XSSFSheetXMLHandler(styles, strings, this.handler, this.formatter, false);

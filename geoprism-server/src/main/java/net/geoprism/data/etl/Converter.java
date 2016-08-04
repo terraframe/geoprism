@@ -18,7 +18,10 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.HashMap;
 import java.util.List;
+
+import net.geoprism.data.importer.LocationExclusionException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.Transient;
@@ -34,36 +37,43 @@ public class Converter implements ConverterIF
   }
 
   @Override
-  public void create(Transient source)
+  public void create(Transient source, List<HashMap<String, String>> locationExclusions)
   {
-    Business business = this.context.newBusiness(source.getType());
-    boolean hasValues = false;
-
-    List<TargetFieldIF> fields = this.context.getFields(source.getType());
-
-    for (TargetFieldIF field : fields)
+    try
     {
-      String attributeName = field.getName();
-
-      MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
-
-      FieldValue fValue = field.getValue(mdAttribute, source);
-      Object value = fValue.getValue();
-
-      if (value != null)
+      Business business = this.context.newBusiness(source.getType());
+      boolean hasValues = false;
+  
+      List<TargetFieldIF> fields = this.context.getFields(source.getType());
+  
+      for (TargetFieldIF field : fields)
       {
-        business.setValue(attributeName, value);
+        String attributeName = field.getName();
+  
+        MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
+  
+        FieldValue fValue = field.getValue(mdAttribute, source);
+        Object value = fValue.getValue();
+  
+        if (value != null)
+        {
+          business.setValue(attributeName, value);
+        }
+  
+        hasValues = hasValues || !fValue.isBlank();
       }
-
-      hasValues = hasValues || !fValue.isBlank();
+  
+      /*
+       * Before apply ensure that at least one source field was not blank
+       */
+      if (hasValues)
+      {
+        business.apply();
+      }
     }
-
-    /*
-     * Before apply ensure that at least one source field was not blank
-     */
-    if (hasValues)
+    catch(LocationExclusionException e)
     {
-      business.apply();
+      // Do nothing. It's likely that a source value was not found because of location exclusions
     }
   }
 }

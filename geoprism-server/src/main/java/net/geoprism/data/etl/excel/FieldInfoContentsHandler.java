@@ -173,7 +173,7 @@ public class FieldInfoContentsHandler implements SheetHandler
   }
 
   @Override
-  public void startSheet(String sheetName)
+  public void startSheet(String sheetName, String configuration)
   {
     this.sheetName = sheetName;
     this.rowNum = 0;

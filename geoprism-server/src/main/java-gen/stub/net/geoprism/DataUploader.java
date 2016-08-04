@@ -115,7 +115,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(new FileInputStream(file));
+      reader.process(new FileInputStream(file), "");
 
       JSONObject object = new JSONObject();
       object.put("sheets", handler.getSheets());

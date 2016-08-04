@@ -95,7 +95,16 @@
       $scope.errors = undefined;
       
       datasetService.createGeoEntity(connection, $scope.problem.parentId, $scope.problem.universalId, $scope.problem.label);
-    }    
+    }
+    
+    controller.ignoreDataAtLocation = function() {
+    	var locationLabel = $scope.problem.label;
+    	var universal = $scope.problem.universalId;
+    	
+    	$scope.problem.resolved = true;
+    	
+    	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
+    }
   }
   
   function GeoValidationProblem($timeout) {
@@ -882,11 +891,13 @@
         }
       };
       // Reset the file Errors
-      $scope.configuration.sheets[0] = $scope.sheet;
+      
+      var config = datasetService.getDatasetConfiguration();
+      config.sheets[0] = $scope.sheet;
       
       $scope.errors = [];
       
-      datasetService.importData(connection, $scope.configuration);      
+      datasetService.importData(connection, config);      
     }
     
     controller.cancel = function() {
@@ -914,8 +925,11 @@
     controller.load = function(information, options) {
       $scope.options = options;
       
-      $scope.configuration = information;
-      $scope.sheet = $scope.configuration.sheets[0];
+//      $scope.configuration = information;
+      datasetService.setDatasetConfiguration(information);
+      var config = datasetService.getDatasetConfiguration();
+      
+      $scope.sheet = config.sheets[0];
       $scope.sheet.attributes = {ids:[], values : {}};    
       $scope.sheet.coordinates = {ids:[], values : {}};    
       $scope.errors = [];      

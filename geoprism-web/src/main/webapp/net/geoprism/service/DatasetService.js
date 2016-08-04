@@ -20,6 +20,7 @@
 
   function DatasetService(runwayService) {
     var service = {};
+    var _datasetConfiguration = {};
     
     service.uploadSpreadsheet = function(connection, file) {
     	
@@ -35,6 +36,14 @@
        * submitting file objects through javascript.
        */
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
+    }
+    
+    service.setDatasetConfiguration = function(config) {
+    	this._datasetConfiguration = config;
+    }
+    
+    service.getDatasetConfiguration = function() {
+    	return this._datasetConfiguration;
     }
     
     service.importData = function(connection, configuration) {
@@ -66,6 +75,16 @@
       
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }    
+    
+    service.addLocationExclusion = function(locationExclusionObj) {
+    	var config = this.getDatasetConfiguration();
+     	if(config.locationExclusions){
+     		config.locationExclusions.push(locationExclusionObj);
+    	}
+    	else{
+    		config.locationExclusions = [locationExclusionObj];
+    	}
+    }
     
     service.getAll = function(connection) {
       var request = runwayService.createConnectionRequest(connection);

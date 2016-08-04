@@ -105,7 +105,7 @@ public class LocationValidator implements ConverterIF
   }
 
   @Override
-  public void create(Transient source)
+  public void create(Transient source, List<HashMap<String, String>> locationExclusions)
   {
     Universal universal = this.states.get(source.getType()).getCurrent();
 
@@ -119,7 +119,7 @@ public class LocationValidator implements ConverterIF
         {
           TargetFieldGeoEntityIF entity = (TargetFieldGeoEntityIF) field;
 
-          LocationProblemIF problem = entity.getLocationProblem(source, universal);
+          LocationProblemIF problem = entity.getLocationProblem(source, universal, locationExclusions);
 
           if (problem != null)
           {

@@ -125,7 +125,7 @@ public class ImportRunnable
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(istream);
+      reader.process(istream, this.configuration);
     }
     finally
     {
@@ -149,7 +149,7 @@ public class ImportRunnable
         ExcelDataFormatter formatter = new ExcelDataFormatter();
 
         ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-        reader.process(istream);
+        reader.process(istream, configuration);
       }
       finally
       {
