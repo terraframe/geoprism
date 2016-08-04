@@ -115,6 +115,7 @@
     	
     	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
 	}
+    
 
     controller.undoAction = function() {
       if($scope.problem.resolved) {
@@ -147,6 +148,7 @@
         }
       }
     }
+  }
   
   function GeoValidationProblem($timeout) {
     return {
@@ -1161,7 +1163,7 @@
     
     controller.hasLocationField = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
-        var field = $scope.sheet.fields[i]
+        var field = $scope.sheet.fields[i];
           
         if(field.type == 'LOCATION') {
           return true;
@@ -1173,7 +1175,7 @@
     
     controller.hasCoordinateField = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
-        var field = $scope.sheet.fields[i]
+        var field = $scope.sheet.fields[i];
               
         if(field.type == 'LONGITUDE' || field.type == 'LATITUDE' ) {
           return true;
