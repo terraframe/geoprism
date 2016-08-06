@@ -21,8 +21,10 @@ package net.geoprism.data.etl.excel;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.geoprism.ExceptionUtil;
@@ -32,8 +34,12 @@ import net.geoprism.data.etl.SourceContextIF;
 import net.geoprism.data.etl.SourceFieldIF;
 
 import org.apache.poi.ss.util.CellReference;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.Transient;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 
 public class SourceContentHandler implements SheetHandler
 {
@@ -51,6 +57,11 @@ public class SourceContentHandler implements SheetHandler
    * Current sheet name
    */
   private String               sheetName;
+  
+  /**
+   * Locations from which data should be excluded
+   */
+  private List<HashMap<String, String>>               locationExclusions;
 
   /**
    * Column index-Column Name Map for the current sheet
@@ -93,11 +104,47 @@ public class SourceContentHandler implements SheetHandler
     this.dateTimeFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_TIME_FORMAT);
     this.dateFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_FORMAT);
   }
+  
+  public void setLocationExclusions(String configuration)
+  {
+    JSONArray locationExclusionsArr = null;
+    List<HashMap<String, String>> locationExclusionsMapArray = new ArrayList<HashMap<String, String>>();
+    if(configuration.length() > 0)
+    {
+      try
+      {
+        JSONObject configObj = new JSONObject(configuration);
+        if(configObj.has("locationExclusions"))
+        {
+          locationExclusionsArr = configObj.getJSONArray("locationExclusions");
+        }
+        
+        // convert to native Java data structure rather than JSON
+        if(locationExclusionsArr != null && locationExclusionsArr.length() > 0)
+        {
+          for (int i=0; i<locationExclusionsArr.length(); i++){ 
+            HashMap<String,String> locationExclusionsMap = new HashMap<String,String>();
+            locationExclusionsMap.put("universal", locationExclusionsArr.getJSONObject(i).getString("universal"));
+            locationExclusionsMap.put("locationLabel", locationExclusionsArr.getJSONObject(i).getString("locationLabel"));
+            locationExclusionsMapArray.add(locationExclusionsMap);
+          } 
+        }
+      }
+      catch (JSONException e)
+      {
+        String devMsg = "Could not parse dataset configuration string to JSON.";
+        throw new ProgrammingErrorException(devMsg, e);
+      }
+    }
+    
+    this.locationExclusions = locationExclusionsMapArray;
+  }
 
   @Override
-  public void startSheet(String sheetName)
+  public void startSheet(String sheetName, String configuration)
   {
     this.sheetName = sheetName;
+    this.setLocationExclusions(configuration);
   }
 
   @Override
@@ -121,10 +168,9 @@ public class SourceContentHandler implements SheetHandler
   {
     try
     {
-
       if (this.view != null)
       {
-        this.converter.create(this.view);
+        this.converter.create(this.view, this.locationExclusions);
 
         this.view = null;
       }

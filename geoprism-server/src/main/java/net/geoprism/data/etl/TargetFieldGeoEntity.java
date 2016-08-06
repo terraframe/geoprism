@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.geoprism.data.importer.LocationExclusionException;
 import net.geoprism.ontology.NonUniqueEntityResultException;
 
 import org.json.JSONException;
@@ -144,7 +145,8 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       labels.add(source.getValue(attribute.getAttributeName()));
     }
 
-    GeoEntity entity = this.getOrCreateLocation(this.root, labels);
+    
+    GeoEntity entity = this.getLocation(this.root, labels);
 
     return new FieldValue(entity.getId());
   }
@@ -155,7 +157,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    * @param labels
    * @return
    */
-  private GeoEntity getOrCreateLocation(GeoEntity root, List<String> labels)
+  private GeoEntity getLocation(GeoEntity root, List<String> labels)
   {
     GeoEntity parent = root;
 
@@ -178,17 +180,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
           if (entity == null)
           {
-            throw new ProgrammingErrorException("Unknown geo entity");
-            // entity = new GeoEntity();
-            // entity.setUniversal(universal);
-            // entity.setGeoId(this.generateGeoId());
-            // entity.getDisplayLabel().setDefaultValue(label);
-            // entity.apply();
-            //
-            // entity.addLink(parent, LocatedIn.CLASS);
-            //
-            // // Create a new geo entity problem
-            // GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);
+            throw new LocationExclusionException("Location not found in system.", label); 
           }
 
           parent = entity;
@@ -295,7 +287,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    * com.runwaysdk.system.gis.geo.Universal)
    */
   @Override
-  public LocationProblemIF getLocationProblem(Transient source, Universal universal)
+  public LocationProblemIF getLocationProblem(Transient source, Universal universal, List<HashMap<String, String>> locationExclusions)
   {
     GeoEntity parent = this.root;
 
@@ -307,7 +299,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
       Universal entityUniversal = attribute.getUniversal();
 
-      if (label != null && label.length() > 0)
+      if (label != null && label.length() > 0 && !sourceLocationExclusionExists(locationExclusions, label, entityUniversal))
       {
         if (parent.getUniversalId().equals(entityUniversal.getId()))
         {
@@ -348,5 +340,19 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     }
 
     return null;
+  }
+  
+  
+  private boolean sourceLocationExclusionExists(List<HashMap<String, String>> locationExclusions, String locationLabel, Universal entityUniversal)
+  {
+    for(HashMap<String, String> locationExclusion : locationExclusions)
+    {
+      if(locationExclusion.containsValue(locationLabel) && locationExclusion.get("universal").equals(entityUniversal.getId()))
+      {
+        return true;
+      }
+    }
+    
+    return false;
   }
 }

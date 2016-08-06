@@ -18,9 +18,12 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.runwaysdk.business.Transient;
 
 public interface ConverterIF
 {
-  public void create(Transient source);
+  public void create(Transient source, List<HashMap<String, String>> locationExclusions);
 }

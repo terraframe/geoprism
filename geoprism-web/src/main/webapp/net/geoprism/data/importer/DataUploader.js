@@ -58,8 +58,13 @@
     controller.createSynonym = function() {
       var connection = {
         elementId : '#uploader-overlay',
-        onSuccess : function(){
+        onSuccess : function(response){
           $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'SYNONYM',
+            synonymId : response.synonymId,
+            label : response.label
+          };
          
           $scope.$apply();
         },
@@ -79,8 +84,12 @@
     controller.createEntity = function() {
       var connection = {
         elementId : '#uploader-overlay',
-        onSuccess : function(){
+        onSuccess : function(response){
           $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'ENTITY',
+            entityId : response.entityId
+          };
       
           $scope.$apply();        
         },
@@ -95,7 +104,62 @@
       $scope.errors = undefined;
       
       datasetService.createGeoEntity(connection, $scope.problem.parentId, $scope.problem.universalId, $scope.problem.label);
-    }    
+    }
+    
+
+    controller.ignoreDataAtLocation = function() {
+    	var locationLabel = $scope.problem.label;
+    	var universal = $scope.problem.universalId;
+    	
+    	$scope.problem.resolved = true;
+    	
+	    $scope.problem.action = {
+            name : 'IGNOREATLOCATION',
+            label : locationLabel
+        };
+    	
+    	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
+	}
+    
+
+    controller.undoAction = function() {
+      var locationLabel = $scope.problem.label;
+      var universal = $scope.problem.universalId;
+      
+      if($scope.problem.resolved) {
+    	  
+        var connection = {
+          elementId : '#uploader-overlay',
+          onSuccess : function(response){
+            $scope.problem.resolved = false;
+            $scope.problem.synonym = null;
+            
+            controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+            
+            $scope.$apply();        
+          },
+          onFailure : function(e){
+            $scope.errors = [];
+            $scope.errors.push(e.localizedMessage);
+                
+            $scope.$apply();
+          }      
+        };
+    	
+        var action = $scope.problem.action;
+        
+        if(action.name == 'ENTITY')  {
+          datasetService.deleteGeoEntity(connection, action.entityId);          
+        }
+        else if(action.name == 'IGNOREATLOCATION'){
+        	$scope.problem.resolved = false;
+        	datasetService.removeLocationExclusion({"universal":universal, "locationLabel":locationLabel});
+        }
+        else {
+          datasetService.deleteGeoEntitySynonym(connection, action.synonymId);                    
+        }
+      }
+    }
   }
   
   function GeoValidationProblem($timeout) {
@@ -882,11 +946,13 @@
         }
       };
       // Reset the file Errors
-      $scope.configuration.sheets[0] = $scope.sheet;
+      
+      var config = datasetService.getDatasetConfiguration();
+      config.sheets[0] = $scope.sheet;
       
       $scope.errors = [];
       
-      datasetService.importData(connection, $scope.configuration);      
+      datasetService.importData(connection, config);      
     }
     
     controller.cancel = function() {
@@ -908,14 +974,16 @@
       // Reset the file Errors
       $scope.errors = [];
           
-      datasetService.cancelImport(connection, $scope.configuration);
+      datasetService.cancelImport(connection, datasetService.getDatasetConfiguration());
     }
     
     controller.load = function(information, options) {
       $scope.options = options;
       
-      $scope.configuration = information;
-      $scope.sheet = $scope.configuration.sheets[0];
+      datasetService.setDatasetConfiguration(information);
+      var config = datasetService.getDatasetConfiguration();
+      
+      $scope.sheet = config.sheets[0];
       $scope.sheet.attributes = {ids:[], values : {}};    
       $scope.sheet.coordinates = {ids:[], values : {}};    
       $scope.errors = [];      
@@ -1107,7 +1175,7 @@
     
     controller.hasLocationField = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
-        var field = $scope.sheet.fields[i]
+        var field = $scope.sheet.fields[i];
           
         if(field.type == 'LOCATION') {
           return true;
@@ -1119,7 +1187,7 @@
     
     controller.hasCoordinateField = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
-        var field = $scope.sheet.fields[i]
+        var field = $scope.sheet.fields[i];
               
         if(field.type == 'LONGITUDE' || field.type == 'LATITUDE' ) {
           return true;

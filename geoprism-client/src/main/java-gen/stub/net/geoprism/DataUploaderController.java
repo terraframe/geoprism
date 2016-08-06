@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+import com.runwaysdk.system.gis.geo.SynonymDTO;
 
 public class DataUploaderController extends DataUploaderControllerBase implements Reloadable
 {
@@ -131,9 +133,12 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
+      String entityId = DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
 
-      JSONControllerUtil.writeReponse(this.resp);
+      JSONObject object = new JSONObject();
+      object.put("entityId", entityId);
+
+      JSONControllerUtil.writeReponse(this.resp, object);
     }
     catch (Throwable t)
     {
@@ -148,7 +153,27 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+      String response = DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+
+      JSONObject object = new JSONObject(response);
+
+      JSONControllerUtil.writeReponse(this.resp, object);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void deleteGeoEntity(String entityId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
+      entity.delete();
 
       JSONControllerUtil.writeReponse(this.resp);
     }
@@ -158,4 +183,21 @@ public class DataUploaderController extends DataUploaderControllerBase implement
     }
   }
 
+  @Override
+  public void deleteGeoEntitySynonym(String synonymId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      SynonymDTO synonym = SynonymDTO.get(request, synonymId);
+      synonym.delete();
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }    
+  }
 }

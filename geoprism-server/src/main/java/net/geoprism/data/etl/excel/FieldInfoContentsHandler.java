@@ -20,6 +20,7 @@ package net.geoprism.data.etl.excel;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -43,19 +44,27 @@ public class FieldInfoContentsHandler implements SheetHandler
 {
   private static class Field
   {
-    private String          name;
+    /**
+     * Number of unique values
+     */
+    private static final int LIMIT = 10;
 
-    private Set<ColumnType> dataTypes;
+    private String           name;
 
-    private int             precision;
+    private int              precision;
 
-    private int             scale;
+    private int              scale;
+
+    private Set<ColumnType>  dataTypes;
+
+    private Set<String>      values;
 
     public Field()
     {
       this.dataTypes = new TreeSet<ColumnType>();
       this.precision = 0;
       this.scale = 0;
+      this.values = new HashSet<String>(LIMIT);
     }
 
     public void setName(String name)
@@ -83,6 +92,14 @@ public class FieldInfoContentsHandler implements SheetHandler
       this.scale = Math.max(this.scale, scale);
     }
 
+    public void addValue(String value)
+    {
+      if (this.values.size() < LIMIT)
+      {
+        this.values.add(value);
+      }
+    }
+
     public JSONObject toJSON() throws JSONException
     {
       JSONObject object = new JSONObject();
@@ -102,22 +119,31 @@ public class FieldInfoContentsHandler implements SheetHandler
         {
           if (this.scale > 0)
           {
-            object.put("precision", (this.precision + this.scale));
+            object.put("precision", ( this.precision + this.scale ));
             object.put("scale", this.scale);
             object.put("type", ColumnType.DOUBLE.name());
-            object.put("ratio", false);            
+            object.put("ratio", false);
           }
           else
           {
             object.put("type", ColumnType.LONG.name());
           }
         }
+        else if (type.equals(ColumnType.TEXT) && this.values.size() < LIMIT)
+        {
+          object.put("type", ColumnType.CATEGORY.name());
+        }
       }
       else
       {
-        object.put("type", ColumnType.TEXT.name());
         object.put("columnType", ColumnType.TEXT.name());
+        object.put("type", ColumnType.TEXT.name());
         object.put("accepted", false);
+
+        if (this.values.size() < LIMIT)
+        {
+          object.put("type", ColumnType.CATEGORY.name());
+        }
       }
 
       return object;
@@ -173,7 +199,7 @@ public class FieldInfoContentsHandler implements SheetHandler
   }
 
   @Override
-  public void startSheet(String sheetName)
+  public void startSheet(String sheetName, String configuration)
   {
     this.sheetName = sheetName;
     this.rowNum = 0;
@@ -260,6 +286,10 @@ public class FieldInfoContentsHandler implements SheetHandler
 
         attribute.setPrecision(precision - scale);
         attribute.setScale(scale);
+      }
+      else if (cellType.equals(ColumnType.TEXT))
+      {
+        attribute.addValue(contentValue);
       }
     }
   }
