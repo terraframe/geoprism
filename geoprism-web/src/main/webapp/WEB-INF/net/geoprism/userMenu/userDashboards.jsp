@@ -66,7 +66,7 @@
     </div>
   </c:if>  
   
-  <div id="container" ng-controller="DashboardMenuController as ctrl"  ng-cloak>
+  <div id="container" ng-controller="DashboardMenuController as ctrl" >
     <header id="header">
     	<div id="header-link-container" class="text-right">
 	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
