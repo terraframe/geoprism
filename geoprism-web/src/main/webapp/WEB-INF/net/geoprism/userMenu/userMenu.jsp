@@ -61,22 +61,10 @@
 			<header id="header">
 				<div id="header-link-container" class="text-right">
 					<a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
-<%-- 					  <c:if test="${not empty miniLogoFilePath}" > --%>
-<%-- 					    <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
-<%-- 					  </c:if> --%>
 					  <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
 					</a>
-					<p id="user-link-container" class="text-right">
-<%-- 			  	        <c:choose> --%>
-<%-- 						  <c:when test="${isAdmin}"> --%>
-<%-- 					      		<a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a> --%>
-<!-- 								<i class="user-command-link"> | </i> -->
-<%-- 					      </c:when> --%>
-<%-- 					      <c:otherwise> --%>
-<%-- 					      </c:otherwise> --%>
-<%-- 				        </c:choose> --%>
-				        
-				        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+					<p id="user-link-container" class="text-right">				        
+		        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
 						<i class="user-command-link"> | </i>
 	 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
 	 				</p>
@@ -104,6 +92,12 @@
 									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dashboards"/></h3>
 								</div>
 								</div>
+							  <div class="col-xs-12 col-sm-6 text-center">
+								<div class="nav-option">
+									<img id="data-management" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
+									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dataManagement"/></h3>
+								</div>
+							  </div>
 							  <div class="col-xs-12 col-sm-6 text-center">
 								<div class="nav-option">
 									<img id="geoprism-admin" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
@@ -135,6 +129,10 @@
 
 				$("#geoprism-admin").click(function(){
 					window.open(window.location.origin +"${pageContext.request.contextPath}", "_self");
+				});	
+
+				$("#data-management").click(function(){
+					window.open(window.location.origin +"${pageContext.request.contextPath}/management", "_self");
 				});	
 
 					com.runwaysdk.ui.Manager.setFactory("JQuery");

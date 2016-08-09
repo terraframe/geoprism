@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,26 +17,18 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
-
-<head>
-
-  <gdb:localize var="page_title" key="dataset.title"/>
-
-  <!-- Datasets Javascript -->
-  <jwr:script src="/bundles/category-icon.js" useRandomParam="false"/>
-
-  <script type="text/javascript">${js}</script>
-  
-</head>
-
-
-<div ng-app="category-icon" ng-controller="CategoryIconController as ctrl">
-  <ng-include src="'/partial/data/importer/icons.jsp'"></ng-include>
-</div>
-
-<script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-</script>
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdController name="net.geoprism.UserMenuController">
+        <create>
+          <mdAction name="dataManagement" label="Data management" isPost="false" isQuery="false" />
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
