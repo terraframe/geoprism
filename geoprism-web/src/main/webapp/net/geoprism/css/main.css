@@ -4503,6 +4503,35 @@ li.list-group-item:hover {
 		float:right;
 	}
 	
+	.navbar-default {
+	  background-color: #333;
+	}	
+	
+  .navbar-default .navbar-nav > li > a {
+    color: white;
+  }
+  
+  .navbar-default:hover .navbar-nav:hover > li > a {
+    color:#f8f8f8;
+  }
+  
+  .navbar-default .navbar-nav > li > a {
+    color: white;
+  }
+  
+  .navbar-default:hover .navbar-nav:hover > li > a {
+    color:#f8f8f8;
+  }
+  
+  .navbar-default .navbar-brand {
+    color: white;
+  }
+  
+  .navbar-default:hover .navbar-brand {
+    color:#f8f8f8;
+  }
+  	
+	
 /*
 * Scroll bar styling
 *
