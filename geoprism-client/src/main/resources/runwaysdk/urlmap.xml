@@ -35,6 +35,10 @@
     <action method="menu" uri=""/>    
   </map>
   
+  <map uri="management" controller="net.geoprism.UserMenuController">
+    <action method="dataManagement" uri=""/>    
+  </map>
+  
   <map uri="dashboards" controller="net.geoprism.UserMenuController">
     <action method="dashboards" uri=""/>    
   </map>

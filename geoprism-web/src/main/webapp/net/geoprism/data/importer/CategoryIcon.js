@@ -20,6 +20,8 @@
   function CategoryIconController($scope, $timeout, categoryIconService, localizationService, widgetService) {
     var controller = this;
     
+    console.log('Loading Category Icon');
+    
     controller.init = function() {
       $scope.icon = {id:'', label:'', file:null, timeStamp:new Date().getTime()};
       

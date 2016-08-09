@@ -36,17 +36,27 @@ import com.runwaysdk.util.FileIO;
 
 public class UserMenuController extends UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR    = "/WEB-INF/";
+  public static final String JSP_DIR         = "/WEB-INF/";
 
-  public static final String LAYOUT     = "WEB-INF/templates/basicLayout.jsp";
+  public static final String LAYOUT          = "WEB-INF/templates/basicLayout.jsp";
 
-  public static final String MENU       = "net/geoprism/userMenu/userMenu.jsp";
+  public static final String MENU            = "net/geoprism/userMenu/userMenu.jsp";
 
-  public static final String DASHBOARDS = "net/geoprism/userMenu/userDashboards.jsp";
+  public static final String DATA_MANAGEMENT = "net/geoprism/userMenu/data-management.jsp";
+
+  public static final String DASHBOARDS      = "net/geoprism/userMenu/userDashboards.jsp";
 
   public UserMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
+  }
+
+  @Override
+  public void dataManagement() throws IOException, ServletException
+  {
+    JavascriptUtil.loadDataManagementBundle(this.getClientRequest(), this.req);
+
+    req.getRequestDispatcher(JSP_DIR + DATA_MANAGEMENT).forward(req, resp);
   }
 
   @Override
@@ -59,7 +69,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet();
 
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-    
+
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
     {
@@ -128,7 +138,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   public void menu() throws IOException, ServletException
   {
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-    
+
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
     {
