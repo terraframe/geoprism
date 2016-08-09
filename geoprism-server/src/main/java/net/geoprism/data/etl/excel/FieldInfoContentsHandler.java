@@ -50,6 +50,8 @@ public class FieldInfoContentsHandler implements SheetHandler
     private int             precision;
 
     private int             scale;
+    
+    private int             inputPosition;
 
     public Field()
     {
@@ -66,6 +68,16 @@ public class FieldInfoContentsHandler implements SheetHandler
     public String getName()
     {
       return name;
+    }
+    
+    public void setInputPosition(int position)
+    {
+      this.inputPosition = position;
+    }
+    
+    public int getInputPosition()
+    {
+      return this.inputPosition;
     }
 
     public void addDataType(ColumnType dataType)
@@ -89,6 +101,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       object.put("name", this.name);
       object.put("label", this.name);
       object.put("aggregatable", true);
+      object.put("fieldPosition", this.getInputPosition());
 
       if (this.dataTypes.size() == 1)
       {
@@ -166,6 +179,13 @@ public class FieldInfoContentsHandler implements SheetHandler
 
     return this.map.get(column);
   }
+  
+  private int getFieldPosition(String cellReference)
+  {
+    CellReference reference = new CellReference(cellReference);
+
+    return reference.getCol();
+  }
 
   public JSONArray getSheets()
   {
@@ -242,6 +262,7 @@ public class FieldInfoContentsHandler implements SheetHandler
 
       Field attribute = this.getField(cellReference);
       attribute.setName(formattedValue);
+      attribute.setInputPosition(this.getFieldPosition(cellReference));
     }
     else
     {

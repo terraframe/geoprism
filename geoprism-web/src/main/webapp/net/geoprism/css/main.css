@@ -290,7 +290,7 @@ form legend{
 	  border:1px solid #bbb;
 	  background:#eee;
 	}
-	.submit-form ::-webkit-input-placeholder{color:#999;}
+	.submit-form ::-webkit-input-placeholder{color:red;}
 	.submit-form :-ms-input-placeholder{color:#999;}
 	.submit-form :-moz-placeholder{color:#999;}
 	.submit-form ::-moz-placeholder{
@@ -1919,6 +1919,19 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	padding:0 11px 18px 12px;
 	position:relative;
 }
+
+	.modal-form ::-webkit-input-placeholder{color:darkgrey !important;}
+	.modal-form :-ms-input-placeholder{color:darkgrey !important;}
+	.modal-form :-moz-placeholder{color:darkgrey !important;}
+	.modal-form ::-moz-placeholder{
+		color:darkgrey !important;
+		opacity:1 !important;
+	}
+	.modal-form :focus::-webkit-input-placeholder{opacity:0 !important;}
+	.modal-form :focus:-ms-input-placeholder{opacity:0 !important;}
+	.modal-form :focus:-moz-placeholder{opacity:0 !important;}
+	.modal-form :focus::-moz-placeholder{opacity:0 !important;}
+	
 .modal-form .text{
 	float:left;
 	position:relative;
@@ -3959,8 +3972,8 @@ div.secondary-box label {
 	.ng-modal-dialog-content {
 	  padding:10px;
 	  text-align: left;
-	  
 	  width: 1000px;
+/* 	  width: 100%; */
       left: 0;
       right: 0;
       margin: 0 auto;

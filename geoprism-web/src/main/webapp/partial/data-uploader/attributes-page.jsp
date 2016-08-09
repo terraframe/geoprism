@@ -22,6 +22,15 @@
 
 <div>
   <div class="label-holder">
+    <strong> </strong>
+  </div>
+  <div class="holder">
+    <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.attributeConfiguration.heading.paragraph"/></p>
+    </div>
+  </div>
+  
+  <div class="label-holder">
     <strong><gdb:localize key="dataUploader.fields"/></strong>
   </div>
   <div class="holder">
