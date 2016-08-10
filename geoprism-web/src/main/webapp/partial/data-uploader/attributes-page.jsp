@@ -22,6 +22,15 @@
 
 <div>
   <div class="label-holder">
+    <strong> </strong>
+  </div>
+  <div class="holder">
+    <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.attributeConfiguration.heading.paragraph"/></p>
+    </div>
+  </div>
+  
+  <div class="label-holder">
     <strong><gdb:localize key="dataUploader.fields"/></strong>
   </div>
   <div class="holder">
@@ -80,6 +89,8 @@
           <option value=""></option>          
         </select>
       </div>      
+
+<!-- 
       <div class="inline-number" ng-if="field.type == 'DOUBLE'">
         <label><gdb:localize key="dataUploader.precision"/></label>
         <input ng-model="field.precision" name="{{::$index + 'precision'}}" ng-required="true" type="text" integer-only></input>
@@ -88,6 +99,7 @@
         <label><gdb:localize key="dataUploader.scale"/></label>
         <input ng-model="field.scale" name="{{::$index + 'scale'}}" ng-required="true" type="text" integer-only></input>
       </div>
+ -->      
 <!--       
       <div class="inline-check" ng-if="field.type == 'DOUBLE'">
         <label><gdb:localize key="dataUploader.ratio"/></label>

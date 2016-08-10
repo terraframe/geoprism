@@ -24,7 +24,7 @@
   <div class="label-holder"></div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/></p>
+      <p><gdb:localize key="dataUploader.textLocationConfiguration.heading.paragraph"/></p>
     </div>
   </div>
 

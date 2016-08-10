@@ -62,7 +62,7 @@
       com.runwaysdk.ui.Manager.setFactory("JQuery");
     </script>    
   </head>
-  <body ng-controller="DataManagementController">
+  <body ng-controller="DataManagementController" id="innerFrameHtml">
     <!-- HEADER AND NAVBAR -->
     <header>
       <nav class="navbar navbar-default">

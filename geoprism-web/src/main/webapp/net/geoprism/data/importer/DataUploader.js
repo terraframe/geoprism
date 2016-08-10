@@ -662,7 +662,7 @@
     }   
   }
   
-  function CoordinatePageController($scope) {
+  function CoordinatePageController($scope, localizationService) {
     var controller = this;
     
     controller.initialize = function() {        
@@ -697,7 +697,7 @@
             var coordinate = {
               label : "",
               latitude : field.label,
-              longitude : "",
+              longitude : controller.getSuggestedLongitude(field),
               featureLabel : "",
               location : "",
               featureId : "",
@@ -744,6 +744,31 @@
           });
         }
       }
+    }
+    
+    controller.getSuggestedLongitude = function(targetField) {
+	   	var fields = $scope.sheet.fields;
+	   	var trackingPosition = null;
+	   	var mostLikelyLongitudeField = null;
+	   	
+		for(var i=0; i<fields.length; i++){
+			var field = fields[i];
+			if(field.type === "LATITUDE" && field.name === targetField.label){
+				trackingPosition = field.fieldPosition;
+			}
+			else if(field.type === "LONGITUDE"){
+				// if fields are located next to each other in the source data (spreadsheet)
+				if(field.fieldPosition === trackingPosition + 1 || field.fieldPosition === trackingPosition - 1){
+					return field.name;
+				}
+				else if(targetField.label.toLowerCase().replace(localizationService.localize("dataUploader", "attributeLatAbbreviation").toLowerCase(), localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase()) === field.label.toLowerCase() ||
+						targetField.label.toLowerCase().replace(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase(), localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) === field.label.toLowerCase() ){
+					return field.name;
+				}
+			}
+		}
+		
+		return false;
     }
     
     controller.hasCoordinateField = function(field) {
@@ -1005,6 +1030,34 @@
       $scope.$apply();
     }
     
+    controller.setAttributeDefaults = function() {
+    	var types = [];
+    	var fields = $scope.sheet.fields;
+    	for(var i=0; i<fields.length; i++){
+    		var field = fields[i];
+    		
+    		if(field.columnType === "NUMBER"){
+    			if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLatAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase()) ){
+    				field.type = 'LATITUDE' 
+    					
+    				if(types.indexOf("COORDINATE") === -1){
+    					types.push("COORDINATE");
+    				}
+    			}
+    			else if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLngAbbreviation").toLowerCase() || field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase()) ){
+    				field.type = 'LONGITUDE';
+    				
+    				if(types.indexOf("COORDINATE") === -1){
+    					types.push("COORDINATE");
+    				}
+    			}
+    		}
+    	}
+    	
+    	return types;
+    }
+    
+    
     controller.next = function() {
       // State machine
       if($scope.page.current == 'MATCH') {
@@ -1024,6 +1077,8 @@
         // Go to fields page  
         $scope.page.current = 'FIELDS';      
         
+        var stepTypes = controller.setAttributeDefaults();
+        
         var snapshot = {
           page : 'INITIAL',
           sheet : angular.copy($scope.sheet)        
@@ -1032,7 +1087,7 @@
         
         // re-set the step indicator since the snapshot re-sets the attributes page
         $scope.locationType = []; 
-        $scope.userSteps = datasetService.getUploaderSteps([]);
+        $scope.userSteps = datasetService.getUploaderSteps(stepTypes);
         $scope.currentStep = 1;        
       }
       else if($scope.page.current == 'FIELDS') {
@@ -1285,7 +1340,7 @@
   };  
   
   
-  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "widget-service", "runway-service" ]);
+  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "widget-service", "runway-service", "ngAnimate" ]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchPage', MatchPage)

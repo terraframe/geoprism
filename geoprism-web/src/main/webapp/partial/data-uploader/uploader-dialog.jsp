@@ -64,11 +64,11 @@
             <section class="form-container">
               <match-page ng-if="page.current == 'MATCH'"></match-page>  
               <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'"></beginning-info-page>            
-              <name-page ng-if="page.current == 'INITIAL'"></name-page>
-              <attributes-page ng-if="page.current == 'FIELDS'"></attributes-page>
-              <location-page ng-if="page.current == 'LOCATION'"></location-page>
-              <coordinate-page ng-if="page.current == 'COORDINATE'"></coordinate-page>
-              <summary-page ng-if="page.current == 'SUMMARY'"></summary-page>
+              <name-page ng-if="page.current == 'INITIAL'" class="slide-right"></name-page>
+              <attributes-page ng-if="page.current == 'FIELDS'" class="slide-right"></attributes-page>
+              <location-page ng-if="page.current == 'LOCATION'" class="slide-right"></location-page>
+              <coordinate-page ng-if="page.current == 'COORDINATE'" class="slide-right"></coordinate-page>
+              <summary-page ng-if="page.current == 'SUMMARY'" class="slide-right"></summary-page>
               <geo-validation-page ng-if="page.current == 'GEO-VALIDATION'"></geo-validation-page>
             </section>            
           </fieldset>

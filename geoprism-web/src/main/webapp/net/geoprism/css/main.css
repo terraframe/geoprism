@@ -290,7 +290,7 @@ form legend{
 	  border:1px solid #bbb;
 	  background:#eee;
 	}
-	.submit-form ::-webkit-input-placeholder{color:#999;}
+	.submit-form ::-webkit-input-placeholder{color:red;}
 	.submit-form :-ms-input-placeholder{color:#999;}
 	.submit-form :-moz-placeholder{color:#999;}
 	.submit-form ::-moz-placeholder{
@@ -1919,6 +1919,19 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	padding:0 11px 18px 12px;
 	position:relative;
 }
+
+	.modal-form ::-webkit-input-placeholder{color:darkgrey !important;}
+	.modal-form :-ms-input-placeholder{color:darkgrey !important;}
+	.modal-form :-moz-placeholder{color:darkgrey !important;}
+	.modal-form ::-moz-placeholder{
+		color:darkgrey !important;
+		opacity:1 !important;
+	}
+	.modal-form :focus::-webkit-input-placeholder{opacity:0 !important;}
+	.modal-form :focus:-ms-input-placeholder{opacity:0 !important;}
+	.modal-form :focus:-moz-placeholder{opacity:0 !important;}
+	.modal-form :focus::-moz-placeholder{opacity:0 !important;}
+	
 .modal-form .text{
 	float:left;
 	position:relative;
@@ -3959,8 +3972,8 @@ div.secondary-box label {
 	.ng-modal-dialog-content {
 	  padding:10px;
 	  text-align: left;
-	  
 	  width: 1000px;
+/* 	  width: 100%; */
       left: 0;
       right: 0;
       margin: 0 auto;
@@ -4341,13 +4354,55 @@ div.secondary-box label {
 }
 
 
+/* .uploader-step-transition-animate-if { */
+	
+/* } */
+/* .uploader-step-transition-animate-if.ng-enter,  */
+/* .uploader-step-transition-animate-if.ng-leave { */
+/* 	transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s; */
+/* } */
+/* .uploader-step-transition-animate-if.ng-enter, */
+/* .uploader-step-transition-animate-if.ng-leave.ng-leave-active { */
+/* 	opacity:0; */
+/* } */
+/* .uploader-step-transition-animate-if.ng-leave, */
+/* .uploader-step-transition-animate-if.ng-enter.ng-enter-active { */
+/*   opacity:1; */
+/* } */
+
+
+/* .uploader-step-transition-animate-repeat { */
+	
+/* } */
+/* .uploader-step-transition-animate-repeat.ng-move, */
+/* .uploader-step-transition-animate-repeat.ng-enter, */
+/* .uploader-step-transition-animate-repeat.ng-leave { */
+/* 	transition:all linear 0.5s; */
+/* } */
+/* .uploader-step-transition-animate-repeat.ng-leave.ng-leave-active, */
+/* .uploader-step-transition-animate-repeat.ng-move, */
+/* .uploader-step-transition-animate-repeat.ng-enter { */
+/*   opacity:0; */
+/*   max-height:0; */
+/* } */
+/* .uploader-step-transition-animate-repeat.ng-leave, */
+/* .uploader-step-transition-animate-repeat.ng-move.ng-move-active, */
+/* .uploader-step-transition-animate-repeat.ng-enter.ng-enter-active { */
+/*   opacity:1; */
+/*   max-height:30px; */
+/* } */
+
+
+
+
+
+
+
+
 .modal-form .form-container .table.table-bordered{
 	font-size: 12px;
 }
 
-    
-    
-    
 #manage-datasets-table .button-column{
 	text-align: center;
 	width: 15%;
