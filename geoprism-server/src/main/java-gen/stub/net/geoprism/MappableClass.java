@@ -171,9 +171,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       nodes.close();
     }
-
-    super.delete();
-
+    
     /*
      * Delete the corresponding MappableAttributes
      */
@@ -183,6 +181,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       mAttribute.delete();
     }
+
+    super.delete();
 
     /*
      * Delete all of the data views which reference this type
