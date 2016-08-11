@@ -301,6 +301,11 @@
       
       $scope.longitudeFields = {};
       $scope.latitudeFields = {};      
+      $scope.textFields = {};
+      
+      for(var i = 0; i < $scope.sheet.fields.length; i++) {
+        controller.accept($scope.sheet.fields[i]);
+      }
     }    
   
     controller.isUniqueLabel = function(label) {
@@ -347,8 +352,22 @@
         delete $scope.longitudeFields[field.name];
       }
       
+      if(field.type === "TEXT") {
+        $scope.textFields[field.name] = field;      
+      }
+      else {
+        delete $scope.textFields[field.name];
+      }
+      
       var matched = (Object.keys($scope.latitudeFields).length == Object.keys($scope.longitudeFields).length);
       $scope.form.$setValidity("coordinate", matched);
+      
+      if(Object.keys($scope.latitudeFields).length > 0 || Object.keys($scope.longitudeFields).length > 0) {
+        $scope.form.$setValidity("coordinateText", (Object.keys($scope.textFields).length > 0));        
+      }
+      else {
+        $scope.form.$setValidity("coordinateText", true);        
+      }
     }
     
     controller.setLocationSelected = function(locationType) {

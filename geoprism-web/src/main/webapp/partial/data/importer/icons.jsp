@@ -24,9 +24,16 @@
 
 <div id="app-container" class="container" >
 
-  <h2> <gdb:localize key="category.icon.title"/> </h2>
+  <div>
+    <span>
+    <h2> <gdb:localize key="category.icon.title"/> </h2>
+    </span>
+    <span>
+      <a class="fa fa-plus" ng-click="ctrl.add(icon)" title="<gdb:localize key="category.icon.addTooltip"/>"> <gdb:localize key="category.icon.addTooltip"/></a>
+    </span>
+  </div>
   
-  <div ng-if="errors.length > 0" class="error-container">
+  <div ng-if="errors.length > 0 && !show" class="error-container">
     <div class="label-holder">
       <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
     </div>
@@ -36,6 +43,7 @@
       </div>
     </div>
   </div>
+  
   
   <table id="manage-datasets-table" class="table table-bordered table-striped">        
     <tbody>
@@ -57,19 +65,45 @@
     </tbody>    
   </table>
   
+  <div ng-if="icons === null"><gdb:localize key='dataset.loadingData'/></div>
+  <div ng-if="icons.length === 0">
+    <p><gdb:localize key='category.icon.emtpy'/></p>
+  </div>
+  
+  <div ng-show="show">
+    <div class="modal-backdrop fade in"></div>
+      <div style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+        <dl>      
   <form class="modal-form" name="ctrl.form">
     <div class="modal-dialog">
       <div class="modal-content">
+             <div class="heading">
+                <h1 ng-if="editIcon"><gdb:localize key="category.icon.editHeader"/></h1>
+                <h1 ng-if="!editIcon"><gdb:localize key="category.icon.addHeader"/></h1>
+             </div>      
         <fieldset>
+          <div class="row-holder" ng-show="errors.length > 0 && show">
+            <div class="label-holder">
+            </div>      
+            <div class="holder">
+              <div class="alert alertbox" ng-repeat="error in errors track by $index">
+                <p >{{error}}</p>
+              </div>
+            </div>
+          </div>            
           <div class="row-holder">
-            <div class="holder" >
+            <div class="label-holder">
               <label><gdb:localize key="category.icon.label"/></label>
+            </div>          
+            <div class="holder" >
               <span class="text">
                 <input type="text" ng-model="icon.label" name="label" required>
               </span>
             </div>
           </div>
           <div class="row-holder">
+            <div class="label-holder">
+            </div>          
             <div class="holder">
               <span class="text">
                 <div class="drop-box-container" ng-show="!icon.file" accept="image/png" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setFile($files)" ngf-drop="ctrl.setFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
@@ -84,7 +118,7 @@
                 <div ng-show="icon.file">
                   <a style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
                   
-          <!-- For display only when editing an icon-->
+                  <!-- For display only when editing an icon-->
                   <img ng-if="icon.id && icon.id.length > 0 && editIcon && icon.file.filePath" style="width:42px;height:42px;margin-left:10px;" ng-src="/iconimage/getCategoryIconImage?iconId={{ editIcon }}&''" class="thumb">
                   
                   <!-- Actual uploaded file preview -->
@@ -98,11 +132,12 @@
             </div>
           </div>
           <div class="row-holder">
+            <div class="label-holder">
+            </div>                    
             <div class="holder">
               <div class="button-holder">
-                <input ng-show="!editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />
-                
-                <input ng-show="editIcon" type="button" value="Cancel" class="btn btn-default" ng-click="ctrl.cancel()" />
+                <input type="button" value="Cancel" class="btn btn-default" ng-click="ctrl.cancel()" />              
+                <input ng-show="!editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />                
                 <input ng-show="editIcon" type="button" value="Update" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
               </div>
             </div>
@@ -111,7 +146,8 @@
       </div>
     </div>
   </form>
-  
-  <div ng-if="icons === null"><gdb:localize key='dataset.loadingData'/></div>
+      </dl>
+    </div>
+  </div>
   
 </div>
