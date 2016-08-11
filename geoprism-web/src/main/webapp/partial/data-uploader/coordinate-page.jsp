@@ -97,7 +97,7 @@
 	        </div> 
 	      </div>	            
 	      
-        <div class="row-holder" ng-show="coordinate.location == 'DERIVE'">
+        <div class="row-holder fade-ngShow" ng-show="coordinate.location == 'DERIVE'">
           <div class="label-help-ico-container">
           	<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.assocUniversalieldHelpToolTip"/>"></i>
           	<p class="select-label"><gdb:localize key="dataUploader.associatedUniversal"/></p>

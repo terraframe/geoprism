@@ -536,7 +536,13 @@
 
         controller.addField(field);
       
-        controller.setUniversalOptions(field);        
+        controller.setUniversalOptions(field); 
+        
+        // There are no universal options (i.e. context locations) so just set the field
+        // to save a click for the user
+        if($scope.universalOptions.length < 1){
+        	controller.newAttribute();
+        }
       }
       else {
         $scope.attribute = null;
@@ -1044,7 +1050,7 @@
     					types.push("COORDINATE");
     				}
     			}
-    			else if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLngAbbreviation").toLowerCase() || field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) ){
+    			else if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLngAbbreviation").toLowerCase() || field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) ){
     				field.type = 'LONGITUDE';
     				
     				if(types.indexOf("COORDINATE") === -1){

@@ -38,10 +38,10 @@
   </div>
   
   <div ng-if="datasets === null"><gdb:localize key='dataset.loadingData'/></div>
-
+  
   <table id="manage-datasets-table" class="table table-bordered table-striped">        
     <tbody>
-      <tr ng-repeat="dataset in datasets" ng-cloak>
+      <tr ng-repeat="dataset in datasets" class="fade-ngRepeat-item" ng-cloak>
         <td class="button-column">
           <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
         </td>

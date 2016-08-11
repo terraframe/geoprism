@@ -4354,6 +4354,57 @@ div.secondary-box label {
 }
 
 
+.fade-ngIf.ng-enter, .animate-if.ng-leave {
+  transition: .2s linear all;
+  -webkit-transition: .2s linear all;
+}
+.fade-ngIf.ng-enter,
+.fade-ngIf.ng-leave.ng-leave-active {
+  opacity:0;
+}
+.fade-ngIf.ng-leave,
+.fade-ngIf.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+
+.fade-ngShow.ng-hide-add, .animate-show.ng-hide-remove {
+  transition: all linear 0s;
+  -webkit-transition: 0s linear all;
+}
+.fade-ngShow.ng-hide-add-active,
+.fade-ngShow.ng-hide-remove-active {
+  /* the transition is defined in the active class */
+  transition: .2s linear all;
+  -webkit-transition: .2s linear all;
+}
+.fade-ngShow.ng-hide-add {
+  opacity: 1;
+}
+.fade-ngShow.ng-hide {
+  opacity: 0;
+}
+
+
+.fade-ngRepeat-item {
+  transition: .2s linear all;
+  -webkit-transition: .2s linear all;
+}
+.fade-ngRepeat-item.ng-enter {
+  opacity: 0;
+}
+.fade-ngRepeat-item.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+.fade-ngRepeat-item.ng-leave {
+  opacity: 1;
+}
+.fade-ngRepeat-item.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+
+
 /* .uploader-step-transition-animate-if { */
 	
 /* } */
@@ -4462,6 +4513,57 @@ div.secondary-box label {
 }
 
 
+.icon-synonym_icon{
+	font-size: 30px;
+	color: #bababa;
+}
+.icon-synonym_icon:hover{
+	color:#00bfff;
+	cursor: pointer;
+}
+.icon-synonym_icon.disabled:hover{
+	color: #bababa;
+	cursor: default;
+}
+
+.icon-new_location_icon{
+	font-size: 30px;
+	color: #bababa;
+}
+.icon-new_location_icon:hover{
+	color:#00bfff;
+	cursor: pointer;
+}
+.icon-new_location_icon.disabled:hover{
+	color: #bababa;
+	cursor: default;
+}
+
+
+#uploader-div div.inline-value > span.fa-stack.fa-lg{
+	position: absolute;
+}
+#uploader-div div.inline-value > span.fa-stack.fa-lg:hover{
+	cursor: pointer;
+}
+#uploader-div div.inline-value > span.fa-stack.fa-lg:hover .fa.fa-square.fa-stack-2x{
+	color:#00bfff;
+}
+.fa.fa-square.fa-stack-2x{
+	color: #bababa;
+}
+.fa.fa-times.fa-stack-1x{
+	color: white;
+}
+
+#uploader-div i .fa.fa-undo{
+	font-size: 30px;
+	color: #bababa;
+}
+#uploader-div i .fa.fa-undo:hover{
+	color:#00bfff;
+	cursor: pointer;
+}
 
 
 .fa-stack-1x.fa-stack-text.file-text.fa.fa-plus,
