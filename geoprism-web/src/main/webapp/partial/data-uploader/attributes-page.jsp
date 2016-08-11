@@ -121,6 +121,7 @@
   <div class="holder">
     <div class="error-message">
       <p ng-show="form.$error.coordinate"><gdb:localize key="dataUploader.coordinateMismatch"/></p>
+      <p ng-show="form.$error.coordinateText"><gdb:localize key="dataUploader.coordinateNoLabel"/></p>
     </div>          
   </div>    
 </div>
