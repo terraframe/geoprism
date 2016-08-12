@@ -4598,14 +4598,14 @@ li.list-group-item{
 	background-color: rgba(255,255,255,0.75);
 }
 
+#match-datasets-list li:nth-child(2n+2){
+	background-color: #f9f9f9;
+}
+
 li.list-group-item a{
 	bottom: 2px;
 }
 
-li.list-group-item:hover {
-/*     border-width: 2px; */
-    background-color: #F6F6F6;
-}
 
 .inline-value > .btn{
 	height: 32px;

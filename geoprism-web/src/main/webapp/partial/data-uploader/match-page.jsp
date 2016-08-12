@@ -35,7 +35,7 @@
     <strong><gdb:localize key="dataUploader.existingDataset"/></strong>
   </div>
   <div class="holder">
-  	<ul class="list-group">   
+  	<ul id="match-datasets-list" class="list-group">   
         <li class="list-group-item" ng-repeat="match in sheet.matches track by $index">
         	{{match.label}}            
   		
