@@ -136,9 +136,9 @@
 		            </div>                    
 		            <div class="holder">
 		              <div class="button-holder">
-		                <input type="button" value="Cancel" class="btn btn-default" ng-click="ctrl.cancel()" />              
+		                <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" ng-click="ctrl.cancel()" />              
 		                <input ng-show="!editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />                
-		                <input ng-show="editIcon" type="button" value="Update" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
+		                <input ng-show="editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
 		              </div>
 		            </div>
 		          </div>

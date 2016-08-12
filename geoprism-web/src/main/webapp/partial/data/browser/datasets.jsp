@@ -20,7 +20,6 @@
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <div id="app-container" class="container">
 
@@ -43,6 +42,7 @@
     <tbody>
       <tr ng-repeat="dataset in datasets" class="fade-ngRepeat-item" ng-cloak>
         <td class="button-column">
+          <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(dataset)" title="<gdb:localize key="dataset.editTooltip"/>"></a>                             
           <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
         </td>
         <td class="submit-form">
@@ -65,6 +65,8 @@
       </div>
     </div>
   </div>
+  
+  <dataset-modal></dataset-modal>  
   
   <uploader-dialog></uploader-dialog>  
 </div>
