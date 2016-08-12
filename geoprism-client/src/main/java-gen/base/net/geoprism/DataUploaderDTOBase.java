@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -503791451)
+@com.runwaysdk.business.ClassSignature(hash = 1344469182)
 public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.DataUploader";
-  private static final long serialVersionUID = -503791451;
+  private static final long serialVersionUID = 1344469182;
   
   protected DataUploaderDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -57,6 +57,22 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     Object[] _parameters = new Object[]{entityId, label};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "createGeoEntitySynonym", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void deleteGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String entityId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{entityId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "deleteGeoEntity", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void deleteGeoEntitySynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String synonymId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{synonymId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "deleteGeoEntitySynonym", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final java.lang.String getAttributeInformation(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String fileName, java.io.InputStream fileStream)

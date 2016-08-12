@@ -172,8 +172,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
-      entity.delete();
+      DataUploaderDTO.deleteGeoEntity(request, entityId);
 
       JSONControllerUtil.writeReponse(this.resp);
     }
@@ -190,8 +189,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      SynonymDTO synonym = SynonymDTO.get(request, synonymId);
-      synonym.delete();
+      DataUploaderDTO.deleteGeoEntitySynonym(request, synonymId);
 
       JSONControllerUtil.writeReponse(this.resp);
     }
