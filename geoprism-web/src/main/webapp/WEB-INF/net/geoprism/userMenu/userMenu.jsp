@@ -64,6 +64,10 @@
 					  <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
 					</a>
 					<p id="user-link-container" class="text-right">				        
+					  <c:if test="${isAdmin}">
+              <a class="user-command-link" href="/"><gdb:localize key="geoprismLanding.administration"/></a>
+              <i class="user-command-link"> | </i>					
+            </c:if>
 		        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
 						<i class="user-command-link"> | </i>
 	 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
@@ -92,18 +96,14 @@
 									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dashboards"/></h3>
 								</div>
 								</div>
-							  <div class="col-xs-12 col-sm-6 text-center">
-								<div class="nav-option">
-									<img id="data-management" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
-									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dataManagement"/></h3>
-								</div>
-							  </div>
-							  <div class="col-xs-12 col-sm-6 text-center">
-								<div class="nav-option">
-									<img id="geoprism-admin" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
-									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.administration"/></h3>
-								</div>
-							  </div>
+								<c:if test="${isBuilder || isAdmin}">								
+  							  <div class="col-xs-12 col-sm-6 text-center">
+	  							<div class="nav-option">
+		  							<img id="data-management" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
+			  						<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dataManagement"/></h3>
+				  				</div>
+					  		  </div>
+							  </c:if>							  
 							</div>
 							<!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
 			        </div>
@@ -125,10 +125,6 @@
 		$(document).ready(function(){
 				$("#dashboard-link").click(function(){
 					window.open(window.location.origin +"${pageContext.request.contextPath}/dashboards", "_self");
-				});	
-
-				$("#geoprism-admin").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}", "_self");
 				});	
 
 				$("#data-management").click(function(){

@@ -253,7 +253,7 @@
   }
   
   
-  angular.module("category-icon", ['ngFileUpload', "category-icon-service", "localization-service", "widget-service", "runway-service"]);
+  angular.module("category-icon", ["styled-inputs", 'ngFileUpload', "category-icon-service", "localization-service", "widget-service", "runway-service"]);
   angular.module("category-icon")
   .controller('CategoryIconController', CategoryIconController)
 })();

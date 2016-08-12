@@ -21,8 +21,8 @@ package net.geoprism;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -83,8 +83,11 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
 
+    Set<String> roleNames = this.getAssignedRoleNames();
+
     this.req.setAttribute("dashboards", dashboards);
-    this.req.setAttribute("isAdmin", this.userIsAdmin());
+    this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
+
     setLogoReqAttrs();
 
     render(DASHBOARDS);
@@ -152,7 +155,11 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
 
-    this.req.setAttribute("isAdmin", this.userIsAdmin());
+    Set<String> roleNames = this.getAssignedRoleNames();
+
+    this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
+    this.req.setAttribute("isBuilder", roleNames.contains(RoleConstants.BUILDER_ROLE));
+
     setLogoReqAttrs();
 
     render(MENU);
@@ -175,24 +182,19 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     }
   }
 
-  private boolean userIsAdmin()
+  private Set<String> getAssignedRoleNames()
   {
+    Set<String> roleNames = new TreeSet<String>();
+
     GeoprismUserDTO currentUser = GeoprismUserDTO.getCurrentUser(this.getClientRequest());
 
     List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
     for (RolesDTO role : userRoles)
     {
-      Pattern regex = Pattern.compile("\\.(\\S+)");
-      Matcher match = regex.matcher(role.getRoleName());
-      if (match.find())
-      {
-        if (match.group(1).equals("admin.Administrator"))
-        {
-          return true;
-        }
-      }
+      roleNames.add(role.getRoleName());
     }
-    return false;
+
+    return roleNames;
   }
 
 }

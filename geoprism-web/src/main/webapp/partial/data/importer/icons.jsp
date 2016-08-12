@@ -75,8 +75,8 @@
       <div style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
         <dl>      
 		  <form class="modal-form" name="ctrl.form">
-		    <div class="modal-dialog">
-		      <div class="modal-content">
+		    <div class="modal-dialog" ng-if="show">
+		      <div class="modal-content" show-on-ready>
 		             <div class="heading">
 		                <h1 ng-if="editIcon"><gdb:localize key="category.icon.editHeader"/></h1>
 		                <h1 ng-if="!editIcon"><gdb:localize key="category.icon.addHeader"/></h1>
@@ -131,7 +131,7 @@
 		              </span>
 		            </div>
 		          </div>
-		          <div class="row-holder">
+		          <div class="row-holder" fire-on-ready>
 		            <div class="label-holder">
 		            </div>                    
 		            <div class="holder">
