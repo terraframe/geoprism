@@ -18,7 +18,6 @@
  */
 package net.geoprism.dashboard.layer;
 
-import java.io.File;
 import java.io.InputStream;
 
 import org.json.JSONArray;
@@ -46,7 +45,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     super();
   }
 
-  //@Override
+  @Override
   public InputStream getIcon()
   {
     VaultFileDAOIF file = VaultFileDAO.get(this.getImageId());
@@ -54,7 +53,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     return file.getFileStream();
   }
 
-  //@Override
+  @Override
   public String getAsJSON()
   {
     return this.toJSON().toString();

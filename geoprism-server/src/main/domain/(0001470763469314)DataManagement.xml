@@ -27,6 +27,15 @@
         </create>
       </mdController>
     </update>
+    <permissions>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.dashboard.layer.CategoryIcon">
+            <operation name="ALL" />
+          </mdBusinessPermission>      
+        </grant>
+      </role>      
+    </permissions>    
   </doIt>
   <undoIt>
     <delete></delete>
