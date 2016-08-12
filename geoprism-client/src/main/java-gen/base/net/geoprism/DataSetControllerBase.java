@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 29337521)
+@com.runwaysdk.business.ClassSignature(hash = -289399826)
 public class DataSetControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataSetController";
@@ -83,6 +83,20 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:config", post=true)
+  public void apply(java.lang.String config) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.apply");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:config", post=true)
+  public void failApply(java.lang.String config) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failApply");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:datasetJSON", post=true)
   public void applyDatasetUpdate(java.lang.String datasetJSON) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -95,6 +109,34 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failApplyDatasetUpdate");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void cancel(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.cancel");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void failCancel(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failCancel");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.edit");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failEdit");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="", post=true)
