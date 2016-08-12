@@ -4691,6 +4691,11 @@ li.list-group-item a{
     color:#00bfff;
   }
   
+  .navbar-default .navbar-nav>li>a:hover, 
+  .navbar-default .navbar-nav>li>a:focus{
+  	color:#00bfff;
+  }
+  
   .navbar-default .navbar-nav > li > a {
     color: white;
   }
