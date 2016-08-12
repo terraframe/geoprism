@@ -4537,8 +4537,10 @@ div.secondary-box label {
 	color:#00bfff;
 	cursor: pointer;
 }
+.icon-synonym_icon.disabled{
+	color:#ddd;
+}
 .icon-synonym_icon.disabled:hover{
-	color: #bababa;
 	cursor: default;
 }
 

@@ -30,7 +30,7 @@
      	</div>   
       </div>
       <div class="inline-value">
-      	<label><gdb:localize key="dataUploader.unknownLabel"/></label>
+      	<label><gdb:localize key="dataUploader.unknownLocation"/></label>
       	<div class="label-help-ico-container">
        		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.unknownLocationNameHelpToolTip"/>"></i>
      	</div>   
