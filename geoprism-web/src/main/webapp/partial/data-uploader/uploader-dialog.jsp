@@ -63,7 +63,7 @@
           <fieldset>
             <section class="form-container">
               <match-page ng-if="page.current == 'MATCH'"></match-page>  
-              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'"></beginning-info-page>            
+              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'" class="slide-right"></beginning-info-page>            
               <name-page ng-if="page.current == 'INITIAL'" class="slide-right"></name-page>
               <attributes-page ng-if="page.current == 'FIELDS'" class="slide-right"></attributes-page>
               <location-page ng-if="page.current == 'LOCATION'" class="slide-right"></location-page>

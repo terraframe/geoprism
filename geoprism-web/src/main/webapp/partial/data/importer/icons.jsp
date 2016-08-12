@@ -74,78 +74,78 @@
     <div class="modal-backdrop fade in"></div>
       <div style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
         <dl>      
-  <form class="modal-form" name="ctrl.form">
-    <div class="modal-dialog">
-      <div class="modal-content">
-             <div class="heading">
-                <h1 ng-if="editIcon"><gdb:localize key="category.icon.editHeader"/></h1>
-                <h1 ng-if="!editIcon"><gdb:localize key="category.icon.addHeader"/></h1>
-             </div>      
-        <fieldset>
-          <div class="row-holder" ng-show="errors.length > 0 && show">
-            <div class="label-holder">
-            </div>      
-            <div class="holder">
-              <div class="alert alertbox" ng-repeat="error in errors track by $index">
-                <p >{{error}}</p>
-              </div>
-            </div>
-          </div>            
-          <div class="row-holder">
-            <div class="label-holder">
-              <label><gdb:localize key="category.icon.label"/></label>
-            </div>          
-            <div class="holder" >
-              <span class="text">
-                <input type="text" ng-model="icon.label" name="label" required>
-              </span>
-            </div>
-          </div>
-          <div class="row-holder">
-            <div class="label-holder">
-            </div>          
-            <div class="holder">
-              <span class="text">
-                <div class="drop-box-container" ng-show="!icon.file" accept="image/png" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setFile($files)" ngf-drop="ctrl.setFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
-                  <div class="drop-box">
-                    <div class="inner-drop-box">
-                      <i class="fa fa-cloud-upload">
-                        <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p>
-                      </i>
-                    </div>
-                  </div>
-                </div>
-                <div ng-show="icon.file">
-                  <a style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
-                  
-                  <!-- For display only when editing an icon-->
-                  <img ng-if="icon.id && icon.id.length > 0 && editIcon && icon.file.filePath" style="width:42px;height:42px;margin-left:10px;" ng-src="/iconimage/getCategoryIconImage?iconId={{ editIcon }}&''" class="thumb">
-                  
-                  <!-- Actual uploaded file preview -->
-                  <img style="width:42px;height:42px;margin-left:10px;" ngf-thumbnail="icon.file" class="thumb">
-                  
-                  <span ng-show="ctrl.form.$error.file" style="float: right;">
-                    <p class="error-message"><gdb:localize key="category.icon.badFileType"/></p>
-                  </span>
-                </div>          
-              </span>
-            </div>
-          </div>
-          <div class="row-holder">
-            <div class="label-holder">
-            </div>                    
-            <div class="holder">
-              <div class="button-holder">
-                <input type="button" value="Cancel" class="btn btn-default" ng-click="ctrl.cancel()" />              
-                <input ng-show="!editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />                
-                <input ng-show="editIcon" type="button" value="Update" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
-              </div>
-            </div>
-          </div>
-        </fieldset>  
-      </div>
-    </div>
-  </form>
+		  <form class="modal-form" name="ctrl.form">
+		    <div class="modal-dialog">
+		      <div class="modal-content">
+		             <div class="heading">
+		                <h1 ng-if="editIcon"><gdb:localize key="category.icon.editHeader"/></h1>
+		                <h1 ng-if="!editIcon"><gdb:localize key="category.icon.addHeader"/></h1>
+		             </div>      
+		        <fieldset>
+		          <div class="row-holder" ng-show="errors.length > 0 && show">
+		            <div class="label-holder">
+		            </div>      
+		            <div class="holder">
+		              <div class="alert alertbox" ng-repeat="error in errors track by $index">
+		                <p >{{error}}</p>
+		              </div>
+		            </div>
+		          </div>            
+		          <div class="row-holder">
+		            <div class="label-holder">
+		              <label><gdb:localize key="category.icon.label"/></label>
+		            </div>          
+		            <div class="holder" >
+		              <span class="text">
+		                <input type="text" ng-model="icon.label" name="label" required>
+		              </span>
+		            </div>
+		          </div>
+		          <div class="row-holder">
+		            <div class="label-holder">
+		            </div>          
+		            <div class="holder">
+		              <span class="text">
+		                <div class="drop-box-container" ng-show="!icon.file" accept="image/png" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.setFile($files)" ngf-drop="ctrl.setFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable">
+		                  <div class="drop-box">
+		                    <div class="inner-drop-box">
+		                      <i class="fa fa-cloud-upload">
+		                        <p class="upload-text"><gdb:localize key="category.icon.uploadIcon"/></p>
+		                      </i>
+		                    </div>
+		                  </div>
+		                </div>
+		                <div ng-show="icon.file">
+		                  <a style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" ng-click="icon.file = null" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
+		                  
+		                  <!-- For display only when editing an icon-->
+		                  <img ng-if="icon.id && icon.id.length > 0 && editIcon && icon.file.filePath" style="width:42px;height:42px;margin-left:10px;" ng-src="/iconimage/getCategoryIconImage?iconId={{ editIcon }}&''" class="thumb">
+		                  
+		                  <!-- Actual uploaded file preview -->
+		                  <img style="width:42px;height:42px;margin-left:10px;" ngf-thumbnail="icon.file" class="thumb">
+		                  
+		                  <span ng-show="ctrl.form.$error.file" style="float: right;">
+		                    <p class="error-message"><gdb:localize key="category.icon.badFileType"/></p>
+		                  </span>
+		                </div>          
+		              </span>
+		            </div>
+		          </div>
+		          <div class="row-holder">
+		            <div class="label-holder">
+		            </div>                    
+		            <div class="holder">
+		              <div class="button-holder">
+		                <input type="button" value="Cancel" class="btn btn-default" ng-click="ctrl.cancel()" />              
+		                <input ng-show="!editIcon" type="button" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" ng-click="ctrl.create()" ng-disabled="ctrl.form.$invalid" />                
+		                <input ng-show="editIcon" type="button" value="Update" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
+		              </div>
+		            </div>
+		          </div>
+		        </fieldset>  
+		      </div>
+		    </div>
+		  </form>
       </dl>
     </div>
   </div>

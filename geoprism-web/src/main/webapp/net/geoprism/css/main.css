@@ -2711,6 +2711,13 @@ option[selected]{ font-weight:bold}
     margin-right: 10px;
 }
 
+#uploader-div .wide-holder .label-help-ico-container{
+	display: inline-block;
+}
+#uploader-div .wide-holder .label-help-ico-container .fa.fa-question-circle.help-info-ico{
+	position: absolute;
+}
+
 .modal-form .holder .location-selector-container p{
     top: 50%;
     -webkit-transform: translateY(-50%);
@@ -4042,24 +4049,33 @@ div.secondary-box label {
     padding-top: 1px;
   }
 	
-	.modal-form .inline-combo {
+  .modal-form .inline-combo {
     float: left;
     position: relative;
-    width: 150px;
+    width: 300px;
     padding-right: 5px;
     padding-top: 1px;
   }
 	
-	.modal-form .inline-value {
+  .modal-form .inline-value {
     float: left;
     position: relative;
-    width: 150px;
+    width: 225px;
     min-width: 150px;
     padding-right: 5px;
     padding-top: 1px;
   }
+  
+  .modal-form .inline-actions {
+    float: left;
+    position: relative;
+    width: 125px;
+    min-width: 125px;
+    padding-right: 5px;
+    padding-top: 1px;
+  }
 	
-	.modal-form .inline-text input[type="text"] {
+  .modal-form .inline-text input[type="text"] {
     background: #EEE none repeat scroll 0% 0%;
     border: 1px solid #AAA;
     margin: 0px;
@@ -4540,13 +4556,13 @@ div.secondary-box label {
 }
 
 
-#uploader-div div.inline-value > span.fa-stack.fa-lg{
-	position: absolute;
+#uploader-div div.inline-actions > span.fa-stack.fa-lg{
+	vertical-align: top;
 }
-#uploader-div div.inline-value > span.fa-stack.fa-lg:hover{
+#uploader-div div.inline-actions > span.fa-stack.fa-lg:hover{
 	cursor: pointer;
 }
-#uploader-div div.inline-value > span.fa-stack.fa-lg:hover .fa.fa-square.fa-stack-2x{
+#uploader-div div.inline-actions > span.fa-stack.fa-lg:hover .fa.fa-square.fa-stack-2x{
 	color:#00bfff;
 }
 .fa.fa-square.fa-stack-2x{
@@ -4556,11 +4572,11 @@ div.secondary-box label {
 	color: white;
 }
 
-#uploader-div i .fa.fa-undo{
+#uploader-div i.fa.fa-undo{
 	font-size: 30px;
 	color: #bababa;
 }
-#uploader-div i .fa.fa-undo:hover{
+#uploader-div i.fa.fa-undo:hover{
 	color:#00bfff;
 	cursor: pointer;
 }

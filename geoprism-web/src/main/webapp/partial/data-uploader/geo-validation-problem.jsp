@@ -37,7 +37,7 @@
         <div class="inline-combo">
           <input class="synonym" name="{{::$index + '-name'}}" type="text" placeholder="<gdb:localize key="dataUploader.synonymSearchPlaceholder"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.setSynonym"></input>
         </div>
-        <div class="inline-value">
+        <div class="inline-actions">
             <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymFromLocationTooltip"/>" ></i>
         	<i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" ng-click="ctrl.createEntity()" title="<gdb:localize key="dataUploader.createNewLocationTooltip"/>" ></i>
         	<span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" ng-click="ctrl.ignoreDataAtLocation()">

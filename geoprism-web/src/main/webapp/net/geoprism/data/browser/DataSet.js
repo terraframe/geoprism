@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DatasetController($scope, $timeout, datasetService, localizationService, widgetService) {
+  function DatasetController($scope, $timeout, datasetService, localizationService, widgetService, $window) {
     var controller = this;
     
     controller.init = function() {
@@ -48,12 +48,13 @@
     	 var connection = {
        	        elementId : '#innerFrameHtml',
        	        onSuccess : function(dataset) {
-       	          console.log(dataset);
        	          var index = controller.getIndex(dataset);
        	          var ds = $scope.datasets[index];
        	          ds.label = dataset.label;
        	          
        	          ds.editMode = false;
+       	          $window.onclick = null;
+       	          $scope.orignialDatasetState = null;
        	          $scope.$apply();
        	        }
        	  };
@@ -66,12 +67,23 @@
     	if(!$scope.orignialDatasetState){
     		$scope.orignialDatasetState = angular.copy(dataset);
     	}
+    	
+    	  // cancel edit mode if clicking outsid of the input element unless its a button (i.e. submit or cancel)
+    	  $window.onclick = function (event) {
+    		  if( !event.target.classList.contains("dataset-list-input") && event.target.type !== 'button' ){
+    			  controller.cancelDatasetEdit(dataset);
+    			  $scope.$apply();
+    		  }
+          };
     }
     
     controller.cancelDatasetEdit = function(dataset) {
-	    dataset.label = $scope.orignialDatasetState.label;
+    	if($scope.orignialDatasetState){
+    		dataset.label = $scope.orignialDatasetState.label;
+    	}
 	    dataset.editMode = false;
     	$scope.orignialDatasetState = null;
+    	$window.onclick = null;
     }
     
     controller.datasetElementHover = function($event) {
@@ -178,4 +190,17 @@
   angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "widget-service", "runway-service"]);
   angular.module("data-set")
   .controller('DatasetController', DatasetController)
+  .directive('pressEnter', function () {
+	    return function (scope, element, attrs) {
+	        element.bind("keydown keypress", function (event) {
+	            if(event.which === 13) {
+	                scope.$apply(function (){
+	                    scope.$eval(attrs.pressEnter);
+	                });
+
+	                event.preventDefault();
+	            }
+	        });
+	    };
+	});
 })();
