@@ -4684,26 +4684,43 @@ li.list-group-item a{
 	
   .navbar-default .navbar-nav > li > a {
     color: white;
+    font-size: 15px;
   }
   
-  .navbar-default:hover .navbar-nav:hover > li > a {
-    color:#f8f8f8;
+  .navbar-default .navbar-nav > li:hover > a {
+    color:#00bfff;
   }
   
   .navbar-default .navbar-nav > li > a {
     color: white;
   }
   
-  .navbar-default:hover .navbar-nav:hover > li > a {
-    color:#f8f8f8;
+  
+  .navbar-default .navbar-nav > li img {
+    height: 30px;
   }
   
   .navbar-default .navbar-brand {
     color: white;
+    font-size: 20px;
   }
   
   .navbar-default:hover .navbar-brand {
     color:#f8f8f8;
+  }
+  
+  .navbar-default .navbar-header > a:hover {
+  	color:#00bfff;
+  }
+  
+  .navbar-default .navbar-header > a > img {
+    height: 30px;
+  }
+  
+  /* This is intended for the geoprism icon menu link */
+  .navbar-default .navbar-header > a:first-child {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   	
 	
