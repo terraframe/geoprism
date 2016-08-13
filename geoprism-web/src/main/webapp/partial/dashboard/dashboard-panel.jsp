@@ -56,6 +56,12 @@
 	       					<p><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></p>
 	       				</li>
 	       			</a>
+	       			<a href="/management">
+	           			<li ng-if="dashboard.canEdit()">
+	           				<i class="fa fa-table"></i>
+	           				<p><gdb:localize key="dashboardViewer.dataManagementLinkLabel"/></p>
+	           			</li>
+           			</a>
 	       			<a href="/">
 	           			<li ng-if="dashboard.canEdit()">
 	           				<i class="fa fa-lock"></i>
