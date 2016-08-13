@@ -1030,7 +1030,7 @@ a.blueactive,
 	font-weight:normal;
 	color:#ececec;
 	margin:1px 0 0;
-	max-width: 155px;
+	max-width: 130px;
 }
 .control-form .cell{float:right;}
 
@@ -1931,6 +1931,18 @@ a.fa.fa-plus.referenceLayer.ico-enable::before{
 	.modal-form :focus:-ms-input-placeholder{opacity:0 !important;}
 	.modal-form :focus:-moz-placeholder{opacity:0 !important;}
 	.modal-form :focus::-moz-placeholder{opacity:0 !important;}
+	
+	input ::-webkit-input-placeholder{color:darkgrey !important;}
+	input :-ms-input-placeholder{color:darkgrey !important;}
+	input :-moz-placeholder{color:darkgrey !important;}
+	input ::-moz-placeholder{
+		color:darkgrey !important;
+		opacity:1 !important;
+	}
+	input :focus::-webkit-input-placeholder{opacity:0 !important;}
+	input :focus:-ms-input-placeholder{opacity:0 !important;}
+	input :focus:-moz-placeholder{opacity:0 !important;}
+	input :focus::-moz-placeholder{opacity:0 !important;}
 	
 .modal-form .text{
 	float:left;
@@ -4475,6 +4487,11 @@ div.secondary-box label {
 	width: 15%;
 }
 
+.datasets-table-wrapper{
+	height: 400px;
+    overflow-y: auto;
+}
+
 #manage-datasets-table td{
     vertical-align: middle;
 }
@@ -4596,6 +4613,9 @@ div.secondary-box label {
 
 li.list-group-item{
 	background-color: rgba(255,255,255,0.75);
+}
+
+#match-datasets-list {
 }
 
 #match-datasets-list li:nth-child(2n+2){

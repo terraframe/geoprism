@@ -37,24 +37,25 @@
   </div>
   
   <div ng-if="datasets === null"><gdb:localize key='dataset.loadingData'/></div>
-  
-  <table id="manage-datasets-table" class="table table-bordered table-striped">        
-    <tbody>
-      <tr ng-repeat="dataset in datasets" class="fade-ngRepeat-item" ng-cloak>
-        <td class="button-column">
-          <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(dataset)" title="<gdb:localize key="dataset.editTooltip"/>"></a>                             
-          <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
-        </td>
-        <td class="submit-form">
-          <input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="orignialDatasetState || ctrl.setDatasetState(dataset)" press-enter="ctrl.apply(dataset)" ng-readonly="!dataset.editMode">
-            <i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
-          </input>
-          <button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)"><gdb:localize key="dataset.submit"/></button>
-          <button type="button" class="btn btn-default" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.cancelDatasetEdit(dataset)"><gdb:localize key="dataset.cancel"/></button>
-        </td>
-      </tr>
-    </tbody>    
-  </table>
+  <div class="datasets-table-wrapper">
+	  <table id="manage-datasets-table" class="table table-bordered table-striped">        
+	    <tbody>
+	      <tr ng-repeat="dataset in datasets" class="fade-ngRepeat-item" ng-cloak>
+	        <td class="button-column">
+	          <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(dataset)" title="<gdb:localize key="dataset.editTooltip"/>"></a>                             
+	          <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
+	        </td>
+	        <td class="submit-form">
+	          <input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="orignialDatasetState || ctrl.setDatasetState(dataset)" press-enter="ctrl.apply(dataset)" ng-readonly="!dataset.editMode">
+	            <i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
+	          </input>
+	          <button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)"><gdb:localize key="dataset.submit"/></button>
+	          <button type="button" class="btn btn-default" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.cancelDatasetEdit(dataset)"><gdb:localize key="dataset.cancel"/></button>
+	        </td>
+	      </tr>
+	    </tbody>    
+	  </table>
+   </div>
   
   <div class="drop-box-container" ngf-drag-over-class="'drop-active'" ngf-select="ctrl.uploadFile($files)" ngf-drop="ctrl.uploadFile($files)" ngf-multiple="false" ngf-drop-available="dropAvailable" fire-on-ready>
     <div class="drop-box">
