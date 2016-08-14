@@ -959,7 +959,6 @@ a.blueactive,
 	left:0;
 	top:23px;
 	z-index:10;
-	width:230px;
 	margin:0;
 }
 .control-form .info-box{
@@ -1030,7 +1029,7 @@ a.blueactive,
 	font-weight:normal;
 	color:#ececec;
 	margin:1px 0 0;
-	max-width: 130px;
+	max-width: 175px;
 }
 .control-form .cell{float:right;}
 
@@ -1039,7 +1038,7 @@ a.blueactive,
   height: 36px;
   position: absolute;
   background-color: rgba(0,0,0,0.7);
-  left: 245px;
+  left: 290px;
   top: 75px;
   border-radius: 3px;
   border: solid 1px black;
@@ -3393,7 +3392,7 @@ span.select-area span.center {
 	}
 
 	
-/*** 
+		/*** 
 ** Legend
 ***/
 	.legend-container {
@@ -3414,7 +3413,7 @@ span.select-area span.center {
 	
 	#legend-collapse-container.accordion.info-box {
 		padding: 2px;
-		max-width: 235px;
+		max-width: 280px;
 	}
 	
 	#legend-container-group {
@@ -3490,6 +3489,7 @@ span.select-area span.center {
 	.legend-image {
 		float: left;
 	}
+	
 	
 /* 
 *
