@@ -75,6 +75,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Transaction
+  @Authenticate
   public static String createGeoEntity(String parentId, String universalId, String label)
   {
     Universal universal = Universal.get(universalId);
@@ -92,6 +93,15 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Transaction
+  @Authenticate
+  public static void deleteGeoEntity(String entityId)
+  {
+    GeoEntity entity = GeoEntity.get(entityId);
+    entity.delete();
+  }
+
+  @Transaction
+  @Authenticate
   public static String createGeoEntitySynonym(String entityId, String label)
   {
     try
@@ -113,6 +123,14 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void deleteGeoEntitySynonym(String synonymId)
+  {
+    Synonym synonym = Synonym.get(synonymId);
+    synonym.delete();
   }
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)
