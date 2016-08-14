@@ -53,13 +53,13 @@
 <%--         <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.ignoreAtLocation"/>" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" class="btn" ng-click="ctrl.ignoreDataAtLocation()" /></div> --%>
       </div>
       <div ng-if="problem.resolved">
-        <div class="inline-value" ng-if="problem.action.name == 'ENTITY'">
+        <div class="inline-combo" ng-if="problem.action.name == 'ENTITY'">
           <gdb:localize key="dataUploader.resolvedEntity"/>
         </div>      
-        <div class="inline-value" ng-if="problem.action.name == 'SYNONYM'">
+        <div class="inline-combo" ng-if="problem.action.name == 'SYNONYM'">
           <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
         </div> 
-        <div class="inline-value">    
+        <div class="inline-actions">    
         	<i class="fa fa-undo" ng-click="ctrl.undoAction()" title="<gdb:localize key="dataUploader.undoFixedLocationTooltip"/>" ></i> 
         </div>
 <%--         <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.undo"/>" class="btn btn-primary" ng-click="ctrl.undoAction()"/></div> --%>
