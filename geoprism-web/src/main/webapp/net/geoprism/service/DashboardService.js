@@ -147,6 +147,12 @@
       com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
     }
     
+    service.removeReport = function(dashboardId, elementId, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+        
+      net.geoprism.report.ReportItemController.remove(request, dashboardId);
+    }
+    
     service.cloneDashboard = function(dashboardId, label, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
     
