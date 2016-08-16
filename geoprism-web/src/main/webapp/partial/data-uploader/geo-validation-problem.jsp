@@ -57,7 +57,7 @@
           <gdb:localize key="dataUploader.resolvedEntity"/>
         </div>      
         <div class="inline-combo" ng-if="problem.action.name == 'SYNONYM'">
-          <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
+          <synonym-action action="problem.action"></synonym-action>
         </div> 
         <div class="inline-actions">    
         	<i class="fa fa-undo" ng-click="ctrl.undoAction()" title="<gdb:localize key="dataUploader.undoFixedLocationTooltip"/>" ></i> 

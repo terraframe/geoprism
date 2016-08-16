@@ -63,7 +63,8 @@
           $scope.problem.action = {
             name : 'SYNONYM',
             synonymId : response.synonymId,
-            label : response.label
+            label : response.label,
+            ancestors : response.ancestors            
           };
          
           $scope.$apply();
@@ -1330,6 +1331,35 @@
     }   
   }  
   
+  function SynonymActionController($scope) {
+    var controller = this;
+      
+    controller.init = function() {
+      $scope.show = false;
+    }
+      
+    controller.toggle = function() {
+      $scope.show = !$scope.show;
+    }
+      
+    controller.init();
+  }
+    
+  function SynonymAction() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/synonym-action.jsp',
+      scope: {
+        action : '='
+      },
+      controller : SynonymActionController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  } 
+  
   function ValidateUnique() {
     return {
       restrict: "A",
@@ -1378,5 +1408,6 @@
    .directive('summaryPage', SummaryPage)
    .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
+   .directive('synonymAction', SynonymAction)
    .directive('uploaderDialog', UploaderDialog);
 })();

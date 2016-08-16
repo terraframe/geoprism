@@ -25,13 +25,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.geoprism.ontology.GeoEntityUtilDTO;
+
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.system.gis.geo.GeoEntityDTO;
-import com.runwaysdk.system.gis.geo.SynonymDTO;
 
 public class DataUploaderController extends DataUploaderControllerBase implements Reloadable
 {
@@ -197,5 +197,5 @@ public class DataUploaderController extends DataUploaderControllerBase implement
     {
       JSONControllerUtil.handleException(this.resp, t, request);
     }    
-  }
+  }  
 }
