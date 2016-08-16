@@ -46,7 +46,7 @@
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == 'NUMBER'">
@@ -58,7 +58,7 @@
           <option value="LONGITUDE"><gdb:localize key="dataUploader.longitude"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>          
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == 'DATE'">
@@ -66,7 +66,7 @@
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="DATE"><gdb:localize key="dataUploader.date"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == 'BOOLEAN'">
@@ -74,14 +74,14 @@
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == ''">
         <label><gdb:localize key="dataUploader.type"/></label>
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box fade-ngIf" ng-if="field.type == 'LOCATION'">

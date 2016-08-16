@@ -4362,10 +4362,10 @@ div.secondary-box label {
     display: block;
     background: #aaa;
     height: 3px;
-    width: 130px;
+    width: 128px;
     position: absolute;
     bottom: 10px;
-    left: 60px;
+    left: 61px;
 }
 
 .wizard-progress li:last-of-type .step-num:after {
@@ -4488,7 +4488,7 @@ div.secondary-box label {
 }
 
 .datasets-table-wrapper{
-	height: 400px;
+	max-height: 400px;
     overflow-y: auto;
 }
 
@@ -4606,10 +4606,58 @@ div.secondary-box label {
 	padding-top: 2px;
 	font-size: 11px;
 }
-
 .fa-stack-1x, .fa-stack-2x{
-	width: 99% !important;
+/* 	width: 99% !important; */
 }
+
+
+.large-icon-stack-wrapper .fa-stack-text.file-text.fa.fa-plus-square,
+.large-icon-stack-wrapper .fa-stack-text.file-text.fa.fa-minus-square,
+.large-icon-stack-wrapper .fa-stack-text.file-text.fa.fa-pencil-square {
+    position: absolute;
+    right: -3px;
+    top: -7px;
+    background-color: white;
+    padding: 0;
+    height: 30px; /*to hide overflowing background **/
+/*     width: 29px; to hide overflowing background * */
+}
+
+
+#uploader-div a.fa-stack:hover .fa.fa-plus-square,
+#uploader-div a.fa-stack:hover .fa.fa-pencil-square {
+	
+}
+
+.large-icon-stack-wrapper {
+    width: 160px;
+    display: inline-block;
+    padding: 20px;
+    text-align: center;
+}
+
+.medium-icon-wrapper {
+	display: inline-block;
+    float: right;
+    text-align: center;
+    padding-left: 10px;
+    font-size: 22px;
+}
+
+.large-icon-stack-wrapper a {
+	color: #bababa;
+}
+.large-icon-stack-wrapper a:hover {
+	color: #00bfff;
+}
+
+.medium-icon-wrapper a {
+	color: #bababa;
+}
+.medium-icon-wrapper a:hover {
+	color: #00bfff;
+}
+
 
 li.list-group-item{
 	background-color: rgba(255,255,255,0.75);
