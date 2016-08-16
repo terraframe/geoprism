@@ -135,6 +135,9 @@ form legend{
 	  border-color:#009edc;
 	  background:#009edc;
 	}
+	button.btn-primary:hover > i {
+		margin-left: 5px;
+	}
 	.btn-primary:focus,
 	.btn-primary:active,
 	.btn.btn-primary.ui-button.ui-widget:focus,
@@ -4501,11 +4504,14 @@ div.secondary-box label {
 }
 
 #manage-datasets-table .fa.fa-pencil.ico-edit{
-	font-size: 20px;
+	font-size: 25px;
 	float: none;
 	color: #bababa;
     margin-left: -35px;
     margin-top: 6px;
+}
+#manage-datasets-table .fa.fa-pencil.ico-edit:hover{
+	color: #00bfff;
 }
 
 #manage-datasets-table .icon-thumbnail-column {
