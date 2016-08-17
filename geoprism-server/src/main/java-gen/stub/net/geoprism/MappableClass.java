@@ -43,9 +43,6 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.BusinessInfo;
-import com.runwaysdk.constants.MdAttributeLocalInfo;
-import com.runwaysdk.constants.MdTypeInfo;
-import com.runwaysdk.dataaccess.EntityDAO;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributePrimitiveDAOIF;
@@ -67,6 +64,7 @@ import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
@@ -172,8 +170,6 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       nodes.close();
     }
 
-    super.delete();
-
     /*
      * Delete the corresponding MappableAttributes
      */
@@ -183,6 +179,8 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       mAttribute.delete();
     }
+
+    super.delete();
 
     /*
      * Delete all of the data views which reference this type
@@ -730,38 +728,45 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
-  // @Transaction
-  // @Authenticate
-  // public static void edit(String id)
-  // {
-  // MappableClass mClass = MappableClass.get(id);
-  //
-  // }
-
   @Transaction
+  @Authenticate
   public static void applyDatasetUpdate(String dataset)
   {
-    JSONObject dsJSONObj = null;
-    String dsLabel = null;
-    String dsId = null;
     try
     {
-      dsJSONObj = new JSONObject(dataset);
-      dsId = dsJSONObj.getString("id");
-      dsLabel = dsJSONObj.getString("label");
+      JSONObject object = new JSONObject(dataset);
+      String label = object.getString("label");
+      String id = object.getString("id");
+
+      MappableClass ds = MappableClass.get(id);
+
+      MdClass mdClass = ds.getWrappedMdClass();
+      mdClass.lock();
+      mdClass.getDisplayLabel().setValue(label);
+      mdClass.apply();
+
+      if (object.has("attributes"))
+      {
+        JSONArray attributes = object.getJSONArray("attributes");
+
+        for (int i = 0; i < attributes.length(); i++)
+        {
+          JSONObject attribute = attributes.getJSONObject(i);
+          String attributeId = attribute.getString("id");
+          String attributeLabel = attribute.getString("label");
+
+          MdAttributeConcrete mdAttribute = MdAttributeConcrete.lock(attributeId);
+          mdAttribute.getDisplayLabel().setValue(attributeLabel);
+          mdAttribute.apply();
+        }
+      }
+
+      ds.unlock();
     }
-    catch (JSONException e1)
+    catch (JSONException e)
     {
-      throw new ProgrammingErrorException(e1);
+      throw new ProgrammingErrorException(e);
     }
-
-    MappableClass ds = MappableClass.get(dsId);
-
-    MdClassDAOIF mdClass = (MdClassDAOIF) MdClassDAO.get(ds.getWrappedMdClassId());
-    EntityDAO entityDAO = mdClass.getEntityDAO();
-    entityDAO.setStructValue(MdTypeInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, dsLabel);
-    entityDAO.apply();
-
   }
 
   @Transaction

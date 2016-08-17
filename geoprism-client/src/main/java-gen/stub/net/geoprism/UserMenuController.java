@@ -21,8 +21,8 @@ package net.geoprism;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -36,17 +36,27 @@ import com.runwaysdk.util.FileIO;
 
 public class UserMenuController extends UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  public static final String JSP_DIR    = "/WEB-INF/";
+  public static final String JSP_DIR         = "/WEB-INF/";
 
-  public static final String LAYOUT     = "WEB-INF/templates/basicLayout.jsp";
+  public static final String LAYOUT          = "WEB-INF/templates/basicLayout.jsp";
 
-  public static final String MENU       = "net/geoprism/userMenu/userMenu.jsp";
+  public static final String MENU            = "net/geoprism/userMenu/userMenu.jsp";
 
-  public static final String DASHBOARDS = "net/geoprism/userMenu/userDashboards.jsp";
+  public static final String DATA_MANAGEMENT = "net/geoprism/userMenu/data-management.jsp";
+
+  public static final String DASHBOARDS      = "net/geoprism/userMenu/userDashboards.jsp";
 
   public UserMenuController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
+  }
+
+  @Override
+  public void dataManagement() throws IOException, ServletException
+  {
+    JavascriptUtil.loadDataManagementBundle(this.getClientRequest(), this.req);
+
+    req.getRequestDispatcher(JSP_DIR + DATA_MANAGEMENT).forward(req, resp);
   }
 
   @Override
@@ -59,7 +69,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet();
 
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-    
+
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
     {
@@ -73,8 +83,11 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
 
+    Set<String> roleNames = this.getAssignedRoleNames();
+
     this.req.setAttribute("dashboards", dashboards);
-    this.req.setAttribute("isAdmin", this.userIsAdmin());
+    this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
+
     setLogoReqAttrs();
 
     render(DASHBOARDS);
@@ -128,7 +141,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   public void menu() throws IOException, ServletException
   {
     JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-    
+
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
     {
@@ -142,7 +155,11 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
 
-    this.req.setAttribute("isAdmin", this.userIsAdmin());
+    Set<String> roleNames = this.getAssignedRoleNames();
+
+    this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
+    this.req.setAttribute("isBuilder", roleNames.contains(RoleConstants.BUILDER_ROLE));
+
     setLogoReqAttrs();
 
     render(MENU);
@@ -165,24 +182,19 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     }
   }
 
-  private boolean userIsAdmin()
+  private Set<String> getAssignedRoleNames()
   {
+    Set<String> roleNames = new TreeSet<String>();
+
     GeoprismUserDTO currentUser = GeoprismUserDTO.getCurrentUser(this.getClientRequest());
 
     List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
     for (RolesDTO role : userRoles)
     {
-      Pattern regex = Pattern.compile("\\.(\\S+)");
-      Matcher match = regex.matcher(role.getRoleName());
-      if (match.find())
-      {
-        if (match.group(1).equals("admin.Administrator"))
-        {
-          return true;
-        }
-      }
+      roleNames.add(role.getRoleName());
     }
-    return false;
+
+    return roleNames;
   }
 
 }

@@ -298,4 +298,15 @@ public class JavascriptUtil implements Reloadable
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
+
+  public static void loadDataManagementBundle(ClientRequestIF request, HttpServletRequest req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(CategoryIconController.CLASS);
+    types.add(DataSetController.CLASS);
+    types.add(DataUploaderController.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
+
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
 }

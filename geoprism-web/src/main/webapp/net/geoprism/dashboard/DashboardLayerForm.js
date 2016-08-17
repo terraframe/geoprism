@@ -86,7 +86,7 @@
         
         // update the value categories
       for(var i=0; i<cats.length; i++){
-        var cat = cats[0];
+        var cat = cats[i];
         if(newValue){
           cat.isRangeCat = true;
           }

@@ -25,27 +25,28 @@
   <modal-dialog modal="uploader-div" overlay="uploader-overlay" ng-if="show">
     <div role="dialog" class="ng-modal-content modal-content" style="display: none;" show-on-ready>
       	
-      	<div class="uploader-step-indicator-container" ng-if="page.current != 'MATCH' && !updateExistingDataset">
+      	<div class="uploader-step-indicator-container" ng-if="page.current != 'MATCH-INITIAL' && page.current != 'MATCH' && !updateExistingDataset">
 	      	<ol class="wizard-progress clearfix">
 			    <li ng-class="{'active-step' : page.current == step.page, 'status-li-disabled' : $index < currentStep}" ng-repeat="step in userSteps track by $index">
-			        <span ng-if="step.label == '1'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
-			        <span ng-if="step.label == '2'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep2"/></span>
-			        <span ng-if="step.label == '3'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep3"/></span>
-			        <span ng-if="step.label == '4'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep4"/></span>
-			        <span ng-if="step.label == '5'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep5"/></span>
-			        <span ng-if="step.label == '6'" class="step-name"><gdb:localize key="dataUploader.uploadStepsLabelStep6"/></span>
+			        <span ng-if="step.label == '1'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
+			        <span ng-if="step.label == '2'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep2"/></span>
+			        <span ng-if="step.label == '3'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep3"/></span>
+			        <span ng-if="step.label == '4'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep4"/></span>
+			        <span ng-if="step.label == '5'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep5"/></span>
+			        <span ng-if="step.label == '6'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep6"/></span>
 			        <span class="visuallyhidden">Step </span><span class="step-num">{{$index + 1}}</span>
 			    </li>
 			</ol>
 		</div>      
       <div class="heading">
-        <h1 class="ui-dialog-title" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
-        <h1 class="ui-dialog-title" ng-if="page.current == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
-        <h1 class="ui-dialog-title" ng-if="page.current == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
-        <h1 class="ui-dialog-title" ng-if="page.current == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
-        <h1 class="ui-dialog-title" ng-if="page.current == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
-        <h1 class="ui-dialog-title" ng-if="page.current == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
-        <h1 class="ui-dialog-title" ng-if="page.current == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'MATCH-INITIAL'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'GEO-VALIDATION'"><gdb:localize key="dataUploader.titleLocationValidation"/></h1>
       </div>
       <form name="form" class="modal-form">
@@ -62,13 +63,14 @@
         <div>
           <fieldset>
             <section class="form-container">
-              <match-page ng-if="page.current == 'MATCH'"></match-page>  
-              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'"></beginning-info-page>            
-              <name-page ng-if="page.current == 'INITIAL'"></name-page>
-              <attributes-page ng-if="page.current == 'FIELDS'"></attributes-page>
-              <location-page ng-if="page.current == 'LOCATION'"></location-page>
-              <coordinate-page ng-if="page.current == 'COORDINATE'"></coordinate-page>
-              <summary-page ng-if="page.current == 'SUMMARY'"></summary-page>
+              <match-initial-page ng-if="page.current == 'MATCH-INITIAL'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-initial-page> 
+              <match-page ng-if="page.current == 'MATCH'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-page>  
+              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></beginning-info-page>            
+              <name-page ng-if="page.current == 'INITIAL'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
+              <attributes-page ng-if="page.current == 'FIELDS'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
+              <location-page ng-if="page.current == 'LOCATION'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
+              <coordinate-page ng-if="page.current == 'COORDINATE'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
+              <summary-page ng-if="page.current == 'SUMMARY'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
               <geo-validation-page ng-if="page.current == 'GEO-VALIDATION'"></geo-validation-page>
             </section>            
           </fieldset>
@@ -92,21 +94,13 @@
                   ng-disabled="busy"
                 /> 
                 <input
-                  ng-if="page.current != 'SUMMARY' && page.current != 'MATCH' && page.current != 'GEO-VALIDATION'"      
+                  ng-if="page.current != 'MATCH-INITIAL' && page.current != 'SUMMARY' && page.current != 'MATCH' && page.current != 'GEO-VALIDATION'"      
                   type="button"
                   value="<gdb:localize key="dataUploader.next"/>"
                   class="btn btn-primary" 
                   ng-click="ctrl.next()"
                   ng-disabled="form.$invalid || busy"
                 />
-                <input
-                  ng-if="page.current == 'MATCH'"      
-                  type="button"
-                  value="<gdb:localize key="dataUploader.newDataset"/>"
-                  class="btn btn-primary" 
-                  ng-click="ctrl.next()"
-                  ng-disabled="form.$invalid || busy"
-                />                
                 <input 
                   ng-if="page.current == 'SUMMARY' || page.current == 'GEO-VALIDATION'"
                   type="button"

@@ -20,6 +20,7 @@ package net.geoprism.ontology;
 
 import java.sql.Savepoint;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -585,6 +586,38 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       {
         iterator.close();
       }
+    }
+  }
+
+  public static String getAncestorsAsJSON(String entityId)
+  {
+    try
+    {
+      GeoEntity root = GeoEntity.getRoot();
+      GeoEntity entity = GeoEntity.get(entityId);
+
+      JSONArray array = new JSONArray();
+
+      List<Term> ancestors = entity.getAllAncestors(LocatedIn.CLASS).getAll();
+
+      Collections.reverse(ancestors);
+
+      for (Term ancestor : ancestors)
+      {
+        if (!ancestor.getId().equals(root.getId()))
+        {
+          JSONObject object = new JSONObject();
+          object.put("label", ancestor.getDisplayLabel().getValue());
+
+          array.put(object);
+        }
+      }
+
+      return array.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
     }
   }
 }

@@ -60,25 +60,24 @@
     <permissions>
       <role roleName="geoprism.admin.Administrator">
         <grant>
-          <mdRelationshipPermission type="net.geoprism.dashboard.layer.CategoryIcon">
+          <mdBusinessPermission type="net.geoprism.dashboard.layer.CategoryIcon">
             <operation name="ALL" />
-          </mdRelationshipPermission>      
+          </mdBusinessPermission>      
         </grant>
       </role>
       <role roleName="geoprism.admin.DashboardBuilder">
         <grant>
-          <mdRelationshipPermission type="net.geoprism.dashboard.layer.CategoryIcon">
-            <operation name="READ" />
-            <operation name="READ_ALL_ATTRIBUTES" />
-          </mdRelationshipPermission>      
+          <mdBusinessPermission type="net.geoprism.dashboard.layer.CategoryIcon">
+            <operation name="ALL" />
+          </mdBusinessPermission>      
         </grant>
       </role>      
       <role roleName="geoprism.DecisionMaker">
         <grant>
-          <mdRelationshipPermission type="net.geoprism.dashboard.layer.CategoryIcon">
+          <mdBusinessPermission type="net.geoprism.dashboard.layer.CategoryIcon">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
-          </mdRelationshipPermission>      
+          </mdBusinessPermission>      
         </grant>
       </role>
     </permissions>    

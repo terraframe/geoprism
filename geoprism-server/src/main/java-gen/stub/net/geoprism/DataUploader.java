@@ -37,6 +37,7 @@ import net.geoprism.data.etl.excel.InvalidExcelFileException;
 import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.gis.geoserver.SessionPredicate;
 import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -75,6 +76,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Transaction
+  @Authenticate
   public static String createGeoEntity(String parentId, String universalId, String label)
   {
     Universal universal = Universal.get(universalId);
@@ -92,6 +94,15 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Transaction
+  @Authenticate
+  public static void deleteGeoEntity(String entityId)
+  {
+    GeoEntity entity = GeoEntity.get(entityId);
+    entity.delete();
+  }
+
+  @Transaction
+  @Authenticate
   public static String createGeoEntitySynonym(String entityId, String label)
   {
     try
@@ -106,6 +117,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       JSONObject object = new JSONObject();
       object.put("synonymId", tr.getTerm().getId());
       object.put("label", entity.getDisplayLabel().getValue());
+      object.put("ancestors", new JSONArray(GeoEntityUtil.getAncestorsAsJSON(entityId)));
 
       return object.toString();
     }
@@ -113,6 +125,14 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void deleteGeoEntitySynonym(String synonymId)
+  {
+    Synonym synonym = Synonym.get(synonymId);
+    synonym.delete();
   }
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)

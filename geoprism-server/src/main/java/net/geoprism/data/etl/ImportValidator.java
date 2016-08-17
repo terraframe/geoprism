@@ -18,6 +18,7 @@
  */
 package net.geoprism.data.etl;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,11 +32,47 @@ import net.geoprism.ontology.GeoEntityUtil;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
+import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class LocationValidator implements ConverterIF
+public class ImportValidator implements ConverterIF
 {
+  public static class DecimalAttribute
+  {
+    private int precision;
+
+    private int scale;
+
+    public DecimalAttribute()
+    {
+      this.precision = 0;
+      this.scale = 0;
+    }
+
+    public void setPrecision(Integer precision)
+    {
+      this.precision = Math.max(this.precision, precision);
+    }
+
+    public void setScale(Integer scale)
+    {
+      this.scale = Math.max(this.scale, scale);
+    }
+
+    public int getPrecision()
+    {
+      return precision;
+    }
+
+    public int getScale()
+    {
+      return scale;
+    }
+  }
+
   private static class State
   {
     private Collection<Term> universals;
@@ -73,17 +110,20 @@ public class LocationValidator implements ConverterIF
     }
   }
 
-  private TargetContextIF        context;
+  private TargetContextIF               context;
 
-  private Set<LocationProblemIF> problems;
+  private Set<LocationProblemIF>        problems;
 
-  private Map<String, State>     states;
+  private Map<String, State>            states;
 
-  public LocationValidator(TargetContextIF context)
+  private Map<String, DecimalAttribute> attributes;
+
+  public ImportValidator(TargetContextIF context)
   {
     this.context = context;
     this.problems = new TreeSet<LocationProblemIF>();
     this.states = new HashMap<String, State>();
+    this.attributes = new HashMap<String, DecimalAttribute>();
 
     List<TargetDefinitionIF> definitions = context.getDefinitions();
 
@@ -126,8 +166,48 @@ public class LocationValidator implements ConverterIF
             this.problems.add(problem);
           }
         }
+        else if (field instanceof TargetFieldBasic)
+        {
+          MdAttributeConcreteDAOIF mdAttribute = MdAttributeConcreteDAO.getByKey(field.getKey());
+
+          if (mdAttribute instanceof MdAttributeDecDAOIF)
+          {
+            FieldValue fValue = field.getValue(mdAttribute, source);
+            String value = (String) fValue.getValue();
+
+            if (value != null && value.length() > 0)
+            {
+              try
+              {
+                BigDecimal decimal = new BigDecimal(value).stripTrailingZeros();
+
+                this.attributes.putIfAbsent(mdAttribute.getId(), new DecimalAttribute());
+
+                /*
+                 * Precision is the total number of digits. Scale is the number of digits after the decimal place.
+                 */
+                DecimalAttribute attribute = this.attributes.get(mdAttribute.getId());
+
+                int precision = decimal.precision();
+                int scale = decimal.scale();
+
+                attribute.setPrecision(precision - scale);
+                attribute.setScale(scale);
+              }
+              catch (Exception e)
+              {
+                // Skip this error
+              }
+            }
+          }
+        }
       }
     }
+  }
+
+  public Map<String, DecimalAttribute> getAttributes()
+  {
+    return attributes;
   }
 
   public Collection<LocationProblemIF> getProblems()

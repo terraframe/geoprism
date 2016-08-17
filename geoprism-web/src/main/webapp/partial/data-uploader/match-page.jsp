@@ -35,19 +35,16 @@
     <strong><gdb:localize key="dataUploader.existingDataset"/></strong>
   </div>
   <div class="holder">
-  	<ul class="list-group">   
+  	<ul id="match-datasets-list" class="list-group">   
         <li class="list-group-item" ng-repeat="match in sheet.matches track by $index">
         	{{match.label}}            
   		
-  		    <a href="#" class="fa-stack fa-1x pull-right" ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>">
-    			<i class="fa fa-file-o fa-stack-2x"></i>
-      			<i class="fa-stack-1x fa-stack-text file-text fa fa-minus"></i>
-  			</a>
-  			<a href="#" class="fa-stack fa-1x pull-right" ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>">
-    			<i class="fa fa-file-o fa-stack-2x"></i>
-      			<i class="fa-stack-1x fa-stack-text file-text fa fa-plus"></i>
-  			</a>
-
+  		    <div class="medium-icon-wrapper">
+  				<a href="#" class="fa fa-plus-square" ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>"></a>
+  			</div>
+  			<div class="medium-icon-wrapper">
+	    		<a href="#" class="fa fa-minus-square" ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>"></a>
+  			</div>
   		</li>
     </ul>
   </div> 

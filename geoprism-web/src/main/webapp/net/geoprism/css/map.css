@@ -110,7 +110,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
       }
       
       .ol-zoom.ol-unselectable.ol-control{
-      	  left: 245px;
+      	  left: 290px;
       	  top: 22px;
       	  padding: 0;
       }
@@ -148,6 +148,8 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	}
 	
 	.control-form {
-		width: 235px;
+		width: 280px;
 		padding: 0 0 0 0;
 	}
+	
+	
