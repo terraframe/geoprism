@@ -27,7 +27,10 @@
       <i ng-show="ctrl.state != 'max'" ng-click="ctrl.expand()" id="report-expand-toggle" class="fa fa-angle-double-up report-height-toggle"></i>
     </div>
       
-    <a ng-if="ctrl.canEdit()" ng-click="ctrl.upload()" href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
+    <span ng-if="ctrl.canEdit()">
+      <a ng-click="ctrl.upload()" href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
+      <a ng-show="hasReport" ng-click="ctrl.remove()" href="#" title="<gdb:localize key='dashboardViewer.removeReportTooltip'/>" ><gdb:localize key="dashboardViewer.remove"/></a>
+    </span>
      
     <span ng-show="hasReport" id="report-export-container">      
       <a href="#" ng-click="ctrl.exportReport('docx')" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/>" ><gdb:localize key="report.docx"/></a>

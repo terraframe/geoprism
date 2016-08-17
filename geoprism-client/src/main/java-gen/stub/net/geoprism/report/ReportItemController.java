@@ -29,6 +29,8 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
+import net.geoprism.JSONControllerUtil;
+import net.geoprism.MappableClassDTO;
 import net.geoprism.dashboard.DashboardDTO;
 import net.geoprism.localization.LocalizationFacadeDTO;
 
@@ -171,7 +173,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
     catch (Throwable t)
     {
       boolean redirect = false;
-      
+
       if (!redirect)
       {
         this.failNewInstance();
@@ -246,7 +248,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
     catch (Throwable t)
     {
       boolean redirect = false;
-      
+
       if (!redirect)
       {
         this.failView(id);
@@ -264,7 +266,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
     catch (Throwable t)
     {
       boolean redirect = false;
-      
+
       if (!redirect)
       {
         this.failView(dto.getId());
@@ -457,5 +459,23 @@ public class ReportItemController extends ReportItemControllerBase implements co
       }
     }
     return str;
+  }
+
+//  @Override
+  public void remove(String dashboardId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ReportItemDTO item = ReportItemDTO.getReportItemForDashboard(request, dashboardId);
+      item.delete();
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
   }
 }

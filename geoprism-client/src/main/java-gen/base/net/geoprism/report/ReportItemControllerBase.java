@@ -18,7 +18,7 @@
  */
 package net.geoprism.report;
 
-@com.runwaysdk.business.ClassSignature(hash = 291341210)
+@com.runwaysdk.business.ClassSignature(hash = 1116501887)
 public class ReportItemControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.report.ReportItemController";
@@ -151,6 +151,20 @@ public class ReportItemControllerBase implements com.runwaysdk.generation.loader
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemController.failNewInstance");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId", post=false)
+  public void remove(java.lang.String dashboardId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemController.remove");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:dashboardId", post=false)
+  public void failRemove(java.lang.String dashboardId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemController.failRemove");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:report, java.lang.String:configuration", post=false)
