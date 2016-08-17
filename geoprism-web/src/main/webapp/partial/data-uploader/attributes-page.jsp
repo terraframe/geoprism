@@ -56,8 +56,8 @@
           <option value="DOUBLE"><gdb:localize key="dataUploader.double"/></option>
           <option value="LATITUDE"><gdb:localize key="dataUploader.latitude"/></option>
           <option value="LONGITUDE"><gdb:localize key="dataUploader.longitude"/></option>
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>          
+          <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>     
+          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>     
 <%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      

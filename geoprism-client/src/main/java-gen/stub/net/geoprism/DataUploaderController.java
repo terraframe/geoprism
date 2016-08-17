@@ -25,8 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.geoprism.ontology.GeoEntityUtilDTO;
-
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;

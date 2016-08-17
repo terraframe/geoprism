@@ -474,7 +474,7 @@
       controller.newAttribute();
     }
     
-    controller.getNextLocationField = function() {
+    controller.getLowestUnassignedLocationField = function() {
       for(var i = ($scope.universals.length - 1); i >= 0; i--) {
         var universal = $scope.universals[i];
         
@@ -493,6 +493,27 @@
       
       return null;
     }
+    
+    
+    controller.getNextLocationField = function(currentField) {
+        for(var i = ($scope.universals.length - 1); i >= 0; i--) {
+            var universal = $scope.universals[i];
+            
+            if($scope.locationFields[universal.value] != null) {
+              var fields = $scope.locationFields[universal.value];
+              
+              for(var j = 0; j < fields.length; j++) {
+                var field = fields[j];
+                
+                if(!field.assigned && currentField.universal !== field.universal) {              
+                  return {field:field, universal:universal};
+                }
+              }
+            }        
+          }  
+          
+      return null;
+    } 
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
@@ -550,6 +571,13 @@
       }
     }
     
+    
+    /**
+     * Create a new attribute from a location field in the source data
+     * 
+     * @attribute - location field that is being constructed. It corresponds to a location card on the UI.
+     * @nexLocationField - location field read from the source data
+     */
     controller.newAttribute = function() {
     	
       if($scope.attribute != null) {      
@@ -566,12 +594,16 @@
         controller.setFieldAssigned();
       }
       
-      var location = controller.getNextLocationField();      
+      var targetLocationField = controller.getLowestUnassignedLocationField();      
       
-      if(location != null) {
-        var field = location.field;
-        var universal = location.universal;
+      if(targetLocationField == null) {
+    	  $scope.attribute = null; // clear the location field
+      }
+      else {
+        var field = targetLocationField.field;
+        var universal = targetLocationField.universal;
         
+        // construct the initial model for a location field
         $scope.attribute = {
           label : field.label,
           name : field.name,
@@ -580,22 +612,26 @@
           id : -1
         };
 
+        // add the targetLocationField.field (remember, it's from the source data) 
+        // to the new location field (i.e. attribute)
         controller.addField(field);
       
+        // sets all valid universal options (excluding the current universal for this location field
         controller.setUniversalOptions(field); 
         
         // There is only one or no universal options (i.e. context locations) so just set the field
         // to save a click for the user
         if($scope.universalOptions.length < 1 && Object.keys($scope.sheet.attributes.values).length < 1){
-        	controller.newAttribute();
+        	// calling newAttribute() is safe because there are no other location fields so the 
+        	// location attribute will just be set to null.
+        	controller.newAttribute(); 
         }
         else if($scope.universalOptions.length === 1){
-        	$scope.attribute.fields[$scope.universalOptions[0].value] = $scope.universalOptions[0].label;
+        	var secondLocationField = controller.getNextLocationField(field); 
+        	// add the onther (there must be only one other) context field to the attribute
+        	controller.addField(secondLocationField.field);
         	controller.newAttribute();
         }
-      }
-      else {
-        $scope.attribute = null;
       }
       
       controller.refreshUnassignedFields([]);

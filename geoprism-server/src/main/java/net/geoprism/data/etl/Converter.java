@@ -52,6 +52,8 @@ public class Converter implements ConverterIF
   
         MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
   
+        // get value can intentionally fail if attempting to get the value of a location that is on the 
+        // location exclusion list. Note the custom effor after this TRY statement.
         FieldValue fValue = field.getValue(mdAttribute, source);
         Object value = fValue.getValue();
   
@@ -74,6 +76,7 @@ public class Converter implements ConverterIF
     catch(LocationExclusionException e)
     {
       // Do nothing. It's likely that a source value was not found because of location exclusions
+      System.out.println("skipping caught LocationExclusionException");
     }
   }
 }

@@ -292,50 +292,53 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     GeoEntity parent = this.root;
 
     List<JSONObject> context = new LinkedList<JSONObject>();
-
-    for (UniversalAttribute attribute : attributes)
+    
+    // exclude the entire attributes[] if it has a location exclusion as one of the contained attributes
+    if( !sourceLocationExclusionExists(locationExclusions, source))
     {
-      String label = source.getValue(attribute.getAttributeName());
-
-      Universal entityUniversal = attribute.getUniversal();
-
-      if (label != null && label.length() > 0 && !sourceLocationExclusionExists(locationExclusions, label, entityUniversal))
+      for (UniversalAttribute attribute : attributes)
       {
-        if (parent.getUniversalId().equals(entityUniversal.getId()))
-        {
-          GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
-
-          if (entity == null)
+        String label = source.getValue(attribute.getAttributeName());
+        Universal entityUniversal = attribute.getUniversal();
+        
+          if (label != null && label.length() > 0)
           {
-            return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
+            if (parent.getUniversalId().equals(entityUniversal.getId()))
+            {
+              GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
+    
+              if (entity == null)
+              {
+                return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
+              }
+            }
+            else
+            {
+              GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
+    
+              if (entity == null)
+              {
+                return new LocationProblem(label, context, parent, entityUniversal);
+              }
+              else
+              {
+                parent = entity;
+              }
+            }
           }
-        }
-        else
-        {
-          GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
-
-          if (entity == null)
+    
+          try
           {
-            return new LocationProblem(label, context, parent, entityUniversal);
+            JSONObject object = new JSONObject();
+            object.put("label", label);
+            object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
+    
+            context.add(object);
           }
-          else
+          catch (JSONException e)
           {
-            parent = entity;
+            throw new ProgrammingErrorException(e);
           }
-        }
-      }
-
-      try
-      {
-        JSONObject object = new JSONObject();
-        object.put("label", label);
-        object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
-
-        context.add(object);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
       }
     }
 
@@ -343,13 +346,20 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   }
   
   
-  private boolean sourceLocationExclusionExists(List<HashMap<String, String>> locationExclusions, String locationLabel, Universal entityUniversal)
+  private boolean sourceLocationExclusionExists(List<HashMap<String, String>> locationExclusions, Transient source)
   {
-    for(HashMap<String, String> locationExclusion : locationExclusions)
+    
+    for (UniversalAttribute attribute : attributes)
     {
-      if(locationExclusion.containsValue(locationLabel) && locationExclusion.get("universal").equals(entityUniversal.getId()))
+      String label = source.getValue(attribute.getAttributeName());
+      Universal entityUniversal = attribute.getUniversal();
+    
+      for(HashMap<String, String> locationExclusion : locationExclusions)
       {
-        return true;
+        if(locationExclusion.containsValue(label) && locationExclusion.get("universal").equals(entityUniversal.getId()))
+        {
+          return true;
+        }
       }
     }
     
