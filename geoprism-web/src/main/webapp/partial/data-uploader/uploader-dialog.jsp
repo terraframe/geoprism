@@ -39,14 +39,14 @@
 			</ol>
 		</div>      
       <div class="heading">
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'MATCH-INITIAL'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
-        <h1 class="ui-dialog-title slide-right" ng-if="page.current == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'MATCH-INITIAL'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
+        <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'GEO-VALIDATION'"><gdb:localize key="dataUploader.titleLocationValidation"/></h1>
       </div>
       <form name="form" class="modal-form">
@@ -63,14 +63,14 @@
         <div>
           <fieldset>
             <section class="form-container">
-              <match-initial-page ng-if="page.current == 'MATCH-INITIAL'" class="slide-right"></match-initial-page> 
-              <match-page ng-if="page.current == 'MATCH'" class="slide-right"></match-page>  
-              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'" class="slide-right"></beginning-info-page>            
-              <name-page ng-if="page.current == 'INITIAL'" class="slide-right"></name-page>
-              <attributes-page ng-if="page.current == 'FIELDS'" class="slide-right"></attributes-page>
-              <location-page ng-if="page.current == 'LOCATION'" class="slide-right"></location-page>
-              <coordinate-page ng-if="page.current == 'COORDINATE'" class="slide-right"></coordinate-page>
-              <summary-page ng-if="page.current == 'SUMMARY'" class="slide-right"></summary-page>
+              <match-initial-page ng-if="page.current == 'MATCH-INITIAL'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-initial-page> 
+              <match-page ng-if="page.current == 'MATCH'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-page>  
+              <beginning-info-page ng-if="page.current == 'BEGINNING-INFO'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></beginning-info-page>            
+              <name-page ng-if="page.current == 'INITIAL'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
+              <attributes-page ng-if="page.current == 'FIELDS'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
+              <location-page ng-if="page.current == 'LOCATION'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
+              <coordinate-page ng-if="page.current == 'COORDINATE'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
+              <summary-page ng-if="page.current == 'SUMMARY'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
               <geo-validation-page ng-if="page.current == 'GEO-VALIDATION'"></geo-validation-page>
             </section>            
           </fieldset>

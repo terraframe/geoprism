@@ -28,9 +28,6 @@
     <span>
     	<h2> <gdb:localize key="category.icon.title"/> </h2>
     </span>
-<!--     <span> -->
-<%--       <a class="fa fa-plus" ng-click="ctrl.add(icon)" title="<gdb:localize key="category.icon.addTooltip"/>"> <gdb:localize key="category.icon.addTooltip"/></a> --%>
-<!--     </span> -->
   </div>
   
   <div ng-if="errors.length > 0 && !show" class="error-container">

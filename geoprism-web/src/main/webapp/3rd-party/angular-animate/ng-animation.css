@@ -265,19 +265,19 @@
 }
 /* line 230, ../sass/ng-animation.scss */
 .slide-left.ng-leave {
-  transform: translateX(0);
-  -ms-transform: translateX(0);
-  -webkit-transform: translateX(0);
-  transition-duration: 250ms;
-  -webkit-transition-duration: 250ms;
-  opacity: 1;
+/*   transform: translateX(0); */
+/*   -ms-transform: translateX(0); */
+/*   -webkit-transform: translateX(0); */
+/*   transition-duration: 250ms; */
+/*   -webkit-transition-duration: 250ms; */
+/*   opacity: 1; */
 }
 /* line 236, ../sass/ng-animation.scss */
 .slide-left.ng-leave-active {
-  transform: translateX(-60px);
-  -ms-transform: translateX(-60px);
-  -webkit-transform: translateX(-60px);
-  opacity: 0;
+/*   transform: translateX(-60px); */
+/*   -ms-transform: translateX(-60px); */
+/*   -webkit-transform: translateX(-60px); */
+/*   opacity: 0; */
 }
 /* line 242, ../sass/ng-animation.scss */
 .slide-left.ng-hide-add {

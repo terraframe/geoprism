@@ -583,9 +583,13 @@
       
         controller.setUniversalOptions(field); 
         
-        // There are no universal options (i.e. context locations) so just set the field
+        // There is only one or no universal options (i.e. context locations) so just set the field
         // to save a click for the user
-        if($scope.universalOptions.length < 1){
+        if($scope.universalOptions.length < 1 && Object.keys($scope.sheet.attributes.values).length < 1){
+        	controller.newAttribute();
+        }
+        else if($scope.universalOptions.length === 1){
+        	$scope.attribute.fields[$scope.universalOptions[0].value] = $scope.universalOptions[0].label;
         	controller.newAttribute();
         }
       }
@@ -1113,6 +1117,8 @@
      * @param leavingPage <optional> 
      */
     controller.next = function(targetPage, leavingPage) {
+      $scope.pageDirection = "NEXT";
+    	
       if(targetPage && leavingPage){
     	  $scope.page.current = targetPage
     		  
@@ -1227,6 +1233,7 @@
     }
     
     controller.prev = function() {
+      $scope.pageDirection = "PREVIOUS";
       if($scope.page.current === 'MATCH' || $scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO") {
         controller.handlePrev();    	  
       }
