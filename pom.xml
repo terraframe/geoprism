@@ -159,14 +159,14 @@
           </properties>
           <encoding>UTF-8</encoding>
         </configuration>
-        <executions>
+        <!-- <executions>
           <execution>
             <phase>process-sources</phase>
             <goals>
               <goal>check</goal>
             </goals>
           </execution>
-        </executions>
+        </executions> -->
       </plugin>
     </plugins>
     <pluginManagement>
