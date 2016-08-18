@@ -44,6 +44,7 @@
         <select class="select-area" ng-model="field.type" ng-class="{selectInputDisabled : field.type == 'IGNORE'}" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="LOCATION"><gdb:localize key="dataUploader.location"/></option>
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
+          <option value="DOMAIN"><gdb:localize key="dataUploader.domain"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
 <%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
@@ -87,6 +88,12 @@
       <div class="inline-box fade-ngIf" ng-if="field.type == 'LOCATION'">
         <label><gdb:localize key="dataUploader.locationType"/></label>
         <select class="select-area" ng-model="field.universal" name="{{::$index + '-universal'}}" ng-required="true" ng-options="opt.value as opt.label for opt in universals">
+          <option value=""></option>          
+        </select>
+      </div>      
+      <div class="inline-box fade-ngIf" ng-if="field.type == 'DOMAIN'">
+        <label><gdb:localize key="dataUploader.domainRoot"/></label>
+        <select class="select-area" ng-model="field.root" name="{{::$index + '-domain'}}" ng-required="true" ng-options="opt.value as opt.label for opt in classifiers">
           <option value=""></option>          
         </select>
       </div>      

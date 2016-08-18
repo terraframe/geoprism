@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -294861867)
+@com.runwaysdk.business.ClassSignature(hash = -239156356)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.Classifier";
-  private static final long serialVersionUID = -294861867;
+  private static final long serialVersionUID = -239156356;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -56,6 +56,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String MANAGED = "managed";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
@@ -406,6 +407,43 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
   
+  public Boolean getManaged()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(MANAGED));
+  }
+  
+  public void setManaged(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(MANAGED, "");
+    }
+    else
+    {
+      setValue(MANAGED, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isManagedWritable()
+  {
+    return isWritable(MANAGED);
+  }
+  
+  public boolean isManagedReadable()
+  {
+    return isReadable(MANAGED);
+  }
+  
+  public boolean isManagedModified()
+  {
+    return isModified(MANAGED);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getManagedMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(MANAGED).getAttributeMdDTO();
+  }
+  
   public com.runwaysdk.system.ActorDTO getOwner()
   {
     if(getValue(OWNER) == null || getValue(OWNER).trim().equals(""))
@@ -534,6 +572,14 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{classifierId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "getClassifierTree", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getManagedClassifiersAsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "getManagedClassifiersAsJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

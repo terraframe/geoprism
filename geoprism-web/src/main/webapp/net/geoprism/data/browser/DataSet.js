@@ -152,7 +152,7 @@
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(result) {               
-          $scope.$emit('dataUpload', {information:result.information, options:result.options});            
+          $scope.$emit('dataUpload', result);            
                 
           // Hide modal, but preserve the elements and values        
           $scope.hidden = true;

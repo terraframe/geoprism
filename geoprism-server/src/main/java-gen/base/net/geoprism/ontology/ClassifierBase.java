@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -486476459)
+@com.runwaysdk.business.ClassSignature(hash = 97654012)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -47,11 +47,12 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
+  public static java.lang.String MANAGED = "managed";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -486476459;
+  private static final long serialVersionUID = 97654012;
   
   public ClassifierBase()
   {
@@ -329,6 +330,34 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.Classifier.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
+  }
+  
+  public Boolean getManaged()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(MANAGED));
+  }
+  
+  public void validateManaged()
+  {
+    this.validateAttribute(MANAGED);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getManagedMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.Classifier.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(MANAGED);
+  }
+  
+  public void setManaged(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(MANAGED, "");
+    }
+    else
+    {
+      setValue(MANAGED, java.lang.Boolean.toString(value));
+    }
   }
   
   public com.runwaysdk.system.Actor getOwner()
@@ -650,6 +679,12 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   }
   
   public static java.lang.String getClassifierTree(java.lang.String classifierId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getManagedClassifiersAsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.TermAndRelDTO;
+import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
@@ -42,7 +43,16 @@ public class ClassifierController extends ClassifierControllerBase implements co
   {
     try
     {
-      TermAndRelDTO tnr = ClassifierDTO.create(super.getClientRequest(), dto, parentId);
+      ClientRequestIF request = super.getClientRequest();
+
+      ClassifierDTO root = ClassifierDTO.getRoot(request);
+
+      if (parentId.equals(root.getId()))
+      {
+        dto.setManaged(true);
+      }
+
+      TermAndRelDTO tnr = ClassifierDTO.create(request, dto, parentId);
 
       this.resp.getWriter().print(new JSONReturnObject(tnr.toJSON().toString()).toString());
     }
@@ -76,12 +86,12 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONArray array = new JSONArray();
 
       TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentId, new String[] { ClassifierIsARelationshipDTO.CLASS });
-      
+
       JSONObject page = new JSONObject();
 
       if (pageNum != null && pageSize != null && pageNum > 0 && pageSize > 0)
       {
-        int startIndex = Math.max(0, (( pageNum - 1 ) * pageSize));
+        int startIndex = Math.max(0, ( ( pageNum - 1 ) * pageSize ));
         int endIndex = Math.min( ( pageNum * pageSize ), tnrs.length);
         int maxPages = ( (int) tnrs.length / pageSize ) + 1;
 

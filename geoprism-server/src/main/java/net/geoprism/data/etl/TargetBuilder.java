@@ -460,6 +460,10 @@ public class TargetBuilder
     {
       return true;
     }
+    else if (type.equals(ColumnType.DOMAIN.name()))
+    {
+      return true;
+    }
 
     return false;
   }
@@ -477,14 +481,7 @@ public class TargetBuilder
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
     {
-      MdBusinessDAOIF referenceMdBusiness = MdBusinessDAO.getMdBusinessDAO(Classifier.CLASS);
-
-      MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
-      mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
-      mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-      mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getId());
-      mdAttribute.apply();
+      MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 
       /*
        * Create the root term for the options
@@ -520,21 +517,34 @@ public class TargetBuilder
       field.setPackageName(key);
       field.setAggregatable(aggregatable);
 
-      /*
-       * Create the synonym restore attribute
-       */
-      MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
-      synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
-      synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
-      synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
-      synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
-      synonymAttribute.apply();
+      return field;
+    }
+    else if (columnType.equals(ColumnType.DOMAIN.name()))
+    {
+      String classifierId = cField.getString("root");
 
-      RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
-      synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
-      synonymRelationship.apply();
+      MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
+
+      Classifier classifier = Classifier.get(classifierId);
+
+      /*
+       * Add the root as an option to the MdAttributeTerm
+       */
+      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+
+      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+      relationship.apply();
+
+      TargetFieldDomain field = new TargetFieldDomain();
+      field.setName(attributeName);
+      field.setLabel(label);
+      field.setKey(key);
+      field.setSourceAttributeName(sourceAttributeName);
+      field.setAggregatable(aggregatable);
 
       return field;
+
     }
     else if (columnType.equals(ColumnType.BOOLEAN.name()))
     {
@@ -596,6 +606,33 @@ public class TargetBuilder
     return field;
   }
 
+  private MdAttributeTermDAO createMdAttributeTerm(MdClassDAO mdClass, String label, String attributeName)
+  {
+    MdBusinessDAOIF referenceMdBusiness = MdBusinessDAO.getMdBusinessDAO(Classifier.CLASS);
+
+    MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
+    mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
+    mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getId());
+    mdAttribute.apply();
+
+    /*
+     * Create the synonym restore attribute
+     */
+    MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
+    synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
+    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
+    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+    synonymAttribute.apply();
+
+    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+    synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
+    synonymRelationship.apply();
+    return mdAttribute;
+  }
+
   private Boolean getAggregatable(JSONObject cField) throws JSONException
   {
     return cField.has("ratio") ? !cField.getBoolean("ratio") : true;
@@ -605,7 +642,7 @@ public class TargetBuilder
   {
     String label = cAttribute.getString("label");
     String universalId = cAttribute.getString("universal");
-    Boolean aggregatable = this.getAggregatable(cAttribute);    
+    Boolean aggregatable = this.getAggregatable(cAttribute);
     String attributeName = this.generateAttributeName(label);
 
     MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();

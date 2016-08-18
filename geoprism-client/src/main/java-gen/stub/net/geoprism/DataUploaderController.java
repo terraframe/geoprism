@@ -25,8 +25,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.geoprism.ontology.GeoEntityUtilDTO;
+import net.geoprism.ontology.ClassifierDTO;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
@@ -55,6 +56,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
         JSONObject object = new JSONObject();
         object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
         object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
+        object.put("classifiers", new JSONArray(ClassifierDTO.getManagedClassifiersAsJSON(request)));
 
         JSONControllerUtil.writeReponse(this.resp, object);
       }

@@ -705,4 +705,46 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
   }
 
+  public static String getManagedClassifiersAsJSON()
+  {
+    try
+    {
+      JSONArray array = new JSONArray();
+
+      ClassifierQuery query = new ClassifierQuery(new QueryFactory());
+      query.WHERE(query.getManaged().EQ(true));
+
+      OIterator<? extends Classifier> it = null;
+
+      try
+      {
+        it = query.getIterator();
+
+        if (it.hasNext())
+        {
+          Classifier classifier = it.next();
+
+          JSONObject object = new JSONObject();
+          object.put("value", classifier.getId());
+          object.put("label", classifier.getDisplayLabel().getValue());
+
+          array.put(object);
+        }
+      }
+      finally
+      {
+        if (it != null)
+        {
+          it.close();
+        }
+      }
+
+      return array.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
 }

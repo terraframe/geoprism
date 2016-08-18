@@ -1058,8 +1058,9 @@
       datasetService.cancelImport(connection, datasetService.getDatasetConfiguration());
     }
     
-    controller.load = function(information, options) {
+    controller.load = function(information, options, classifiers) {
       $scope.options = options;
+      $scope.classifiers = classifiers;
       
       datasetService.setDatasetConfiguration(information);
       var config = datasetService.getDatasetConfiguration();
@@ -1336,7 +1337,7 @@
     
     $rootScope.$on('dataUpload', function(event, data){
       if(data.information != null && data.information.sheets.length > 0) {
-        controller.load(data.information, data.options);
+        controller.load(data.information, data.options, data.classifiers);
       }
     });
     
