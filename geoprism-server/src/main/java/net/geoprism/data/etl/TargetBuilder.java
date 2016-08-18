@@ -18,8 +18,12 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -145,6 +149,9 @@ public class TargetBuilder
           this.target.addDefinition(definition);
         }
       }
+
+      this.setupLocationExclusions();
+      this.setupCategoryExclusions();
     }
     catch (JSONException e)
     {
@@ -822,4 +829,74 @@ public class TargetBuilder
     return ( query.getCount() == 0 );
   }
 
+  public void setupLocationExclusions()
+  {
+    try
+    {
+      Map<String, Set<String>> exclusions = new HashMap<String, Set<String>>();
+
+      if (this.configuration.has("locationExclusions"))
+      {
+        JSONArray locationExclusionsArr = this.configuration.getJSONArray("locationExclusions");
+
+        // convert to native Java data structure rather than JSON
+        for (int i = 0; i < locationExclusionsArr.length(); i++)
+        {
+          JSONObject object = locationExclusionsArr.getJSONObject(i);
+
+          String universal = object.getString("universal");
+          String label = object.getString("locationLabel");
+
+          exclusions.putIfAbsent(universal, new HashSet<String>());
+          exclusions.get(universal).add(label);
+        }
+      }
+
+      this.target.setLocationExclusions(exclusions);
+    }
+    catch (JSONException e)
+    {
+      String devMsg = "Could not parse dataset configuration string to JSON.";
+      throw new ProgrammingErrorException(devMsg, e);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setupCategoryExclusions()
+  {
+    try
+    {
+      Map<String, Set<String>> exclusions = new HashMap<String, Set<String>>();
+
+      if (this.configuration.has("categoryExclusion"))
+      {
+        JSONObject categoryExclusion = this.configuration.getJSONObject("categoryExclusion");
+
+        Iterator<String> keys = categoryExclusion.keys();
+
+        while (keys.hasNext())
+        {
+          String mdAttributeId = keys.next();
+
+          exclusions.putIfAbsent(mdAttributeId, new HashSet<String>());
+
+          JSONArray labels = categoryExclusion.getJSONArray(mdAttributeId);
+
+          for (int i = 0; i < labels.length(); i++)
+          {
+            String label = labels.getString(i);
+
+            exclusions.get(mdAttributeId).add(label);
+          }
+        }
+      }
+
+      this.target.setCategoryExclusions(exclusions);
+    }
+    catch (JSONException e)
+    {
+      String devMsg = "Could not parse dataset configuration string to JSON.";
+      throw new ProgrammingErrorException(devMsg, e);
+    }
+  }
 }

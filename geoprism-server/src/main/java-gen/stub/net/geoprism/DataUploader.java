@@ -37,6 +37,8 @@ import net.geoprism.data.etl.excel.InvalidExcelFileException;
 import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.gis.geoserver.SessionPredicate;
 import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
 import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.commons.io.FileUtils;
@@ -132,6 +134,39 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   public static void deleteGeoEntitySynonym(String synonymId)
   {
     Synonym synonym = Synonym.get(synonymId);
+    synonym.delete();
+  }
+
+  @Transaction
+  @Authenticate
+  public static String createClassifierSynonym(String classifierId, String label)
+  {
+    try
+    {
+      Classifier classifier = Classifier.get(classifierId);
+
+      ClassifierSynonym synonym = new ClassifierSynonym();
+      synonym.getDisplayLabel().setValue(label);
+
+      TermAndRel tr = ClassifierSynonym.createSynonym(synonym, classifierId);
+
+      JSONObject object = new JSONObject();
+      object.put("synonymId", tr.getTerm().getId());
+      object.put("label", classifier.getDisplayLabel().getValue());
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void deleteClassifierSynonym(String synonymId)
+  {
+    ClassifierSynonym synonym = ClassifierSynonym.get(synonymId);
     synonym.delete();
   }
 

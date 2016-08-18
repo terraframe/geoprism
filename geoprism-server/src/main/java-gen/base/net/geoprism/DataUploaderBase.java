@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -584357314)
+@com.runwaysdk.business.ClassSignature(hash = -1025405750)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
 {
   public final static String CLASS = "net.geoprism.DataUploader";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -584357314;
+  private static final long serialVersionUID = -1025405750;
   
   public DataUploaderBase()
   {
@@ -69,6 +69,12 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
+  public static java.lang.String createClassifierSynonym(java.lang.String classifierId, java.lang.String label)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String createGeoEntity(java.lang.String parentId, java.lang.String universalId, java.lang.String label)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
@@ -76,6 +82,12 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
   }
   
   public static java.lang.String createGeoEntitySynonym(java.lang.String entityId, java.lang.String label)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void deleteClassifierSynonym(java.lang.String synonymId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

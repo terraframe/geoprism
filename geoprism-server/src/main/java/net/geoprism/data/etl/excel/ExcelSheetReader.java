@@ -72,7 +72,7 @@ public class ExcelSheetReader
         {
           String sheetName = iter.getSheetName();
 
-          this.handler.startSheet(sheetName, configuration);
+          this.handler.startSheet(sheetName);
 
           InputSource sheetSource = new InputSource(sheet);
           ContentHandler handler = new XSSFSheetXMLHandler(styles, strings, this.handler, this.formatter, false);

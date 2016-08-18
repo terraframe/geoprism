@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1637166197)
+@com.runwaysdk.business.ClassSignature(hash = 1017053997)
 public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataUploaderController";
@@ -97,6 +97,20 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCancelImport");
   }
   
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:classifierId, java.lang.String:label", post=true)
+  public void createClassifierSynonym(java.lang.String classifierId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.createClassifierSynonym");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:classifierId, java.lang.String:label", post=true)
+  public void failCreateClassifierSynonym(java.lang.String classifierId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCreateClassifierSynonym");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:universalId, java.lang.String:label", post=true)
   public void createGeoEntity(java.lang.String parentId, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -123,6 +137,20 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCreateGeoEntitySynonym");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:synonymId", post=true)
+  public void deleteClassifierSynonym(java.lang.String synonymId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.deleteClassifierSynonym");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:synonymId", post=true)
+  public void failDeleteClassifierSynonym(java.lang.String synonymId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failDeleteClassifierSynonym");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:entityId", post=true)
@@ -165,6 +193,20 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failGetAttributeInformation");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttributeId, java.lang.String:text, java.lang.Integer:limit", post=false)
+  public void getClassifierSuggestions(java.lang.String mdAttributeId, java.lang.String text, java.lang.Integer limit) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.getClassifierSuggestions");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:mdAttributeId, java.lang.String:text, java.lang.String:limit", post=false)
+  public void failGetClassifierSuggestions(java.lang.String mdAttributeId, java.lang.String text, java.lang.String limit) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failGetClassifierSuggestions");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, java.lang.String:sheetName", post=true)

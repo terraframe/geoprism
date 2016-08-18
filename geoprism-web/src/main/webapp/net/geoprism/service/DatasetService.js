@@ -70,6 +70,12 @@
       net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
     }
     
+    service.createClassifierSynonym = function(connection, classifierId, label) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.createClassifierSynonym(request, classifierId, label);
+    }
+    
     service.createGeoEntity = function(connection, parentId, universalId, label) {
       var request = runwayService.createConnectionRequest(connection);
       
@@ -108,7 +114,6 @@
       }
     }
     
-
     service.deleteGeoEntity = function(connection, entityId) {
       var request = runwayService.createConnectionRequest(connection);
       
@@ -119,6 +124,12 @@
       var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataUploaderController.deleteGeoEntitySynonym(request, synonymId);
+    }    
+    
+    service.deleteClassifierSynonym = function(connection, synonymId) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.deleteClassifierSynonym(request, synonymId);
     }    
     
     service.getAll = function(connection) {
@@ -161,6 +172,12 @@
       var request = runwayService.createConnectionRequest(connection);
     
       net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
+    }
+    
+    service.getClassifierSuggestions = function(connection, mdAttributeId, text, limit) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.getClassifierSuggestions(request, mdAttributeId, text, limit);
     }
     
     //

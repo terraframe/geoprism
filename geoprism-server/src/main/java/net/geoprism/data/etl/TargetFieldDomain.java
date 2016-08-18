@@ -18,15 +18,19 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.Map;
+import java.util.Set;
+
+import net.geoprism.data.importer.ExclusionException;
 import net.geoprism.ontology.Classifier;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
+public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF, TargetFieldValidationIF
 {
   @Override
   public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
@@ -41,7 +45,7 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
 
       if (classifier == null)
       {
-        throw new ProgrammingErrorException("Unable to find matching term with label [" + value + "]");
+        throw new ExclusionException("Unable to find matching term with label [" + value + "]");
       }
 
       return new FieldValue(classifier.getId());
@@ -64,4 +68,41 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
     field.apply();
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public ImportProblemIF validate(Transient source, Map<String, Object> parameters)
+  {
+    String value = source.getValue(this.getSourceAttributeName());
+
+    if (value != null && value.length() > 0)
+    {
+      Map<String, Set<String>> exclusions = (Map<String, Set<String>>) parameters.get("categoryExclusions");
+
+      MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) MdAttributeDAO.getByKey(this.getKey());
+
+      if (!this.isExcluded(exclusions, mdAttributeTerm, value))
+      {
+        Classifier classifier = Classifier.findMatchingTerm(value.trim(), mdAttributeTerm);
+
+        if (classifier == null)
+        {
+          return new DomainProblem(value.trim(), mdAttributeTerm.getId());
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private boolean isExcluded(Map<String, Set<String>> exclusions, MdAttributeTermDAOIF mdAttributeTerm, String label)
+  {
+    if (exclusions.containsKey(mdAttributeTerm.getId()))
+    {
+      Set<String> labels = exclusions.get(mdAttributeTerm.getId());
+
+      return labels.contains(label);
+    }
+
+    return false;
+  }
 }

@@ -33,13 +33,13 @@ import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 
 public class ProblemResponse implements ImportResponseIF
 {
-  private Collection<LocationProblemIF> problems;
+  private Collection<ImportProblemIF> problems;
 
   private SourceContextIF               sContext;
 
   private TargetContextIF               tContext;
 
-  public ProblemResponse(Collection<LocationProblemIF> problems, SourceContextIF sContext, TargetContextIF tContext)
+  public ProblemResponse(Collection<ImportProblemIF> problems, SourceContextIF sContext, TargetContextIF tContext)
   {
     this.problems = problems;
     this.sContext = sContext;
@@ -102,7 +102,7 @@ public class ProblemResponse implements ImportResponseIF
   {
     JSONArray array = new JSONArray();
 
-    for (LocationProblemIF problem : this.problems)
+    for (ImportProblemIF problem : this.problems)
     {
       array.put(problem.toJSON());
     }

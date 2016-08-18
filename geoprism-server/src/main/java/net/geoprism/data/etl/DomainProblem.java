@@ -21,9 +21,37 @@ package net.geoprism.data.etl;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public interface LocationProblemIF
+public class DomainProblem implements ImportProblemIF, Comparable<ImportProblemIF>
 {
-  public JSONObject toJSON() throws JSONException;
+  private String label;
 
-  public String getKey();
+  private String mdAttributeId;
+
+  public DomainProblem(String label, String mdAttributeId)
+  {
+    this.label = label;
+    this.mdAttributeId = mdAttributeId;
+  }
+
+  public String getKey()
+  {
+    return this.mdAttributeId + "-" + this.label;
+  }
+
+  @Override
+  public JSONObject toJSON() throws JSONException
+  {
+    JSONObject object = new JSONObject();
+    object.put("type", "DOMAIN");
+    object.put("label", label);
+    object.put("mdAttributeId", mdAttributeId);
+
+    return object;
+  }
+
+  @Override
+  public int compareTo(ImportProblemIF problem)
+  {
+    return this.getKey().compareTo(problem.getKey());
+  }
 }

@@ -48,7 +48,11 @@
      	</div> 
       </div>
     </div>  
-    <geo-validation-problem ng-repeat="problem in problems" problem="problem"></geo-validation-problem>
+    
+    <div ng-repeat="problem in problems">
+      <geo-validation-problem ng-if="problem.type === 'LOCATION'" problem="problem"></geo-validation-problem>
+      <domain-validation-problem ng-if="problem.type === 'DOMAIN'" problem="problem"></domain-validation-problem>
+    </div>
   </div>
   <div class="wide-holder">
     <div class="error-message">

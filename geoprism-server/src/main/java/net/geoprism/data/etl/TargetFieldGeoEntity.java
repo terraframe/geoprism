@@ -23,8 +23,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import net.geoprism.data.importer.LocationExclusionException;
+import net.geoprism.data.importer.ExclusionException;
 import net.geoprism.ontology.NonUniqueEntityResultException;
 
 import org.json.JSONException;
@@ -44,7 +45,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.util.IDGenerator;
 
-public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoEntityIF
+public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoEntityIF, TargetFieldValidationIF
 {
   public static class UniversalAttribute
   {
@@ -145,7 +146,6 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       labels.add(source.getValue(attribute.getAttributeName()));
     }
 
-    
     GeoEntity entity = this.getLocation(this.root, labels);
 
     return new FieldValue(entity.getId());
@@ -180,7 +180,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
           if (entity == null)
           {
-            throw new LocationExclusionException("Location not found in system.", label); 
+            throw new ExclusionException("Location not found in system.");
           }
 
           parent = entity;
@@ -286,21 +286,28 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    * @see net.geoprism.data.etl.TargetFieldGeoEntityIF#getLocationProblem(com.runwaysdk.business.Transient,
    * com.runwaysdk.system.gis.geo.Universal)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public LocationProblemIF getLocationProblem(Transient source, Universal universal, List<HashMap<String, String>> locationExclusions)
+  public ImportProblemIF validate(Transient source, Map<String, Object> parameters)
   {
     GeoEntity parent = this.root;
+    
+    Map<String, Set<String>> locationExclusions = (Map<String, Set<String>>) parameters.get("locationExclusions");
 
     List<JSONObject> context = new LinkedList<JSONObject>();
 
     for (UniversalAttribute attribute : attributes)
     {
       String label = source.getValue(attribute.getAttributeName());
-
       Universal entityUniversal = attribute.getUniversal();
 
-      if (label != null && label.length() > 0 && !sourceLocationExclusionExists(locationExclusions, label, entityUniversal))
+      if (label != null && label.length() > 0)
       {
+        if (this.isExcluded(locationExclusions, entityUniversal, label))
+        {
+          return null;
+        }
+
         if (parent.getUniversalId().equals(entityUniversal.getId()))
         {
           GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
@@ -341,18 +348,16 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     return null;
   }
-  
-  
-  private boolean sourceLocationExclusionExists(List<HashMap<String, String>> locationExclusions, String locationLabel, Universal entityUniversal)
+
+  private boolean isExcluded(Map<String, Set<String>> locationExclusions, Universal universal, String label)
   {
-    for(HashMap<String, String> locationExclusion : locationExclusions)
+    if (locationExclusions.containsKey(universal.getId()))
     {
-      if(locationExclusion.containsValue(locationLabel) && locationExclusion.get("universal").equals(entityUniversal.getId()))
-      {
-        return true;
-      }
+      Set<String> labels = locationExclusions.get(universal.getId());
+
+      return labels.contains(label);
     }
-    
+
     return false;
   }
 }

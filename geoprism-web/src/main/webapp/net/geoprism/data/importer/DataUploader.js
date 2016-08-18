@@ -17,6 +17,160 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+  function DomainValidationProblemController($scope, datasetService) {
+    var controller = this;
+    $scope.problem.synonym = null;
+    
+    controller.getClassifierSuggestions = function( request, response ) {
+      var limit = 20;
+      
+      var connection = {
+          onSuccess : function(resultSet){
+            var results = [];
+            
+            $.each(resultSet, function( index, result ) {
+              results.push({'label':result.label, 'value':result.label, 'id':result.value});
+            });
+            
+            response( results );
+          },
+          onFailure : function(e){
+            console.log(e);
+          }
+      };
+      
+      var text = request.term;
+      
+      datasetService.getClassifierSuggestions(connection, $scope.problem.mdAttributeId, text, limit);
+    }
+    
+    controller.setSynonym = function(value) {
+      $scope.problem.synonym = value;
+      
+      controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+    }
+    
+    controller.createSynonym = function() {
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(response){
+          $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'SYNONYM',
+            synonymId : response.synonymId,
+            label : response.label
+          };
+            
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors = [];
+          $scope.errors.push(e.localizedMessage);
+            
+          $scope.$apply();
+        }        
+      };
+      
+      $scope.errors = undefined;
+      
+      datasetService.createClassifierSynonym(connection, $scope.problem.synonym, $scope.problem.label);
+    }
+    
+    controller.ignoreValue = function() {
+      $scope.problem.resolved = true;
+      
+      $scope.problem.action = {
+        name : 'IGNORE'
+      };
+      
+      var mdAttributeId = $scope.problem.mdAttributeId;
+      
+      var config = datasetService.getDatasetConfiguration();
+      
+      if(!config.categoryExclusion){
+        config.categoryExclusion = {};
+      }
+      
+      if(!config.categoryExclusion[mdAttributeId]) {
+        config.categoryExclusion[mdAttributeId] = [];
+      }
+      
+      config.categoryExclusion[mdAttributeId].push($scope.problem.label);
+    }
+    
+    controller.removeExclusion = function() {
+      
+      var mdAttributeId = $scope.problem.mdAttributeId;
+      var label = $scope.problem.label;
+      
+      var config = datasetService.getDatasetConfiguration();
+      if(config.categoryExclusion && config.categoryExclusion[mdAttributeId]){          
+        config.categoryExclusion[mdAttributeId] = $.grep(config.categoryExclusion[mdAttributeId], function(value) {
+          return value != label;
+        });        
+      }
+      
+      if(config.categoryExclusion[mdAttributeId].length === 0) {
+        delete config.categoryExclusion[mdAttributeId];
+      }
+    }    
+    
+    controller.undoAction = function() {
+      var locationLabel = $scope.problem.label;
+      var universal = $scope.problem.universalId;
+      
+      if($scope.problem.resolved) {
+        
+        var action = $scope.problem.action;
+        
+        if(action.name == 'IGNORE'){
+          $scope.problem.resolved = false;
+          
+          controller.removeExclusion();
+        }
+        else {
+          var connection = {
+            elementId : '#uploader-overlay',
+            onSuccess : function(response){
+              $scope.problem.resolved = false;
+              $scope.problem.synonym = null;
+                      
+              controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+                      
+              $scope.$apply();        
+            },
+            onFailure : function(e){
+              $scope.errors = [];
+              $scope.errors.push(e.localizedMessage);
+                      
+              $scope.$apply();
+            }      
+          };
+        	
+          datasetService.deleteClassifierSynonym(connection, action.synonymId);                    
+        }
+      }
+    }
+  }
+  
+  function DomainValidationProblem($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/domain-validation-problem.jsp',
+      scope: {
+        problem : '=' 
+      },
+      controller : DomainValidationProblemController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs, ctrl) {
+        $timeout(function(){
+          ctrl.problemForm.$setValidity("synonym-length",  false);        
+        }, 0);
+      }
+    }   
+  }
+	
   function GeoValidationProblemController($scope, datasetService) {
     var controller = this;
     $scope.problem.synonym = null;
@@ -474,7 +628,7 @@
       controller.newAttribute();
     }
     
-    controller.getNextLocationField = function() {
+    controller.getLowestUnassignedLocationField = function() {
       for(var i = ($scope.universals.length - 1); i >= 0; i--) {
         var universal = $scope.universals[i];
         
@@ -493,6 +647,27 @@
       
       return null;
     }
+    
+    
+    controller.getNextLocationField = function(currentField) {
+        for(var i = ($scope.universals.length - 1); i >= 0; i--) {
+            var universal = $scope.universals[i];
+            
+            if($scope.locationFields[universal.value] != null) {
+              var fields = $scope.locationFields[universal.value];
+              
+              for(var j = 0; j < fields.length; j++) {
+                var field = fields[j];
+                
+                if(!field.assigned && currentField.universal !== field.universal) {              
+                  return {field:field, universal:universal};
+                }
+              }
+            }        
+          }  
+          
+      return null;
+    } 
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
@@ -550,6 +725,13 @@
       }
     }
     
+    
+    /**
+     * Create a new attribute from a location field in the source data
+     * 
+     * @attribute - location field that is being constructed. It corresponds to a location card on the UI.
+     * @nexLocationField - location field read from the source data
+     */
     controller.newAttribute = function() {
     	
       if($scope.attribute != null) {      
@@ -566,12 +748,16 @@
         controller.setFieldAssigned();
       }
       
-      var location = controller.getNextLocationField();      
+      var targetLocationField = controller.getLowestUnassignedLocationField();      
       
-      if(location != null) {
-        var field = location.field;
-        var universal = location.universal;
+      if(targetLocationField == null) {
+    	  $scope.attribute = null; // clear the location field
+      }
+      else {
+        var field = targetLocationField.field;
+        var universal = targetLocationField.universal;
         
+        // construct the initial model for a location field
         $scope.attribute = {
           label : field.label,
           name : field.name,
@@ -580,22 +766,26 @@
           id : -1
         };
 
+        // add the targetLocationField.field (remember, it's from the source data) 
+        // to the new location field (i.e. attribute)
         controller.addField(field);
       
+        // sets all valid universal options (excluding the current universal for this location field
         controller.setUniversalOptions(field); 
         
         // There is only one or no universal options (i.e. context locations) so just set the field
         // to save a click for the user
         if($scope.universalOptions.length < 1 && Object.keys($scope.sheet.attributes.values).length < 1){
-        	controller.newAttribute();
+        	// calling newAttribute() is safe because there are no other location fields so the 
+        	// location attribute will just be set to null.
+        	controller.newAttribute(); 
         }
         else if($scope.universalOptions.length === 1){
-        	$scope.attribute.fields[$scope.universalOptions[0].value] = $scope.universalOptions[0].label;
+        	var secondLocationField = controller.getNextLocationField(field); 
+        	// add the onther (there must be only one other) context field to the attribute
+        	controller.addField(secondLocationField.field);
         	controller.newAttribute();
         }
-      }
-      else {
-        $scope.attribute = null;
       }
       
       controller.refreshUnassignedFields([]);
@@ -1464,6 +1654,7 @@
    .directive('matchPage', MatchPage)
    .directive('geoValidationPage', GeoValidationPage)
    .directive('geoValidationProblem', GeoValidationProblem)
+   .directive('domainValidationProblem', DomainValidationProblem)
    .directive('beginningInfoPage', BeginningInfoPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)

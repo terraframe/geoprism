@@ -18,10 +18,9 @@
  */
 package net.geoprism.data.etl;
 
-import java.util.HashMap;
 import java.util.List;
 
-import net.geoprism.data.importer.LocationExclusionException;
+import net.geoprism.data.importer.ExclusionException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.Transient;
@@ -37,7 +36,7 @@ public class Converter implements ConverterIF
   }
 
   @Override
-  public void create(Transient source, List<HashMap<String, String>> locationExclusions)
+  public void create(Transient source)
   {
     try
     {
@@ -52,6 +51,8 @@ public class Converter implements ConverterIF
   
         MdAttributeConcreteDAOIF mdAttribute = business.getMdAttributeDAO(attributeName);
   
+        // get value can intentionally fail if attempting to get the value of a location that is on the 
+        // location exclusion list. Note the custom effor after this TRY statement.
         FieldValue fValue = field.getValue(mdAttribute, source);
         Object value = fValue.getValue();
   
@@ -71,9 +72,10 @@ public class Converter implements ConverterIF
         business.apply();
       }
     }
-    catch(LocationExclusionException e)
+    catch(ExclusionException e)
     {
       // Do nothing. It's likely that a source value was not found because of location exclusions
+      System.out.println("skipping caught LocationExclusionException");
     }
   }
 }

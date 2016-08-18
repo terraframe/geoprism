@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 97654012)
+@com.runwaysdk.business.ClassSignature(hash = 1891724562)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -52,7 +52,7 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 97654012;
+  private static final long serialVersionUID = 1891724562;
   
   public ClassifierBase()
   {
@@ -673,6 +673,12 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   }
   
   public static net.geoprism.ontology.ClassifierProblemView[] getAllProblems()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.query.ValueQuery getClassifierSuggestions(java.lang.String mdAttributeId, java.lang.String text, java.lang.Integer limit)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

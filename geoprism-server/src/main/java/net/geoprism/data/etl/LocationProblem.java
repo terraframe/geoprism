@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class LocationProblem implements LocationProblemIF, Comparable<LocationProblemIF>
+public class LocationProblem implements ImportProblemIF, Comparable<ImportProblemIF>
 {
   private String           label;
 
@@ -54,6 +54,7 @@ public class LocationProblem implements LocationProblemIF, Comparable<LocationPr
   public JSONObject toJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
+    object.put("type", "LOCATION");
     object.put("label", label);
     object.put("parentId", parent.getId());
     object.put("universalId", universal.getId());
@@ -64,7 +65,7 @@ public class LocationProblem implements LocationProblemIF, Comparable<LocationPr
   }
 
   @Override
-  public int compareTo(LocationProblemIF problem)
+  public int compareTo(ImportProblemIF problem)
   {
     return this.getKey().compareTo(problem.getKey());
   }

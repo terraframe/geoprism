@@ -47,9 +47,12 @@ import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.AttributeReference;
+import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 
@@ -747,4 +750,32 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
   }
 
+  public static ValueQuery getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
+  {
+    ValueQuery query = new ValueQuery(new QueryFactory());
+
+    ClassifierQuery classifierQuery = new ClassifierQuery(query);
+    ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);    
+    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(query);
+
+    SelectableChar id = classifierQuery.getId();
+
+    Coalesce label = classifierQuery.getDisplayLabel().localize();
+    label.setColumnAlias(Classifier.DISPLAYLABEL);
+    label.setUserDefinedAlias(Classifier.DISPLAYLABEL);
+    label.setUserDefinedDisplayLabel(Classifier.DISPLAYLABEL);
+
+    query.SELECT(id, label);
+    query.WHERE(label.LIKEi("%" + text + "%"));
+    query.AND(rootQ.parentId().EQ(mdAttributeId));
+    query.AND(aptQuery.getParentTerm().EQ(rootQ.getChild()));
+    query.AND(classifierQuery.EQ(aptQuery.getChildTerm()));
+    
+    query.ORDER_BY_ASC(label);
+
+    query.restrictRows(limit, 1);
+
+    return query;
+
+  }
 }

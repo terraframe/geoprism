@@ -28,7 +28,7 @@ public interface SheetHandler
    * @param sheetName
    *          Name of the sheet
    */
-  public void startSheet(String sheetName, String configuration);
+  public void startSheet(String sheetName);
 
   /**
    * A sheet has ended
