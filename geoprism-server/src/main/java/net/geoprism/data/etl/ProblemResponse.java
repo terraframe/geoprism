@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
@@ -35,9 +33,9 @@ public class ProblemResponse implements ImportResponseIF
 {
   private Collection<ImportProblemIF> problems;
 
-  private SourceContextIF               sContext;
+  private SourceContextIF             sContext;
 
-  private TargetContextIF               tContext;
+  private TargetContextIF             tContext;
 
   public ProblemResponse(Collection<ImportProblemIF> problems, SourceContextIF sContext, TargetContextIF tContext)
   {
@@ -98,16 +96,28 @@ public class ProblemResponse implements ImportResponseIF
     return true;
   }
 
-  private JSONArray getProblemsJSON() throws JSONException
+  private JSONObject getProblemsJSON() throws JSONException
   {
-    JSONArray array = new JSONArray();
+    JSONArray locations = new JSONArray();
+    JSONArray categories = new JSONArray();
 
     for (ImportProblemIF problem : this.problems)
     {
-      array.put(problem.toJSON());
+      if (problem instanceof LocationProblem)
+      {
+        locations.put(problem.toJSON());
+      }
+      else
+      {
+        categories.put(problem.toJSON());
+      }
     }
 
-    return array;
+    JSONObject object = new JSONObject();
+    object.put("locations", locations);
+    object.put("categories", categories);
+
+    return object;
   }
 
   private JSONArray getSheetsJSON() throws JSONException

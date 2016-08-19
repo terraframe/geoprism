@@ -24,33 +24,27 @@
   <div class="wide-holder">
     <div class="row-holder">    
       <div class="inline-value">
-        <label><gdb:localize key="dataUploader.locationContext"/></label>   
+        <label><gdb:localize key="dataUploader.unknownCategory"/></label>
         <div class="label-help-ico-container">
-       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContextHelpToolTip"/>"></i>
-     	</div>   
-      </div>
-      <div class="inline-value">
-      	<label><gdb:localize key="dataUploader.unknownLocation"/></label>
-      	<div class="label-help-ico-container">
-       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.unknownLocationNameHelpToolTip"/>"></i>
-     	</div>   
+          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.unknownCategoryHelpToolTip"/>"></i>
+      </div>   
       </div>
       <div class="inline-combo">
-      	<label><gdb:localize key="dataUploader.synonymn"/></label>
-      	<div class="label-help-ico-container">
-       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.synonymSearchHelpToolTip"/>"></i>
-     	</div> 
+        <label><gdb:localize key="dataUploader.synonymn"/></label>
+        <div class="label-help-ico-container">
+          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.categorySynonymSearchHelpToolTip"/>"></i>
+      </div> 
       </div>
       <div class="inline-actions">
-      	<label><gdb:localize key="dataUploader.actions"/></label>
-      	<div class="label-help-ico-container">
-       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationProblemActionsHelpToolTip"/>"></i>
-     	</div> 
+        <label><gdb:localize key="dataUploader.actions"/></label>
+        <div class="label-help-ico-container">
+          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.categoryProblemActionsHelpToolTip"/>"></i>
+      </div> 
       </div>
     </div>  
     
-    <div ng-repeat="problem in problems.locations">
-      <geo-validation-problem problem="problem"></geo-validation-problem>
+    <div ng-repeat="problem in problems.categories">
+      <category-validation-problem problem="problem"></category-validation-problem>
     </div>
   </div>
   <div class="wide-holder">
@@ -58,7 +52,7 @@
       <p ng-show="form.$error.size"><gdb:localize key="dataUploader.existingProblems"/></p>
     </div>          
     <div>
-      <p ng-show="!form.$error.size"><gdb:localize key="dataUploader.noLocationProblem"/></p>
+      <p ng-show="!form.$error.size"><gdb:localize key="dataUploader.noCategoryProblem"/></p>
     </div>          
   </div>  
 </div>

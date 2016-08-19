@@ -755,6 +755,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     ValueQuery query = new ValueQuery(new QueryFactory());
 
     ClassifierQuery classifierQuery = new ClassifierQuery(query);
+    ClassifierIsARelationshipQuery isAQ = new ClassifierIsARelationshipQuery(query);
     ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);    
     ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(query);
 
@@ -768,7 +769,8 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
     query.AND(rootQ.parentId().EQ(mdAttributeId));
-    query.AND(aptQuery.getParentTerm().EQ(rootQ.getChild()));
+    query.AND(isAQ.getParent().EQ(rootQ.getChild()));
+    query.AND(aptQuery.getParentTerm().EQ(isAQ.getChild()));
     query.AND(classifierQuery.EQ(aptQuery.getChildTerm()));
     
     query.ORDER_BY_ASC(label);

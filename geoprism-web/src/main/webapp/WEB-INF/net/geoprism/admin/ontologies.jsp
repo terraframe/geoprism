@@ -44,7 +44,7 @@
     <div class="holder">
       <div class="button-holder">
         <button type="submit" class="btn btn-primary" id="add-button">
-          Add a new managed category
+          <gdb:localize key="classifier.addNewManagedCategory"/>
             &nbsp;
           <i class="fa fa-plus"></i>
         </button>

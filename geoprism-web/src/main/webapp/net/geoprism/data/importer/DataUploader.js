@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function DomainValidationProblemController($scope, datasetService) {
+  function CategoryValidationProblemController($scope, datasetService) {
     var controller = this;
     $scope.problem.synonym = null;
     
@@ -153,15 +153,15 @@
     }
   }
   
-  function DomainValidationProblem($timeout) {
+  function CategoryValidationProblem($timeout) {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/domain-validation-problem.jsp',
+      templateUrl: '/partial/data-uploader/category-validation-problem.jsp',
       scope: {
         problem : '=' 
       },
-      controller : DomainValidationProblemController,
+      controller : CategoryValidationProblemController,
       controllerAs : 'ctrl',      
       link: function (scope, element, attrs, ctrl) {
         $timeout(function(){
@@ -170,6 +170,43 @@
       }
     }   
   }
+  
+  
+  function CategoryValidationPageController($scope) {
+    var controller = this;
+    
+    controller.hasProblems = function() {
+      for(var i = 0; i < $scope.problems.categories.length; i++) {
+        if(!$scope.problems.categories[i].resolved) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
+    $scope.$watch('problems', function(){
+      $scope.form.$setValidity("size",  (!controller.hasProblems()));
+    }, true);
+
+    // Remove the global validation on the form
+    $scope.$on('pagePrev', function(event, data){
+      $scope.form.$setValidity("size",  true);
+    });       
+  }
+  
+  function CategoryValidationPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/category-validation-page.jsp',
+      scope: true,
+      controller : CategoryValidationPageController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }  
 	
   function GeoValidationProblemController($scope, datasetService) {
     var controller = this;
@@ -339,8 +376,8 @@
     var controller = this;
     
     controller.hasProblems = function() {
-      for(var i = 0; i < $scope.problems.length; i++) {
-        if(!$scope.problems[i].resolved) {
+      for(var i = 0; i < $scope.problems.locations.length; i++) {
+        if(!$scope.problems.locations[i].resolved) {
           return true;
         }
       }
@@ -1191,19 +1228,26 @@
             $scope.$emit('datasetChange', {datasets:result.datasets, finished : true});          
           }
           else {          
-            $scope.page.current = 'GEO-VALIDATION';
-            $scope.page.snapshots = [];
             
             if(controller.hasLocationField() && controller.hasCoordinateField()) {
-            	$scope.currentStep = 5;
+              $scope.currentStep = 5;
             }
             else if(controller.hasLocationField() || controller.hasCoordinateField()) {
-          		$scope.currentStep = 4;
-       		}
-        	else{
-          		$scope.currentStep = 3;
-        	}
-          
+              $scope.currentStep = 4;
+            }
+            else{
+              $scope.currentStep = 3;
+            }
+
+        	  
+            if(result.problems.locations.length > 0) {
+              $scope.page.current = 'GEO-VALIDATION';
+            }
+            else {
+              $scope.page.current = 'CATEGORY-VALIDATION';
+            }
+            
+            $scope.page.snapshots = [];        	  
             $scope.sheets = result.sheets;
             $scope.sheet = $scope.sheets[0];
             $scope.problems = result.problems;
@@ -1424,12 +1468,23 @@
 	        };        
 	        $scope.page.snapshots.push(snapshot);
 	      }
+        else if($scope.page.current == 'GEO-VALIDATION') {
+          // Go to summary page
+          $scope.page.current = 'CATEGORY-VALIDATION';  
+          
+          var snapshot = {
+            page : 'GEO-VALIDATION',
+            sheet : angular.copy($scope.sheet)        
+          };        
+
+          $scope.page.snapshots.push(snapshot);
+        }
       }
     }
     
     controller.prev = function() {
       $scope.pageDirection = "PREVIOUS";
-      if($scope.page.current === 'MATCH' || $scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO") {
+      if($scope.page.current === 'MATCH' || $scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO" || $scope.page.current === "CATEGORY-VALIDATION") {
         controller.handlePrev();    	  
       }
       else {
@@ -1454,6 +1509,22 @@
         
         widgetService.createDialog(title, message, buttons);      
       }
+    }
+    
+    controller.isReady = function() {
+      var current = $scope.page.current;
+      
+      return (current == 'SUMMARY' || current == 'CATEGORY-VALIDATION' || (current == 'GEO-VALIDATION' && $scope.problems.categories.length == 0));
+    }
+    
+    controller.hasNextPage = function() {
+      var current = $scope.page.current;
+      
+      if(current == 'GEO-VALIDATION') {
+        return ($scope.problems.categories.length > 0);
+      }
+      
+      return (current != 'MATCH-INITIAL' && current != 'SUMMARY' && current != 'MATCH' && current != 'CATEGORY-VALIDATION');
     }
     
     controller.handlePrev = function() {
@@ -1657,7 +1728,8 @@
    .directive('matchPage', MatchPage)
    .directive('geoValidationPage', GeoValidationPage)
    .directive('geoValidationProblem', GeoValidationProblem)
-   .directive('domainValidationProblem', DomainValidationProblem)
+   .directive('categoryValidationPage', CategoryValidationPage)
+   .directive('categoryValidationProblem', CategoryValidationProblem)
    .directive('beginningInfoPage', BeginningInfoPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)

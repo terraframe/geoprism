@@ -27,16 +27,14 @@
       <p >{{error}}</p>
     </div>
     <ng-form name="ctrl.problemForm" isolate-form>
-      <div class="inline-value">
-      </div>
       <div class="inline-value error-message">{{problem.label}}</div>
       <div ng-if="!problem.resolved">      
         <div class="inline-combo">
           <input class="synonym" name="{{::$index + '-name'}}" type="text" placeholder="<gdb:localize key="dataUploader.categorySynonymSearchPlaceholder"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getClassifierSuggestions" setter="ctrl.setSynonym"></input>
         </div>
         <div class="inline-actions">
-          <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymFromLocationTooltip"/>" ></i>
-          <span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" ng-click="ctrl.ignoreValue()">
+          <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymCategoryTooltip"/>" ></i>
+          <span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreCategoryTooltip"/>" ng-click="ctrl.ignoreValue()">
             <i class="fa fa-square fa-stack-2x"></i>
             <i class="fa fa-times fa-stack-1x"></i>
           </span>
@@ -44,15 +42,14 @@
       </div>
       <div ng-if="problem.resolved">
         <div class="inline-combo" ng-if="problem.action.name == 'SYNONYM'">
-          <synonym-action action="problem.action"></synonym-action>
+          <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
         </div> 
-        <div class="inline-combo" ng-if="problem.action.name == 'IGNOREVALUE'">
-          <gdb:localize key="dataUploader.resolvedIgnoreAtLocation"/> [{{problem.action.label}}]
+        <div class="inline-combo" ng-if="problem.action.name == 'IGNORE'">
+          <gdb:localize key="dataUploader.resolvedIgnoreCategory"/> [{{problem.label}}]
         </div> 
         <div class="inline-actions">    
-          <i class="fa fa-undo" ng-click="ctrl.undoAction()" title="<gdb:localize key="dataUploader.undoFixedLocationTooltip"/>" ></i> 
+          <i class="fa fa-undo" ng-click="ctrl.undoAction()" title="<gdb:localize key="dataUploader.undoFixedCategoryTooltip"/>" ></i> 
         </div>
-<%--         <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.undo"/>" class="btn btn-primary" ng-click="ctrl.undoAction()"/></div> --%>
       </div>
     </ng-form>
   </div>
