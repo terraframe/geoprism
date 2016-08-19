@@ -734,6 +734,7 @@
      */
     controller.newAttribute = function() {
     	
+      // TODO: What scenario should this pass for?	
       if($scope.attribute != null) {      
         if($scope.attribute.id == -1) {
           $scope.attribute.id = runwayService.generateId();
@@ -778,13 +779,15 @@
         if($scope.universalOptions.length < 1 && Object.keys($scope.sheet.attributes.values).length < 1){
         	// calling newAttribute() is safe because there are no other location fields so the 
         	// location attribute will just be set to null.
-        	controller.newAttribute(); 
+//        	controller.newAttribute(); 
+        	$scope.attribute = null;
         }
         else if($scope.universalOptions.length === 1){
         	var secondLocationField = controller.getNextLocationField(field); 
         	// add the onther (there must be only one other) context field to the attribute
         	controller.addField(secondLocationField.field);
-        	controller.newAttribute();
+        	$scope.attribute = null;
+//        	controller.newAttribute();
         }
       }
       
