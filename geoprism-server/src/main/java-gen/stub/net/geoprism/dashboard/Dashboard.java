@@ -52,6 +52,7 @@ import net.geoprism.RoleView;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 import net.geoprism.dashboard.layer.DashboardLayer;
+import net.geoprism.dashboard.layer.UnsupportedAggregationException;
 import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
 import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
@@ -109,6 +110,7 @@ import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -1144,23 +1146,36 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public String getGeoNodesJSON(MdAttribute thematicAttribute)
   {
+    return this.getGeoNodesJSON(thematicAttribute, true);
+  }
+
+  public String getGeoNodesJSON(MdAttribute thematicAttribute, Boolean aggregatable)
+  {
     JSONArray nodesArr = new JSONArray();
     GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
     for (GeoNode node : nodes)
     {
-      try
+      if (aggregatable || ( node instanceof GeoNodeGeometry ))
       {
-        JSONObject nodeJSON = new JSONObject();
-        nodeJSON.put("id", node.getId());
-        nodeJSON.put("type", node.getType());
-        nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
-        nodesArr.put(nodeJSON);
+        try
+        {
+          JSONObject nodeJSON = new JSONObject();
+          nodeJSON.put("id", node.getId());
+          nodeJSON.put("type", node.getType());
+          nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
+          nodesArr.put(nodeJSON);
+        }
+        catch (JSONException e)
+        {
+          String error = "Could not build GeoNode JSON.";
+          throw new ProgrammingErrorException(error, e);
+        }
       }
-      catch (JSONException e)
-      {
-        String error = "Could not build GeoNode JSON.";
-        throw new ProgrammingErrorException(error, e);
-      }
+    }
+    
+    if(aggregatable && nodesArr.length() == 0)
+    {
+      throw new UnsupportedAggregationException();
     }
 
     return nodesArr.toString();
@@ -1324,7 +1339,14 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       if (state != null)
       {
         state.lock();
-        state.setMapThumbnail(image);
+        if(image == null)
+        {
+          state.setMapThumbnail(new byte[0]); 
+        }
+        else
+        {
+          state.setMapThumbnail(image);
+        }
         state.apply();
       }
     }
@@ -1350,103 +1372,109 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // Ordering the layers from the default map
     DashboardLayer[] orderedLayers = dashMap.getOrderedLayers();
     JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .2);
-
-    // Get bounds of the map
-    try
+    
+    if(mapBoundsArr != null)
     {
-      left = mapBoundsArr.getDouble(0);
-      bottom = mapBoundsArr.getDouble(1);
-      right = mapBoundsArr.getDouble(2);
-      top = mapBoundsArr.getDouble(3);
 
-      restructuredBounds.put("left", left);
-      restructuredBounds.put("bottom", bottom);
-      restructuredBounds.put("right", right);
-      restructuredBounds.put("top", top);
-    }
-    catch (JSONException e)
-    {
-      String error = "Could not parse map bounds.";
-      throw new ProgrammingErrorException(error, e);
-    }
-
-    int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
-    int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
-
-    base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-    // Create the base canvas that all other map elements will be draped on top of
-    mapBaseGraphic = base.getGraphics();
-    mapBaseGraphic.setColor(Color.white);
-    mapBaseGraphic.fillRect(0, 0, width, height);
-    mapBaseGraphic.drawImage(base, 0, 0, null);
-
-    // Ticket #412: Get base map
-    String baseType = "osm";
-
-    if (baseType.length() > 0)
-    {
-      BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top), baseType);
-
-      if (baseMapImage != null)
+      // Get bounds of the map
+      try
       {
-        mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
+        left = mapBoundsArr.getDouble(0);
+        bottom = mapBoundsArr.getDouble(1);
+        right = mapBoundsArr.getDouble(2);
+        top = mapBoundsArr.getDouble(3);
+  
+        restructuredBounds.put("left", left);
+        restructuredBounds.put("bottom", bottom);
+        restructuredBounds.put("right", right);
+        restructuredBounds.put("top", top);
       }
-    }
-
-    // Add layers to the base canvas
-    BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
-
-    // Offset the layerCanvas so that it is center
-    int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
-    int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
-
-    mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
-
-    try
-    {
-      resizedImage = Thumbnails.of(base).size(330, 210).asBufferedImage();
-    }
-    catch (IOException e)
-    {
-      String error = "Could not resize map image to thumbnail size.";
-      throw new ProgrammingErrorException(error, e);
-    }
-
-    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
-    try
-    {
-      ImageIO.write(resizedImage, outFileFormat, outStream);
-    }
-    catch (IOException e)
-    {
-      String error = "Could not write map image to the output stream.";
-      throw new ProgrammingErrorException(error, e);
-    }
-    finally
-    {
-      if (outStream != null)
+      catch (JSONException e)
       {
-        try
+        String error = "Could not parse map bounds.";
+        throw new ProgrammingErrorException(error, e);
+      }
+  
+      int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
+      int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
+  
+      base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+  
+      // Create the base canvas that all other map elements will be draped on top of
+      mapBaseGraphic = base.getGraphics();
+      mapBaseGraphic.setColor(Color.white);
+      mapBaseGraphic.fillRect(0, 0, width, height);
+      mapBaseGraphic.drawImage(base, 0, 0, null);
+  
+      // Ticket #412: Get base map
+      String baseType = "osm";
+  
+      if (baseType.length() > 0)
+      {
+        BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top), baseType);
+  
+        if (baseMapImage != null)
         {
-          outStream.flush();
-          outStream.close();
-        }
-        catch (IOException e)
-        {
-          String error = "Could not close stream.";
-          throw new ProgrammingErrorException(error, e);
+          mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
         }
       }
+  
+      // Add layers to the base canvas
+      BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
+  
+      // Offset the layerCanvas so that it is center
+      int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
+      int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
+  
+      mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
+  
+      try
+      {
+        resizedImage = Thumbnails.of(base).size(330, 210).asBufferedImage();
+      }
+      catch (IOException e)
+      {
+        String error = "Could not resize map image to thumbnail size.";
+        throw new ProgrammingErrorException(error, e);
+      }
+  
+      ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+  
+      try
+      {
+        ImageIO.write(resizedImage, outFileFormat, outStream);
+      }
+      catch (IOException e)
+      {
+        String error = "Could not write map image to the output stream.";
+        throw new ProgrammingErrorException(error, e);
+      }
+      finally
+      {
+        if (outStream != null)
+        {
+          try
+          {
+            outStream.flush();
+            outStream.close();
+          }
+          catch (IOException e)
+          {
+            String error = "Could not close stream.";
+            throw new ProgrammingErrorException(error, e);
+          }
+        }
+      }
+  
+      if (mapBaseGraphic != null)
+      {
+        mapBaseGraphic.dispose();
+      }
+      
+      return outStream.toByteArray();
     }
 
-    if (mapBaseGraphic != null)
-    {
-      mapBaseGraphic.dispose();
-    }
-
-    return outStream.toByteArray();
+    return null;
   }
 
   @Override

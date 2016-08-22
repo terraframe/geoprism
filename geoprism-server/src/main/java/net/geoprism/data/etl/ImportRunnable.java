@@ -23,8 +23,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.geoprism.MappableClass;
+import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
 import net.geoprism.data.etl.excel.ExcelSheetReader;
 import net.geoprism.data.etl.excel.SourceContentHandler;
@@ -33,13 +37,41 @@ import org.json.JSONArray;
 
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
+import com.runwaysdk.constants.MdAttributeDecInfo;
+import com.runwaysdk.dataaccess.BusinessDAO;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDecDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 public class ImportRunnable
 {
+  static class ValidationResult
+  {
+    private ImportResponseIF              response;
+
+    private Map<String, DecimalAttribute> attributes;
+
+    public ValidationResult(ImportResponseIF response, Map<String, DecimalAttribute> attributes)
+    {
+      this.response = response;
+      this.attributes = attributes;
+    }
+
+    public Map<String, DecimalAttribute> getAttributes()
+    {
+      return attributes;
+    }
+
+    public ImportResponseIF getResponse()
+    {
+      return response;
+    }
+  }
+
   private String configuration;
 
   private File   file;
@@ -70,12 +102,17 @@ public class ImportRunnable
       /*
        * Before importing the data we must validate that the location text information
        */
-      ImportResponseIF response = this.validateData(file, sContext, tContext);
+      ValidationResult result = this.validateData(file, sContext, tContext);
 
-      if (response != null)
+      if (result.getResponse() != null)
       {
-        return response;
+        return result.getResponse();
       }
+
+      /*
+       * Update any scale or precision which is greater than its current definition
+       */
+      this.updateScaleAndPrecision(result.getAttributes());
 
       /*
        * Import the data
@@ -113,6 +150,33 @@ public class ImportRunnable
     }
   }
 
+  private void updateScaleAndPrecision(Map<String, DecimalAttribute> attributes)
+  {
+    Set<Entry<String, DecimalAttribute>> entries = attributes.entrySet();
+
+    for (Entry<String, DecimalAttribute> entry : entries)
+    {
+      String mdAttributeId = entry.getKey();
+      DecimalAttribute attribute = entry.getValue();
+
+      int scale = attribute.getScale();
+      int total = attribute.getPrecision() + scale;
+
+      MdAttributeDecDAOIF mdAttributeIF = (MdAttributeDecDAOIF) MdAttributeDecDAO.get(mdAttributeId);
+
+      Integer length = new Integer(mdAttributeIF.getLength());
+      Integer decimal = new Integer(mdAttributeIF.getDecimal());
+
+      if (total > length || scale > decimal)
+      {
+        MdAttributeDecDAO mdAttribute = (MdAttributeDecDAO) mdAttributeIF.getBusinessDAO();
+        mdAttribute.setValue(MdAttributeDecInfo.LENGTH, new Integer(total).toString());
+        mdAttribute.setValue(MdAttributeDecInfo.DECIMAL, new Integer(scale).toString());
+        mdAttribute.apply();
+      }
+    }
+  }
+
   private void importData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, Exception, IOException
   {
     ConverterIF converter = new Converter(tContext);
@@ -125,7 +189,7 @@ public class ImportRunnable
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(istream);
+      reader.process(istream, this.configuration);
     }
     finally
     {
@@ -133,9 +197,9 @@ public class ImportRunnable
     }
   }
 
-  private ImportResponseIF validateData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, Exception, IOException
+  private ValidationResult validateData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, Exception, IOException
   {
-    LocationValidator converter = new LocationValidator(tContext);
+    ImportValidator converter = new ImportValidator(tContext);
 
     // while (!converter.isFinished())
     {
@@ -149,7 +213,7 @@ public class ImportRunnable
         ExcelDataFormatter formatter = new ExcelDataFormatter();
 
         ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-        reader.process(istream);
+        reader.process(istream, configuration);
       }
       finally
       {
@@ -157,12 +221,13 @@ public class ImportRunnable
       }
     }
 
+    ImportResponseIF response = null;
+
     if (converter.getProblems().size() > 0)
     {
-      return new ProblemResponse(converter.getProblems(), sContext, tContext);
+      response = new ProblemResponse(converter.getProblems(), sContext, tContext);
     }
 
-    return null;
+    return new ValidationResult(response, converter.getAttributes());
   }
-
 }

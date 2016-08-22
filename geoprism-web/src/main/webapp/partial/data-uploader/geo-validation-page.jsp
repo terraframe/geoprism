@@ -24,11 +24,29 @@
   <div class="wide-holder">
     <div class="row-holder">    
       <div class="inline-value">
-        <label><gdb:localize key="dataUploader.locationContext"/></label>      
+        <label><gdb:localize key="dataUploader.locationContext"/></label>   
+        <div class="label-help-ico-container">
+       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContextHelpToolTip"/>"></i>
+     	</div>   
       </div>
-      <div class="inline-value"><label><gdb:localize key="dataUploader.unknownLabel"/></label></div>
-      <div class="inline-value"><label><gdb:localize key="dataUploader.synonymn"/></label></div>
-      <div class="inline-value"><label><gdb:localize key="dataUploader.actions"/></label></div>
+      <div class="inline-value">
+      	<label><gdb:localize key="dataUploader.unknownLocation"/></label>
+      	<div class="label-help-ico-container">
+       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.unknownLocationNameHelpToolTip"/>"></i>
+     	</div>   
+      </div>
+      <div class="inline-combo">
+      	<label><gdb:localize key="dataUploader.synonymn"/></label>
+      	<div class="label-help-ico-container">
+       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.synonymSearchHelpToolTip"/>"></i>
+     	</div> 
+      </div>
+      <div class="inline-actions">
+      	<label><gdb:localize key="dataUploader.actions"/></label>
+      	<div class="label-help-ico-container">
+       		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationProblemActionsHelpToolTip"/>"></i>
+     	</div> 
+      </div>
     </div>  
     <geo-validation-problem ng-repeat="problem in problems" problem="problem"></geo-validation-problem>
   </div>

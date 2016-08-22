@@ -20,7 +20,17 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
+
 <div>
+  <div class="label-holder">
+    <strong> </strong>
+  </div>
+  <div class="holder">
+    <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.coordinateLocation.heading.paragraph"/></p>
+    </div>
+  </div>
+  
   <div ng-repeat="id in sheet.coordinates.ids" ng-init="coordinate = sheet.coordinates.values[id]">
     <div class="label-holder">
       <strong ng-if="$index == 0"><gdb:localize key="dataUploader.coordinateCreatorWidgetLabel"/></strong>
@@ -28,7 +38,7 @@
     <div class="holder">
       <div class="location-selector-container">
 	      <span class="text">
-	        <input ng-model="coordinate.label" name="{{::$index + '-label'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
+	        <input ng-model="coordinate.label" name="{{::$index + '-label'}}" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel" placeholder="<gdb:localize key="dataUploader.latFieldLabelPlaceholder"/>"></input>
 	      </span>
 	      <div class="error-message">
 	        <p ng-show="form[$index + '-label'].$error.unique">
@@ -87,7 +97,7 @@
 	        </div> 
 	      </div>	            
 	      
-        <div class="row-holder" ng-show="coordinate.location == 'DERIVE'">
+        <div class="row-holder fade-ngShow" ng-show="coordinate.location == 'DERIVE'">
           <div class="label-help-ico-container">
           	<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.assocUniversalieldHelpToolTip"/>"></i>
           	<p class="select-label"><gdb:localize key="dataUploader.associatedUniversal"/></p>

@@ -47,12 +47,12 @@
       }
     }    
     
-    service.loadDashboard = function(dashboardId, onSuccess, onFailure) {
+    service.loadDashboard = function(dashboardId, element, onSuccess, onFailure) {
       
       /*
        * Second: Get all options
        */
-      var request = runwayService.createRequest(function(json, dto) {    	  
+      var request = runwayService.createStandbyRequest(element, function(json, dto) {    	  
         service.dto = dto;
     	  
         var object = JSON.parse(json);
@@ -85,7 +85,7 @@
         /*
          * First: Lock the dashboard object
          */
-        var lockRequest = runwayService.createRequest(function(dto){          
+        var lockRequest = runwayService.createStandbyRequest(element, function(dto){          
           dto.getDashboardDefinition(request);
         });
                 

@@ -22,6 +22,15 @@
 
 <div>
   <div class="label-holder">
+    <strong> </strong>
+  </div>
+  <div class="holder">
+    <div class="row-holder">
+    	<p><gdb:localize key="dataUploader.attributeConfiguration.heading.paragraph"/></p>
+    </div>
+  </div>
+  
+  <div class="label-holder">
     <strong><gdb:localize key="dataUploader.fields"/></strong>
   </div>
   <div class="holder">
@@ -37,7 +46,7 @@
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == 'NUMBER'">
@@ -47,8 +56,9 @@
           <option value="DOUBLE"><gdb:localize key="dataUploader.double"/></option>
           <option value="LATITUDE"><gdb:localize key="dataUploader.latitude"/></option>
           <option value="LONGITUDE"><gdb:localize key="dataUploader.longitude"/></option>
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+          <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>     
+          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>     
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == 'DATE'">
@@ -56,7 +66,7 @@
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="DATE"><gdb:localize key="dataUploader.date"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == 'BOOLEAN'">
@@ -64,22 +74,24 @@
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
       <div class="inline-box" ng-if="field.columnType == ''">
         <label><gdb:localize key="dataUploader.type"/></label>
         <select class="select-area" ng-model="field.type" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
-          <option value=""><gdb:localize key="dataUploader.undefined"/></option>
+<%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
         </select>      
       </div>      
-      <div class="inline-box" ng-if="field.type == 'LOCATION'">
+      <div class="inline-box fade-ngIf" ng-if="field.type == 'LOCATION'">
         <label><gdb:localize key="dataUploader.locationType"/></label>
         <select class="select-area" ng-model="field.universal" name="{{::$index + '-universal'}}" ng-required="true" ng-options="opt.value as opt.label for opt in universals">
           <option value=""></option>          
         </select>
       </div>      
+
+<!-- 
       <div class="inline-number" ng-if="field.type == 'DOUBLE'">
         <label><gdb:localize key="dataUploader.precision"/></label>
         <input ng-model="field.precision" name="{{::$index + 'precision'}}" ng-required="true" type="text" integer-only></input>
@@ -88,12 +100,14 @@
         <label><gdb:localize key="dataUploader.scale"/></label>
         <input ng-model="field.scale" name="{{::$index + 'scale'}}" ng-required="true" type="text" integer-only></input>
       </div>
-      <div class="inline-error-message">
-<!-- 
-        <p ng-show="form[$index + '-name'].$error.required || form[$index + '-type'].$error.required || form[$index + '-universal'].$error.required">
-          <gdb:localize key="dashboard.Required"/>
-        </p>    
  -->      
+<!--       
+      <div class="inline-check" ng-if="field.type == 'DOUBLE'">
+        <label><gdb:localize key="dataUploader.ratio"/></label>
+        <styled-check-box model="field.ratio" name="{{::$index + 'field.ratio'}" style="{'margin': '5px 0px 0 0'}"></styled-check-box>
+      </div>
+ -->
+      <div class="inline-error-message">
         <p ng-show="form[$index + '-name'].$error.unique">
           <gdb:localize key="dataUploader.unique"/>
         </p>    
@@ -107,6 +121,7 @@
   <div class="holder">
     <div class="error-message">
       <p ng-show="form.$error.coordinate"><gdb:localize key="dataUploader.coordinateMismatch"/></p>
+      <p ng-show="form.$error.coordinateText"><gdb:localize key="dataUploader.coordinateNoLabel"/></p>
     </div>          
   </div>    
 </div>

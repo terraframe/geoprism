@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -43,5 +45,5 @@ public interface TargetFieldGeoEntityIF extends TargetFieldIF
    * 
    * @return
    */
-  public LocationProblemIF getLocationProblem(Transient source, Universal universal);
+  public LocationProblemIF getLocationProblem(Transient source, Universal universal, List<HashMap<String, String>> locationExclusions);
 }

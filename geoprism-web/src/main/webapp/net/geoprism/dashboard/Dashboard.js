@@ -489,6 +489,21 @@
       window.location.href = url;            
     }
     
+    controller.exportLayerData = function(layerId) {
+      var mapId = controller.model.mapId;      
+      var state = controller.getCompressedState();
+      
+      var params = {
+        'mapId' : mapId,
+        'state' : state,
+        'layerId' : layerId
+      };
+            
+      var url = 'net.geoprism.dashboard.DashboardMapController.exportLayerData.mojo?' + $.param(params);
+                    
+      window.location.href = url;             
+    }
+    
     controller.openDashboard = function(){
       var url = "?" + $.param({'dashboard' : controller.dashboardId}) ;
       
@@ -753,6 +768,12 @@
       controller.toggleLayer(data.layer);    
     });
     
+    $scope.$on('exportLayerData', function(event, data) {
+      controller.exportLayerData(data.layerId);
+              
+      event.stopPropagation();
+    });
+    
     $rootScope.$on('layerChange', function(event, data) {
       controller.handleLayerEvent(data.map);      
     });
@@ -771,7 +792,7 @@
       controller.exportMap();
         
       event.stopPropagation();
-    });
+    });    
       
     $scope.$on('centerMap', function(event, data) {
       controller.centerMap();

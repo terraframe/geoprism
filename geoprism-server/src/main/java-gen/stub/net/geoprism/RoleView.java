@@ -34,13 +34,13 @@ import com.runwaysdk.system.RolesQuery;
 
 public class RoleView extends RoleViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long  serialVersionUID       = -875685428;
+  private static final long  serialVersionUID    = -875685428;
 
-  public static final String GEOPRISM_NAMESPACE = "geoprism";
+  public static final String GEOPRISM_NAMESPACE  = "geoprism";
 
-  public static final String ADMIN_NAMESPACE        = GEOPRISM_NAMESPACE + ".admin";
+  public static final String ADMIN_NAMESPACE     = GEOPRISM_NAMESPACE + ".admin";
 
-  public static final String DASHBOARD_NAMESPACE    = GEOPRISM_NAMESPACE + ".dashboard";
+  public static final String DASHBOARD_NAMESPACE = GEOPRISM_NAMESPACE + ".dashboard";
 
   public RoleView()
   {

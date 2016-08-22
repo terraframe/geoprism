@@ -31,19 +31,19 @@
       var speed = 500;
         
       if(controller.expanded){
-        widgetService.animate("#control-form", {left: "-=236"}, speed, function(){
+        widgetService.animate("#control-form", {left: "-=281"}, speed, function(){
           controller.expanded = false;
           $scope.$apply();
         });
         
-        widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=236"}, speed);
+        widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=281"}, speed);
       }
       else{
-        widgetService.animate("#control-form", {left: "+=236"}, speed, function(){
+        widgetService.animate("#control-form", {left: "+=281"}, speed, function(){
             controller.expanded = true;
             $scope.$apply();
         });        
-        widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=236"}, speed);
+        widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=281"}, speed);
       }
     }
     
@@ -93,6 +93,10 @@
     
     controller.edit = function(layerId) {
       $scope.$emit('editThematicLayer', {layerId:layerId});
+    }
+    
+    controller.exportLayerData = function(layerId) {
+      $scope.$emit('exportLayerData', {layerId:layerId});
     }
     
     controller.remove = function(layerId) {    
@@ -371,7 +375,7 @@
         WIDTH:25,        
         HEIGHT:25,        
         TRANSPARENT:true,
-        LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;",      
+        LEGEND_OPTIONS:"fontName:Arial;fontAntiAliasing:true;fontColor:0xececec;fontSize:11;fontStyle:bold;forceLabels:on;",      
         LAYER: mapService.getWorkspace() + ":" + layer.viewName
       };
 

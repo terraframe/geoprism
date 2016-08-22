@@ -20,6 +20,7 @@ package net.geoprism.data.etl.excel;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -43,19 +44,29 @@ public class FieldInfoContentsHandler implements SheetHandler
 {
   private static class Field
   {
-    private String          name;
+    /**
+     * Number of unique values
+     */
+    private static final int LIMIT = 10;
 
-    private Set<ColumnType> dataTypes;
+    private String           name;
 
-    private int             precision;
+    private int              precision;
 
     private int             scale;
+    
+    private int             inputPosition;
+
+    private Set<ColumnType>  dataTypes;
+
+    private Set<String>      values;
 
     public Field()
     {
       this.dataTypes = new TreeSet<ColumnType>();
       this.precision = 0;
       this.scale = 0;
+      this.values = new HashSet<String>(LIMIT);
     }
 
     public void setName(String name)
@@ -66,6 +77,16 @@ public class FieldInfoContentsHandler implements SheetHandler
     public String getName()
     {
       return name;
+    }
+    
+    public void setInputPosition(int position)
+    {
+      this.inputPosition = position;
+    }
+    
+    public int getInputPosition()
+    {
+      return this.inputPosition;
     }
 
     public void addDataType(ColumnType dataType)
@@ -83,11 +104,21 @@ public class FieldInfoContentsHandler implements SheetHandler
       this.scale = Math.max(this.scale, scale);
     }
 
+    public void addValue(String value)
+    {
+      if (this.values.size() < LIMIT)
+      {
+        this.values.add(value);
+      }
+    }
+
     public JSONObject toJSON() throws JSONException
     {
       JSONObject object = new JSONObject();
       object.put("name", this.name);
       object.put("label", this.name);
+      object.put("aggregatable", true);
+      object.put("fieldPosition", this.getInputPosition());
 
       if (this.dataTypes.size() == 1)
       {
@@ -101,21 +132,31 @@ public class FieldInfoContentsHandler implements SheetHandler
         {
           if (this.scale > 0)
           {
-            object.put("precision", this.precision);
+            object.put("precision", ( this.precision + this.scale ));
             object.put("scale", this.scale);
             object.put("type", ColumnType.DOUBLE.name());
+            object.put("ratio", false);
           }
           else
           {
             object.put("type", ColumnType.LONG.name());
           }
         }
+        else if (type.equals(ColumnType.TEXT) && this.values.size() < LIMIT)
+        {
+          object.put("type", ColumnType.CATEGORY.name());
+        }
       }
       else
       {
-        object.put("type", ColumnType.TEXT.name());
         object.put("columnType", ColumnType.TEXT.name());
+        object.put("type", ColumnType.TEXT.name());
         object.put("accepted", false);
+
+        if (this.values.size() < LIMIT)
+        {
+          object.put("type", ColumnType.CATEGORY.name());
+        }
       }
 
       return object;
@@ -164,6 +205,13 @@ public class FieldInfoContentsHandler implements SheetHandler
 
     return this.map.get(column);
   }
+  
+  private int getFieldPosition(String cellReference)
+  {
+    CellReference reference = new CellReference(cellReference);
+
+    return reference.getCol();
+  }
 
   public JSONArray getSheets()
   {
@@ -171,7 +219,7 @@ public class FieldInfoContentsHandler implements SheetHandler
   }
 
   @Override
-  public void startSheet(String sheetName)
+  public void startSheet(String sheetName, String configuration)
   {
     this.sheetName = sheetName;
     this.rowNum = 0;
@@ -240,6 +288,7 @@ public class FieldInfoContentsHandler implements SheetHandler
 
       Field attribute = this.getField(cellReference);
       attribute.setName(formattedValue);
+      attribute.setInputPosition(this.getFieldPosition(cellReference));
     }
     else
     {
@@ -250,8 +299,18 @@ public class FieldInfoContentsHandler implements SheetHandler
       {
         BigDecimal decimal = new BigDecimal(contentValue).stripTrailingZeros();
 
-        attribute.setScale(decimal.scale());
-        attribute.setPrecision(decimal.precision());
+        /*
+         * Precision is the total number of digits. Scale is the number of digits after the decimal place.
+         */
+        int precision = decimal.precision();
+        int scale = decimal.scale();
+
+        attribute.setPrecision(precision - scale);
+        attribute.setScale(scale);
+      }
+      else if (cellType.equals(ColumnType.TEXT))
+      {
+        attribute.addValue(contentValue);
       }
     }
   }

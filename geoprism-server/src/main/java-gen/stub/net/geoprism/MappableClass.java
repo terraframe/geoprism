@@ -64,6 +64,7 @@ import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdClass;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
@@ -167,6 +168,16 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     finally
     {
       nodes.close();
+    }
+
+    /*
+     * Delete the corresponding MappableAttributes
+     */
+    List<MappableAttribute> mAttributes = MappableAttribute.getMappableAttributes(mdClass);
+
+    for (MappableAttribute mAttribute : mAttributes)
+    {
+      mAttribute.delete();
     }
 
     super.delete();
@@ -680,6 +691,22 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
   }
 
+  @Override
+  public String getAsJSON()
+  {
+    JSONObject dataset = null;
+    try
+    {
+      dataset = this.toJSON();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+
+    return dataset.toString();
+  }
+
   public static String getAllAsJSON()
   {
     try
@@ -694,6 +721,47 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       }
 
       return array.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void applyDatasetUpdate(String dataset)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(dataset);
+      String label = object.getString("label");
+      String id = object.getString("id");
+
+      MappableClass ds = MappableClass.get(id);
+
+      MdClass mdClass = ds.getWrappedMdClass();
+      mdClass.lock();
+      mdClass.getDisplayLabel().setValue(label);
+      mdClass.apply();
+
+      if (object.has("attributes"))
+      {
+        JSONArray attributes = object.getJSONArray("attributes");
+
+        for (int i = 0; i < attributes.length(); i++)
+        {
+          JSONObject attribute = attributes.getJSONObject(i);
+          String attributeId = attribute.getString("id");
+          String attributeLabel = attribute.getString("label");
+
+          MdAttributeConcrete mdAttribute = MdAttributeConcrete.lock(attributeId);
+          mdAttribute.getDisplayLabel().setValue(attributeLabel);
+          mdAttribute.apply();
+        }
+      }
+
+      ds.unlock();
     }
     catch (JSONException e)
     {

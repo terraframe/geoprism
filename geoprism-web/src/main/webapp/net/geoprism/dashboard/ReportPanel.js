@@ -139,6 +139,17 @@
     controller.exportReport = function(format){
       $scope.$emit('exportReport', {format:format});
     }
+    
+    controller.remove = function() {
+      var dashboardId = dashboardService.getDashboard().getDashboardId();
+      
+      var onSuccess = function(){
+        $scope.hasReport = false;          
+        $scope.$apply();    	  
+      };
+      
+      dashboardService.removeReport(dashboardId, "#report-viewport", onSuccess);
+    }
   }
   
   function ReportPanel() {

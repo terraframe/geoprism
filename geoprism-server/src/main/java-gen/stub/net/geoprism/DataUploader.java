@@ -37,6 +37,7 @@ import net.geoprism.data.etl.excel.InvalidExcelFileException;
 import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.gis.geoserver.SessionPredicate;
 import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.ontology.TermAndRel;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -74,7 +76,8 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Transaction
-  public static void createGeoEntity(String parentId, String universalId, String label)
+  @Authenticate
+  public static String createGeoEntity(String parentId, String universalId, String label)
   {
     Universal universal = Universal.get(universalId);
     GeoEntity parent = GeoEntity.get(parentId);
@@ -86,15 +89,50 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     entity.apply();
 
     entity.addLink(parent, LocatedIn.CLASS);
+
+    return entity.getId();
   }
 
   @Transaction
-  public static void createGeoEntitySynonym(String entityId, String label)
+  @Authenticate
+  public static void deleteGeoEntity(String entityId)
   {
-    Synonym synonym = new Synonym();
-    synonym.getDisplayLabel().setValue(label);
-    
-    Synonym.create(synonym, entityId);
+    GeoEntity entity = GeoEntity.get(entityId);
+    entity.delete();
+  }
+
+  @Transaction
+  @Authenticate
+  public static String createGeoEntitySynonym(String entityId, String label)
+  {
+    try
+    {
+      GeoEntity entity = GeoEntity.get(entityId);
+
+      Synonym synonym = new Synonym();
+      synonym.getDisplayLabel().setValue(label);
+
+      TermAndRel tr = Synonym.create(synonym, entityId);
+
+      JSONObject object = new JSONObject();
+      object.put("synonymId", tr.getTerm().getId());
+      object.put("label", entity.getDisplayLabel().getValue());
+      object.put("ancestors", new JSONArray(GeoEntityUtil.getAncestorsAsJSON(entityId)));
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void deleteGeoEntitySynonym(String synonymId)
+  {
+    Synonym synonym = Synonym.get(synonymId);
+    synonym.delete();
   }
 
   public static String getAttributeInformation(String fileName, InputStream fileStream)
@@ -115,7 +153,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(new FileInputStream(file));
+      reader.process(new FileInputStream(file), "");
 
       JSONObject object = new JSONObject();
       object.put("sheets", handler.getSheets());

@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.geoprism.MappableAttribute;
 import net.geoprism.QueryUtil;
 import net.geoprism.dashboard.AggregationStrategy;
 import net.geoprism.dashboard.AggregationStrategyView;
@@ -144,18 +145,29 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
   {
 
     HashMap<String, Double> minMaxMap = new HashMap<String, Double>();
+    String thematicAttrType = this.getMdAttribute().getType();
 
     QueryFactory f = new QueryFactory();
     ValueQuery wrapper = new ValueQuery(f);
     wrapper.FROM(getViewName(), "");
-
+    
     List<Selectable> selectables = new LinkedList<Selectable>();
-    AllLayerType layerType = this.getLayerType().get(0);
-    if (layerType == AllLayerType.BUBBLE || layerType == AllLayerType.GRADIENTPOLYGON || layerType == AllLayerType.GRADIENTPOINT)
-    {
 
+    //
+    // Only number types can be used
+    //
+    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || 
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") ||
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") ||
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") ||
+        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
+    {
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
       selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
+    }
+    else
+    {
+      throw new ProgrammingErrorException("Could not calculate the min/max value of a non-numeric attribute");
     }
 
     selectables.add(wrapper.aSQLAggregateLong("totalResults", "COUNT(*)"));
@@ -277,9 +289,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       MdAttribute tAttr = MdAttribute.get(thematicAttributeId);
       MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(thematicAttributeId);
 
+      MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(mdAttribute);
+      Boolean aggregatable = ( mAttribute != null ? mAttribute.getAggregatable() : true );
+
       String[] fonts = DashboardThematicStyle.getSortedFonts();
       OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
-      String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr);
+      String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr, aggregatable);
 
       JSONArray aggStrategiesJSON = new JSONArray();
       GeoNode[] geoNodes = dashboard.getGeoNodes(tAttr);
@@ -290,23 +305,27 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         String nodeType = geoNode.getType();
         String nodeLabel = geoNode.getDisplayLabelAttribute().getDisplayLabel().getValue();
 
-        List<AggregationStrategyView> strategies = Arrays.asList(AggregationStrategyView.getAggregationStrategies(geoNode));
-        Collections.reverse(strategies);
+        List<AggregationStrategyView> strategies = Arrays.asList(AggregationStrategyView.getAggregationStrategies(geoNode, aggregatable));
 
-        JSONArray aggregationStrategies = new JSONArray();
-
-        for (AggregationStrategyView strategy : strategies)
+        if (strategies.size() > 0)
         {
-          aggregationStrategies.put(strategy.toJSON());
+          Collections.reverse(strategies);
+
+          JSONArray aggregationStrategies = new JSONArray();
+
+          for (AggregationStrategyView strategy : strategies)
+          {
+            aggregationStrategies.put(strategy.toJSON());
+          }
+
+          JSONObject nodeObj = new JSONObject();
+          nodeObj.put("nodeId", nodeId);
+          nodeObj.put("nodeType", nodeType);
+          nodeObj.put("nodeLabel", nodeLabel);
+          nodeObj.put("aggregationStrategies", aggregationStrategies);
+
+          aggStrategiesJSON.put(nodeObj);
         }
-
-        JSONObject nodeObj = new JSONObject();
-        nodeObj.put("nodeId", nodeId);
-        nodeObj.put("nodeType", nodeType);
-        nodeObj.put("nodeLabel", nodeLabel);
-        nodeObj.put("aggregationStrategies", aggregationStrategies);
-
-        aggStrategiesJSON.put(nodeObj);
       }
 
       JSONArray secondaryAttributes = getSecodaryAttributesJSON(dashboard.getMapId(), thematicAttributeId);

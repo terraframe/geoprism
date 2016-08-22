@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.geoprism.ClassUniversalQuery;
+import net.geoprism.MappableAttribute;
 import net.geoprism.MappableClassGeoNodeQuery;
 import net.geoprism.MappableClassQuery;
 import net.geoprism.dashboard.layer.DashboardReferenceLayer;
@@ -155,10 +156,10 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
         String attrId = attr.getId();
         String attrType = mdAttributeConcrete.getType();
 
-        MdAttributeView view = new MdAttributeView();
 
         String label = attr.getDisplayLabel(locale);
 
+        MdAttributeView view = new MdAttributeView();
         view.setMdClassId(mdId);
         view.setMdAttributeId(attrId);
         view.setDisplayLabel(label);

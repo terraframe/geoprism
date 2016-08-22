@@ -20,9 +20,10 @@
 
   function DatasetService(runwayService) {
     var service = {};
+    var _datasetConfiguration = {};
     
     service.uploadSpreadsheet = function(connection, file) {
-    	
+      
       var request = runwayService.createConnectionRequest(connection);
       
       var params = new FormData();
@@ -35,6 +36,14 @@
        * submitting file objects through javascript.
        */
       Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
+    }
+    
+    service.setDatasetConfiguration = function(config) {
+      this._datasetConfiguration = config;
+    }
+    
+    service.getDatasetConfiguration = function() {
+      return this._datasetConfiguration;
     }
     
     service.importData = function(connection, configuration) {
@@ -67,6 +76,51 @@
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }    
     
+
+    service.removeLocationExclusion = function(locationExclusionObj) {
+      var config = this.getDatasetConfiguration();
+       if(config.locationExclusions){
+         
+         function findLocObjIndex(locationExclusions, locationExclusionObj){
+           for(var i=0; i<locationExclusions.length; i++){
+             var le = locationExclusions[i];
+             if(le.locationLabel === locationExclusionObj.locationLabel && le.universal === locationExclusionObj.universal){
+               return i;
+             }
+           }
+         }
+         
+         var index = findLocObjIndex(config.locationExclusions, locationExclusionObj);
+         
+         if (index > -1) {
+           config.locationExclusions.splice(index, 1);
+         }
+      }
+    }
+    
+    service.addLocationExclusion = function(locationExclusionObj) {
+      var config = this.getDatasetConfiguration();
+       if(config.locationExclusions){
+         config.locationExclusions.push(locationExclusionObj);
+      }
+      else{
+        config.locationExclusions = [locationExclusionObj];
+      }
+    }
+    
+
+    service.deleteGeoEntity = function(connection, entityId) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.deleteGeoEntity(request, entityId);
+    }    
+    
+    service.deleteGeoEntitySynonym = function(connection, synonymId) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.deleteGeoEntitySynonym(request, synonymId);
+    }    
+    
     service.getAll = function(connection) {
       var request = runwayService.createConnectionRequest(connection);
     
@@ -77,6 +131,30 @@
       var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataSetController.remove(request, id);
+    }
+    
+    service.edit = function(connection, id) {
+      var request = runwayService.createConnectionRequest(connection);
+    
+      net.geoprism.DataSetController.edit(request, id);
+    }
+    
+    service.cancel = function(connection, id) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataSetController.cancel(request, id);
+    }
+    
+    service.applyDatasetUpdate = function(connection, dataset) {
+      var request = runwayService.createConnectionRequest(connection);
+    
+      net.geoprism.DataSetController.applyDatasetUpdate(request, JSON.stringify(dataset));
+    }
+    
+    service.apply = function(connection, dataset) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataSetController.apply(request, JSON.stringify(dataset));
     }
     
     service.getGeoEntitySuggestions = function(connection, parentId, universalId, text, limit) {
@@ -115,7 +193,7 @@
       return basicSteps;
     }
 
-	// List of runway class dependencies which must be loaded from the server
+    // List of runway class dependencies which must be loaded from the server
     return service;  
   }
   

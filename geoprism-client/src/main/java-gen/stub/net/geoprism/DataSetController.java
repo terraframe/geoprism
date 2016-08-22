@@ -55,6 +55,28 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
+  public void applyDatasetUpdate(String dataset) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      JSONObject dsJSONObj = new JSONObject(dataset);
+      String dsId = dsJSONObj.getString("id");
+
+      MappableClassDTO ds = MappableClassDTO.lock(request, dsId);
+      MappableClassDTO.applyDatasetUpdate(request, dataset);
+      ds.unlock();
+
+      JSONControllerUtil.writeReponse(this.resp, new JSONObject(ds.getAsJSON()));
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  @Override
   public void remove(String id) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
@@ -62,8 +84,59 @@ public class DataSetController extends DataSetControllerBase implements com.runw
     try
     {
       MappableClassDTO.remove(request, id);
-      
+
       JSONControllerUtil.writeReponse(this.resp, "");
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  @Override
+  public void edit(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      MappableClassDTO mappableClass = MappableClassDTO.lock(request, id);
+
+      JSONControllerUtil.writeReponse(this.resp, new JSONObject(mappableClass.getAsJSON()));
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  @Override
+  public void apply(String config) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      MappableClassDTO.applyDatasetUpdate(request, config);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+    }
+  }
+
+  @Override
+  public void cancel(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      MappableClassDTO.unlock(request, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
     }
     catch (Throwable t)
     {

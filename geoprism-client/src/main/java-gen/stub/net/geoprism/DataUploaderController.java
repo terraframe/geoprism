@@ -131,9 +131,12 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
+      String entityId = DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
 
-      JSONControllerUtil.writeReponse(this.resp);
+      JSONObject object = new JSONObject();
+      object.put("entityId", entityId);
+
+      JSONControllerUtil.writeReponse(this.resp, object);
     }
     catch (Throwable t)
     {
@@ -148,7 +151,26 @@ public class DataUploaderController extends DataUploaderControllerBase implement
 
     try
     {
-      DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+      String response = DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+
+      JSONObject object = new JSONObject(response);
+
+      JSONControllerUtil.writeReponse(this.resp, object);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void deleteGeoEntity(String entityId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.deleteGeoEntity(request, entityId);
 
       JSONControllerUtil.writeReponse(this.resp);
     }
@@ -158,4 +180,20 @@ public class DataUploaderController extends DataUploaderControllerBase implement
     }
   }
 
+  @Override
+  public void deleteGeoEntitySynonym(String synonymId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.deleteGeoEntitySynonym(request, synonymId);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }    
+  }  
 }

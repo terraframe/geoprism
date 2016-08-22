@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.geoprism.data.importer.LocationExclusionException;
 import net.geoprism.ontology.NonUniqueEntityResultException;
 
 import org.json.JSONException;
@@ -144,7 +145,8 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       labels.add(source.getValue(attribute.getAttributeName()));
     }
 
-    GeoEntity entity = this.getOrCreateLocation(this.root, labels);
+    
+    GeoEntity entity = this.getLocation(this.root, labels);
 
     return new FieldValue(entity.getId());
   }
@@ -155,7 +157,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    * @param labels
    * @return
    */
-  private GeoEntity getOrCreateLocation(GeoEntity root, List<String> labels)
+  private GeoEntity getLocation(GeoEntity root, List<String> labels)
   {
     GeoEntity parent = root;
 
@@ -178,17 +180,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
           if (entity == null)
           {
-            throw new ProgrammingErrorException("Unknown geo entity");
-            // entity = new GeoEntity();
-            // entity.setUniversal(universal);
-            // entity.setGeoId(this.generateGeoId());
-            // entity.getDisplayLabel().setDefaultValue(label);
-            // entity.apply();
-            //
-            // entity.addLink(parent, LocatedIn.CLASS);
-            //
-            // // Create a new geo entity problem
-            // GeoEntityProblem.createProblems(entity, GeoEntityProblemType.UNMATCHED);
+            throw new LocationExclusionException("Location not found in system.", label); 
           }
 
           parent = entity;
@@ -295,58 +287,82 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    * com.runwaysdk.system.gis.geo.Universal)
    */
   @Override
-  public LocationProblemIF getLocationProblem(Transient source, Universal universal)
+  public LocationProblemIF getLocationProblem(Transient source, Universal universal, List<HashMap<String, String>> locationExclusions)
   {
     GeoEntity parent = this.root;
 
     List<JSONObject> context = new LinkedList<JSONObject>();
-
-    for (UniversalAttribute attribute : attributes)
+    
+    // exclude the entire attributes[] if it has a location exclusion as one of the contained attributes
+    if( !sourceLocationExclusionExists(locationExclusions, source))
     {
-      String label = source.getValue(attribute.getAttributeName());
-
-      Universal entityUniversal = attribute.getUniversal();
-
-      if (label != null && label.length() > 0)
+      for (UniversalAttribute attribute : attributes)
       {
-        if (parent.getUniversalId().equals(entityUniversal.getId()))
-        {
-          GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
-
-          if (entity == null)
+        String label = source.getValue(attribute.getAttributeName());
+        Universal entityUniversal = attribute.getUniversal();
+        
+          if (label != null && label.length() > 0)
           {
-            return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
+            if (parent.getUniversalId().equals(entityUniversal.getId()))
+            {
+              GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
+    
+              if (entity == null)
+              {
+                return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
+              }
+            }
+            else
+            {
+              GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
+    
+              if (entity == null)
+              {
+                return new LocationProblem(label, context, parent, entityUniversal);
+              }
+              else
+              {
+                parent = entity;
+              }
+            }
           }
-        }
-        else
-        {
-          GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
-
-          if (entity == null)
+    
+          try
           {
-            return new LocationProblem(label, context, parent, entityUniversal);
+            JSONObject object = new JSONObject();
+            object.put("label", label);
+            object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
+    
+            context.add(object);
           }
-          else
+          catch (JSONException e)
           {
-            parent = entity;
+            throw new ProgrammingErrorException(e);
           }
-        }
-      }
-
-      try
-      {
-        JSONObject object = new JSONObject();
-        object.put("label", label);
-        object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
-
-        context.add(object);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
       }
     }
 
     return null;
+  }
+  
+  
+  private boolean sourceLocationExclusionExists(List<HashMap<String, String>> locationExclusions, Transient source)
+  {
+    
+    for (UniversalAttribute attribute : attributes)
+    {
+      String label = source.getValue(attribute.getAttributeName());
+      Universal entityUniversal = attribute.getUniversal();
+    
+      for(HashMap<String, String> locationExclusion : locationExclusions)
+      {
+        if(locationExclusion.containsValue(label) && locationExclusion.get("universal").equals(entityUniversal.getId()))
+        {
+          return true;
+        }
+      }
+    }
+    
+    return false;
   }
 }

@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 701467831)
+@com.runwaysdk.business.ClassSignature(hash = 1316411992)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -42,7 +42,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 701467831;
+  private static final long serialVersionUID = 1316411992;
   
   public MappableClassBase()
   {
@@ -455,10 +455,34 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
     return (MappableClass) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
+  public static void applyDatasetUpdate(java.lang.String dataset)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void edit(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String getAllAsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public java.lang.String getAsJSON()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final java.lang.String getAsJSON(java.lang.String id)
+  {
+    MappableClass _instance = MappableClass.get(id);
+    return _instance.getAsJSON();
   }
   
   public static java.lang.String getAttributesAsJSON(java.lang.String dashboardId, java.lang.String mdClassId)

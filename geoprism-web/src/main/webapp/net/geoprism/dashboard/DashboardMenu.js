@@ -67,15 +67,15 @@
     }
     
     controller.newDashboard = function() {
-      $scope.$emit('newDashboard');
+      $scope.$emit('newDashboard', {element : '#container'});
     }
     
     controller.edit = function(dashboardId) {
-      $scope.$emit('editDashboard', {dashboardId : dashboardId});
+      $scope.$emit('editDashboard', {dashboardId : dashboardId, element : '#container'});
     }
     
     controller.cloneDashboard = function(dashboardId) {
-      $scope.$emit('cloneDashboard', {dashboardId : dashboardId, elementId : '#container'});    	
+      $scope.$emit('cloneDashboard', {dashboardId : dashboardId, element : '#container'});    	
     }
     
     controller.remove = function(dashboardId) {
