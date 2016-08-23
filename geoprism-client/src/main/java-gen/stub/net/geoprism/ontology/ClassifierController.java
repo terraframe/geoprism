@@ -51,13 +51,6 @@ public class ClassifierController extends ClassifierControllerBase implements co
     {
       ClientRequestIF request = super.getClientRequest();
 
-      ClassifierDTO root = ClassifierDTO.getRoot(request);
-
-      if (parentId.equals(root.getId()))
-      {
-        dto.setManaged(true);
-      }
-
       TermAndRelDTO tnr = ClassifierDTO.create(request, dto, parentId);
 
       this.resp.getWriter().print(new JSONReturnObject(tnr.toJSON().toString()).toString());
@@ -283,7 +276,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
     try
     {
 
-      String classifiers = ClassifierDTO.getManagedClassifiersAsJSON(request);
+      String classifiers = ClassifierDTO.getCategoryClassifiersAsJSON(request);
 
       JSONControllerUtil.writeReponse(this.resp, new JSONArray(classifiers));
     }
@@ -327,15 +320,15 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
-
+  
   @Override
-  public void editCategory(String id) throws IOException, ServletException
+  public void editOption(String id) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      ClassifierDTO dto = ClassifierDTO.lock(request, id);
+      ClassifierDTO dto = ClassifierDTO.editOption(request, id);
 
       JSONArray sArray = new JSONArray();
 
@@ -390,7 +383,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
 
     try
     {
-      ClassifierDTO.unlock(request, id);
+      ClassifierDTO.unlockCategory(request, id);
     }
     catch (Throwable t)
     {
@@ -419,4 +412,20 @@ public class ClassifierController extends ClassifierControllerBase implements co
     }
   }
 
+  @Override
+  public void deleteOption(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO.deleteOption(request, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
 }

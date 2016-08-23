@@ -1,6 +1,6 @@
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -2033316528)
+@com.runwaysdk.business.ClassSignature(hash = -641786576)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -16,6 +16,7 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
     strategy =  com.runwaysdk.business.ontology.Term.assignStrategy("net.geoprism.ontology.Classifier");
   }
   public final static String CLASS = "net.geoprism.ontology.Classifier";
+  public static java.lang.String CATEGORY = "category";
   public static java.lang.String CLASSIFIERID = "classifierId";
   public static java.lang.String CLASSIFIERPACKAGE = "classifierPackage";
   public static java.lang.String CREATEDATE = "createDate";
@@ -29,17 +30,44 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String MANAGED = "managed";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -2033316528;
+  private static final long serialVersionUID = -641786576;
   
   public ClassifierBase()
   {
     super();
     displayLabel = super.getStruct("displayLabel");
+  }
+  
+  public Boolean getCategory()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(CATEGORY));
+  }
+  
+  public void validateCategory()
+  {
+    this.validateAttribute(CATEGORY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getCategoryMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.Classifier.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(CATEGORY);
+  }
+  
+  public void setCategory(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORY, "");
+    }
+    else
+    {
+      setValue(CATEGORY, java.lang.Boolean.toString(value));
+    }
   }
   
   public String getClassifierId()
@@ -312,34 +340,6 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.Classifier.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LOCKEDBY);
-  }
-  
-  public Boolean getManaged()
-  {
-    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(MANAGED));
-  }
-  
-  public void validateManaged()
-  {
-    this.validateAttribute(MANAGED);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getManagedMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.ontology.Classifier.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(MANAGED);
-  }
-  
-  public void setManaged(Boolean value)
-  {
-    if(value == null)
-    {
-      setValue(MANAGED, "");
-    }
-    else
-    {
-      setValue(MANAGED, java.lang.Boolean.toString(value));
-    }
   }
   
   public com.runwaysdk.system.Actor getOwner()
@@ -666,7 +666,25 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
+  public static void deleteOption(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static net.geoprism.ontology.Classifier editOption(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static net.geoprism.ontology.ClassifierProblemView[] getAllProblems()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getCategoryClassifiersAsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -679,12 +697,6 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   }
   
   public static java.lang.String getClassifierTree(java.lang.String classifierId)
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static java.lang.String getManagedClassifiersAsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -703,6 +715,12 @@ public abstract class ClassifierBase extends com.runwaysdk.business.ontology.Ter
   }
   
   public static java.lang.String[] restoreSynonym(java.lang.String synonymId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void unlockCategory(java.lang.String id)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.Classifier.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

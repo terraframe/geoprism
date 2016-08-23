@@ -59,7 +59,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
         JSONObject object = new JSONObject();
         object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
         object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
-        object.put("classifiers", new JSONArray(ClassifierDTO.getManagedClassifiersAsJSON(request)));
+        object.put("classifiers", new JSONArray(ClassifierDTO.getCategoryClassifiersAsJSON(request)));
 
         JSONControllerUtil.writeReponse(this.resp, object);
       }

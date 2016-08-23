@@ -44,7 +44,6 @@
         <select class="select-area" ng-model="field.type" ng-class="{selectInputDisabled : field.type == 'IGNORE'}" name="{{::$index + '-type'}}" ng-required="true" validate-accepted field="field" ng-change="ctrl.accept(field)">
           <option value="LOCATION"><gdb:localize key="dataUploader.location"/></option>
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
-          <option value="DOMAIN"><gdb:localize key="dataUploader.domain"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
 <%--           <option value=""><gdb:localize key="dataUploader.undefined"/></option> --%>
@@ -91,10 +90,10 @@
           <option value=""></option>          
         </select>
       </div>      
-      <div class="inline-box fade-ngIf" ng-if="field.type == 'DOMAIN'">
+      <div class="inline-box fade-ngIf" ng-if="field.type == 'CATEGORY'">
         <label><gdb:localize key="dataUploader.domainRoot"/></label>
-        <select class="select-area" ng-model="field.root" name="{{::$index + '-domain'}}" ng-required="true" ng-options="opt.value as opt.label for opt in classifiers">
-          <option value=""></option>          
+        <select class="select-area" ng-model="field.root" name="{{::$index + '-domain'}}" ng-options="opt.value as opt.label for opt in classifiers">
+          <option value=""><gdb:localize key="dataUploader.new"/></option>          
         </select>
       </div>      
 

@@ -30,7 +30,7 @@
     service.edit = function(connection, id) {
       var request = runwayService.createConnectionRequest(connection);
         
-      net.geoprism.ontology.ClassifierController.editCategory(request, id);
+      net.geoprism.ontology.ClassifierController.editOption(request, id);
     }
     
     service.unlock = function(connection, id) {
@@ -49,6 +49,12 @@
       var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.ontology.ClassifierController.createOption(request, option);
+    }
+    
+    service.deleteOption = function(connection, id) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.ontology.ClassifierController.deleteOption(request, id);
     }
     
     service.applyOption = function(connection, config) {

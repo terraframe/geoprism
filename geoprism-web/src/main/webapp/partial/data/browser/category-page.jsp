@@ -55,8 +55,9 @@
             <table id="manage-datasets-table" class="table table-bordered table-striped">
               <tbody>
                 <tr ng-repeat="descendant in category.descendants" class="fade-ngRepeat-item">
-                  <td class="button-column">
+                  <td class="button-column" style="padding-right: 0px;">
                     <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
+                    <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
                   </td>
                   <td>
                     {{descendant.label}}

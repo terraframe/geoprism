@@ -685,8 +685,22 @@
       return null;
     }
     
+    controller.getLocationField = function(universalId) {
+      var fields = $scope.locationFields[universalId];
+      
+      for(var j = 0; j < fields.length; j++) {
+        var field = fields[j];
+        
+        if(!field.assigned) {              
+          return field
+        }
+      }
+          
+      return null;
+    } 
     
-    controller.getNextLocationField = function(currentField) {
+    
+    controller.getNextLocationField = function(currentFieldUniversal) {
         for(var i = ($scope.universals.length - 1); i >= 0; i--) {
             var universal = $scope.universals[i];
             
@@ -696,7 +710,7 @@
               for(var j = 0; j < fields.length; j++) {
                 var field = fields[j];
                 
-                if(!field.assigned && currentField.universal !== field.universal) {              
+                if(!field.assigned && currentFieldUniversal !== field.universal) {              
                   return {field:field, universal:universal};
                 }
               }
@@ -705,6 +719,7 @@
           
       return null;
     } 
+    
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
@@ -771,7 +786,10 @@
      */
     controller.newAttribute = function() {
     	
-      // TODO: What scenario should this pass for?	
+      // This passes when the sheet needs to be populated with the users settings for
+      // a location attribute and the fields need to be set as assigned.  This will 
+      // typically occur when the user clicks to set a location field or if 
+      // auto-grouping of context fields sets an equivilent card.
       if($scope.attribute != null) {      
         if($scope.attribute.id == -1) {
           $scope.attribute.id = runwayService.generateId();
@@ -816,15 +834,16 @@
         if($scope.universalOptions.length < 1 && Object.keys($scope.sheet.attributes.values).length < 1){
         	// calling newAttribute() is safe because there are no other location fields so the 
         	// location attribute will just be set to null.
-//        	controller.newAttribute(); 
-        	$scope.attribute = null;
+        	controller.newAttribute(); 
         }
-        else if($scope.universalOptions.length === 1){
-        	var secondLocationField = controller.getNextLocationField(field); 
-        	// add the onther (there must be only one other) context field to the attribute
-        	controller.addField(secondLocationField.field);
-        	$scope.attribute = null;
-//        	controller.newAttribute();
+        else if($scope.universalOptions.length > 0){
+        	$scope.universalOptions.reverse();
+        	for(var i=0; i < $scope.universalOptions.length; i++){
+        		var universalOption = $scope.universalOptions[i];
+            	var locationField = controller.getLocationField(universalOption.value); 
+            	controller.addField(locationField);
+        	}
+        	controller.newAttribute();
         }
       }
       

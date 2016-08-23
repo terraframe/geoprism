@@ -37,6 +37,7 @@ import com.runwaysdk.business.Relationship;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.ontology.TermAndRel;
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
@@ -64,6 +65,12 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   public Classifier()
   {
     super();
+  }
+
+  @Override
+  public String toString()
+  {
+    return this.getClassifierId();
   }
 
   /**
@@ -210,6 +217,40 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   /**
+   * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
+   * that are children of the given attribute root nodes including the root nodes.
+   * 
+   * @param sfTermToMatch
+   * @param mdAttributeTermDAO
+   * @return the <code>Classifier</code> object with a label or synonym that matches the given term.
+   */
+  public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
+  {
+    QueryFactory qf = new QueryFactory();
+
+    ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
+    ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
+
+    carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
+
+    classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
+
+    OIterator<? extends Classifier> i = classifierRootQ.getIterator();
+    try
+    {
+      for (Classifier classifier : i)
+      {
+        return classifier;
+      }
+    }
+    finally
+    {
+      i.close();
+    }
+    return null;
+  }
+
+  /**
    * MdMethod used for creating Classifiers.
    * 
    * @param termId
@@ -338,6 +379,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       classifier.getDisplayLabel().setDefaultValue(classifierLabel);
       classifier.setClassifierId(classifierLabel);
       classifier.setClassifierPackage(packageString);
+      
       classifier.apply();
 
       // Create a new Classifier problem
@@ -707,14 +749,14 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
   }
 
-  public static String getManagedClassifiersAsJSON()
+  public static String getCategoryClassifiersAsJSON()
   {
     try
     {
       JSONArray array = new JSONArray();
 
       ClassifierQuery query = new ClassifierQuery(new QueryFactory());
-      query.WHERE(query.getManaged().EQ(true));
+      query.WHERE(query.getCategory().EQ(true));
 
       OIterator<? extends Classifier> it = null;
 
@@ -722,7 +764,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       {
         it = query.getIterator();
 
-        if (it.hasNext())
+        while (it.hasNext())
         {
           Classifier classifier = it.next();
 
@@ -781,6 +823,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   @Transaction
+  @Authenticate
   public static void applyOption(String config)
   {
     try
@@ -827,6 +870,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   @Transaction
+  @Authenticate
   public static Classifier createOption(String option)
   {
     try
@@ -842,7 +886,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       classifier.setClassifierPackage(parent.getClassifierPackage());
       classifier.setClassifierId(IDGenerator.nextID());
       classifier.getDisplayLabel().setValue(label);
-      
+
       Classifier.create(classifier, parentId);
 
       return classifier;
@@ -851,6 +895,25 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Authenticate
+  public static void deleteOption(String id)
+  {
+    Classifier classifier = Classifier.get(id);
+    classifier.delete();
+  }
+
+  @Authenticate
+  public static Classifier editOption(String id)
+  {
+    return Classifier.lock(id);
+  }
+
+  @Authenticate
+  public static void unlockCategory(String id)
+  {
+    Classifier.unlock(id);
   }
 
 }

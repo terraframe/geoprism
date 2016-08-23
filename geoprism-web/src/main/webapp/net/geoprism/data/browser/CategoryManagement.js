@@ -85,10 +85,8 @@
       event.stopPropagation();
     });
     
-    $scope.$on('ok', function(event, data){
+    $scope.$on('categoryOk', function(event, data){
       controller.ok();
-      
-      event.stopPropagation();
     });
       
     $rootScope.$on('categoryEdit', function(event, data) {
@@ -112,7 +110,7 @@
     }   
   }
   
-  function CategoryPageController($scope, categoryService) {
+  function CategoryPageController($scope, categoryService, widgetService, localizationService) {
     var controller = this;
     
     controller.init = function() {
@@ -124,7 +122,7 @@
     }
       
     controller.ok = function() {      
-      $scope.$emit('ok');
+      $scope.$emit('categoryOk');
     }
     
     controller.newInstance = function() {
@@ -155,6 +153,65 @@
     
     controller.cancel = function() {
       controller.init();      
+    }
+    
+    
+    controller.removeDescendant = function(descendantId) {
+      var index = -1;
+      
+      for(var i = 0; i < $scope.category.descendants.length; i++) {
+        var descendant = $scope.category.descendants[i];
+    
+        if(descendant.id == descendantId) {
+          index = i;
+        }
+      }
+      
+      if(index != -1) {
+        $scope.category.descendants.splice(index, 1);      
+      }
+    }    
+      
+    controller.remove = function(descendant) {
+      var title = localizationService.localize("category.management", "removeOptionTitle", "Delete option");
+
+      var message = localizationService.localize("category.management", "removeOptionConfirm", "Are you sure you want to delete the category option [{0}]?");
+      message = message.replace('{0}', descendant.label);
+          
+      var buttons = [];
+      buttons.push({
+        label : localizationService.localize("layer.category", "ok", "Ok"),
+        config : {class:'btn btn-primary'},
+        callback : function(){
+          controller.performRemove(descendant);
+        }
+      });
+      buttons.push({
+        label : localizationService.localize("dataset", "cancel", "Cancel"),
+        config : {class:'btn'}
+      });
+          
+      widgetService.createDialog(title, message, buttons);    
+    }
+    
+    controller.performRemove = function(descendant) {    
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function() {
+          controller.removeDescendant(descendant.id);
+                          
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.message);
+                                   
+          $scope.$apply();
+        }        
+      };
+                      
+      $scope.errors = [];
+                        
+      categoryService.deleteOption(connection, descendant.id);         
     }
     
     controller.edit = function(descendant) {

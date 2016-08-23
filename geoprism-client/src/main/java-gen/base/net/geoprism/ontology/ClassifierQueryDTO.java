@@ -1,6 +1,6 @@
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1050187801)
+@com.runwaysdk.business.ClassSignature(hash = 1710417607)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism.ontology;
 public class ClassifierQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1050187801;
+private static final long serialVersionUID = 1710417607;
 
   protected ClassifierQueryDTO(String type)
   {
