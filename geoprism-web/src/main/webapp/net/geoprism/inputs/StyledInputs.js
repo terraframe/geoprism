@@ -578,6 +578,61 @@
     };
   }  
   
+  function PressEnter() {
+    return function (scope, element, attrs) {
+      element.bind("keydown keypress", function (event) {
+        if(event.which === 13) {
+          scope.$apply(function (){
+            scope.$eval(attrs.pressEnter);
+          });
+
+          event.preventDefault();
+        }
+      });
+    };
+  }
+  
+  function PressEsc() {
+    return function (scope, element, attrs) {
+      element.bind("keydown keypress", function (event) {
+        if(event.which === 27) {
+          scope.$apply(function (){
+            scope.$eval(attrs.pressEsc);
+          });
+          
+          event.preventDefault();
+        }
+      });
+    };
+  }
+  
+  function FocusOnShow($timeout) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        if ($attr.ngShow){
+          $scope.$watch($attr.ngShow, function(newValue){
+            if(newValue){
+              $timeout(function(){
+                $element[0].focus();
+              }, 0);
+            }
+          })      
+        }
+        if ($attr.ngHide){
+          $scope.$watch($attr.ngHide, function(newValue){
+            if(!newValue){
+              $timeout(function(){
+                $element[0].focus();
+              }, 0);
+            }
+          })      
+        }
+      }
+    };
+  }  
+  
+  
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
     .directive('styledCheckBox', StyledCheckBox)
@@ -595,5 +650,8 @@
     .directive('callbackAutoComplete', CallbackAutoComplete)
     .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('modalDialog', ModalDialog)
-    .directive('isolateForm', IsolateForm);    
+    .directive('isolateForm', IsolateForm)
+    .directive('pressEnter', PressEnter)
+    .directive('pressEnter', PressEsc)
+    .directive('focusOnShow', FocusOnShow);
 })();

@@ -1,0 +1,43 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdController name="net.geoprism.ontology.ClassifierController">
+        <create>
+          <mdAction name="getAllCategories" isPost="false" isQuery="false" label="Get all categories" />
+          <mdAction name="editCategory" isPost="true" isQuery="false" label="Edit category">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="getCategory" isPost="true" isQuery="false" label="Get category">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="applyOption" isPost="true" isQuery="false" label="Edit category">
+            <mdParameter name="config" label="config" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="unlockCategory" isPost="true" isQuery="false" label="Unlock category">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="createOption" isPost="true" isQuery="false" label="Create option">
+            <mdParameter name="option" label="Option" order="0" type="java.lang.String" />
+          </mdAction>          
+        </create>
+      </mdController>
+      <mdBusiness name="net.geoprism.ontology.Classifier">
+        <create>
+          <mdMethod name="createOption" label="Create option" static="true" returnType="net.geoprism.ontology.Classifier">
+            <mdParameter name="option" label="Option" order="0" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="applyOption" label="Apply option" returnType="void" static="true">
+            <mdParameter name="config" label="config" order="0" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.ontology.ClassifierController.applyOption" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.ontology.ClassifierController.applyCategory" type="com.runwaysdk.system.metadata.MdAction" />
+      <object key="net.geoprism.ontology.Classifier.applyCategory" type="com.runwaysdk.system.metadata.MdMethod" />
+    </delete>
+  </undoIt>
+</version>

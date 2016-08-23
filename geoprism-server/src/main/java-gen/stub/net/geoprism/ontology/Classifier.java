@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -55,6 +53,7 @@ import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
+import com.runwaysdk.util.IDGenerator;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -756,7 +755,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
     ClassifierQuery classifierQuery = new ClassifierQuery(query);
     ClassifierIsARelationshipQuery isAQ = new ClassifierIsARelationshipQuery(query);
-    ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);    
+    ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);
     ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(query);
 
     SelectableChar id = classifierQuery.getId();
@@ -772,7 +771,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     query.AND(isAQ.getParent().EQ(rootQ.getChild()));
     query.AND(aptQuery.getParentTerm().EQ(isAQ.getChild()));
     query.AND(classifierQuery.EQ(aptQuery.getChildTerm()));
-    
+
     query.ORDER_BY_ASC(label);
 
     query.restrictRows(limit, 1);
@@ -780,4 +779,78 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     return query;
 
   }
+
+  @Transaction
+  public static void applyOption(String config)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(config);
+
+      JSONObject option = object.getJSONObject("option");
+      String optionId = option.getString("id");
+      String label = option.getString("label");
+
+      /*
+       * First: Update classifier values
+       */
+      Classifier classifier = Classifier.lock(optionId);
+      classifier.getDisplayLabel().setValue(label);
+      classifier.apply();
+
+      /*
+       * Second: Restore all synonyms
+       */
+      JSONArray restore = object.getJSONArray("restore");
+
+      for (int i = 0; i < restore.length(); i++)
+      {
+        String synonymId = restore.getString(i);
+
+        Classifier.restoreSynonym(synonymId);
+      }
+
+      /*
+       * Third: Change the optionId into a synonym if specified
+       */
+      String synonym = object.getString("synonym");
+
+      if (synonym != null && synonym.length() > 0)
+      {
+        Classifier.makeSynonym(optionId, synonym);
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  public static Classifier createOption(String option)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(option);
+
+      String parentId = object.getString("parentId");
+      String label = object.getString("label");
+
+      Classifier parent = Classifier.get(parentId);
+
+      Classifier classifier = new Classifier();
+      classifier.setClassifierPackage(parent.getClassifierPackage());
+      classifier.setClassifierId(IDGenerator.nextID());
+      classifier.getDisplayLabel().setValue(label);
+      
+      Classifier.create(classifier, parentId);
+
+      return classifier;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
 }

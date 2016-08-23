@@ -284,18 +284,5 @@
   angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "widget-service", "runway-service"]);
   angular.module("data-set")
   .controller('DatasetController', DatasetController)
-  .directive('datasetModal', DatasetModal)
-  .directive('pressEnter', function () {
-      return function (scope, element, attrs) {
-          element.bind("keydown keypress", function (event) {
-              if(event.which === 13) {
-                  scope.$apply(function (){
-                      scope.$eval(attrs.pressEnter);
-                  });
-
-                  event.preventDefault();
-              }
-          });
-      };
-  });
+  .directive('datasetModal', DatasetModal);
 })();

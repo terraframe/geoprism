@@ -76,6 +76,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
             <li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
+            <li><a href="#category"><i></i><gdb:localize key="category.management.title"/></a></li>
 <%--             <li><a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
 <%--             <li><a href="/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
           </ul>

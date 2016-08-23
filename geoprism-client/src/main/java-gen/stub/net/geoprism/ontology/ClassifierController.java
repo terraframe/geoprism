@@ -3,25 +3,31 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+
+import net.geoprism.JSONControllerUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.TermAndRelDTO;
+import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.system.ontology.TermUtilDTO;
@@ -268,4 +274,149 @@ public class ClassifierController extends ClassifierControllerBase implements co
   {
     resp.sendError(500);
   }
+
+  @Override
+  public void getAllCategories() throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+
+      String classifiers = ClassifierDTO.getManagedClassifiersAsJSON(request);
+
+      JSONControllerUtil.writeReponse(this.resp, new JSONArray(classifiers));
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void getCategory(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO dto = ClassifierDTO.get(request, id);
+
+      JSONArray dArray = new JSONArray();
+
+      TermDTO[] descendants = dto.getAllDescendants(new String[] { ClassifierIsARelationshipDTO.CLASS });
+
+      for (TermDTO descendant : descendants)
+      {
+        JSONObject object = new JSONObject();
+        object.put("label", descendant.getDisplayLabel().getValue());
+        object.put("id", descendant.getId());
+
+        dArray.put(object);
+      }
+
+      JSONObject response = new JSONObject();
+      response.put("label", dto.getDisplayLabel().getValue());
+      response.put("id", dto.getId());
+      response.put("descendants", dArray);
+
+      JSONControllerUtil.writeReponse(this.resp, response);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void editCategory(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO dto = ClassifierDTO.lock(request, id);
+
+      JSONArray sArray = new JSONArray();
+
+      List<? extends ClassifierSynonymDTO> synonyms = dto.getAllHasSynonym();
+
+      for (ClassifierSynonymDTO synonym : synonyms)
+      {
+        JSONObject object = new JSONObject();
+        object.put("label", synonym.getDisplayLabel().getValue());
+        object.put("id", synonym.getId());
+
+        sArray.put(object);
+      }
+
+      JSONObject response = new JSONObject();
+      response.put("label", dto.getDisplayLabel().getValue());
+      response.put("id", dto.getId());
+      response.put("synonyms", sArray);
+
+      JSONControllerUtil.writeReponse(this.resp, response);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void applyOption(String config) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      JSONObject object = new JSONObject(config);
+      String categoryId = object.getString("categoryId");
+
+      ClassifierDTO.applyOption(request, config);
+
+      this.getCategory(categoryId);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void unlockCategory(String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO.unlock(request, id);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void createOption(String option) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO classifier = ClassifierDTO.createOption(request, option);
+
+      JSONObject object = new JSONObject();
+      object.put("label", classifier.getDisplayLabel().getValue());
+      object.put("id", classifier.getId());
+
+      JSONControllerUtil.writeReponse(this.resp, object);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
 }

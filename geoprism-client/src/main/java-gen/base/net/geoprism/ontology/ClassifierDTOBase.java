@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1087663762)
+@com.runwaysdk.business.ClassSignature(hash = 1402919888)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.Classifier";
-  private static final long serialVersionUID = 1087663762;
+  private static final long serialVersionUID = 1402919888;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -543,12 +525,28 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
+  public static final void applyOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String config)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{config};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "applyOption", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final com.runwaysdk.business.ontology.TermAndRelDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentId)
   {
     String[] _declaredTypes = new String[]{"net.geoprism.ontology.Classifier", "java.lang.String"};
     Object[] _parameters = new Object[]{dto, parentId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "create", _declaredTypes);
     return (com.runwaysdk.business.ontology.TermAndRelDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final net.geoprism.ontology.ClassifierDTO createOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String option)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{option};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "createOption", _declaredTypes);
+    return (net.geoprism.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final void deleteClassifierProblem(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String problemId)
