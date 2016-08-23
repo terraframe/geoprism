@@ -85,10 +85,8 @@
       event.stopPropagation();
     });
     
-    $scope.$on('ok', function(event, data){
+    $scope.$on('categoryOk', function(event, data){
       controller.ok();
-      
-      event.stopPropagation();
     });
       
     $rootScope.$on('categoryEdit', function(event, data) {
@@ -124,7 +122,7 @@
     }
       
     controller.ok = function() {      
-      $scope.$emit('ok');
+      $scope.$emit('categoryOk');
     }
     
     controller.newInstance = function() {

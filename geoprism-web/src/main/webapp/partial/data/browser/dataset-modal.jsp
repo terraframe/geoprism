@@ -61,7 +61,14 @@
                     <tbody>
                       <tr ng-repeat="attribute in dataset.attributes" class="fade-ngRepeat-item">
                         <td class="submit-form">
-                          <input type="text" name="{{attribute.label}}" ng-model="attribute.label" required></input>
+                          <dl>
+                            <dd>
+                              <input type="text" name="{{attribute.label}}" ng-model="attribute.label" required></input>
+                            </dd>
+                            <dd ng-if="attribute.type == 'Category'">
+                              <gdb:localize key="dataset.category"/> <a ng-click="ctrl.open(attribute.root)">{{attribute.root.label}}</a>
+                            </dd>
+                          </dl>
                         </td>
                       </tr>
                     </tbody>
@@ -85,4 +92,5 @@
     </dl>   
     </div>
   </div>
+  <category-modal></category-modal>
 </div>

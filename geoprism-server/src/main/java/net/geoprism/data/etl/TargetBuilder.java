@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
@@ -488,70 +486,73 @@ public class TargetBuilder
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
     {
-      MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
-
-      /*
-       * Create the root term for the options
-       */
-      Classifier classifier = Classifier.findClassifier(mdClass.definesType(), attributeName);
-
-      if (classifier == null)
+      if (!cField.has("root"))
       {
-        classifier = new Classifier();
-        classifier.setClassifierId(attributeName);
-        classifier.setClassifierPackage(mdClass.definesType());
-        classifier.setKeyName(key);
-        classifier.getDisplayLabel().setValue(label);
-        classifier.apply();
+        MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 
-        classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+        /*
+         * Create the root term for the options
+         */
+        Classifier classifier = Classifier.findClassifierRoot(mdAttribute);
+
+        if (classifier == null)
+        {
+          classifier = new Classifier();
+          classifier.setClassifierId(attributeName);
+          classifier.setClassifierPackage(mdClass.definesType());
+          classifier.setKeyName(key);
+          classifier.getDisplayLabel().setValue(label);
+          classifier.setManaged(true);
+          classifier.apply();
+
+          classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+        }
+
+        /*
+         * Add the root as an option to the MdAttributeTerm
+         */
+        String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+        relationship.apply();
+
+        TargetFieldClassifier field = new TargetFieldClassifier();
+        field.setName(attributeName);
+        field.setLabel(label);
+        field.setKey(key);
+        field.setSourceAttributeName(sourceAttributeName);
+        field.setPackageName(key);
+        field.setAggregatable(aggregatable);
+
+        return field;
       }
+      else
+      {
+        MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
+        
+        String classifierId = cField.getString("root");
 
-      /*
-       * Add the root as an option to the MdAttributeTerm
-       */
-      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+        Classifier classifier = Classifier.get(classifierId);
 
-      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
-      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
-      relationship.apply();
+        /*
+         * Add the root as an option to the MdAttributeTerm
+         */
+        String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
 
-      TargetFieldClassifier field = new TargetFieldClassifier();
-      field.setName(attributeName);
-      field.setLabel(label);
-      field.setKey(key);
-      field.setSourceAttributeName(sourceAttributeName);
-      field.setPackageName(key);
-      field.setAggregatable(aggregatable);
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+        relationship.apply();
 
-      return field;
-    }
-    else if (columnType.equals(ColumnType.DOMAIN.name()))
-    {
-      String classifierId = cField.getString("root");
+        TargetFieldDomain field = new TargetFieldDomain();
+        field.setName(attributeName);
+        field.setLabel(label);
+        field.setKey(key);
+        field.setSourceAttributeName(sourceAttributeName);
+        field.setAggregatable(aggregatable);
 
-      MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
-
-      Classifier classifier = Classifier.get(classifierId);
-
-      /*
-       * Add the root as an option to the MdAttributeTerm
-       */
-      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
-
-      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
-      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
-      relationship.apply();
-
-      TargetFieldDomain field = new TargetFieldDomain();
-      field.setName(attributeName);
-      field.setLabel(label);
-      field.setKey(key);
-      field.setSourceAttributeName(sourceAttributeName);
-      field.setAggregatable(aggregatable);
-
-      return field;
-
+        return field;
+      }
     }
     else if (columnType.equals(ColumnType.BOOLEAN.name()))
     {
