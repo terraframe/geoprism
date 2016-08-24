@@ -33,6 +33,7 @@
             <xs:element name="locationTask" type="locationTask" />
             <xs:element name="initializeTask" type="initializeTask" />
             <xs:element name="patchMappableClassTask" type="patchMappableClassTask" />
+            <xs:element name="patchCategoryTask" type="patchCategoryTask" />
           </xs:choice>
         </xs:extension>
       </xs:complexContent>
@@ -106,6 +107,9 @@
   </xs:complexType>
 
   <xs:complexType name="patchMappableClassTask">
+  </xs:complexType>
+
+  <xs:complexType name="patchCategoryTask">
   </xs:complexType>
 
 </xs:schema>

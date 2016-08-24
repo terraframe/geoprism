@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -235,40 +237,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     
     classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
     
-    OIterator<? extends Classifier> i = classifierRootQ.getIterator();
-    try
-    {
-      for (Classifier classifier : i)
-      {
-        return classifier;
-      }
-    }
-    finally
-    {
-      i.close();
-    }
-    return null;
-  }
-
-  /**
-   * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
-   * that are children of the given attribute root nodes including the root nodes.
-   * 
-   * @param sfTermToMatch
-   * @param mdAttributeTermDAO
-   * @return the <code>Classifier</code> object with a label or synonym that matches the given term.
-   */
-  public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
-  {
-    QueryFactory qf = new QueryFactory();
-
-    ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
-    ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
-
-    carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
-
-    classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
-
     OIterator<? extends Classifier> i = classifierRootQ.getIterator();
     try
     {
