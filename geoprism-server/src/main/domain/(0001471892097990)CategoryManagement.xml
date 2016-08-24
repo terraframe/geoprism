@@ -4,7 +4,7 @@
       <mdController name="net.geoprism.ontology.ClassifierController">
         <create>
           <mdAction name="getAllCategories" isPost="false" isQuery="false" label="Get all categories" />
-          <mdAction name="editCategory" isPost="true" isQuery="false" label="Edit category">
+          <mdAction name="editOption" isPost="true" isQuery="false" label="Edit option">
             <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
           </mdAction>
           <mdAction name="getCategory" isPost="true" isQuery="false" label="Get category">
@@ -19,6 +19,9 @@
           <mdAction name="createOption" isPost="true" isQuery="false" label="Create option">
             <mdParameter name="option" label="Option" order="0" type="java.lang.String" />
           </mdAction>          
+          <mdAction name="deleteOption" isPost="true" isQuery="false" label="Create option">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdAction>          
         </create>
       </mdController>
       <mdBusiness name="net.geoprism.ontology.Classifier">
@@ -26,12 +29,80 @@
           <mdMethod name="createOption" label="Create option" static="true" returnType="net.geoprism.ontology.Classifier">
             <mdParameter name="option" label="Option" order="0" type="java.lang.String" />
           </mdMethod>
+          <mdMethod name="editOption" label="Edit option" static="true" returnType="net.geoprism.ontology.Classifier">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdMethod>          
           <mdMethod name="applyOption" label="Apply option" returnType="void" static="true">
             <mdParameter name="config" label="config" order="0" type="java.lang.String" />
           </mdMethod>
+          <mdMethod name="unlockCategory" label="Unlock Category" returnType="void" static="true">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="deleteOption"  label="Delete Category" returnType="void" static="true">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
+          </mdMethod>          
         </create>
       </mdBusiness>
     </update>
+    <permissions>
+      <method methodName="createOption" type="net.geoprism.ontology.Classifier">
+        <assignedRole roleName="Administrator" />
+      </method>
+      <method methodName="editOption" type="net.geoprism.ontology.Classifier">
+        <assignedRole roleName="Administrator" />
+      </method>
+      <method methodName="applyOption" type="net.geoprism.ontology.Classifier">
+        <assignedRole roleName="Administrator" />
+      </method>
+      <method methodName="unlockCategory" type="net.geoprism.ontology.Classifier">
+        <assignedRole roleName="Administrator" />
+      </method>
+      <method methodName="deleteOption" type="net.geoprism.ontology.Classifier">
+        <assignedRole roleName="Administrator" />
+      </method>      
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.ontology.Classifier">
+            <mdMethodPermission methodName="createOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="editOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="applyOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="unlockCategory">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="deleteOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.ontology.Classifier">
+            <mdMethodPermission methodName="createOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="editOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="applyOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="unlockCategory">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="deleteOption">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+    </permissions>    
   </doIt>
   <undoIt>
     <delete>

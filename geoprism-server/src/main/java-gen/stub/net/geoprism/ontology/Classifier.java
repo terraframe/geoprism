@@ -215,6 +215,40 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
     return null;
   }
+  
+  /**
+   * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
+   * that are children of the given attribute root nodes including the root nodes.
+   * 
+   * @param sfTermToMatch
+   * @param mdAttributeTermDAO
+   * @return the <code>Classifier</code> object with a label or synonym that matches the given term.
+   */
+  public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
+  {
+    QueryFactory qf = new QueryFactory();
+    
+    ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
+    ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
+    
+    carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
+    
+    classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
+    
+    OIterator<? extends Classifier> i = classifierRootQ.getIterator();
+    try
+    {
+      for (Classifier classifier : i)
+      {
+        return classifier;
+      }
+    }
+    finally
+    {
+      i.close();
+    }
+    return null;
+  }
 
   /**
    * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
