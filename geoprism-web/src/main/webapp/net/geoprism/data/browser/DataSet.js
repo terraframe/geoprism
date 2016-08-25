@@ -169,7 +169,9 @@
       
       // Reset the file Errors
       $scope.errors = [];
-      datasetService.uploadSpreadsheet(connection, files[0]);
+      if(files && files.length > 0){
+      	datasetService.uploadSpreadsheet(connection, files[0]);
+      }
     }    
     
     controller.addDatasets = function(datasets) {
