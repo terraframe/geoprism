@@ -850,10 +850,13 @@ public class TargetBuilder
           JSONObject object = locationExclusionsArr.getJSONObject(i);
 
           String universal = object.getString("universal");
+          String parentId = object.getString("parentId");
           String label = object.getString("locationLabel");
 
-          exclusions.putIfAbsent(universal, new HashSet<String>());
-          exclusions.get(universal).add(label);
+          String key = universal + "-" + parentId;
+          
+          exclusions.putIfAbsent(key, new HashSet<String>());
+          exclusions.get(key).add(label);
         }
       }
 

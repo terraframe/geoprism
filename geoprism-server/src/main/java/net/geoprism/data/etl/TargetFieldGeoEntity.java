@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
@@ -291,7 +289,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   public ImportProblemIF validate(Transient source, Map<String, Object> parameters)
   {
     GeoEntity parent = this.root;
-    
+
     Map<String, Set<String>> locationExclusions = (Map<String, Set<String>>) parameters.get("locationExclusions");
 
     List<JSONObject> context = new LinkedList<JSONObject>();
@@ -303,7 +301,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
       if (label != null && label.length() > 0)
       {
-        if (this.isExcluded(locationExclusions, entityUniversal, label))
+        if (this.isExcluded(locationExclusions, entityUniversal, parent, label))
         {
           return null;
         }
@@ -349,11 +347,18 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     return null;
   }
 
-  private boolean isExcluded(Map<String, Set<String>> locationExclusions, Universal universal, String label)
+  private boolean isExcluded(Map<String, Set<String>> locationExclusions, Universal universal, GeoEntity parent, String label)
   {
-    if (locationExclusions.containsKey(universal.getId()))
+    String key = universal.getId() + "-" + parent.getId();
+
+    if (universal.getId().equals(this.rootUniversal.getId()))
     {
-      Set<String> labels = locationExclusions.get(universal.getId());
+      key = universal.getId() + "-" + GeoEntity.getRoot().getId();
+    }
+
+    if (locationExclusions.containsKey(key))
+    {
+      Set<String> labels = locationExclusions.get(key);
 
       return labels.contains(label);
     }

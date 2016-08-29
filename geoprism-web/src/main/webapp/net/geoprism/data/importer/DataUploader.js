@@ -298,20 +298,62 @@
       datasetService.createGeoEntity(connection, $scope.problem.parentId, $scope.problem.universalId, $scope.problem.label);
     }
     
+    controller.findLocObjIndex = function(locationExclusions, exclusionId){
+      for(var i=0; i<locationExclusions.length; i++){
+        var exclusion = locationExclusions[i];
+        
+        if(exclusion.id == exclusionId){
+          return i;
+        }
+      }
+      
+      return -1;
+    }
 
+    controller.removeLocationExclusion = function(exclusionId) {
+      var config = datasetService.getDatasetConfiguration();
+
+      if(config.locationExclusions){         
+         
+        var index = controller.findLocObjIndex(config.locationExclusions, exclusionId);
+         
+        if (index > -1) {
+          config.locationExclusions.splice(index, 1);
+       }
+      }
+    }
+    
+    controller.guid = function() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+      });
+    }
+    
     controller.ignoreDataAtLocation = function() {
-    	var locationLabel = $scope.problem.label;
-    	var universal = $scope.problem.universalId;
-    	
-    	$scope.problem.resolved = true;
-    	
-	    $scope.problem.action = {
-            name : 'IGNOREATLOCATION',
-            label : locationLabel
-        };
-    	
-    	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
-	}
+      var locationLabel = $scope.problem.label;
+      var universal = $scope.problem.universalId;
+      var id = controller.guid();
+      
+      $scope.problem.resolved = true;
+      
+      $scope.problem.action = {
+        name : 'IGNOREATLOCATION',
+        label : locationLabel,
+        id : id
+      };
+      
+      var exclusion = {id:id, "universal":universal, "locationLabel":locationLabel, "parentId":$scope.problem.parentId};
+      
+      var config = datasetService.getDatasetConfiguration();
+      
+      if(config.locationExclusions){
+        config.locationExclusions.push(exclusion);
+      }
+      else{
+        config.locationExclusions = [exclusion];
+      }
+    }
     
 
     controller.undoAction = function() {
@@ -319,7 +361,7 @@
       var universal = $scope.problem.universalId;
       
       if($scope.problem.resolved) {
-    	  
+        
         var connection = {
           elementId : '#uploader-overlay',
           onSuccess : function(response){
@@ -337,15 +379,15 @@
             $scope.$apply();
           }      
         };
-    	
+      
         var action = $scope.problem.action;
         
         if(action.name == 'ENTITY')  {
           datasetService.deleteGeoEntity(connection, action.entityId);          
         }
         else if(action.name == 'IGNOREATLOCATION'){
-        	$scope.problem.resolved = false;
-        	datasetService.removeLocationExclusion({"universal":universal, "locationLabel":locationLabel});
+          $scope.problem.resolved = false;
+          controller.removeLocationExclusion(action.id);
         }
         else {
           datasetService.deleteGeoEntitySynonym(connection, action.synonymId);                    
