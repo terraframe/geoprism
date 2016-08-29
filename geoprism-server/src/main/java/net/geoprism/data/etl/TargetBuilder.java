@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
@@ -164,6 +162,7 @@ public class TargetBuilder
   {
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
+    String description = ( cSheet.has("description") ? cSheet.getString("description") : "" );
     String countryId = cSheet.getString("country");
     List<GeoNode> nodes = new LinkedList<GeoNode>();
 
@@ -184,6 +183,7 @@ public class TargetBuilder
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
     mdBusiness.setValue(MdBusinessInfo.NAME, typeName);
     mdBusiness.setStructValue(MdBusinessInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdBusiness.setStructValue(MdBusinessInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, description);
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
@@ -501,7 +501,7 @@ public class TargetBuilder
         if (classifier == null)
         {
           String categoryLabel = cField.getString("categoryLabel");
-          
+
           classifier = new Classifier();
           classifier.setClassifierId(attributeName);
           classifier.setClassifierPackage(IDGenerator.nextID());
@@ -534,7 +534,7 @@ public class TargetBuilder
       else
       {
         MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
-        
+
         String classifierId = cField.getString("root");
 
         Classifier classifier = Classifier.get(classifierId);

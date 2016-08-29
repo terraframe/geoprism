@@ -36,6 +36,14 @@
     </div>      
   </div> 
   <div class="label-holder">
+    <label><gdb:localize key="dataset.description"/></label>
+  </div>          
+  <div class="holder" >
+    <span class="text">
+      <textarea ng-model="sheet.description" name="description"></textarea>
+    </span>
+  </div>
+  <div class="label-holder">
     <strong><gdb:localize key="dataUploader.country"/></strong>
   </div>
   <div class="holder">
