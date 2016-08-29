@@ -702,10 +702,16 @@
         }
       }
       
-      controller.newAttribute();
+      controller.setLocationFieldAutoAssignment();
     }
     
-    controller.getLowestUnassignedLocationField = function() {
+    
+    /**
+     * Gets the lowest unassigned location fields in across the entire universal hierarchy.
+     */
+    controller.getLowestUnassignedLocationFields = function() {
+      var unassignedLowestFields = [];
+    	
       for(var i = ($scope.universals.length - 1); i >= 0; i--) {
         var universal = $scope.universals[i];
         
@@ -716,30 +722,52 @@
             var field = fields[j];
             
             if(!field.assigned) {              
-              return {field:field, universal:universal};
+            	unassignedLowestFields.push({field:field, universal:universal});
             }
+          }
+          
+          if(unassignedLowestFields.length > 0){
+        	  return unassignedLowestFields;
           }
         }        
       }  
       
-      return null;
+      return unassignedLowestFields;
     }
     
-    controller.getLocationField = function(universalId) {
-      var fields = $scope.locationFields[universalId];
-      
-      for(var j = 0; j < fields.length; j++) {
-        var field = fields[j];
-        
-        if(!field.assigned) {              
-          return field
-        }
+    
+    /**
+     * Gets all unassigned location fields at a given universal level
+     * 
+     * @universalId - The universal level at which to search for unassigned fields
+     */
+    controller.getUnassignedLocationFields = function(universalId) {
+      if($scope.locationFields.hasOwnProperty(universalId)){
+	      var fields = $scope.locationFields[universalId];
+	      var unassignedFields = [];
+	  
+	      for(var j = 0; j < fields.length; j++) {
+	        var field = fields[j];
+	        
+	        if(!field.assigned) {              
+	        	unassignedFields.push(field);
+	        }
+	      }
+	          
+	      return unassignedFields;
       }
-          
-      return null;
+      
+      return [];
     } 
     
     
+    /**
+     * Gets the next location moving from low to high in the universal hierarchy. 
+     * Valid returns include another field at the same universal level or a higher universal level.
+     * 
+     * @currentFieldUniversal - universal id of a field that is considered the current and which 
+     * 							this method seeks to find the the next.
+     */
     controller.getNextLocationField = function(currentFieldUniversal) {
         for(var i = ($scope.universals.length - 1); i >= 0; i--) {
             var universal = $scope.universals[i];
@@ -750,7 +778,7 @@
               for(var j = 0; j < fields.length; j++) {
                 var field = fields[j];
                 
-                if(!field.assigned && currentFieldUniversal !== field.universal) {              
+                if(!field.assigned) {              
                   return {field:field, universal:universal};
                 }
               }
@@ -770,6 +798,12 @@
       controller.setUniversalOptions(field);      
     }
     
+    
+    /**
+     * Gets a field from sheet.fields by label
+     * 
+     * @label = label of a field 
+     */
     controller.getField = function(label) {
       for(var j = 0; j < $scope.sheet.fields.length; j++) {
         var field = $scope.sheet.fields[j];
@@ -782,15 +816,19 @@
       return null;
     }
     
+    
+    /**
+     * Populate the unassigned field array from sheet.fields
+     * 
+     * @selectedFields - fields that are to be excluded from the unassignedFields array. Typically this is because they are set in the 
+     * 					 location field attribute by the user in the UI and that location card has not yet been set.
+     */
     controller.refreshUnassignedFields = function(selectedFields) {
-      /*
-       * Reset the unassigned field array
-       */
       $scope.unassignedFields = [];
       
       if($scope.attribute != null) {
         for(var i = 0; i < $scope.sheet.fields.length; i++) {     
-          var field = $scope.sheet.fields[i]
+          var field = $scope.sheet.fields[i];
               
           if(field.type == 'LOCATION' && !field.assigned && field.name != $scope.attribute.name && selectedFields.indexOf(field.name) === -1 ) {
             $scope.unassignedFields.push(field);
@@ -805,7 +843,7 @@
         delete $scope.sheet.attributes.values[attribute.id];        
         $scope.sheet.attributes.ids.splice( $.inArray(attribute.id, $scope.sheet.attributes.ids), 1 );
         
-        // Update the field.assigned status
+        // Update the field.assigned status which sets assigned for all fields that are in sheet.attributes
         controller.setFieldAssigned();
         
         if($scope.attribute == null) {
@@ -821,15 +859,11 @@
     /**
      * Create a new attribute from a location field in the source data
      * 
-     * @attribute - location field that is being constructed. It corresponds to a location card on the UI.
-     * @nexLocationField - location field read from the source data
+     * @attribute - location field that is being constructed. 
+     * 				It corresponds to a configurable location card on the UI where the user can set the location.
      */
     controller.newAttribute = function() {
     	
-      // This passes when the sheet needs to be populated with the users settings for
-      // a location attribute and the fields need to be set as assigned.  This will 
-      // typically occur when the user clicks to set a location field or if 
-      // auto-grouping of context fields sets an equivilent card.
       if($scope.attribute != null) {      
         if($scope.attribute.id == -1) {
           $scope.attribute.id = runwayService.generateId();
@@ -842,74 +876,181 @@
         
         // Update the field.assigned status
         controller.setFieldAssigned();
-      }
-      
-      var targetLocationField = controller.getLowestUnassignedLocationField();      
-      
-      if(targetLocationField == null) {
-    	  $scope.attribute = null; // clear the location field
-      }
-      else {
-        var field = targetLocationField.field;
-        var universal = targetLocationField.universal;
         
-        // construct the initial model for a location field
-        $scope.attribute = {
-          label : field.label,
-          name : field.name,
-          universal : universal.value,
-          fields : {},
-          id : -1
-        };
+        var location = controller.getNextLocationField($scope.attribute.universal);      
+        
+        // This typically passes when a user manually sets an attribute and 
+        // there are more location fields yet to be set
+        if(location != null) {
+          var field = location.field;
+          var universal = location.universal;
+          
+          $scope.attribute = {
+            label : field.label,
+            universal : universal.value,
+            fields : {},
+            id : -1
+          };
 
-        // add the targetLocationField.field (remember, it's from the source data) 
-        // to the new location field (i.e. attribute)
-        controller.addField(field);
-      
-        // sets all valid universal options (excluding the current universal for this location field
-        controller.setUniversalOptions(field); 
-        
-        // There is only one or no universal options (i.e. context locations) so just set the field
-        // to save a click for the user
-        if($scope.universalOptions.length < 1 && Object.keys($scope.sheet.attributes.values).length < 1){
-        	// calling newAttribute() is safe because there are no other location fields so the 
-        	// location attribute will just be set to null.
-        	controller.newAttribute(); 
+          controller.addField(field);
+          controller.setUniversalOptions(field);
+          
+          // After manually setting an attribute there may be an auto-assignement possible for the remaining fields
+          controller.setLocationFieldAutoAssignment();
         }
-        else if($scope.universalOptions.length > 0){
-        	$scope.universalOptions.reverse();
-        	for(var i=0; i < $scope.universalOptions.length; i++){
-        		var universalOption = $scope.universalOptions[i];
-            	var locationField = controller.getLocationField(universalOption.value); 
-            	controller.addField(locationField);
-        	}
-        	controller.newAttribute();
+        else {
+          controller.refreshUnassignedFields([]);
+          $scope.attribute = null;
         }
       }
-      
-      controller.refreshUnassignedFields([]);
+    }
+    
+    
+    /**
+     * Try to auto build the location field if there is only one field option per universal
+     * 
+     * Rules:
+     *  1. Attempt to auto-assign context fields if there is ONLY one lowest level universal
+     *  2. Auto-assign a single context field only if there is a single option
+     *  
+     */
+    controller.setLocationFieldAutoAssignment = function() {
+    	
+    	var lowestLevelUnassignedLocationFields = controller.getLowestUnassignedLocationFields();  
+    	var lowestLevelUnassignedUniversal;
+    	if(lowestLevelUnassignedLocationFields.length > 0){
+    		lowestLevelUnassignedUniversal = lowestLevelUnassignedLocationFields[0].universal.value;
+    	}
+            
+        if(lowestLevelUnassignedLocationFields.length === 1){
+            for(var j = 0; j < lowestLevelUnassignedLocationFields.length; j++) {
+                var field = lowestLevelUnassignedLocationFields[j].field;
+                
+	            // construct the initial model for a location field
+	            $scope.attribute = {
+	              label : field.label,
+	              name : field.name,
+	              universal : field.universal,
+	              fields : {},
+	              id : -1
+	            };
+	    
+	            // add the targetLocationField.field (remember, it's from the source data) 
+	            // to the new location field (i.e. attribute)
+	            controller.addField(field);
+	            
+	            // sets all valid universal options (excluding the current universal) for this location field
+	            controller.setUniversalOptions(field); 
+	            
+	            // There is only one or no universal options (i.e. context locations) so just set the field
+	            // to save a click for the user
+	            if($scope.universalOptions.length < 1){
+	            	// calling newAttribute() is safe because there are no other location fields so the 
+	            	// location attribute will just be set to null.
+	            	controller.newAttribute(); 
+	            }
+	            else{
+	            	// Attempting auto-assignment of context fields
+	            	controller.constructContextFieldsForAttribute(field);
+	            }
+            }
+        }
+        // There are more than one lowest level un-assigned fields so lets not assume we can guess context fields.
+        else if(lowestLevelUnassignedLocationFields.length > 1){
+        	for(var j = 0; j < lowestLevelUnassignedLocationFields.length; j++) {
+                var field = lowestLevelUnassignedLocationFields[j].field;
+                
+	            // construct the initial model for a location field
+	            $scope.attribute = {
+	              label : field.label,
+	              name : field.name,
+	              universal : field.universal,
+	              fields : {},
+	              id : -1
+	            };
+	            
+	            // add the targetLocationField.field (remember, it's from the source data) 
+	            // to the new location field (i.e. attribute)
+	            controller.addField(field);
+	          
+	            // sets all valid universal options (excluding the current universal) for this location field
+	            controller.setUniversalOptions(field);
+	            
+	            controller.refreshUnassignedFields([field.name]);
+	            
+	            break;
+        	}
+        }
+    }
+    
+    
+    /**
+     * Construct all possible context fields for a given target field.
+     * NOTE: there is an assumption that this will only be called for a lowest level univeral field
+     * 
+     * @field - the target field to which context fields would be built from. This is typically a field
+     * 			in the lowest level universal of a sheet.
+     */
+    controller.constructContextFieldsForAttribute = function(field) {
+    	var unassignedLocationFieldsForTargetFieldUniversal = controller.getUnassignedLocationFields(field.universal); 
+    	
+        if($scope.universalOptions.length > 0 && unassignedLocationFieldsForTargetFieldUniversal.length === 1){
+        	var fieldsSetToUniversalOptions = [];
+        	
+        	for(var i=$scope.universalOptions.length; i--;){
+        		var universalOption = $scope.universalOptions[i];
+            	var unassignedLocationFieldsForThisUniversal = controller.getUnassignedLocationFields(universalOption.value); 
+            	// Set the field ONLY if there is a single option per universal
+            	if(unassignedLocationFieldsForThisUniversal.length === 1){
+            		controller.addField(unassignedLocationFieldsForThisUniversal[0]);
+            		fieldsSetToUniversalOptions.push(unassignedLocationFieldsForThisUniversal[0].name);
+            	}
+        	}
+        	
+        	// set the location attribute only if all the universal options have been set automatically
+        	// i.e. The # of universal options must match the # of fields set
+        	if(fieldsSetToUniversalOptions.length === $scope.universalOptions.length){
+        		controller.newAttribute();
+        	}
+        	
+        	controller.refreshUnassignedFields(fieldsSetToUniversalOptions);
+        }
     }
     
     controller.addField = function(field) {
       $scope.attribute.fields[field.universal] = field.label;
     }
     
+    /**
+     * Sets the valid universal options for a given field.
+     * 
+     * Valid options are:
+     *   1.  universals that are assigned by the user in the source data 
+     *   2.  universals with fields that are not yet assigned
+     */
     controller.setUniversalOptions = function(field) {
       $scope.universalOptions = [];
       var valid = true;
       
       for(var i = 0; i < $scope.universals.length; i++) {
         var universal = $scope.universals[i];
+        var unassignedFieldsForThisUniversal = controller.getUnassignedLocationFields(universal.value);
               
         if(universal.value == field.universal) {
           valid = false;              
         }
-        else if(valid && $scope.locationFields[universal.value] != null) {
-          $scope.universalOptions.push(universal);
+        else if(valid && unassignedFieldsForThisUniversal.length > 0) {
+        	$scope.universalOptions.push(universal);
         }
       }
     }
     
+    
+    /**
+     * Sets all sheet.fields in a sheet to isAssigned = true if the field is assigned to a sheet attribute
+     * and is a location field.
+     * 
+     */
     controller.setFieldAssigned = function() {
       for(var i = 0; i < $scope.sheet.fields.length; i++) {     
         var field = $scope.sheet.fields[i]
@@ -924,6 +1065,13 @@
     }
     
     
+    /**
+     * Check if a field is assigned to a sheet attribute 
+     * 
+     * @field - the field to check
+     * 
+     * isAssigned = true if the sheet attribute fields has a field with a corresponding field label
+     */
     controller.isAssigned = function(field) {
       for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
         var id = $scope.sheet.attributes.ids[i];
