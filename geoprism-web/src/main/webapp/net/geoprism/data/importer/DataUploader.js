@@ -487,18 +487,41 @@
     }   
   }
   
+  function NamePageController($scope, datasetService) {
+    var controller = this;
+    
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+      
+      if(label != null && label != '') {
+        datasetService.validateDatasetName(connection, label, '');
+      }
+    }
+  }
+  
   function NamePage() {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/data-uploader/name-page.jsp',
       scope: true,
+      controller : NamePageController,
+      controllerAs : 'ctrl',    	  
       link: function (scope, element, attrs) {
       }
     }   
-  }  
+  } 
   
-  function AttributesPageController($scope) {
+  function AttributesPageController($scope, datasetService) {
     var controller = this;
     
     controller.initialize = function() {
@@ -544,6 +567,23 @@
       }  
         
       return true;
+    }
+    
+    controller.isUniqueCategory = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+        
+      if(label != null && label != '') {      
+        datasetService.validateCategoryName(connection, label, '');
+      }
     }
     
     controller.accept = function(field) {
@@ -1705,25 +1745,6 @@
     }   
   } 
   
-  function ValidateUnique() {
-    return {
-      restrict: "A",
-      scope : {
-        validator : '&'  
-      },
-      require: 'ngModel',
-      link: function (scope, element, attr, ngModel) {
-      
-        element.bind('blur', function (e) {
-          var unique = scope.validator()(element.val());
-          ngModel.$setValidity('unique', unique);
-          
-          scope.$apply();
-        });            
-      }
-    };
-  };  
-  
   function ValidateAccepted() {
     return {
       restrict: "A",
@@ -1754,7 +1775,6 @@
    .directive('locationPage', LocationPage)
    .directive('coordinatePage', CoordinatePage)
    .directive('summaryPage', SummaryPage)
-   .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
    .directive('synonymAction', SynonymAction)
    .directive('uploaderDialog', UploaderDialog);

@@ -44,6 +44,24 @@
       return null;
     }
     
+    
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+        
+      if(label != null && label != '') {
+        datasetService.validateDatasetName(connection, label, scope.$parent.dataset.id);
+      }
+    }
+    
     controller.apply = function(dataset) {
       
       var connection = {
@@ -279,6 +297,23 @@
 
       categoryService.get(connection, category.id);
     }
+        
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+        
+      if(label != null && label != '') {
+        datasetService.validateDatasetName(connection, label, $scope.dataset.id);
+      }
+    }    
     
     $rootScope.$on('categoryOk', function(event, data){
       $scope.show = true;      

@@ -180,6 +180,18 @@
       net.geoprism.DataUploaderController.getClassifierSuggestions(request, mdAttributeId, text, limit);
     }
     
+    service.validateDatasetName = function(connection, label, id) {
+      var request = runwayService.createConnectionRequest(connection);
+        
+      net.geoprism.DataUploaderController.validateDatasetName(request, label, id);      
+    }
+    
+    service.validateCategoryName = function(connection, label, id) {
+      var request = runwayService.createConnectionRequest(connection);
+    
+      net.geoprism.DataUploaderController.validateCategoryName(request, label, id);      
+    }
+    
     //
     // Used to structure the data uploader steps widget
     // config - Configuration array containing additional steps. Can be an empty array.

@@ -3,23 +3,24 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.geoprism.MappableClass;
 
@@ -100,24 +101,18 @@ public class ProblemResponse implements ImportResponseIF
 
   private JSONObject getProblemsJSON() throws JSONException
   {
-    JSONArray locations = new JSONArray();
-    JSONArray categories = new JSONArray();
+    Map<String, List<JSONObject>> map = new HashMap<String, List<JSONObject>>();
+    map.put(LocationProblem.TYPE, new LinkedList<JSONObject>());
+    map.put(CategoryProblem.TYPE, new LinkedList<JSONObject>());
 
     for (ImportProblemIF problem : this.problems)
     {
-      if (problem instanceof LocationProblem)
-      {
-        locations.put(problem.toJSON());
-      }
-      else
-      {
-        categories.put(problem.toJSON());
-      }
+      map.putIfAbsent(problem.getType(), new LinkedList<JSONObject>());
+      
+      map.get(problem.getType()).add(problem.toJSON());
     }
 
-    JSONObject object = new JSONObject();
-    object.put("locations", locations);
-    object.put("categories", categories);
+    JSONObject object = new JSONObject(map);
 
     return object;
   }

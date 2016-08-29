@@ -27,6 +27,7 @@
       <p >{{error}}</p>
     </div>
     <ng-form name="ctrl.problemForm" isolate-form>
+      <div class="inline-value">{{problem.attributeLabel}}</div>    
       <div class="inline-value error-message">{{problem.label}}</div>
       <div ng-if="!problem.resolved">      
         <div class="inline-combo">

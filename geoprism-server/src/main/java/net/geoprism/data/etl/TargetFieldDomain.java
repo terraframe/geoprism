@@ -28,6 +28,7 @@ import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttribute;
 
 public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF, TargetFieldValidationIF
@@ -86,7 +87,9 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
 
         if (classifier == null)
         {
-          return new DomainProblem(value.trim(), mdAttributeTerm.getId());
+          String attributeLabel = mdAttributeTerm.getDisplayLabel(Session.getCurrentLocale());
+          
+          return new CategoryProblem(value.trim(), mdAttributeTerm.getId(), attributeLabel);
         }
       }
     }

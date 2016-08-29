@@ -500,10 +500,12 @@ public class TargetBuilder
 
         if (classifier == null)
         {
+          String categoryLabel = cField.getString("categoryLabel");
+          
           classifier = new Classifier();
           classifier.setClassifierId(attributeName);
           classifier.setClassifierPackage(IDGenerator.nextID());
-          classifier.getDisplayLabel().setValue(label);
+          classifier.getDisplayLabel().setValue(categoryLabel);
           classifier.setCategory(true);
           classifier.apply();
 

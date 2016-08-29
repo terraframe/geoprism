@@ -46,11 +46,13 @@
 	          <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(dataset)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
 	        </td>
 	        <td class="submit-form">
-	          <input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="orignialDatasetState || ctrl.setDatasetState(dataset)" press-enter="ctrl.apply(dataset)" ng-readonly="!dataset.editMode">
-	            <i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
-	          </input>
-	          <button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)"><gdb:localize key="dataset.submit"/></button>
-	          <button type="button" class="btn btn-default" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.cancelDatasetEdit(dataset)"><gdb:localize key="dataset.cancel"/></button>
+	          <ng-form name="form{{$index}}">
+  	          <input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="orignialDatasetState || ctrl.setDatasetState(dataset)" press-enter="ctrl.apply(dataset)" ng-readonly="!dataset.editMode" validate-unique validator="ctrl.isUniqueLabel">
+	              <i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
+	            </input>
+	            <button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)" ng-disabled="form{{$index}}.$invalid"><gdb:localize key="dataset.submit"/></button>
+	            <button type="button" class="btn btn-default" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.cancelDatasetEdit(dataset)"><gdb:localize key="dataset.cancel"/></button>
+	          </ng-form>
 	        </td>
 	      </tr>
 	    </tbody>    

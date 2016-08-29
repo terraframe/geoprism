@@ -27,7 +27,7 @@
         <label><gdb:localize key="dataUploader.locationContext"/></label>   
         <div class="label-help-ico-container">
        		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContextHelpToolTip"/>"></i>
-     	</div>   
+      	</div>   
       </div>
       <div class="inline-value">
       	<label><gdb:localize key="dataUploader.unknownLocation"/></label>

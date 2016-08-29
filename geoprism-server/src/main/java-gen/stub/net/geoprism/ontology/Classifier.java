@@ -917,5 +917,31 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   {
     Classifier.unlock(id);
   }
+  
+
+  public static void validateCategoryName(String name, String id)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierQuery classifierQuery = new ClassifierQuery(factory);
+    classifierQuery.WHERE(classifierQuery.getCategory().EQ(true));
+    classifierQuery.AND(classifierQuery.getDisplayLabel().localize().EQ(name.trim()));
+
+    if (id != null && id.length() > 0)
+    {
+      classifierQuery.AND(classifierQuery.getId().NE(id));
+    }
+
+    long count = classifierQuery.getCount();
+
+    if (count > 0)
+    {
+      NonUniqueCategoryException ex = new NonUniqueCategoryException();
+      ex.setLabel(name.trim());
+
+      throw ex;
+    }
+  }
+
 
 }
