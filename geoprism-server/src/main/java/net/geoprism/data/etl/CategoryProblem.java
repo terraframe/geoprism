@@ -22,20 +22,23 @@ import org.json.JSONObject;
 public class CategoryProblem implements ImportProblemIF, Comparable<ImportProblemIF>
 {
   public static final String TYPE = "categories";
-  
-  private String label;
 
-  private String mdAttributeId;
+  private String             label;
 
-  private String attributeLabel;
+  private String             mdAttributeId;
 
-  public CategoryProblem(String label, String mdAttributeId, String attributeLabel)
+  private String             attributeLabel;
+
+  private String             rootId;
+
+  public CategoryProblem(String label, String rootId, String mdAttributeId, String attributeLabel)
   {
     this.label = label;
+    this.rootId = rootId;
     this.mdAttributeId = mdAttributeId;
     this.attributeLabel = attributeLabel;
   }
-  
+
   public String getMdAttributeId()
   {
     return mdAttributeId;
@@ -43,7 +46,7 @@ public class CategoryProblem implements ImportProblemIF, Comparable<ImportProble
 
   public String getKey()
   {
-    return this.mdAttributeId + "-" + this.label;
+    return this.rootId + "-" + this.label;
   }
 
   @Override
