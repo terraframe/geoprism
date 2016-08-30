@@ -45,8 +45,6 @@
     }
     
     controller.setSynonym = function(value) {
-      $scope.problem.synonym = value;
-      
       controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
     }
     
@@ -159,7 +157,8 @@
       replace: true,
       templateUrl: '/partial/data-uploader/category-validation-problem.jsp',
       scope: {
-        problem : '=' 
+        problem : '=',
+        options : '='
       },
       controller : CategoryValidationProblemController,
       controllerAs : 'ctrl',      

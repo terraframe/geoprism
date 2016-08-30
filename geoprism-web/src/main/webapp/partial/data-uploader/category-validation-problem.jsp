@@ -30,8 +30,10 @@
       <div class="inline-value">{{problem.attributeLabel}}</div>    
       <div class="inline-value error-message">{{problem.label}}</div>
       <div ng-if="!problem.resolved">      
-        <div class="inline-combo">
-          <input class="synonym" name="{{::$index + '-name'}}" type="text" placeholder="<gdb:localize key="dataUploader.categorySynonymSearchPlaceholder"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getClassifierSuggestions" setter="ctrl.setSynonym"></input>
+        <div class="inline-box">
+          <select class="select-area" ng-model="problem.synonym" ng-change="ctrl.setSynonym()" ng-options="opt.id as opt.label for opt in options">
+            <option value=""></option>          
+          </select>          
         </div>
         <div class="inline-actions">
           <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymCategoryTooltip"/>" ></i>

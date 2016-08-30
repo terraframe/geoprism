@@ -35,6 +35,11 @@ public class CategoryProblem implements ImportProblemIF, Comparable<ImportProble
     this.mdAttributeId = mdAttributeId;
     this.attributeLabel = attributeLabel;
   }
+  
+  public String getMdAttributeId()
+  {
+    return mdAttributeId;
+  }
 
   public String getKey()
   {
