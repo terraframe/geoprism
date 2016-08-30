@@ -418,9 +418,11 @@
     var controller = this;
     
     controller.hasProblems = function() {
-      for(var i = 0; i < $scope.problems.locations.length; i++) {
-        if(!$scope.problems.locations[i].resolved) {
-          return true;
+      if($scope.problems.locations != null) {      
+        for(var i = 0; i < $scope.problems.locations.length; i++) {
+          if(!$scope.problems.locations[i].resolved) {
+            return true;
+          }
         }
       }
       
@@ -1489,7 +1491,7 @@
             }
 
         	  
-            if(result.problems.locations.length > 0) {
+            if(result.problems.locations == null || result.problems.locations.length > 0) {
               $scope.page.current = 'GEO-VALIDATION';
             }
             else {
@@ -1763,14 +1765,14 @@
     controller.isReady = function() {
       var current = $scope.page.current;
       
-      return (current == 'SUMMARY' || current == 'CATEGORY-VALIDATION' || (current == 'GEO-VALIDATION' && $scope.problems.categories.length == 0));
+      return (current == 'SUMMARY' || current == 'CATEGORY-VALIDATION' || (current == 'GEO-VALIDATION' && $scope.problems.categories != null && $scope.problems.categories.length == 0));
     }
     
     controller.hasNextPage = function() {
       var current = $scope.page.current;
       
       if(current == 'GEO-VALIDATION') {
-        return ($scope.problems.categories.length > 0);
+        return ($scope.problems.categories != null && $scope.problems.categories.length > 0);
       }
       
       return (current != 'MATCH-INITIAL' && current != 'SUMMARY' && current != 'MATCH' && current != 'CATEGORY-VALIDATION');
