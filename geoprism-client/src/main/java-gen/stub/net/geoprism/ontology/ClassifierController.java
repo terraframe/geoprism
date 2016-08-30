@@ -430,4 +430,21 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
+  
+  @Override
+  public void validateCategoryName(String name, String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO.validateCategoryName(request, name, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
 }

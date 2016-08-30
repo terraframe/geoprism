@@ -44,11 +44,26 @@
               </div>            
               <div class="row-holder">
                 <div class="label-holder">
-                  <label><gdb:localize key="category.icon.label"/></label>
+                  <label><gdb:localize key="dataset.label"/></label>
                 </div>          
                 <div class="holder" >
                   <span class="text">
-                    <input type="text" ng-model="dataset.label" name="label" required>
+                    <input type="text" ng-model="dataset.label" name="label" required  validate-unique validator="ctrl.isUniqueLabel">
+                  </span>
+                  <div class="inline-error-message">
+                    <p ng-show="ctrl.form.label.$error.unique">
+                      <gdb:localize key="dataUploader.unique"/>
+                    </p>
+                  </div>         
+                </div>
+              </div>
+              <div class="row-holder">
+                <div class="label-holder">
+                  <label><gdb:localize key="dataset.description"/></label>
+                </div>          
+                <div class="holder" >
+                  <span class="text">                  
+                    <textarea ng-model="dataset.description" name="description"></textarea>
                   </span>
                 </div>
               </div>

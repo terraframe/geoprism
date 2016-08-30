@@ -92,30 +92,21 @@
       </div>      
       <div class="inline-box fade-ngIf" ng-if="field.type == 'CATEGORY'">
         <label><gdb:localize key="dataUploader.domainRoot"/></label>
-        <select class="select-area" ng-model="field.root" name="{{::$index + '-domain'}}" ng-options="opt.value as opt.label for opt in classifiers">
+        <select class="select-area" ng-model="field.root" name="{{::$index + '-root'}}" ng-options="opt.value as opt.label for opt in classifiers">
           <option value=""><gdb:localize key="dataUploader.new"/></option>          
         </select>
       </div>      
+      <div class="inline-text fade-ngIf" ng-if="field.type == 'CATEGORY' && field.root == null">
+        <label><gdb:localize key="dataUploader.categoryLabel"/></label>
+        <input ng-model="field.categoryLabel" name="{{::$index + '-categoryLabel'}}" ng-init="field.categoryLabel = field.label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueCategory"></input>
+      </div>      
 
-<!-- 
-      <div class="inline-number" ng-if="field.type == 'DOUBLE'">
-        <label><gdb:localize key="dataUploader.precision"/></label>
-        <input ng-model="field.precision" name="{{::$index + 'precision'}}" ng-required="true" type="text" integer-only></input>
-      </div>
-      <div class="inline-number" ng-if="field.type == 'DOUBLE'">
-        <label><gdb:localize key="dataUploader.scale"/></label>
-        <input ng-model="field.scale" name="{{::$index + 'scale'}}" ng-required="true" type="text" integer-only></input>
-      </div>
- -->      
-<!--       
-      <div class="inline-check" ng-if="field.type == 'DOUBLE'">
-        <label><gdb:localize key="dataUploader.ratio"/></label>
-        <styled-check-box model="field.ratio" name="{{::$index + 'field.ratio'}" style="{'margin': '5px 0px 0 0'}"></styled-check-box>
-      </div>
- -->
       <div class="inline-error-message">
         <p ng-show="form[$index + '-name'].$error.unique">
           <gdb:localize key="dataUploader.unique"/>
+        </p>    
+        <p ng-show="form[$index + '-categoryLabel'].$error.unique">
+          <gdb:localize key="dataUploader.uniqueCategory"/>
         </p>    
         <p ng-show="form[$index + '-type'].$error.accepted" style="padding-top: 26px;">
           <i class="fa fa-exclamation" ng-click="ctrl.accept(field)" title="<gdb:localize key="dataUploader.acceptType"/>"></i>

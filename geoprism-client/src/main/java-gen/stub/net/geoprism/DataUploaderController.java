@@ -268,4 +268,38 @@ public class DataUploaderController extends DataUploaderControllerBase implement
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
+  
+  @Override
+  public void validateDatasetName(String name, String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.validateDatasetName(request, name, id);
+      
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+  
+  @Override
+  public void validateCategoryName(String name, String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO.validateCategoryName(request, name, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
 }

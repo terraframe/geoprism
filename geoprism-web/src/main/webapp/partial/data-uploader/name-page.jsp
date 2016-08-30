@@ -27,9 +27,22 @@
   </div>
   <div class="holder">
     <span class="text">
-      <input ng-model="sheet.label" name="label" ng-required="true" type="text"></input>
+      <input ng-model="sheet.label" name="label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueLabel"></input>
     </span>
+    <div class="inline-error-message">
+      <p ng-show="form.label.$error.unique">
+        <gdb:localize key="dataUploader.unique"/>
+      </p>    
+    </div>      
   </div> 
+  <div class="label-holder">
+    <label><gdb:localize key="dataset.description"/></label>
+  </div>          
+  <div class="holder" >
+    <span class="text">
+      <textarea ng-model="sheet.description" name="description"></textarea>
+    </span>
+  </div>
   <div class="label-holder">
     <strong><gdb:localize key="dataUploader.country"/></strong>
   </div>

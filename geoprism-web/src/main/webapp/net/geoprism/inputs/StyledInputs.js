@@ -630,8 +630,37 @@
         }
       }
     };
-  }  
+  }
+
+  function ValidateUnique($timeout) {
+    return {
+      restrict: "A",
+      scope : {
+        validator : '&'  
+      },
+      require: 'ngModel',
+      link: function (scope, element, attr, ngModel) {      
+        var validate = function() {
+          var unique = scope.validator()(element.val(), ngModel, scope);
+          
+          if(unique != null) {
+            ngModel.$setValidity('unique', unique);
+              
+            scope.$apply();            
+          }        
+        }
+      
+        element.bind('blur', function (e) {
+          validate();
+        });            
   
+        // Validate the initial value
+        $timeout(function(){
+          validate();          
+        }, 0)
+      }
+    };
+  };  
   
   angular.module("styled-inputs", ["localization-service"]);
   angular.module("styled-inputs")
@@ -651,6 +680,7 @@
     .directive('categoryAutoComplete', CategoryAutoComplete)
     .directive('modalDialog', ModalDialog)
     .directive('isolateForm', IsolateForm)
+    .directive('validateUnique', ValidateUnique)    
     .directive('pressEnter', PressEnter)
     .directive('pressEnter', PressEsc)
     .directive('focusOnShow', FocusOnShow);
