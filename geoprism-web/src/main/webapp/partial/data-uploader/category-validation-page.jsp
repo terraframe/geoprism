@@ -50,7 +50,7 @@
     </div>  
     
     <div ng-repeat="problem in problems.categories">
-      <category-validation-problem problem="problem"></category-validation-problem>
+      <category-validation-problem problem="problem" options="problems.options[problem.mdAttributeId]"></category-validation-problem>
     </div>
   </div>
   <div class="wide-holder">
