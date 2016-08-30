@@ -38,7 +38,7 @@
   
   <div ng-if="datasets === null"><gdb:localize key='dataset.loadingData'/></div>
   <div class="datasets-table-wrapper">
-	  <table id="manage-datasets-table" class="table table-bordered table-striped">        
+	  <table id="manage-datasets-table" class="list-table table table-bordered table-striped">        
 	    <tbody>
 	      <tr ng-repeat="dataset in datasets" class="fade-ngRepeat-item" ng-cloak>
 	        <td class="button-column">

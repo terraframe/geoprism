@@ -271,3 +271,84 @@ img{
 .frame-box:after {top:0;right:0;border-width: 6px 6px 0 0}
 .frame-box>:first-child:before {bottom:0;right:0;border-width: 0 6px 6px 0}
 .frame-box>:first-child:after {bottom:0;left:0;border-width: 0 0 6px 6px}  
+
+
+/* 
+*
+* DASHBOARDS 
+*
+*/
+a.clone-dashboard {
+	color: #019EDC;
+	position: relative;
+	margin: 0px 9px 0px 0px;
+}
+
+i.fa.fa-plus.ico-dashboard {
+	margin-left: 5px;
+	vertical-align: bottom;
+ 		font-size: 14px;
+ 		color: #bababa;
+ 		cursor: pointer;
+}
+
+i.fa.fa-plus.ico-dashboard:hover,
+i.fa.fa-plus.ico-dashboard:focus{
+	color: #00bfff;
+}
+
+i.fa.fa-minus.ico-dashboard {
+	margin-left: 5px;
+	vertical-align: bottom;
+ 		font-size: 14px;
+ 		color: #bababa;
+ 		cursor: pointer;
+}
+
+i.fa.fa-minus.ico-dashboard:hover,
+i.fa.fa-minus.ico-dashboard:focus{
+	color: #00bfff;
+}
+
+.fa.fa-cog.ico-dashboard-options:hover,
+.fa.fa-cog.ico-dashboard-options:focus{
+	color: #00bfff;
+}
+
+i.fa.fa-user-plus.ico-add-dashboard-user {
+	margin-left: 5px;
+	vertical-align: bottom;
+ 		font-size: 14px;
+ 		color: #bababa;
+ 		cursor: pointer;
+}
+
+i.fa.fa-user-plus.ico-add-dashboard-user:hover,
+i.fa.fa-user-plus.ico-add-dashboard-user:focus{
+	color: #00bfff;
+}
+	
+#add-dashboard-users-container{
+	float: left;
+}
+
+#add-dashboard-type-container{
+	float: left;
+}
+
+#dashboardMetadata {
+	z-index: 16;
+}
+
+#new-dashboard-btn-container {
+	margin-bottom: 5px;
+}
+
+.new-dashboard-btn {
+	color: white;
+	font-weight: bold;
+}
+
+.new-dashboard-btn:hover {
+	color: #00bfff;
+}

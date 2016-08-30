@@ -27,7 +27,7 @@
   
   <div ng-if="errors.length > 0" class="error-container" ng-cloak>
     <div class="label-holder">
-      <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
+      <strong><gdb:localize key='dashboard.errorsLabel'/></strong>
     </div>
     <div class="holder">
       <div ng-repeat="error in errors" >
@@ -38,13 +38,13 @@
   
   <div ng-if="category.management === null"><gdb:localize key='category.management.loadingData'/></div>
   <div class="datasets-table-wrapper">
-    <table id="manage-datasets-table" class="table table-bordered table-striped">        
+    <table class="list-table table table-bordered table-striped">        
       <tbody>
         <tr ng-repeat="category in categories" class="fade-ngRepeat-item" ng-cloak>
           <td class="button-column">
             <a class="fa fa-tasks ico-edit" ng-click="ctrl.edit(category)" title="<gdb:localize key="category.management.editTooltip"/>"></a>                             
           </td>
-          <td>
+          <td class="label-column">
             {{category.label}}
           </td>
         </tr>

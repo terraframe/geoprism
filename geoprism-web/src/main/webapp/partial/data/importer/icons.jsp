@@ -42,7 +42,7 @@
   </div>
   
   
-  <table id="manage-datasets-table" class="table table-bordered table-striped">        
+  <table class="list-table table table-bordered table-striped">        
     <tbody>
       <tr ng-repeat="icon in icons">
         <td class="button-column">
@@ -51,7 +51,7 @@
             <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
           </span>
         </td>
-        <td class="icon-label-column">
+        <td class="label-column">
           {{ icon.label }}
         </td>
         <td class="icon-thumbnail-column">

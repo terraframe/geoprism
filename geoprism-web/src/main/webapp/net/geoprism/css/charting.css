@@ -1,0 +1,129 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/** 
+* 
+* REPORTS 
+*
+*/
+#report-toolbar {
+	border-top: 1px solid #000;
+	margin-right: 300px;
+	left: 0px;
+	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.9);
+	padding: 5px;
+	color: #000;
+	height: 30px;
+}
+
+#report-toggle-container{
+	position: absolute;
+ 		text-align: center;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+ 		top: -19px;
+ 		width: 70px;
+ 		height: 20px;
+	background: rgba(255, 255, 255, 0.9);
+ 		border: 1px solid;
+	border-bottom: none;
+   	border-top-left-radius:3px;
+	border-top-right-radius:3px;
+}
+
+#report-toggle-container.maxed{
+	top: 30px;
+	border-bottom: 1px solid;
+   	border-top-left-radius:0px;
+	border-top-right-radius:0px;
+	border-top: none;
+   	border-bottom-left-radius:3px;
+	border-bottom-right-radius:3px;
+}
+
+.report-height-toggle{
+	cursor: pointer;
+	color: black;
+}
+.report-height-toggle:hover,
+.report-height-toggle:focus{
+	color: #00bfff;
+}
+
+#report-expand-toggle{
+	font-size: 20px;
+}
+
+#report-collapse-toggle{
+	font-size: 20px;
+}
+
+#report-toolbar a {
+	color: #000;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-right: 1px solid rgb(0, 0, 0);
+}
+
+#reporticng-container {
+	z-index: 15;
+}
+
+/* reporting container style */
+.reporticng-container{
+	position:fixed;
+	left:0;
+	height:30px;   
+	bottom:-30px;   
+	width:100%;
+	background: none;
+	margin: 0;
+	opacity: 0.9;
+}
+
+#reporting-toggle-button{
+	font-weight: bold;
+	text-align: center;
+	padding: 2px;
+	margin-bottom: 0;
+	margin-top: 0;
+	margin-left: 35%;
+	background: rgba(0,0,0,0.8);
+	border: solid black 2px;
+	color: #fff;
+	width: 150px;
+	cursor: pointer;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+}
+
+#reporting-toggle-button:hover{
+	color:#00bfff;
+}
+
+#report-viewport{
+	height: 0px;
+	border-top: 1px solid #000;
+	overflow-y: scroll;
+	margin-right: 300px;
+	left: 0px;
+	background: rgba(0,0,0,0.8);
+	padding: 5px;
+}

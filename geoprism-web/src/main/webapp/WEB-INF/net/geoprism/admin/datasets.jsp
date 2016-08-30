@@ -24,6 +24,8 @@
 <head>
 
   <gdb:localize var="page_title" key="dataset.title"/>
+  
+  <jwr:style src="/bundles/administration.css" useRandomParam="false" />
 
   <!-- Datasets Javascript -->
   <jwr:script src="/bundles/datasets.js" useRandomParam="false"/>

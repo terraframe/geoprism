@@ -57,7 +57,7 @@
                   <label><gdb:localize key="dataset.attributes"/></label>
                 </div>          
                 <div class="holder" >
-                  <table id="manage-datasets-table" class="table table-bordered table-striped">
+                  <table class="list-table table table-bordered table-striped">
                     <tbody>
                       <tr ng-repeat="attribute in dataset.attributes" class="fade-ngRepeat-item">
                         <td class="submit-form">

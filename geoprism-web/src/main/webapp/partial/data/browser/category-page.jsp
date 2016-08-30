@@ -33,7 +33,7 @@
           </div>
           <div class="holder">
             <div class="alert alertbox" ng-repeat="error in errors track by $index">
-              <p >{{error}}</p>
+              <p class="error-message">{{error}}</p>
             </div>
           </div>
         </div>
@@ -52,14 +52,14 @@
             <label><gdb:localize key="category.management.descendants"/></label>
           </div>    
           <div class="holder" >
-            <table id="manage-datasets-table" class="table table-bordered table-striped">
+            <table class="list-table table table-bordered table-striped">
               <tbody>
                 <tr ng-repeat="descendant in category.descendants" class="fade-ngRepeat-item">
-                  <td class="button-column" style="padding-right: 0px;">
+                  <td class="button-column">
                     <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
                     <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
                   </td>
-                  <td>
+                  <td class="label-column">
                     {{descendant.label}}
                   </td>
                 </tr>

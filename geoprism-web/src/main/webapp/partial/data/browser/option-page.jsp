@@ -33,7 +33,7 @@
           </div>
           <div class="holder">
             <div class="alert alertbox" ng-repeat="error in errors track by $index">
-              <p >{{error}}</p>
+              <p class="error-message">{{error}}</p>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
             <label><gdb:localize key="category.management.synonyms"/></label>
           </div>    
           <div class="holder" >
-            <table id="manage-datasets-table" class="table table-bordered table-striped">
+            <table class="list-table table table-bordered table-striped">
               <tbody>
                 <tr ng-repeat="synonym in option.synonyms" class="fade-ngRepeat-item">
                   <td class="button-column">
