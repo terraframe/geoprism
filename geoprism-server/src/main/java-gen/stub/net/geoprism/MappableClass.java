@@ -509,12 +509,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
           {
             Classifier classifier = Classifier.findClassifierRoot(mdAttributeTerm);
 
-            JSONObject root = new JSONObject();
-            root.put("id", classifier.getId());
-            root.put("label", classifier.getDisplayLabel().getValue());
+            if (classifier != null)
+            {
+              JSONObject root = new JSONObject();
+              root.put("id", classifier.getId());
+              root.put("label", classifier.getDisplayLabel().getValue());
 
-            object.put("type", "Category");
-            object.put("root", root);
+              object.put("type", "Category");
+              object.put("root", root);
+            }
           }
         }
 
