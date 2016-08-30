@@ -1227,6 +1227,38 @@ input :focus::-moz-placeholder{opacity:0 !important;}
     color: #999;
 }
 
+.modal-form .text textarea{
+	background:#eee;
+	border:1px solid #aaa;
+	width:99%;
+	padding:5px 10px;
+	margin:0;
+	float:left;
+	font-size:18px;
+	line-height:24px;
+	color:#333;
+	box-shadow:none;
+	outline:none;
+	word-wrap: break-word;
+  word-break: break-word;
+  height: 75px;
+  resize: none;
+  max-height: 150px;
+  resize: none;    
+}
+.modal-form .text textarea::-moz-placeholder{
+	color:#333;
+	opacity:1;
+}
+.modal-form .text textarea:-ms-input-placeholder{color:#333;}
+.modal-form .text textarea::-webkit-input-placeholder{color:#333;}
+.modal-form .text textarea:-moz-placeholder{color:#333;}
+.modal-form .text textarea:focus{border-color:#01b1ec;}
+.modal-form .text textarea:disabled {
+    color: #999;
+}
+
+
 .modal-form .check-block{
 	float:left;
 	position:relative;

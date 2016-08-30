@@ -110,7 +110,7 @@
     }   
   }
   
-  function CategoryPageController($scope, categoryService, widgetService, localizationService) {
+  function CategoryPageController($scope, categoryService, widgetService, localizationService, $window) {
     var controller = this;
     
     controller.init = function() {
@@ -118,7 +118,9 @@
         isNew : false,
         label : '',
         parentId : $scope.category.id
-      };                
+      };      
+      
+      $window.onclick = null;
     }
       
     controller.ok = function() {      
@@ -127,6 +129,19 @@
     
     controller.newInstance = function() {
       $scope.instance.isNew = true;
+      
+      $window.onclick = function (event) {
+      	if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
+  	        if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
+  	        	controller.apply();
+  	        }
+  	        else{
+  	        	$scope.instance.isNew = false;
+  	        }
+  	        
+  	        $scope.$apply();
+      	}
+      };
     }
     
     controller.apply = function() {
@@ -232,6 +247,7 @@
       $scope.errors = [];
       categoryService.edit(connection, descendant.id);      
     }
+    
 
     controller.init();
   }  

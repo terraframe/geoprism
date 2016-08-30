@@ -59,16 +59,14 @@
                     <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
                     <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
                   </td>
-                  <td class="label-column">
-                    {{descendant.label}}
-                  </td>
+                  <td class="label-column">{{descendant.label}}</td>
                 </tr>
                 <tr>
                   <td class="button-column">
+                    <a class="fa fa-plus" ng-show="!instance.isNew" ng-click="ctrl.newInstance()"></a>
                   </td>                 
-                  <td class="submit-form">
-                    <a ng-show="!instance.isNew" ng-click="ctrl.newInstance()"><gdb:localize key="category.management.add"/></a>
-                    <input class="dataset-list-input" type="text" ng-model="instance.label" ng-show="instance.isNew" press-esc="ctrl.cancel()" press-enter="ctrl.apply()" focus-on-show></input>                    
+                  <td ng-show="instance.isNew" class="submit-form">
+                    <input class="list-table-input" type="text" ng-model="instance.label" ng-show="instance.isNew" press-esc="ctrl.cancel()" press-enter="ctrl.apply()" focus-on-show></input>                    
                   </td>                
                 </tr>
               </tbody>

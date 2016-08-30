@@ -317,4 +317,8 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
 	max-height: 400px;
     overflow-y: auto;
 }
+.table-list-wrapper{
+	max-height: 400px;
+    overflow-y: auto;
+}
 

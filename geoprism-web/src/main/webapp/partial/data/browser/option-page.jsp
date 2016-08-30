@@ -58,7 +58,7 @@
                   <td class="button-column">
                     <a class="fa fa-undo ico-edit" ng-click="ctrl.restore(synonym)" title="<gdb:localize key="category.management.restoreTooltip"/>"></a>
                   </td>
-                  <td>
+                  <td class="label-column">
                     {{synonym.label}}
                   </td>
                 </tr>

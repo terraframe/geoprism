@@ -37,16 +37,14 @@
   </div>
   
   <div ng-if="category.management === null"><gdb:localize key='category.management.loadingData'/></div>
-  <div class="datasets-table-wrapper">
+  <div class="table-list-wrapper">
     <table class="list-table table table-bordered table-striped">        
       <tbody>
         <tr ng-repeat="category in categories" class="fade-ngRepeat-item" ng-cloak>
           <td class="button-column">
             <a class="fa fa-tasks ico-edit" ng-click="ctrl.edit(category)" title="<gdb:localize key="category.management.editTooltip"/>"></a>                             
           </td>
-          <td class="label-column">
-            {{category.label}}
-          </td>
+          <td class="label-column"> {{category.label}} </td>
         </tr>
       </tbody>    
     </table>

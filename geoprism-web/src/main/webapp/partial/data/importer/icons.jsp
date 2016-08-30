@@ -51,9 +51,7 @@
             <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
           </span>
         </td>
-        <td class="label-column">
-          {{ icon.label }}
-        </td>
+        <td class="label-column">{{ icon.label }}</td>
         <td class="icon-thumbnail-column">
 <!--      REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
           <img ng-if="icon.id && icon.id.length > 0" style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
