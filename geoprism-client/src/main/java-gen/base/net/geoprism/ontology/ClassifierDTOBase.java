@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1087663762)
+@com.runwaysdk.business.ClassSignature(hash = 438388464)
 public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.Classifier";
-  private static final long serialVersionUID = 1087663762;
+  private static final long serialVersionUID = 438388464;
   
   protected ClassifierDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -45,6 +27,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     return CLASS;
   }
   
+  public static java.lang.String CATEGORY = "category";
   public static java.lang.String CLASSIFIERID = "classifierId";
   public static java.lang.String CLASSIFIERPACKAGE = "classifierPackage";
   public static java.lang.String CREATEDATE = "createDate";
@@ -56,11 +39,47 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
-  public static java.lang.String MANAGED = "managed";
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
+  public Boolean getCategory()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(CATEGORY));
+  }
+  
+  public void setCategory(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(CATEGORY, "");
+    }
+    else
+    {
+      setValue(CATEGORY, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isCategoryWritable()
+  {
+    return isWritable(CATEGORY);
+  }
+  
+  public boolean isCategoryReadable()
+  {
+    return isReadable(CATEGORY);
+  }
+  
+  public boolean isCategoryModified()
+  {
+    return isModified(CATEGORY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getCategoryMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(CATEGORY).getAttributeMdDTO();
+  }
+  
   public String getClassifierId()
   {
     return getValue(CLASSIFIERID);
@@ -407,43 +426,6 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LOCKEDBY).getAttributeMdDTO();
   }
   
-  public Boolean getManaged()
-  {
-    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(MANAGED));
-  }
-  
-  public void setManaged(Boolean value)
-  {
-    if(value == null)
-    {
-      setValue(MANAGED, "");
-    }
-    else
-    {
-      setValue(MANAGED, java.lang.Boolean.toString(value));
-    }
-  }
-  
-  public boolean isManagedWritable()
-  {
-    return isWritable(MANAGED);
-  }
-  
-  public boolean isManagedReadable()
-  {
-    return isReadable(MANAGED);
-  }
-  
-  public boolean isManagedModified()
-  {
-    return isModified(MANAGED);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getManagedMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(MANAGED).getAttributeMdDTO();
-  }
-  
   public com.runwaysdk.system.ActorDTO getOwner()
   {
     if(getValue(OWNER) == null || getValue(OWNER).trim().equals(""))
@@ -543,12 +525,28 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
+  public static final void applyOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String config)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{config};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "applyOption", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final com.runwaysdk.business.ontology.TermAndRelDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentId)
   {
     String[] _declaredTypes = new String[]{"net.geoprism.ontology.Classifier", "java.lang.String"};
     Object[] _parameters = new Object[]{dto, parentId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "create", _declaredTypes);
     return (com.runwaysdk.business.ontology.TermAndRelDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final net.geoprism.ontology.ClassifierDTO createOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String option)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{option};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "createOption", _declaredTypes);
+    return (net.geoprism.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final void deleteClassifierProblem(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String problemId)
@@ -559,12 +557,36 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public static final void deleteOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "deleteOption", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final net.geoprism.ontology.ClassifierDTO editOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "editOption", _declaredTypes);
+    return (net.geoprism.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final net.geoprism.ontology.ClassifierProblemViewDTO[] getAllProblems(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "getAllProblems", _declaredTypes);
     return (net.geoprism.ontology.ClassifierProblemViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getCategoryClassifiersAsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "getCategoryClassifiersAsJSON", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.business.ValueQueryDTO getClassifierSuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String mdAttributeId, java.lang.String text, java.lang.Integer limit)
@@ -580,14 +602,6 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{classifierId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "getClassifierTree", _declaredTypes);
-    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
-  public static final java.lang.String getManagedClassifiersAsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest)
-  {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "getManagedClassifiersAsJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
@@ -613,6 +627,22 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     Object[] _parameters = new Object[]{synonymId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "restoreSynonym", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void unlockCategory(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "unlockCategory", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void validateCategoryName(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String name, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{name, id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "validateCategoryName", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   @SuppressWarnings("unchecked")

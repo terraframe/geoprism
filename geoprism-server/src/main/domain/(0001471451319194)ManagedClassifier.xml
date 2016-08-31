@@ -27,9 +27,9 @@
       <mdTerm name="net.geoprism.ontology.Classifier">
         <create>
           <attributes>
-            <boolean name="managed" label="Managed" defaultValue="false" negativeLabel="False" positiveLabel="True"/>
+            <boolean name="category" label="Category" defaultValue="false" negativeLabel="False" positiveLabel="True"/>
           </attributes>
-          <mdMethod name="getManagedClassifiersAsJSON" label="Get managed classifiers" returnType="java.lang.String" static="true" />
+          <mdMethod name="getCategoryClassifiersAsJSON" label="Get managed classifiers" returnType="java.lang.String" static="true" />
           <mdMethod name="getClassifierSuggestions" label="Get classifier suggestions" static="true" returnType="com.runwaysdk.query.ValueQuery">
             <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="Text" />
             <mdParameter name="text" order="1" type="java.lang.String" label="Text" />

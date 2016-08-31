@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1849944713)
+@com.runwaysdk.business.ClassSignature(hash = -981797145)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -55,6 +37,23 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public String getClassType()
   {
     return net.geoprism.ontology.Classifier.CLASS;
+  }
+  public com.runwaysdk.query.SelectableBoolean getCategory()
+  {
+    return getCategory(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getCategory(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.ontology.Classifier.CATEGORY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getCategory(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.ontology.Classifier.CATEGORY, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableChar getClassifierId()
   {
@@ -271,23 +270,6 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.ontology.Classifier.LOCKEDBY);
 
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.Classifier.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableBoolean getManaged()
-  {
-    return getManaged(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableBoolean getManaged(String alias)
-  {
-    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.ontology.Classifier.MANAGED, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableBoolean getManaged(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableBoolean)this.getComponentQuery().get(net.geoprism.ontology.Classifier.MANAGED, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1022,6 +1004,9 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public interface ClassifierQueryReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableReference
   {
 
+    public com.runwaysdk.query.SelectableBoolean getCategory();
+    public com.runwaysdk.query.SelectableBoolean getCategory(String alias);
+    public com.runwaysdk.query.SelectableBoolean getCategory(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getClassifierId();
     public com.runwaysdk.query.SelectableChar getClassifierId(String alias);
     public com.runwaysdk.query.SelectableChar getClassifierId(String alias, String displayLabel);
@@ -1055,9 +1040,6 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableBoolean getManaged();
-    public com.runwaysdk.query.SelectableBoolean getManaged(String alias);
-    public com.runwaysdk.query.SelectableBoolean getManaged(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1233,6 +1215,23 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
       return this.NE(classifier.getId());
     }
 
+  public com.runwaysdk.query.SelectableBoolean getCategory()
+  {
+    return getCategory(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getCategory(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.CATEGORY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getCategory(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.CATEGORY, alias, displayLabel);
+
+  }
   public com.runwaysdk.query.SelectableChar getClassifierId()
   {
     return getClassifierId(null);
@@ -1418,23 +1417,6 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.Classifier.LOCKEDBY,  alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableBoolean getManaged()
-  {
-    return getManaged(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableBoolean getManaged(String alias)
-  {
-    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.MANAGED, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableBoolean getManaged(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.MANAGED, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -2140,6 +2122,9 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public interface ClassifierQueryMultiReferenceIF extends com.runwaysdk.generation.loader.Reloadable, com.runwaysdk.query.SelectableMultiReference
   {
 
+    public com.runwaysdk.query.SelectableBoolean getCategory();
+    public com.runwaysdk.query.SelectableBoolean getCategory(String alias);
+    public com.runwaysdk.query.SelectableBoolean getCategory(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getClassifierId();
     public com.runwaysdk.query.SelectableChar getClassifierId(String alias);
     public com.runwaysdk.query.SelectableChar getClassifierId(String alias, String displayLabel);
@@ -2173,9 +2158,6 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
     public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableBoolean getManaged();
-    public com.runwaysdk.query.SelectableBoolean getManaged(String alias);
-    public com.runwaysdk.query.SelectableBoolean getManaged(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -2271,6 +2253,23 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
       }
 
       return this.containsExactly(itemIdArray);
+  }
+  public com.runwaysdk.query.SelectableBoolean getCategory()
+  {
+    return getCategory(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getCategory(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.CATEGORY, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBoolean getCategory(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.CATEGORY, alias, displayLabel);
+
   }
   public com.runwaysdk.query.SelectableChar getClassifierId()
   {
@@ -2457,23 +2456,6 @@ public  class ClassifierQuery extends com.runwaysdk.query.GeneratedBusinessQuery
   public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.ontology.Classifier.LOCKEDBY,  alias, displayLabel);
-
-  }
-  public com.runwaysdk.query.SelectableBoolean getManaged()
-  {
-    return getManaged(null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableBoolean getManaged(String alias)
-  {
-    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.MANAGED, alias, null);
-
-  }
- 
-  public com.runwaysdk.query.SelectableBoolean getManaged(String alias, String displayLabel)
-  {
-    return (com.runwaysdk.query.SelectableBoolean)this.get(net.geoprism.ontology.Classifier.MANAGED, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()

@@ -17,16 +17,26 @@
 package net.geoprism.data.etl;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.geoprism.MappableClass;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 
 public class ProblemResponse implements ImportResponseIF
@@ -98,24 +108,61 @@ public class ProblemResponse implements ImportResponseIF
 
   private JSONObject getProblemsJSON() throws JSONException
   {
-    JSONArray locations = new JSONArray();
-    JSONArray categories = new JSONArray();
+    Map<String, List<JSONObject>> map = new HashMap<String, List<JSONObject>>();
+    map.put(LocationProblem.TYPE, new LinkedList<JSONObject>());
+    map.put(CategoryProblem.TYPE, new LinkedList<JSONObject>());
+
+    JSONObject options = new JSONObject();
 
     for (ImportProblemIF problem : this.problems)
     {
-      if (problem instanceof LocationProblem)
+      map.putIfAbsent(problem.getType(), new LinkedList<JSONObject>());
+
+      map.get(problem.getType()).add(problem.toJSON());
+
+      if (problem instanceof CategoryProblem)
       {
-        locations.put(problem.toJSON());
-      }
-      else
-      {
-        categories.put(problem.toJSON());
+        CategoryProblem cProblem = (CategoryProblem) problem;
+
+        /*
+         * Load all of the options for this attribute
+         */
+        if (!options.has(cProblem.getMdAttributeId()))
+        {
+          // Serialized JSON array of all the classifier options for this mdAttribute
+          JSONArray array = new JSONArray();
+
+          MdAttributeTermDAOIF mdAttributeTerm = MdAttributeTermDAO.get(cProblem.getMdAttributeId());
+          Classifier root = Classifier.findClassifierRoot(mdAttributeTerm);
+
+          List<Term> children = root.getAllDescendants(ClassifierIsARelationship.CLASS).getAll();
+
+          Collections.sort(children, new Comparator<Term>()
+          {
+            @Override
+            public int compare(Term o1, Term o2)
+            {
+              return o1.getDisplayLabel().getValue().compareTo(o2.getDisplayLabel().getValue());
+            }
+          });
+
+          for (Term child : children)
+          {
+            JSONObject option = new JSONObject();
+            option.put("label", child.getDisplayLabel().getValue());
+            option.put("id", child.getId());
+
+            array.put(option);
+          }
+
+          options.put(cProblem.getMdAttributeId(), array);
+        }
+
       }
     }
 
-    JSONObject object = new JSONObject();
-    object.put("locations", locations);
-    object.put("categories", categories);
+    JSONObject object = new JSONObject(map);
+    object.put("options", options);
 
     return object;
   }

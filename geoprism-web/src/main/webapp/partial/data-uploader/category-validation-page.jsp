@@ -24,6 +24,12 @@
   <div class="wide-holder">
     <div class="row-holder">    
       <div class="inline-value">
+        <label><gdb:localize key="dataUploader.categoryAttribute"/></label>   
+        <div class="label-help-ico-container">
+          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.categoryAttributeHelpToolTip"/>"></i>
+        </div>   
+      </div>    
+      <div class="inline-value">
         <label><gdb:localize key="dataUploader.unknownCategory"/></label>
         <div class="label-help-ico-container">
           <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.unknownCategoryHelpToolTip"/>"></i>
@@ -44,7 +50,7 @@
     </div>  
     
     <div ng-repeat="problem in problems.categories">
-      <category-validation-problem problem="problem"></category-validation-problem>
+      <category-validation-problem problem="problem" options="problems.options[problem.mdAttributeId]"></category-validation-problem>
     </div>
   </div>
   <div class="wide-holder">
