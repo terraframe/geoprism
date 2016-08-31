@@ -26,6 +26,4 @@ public interface ImportProblemIF
   public JSONObject toJSON() throws JSONException;
 
   public String getKey();
-  
-  public String getType();
 }

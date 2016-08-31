@@ -59,7 +59,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
         JSONObject object = new JSONObject();
         object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
         object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
-        object.put("classifiers", new JSONArray(ClassifierDTO.getCategoryClassifiersAsJSON(request)));
+        object.put("classifiers", new JSONArray(ClassifierDTO.getManagedClassifiersAsJSON(request)));
 
         JSONControllerUtil.writeReponse(this.resp, object);
       }
@@ -262,40 +262,6 @@ public class DataUploaderController extends DataUploaderControllerBase implement
       }
 
       JSONControllerUtil.writeReponse(this.resp, response);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-  
-  @Override
-  public void validateDatasetName(String name, String id) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      DataUploaderDTO.validateDatasetName(request, name, id);
-      
-      JSONControllerUtil.writeReponse(this.resp);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-  
-  @Override
-  public void validateCategoryName(String name, String id) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      ClassifierDTO.validateCategoryName(request, name, id);
-
-      JSONControllerUtil.writeReponse(this.resp);
     }
     catch (Throwable t)
     {

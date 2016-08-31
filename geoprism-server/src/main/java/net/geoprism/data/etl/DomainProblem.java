@@ -18,48 +18,33 @@
  */
 package net.geoprism.data.etl;
 
-import java.util.List;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.Universal;
-
-public class LocationProblem implements ImportProblemIF, Comparable<ImportProblemIF>
+public class DomainProblem implements ImportProblemIF, Comparable<ImportProblemIF>
 {
-  private String           label;
+  private String label;
 
-  private List<JSONObject> context;
+  private String mdAttributeId;
 
-  private GeoEntity        parent;
-
-  private Universal        universal;
-
-  public LocationProblem(String label, List<JSONObject> context, GeoEntity parent, Universal universal)
+  public DomainProblem(String label, String mdAttributeId)
   {
     this.label = label;
-    this.context = context;
-    this.parent = parent;
-    this.universal = universal;
+    this.mdAttributeId = mdAttributeId;
   }
 
   public String getKey()
   {
-    return this.parent.getId() + "-" + this.label;
+    return this.mdAttributeId + "-" + this.label;
   }
 
   @Override
   public JSONObject toJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
-    object.put("type", "LOCATION");
+    object.put("type", "DOMAIN");
     object.put("label", label);
-    object.put("parentId", parent.getId());
-    object.put("universalId", universal.getId());
-    object.put("universalLabel", universal.getDisplayLabel().getValue());
-    object.put("context", new JSONArray(context));
+    object.put("mdAttributeId", mdAttributeId);
 
     return object;
   }

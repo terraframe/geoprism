@@ -1,6 +1,24 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 65312103)
+@com.runwaysdk.business.ClassSignature(hash = 1017053997)
 public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataUploaderController";
@@ -217,34 +235,6 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failImportData");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void validateCategoryName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.validateCategoryName");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void failValidateCategoryName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failValidateCategoryName");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void validateDatasetName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.validateDatasetName");
-  }
-  
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void failValidateDatasetName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
-    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failValidateDatasetName");
   }
   
 }
