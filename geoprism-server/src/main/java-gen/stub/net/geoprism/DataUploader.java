@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -65,6 +63,7 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwaysdk.system.metadata.MdClassQuery;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -456,5 +455,32 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       return part.substring(0, part.length() - 1) + "1";
     }
     return part;
+  }
+
+  public static void validateDatasetName(String name, String id)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    MappableClassQuery mClassQuery = new MappableClassQuery(factory);
+
+    if (id != null && id.length() > 0)
+    {
+      mClassQuery.AND(mClassQuery.getId().NE(id));
+    }
+
+    MdClassQuery mdClassQuery = new MdClassQuery(factory);
+
+    mdClassQuery.WHERE(mdClassQuery.EQ(mClassQuery.getWrappedMdClass()));
+    mdClassQuery.AND(mdClassQuery.getDisplayLabel().localize().EQ(name.trim()));
+
+    long count = mdClassQuery.getCount();
+
+    if (count > 0)
+    {
+      NonUniqueDatasetException ex = new NonUniqueDatasetException();
+      ex.setLabel(name.trim());
+
+      throw ex;
+    }
   }
 }

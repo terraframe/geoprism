@@ -31,6 +31,13 @@
        controller : 'CategoryIconController',
        controllerAs : 'ctrl'
      })
+     .when('/category', {
+       bundle : 'category.management',
+       key : 'title',       
+       templateUrl : '/partial/data/browser/category-management.jsp',
+       controller : 'CategoryController',
+       controllerAs : 'ctrl'
+     })
      
      // route for the dataset page and default page
      .otherwise({
@@ -42,7 +49,7 @@
      });    
   }
   
-  angular.module("data-management", ["ngRoute", "localization-service", "data-set", "category-icon"]);
+  angular.module("data-management", ["ngRoute", "localization-service", "data-set", "category-icon", 'category-management']);
   angular.module("data-management")
    .config(["$routeProvider", DataManagementConfig])
    .controller('DataManagementController', DataManagementController)

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
@@ -89,6 +87,7 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.util.IDGenerator;
 
 public class TargetBuilder
 {
@@ -163,6 +162,7 @@ public class TargetBuilder
   {
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
+    String description = ( cSheet.has("description") ? cSheet.getString("description") : "" );
     String countryId = cSheet.getString("country");
     List<GeoNode> nodes = new LinkedList<GeoNode>();
 
@@ -183,6 +183,7 @@ public class TargetBuilder
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
     mdBusiness.setValue(MdBusinessInfo.NAME, typeName);
     mdBusiness.setStructValue(MdBusinessInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdBusiness.setStructValue(MdBusinessInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, description);
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
@@ -488,70 +489,74 @@ public class TargetBuilder
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
     {
-      MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
-
-      /*
-       * Create the root term for the options
-       */
-      Classifier classifier = Classifier.findClassifier(mdClass.definesType(), attributeName);
-
-      if (classifier == null)
+      if (!cField.has("root"))
       {
-        classifier = new Classifier();
-        classifier.setClassifierId(attributeName);
-        classifier.setClassifierPackage(mdClass.definesType());
-        classifier.setKeyName(key);
-        classifier.getDisplayLabel().setValue(label);
-        classifier.apply();
+        MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 
-        classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+        /*
+         * Create the root term for the options
+         */
+        Classifier classifier = Classifier.findClassifierRoot(mdAttribute);
+
+        if (classifier == null)
+        {
+          String categoryLabel = cField.getString("categoryLabel");
+
+          classifier = new Classifier();
+          classifier.setClassifierId(attributeName);
+          classifier.setClassifierPackage(IDGenerator.nextID());
+          classifier.getDisplayLabel().setValue(categoryLabel);
+          classifier.setCategory(true);
+          classifier.apply();
+
+          classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+        }
+
+        /*
+         * Add the root as an option to the MdAttributeTerm
+         */
+        String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+        relationship.apply();
+
+        TargetFieldClassifier field = new TargetFieldClassifier();
+        field.setName(attributeName);
+        field.setLabel(label);
+        field.setKey(key);
+        field.setSourceAttributeName(sourceAttributeName);
+        field.setPackageName(classifier.getClassifierPackage());
+        field.setAggregatable(aggregatable);
+
+        return field;
       }
+      else
+      {
+        MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 
-      /*
-       * Add the root as an option to the MdAttributeTerm
-       */
-      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+        String classifierId = cField.getString("root");
 
-      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
-      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
-      relationship.apply();
+        Classifier classifier = Classifier.get(classifierId);
 
-      TargetFieldClassifier field = new TargetFieldClassifier();
-      field.setName(attributeName);
-      field.setLabel(label);
-      field.setKey(key);
-      field.setSourceAttributeName(sourceAttributeName);
-      field.setPackageName(key);
-      field.setAggregatable(aggregatable);
+        /*
+         * Add the root as an option to the MdAttributeTerm
+         */
+        String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
 
-      return field;
-    }
-    else if (columnType.equals(ColumnType.DOMAIN.name()))
-    {
-      String classifierId = cField.getString("root");
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+        relationship.apply();
 
-      MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
+        TargetFieldDomain field = new TargetFieldDomain();
+        field.setName(attributeName);
+        field.setLabel(label);
+        field.setKey(key);
+        field.setSourceAttributeName(sourceAttributeName);
+        field.setAggregatable(aggregatable);
 
-      Classifier classifier = Classifier.get(classifierId);
-
-      /*
-       * Add the root as an option to the MdAttributeTerm
-       */
-      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
-
-      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
-      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
-      relationship.apply();
-
-      TargetFieldDomain field = new TargetFieldDomain();
-      field.setName(attributeName);
-      field.setLabel(label);
-      field.setKey(key);
-      field.setSourceAttributeName(sourceAttributeName);
-      field.setAggregatable(aggregatable);
-
-      return field;
-
+        return field;
+      }
     }
     else if (columnType.equals(ColumnType.BOOLEAN.name()))
     {
@@ -845,10 +850,13 @@ public class TargetBuilder
           JSONObject object = locationExclusionsArr.getJSONObject(i);
 
           String universal = object.getString("universal");
+          String parentId = object.getString("parentId");
           String label = object.getString("locationLabel");
 
-          exclusions.putIfAbsent(universal, new HashSet<String>());
-          exclusions.get(universal).add(label);
+          String key = universal + "-" + parentId;
+          
+          exclusions.putIfAbsent(key, new HashSet<String>());
+          exclusions.get(key).add(label);
         }
       }
 

@@ -1,0 +1,57 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdController name="net.geoprism.DataUploaderController">
+        <create>
+          <mdAction name="validateDatasetName" label="Validate dataset name" isPost="false" isQuery="false">
+            <mdParameter name="name" label="Name" order="0" type="java.lang.String"/>
+            <mdParameter name="id" label="id" order="1" type="java.lang.String"/>
+          </mdAction>
+          <mdAction name="validateCategoryName" label="Validate category name" isPost="false" isQuery="false">
+            <mdParameter name="name" label="Name" order="0" type="java.lang.String"/>
+            <mdParameter name="id" label="id" order="1" type="java.lang.String"/>
+          </mdAction> 
+        </create>
+      </mdController>
+      <mdController name="net.geoprism.ontology.ClassifierController">
+        <create>
+          <mdAction name="validateCategoryName" label="Validate category name" isPost="false" isQuery="false">
+            <mdParameter name="name" label="Name" order="0" type="java.lang.String"/>
+            <mdParameter name="id" label="id" order="1" type="java.lang.String"/>
+          </mdAction>
+        </create>
+      </mdController>
+      <mdUtil name="net.geoprism.DataUploader">
+        <create>
+          <mdMethod name="validateDatasetName" label="Validate dataset name" returnType="void" static="true">
+            <mdParameter name="name" label="Name" order="0" type="java.lang.String"/>          
+            <mdParameter name="id" label="id" order="1" type="java.lang.String"/>          
+          </mdMethod>
+        </create>
+      </mdUtil>
+      <mdBusiness name="net.geoprism.ontology.Classifier">
+        <create>
+          <mdMethod name="validateCategoryName" label="Validate category name" returnType="void" static="true">
+            <mdParameter name="name" label="Name" order="0" type="java.lang.String"/>          
+            <mdParameter name="id" label="id" order="1" type="java.lang.String"/>          
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+    <create>
+      <mdException name="net.geoprism.NonUniqueDatasetException" label="Non unique dataset exception" message="A dataset with the label [{label}] already exists">
+        <attributes>
+          <text name="label" label="Label" />
+        </attributes>
+      </mdException>
+      <mdException name="net.geoprism.ontology.NonUniqueCategoryException" label="Non unique category exception" message="A category with the label [{label}] already exists">
+        <attributes>
+          <text name="label" label="Label" />
+        </attributes>
+      </mdException>
+    </create>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

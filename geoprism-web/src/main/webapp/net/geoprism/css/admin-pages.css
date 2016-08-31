@@ -1,0 +1,324 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+ /* sidebar styles */
+#sidebar{
+	float:left;
+	width:275px;
+	margin:0 0 -9999px -275px;
+	padding:16px 0 9999px;
+	font-size:13px;
+	line-height:18px;
+	border-right:1px solid #111;
+	background:#333;
+}
+#sidebar h3{
+	margin:0 0 2px;
+	font-size:13px;
+	line-height:18px;
+	font-weight:bold;
+	color:#ddd;
+}
+#sidebar h3.marked{
+	margin:0 0 6px;
+	color:#fff;
+}
+/* sidebar widget styles */
+.widget{
+	padding:30px 40px;
+	border-bottom:1px solid #2b2b2b;
+}
+.widget:first-child{padding-top:0;}
+.widget a{
+	color:#b9b9b9;
+	outline:0;
+}
+
+.links-list .active a,
+div .aside-nav a.blueactive,
+a.blueactive,
+.widget a:hover,
+.widget a:focus,
+.widget a:active{
+  color:#00bfff;
+}
+
+.links-list{
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+.links-list li{padding:2px 0 0;}
+.links-list li:first-child{padding-top:0;}
+.links-list a{position:relative;}
+.links-list .link-viewer:before{
+	position:absolute;
+	content:'';
+	left:-27px;
+	top:0;
+	width:15px;
+	height:17px;
+	background:url(../images/sprite.png) no-repeat;
+}
+.links-list .link-viewer:hover:before{background-position:-19px 0;}
+.links-list a[data-toggle="collapse"]:before{
+	position:absolute;
+	content:'';
+	left:-25px;
+	top:2px;
+	width:14px;
+	height:14px;
+	background:url(../images/sprite.png) no-repeat -36px 0;
+}
+.links-list a[data-toggle="collapse"]:hover:before{background-position:-53px 0;}
+.links-list ul{
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+.links-list ul li:first-child{padding-top:2px;}
+
+.aside-nav{
+	padding:21px 0 0;
+	font-weight:bold;
+}
+.aside-nav ul{
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+.aside-nav li{padding:0 0 3px;}
+.aside-nav a{
+	position:relative;
+	display:block;
+	padding:11px 40px;
+	color:#fff;
+	outline:0;
+}
+.aside-nav a:hover,
+.aside-nav a:focus,
+.aside-nav a:active{color:#00bfff;}
+.aside-nav a[data-toggle="collapse"]:before{
+	position:absolute;
+	content:'';
+	left:19px;
+	top:17px;
+	width:0;
+	height:0;
+	border:solid transparent;
+	border-width:4px 0 4px 5px;
+	border-left-color:#888;
+}
+.aside-nav a[data-toggle="collapse"]:hover:before{
+	left:18px;
+	top:18px;
+	border-width:5px 3px 0;
+	border-color:#00bfff transparent transparent transparent;
+}
+.aside-nav .panel-collapse ul{
+	padding:0 40px 6px;
+	font-weight:normal;
+}
+.aside-nav .panel-collapse li{padding:0 0 6px;}
+.aside-nav .panel-collapse a{
+	display:inline;
+	padding:0;
+	color:#b9b9b9;
+}
+.aside-nav .panel-collapse a:hover{color:#00bfff;}
+
+#wrapper.map-section{padding:0;}
+
+.fa.fa-times-circle.geoent-problem-msg-icon.geoent-problem-error{
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+
+
+/** 
+* 
+* ACCOUNT MANAGEMENT  
+*
+*/
+#usersTable {
+	margin-left: 0;
+	width: 100%;
+	overflow-x: auto;
+}
+
+table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-factory-runway-Widget.com-runwaysdk-ui-factory-jquery-datatable-DataTable.dataTable
+	{
+	margin-left: 0;
+	width: 100%;
+}
+
+
+#tree-container{
+	margin: auto;
+}
+
+#tree{
+  width: 50%;
+  float: left;
+  padding: 10px;
+}
+
+#problem-panel{
+  margin-left: 50%;
+  width: 50%;
+  padding: 10px;
+  border: rgb(190, 190, 190) solid 2px;
+  border-radius: 5px;
+}
+
+#problem-panel-heading{
+	text-align: center;
+}
+
+#problem-panel-noissue-msg{
+  text-align: center;
+  color: grey;
+}
+
+#problems-list{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+#problems-list li{
+	padding: 5px;
+	border: rgb(190, 190, 190) 1px solid;
+	border-radius: 2px;
+}
+
+.geoent-problem-msg-icon{
+	font-size: 15px;
+}
+
+.geoentity-problem-tooltip{
+	background: rgb(254, 236, 239) !important;
+}
+
+.geoent-problem-msg{
+	display: inline-block;
+	margin: 0;
+}
+
+.geoent-problem-error::before{
+	color: red;
+}
+
+.geoent-problem-warn::before{
+	color: orange;
+}
+
+.geoent-problem-error-li{
+	background: rgb(254, 236, 239);
+	cursor: pointer;
+}
+
+.geoent-problem-error-li:hover{
+	background: rgb(245, 171, 184);
+}
+
+.geoent-problem-error-li > a:hover{
+	color: red;
+}
+
+.geoent-problem-error-li > a:focus{
+	color: red;
+}
+
+.geoent-problem-warn-li{
+	background: lightyellow;
+	cursor: pointer;
+}
+
+.geoent-problem-warn-li:hover{
+	background: rgb(244, 244, 184);
+}
+
+.classifier-problem-msg-icon{
+	font-size: 15px;
+}
+
+.classifierity-problem-tooltip{
+	background: rgb(254, 236, 239) !important;
+}
+
+.classifier-problem-msg{
+	display: inline-block;
+	margin: 0;
+}
+
+.classifier-problem-error::before{
+	color: red;
+}
+
+.classifier-problem-warn::before{
+	color: orange;
+}
+
+.classifier-problem-error-li{
+	background: rgb(254, 236, 239);
+	cursor: pointer;
+}
+
+.classifier-problem-error-li:hover{
+	background: rgb(245, 171, 184);
+}
+
+.classifier-problem-error-li > a:hover{
+	color: red;
+}
+
+.classifier-problem-error-li > a:focus{
+	color: red;
+}
+
+.classifier-problem-warn-li{
+	background: lightyellow;
+	cursor: pointer;
+}
+
+.classifier-problem-warn-li:hover{
+	background: rgb(244, 244, 184);
+}
+
+.fa.fa-times-circle.classifier-problem-msg-icon.classifier-problem-error{
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+
+
+.modal-form .form-container .table.table-bordered{
+	font-size: 12px;
+}
+
+.datasets-table-wrapper{
+	max-height: 400px;
+    overflow-y: auto;
+}
+.table-list-wrapper{
+	max-height: 400px;
+    overflow-y: auto;
+}
+

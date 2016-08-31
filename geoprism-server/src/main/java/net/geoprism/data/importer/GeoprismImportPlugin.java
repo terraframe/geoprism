@@ -24,7 +24,6 @@ import java.util.List;
 
 import net.geoprism.ClassUniversalQuery;
 import net.geoprism.MappableAttribute;
-import net.geoprism.MappableAttributeQuery;
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNodeQuery;
 import net.geoprism.MappableClassQuery;
@@ -39,6 +38,8 @@ import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
 import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
+import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 
 import org.xml.sax.Attributes;
 
@@ -71,8 +72,9 @@ import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdAttributeQuery;
+import com.runwaysdk.system.metadata.MdAttributeTermQuery;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.system.metadata.MdClassQuery;
 
 public class GeoprismImportPlugin implements ImportPluginIF
 {
@@ -601,6 +603,53 @@ public class GeoprismImportPlugin implements ImportPluginIF
     }
   }
 
+  private static class PatchCategoryTaskHandler extends TagHandler
+  {
+    public PatchCategoryTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      QueryFactory factory = new QueryFactory();
+
+      MappableClassQuery mcQuery = new MappableClassQuery(factory);
+
+      MdClassQuery mdClassQuery = new MdClassQuery(factory);
+      mdClassQuery.WHERE(mdClassQuery.EQ(mcQuery.getWrappedMdClass()));
+
+      MdAttributeTermQuery mdAttributeTermQuery = new MdAttributeTermQuery(factory);
+      mdAttributeTermQuery.WHERE(mdAttributeTermQuery.definingClass(mdClassQuery));
+
+      ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
+      rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeTermQuery));
+
+      ClassifierQuery classifierRootQ = new ClassifierQuery(factory);
+      classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(rootQuery));
+      classifierRootQ.AND(classifierRootQ.getCategory().EQ(false));
+
+      OIterator<? extends Classifier> iterator = classifierRootQ.getIterator();
+
+      try
+      {
+        while (iterator.hasNext())
+        {
+          Classifier classifier = iterator.next();
+
+          classifier.lock();
+          classifier.setCategory(true);
+          classifier.apply();
+        }
+      }
+      finally
+      {
+        iterator.close();
+      }
+    }
+  }
+
   private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
   {
     private static final String DASHBOARD_TAG                 = "dashboard";
@@ -615,6 +664,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
     private static final String PATCH_MAPPABLE_CLASS_TASK_TAG = "patchMappableClassTask";
 
+    private static final String PATCH_CATEGORY_TASK_TAG       = "patchCategoryTask";
+
     public PluginHandlerFactory(ImportManager manager)
     {
       this.addHandler(DASHBOARD_TAG, new DashboardHandler(manager));
@@ -623,6 +674,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       this.addHandler(LOCATION_TASK_TAG, new LocationTaskHandler(manager));
       this.addHandler(INITIALIZE_TASK_TAG, new InitializeTaskHandler(manager));
       this.addHandler(PATCH_MAPPABLE_CLASS_TASK_TAG, new PatchMappableClassTaskHandler(manager));
+      this.addHandler(PATCH_CATEGORY_TASK_TAG, new PatchCategoryTaskHandler(manager));
     }
   }
 

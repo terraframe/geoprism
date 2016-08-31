@@ -44,6 +44,24 @@
       return null;
     }
     
+    
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+        
+      if(label != null && label != '') {
+        datasetService.validateDatasetName(connection, label, scope.$parent.dataset.id);
+      }
+    }
+    
     controller.apply = function(dataset) {
       
       var connection = {
@@ -208,7 +226,7 @@
     controller.init();
   }
   
-  function DatasetModalController($scope, $rootScope, datasetService) {
+  function DatasetModalController($scope, $rootScope, datasetService, categoryService) {
     var controller = this;
     
     controller.init = function() {
@@ -261,6 +279,48 @@
       datasetService.cancel(connection, $scope.dataset.id);        
     }
     
+    controller.open = function(category) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(response) {
+          $scope.$emit('categoryEdit', response);            
+          $scope.show = false;
+                  
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.message);
+                    
+          $scope.$apply();
+        }        
+      };
+      
+      $scope.errors = [];      
+
+      categoryService.get(connection, category.id);
+    }
+        
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+        
+      if(label != null && label != '') {
+        datasetService.validateDatasetName(connection, label, $scope.dataset.id);
+      }
+    }    
+    
+    $rootScope.$on('categoryOk', function(event, data){
+      $scope.show = true;      
+    });
+    
     $rootScope.$on('datasetEdit', function(event, data) {
       controller.load(data.dataset);
     });
@@ -283,21 +343,8 @@
     }   
   }
 
-  angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "widget-service", "runway-service"]);
+  angular.module("data-set", ["data-uploader", "styled-inputs", 'ngFileUpload', "dataset-service", "localization-service", "widget-service", "category-management", "category-service"]);
   angular.module("data-set")
   .controller('DatasetController', DatasetController)
-  .directive('datasetModal', DatasetModal)
-  .directive('pressEnter', function () {
-      return function (scope, element, attrs) {
-          element.bind("keydown keypress", function (event) {
-              if(event.which === 13) {
-                  scope.$apply(function (){
-                      scope.$eval(attrs.pressEnter);
-                  });
-
-                  event.preventDefault();
-              }
-          });
-      };
-  });
+  .directive('datasetModal', DatasetModal);
 })();

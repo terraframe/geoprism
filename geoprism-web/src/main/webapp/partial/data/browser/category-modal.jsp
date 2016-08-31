@@ -18,27 +18,17 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
-<head>
-
-  <gdb:localize var="page_title" key="dataset.title"/>
-  
-  <jwr:style src="/bundles/administration.css" useRandomParam="false" />
-
-  <!-- Datasets Javascript -->
-  <jwr:script src="/bundles/datasets.js" useRandomParam="false"/>
-
-  <script type="text/javascript">${js}</script>
-  
-</head>
-
-
-<div ng-app="data-set" ng-controller="DatasetController as ctrl">
-  <ng-include src="'/partial/data/browser/datasets.jsp'"></ng-include>
+<div>
+  <div ng-if="show">
+    <div class="modal-backdrop fade in"></div>
+    <div id="modal-div" style="display: block;" class="modal fade in" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+    <dl>      
+      <category-page ng-if="page === 'CATEGORY'"></category-page>
+      <option-page ng-if="page === 'OPTION'"></option-page>
+    </dl>   
+    </div>
+  </div>
 </div>
-
-<script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-</script>

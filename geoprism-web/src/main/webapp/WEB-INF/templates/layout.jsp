@@ -64,6 +64,7 @@ window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
 	
 	<!-- CSS imports -->
 	<jwr:style src="/bundles/main.css" useRandomParam="false" />
+	<jwr:style src="/bundles/administration.css" useRandomParam="false" />
 	<jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 	
 	<!-- Default imports -->
