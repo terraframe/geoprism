@@ -942,6 +942,4 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       throw ex;
     }
   }
-
-
 }
