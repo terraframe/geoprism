@@ -20,7 +20,8 @@
 
   function DashboardMenuController($scope, $timeout, dashboardService, localizationService, widgetService) {
     var controller = this;
-    controller.show = null;    
+    controller.show = null;   
+    controller.isInExistingRow = true;
     
     controller.getDashboards = function() {
       var onSuccess = function(json) {
@@ -50,8 +51,12 @@
           $scope.$apply();
         }, 0);
       };
+      
+      var onFailure = function(json) {
+    	  console.log("Err: Could not get available dashboards");
+      };
               
-      dashboardService.getAvailableDashboardsAsJSON('', onSuccess);          
+      dashboardService.getAvailableDashboardsAsJSON('', onSuccess, onFailure);          
     }
     
     controller.account = function() {
