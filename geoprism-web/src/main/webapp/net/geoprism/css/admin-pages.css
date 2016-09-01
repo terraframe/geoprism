@@ -313,12 +313,32 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
 	font-size: 12px;
 }
 
-.datasets-table-wrapper{
-	max-height: 400px;
-    overflow-y: auto;
+
+#manage-datasets-table.list-table .label-column {
+	width: 35%;
 }
-.table-list-wrapper{
-	max-height: 400px;
-    overflow-y: auto;
+#manage-datasets-table.list-table .description-column {
+	width: 55%;
+}
+#manage-datasets-table.list-table .button-column {
+	width: 10%;
 }
 
+
+#manage-icons-table.list-table .label-column {
+	width: 70%;
+}
+#manage-icons-table.list-table .icon-thumbnail-column {
+	width: 15%;
+}
+#manage-icons-table.list-table .button-column {
+	width: 15%;
+}
+
+
+#manage-categories-table.list-table .label-column {
+	width: 85%;
+}
+#manage-categories-table.list-table .button-column {
+	width: 15%;
+}

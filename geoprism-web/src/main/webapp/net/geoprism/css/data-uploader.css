@@ -140,7 +140,8 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-combo {
   float: left;
   position: relative;
-  width: 300px;
+/*   width: 300px; */
+  width: 35%;
   padding-right: 5px;
   padding-top: 1px;
 }
@@ -150,7 +151,7 @@ h4.location-summary-sub-table-heading{
   position: relative;
 /*   width: 225px; */
   width: 25%;
-  min-width: 150px;
+/*   min-width: 150px; */
   padding-right: 5px;
   padding-top: 1px;
 }
@@ -158,8 +159,9 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-actions {
   float: left;
   position: relative;
-  width: 125px;
-  min-width: 125px;
+/*   width: 125px; */
+  width: 15%;
+/*   min-width: 125px; */
   padding-right: 5px;
   padding-top: 1px;
 }

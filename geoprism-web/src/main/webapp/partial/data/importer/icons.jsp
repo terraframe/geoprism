@@ -41,24 +41,25 @@
     </div>
   </div>
   
-  
-  <table class="list-table table table-bordered table-striped">        
-    <tbody>
-      <tr ng-repeat="icon in icons">
-        <td class="button-column">
-          <span>
-            <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(icon)" title="<gdb:localize key="category.icon.editTooltip"/>"></a>                     
-            <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
-          </span>
-        </td>
-        <td class="label-column">{{ icon.label }}</td>
-        <td class="icon-thumbnail-column">
-<!--      REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
-          <img ng-if="icon.id && icon.id.length > 0" style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
-        </td>
-      </tr>      
-    </tbody>    
-  </table>
+  <div class="list-table-wrapper">
+	  <table id="manage-icons-table" class="list-table table table-bordered table-striped">        
+	    <tbody>
+	      <tr ng-repeat="icon in icons" class="fade-ngRepeat-item">
+	        <td class="button-column">
+	          <span>
+	            <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(icon)" title="<gdb:localize key="category.icon.editTooltip"/>"></a>                     
+	            <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(icon)" title="<gdb:localize key="category.icon.removeTooltip"/>"></a>           
+	          </span>
+	        </td>
+	        <td class="label-column">{{ icon.label }}</td>
+	        <td class="icon-thumbnail-column">
+	<!--      REMOVED:  onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" -->
+	          <img ng-if="icon.id && icon.id.length > 0" style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
+	        </td>
+	      </tr>      
+	    </tbody>    
+	  </table>
+  </div>
   
   <div ng-if="icons === null"><gdb:localize key='dataset.loadingData'/></div>
   <div ng-if="icons.length === 0">

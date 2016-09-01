@@ -162,14 +162,20 @@ button.btn-primary:hover > i {
 	color: black;
 }
 
-.fa:hover,
-.fa:focus
+a.fa:hover,
+a.fa:focus,
+i.fa:hover,
+i.fa:focus
 {
-	color: #00bfff !important;
+	color: #00bfff;
 }
 
 .fa-stack:hover .fa {
-	color: #00bfff !important;
+	color: #00bfff;
+}
+
+i {
+	font-style: normal;
 }
 
 	
@@ -1138,7 +1144,8 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 }
 .modal-form .wide-holder{
 	float:left;
-	width:900px;
+/* 	width:900px; */
+	width: 100%;
 	border-left:1px solid #ccc;
 	padding:0 11px 18px 12px;
 	position:relative;
@@ -1961,10 +1968,10 @@ div.alert.alertbox {
 .ng-modal-dialog-content {
   padding:10px;
   text-align: left;
-  width: 1000px;
-     left: 0;
-     right: 0;
-     margin: 0 auto;
+  width: 900px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 .ng-modal-close {
   position: absolute;
@@ -2098,7 +2105,20 @@ i.fa.fa-cloud-upload{
     
     
     
-    
+/*
+* List tables are generic tables with the intent presenting a list of options
+*
+* DEFAULT REQUIREMENTS: 
+** 4 columns wide
+** must be wrapped in a fixed width container
+** page specific overrides must be added to other css files to maintain this as a generic element
+*/    
+.list-table-wrapper{
+	max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
 .list-table {
 	font-size: 14px;
 }
@@ -2106,17 +2126,31 @@ i.fa.fa-cloud-upload{
 }
 .list-table td {
     vertical-align: middle;
+    width: 25%;
+	font-size: 20px;
 }
 .list-table td dl{
 	margin: 0;
 }
 .list-table .button-column{
+	width: 15%;
 	vertical-align: middle;
+    text-align: center;
     text-align: center;
 }
 .list-table .label-column{
+	width: 25%;
 	font-size: 20px;
 	vertical-align: middle;
+}
+.list-table .description-column {
+	width: 25%;
+	font-size: 15px;
+}
+.list-table .icon-thumbnail-column {
+	width: 25%;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .list-table tr td button {
@@ -2137,16 +2171,6 @@ i.fa.fa-cloud-upload{
 .list-table .button-column .fa{
 	font-size: 25px;
 	margin: 5px;
-}
-
-.list-table .button-column{
-	text-align: center;
-	width: 15%;
-}
-
-.list-table .icon-thumbnail-column {
-    text-align: center;
-    width: 15%
 }
 
 .list-table input[type="text"] {
