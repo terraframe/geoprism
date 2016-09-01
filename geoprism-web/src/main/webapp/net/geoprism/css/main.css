@@ -168,6 +168,9 @@ button.btn-primary:hover > i {
 	color: #00bfff !important;
 }
 
+.fa-stack:hover .fa {
+	color: #00bfff !important;
+}
 
 	
 /* 
@@ -2146,12 +2149,16 @@ i.fa.fa-cloud-upload{
     width: 15%
 }
 
+.list-table input[type="text"] {
+	width: 100%;
+}
+
+
 /*
 * Standard list table input
 */
 .list-table input[readonly] {
 	float: left;
-    width: 269px;
     height: 32px;
     margin: 0 11px 0 0;
     padding: 6px 10px;

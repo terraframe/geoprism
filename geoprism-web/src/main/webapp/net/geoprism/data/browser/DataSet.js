@@ -90,7 +90,12 @@
       // cancel edit mode if clicking outsid of the input element unless its a button (i.e. submit or cancel)
       $window.onclick = function (event) {
         if( !event.target.classList.contains("dataset-list-input") && event.target.type !== 'button' ){
-          controller.cancelDatasetEdit(dataset);
+          if(dataset.label.length > 0 && dataset.label !== $scope.orignialDatasetState.label){
+        	  controller.apply(dataset);
+          }
+          else{
+          	controller.cancelDatasetEdit(dataset);
+          }
           $scope.$apply();
         }
       };
