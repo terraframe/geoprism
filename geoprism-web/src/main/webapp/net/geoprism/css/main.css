@@ -155,6 +155,15 @@ button.btn-primary:hover > i {
 	color: white;
 }
 
+
+a:hover > .fa.fa-caret-right{
+	display:none;
+}
+a:hover > .fa.fa-caret-down{
+	display:inline-block !important;
+}
+
+
 .fa {
 	color: #bababa;
 }
@@ -176,6 +185,40 @@ i.fa:focus
 
 i {
 	font-style: normal;
+}
+
+
+
+.large-icon-stack-wrapper {
+    width: 160px;
+    display: inline-block;
+    padding: 20px;
+    text-align: center;
+    cursor:pointer;
+}
+
+.medium-icon-wrapper {
+	display: inline-block;
+    float: right;
+    text-align: center;
+    margin-left: 10px;
+    font-size: 22px;
+    line-height: 22px;
+    cursor:pointer;
+}
+
+.large-icon-stack-wrapper a {
+	color: #bababa;
+}
+.large-icon-stack-wrapper a:hover {
+	color: #00bfff;
+}
+
+.medium-icon-wrapper a {
+	color: #bababa;
+}
+.medium-icon-wrapper a:hover {
+	color: #00bfff;
 }
 
 	
@@ -1244,17 +1287,17 @@ input :focus::-moz-placeholder{opacity:0 !important;}
 	padding:5px 10px;
 	margin:0;
 	float:left;
-	font-size:18px;
+	font-size:14px;
 	line-height:24px;
 	color:#333;
 	box-shadow:none;
 	outline:none;
 	word-wrap: break-word;
-  word-break: break-word;
-  height: 75px;
-  resize: none;
-  max-height: 150px;
-  resize: none;    
+    word-break: break-word;
+    height: 75px;
+    resize: none;
+    max-height: 150px;
+    resize: none;    
 }
 .modal-form .text textarea::-moz-placeholder{
 	color:#333;
@@ -2103,6 +2146,34 @@ i.fa.fa-cloud-upload{
    	border: 3px #00bfff dashed;
 }
     
+.builder-dialog-category-ico-container a {
+    font-size: 50px;
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    line-height: 100px;
+    left: 0;
+    right: 0;
+    color: black;
+}
+.builder-dialog-category-ico-container .builder-ico-container {
+    height: 100%;
+}
+.builder-dialog-category-ico-container {
+    height: 100px;
+}
+.builder-dialog-category-ico-container .builder-dialog-ico-label {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+#builder-dialog-category-widget-container {
+    padding: 10px;
+    padding-top: 20px;
+    border-top: solid lightgrey 1px;
+}
     
     
 /*
@@ -2127,7 +2198,6 @@ i.fa.fa-cloud-upload{
 .list-table td {
     vertical-align: middle;
     width: 25%;
-	font-size: 20px;
 }
 .list-table td dl{
 	margin: 0;
@@ -2140,12 +2210,11 @@ i.fa.fa-cloud-upload{
 }
 .list-table .label-column{
 	width: 25%;
-	font-size: 20px;
 	vertical-align: middle;
 }
 .list-table .description-column {
 	width: 25%;
-	font-size: 15px;
+	font-size: 14px;
 }
 .list-table .icon-thumbnail-column {
 	width: 25%;

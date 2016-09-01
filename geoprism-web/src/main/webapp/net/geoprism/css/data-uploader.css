@@ -131,7 +131,6 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-text {
    float: left;
    position: relative;
-/*    min-width: 150px; */
    width: 25%;
    padding-right: 5px;
    padding-top: 1px;
@@ -140,7 +139,6 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-combo {
   float: left;
   position: relative;
-/*   width: 300px; */
   width: 35%;
   padding-right: 5px;
   padding-top: 1px;
@@ -149,9 +147,7 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-value {
   float: left;
   position: relative;
-/*   width: 225px; */
   width: 25%;
-/*   min-width: 150px; */
   padding-right: 5px;
   padding-top: 1px;
 }
@@ -159,9 +155,7 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-actions {
   float: left;
   position: relative;
-/*   width: 125px; */
   width: 15%;
-/*   min-width: 125px; */
   padding-right: 5px;
   padding-top: 1px;
 }
@@ -197,9 +191,15 @@ h4.location-summary-sub-table-heading{
   padding-left: 10px;
   width: 100%;
 }
-
 .modal-form .inline-combo input[type="text"]:focus {
 	border-color:#019edc;
+}
+
+.modal-form .inline-combo ul{
+	margin-left: -30px;
+}
+.modal-form .inline-combo ul li{
+	margin-left: 25px;
 }
 
 .modal-form .inline-number {
@@ -506,37 +506,6 @@ h4.location-summary-sub-table-heading{
 	
 }
 
-.large-icon-stack-wrapper {
-    width: 160px;
-    display: inline-block;
-    padding: 20px;
-    text-align: center;
-}
-
-.medium-icon-wrapper {
-	display: inline-block;
-    float: right;
-    text-align: center;
-    padding-left: 10px;
-    font-size: 22px;
-    line-height: 22px;
-}
-
-.large-icon-stack-wrapper a {
-	color: #bababa;
-}
-.large-icon-stack-wrapper a:hover {
-	color: #00bfff;
-}
-
-.medium-icon-wrapper a {
-	color: #bababa;
-}
-.medium-icon-wrapper a:hover {
-	color: #00bfff;
-}
-
-
 
 #match-datasets-list {
 }
@@ -552,5 +521,4 @@ h4.location-summary-sub-table-heading{
 
 .inline-value.error-message{
 	text-align: left;
-	margin-top: 6px;
 }
