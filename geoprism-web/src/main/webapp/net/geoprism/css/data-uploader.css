@@ -131,7 +131,8 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-text {
    float: left;
    position: relative;
-   min-width: 150px;
+/*    min-width: 150px; */
+   width: 25%;
    padding-right: 5px;
    padding-top: 1px;
 }
@@ -147,7 +148,8 @@ h4.location-summary-sub-table-heading{
 .modal-form .inline-value {
   float: left;
   position: relative;
-  width: 225px;
+/*   width: 225px; */
+  width: 25%;
   min-width: 150px;
   padding-right: 5px;
   padding-top: 1px;
@@ -236,7 +238,8 @@ h4.location-summary-sub-table-heading{
    overflow: hidden;
    padding: 1px;
    padding-right: 5px; 
-   width: 150px;   
+/*    width: 150px;    */
+   width: 25%;
 }
  
 .modal-form .inline-error-message {
@@ -247,6 +250,7 @@ h4.location-summary-sub-table-heading{
   color: #8C0000;
   word-wrap: break-word;
   padding-left: 10px;
+  width: 25%;
 }
 
 .modal-form .inline-check-block label {

@@ -21,19 +21,19 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
-  <div class="label-holder">
-    <strong> </strong>
-  </div>
-  <div class="holder">
+<!--   <div class="label-holder"> -->
+<!--     <strong> </strong> -->
+<!--   </div> -->
+  <div class="wide-holder">
     <div class="row-holder">
     	<p><gdb:localize key="dataUploader.attributeConfiguration.heading.paragraph"/></p>
     </div>
   </div>
   
-  <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.fields"/></strong>
-  </div>
-  <div class="holder">
+<!--   <div class="label-holder"> -->
+<%--     <strong><gdb:localize key="dataUploader.fields"/></strong> --%>
+<!--   </div> -->
+  <div class="wide-holder">
     <div class="row-holder" ng-repeat="field in sheet.fields">
       <div class="inline-text">
         <label><gdb:localize key="dataUploader.label"/></label>
@@ -101,7 +101,7 @@
         <input ng-model="field.categoryLabel" name="{{::$index + '-categoryLabel'}}" ng-init="field.categoryLabel = field.label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueCategory"></input>
       </div>      
 
-      <div class="inline-error-message">
+      <div class="inline-error-message pull-right">
         <p ng-show="form[$index + '-name'].$error.unique">
           <gdb:localize key="dataUploader.unique"/>
         </p>    
@@ -114,8 +114,8 @@
       </div>      
     </div>
   </div> 
-  <div class="label-holder"></div>
-  <div class="holder">
+<!--   <div class="label-holder"></div> -->
+  <div class="wide-holder">
     <div class="error-message">
       <p ng-show="form.$error.coordinate"><gdb:localize key="dataUploader.coordinateMismatch"/></p>
       <p ng-show="form.$error.coordinateText"><gdb:localize key="dataUploader.coordinateNoLabel"/></p>

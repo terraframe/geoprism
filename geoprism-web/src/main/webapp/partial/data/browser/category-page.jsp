@@ -63,7 +63,7 @@
                 </tr>
                 <tr>
                   <td class="button-column">
-                    <a class="fa fa-plus" ng-show="!instance.isNew" ng-click="ctrl.newInstance()"></a>
+                    <a class="fa fa-plus" ng-show="!instance.isNew" ng-click="ctrl.newInstance()" title="<gdb:localize key="category.management.createCategoryOptionTooltip"/>"></a>
                   </td>                 
                   <td ng-show="instance.isNew" class="submit-form">
                     <input class="list-table-input" type="text" ng-model="instance.label" ng-show="instance.isNew" press-esc="ctrl.cancel()" press-enter="ctrl.apply()" focus-on-show></input>                    

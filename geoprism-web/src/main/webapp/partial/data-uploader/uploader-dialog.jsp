@@ -78,7 +78,7 @@
           </fieldset>
           <div class="row-holder" >
             <div class="label-holder"></div>          
-            <div ng-class="{'holder' : (page.current != 'GEO-VALIDATION' && page.current != 'CATEGORY-VALIDATION'), 'wide-holder' : (page.current == 'GEO-VALIDATION' || page.current == 'CATEGORY-VALIDATION')}">
+            <div ng-class="{'holder' : (page.current != 'GEO-VALIDATION' && page.current != 'CATEGORY-VALIDATION' && page.current != 'FIELDS'), 'wide-holder' : (page.current == 'GEO-VALIDATION' || page.current == 'CATEGORY-VALIDATION' || page.current == 'FIELDS')}">
               <div class="button-holder" fire-on-ready>
                 <input
                   type="button"

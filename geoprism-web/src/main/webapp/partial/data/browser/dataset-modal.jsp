@@ -81,7 +81,7 @@
                               <input type="text" name="{{attribute.label}}" ng-model="attribute.label" required></input>
                             </dd>
                             <dd ng-if="attribute.type == 'Category'">
-                              <gdb:localize key="dataset.category"/> <a ng-click="ctrl.open(attribute.root)">{{attribute.root.label}}</a>
+                              <gdb:localize key="dataset.category"/> <a ng-click="ctrl.open(attribute.root)" title="<gdb:localize key="category.management.editThisCategoryTooltip"/>">{{attribute.root.label}}</a>
                             </dd>
                           </dl>
                         </td>
