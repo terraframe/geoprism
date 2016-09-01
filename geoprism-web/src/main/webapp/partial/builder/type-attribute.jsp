@@ -20,11 +20,8 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<div style="padding-left: 10px;">
-<!--   <input type="checkbox" ng-model="attribute.selected"></input> -->
-<!--   {{attribute.label}}      -->
+<div style="padding-left:10px;">
   <styled-check-box model="attribute.selected" name="attribute_{{$index}}" label="{{attribute.label}}"></styled-check-box>
-           
 </div>
 
 

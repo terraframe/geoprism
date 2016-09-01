@@ -42,8 +42,8 @@
             </div>
           </div>
         </div>
-        <div class="" style="">
-          <fieldset class="">
+        <div>
+          <fieldset>
             <!-- Basic dashboard settings (i.e.Name and label) -->
             <section class="form-container">
               <div ng-repeat="field in fields">
@@ -107,7 +107,11 @@
                         <div ng-repeat="type in dashboard.options.types">
                           <div class="vertical-checkbox-container">
                             <styled-check-box model="type.value" name="type_{{$index}}" label=""></styled-check-box>
-                            <a class="opener-link checkbox-label" data-toggle="collapse" ng-href="#type{{$index}}">{{type.label}}</a>
+                            <a class="opener-link checkbox-label" data-toggle="collapse" ng-href="#type{{$index}}">
+                            	<i class="fa fa-caret-right" aria-hidden="true"></i>
+  								<i class="fa fa-caret-down" style="display:none;" aria-hidden="true"></i>
+                            	{{type.label}}
+                            </a>
                           </div>
                   
                           <div id="type{{$index}}" class="collapse">
