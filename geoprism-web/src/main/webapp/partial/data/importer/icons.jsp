@@ -159,19 +159,4 @@
       </dl>
     </div>
   </div> <!-- end modal wrapper -->
-<!-- 
-  <div class="row-holder" fire-on-ready>
-    <div class="label-holder"></div>                    
-    <div class="holder">
-      <div class="button-holder">
-        <button type="submit" class="btn btn-primary" ng-click="ctrl.add(icon)" >
-        	<gdb:localize key="category.icon.addTooltip"/>
-            &nbsp;
-        	<i class="fa fa-plus"></i>
-        </button>
-      </div>
-    </div>
-  </div>
- -->  
-  
 </div>
