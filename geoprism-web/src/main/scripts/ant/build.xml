@@ -24,7 +24,7 @@
   <!-- IMPORTANT: This ant script should be run with a base directory set to the root of the project! -->
 
   <property name="tomcat" value="tomcat8x" /> 
-  <property name="projectName" value="ROOT" />  
+  <property name="projectName" value="geoprism" />  
   <property name="project.webapp.root" value="${basedir}/src/main/webapp" />
 
   <target name="deploy_presentation_files">

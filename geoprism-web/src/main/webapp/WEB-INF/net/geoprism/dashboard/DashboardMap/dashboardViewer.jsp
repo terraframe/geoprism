@@ -43,7 +43,7 @@
 				<link rel="icon" href="${miniLogoFilePath}"/>
 			</c:when>
 			<c:otherwise>
-				<link rel="icon" href="/net/geoprism/images/splash_logo_icon.png"/>
+				<link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png"/>
 			</c:otherwise>
 		</c:choose>
 	  

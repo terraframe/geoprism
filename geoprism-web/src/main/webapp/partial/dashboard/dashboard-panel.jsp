@@ -44,25 +44,25 @@
    			<li class="dropdown navigation-dropdown">      
    				<a href="#" class="fa fa-bars opener-drop dropdown-toggle dropdown-toggle-compact pull-right" ></a>
 	    		<ul class="dropdown-menu navigation-menu pull-right">
-	    			<a href="/menu">
+	    			<a href="${pageContext.request.contextPath}/menu">
 	       				<li>
 	       					<i class="fa fa-home"></i> 
 	       					<p ><gdb:localize key="dashboardViewer.userMenuLinkLabel"/></p>
 	       				</li>
        				</a>
-       				<a href="/dashboards">
+       				<a href="${pageContext.request.contextPath}/dashboards">
 	       				<li>
 	       					<i class="fa fa-th"></i> 
 	       					<p><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></p>
 	       				</li>
 	       			</a>
-	       			<a href="/management">
+	       			<a href="${pageContext.request.contextPath}/management">
 	           			<li ng-if="dashboard.canEdit()">
 	           				<i class="fa fa-table"></i>
 	           				<p><gdb:localize key="dashboardViewer.dataManagementLinkLabel"/></p>
 	           			</li>
            			</a>
-	       			<a href="/">
+	       			<a href="${pageContext.request.contextPath}/">
 	           			<li ng-if="dashboard.canEdit()">
 	           				<i class="fa fa-lock"></i>
 	           				<p><gdb:localize key="dashboardViewer.administrationLinkLabel"/></p>

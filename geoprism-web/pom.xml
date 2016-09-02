@@ -159,10 +159,10 @@
     </profile>
 
     <profile>
-      <id>geoprism-cargo-run-debug</id>
+      <id>geoprism-cargo-run</id>
       <activation>
         <property>
-          <name>geoprism-cargo-run-debug</name>
+          <name>geoprism-cargo-run</name>
         </property>
       </activation>
       <build>
@@ -212,7 +212,7 @@
                   <artifactId>geoprism-web</artifactId>
                   <type>war</type>
                   <properties>
-                    <context>ROOT</context>
+                    <context>geoprism</context>
                   </properties>
                 </deployable>
                 <deployable>

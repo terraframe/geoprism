@@ -30,6 +30,9 @@ import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.metadata.MdDimensionDAO;
 import com.runwaysdk.generation.loader.Reloadable;
 
+import net.geoprism.configuration.GeoprismConfigurationManager;
+import net.geoprism.configuration.GeoprismConfigurationManager.GeoprismConfigGroup;
+
 public class LocaleDimension implements Reloadable
 {
   private String           locale;
@@ -104,7 +107,7 @@ public class LocaleDimension implements Reloadable
   {
     String fileName = this.getResourceName(bundle);
 
-    InputStream stream = this.getClass().getResourceAsStream(fileName);
+    InputStream stream = GeoprismConfigurationManager.getResourceAsStream(GeoprismConfigGroup.ROOT, fileName, true);
 
     if (stream == null)
     {
