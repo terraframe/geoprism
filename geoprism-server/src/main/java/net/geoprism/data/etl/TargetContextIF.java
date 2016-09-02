@@ -19,6 +19,8 @@
 package net.geoprism.data.etl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.runwaysdk.business.Business;
 
@@ -33,4 +35,8 @@ public interface TargetContextIF
   public List<TargetDefinitionIF> getDefinitions();
 
   public TargetDefinitionIF getDefinition(String sourceType);
+
+  public Map<String, Set<String>> getLocationExclusions();
+
+  public Map<String, Set<String>> getCategoryExclusions();
 }

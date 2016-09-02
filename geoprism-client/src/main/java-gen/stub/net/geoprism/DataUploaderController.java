@@ -20,13 +20,19 @@ package net.geoprism;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.geoprism.ontology.ClassifierDTO;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ValueObjectDTO;
+import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.generation.loader.Reloadable;
@@ -53,6 +59,7 @@ public class DataUploaderController extends DataUploaderControllerBase implement
         JSONObject object = new JSONObject();
         object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
         object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
+        object.put("classifiers", new JSONArray(ClassifierDTO.getCategoryClassifiersAsJSON(request)));
 
         JSONControllerUtil.writeReponse(this.resp, object);
       }
@@ -194,6 +201,105 @@ public class DataUploaderController extends DataUploaderControllerBase implement
     catch (Throwable t)
     {
       JSONControllerUtil.handleException(this.resp, t, request);
-    }    
-  }  
+    }
+  }
+
+  @Override
+  public void createClassifierSynonym(String classifierId, String label) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      String response = DataUploaderDTO.createClassifierSynonym(request, classifierId, label);
+
+      JSONObject object = new JSONObject(response);
+
+      JSONControllerUtil.writeReponse(this.resp, object);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void deleteClassifierSynonym(String synonymId) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.deleteClassifierSynonym(request, synonymId);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void getClassifierSuggestions(String mdAttributeId, String text, Integer limit) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      JSONArray response = new JSONArray();
+
+      ValueQueryDTO query = ClassifierDTO.getClassifierSuggestions(request, mdAttributeId, text, limit);
+      List<ValueObjectDTO> results = query.getResultSet();
+
+      for (ValueObjectDTO result : results)
+      {
+        JSONObject object = new JSONObject();
+        object.put("label", result.getValue(ClassifierDTO.DISPLAYLABEL));
+        object.put("value", result.getValue(ClassifierDTO.ID));
+
+        response.put(object);
+      }
+
+      JSONControllerUtil.writeReponse(this.resp, response);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+  
+  @Override
+  public void validateDatasetName(String name, String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      DataUploaderDTO.validateDatasetName(request, name, id);
+      
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+  
+  @Override
+  public void validateCategoryName(String name, String id) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      ClassifierDTO.validateCategoryName(request, name, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
 }

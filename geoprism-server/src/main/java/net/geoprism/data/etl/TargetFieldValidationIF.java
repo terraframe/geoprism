@@ -16,22 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data.importer;
+package net.geoprism.data.etl;
 
-public class LocationExclusionException extends RuntimeException
+import java.util.Map;
+
+import com.runwaysdk.business.Transient;
+
+public interface TargetFieldValidationIF
 {
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -5764187692708424880L;
-
-  private String            entityName;
-
-
-  public LocationExclusionException(String msg, String entityName)
-  {
-    super(msg);
-
-    this.entityName = entityName;
-  }
+  public ImportProblemIF validate(Transient source, Map<String, Object> parameters);
 }

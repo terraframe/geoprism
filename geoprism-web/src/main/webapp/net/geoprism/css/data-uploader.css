@@ -1,0 +1,524 @@
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+ .location-select-container-heading-text{
+    width: 90%;
+    float: left;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.modal-form .button-holder .btn.btn-primary.set-location-btn{
+	min-width: 25px;
+    font-size: 31px;
+    font-weight: bold;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.location-field-info-card {
+    border: solid 2px lightgrey;
+    border-radius: 3px;
+    padding: 10px;
+    min-height: 150px;
+    display: inline-block;
+    vertical-align: top;
+    width: 48%;
+    margin: 1%;
+}
+
+.location-field-info-card-title {
+	width: 70%;
+    margin-top: 0;
+    left: 0;
+    display: inline-block;
+    color: grey;
+}
+
+.location-field-info-card > .cell {
+	display: inline-block;
+    float: right;
+    width: initial;
+}
+
+.location-selector-container .cell{
+	width: inherit;
+}
+.location-selector-container .cell .fa.fa-pencil.ico-edit,
+.location-selector-container .cell .fa.fa-trash-o.ico-remove,
+.location-field-info-card .cell .fa.fa-pencil.ico-edit,
+.location-field-info-card .cell .fa.fa-trash-o.ico-remove{
+	font-size: 20px;
+}
+
+
+.location-field-list-display{
+    list-style: none;
+    padding: 0;
+    font-size: 15px;
+    color: grey;
+}
+
+.location-field-list-display.location-field-list-display i {
+    font-size: 20px;
+    vertical-align: middle;
+    color: grey;
+    margin-right: 5px;
+}
+
+.modal-form .holder .location-selector-container{
+	border: solid 2px lightgrey;
+  	padding: 10px;
+  	margin-top: 2px;
+}
+
+.modal-form .holder .location-selector-container > .text {
+	margin-bottom: 10px;
+}
+
+.modal-form .holder .location-selector-container .label-help-ico-container{
+	width: 50%;
+    height: 34px;
+    float: left;
+    margin-right: 10px;
+}
+
+#uploader-div .wide-holder .label-help-ico-container{
+	display: inline-block;
+}
+#uploader-div .wide-holder .label-help-ico-container .fa.fa-question-circle.help-info-ico{
+	position: absolute;
+}
+
+.modal-form .holder .location-selector-container p{
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    position: relative;
+    white-space: nowrap;
+    margin: 0;
+}
+
+h4.location-summary-sub-table-heading{
+	text-align: center;
+    color: inherit;
+}
+
+.table.table-bordered.location-summary-sub-table{
+	font-size: inherit;
+    background: transparent;
+    margin-bottom: 0;
+}
+
+
+.modal-form .inline-text {
+   float: left;
+   position: relative;
+   width: 25%;
+   padding-right: 5px;
+   padding-top: 1px;
+}
+
+.modal-form .inline-combo {
+  float: left;
+  position: relative;
+  width: 35%;
+  padding-right: 5px;
+  padding-top: 1px;
+}
+
+.modal-form .inline-value {
+  float: left;
+  position: relative;
+  width: 25%;
+  padding-right: 5px;
+  padding-top: 1px;
+}
+
+.modal-form .inline-actions {
+  float: left;
+  position: relative;
+  width: 15%;
+  padding-right: 5px;
+  padding-top: 1px;
+}
+
+.modal-form .inline-text input[type="text"] {
+  background: #EEE none repeat scroll 0% 0%;
+  border: 1px solid #AAA;
+  margin: 0px;
+  float: left;
+  font-size: 14px;
+  color: #333;
+  box-shadow: none;
+  outline: medium none;
+  height: 32px;
+  line-height: 24px;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: 100%;
+}
+
+.modal-form .inline-combo input[type="text"] {
+  background: #EEE none repeat scroll 0% 0%;
+  border: 1px solid #AAA;
+  margin: 0px;
+  float: left;
+  font-size: 14px;
+  color: #333;
+  box-shadow: none;
+  outline: medium none;
+  height: 32px;
+  line-height: 24px;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: 100%;
+}
+.modal-form .inline-combo input[type="text"]:focus {
+	border-color:#019edc;
+}
+
+.modal-form .inline-combo ul{
+	margin-left: -30px;
+}
+.modal-form .inline-combo ul li{
+	margin-left: 25px;
+}
+
+.modal-form .inline-number {
+  float: left;
+  position: relative;
+  width: 70px;
+  padding-right: 5px;
+  padding-top: 1px;
+}
+
+.modal-form .inline-check {
+  float: left;
+  position: relative;
+  width: 30px;
+  padding-right: 5px;
+  padding-top: 1px;
+}
+
+.modal-form .inline-number input[type="text"] {
+   background: #EEE none repeat scroll 0% 0%;
+   border: 1px solid #AAA;
+   margin: 0px;
+   float: left;
+   font-size: 14px;
+   color: #333;
+   box-shadow: none;
+   outline: medium none;
+   height: 32px;
+   line-height: 24px;
+   padding-right: 10px;
+   padding-left: 10px;
+   width: 100%;
+}
+ 
+ .modal-form .inline-box {
+   float: left;
+   position: relative;
+   overflow: hidden;
+   padding: 1px;
+   padding-right: 5px; 
+/*    width: 150px;    */
+   width: 25%;
+}
+ 
+.modal-form .inline-error-message {
+  float: left;
+  padding: 6px 0px 0px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #8C0000;
+  word-wrap: break-word;
+  padding-left: 10px;
+  width: 25%;
+}
+
+.modal-form .inline-check-block label {
+   float: left;
+   font-size: 13px;
+   line-height: 16px;
+   font-weight: normal;
+   color: #333;
+}
+ 
+.modal-form .inline-check-block {
+  float: left;
+  position: relative;
+  white-space: nowrap;
+  width: 100%;
+}
+
+
+
+.visuallyhidden {
+    display: none;
+}
+
+.uploader-step-indicator-container{
+    width: 100%;
+    text-align: center;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    margin-bottom: 75px;
+    margin-top: 40px;
+}
+
+.wizard-progress {
+	display: inline-block;
+    list-style: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.wizard-progress li {
+    float: left;
+    margin-right: 50px;
+    text-align: center;
+    position: relative;
+    width: 100px;
+    white-space: normal;
+}
+
+.wizard-progress li:last-child{
+	margin-right: 0;
+}
+
+.wizard-progress .status-li-disabled {
+	color: lightgrey;
+}
+
+.wizard-progress .status-li-disabled > .step-num{
+	border-color: lightgrey;
+}
+
+.wizard-progress .status-li-disabled > .step-num::after{
+	background: lightgrey;
+}
+
+.wizard-progress .step-name {
+    display: table-cell;
+    height: 32px;
+    vertical-align: bottom;
+    text-align: center;
+    width: 100px;
+    float: left;
+}
+
+
+.wizard-progress .step-name-wrapper {
+    display: table-cell;
+    height: 100%;
+    vertical-align: bottom;
+}
+
+.wizard-progress .step-num {
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #aaa;
+    border-radius: 50%;
+    width: 26px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.wizard-progress .step-num:after {
+    content: "";
+    display: block;
+    background: #aaa;
+    height: 3px;
+    width: 128px;
+    position: absolute;
+    bottom: 10px;
+    left: 61px;
+}
+
+.wizard-progress li:last-of-type .step-num:after {
+    display: none;
+}
+
+.wizard-progress .active-step {
+	font-weight: bold;
+}
+
+.wizard-progress .active-step .step-num {
+    background-color: #00bfff;
+    color: white;
+}
+
+
+
+
+.fade-ngIf.ng-enter, .animate-if.ng-leave {
+  transition: .2s linear all;
+  -webkit-transition: .2s linear all;
+}
+.fade-ngIf.ng-enter,
+.fade-ngIf.ng-leave.ng-leave-active {
+  opacity:0;
+}
+.fade-ngIf.ng-leave,
+.fade-ngIf.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+
+.fade-ngShow.ng-hide-add, .animate-show.ng-hide-remove {
+  transition: all linear 0s;
+  -webkit-transition: 0s linear all;
+}
+.fade-ngShow.ng-hide-add-active,
+.fade-ngShow.ng-hide-remove-active {
+  /* the transition is defined in the active class */
+  transition: .2s linear all;
+  -webkit-transition: .2s linear all;
+}
+.fade-ngShow.ng-hide-add {
+  opacity: 1;
+}
+.fade-ngShow.ng-hide {
+  opacity: 0;
+}
+
+
+.fade-ngRepeat-item {
+  transition: .2s linear all;
+  -webkit-transition: .2s linear all;
+}
+.fade-ngRepeat-item.ng-enter {
+  opacity: 0;
+}
+.fade-ngRepeat-item.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+.fade-ngRepeat-item.ng-leave {
+  opacity: 1;
+}
+.fade-ngRepeat-item.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+
+.icon-synonym_icon{
+	font-size: 30px;
+	color: #bababa;
+}
+.icon-synonym_icon:hover{
+	color:#00bfff;
+	cursor: pointer;
+}
+.icon-synonym_icon.disabled{
+	color:#ddd;
+}
+.icon-synonym_icon.disabled:hover{
+	cursor: default;
+}
+
+.icon-new_location_icon{
+	font-size: 30px;
+	color: #bababa;
+}
+.icon-new_location_icon:hover{
+	color:#00bfff;
+	cursor: pointer;
+}
+.icon-new_location_icon.disabled:hover{
+	color: #bababa;
+	cursor: default;
+}
+
+
+#uploader-div div.inline-actions > span.fa-stack.fa-lg{
+	vertical-align: top;
+}
+#uploader-div div.inline-actions > span.fa-stack.fa-lg:hover{
+	cursor: pointer;
+}
+#uploader-div div.inline-actions > span.fa-stack.fa-lg:hover .fa.fa-square.fa-stack-2x{
+	color:#00bfff;
+}
+.fa.fa-square.fa-stack-2x{
+	color: #bababa;
+}
+.fa.fa-times.fa-stack-1x{
+	color: white;
+}
+
+#uploader-div i.fa.fa-undo{
+	font-size: 30px;
+	color: #bababa;
+}
+#uploader-div i.fa.fa-undo:hover{
+	color:#00bfff;
+	cursor: pointer;
+}
+
+
+.fa-stack-1x.fa-stack-text.file-text.fa.fa-plus,
+.fa-stack-1x.fa-stack-text.file-text.fa.fa-minus {
+	padding-top: 2px;
+	font-size: 11px;
+}
+.fa-stack-1x, .fa-stack-2x{
+/* 	width: 99% !important; */
+}
+
+
+.large-icon-stack-wrapper .fa-stack-text.file-text.fa.fa-plus-square,
+.large-icon-stack-wrapper .fa-stack-text.file-text.fa.fa-minus-square,
+.large-icon-stack-wrapper .fa-stack-text.file-text.fa.fa-pencil-square {
+    position: absolute;
+    right: -3px;
+    top: -7px;
+    background-color: white;
+    padding: 0;
+    height: 30px; /*to hide overflowing background **/
+/*     width: 29px; to hide overflowing background * */
+}
+
+
+#uploader-div a.fa-stack:hover .fa.fa-plus-square,
+#uploader-div a.fa-stack:hover .fa.fa-pencil-square {
+	
+}
+
+
+#match-datasets-list {
+}
+
+#match-datasets-list li:nth-child(2n+2){
+	background-color: #f9f9f9;
+}
+
+
+.inline-value > .btn{
+	height: 32px;
+}
+
+.inline-value.error-message{
+	text-align: left;
+}

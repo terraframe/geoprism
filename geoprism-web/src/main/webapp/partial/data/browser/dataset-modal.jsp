@@ -44,11 +44,26 @@
               </div>            
               <div class="row-holder">
                 <div class="label-holder">
-                  <label><gdb:localize key="category.icon.label"/></label>
+                  <label><gdb:localize key="dataset.label"/></label>
                 </div>          
                 <div class="holder" >
                   <span class="text">
-                    <input type="text" ng-model="dataset.label" name="label" required>
+                    <input type="text" ng-model="dataset.label" name="label" required  validate-unique validator="ctrl.isUniqueLabel">
+                  </span>
+                  <div class="inline-error-message">
+                    <p ng-show="ctrl.form.label.$error.unique">
+                      <gdb:localize key="dataUploader.unique"/>
+                    </p>
+                  </div>         
+                </div>
+              </div>
+              <div class="row-holder">
+                <div class="label-holder">
+                  <label><gdb:localize key="dataset.description"/></label>
+                </div>          
+                <div class="holder" >
+                  <span class="text">                  
+                    <textarea ng-model="dataset.description" name="description"></textarea>
                   </span>
                 </div>
               </div>
@@ -57,11 +72,18 @@
                   <label><gdb:localize key="dataset.attributes"/></label>
                 </div>          
                 <div class="holder" >
-                  <table id="manage-datasets-table" class="table table-bordered table-striped">
+                  <table class="list-table table table-bordered table-striped">
                     <tbody>
                       <tr ng-repeat="attribute in dataset.attributes" class="fade-ngRepeat-item">
                         <td class="submit-form">
-                          <input type="text" name="{{attribute.label}}" ng-model="attribute.label" required></input>
+                          <dl>
+                            <dd>
+                              <input type="text" name="{{attribute.label}}" ng-model="attribute.label" required></input>
+                            </dd>
+                            <dd ng-if="attribute.type == 'Category'">
+                              <gdb:localize key="dataset.category"/> <a ng-click="ctrl.open(attribute.root)" title="<gdb:localize key="category.management.editThisCategoryTooltip"/>">{{attribute.root.label}}</a>
+                            </dd>
+                          </dl>
                         </td>
                       </tr>
                     </tbody>
@@ -85,4 +107,5 @@
     </dl>   
     </div>
   </div>
+  <category-modal></category-modal>
 </div>

@@ -1,0 +1,105 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldDomainBinding" label="Target Field Domain Binding" extends="net.geoprism.data.etl.TargetFieldBasicBinding" />    
+    </create>
+    <update>
+      <mdTerm name="net.geoprism.ontology.Classifier">
+        <create>
+          <attributes>
+            <boolean name="category" label="Category" defaultValue="false" negativeLabel="False" positiveLabel="True"/>
+          </attributes>
+          <mdMethod name="getCategoryClassifiersAsJSON" label="Get managed classifiers" returnType="java.lang.String" static="true" />
+          <mdMethod name="getClassifierSuggestions" label="Get classifier suggestions" static="true" returnType="com.runwaysdk.query.ValueQuery">
+            <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="Text" />
+            <mdParameter name="text" order="1" type="java.lang.String" label="Text" />
+            <mdParameter name="limit" order="2" type="java.lang.Integer" label="Limit" />
+          </mdMethod>
+        </create>
+      </mdTerm>
+      <mdUtil name="net.geoprism.DataUploader">
+        <create>
+          <mdMethod name="deleteClassifierSynonym" label="Delete synonym" returnType="void" static="true">
+            <mdParameter name="synonymId" label="Synonym id" order="0" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="createClassifierSynonym" label="Create classifier synonym" returnType="java.lang.String" static="true">
+            <mdParameter name="classifierId" label="Classifier id" order="0" type="java.lang.String"/>
+            <mdParameter name="label" label="Label" order="1" type="java.lang.String"/>
+          </mdMethod>
+        </create>      
+      </mdUtil>
+      <mdController name="net.geoprism.DataUploaderController">
+        <create>
+          <mdAction name="createClassifierSynonym" label="Create classifier synonym" isPost="true">
+            <mdParameter name="classifierId" label="Entity id" order="0" type="java.lang.String"/>
+            <mdParameter name="label" label="Label" order="1" type="java.lang.String"/>
+          </mdAction>        
+          <mdAction name="deleteClassifierSynonym" label="Delete classifier synonym" isPost="true">
+            <mdParameter name="synonymId" label="Synonym Id" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="getClassifierSuggestions" label="Get classifier suggestions" isPost="false" isQuery="false">
+            <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="Text" />
+            <mdParameter name="text" order="1" type="java.lang.String" label="Text" />
+            <mdParameter name="limit" order="2" type="java.lang.Integer" label="Limit" />
+          </mdAction>
+        </create>
+      </mdController>      
+    </update>
+    <permissions>
+      <method methodName="createClassifierSynonym" type="net.geoprism.DataUploader">
+        <assignedRole roleName="Administrator" />
+      </method>
+      <method methodName="deleteClassifierSynonym" type="net.geoprism.DataUploader">
+        <assignedRole roleName="Administrator" />
+      </method>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.DataUploader">
+            <mdMethodPermission methodName="createClassifierSynonym">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="deleteClassifierSynonym">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.DataUploader">
+            <mdMethodPermission methodName="createClassifierSynonym">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="deleteClassifierSynonym">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+    </delete>
+  </undoIt>
+</version>

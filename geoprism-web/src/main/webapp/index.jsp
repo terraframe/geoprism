@@ -44,6 +44,7 @@
 	</c:choose>
   
   <jwr:style src="/bundles/main.css" useRandomParam="false" />  
+  <jwr:style src="/bundles/administration.css" useRandomParam="false" />
   <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
   
   <!-- include HTML5 IE enabling script for IE -->

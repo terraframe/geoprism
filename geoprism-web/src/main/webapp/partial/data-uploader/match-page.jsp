@@ -40,10 +40,10 @@
         	{{match.label}}            
   		
   		    <div class="medium-icon-wrapper">
-  				<a href="#" class="fa fa-plus-square" ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>"></a>
+  				<i class="fa fa-plus-square" ng-click="ctrl.select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>"></i>
   			</div>
   			<div class="medium-icon-wrapper">
-	    		<a href="#" class="fa fa-minus-square" ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>"></a>
+	    		<i class="fa fa-minus-square" ng-click="ctrl.select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>"></i>
   			</div>
   		</li>
     </ul>

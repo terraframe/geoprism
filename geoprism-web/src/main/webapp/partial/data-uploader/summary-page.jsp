@@ -55,7 +55,7 @@
 	  </div>
   </div>
 
-  <div ng-if="ctrl.hasFieldType('CATEGORY')">
+  <div ng-if="ctrl.hasFieldType('CATEGORY') || ctrl.hasFieldType('DOMAIN')">
 	  <div class="label-holder">
 	    <strong><gdb:localize key="dataUploader.summaryCategoryLabel"/></strong>
 	  </div>
@@ -69,7 +69,7 @@
 	         		</tr>
 	         	</thead>
 	         	<tbody>	
-	         		<tr ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field) && field.type === 'CATEGORY'">
+	         		<tr ng-repeat="field in sheet.fields" ng-if="ctrl.isValid(field) && (field.type === 'CATEGORY' || field.type === 'DOMAIN')">
 	         			<td>{{field.label}}</td>
 <!-- 	         			<td> -->
 <%-- 	            			<div><gdb:localize key="dataUploader.category"/></div> --%>

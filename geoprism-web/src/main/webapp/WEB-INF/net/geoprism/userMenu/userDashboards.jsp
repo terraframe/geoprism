@@ -58,7 +58,7 @@
   
   <jwr:script src="/bundles/builder.js" useRandomParam="false"/>   
 </head>
-<body ng-app="dashboard-menu">
+<body ng-app="dashboard-menu" ng-cloak>
 
   <c:if test="${not empty param.errorMessage}">
     <div class="error-message">
@@ -96,7 +96,7 @@
     <div class="row"></div>
     <div class="col-md-2"></div>
     <div class="col-md-8">
-    	<div ng-repeat="id in ctrl.ids" ng-init="dashboard = ctrl.dashboards[id]">
+    	<div ng-repeat="id in ctrl.ids" ng-init="dashboard = ctrl.dashboards[id]" ng-cloak>
     		<div ng-if="($index ) % 3 === 0" class="row">
 		        <!-- CREATE DASHBOARD CARD #1 
 		        	 Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
@@ -237,3 +237,7 @@
     <clone-form></clone-form>
   </div>
 </body>
+
+<script type="text/javascript">
+  com.runwaysdk.ui.Manager.setFactory("JQuery");
+</script>

@@ -16,14 +16,17 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data.etl;
+package net.geoprism.data.importer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public interface LocationProblemIF
+public class ExclusionException extends RuntimeException
 {
-  public JSONObject toJSON() throws JSONException;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -5764187692708424880L;
 
-  public String getKey();
+  public ExclusionException(String msg)
+  {
+    super(msg);
+  }
 }

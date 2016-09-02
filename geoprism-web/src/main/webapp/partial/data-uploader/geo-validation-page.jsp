@@ -27,7 +27,7 @@
         <label><gdb:localize key="dataUploader.locationContext"/></label>   
         <div class="label-help-ico-container">
        		<i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContextHelpToolTip"/>"></i>
-     	</div>   
+      	</div>   
       </div>
       <div class="inline-value">
       	<label><gdb:localize key="dataUploader.unknownLocation"/></label>
@@ -48,7 +48,10 @@
      	</div> 
       </div>
     </div>  
-    <geo-validation-problem ng-repeat="problem in problems" problem="problem"></geo-validation-problem>
+    
+    <div ng-repeat="problem in problems.locations">
+      <geo-validation-problem problem="problem"></geo-validation-problem>
+    </div>
   </div>
   <div class="wide-holder">
     <div class="error-message">

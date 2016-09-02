@@ -37,6 +37,8 @@ import net.geoprism.data.etl.excel.InvalidExcelFileException;
 import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.gis.geoserver.SessionPredicate;
 import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
 import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.commons.io.FileUtils;
@@ -63,6 +65,7 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
+import com.runwaysdk.system.metadata.MdClassQuery;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -132,6 +135,39 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   public static void deleteGeoEntitySynonym(String synonymId)
   {
     Synonym synonym = Synonym.get(synonymId);
+    synonym.delete();
+  }
+
+  @Transaction
+  @Authenticate
+  public static String createClassifierSynonym(String classifierId, String label)
+  {
+    try
+    {
+      Classifier classifier = Classifier.get(classifierId);
+
+      ClassifierSynonym synonym = new ClassifierSynonym();
+      synonym.getDisplayLabel().setValue(label);
+
+      TermAndRel tr = ClassifierSynonym.createSynonym(synonym, classifierId);
+
+      JSONObject object = new JSONObject();
+      object.put("synonymId", tr.getTerm().getId());
+      object.put("label", classifier.getDisplayLabel().getValue());
+
+      return object.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void deleteClassifierSynonym(String synonymId)
+  {
+    ClassifierSynonym synonym = ClassifierSynonym.get(synonymId);
     synonym.delete();
   }
 
@@ -421,5 +457,32 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       return part.substring(0, part.length() - 1) + "1";
     }
     return part;
+  }
+
+  public static void validateDatasetName(String name, String id)
+  {
+    QueryFactory factory = new QueryFactory();
+
+    MappableClassQuery mClassQuery = new MappableClassQuery(factory);
+
+    if (id != null && id.length() > 0)
+    {
+      mClassQuery.AND(mClassQuery.getId().NE(id));
+    }
+
+    MdClassQuery mdClassQuery = new MdClassQuery(factory);
+
+    mdClassQuery.WHERE(mdClassQuery.EQ(mClassQuery.getWrappedMdClass()));
+    mdClassQuery.AND(mdClassQuery.getDisplayLabel().localize().EQ(name.trim()));
+
+    long count = mdClassQuery.getCount();
+
+    if (count > 0)
+    {
+      NonUniqueDatasetException ex = new NonUniqueDatasetException();
+      ex.setLabel(name.trim());
+
+      throw ex;
+    }
   }
 }

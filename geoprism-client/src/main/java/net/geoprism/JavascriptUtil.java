@@ -303,6 +303,7 @@ public class JavascriptUtil implements Reloadable
   {
     Set<String> types = new HashSet<String>();
     types.add(CategoryIconController.CLASS);
+    types.add(ClassifierController.CLASS);
     types.add(DataSetController.CLASS);
     types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);

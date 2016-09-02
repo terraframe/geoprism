@@ -48,13 +48,14 @@
         <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
         <h1 class="ui-dialog-title" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" ng-if="page.current == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
         <h1 class="ui-dialog-title" ng-if="page.current == 'GEO-VALIDATION'"><gdb:localize key="dataUploader.titleLocationValidation"/></h1>
+        <h1 class="ui-dialog-title" ng-if="page.current == 'CATEGORY-VALIDATION'"><gdb:localize key="dataUploader.titleCategoryValidation"/></h1>
       </div>
       <form name="form" class="modal-form">
         <div ng-if="errors.length > 0" class="error-container">
           <div class="label-holder">
             <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
           </div>
-          <div ng-class="{'holder' : page.current != 'GEO-VALIDATION', 'wide-holder' : page.current == 'GEO-VALIDATION'}">
+          <div ng-class="{'holder' : (page.current != 'GEO-VALIDATION' && page.current != 'CATEGORY-VALIDATION'), 'wide-holder' : (page.current == 'GEO-VALIDATION' || page.current == 'CATEGORY-VALIDATION')}">
             <div ng-repeat="error in errors">
               <p class="error-message">{{error}}</p>
             </div>
@@ -72,11 +73,12 @@
               <coordinate-page ng-if="page.current == 'COORDINATE'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
               <summary-page ng-if="page.current == 'SUMMARY'" ng-class="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
               <geo-validation-page ng-if="page.current == 'GEO-VALIDATION'"></geo-validation-page>
+              <category-validation-page ng-if="page.current == 'CATEGORY-VALIDATION'"></category-validation-page>              
             </section>            
           </fieldset>
           <div class="row-holder" >
             <div class="label-holder"></div>          
-            <div ng-class="{'holder' : page.current != 'GEO-VALIDATION', 'wide-holder' : page.current == 'GEO-VALIDATION'}">
+            <div ng-class="{'holder' : (page.current != 'GEO-VALIDATION' && page.current != 'CATEGORY-VALIDATION' && page.current != 'FIELDS'), 'wide-holder' : (page.current == 'GEO-VALIDATION' || page.current == 'CATEGORY-VALIDATION' || page.current == 'FIELDS')}">
               <div class="button-holder" fire-on-ready>
                 <input
                   type="button"
@@ -94,7 +96,7 @@
                   ng-disabled="busy"
                 /> 
                 <input
-                  ng-if="page.current != 'MATCH-INITIAL' && page.current != 'SUMMARY' && page.current != 'MATCH' && page.current != 'GEO-VALIDATION'"      
+                  ng-if="ctrl.hasNextPage()"      
                   type="button"
                   value="<gdb:localize key="dataUploader.next"/>"
                   class="btn btn-primary" 
@@ -102,7 +104,7 @@
                   ng-disabled="form.$invalid || busy"
                 />
                 <input 
-                  ng-if="page.current == 'SUMMARY' || page.current == 'GEO-VALIDATION'"
+                  ng-if="ctrl.isReady()"
                   type="button"
                   value="<gdb:localize key="dataUploader.import"/>"
                   class="btn btn-primary" 

@@ -17,6 +17,196 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
+  function CategoryValidationProblemController($scope, datasetService) {
+    var controller = this;
+    $scope.problem.synonym = null;
+    
+    controller.getClassifierSuggestions = function( request, response ) {
+      var limit = 20;
+      
+      var connection = {
+          onSuccess : function(resultSet){
+            var results = [];
+            
+            $.each(resultSet, function( index, result ) {
+              results.push({'label':result.label, 'value':result.label, 'id':result.value});
+            });
+            
+            response( results );
+          },
+          onFailure : function(e){
+            console.log(e);
+          }
+      };
+      
+      var text = request.term;
+      
+      datasetService.getClassifierSuggestions(connection, $scope.problem.mdAttributeId, text, limit);
+    }
+    
+    controller.setSynonym = function(value) {
+      controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+    }
+    
+    controller.createSynonym = function() {
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(response){
+          $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'SYNONYM',
+            synonymId : response.synonymId,
+            label : response.label
+          };
+            
+          $scope.$apply();
+        },
+        onFailure : function(e){
+          $scope.errors = [];
+          $scope.errors.push(e.localizedMessage);
+            
+          $scope.$apply();
+        }        
+      };
+      
+      $scope.errors = undefined;
+      
+      datasetService.createClassifierSynonym(connection, $scope.problem.synonym, $scope.problem.label);
+    }
+    
+    controller.ignoreValue = function() {
+      $scope.problem.resolved = true;
+      
+      $scope.problem.action = {
+        name : 'IGNORE'
+      };
+      
+      var mdAttributeId = $scope.problem.mdAttributeId;
+      
+      var config = datasetService.getDatasetConfiguration();
+      
+      if(!config.categoryExclusion){
+        config.categoryExclusion = {};
+      }
+      
+      if(!config.categoryExclusion[mdAttributeId]) {
+        config.categoryExclusion[mdAttributeId] = [];
+      }
+      
+      config.categoryExclusion[mdAttributeId].push($scope.problem.label);
+    }
+    
+    controller.removeExclusion = function() {
+      
+      var mdAttributeId = $scope.problem.mdAttributeId;
+      var label = $scope.problem.label;
+      
+      var config = datasetService.getDatasetConfiguration();
+      if(config.categoryExclusion && config.categoryExclusion[mdAttributeId]){          
+        config.categoryExclusion[mdAttributeId] = $.grep(config.categoryExclusion[mdAttributeId], function(value) {
+          return value != label;
+        });        
+      }
+      
+      if(config.categoryExclusion[mdAttributeId].length === 0) {
+        delete config.categoryExclusion[mdAttributeId];
+      }
+    }    
+    
+    controller.undoAction = function() {
+      var locationLabel = $scope.problem.label;
+      var universal = $scope.problem.universalId;
+      
+      if($scope.problem.resolved) {
+        
+        var action = $scope.problem.action;
+        
+        if(action.name == 'IGNORE'){
+          $scope.problem.resolved = false;
+          
+          controller.removeExclusion();
+        }
+        else {
+          var connection = {
+            elementId : '#uploader-overlay',
+            onSuccess : function(response){
+              $scope.problem.resolved = false;
+              $scope.problem.synonym = null;
+                      
+              controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
+                      
+              $scope.$apply();        
+            },
+            onFailure : function(e){
+              $scope.errors = [];
+              $scope.errors.push(e.localizedMessage);
+                      
+              $scope.$apply();
+            }      
+          };
+        	
+          datasetService.deleteClassifierSynonym(connection, action.synonymId);                    
+        }
+      }
+    }
+  }
+  
+  function CategoryValidationProblem($timeout) {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/category-validation-problem.jsp',
+      scope: {
+        problem : '=',
+        options : '='
+      },
+      controller : CategoryValidationProblemController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs, ctrl) {
+        $timeout(function(){
+          ctrl.problemForm.$setValidity("synonym-length",  false);        
+        }, 0);
+      }
+    }   
+  }
+  
+  
+  function CategoryValidationPageController($scope) {
+    var controller = this;
+    
+    controller.hasProblems = function() {
+      for(var i = 0; i < $scope.problems.categories.length; i++) {
+        if(!$scope.problems.categories[i].resolved) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
+    $scope.$watch('problems', function(){
+      $scope.form.$setValidity("size",  (!controller.hasProblems()));
+    }, true);
+
+    // Remove the global validation on the form
+    $scope.$on('pagePrev', function(event, data){
+      $scope.form.$setValidity("size",  true);
+    });       
+  }
+  
+  function CategoryValidationPage() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: '/partial/data-uploader/category-validation-page.jsp',
+      scope: true,
+      controller : CategoryValidationPageController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs) {
+      }
+    }   
+  }  
+	
   function GeoValidationProblemController($scope, datasetService) {
     var controller = this;
     $scope.problem.synonym = null;
@@ -107,20 +297,62 @@
       datasetService.createGeoEntity(connection, $scope.problem.parentId, $scope.problem.universalId, $scope.problem.label);
     }
     
+    controller.findLocObjIndex = function(locationExclusions, exclusionId){
+      for(var i=0; i<locationExclusions.length; i++){
+        var exclusion = locationExclusions[i];
+        
+        if(exclusion.id == exclusionId){
+          return i;
+        }
+      }
+      
+      return -1;
+    }
 
+    controller.removeLocationExclusion = function(exclusionId) {
+      var config = datasetService.getDatasetConfiguration();
+
+      if(config.locationExclusions){         
+         
+        var index = controller.findLocObjIndex(config.locationExclusions, exclusionId);
+         
+        if (index > -1) {
+          config.locationExclusions.splice(index, 1);
+       }
+      }
+    }
+    
+    controller.guid = function() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+      });
+    }
+    
     controller.ignoreDataAtLocation = function() {
-    	var locationLabel = $scope.problem.label;
-    	var universal = $scope.problem.universalId;
-    	
-    	$scope.problem.resolved = true;
-    	
-	    $scope.problem.action = {
-            name : 'IGNOREATLOCATION',
-            label : locationLabel
-        };
-    	
-    	datasetService.addLocationExclusion({"universal":universal, "locationLabel":locationLabel});
-	}
+      var locationLabel = $scope.problem.label;
+      var universal = $scope.problem.universalId;
+      var id = controller.guid();
+      
+      $scope.problem.resolved = true;
+      
+      $scope.problem.action = {
+        name : 'IGNOREATLOCATION',
+        label : locationLabel,
+        id : id
+      };
+      
+      var exclusion = {id:id, "universal":universal, "locationLabel":locationLabel, "parentId":$scope.problem.parentId};
+      
+      var config = datasetService.getDatasetConfiguration();
+      
+      if(config.locationExclusions){
+        config.locationExclusions.push(exclusion);
+      }
+      else{
+        config.locationExclusions = [exclusion];
+      }
+    }
     
 
     controller.undoAction = function() {
@@ -128,7 +360,7 @@
       var universal = $scope.problem.universalId;
       
       if($scope.problem.resolved) {
-    	  
+        
         var connection = {
           elementId : '#uploader-overlay',
           onSuccess : function(response){
@@ -146,15 +378,15 @@
             $scope.$apply();
           }      
         };
-    	
+      
         var action = $scope.problem.action;
         
         if(action.name == 'ENTITY')  {
           datasetService.deleteGeoEntity(connection, action.entityId);          
         }
         else if(action.name == 'IGNOREATLOCATION'){
-        	$scope.problem.resolved = false;
-        	datasetService.removeLocationExclusion({"universal":universal, "locationLabel":locationLabel});
+          $scope.problem.resolved = false;
+          controller.removeLocationExclusion(action.id);
         }
         else {
           datasetService.deleteGeoEntitySynonym(connection, action.synonymId);                    
@@ -185,9 +417,11 @@
     var controller = this;
     
     controller.hasProblems = function() {
-      for(var i = 0; i < $scope.problems.length; i++) {
-        if(!$scope.problems[i].resolved) {
-          return true;
+      if($scope.problems.locations != null) {      
+        for(var i = 0; i < $scope.problems.locations.length; i++) {
+          if(!$scope.problems.locations[i].resolved) {
+            return true;
+          }
         }
       }
       
@@ -296,18 +530,41 @@
     }   
   }
   
+  function NamePageController($scope, datasetService) {
+    var controller = this;
+    
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+      
+      if(label != null && label != '') {
+        datasetService.validateDatasetName(connection, label, '');
+      }
+    }
+  }
+  
   function NamePage() {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: '/partial/data-uploader/name-page.jsp',
       scope: true,
+      controller : NamePageController,
+      controllerAs : 'ctrl',    	  
       link: function (scope, element, attrs) {
       }
     }   
-  }  
+  } 
   
-  function AttributesPageController($scope) {
+  function AttributesPageController($scope, datasetService) {
     var controller = this;
     
     controller.initialize = function() {
@@ -353,6 +610,23 @@
       }  
         
       return true;
+    }
+    
+    controller.isUniqueCategory = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+        
+      if(label != null && label != '') {      
+        datasetService.validateCategoryName(connection, label, '');
+      }
     }
     
     controller.accept = function(field) {
@@ -1204,19 +1478,26 @@
             $scope.$emit('datasetChange', {datasets:result.datasets, finished : true});          
           }
           else {          
-            $scope.page.current = 'GEO-VALIDATION';
-            $scope.page.snapshots = [];
             
             if(controller.hasLocationField() && controller.hasCoordinateField()) {
-            	$scope.currentStep = 5;
+              $scope.currentStep = 5;
             }
             else if(controller.hasLocationField() || controller.hasCoordinateField()) {
-          		$scope.currentStep = 4;
-       		}
-        	else{
-          		$scope.currentStep = 3;
-        	}
-          
+              $scope.currentStep = 4;
+            }
+            else{
+              $scope.currentStep = 3;
+            }
+
+        	  
+            if(result.problems.locations == null || result.problems.locations.length > 0) {
+              $scope.page.current = 'GEO-VALIDATION';
+            }
+            else {
+              $scope.page.current = 'CATEGORY-VALIDATION';
+            }
+            
+            $scope.page.snapshots = [];        	  
             $scope.sheets = result.sheets;
             $scope.sheet = $scope.sheets[0];
             $scope.problems = result.problems;
@@ -1264,8 +1545,9 @@
       datasetService.cancelImport(connection, datasetService.getDatasetConfiguration());
     }
     
-    controller.load = function(information, options) {
+    controller.load = function(information, options, classifiers) {
       $scope.options = options;
+      $scope.classifiers = classifiers;
       
       datasetService.setDatasetConfiguration(information);
       var config = datasetService.getDatasetConfiguration();
@@ -1436,12 +1718,23 @@
 	        };        
 	        $scope.page.snapshots.push(snapshot);
 	      }
+        else if($scope.page.current == 'GEO-VALIDATION') {
+          // Go to summary page
+          $scope.page.current = 'CATEGORY-VALIDATION';  
+          
+          var snapshot = {
+            page : 'GEO-VALIDATION',
+            sheet : angular.copy($scope.sheet)        
+          };        
+
+          $scope.page.snapshots.push(snapshot);
+        }
       }
     }
     
     controller.prev = function() {
       $scope.pageDirection = "PREVIOUS";
-      if($scope.page.current === 'MATCH' || $scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO") {
+      if($scope.page.current === 'MATCH' || $scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO" || $scope.page.current === "CATEGORY-VALIDATION") {
         controller.handlePrev();    	  
       }
       else {
@@ -1466,6 +1759,22 @@
         
         widgetService.createDialog(title, message, buttons);      
       }
+    }
+    
+    controller.isReady = function() {
+      var current = $scope.page.current;
+      
+      return (current == 'SUMMARY' || current == 'CATEGORY-VALIDATION' || (current == 'GEO-VALIDATION' && $scope.problems.categories != null && $scope.problems.categories.length == 0));
+    }
+    
+    controller.hasNextPage = function() {
+      var current = $scope.page.current;
+      
+      if(current == 'GEO-VALIDATION') {
+        return ($scope.problems.categories != null && $scope.problems.categories.length > 0);
+      }
+      
+      return (current != 'MATCH-INITIAL' && current != 'SUMMARY' && current != 'MATCH' && current != 'CATEGORY-VALIDATION');
     }
     
     controller.handlePrev = function() {
@@ -1542,7 +1851,7 @@
     
     $rootScope.$on('dataUpload', function(event, data){
       if(data.information != null && data.information.sheets.length > 0) {
-        controller.load(data.information, data.options);
+        controller.load(data.information, data.options, data.classifiers);
       }
     });
     
@@ -1627,25 +1936,6 @@
     }   
   } 
   
-  function ValidateUnique() {
-    return {
-      restrict: "A",
-      scope : {
-        validator : '&'  
-      },
-      require: 'ngModel',
-      link: function (scope, element, attr, ngModel) {
-      
-        element.bind('blur', function (e) {
-          var unique = scope.validator()(element.val());
-          ngModel.$setValidity('unique', unique);
-          
-          scope.$apply();
-        });            
-      }
-    };
-  };  
-  
   function ValidateAccepted() {
     return {
       restrict: "A",
@@ -1669,12 +1959,13 @@
    .directive('matchPage', MatchPage)
    .directive('geoValidationPage', GeoValidationPage)
    .directive('geoValidationProblem', GeoValidationProblem)
+   .directive('categoryValidationPage', CategoryValidationPage)
+   .directive('categoryValidationProblem', CategoryValidationProblem)
    .directive('beginningInfoPage', BeginningInfoPage)
    .directive('namePage', NamePage)
    .directive('locationPage', LocationPage)
    .directive('coordinatePage', CoordinatePage)
    .directive('summaryPage', SummaryPage)
-   .directive('validateUnique', ValidateUnique)
    .directive('validateAccepted', ValidateAccepted)
    .directive('synonymAction', SynonymAction)
    .directive('uploaderDialog', UploaderDialog);

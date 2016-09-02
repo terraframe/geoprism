@@ -38,8 +38,6 @@ import org.json.JSONArray;
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.constants.MdAttributeDecInfo;
-import com.runwaysdk.dataaccess.BusinessDAO;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -201,24 +199,19 @@ public class ImportRunnable
   {
     ImportValidator converter = new ImportValidator(tContext);
 
-    // while (!converter.isFinished())
+    FileInputStream istream = new FileInputStream(file);
+
+    try
     {
-      converter.next();
+      SourceContentHandler handler = new SourceContentHandler(converter, sContext);
+      ExcelDataFormatter formatter = new ExcelDataFormatter();
 
-      FileInputStream istream = new FileInputStream(file);
-
-      try
-      {
-        SourceContentHandler handler = new SourceContentHandler(converter, sContext);
-        ExcelDataFormatter formatter = new ExcelDataFormatter();
-
-        ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-        reader.process(istream, configuration);
-      }
-      finally
-      {
-        istream.close();
-      }
+      ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
+      reader.process(istream, configuration);
+    }
+    finally
+    {
+      istream.close();
     }
 
     ImportResponseIF response = null;

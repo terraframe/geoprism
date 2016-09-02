@@ -97,7 +97,8 @@
     }
     
     service.getAvailableDashboardsAsJSON = function(dashboardId, onSuccess, onFailure) {
-      var request = runwayService.createRequest(onSuccess, onFailure);
+//      var request = runwayService.createRequest(onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest("#container", onSuccess, onFailure);
     
       net.geoprism.dashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
     }

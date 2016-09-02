@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1344469182)
+@com.runwaysdk.business.ClassSignature(hash = -2066036228)
 public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.DataUploader";
-  private static final long serialVersionUID = 1344469182;
+  private static final long serialVersionUID = -2066036228;
   
   protected DataUploaderDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -43,6 +43,14 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public static final java.lang.String createClassifierSynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String classifierId, java.lang.String label)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{classifierId, label};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "createClassifierSynonym", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final java.lang.String createGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String universalId, java.lang.String label)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
@@ -57,6 +65,14 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     Object[] _parameters = new Object[]{entityId, label};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "createGeoEntitySynonym", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void deleteClassifierSynonym(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String synonymId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{synonymId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "deleteClassifierSynonym", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final void deleteGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String entityId)
@@ -105,6 +121,14 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     Object[] _parameters = new Object[]{configuration};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "importData", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void validateDatasetName(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String name, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{name, id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "validateDatasetName", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static DataUploaderDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)

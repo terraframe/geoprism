@@ -18,10 +18,9 @@
  */
 package net.geoprism.data.etl;
 
-import java.util.HashMap;
 import java.util.List;
 
-import net.geoprism.data.importer.LocationExclusionException;
+import net.geoprism.data.importer.ExclusionException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.Transient;
@@ -37,7 +36,7 @@ public class Converter implements ConverterIF
   }
 
   @Override
-  public void create(Transient source, List<HashMap<String, String>> locationExclusions)
+  public void create(Transient source)
   {
     try
     {
@@ -73,7 +72,7 @@ public class Converter implements ConverterIF
         business.apply();
       }
     }
-    catch(LocationExclusionException e)
+    catch(ExclusionException e)
     {
       // Do nothing. It's likely that a source value was not found because of location exclusions
     }

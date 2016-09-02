@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -29,6 +30,10 @@ import com.runwaysdk.business.BusinessFacade;
 public class TargetContext implements TargetContextIF
 {
   private Map<String, TargetDefinitionIF> definitions;
+
+  private Map<String, Set<String>>        locationExclusions;
+
+  private Map<String, Set<String>>        categoryExclusions;
 
   public TargetContext()
   {
@@ -43,6 +48,27 @@ public class TargetContext implements TargetContextIF
   public TargetDefinitionIF getDefinition(String sourceType)
   {
     return this.definitions.get(sourceType);
+  }
+
+  public Map<String, Set<String>> getLocationExclusions()
+  {
+    return locationExclusions;
+  }
+
+  public void setLocationExclusions(Map<String, Set<String>> locationExclusions)
+  {
+    this.locationExclusions = locationExclusions;
+  }
+
+  @Override
+  public Map<String, Set<String>> getCategoryExclusions()
+  {
+    return this.categoryExclusions;
+  }
+
+  public void setCategoryExclusions(Map<String, Set<String>> categoryExclusions)
+  {
+    this.categoryExclusions = categoryExclusions;
   }
 
   @Override
@@ -93,4 +119,5 @@ public class TargetContext implements TargetContextIF
       definition.persist();
     }
   }
+
 }

@@ -18,8 +18,12 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -85,6 +89,7 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 import com.runwaysdk.system.metadata.MdClass;
+import com.runwaysdk.util.IDGenerator;
 
 public class TargetBuilder
 {
@@ -145,6 +150,9 @@ public class TargetBuilder
           this.target.addDefinition(definition);
         }
       }
+
+      this.setupLocationExclusions();
+      this.setupCategoryExclusions();
     }
     catch (JSONException e)
     {
@@ -156,6 +164,7 @@ public class TargetBuilder
   {
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
+    String description = ( cSheet.has("description") ? cSheet.getString("description") : "" );
     String countryId = cSheet.getString("country");
     List<GeoNode> nodes = new LinkedList<GeoNode>();
 
@@ -176,6 +185,7 @@ public class TargetBuilder
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
     mdBusiness.setValue(MdBusinessInfo.NAME, typeName);
     mdBusiness.setStructValue(MdBusinessInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdBusiness.setStructValue(MdBusinessInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, description);
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
     mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
@@ -460,6 +470,10 @@ public class TargetBuilder
     {
       return true;
     }
+    else if (type.equals(ColumnType.DOMAIN.name()))
+    {
+      return true;
+    }
 
     return false;
   }
@@ -477,64 +491,74 @@ public class TargetBuilder
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
     {
-      MdBusinessDAOIF referenceMdBusiness = MdBusinessDAO.getMdBusinessDAO(Classifier.CLASS);
-
-      MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
-      mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
-      mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-      mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getId());
-      mdAttribute.apply();
-
-      /*
-       * Create the root term for the options
-       */
-      Classifier classifier = Classifier.findClassifier(mdClass.definesType(), attributeName);
-
-      if (classifier == null)
+      if (!cField.has("root"))
       {
-        classifier = new Classifier();
-        classifier.setClassifierId(attributeName);
-        classifier.setClassifierPackage(mdClass.definesType());
-        classifier.setKeyName(key);
-        classifier.getDisplayLabel().setValue(label);
-        classifier.apply();
+        MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 
-        classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+        /*
+         * Create the root term for the options
+         */
+        Classifier classifier = Classifier.findClassifierRoot(mdAttribute);
+
+        if (classifier == null)
+        {
+          String categoryLabel = cField.getString("categoryLabel");
+
+          classifier = new Classifier();
+          classifier.setClassifierId(attributeName);
+          classifier.setClassifierPackage(IDGenerator.nextID());
+          classifier.getDisplayLabel().setValue(categoryLabel);
+          classifier.setCategory(true);
+          classifier.apply();
+
+          classifier.addLink(root, ClassifierIsARelationship.CLASS).apply();
+        }
+
+        /*
+         * Add the root as an option to the MdAttributeTerm
+         */
+        String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+        relationship.apply();
+
+        TargetFieldClassifier field = new TargetFieldClassifier();
+        field.setName(attributeName);
+        field.setLabel(label);
+        field.setKey(key);
+        field.setSourceAttributeName(sourceAttributeName);
+        field.setPackageName(classifier.getClassifierPackage());
+        field.setAggregatable(aggregatable);
+
+        return field;
       }
+      else
+      {
+        MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 
-      /*
-       * Add the root as an option to the MdAttributeTerm
-       */
-      String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
+        String classifierId = cField.getString("root");
 
-      RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
-      relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
-      relationship.apply();
+        Classifier classifier = Classifier.get(classifierId);
 
-      TargetFieldClassifier field = new TargetFieldClassifier();
-      field.setName(attributeName);
-      field.setLabel(label);
-      field.setKey(key);
-      field.setSourceAttributeName(sourceAttributeName);
-      field.setPackageName(key);
-      field.setAggregatable(aggregatable);
+        /*
+         * Add the root as an option to the MdAttributeTerm
+         */
+        String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
 
-      /*
-       * Create the synonym restore attribute
-       */
-      MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
-      synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
-      synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
-      synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
-      synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
-      synonymAttribute.apply();
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
+        relationship.apply();
 
-      RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
-      synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
-      synonymRelationship.apply();
+        TargetFieldDomain field = new TargetFieldDomain();
+        field.setName(attributeName);
+        field.setLabel(label);
+        field.setKey(key);
+        field.setSourceAttributeName(sourceAttributeName);
+        field.setAggregatable(aggregatable);
 
-      return field;
+        return field;
+      }
     }
     else if (columnType.equals(ColumnType.BOOLEAN.name()))
     {
@@ -596,6 +620,33 @@ public class TargetBuilder
     return field;
   }
 
+  private MdAttributeTermDAO createMdAttributeTerm(MdClassDAO mdClass, String label, String attributeName)
+  {
+    MdBusinessDAOIF referenceMdBusiness = MdBusinessDAO.getMdBusinessDAO(Classifier.CLASS);
+
+    MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
+    mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
+    mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
+    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getId());
+    mdAttribute.apply();
+
+    /*
+     * Create the synonym restore attribute
+     */
+    MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
+    synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
+    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
+    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+    synonymAttribute.apply();
+
+    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+    synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
+    synonymRelationship.apply();
+    return mdAttribute;
+  }
+
   private Boolean getAggregatable(JSONObject cField) throws JSONException
   {
     return cField.has("ratio") ? !cField.getBoolean("ratio") : true;
@@ -605,7 +656,7 @@ public class TargetBuilder
   {
     String label = cAttribute.getString("label");
     String universalId = cAttribute.getString("universal");
-    Boolean aggregatable = this.getAggregatable(cAttribute);    
+    Boolean aggregatable = this.getAggregatable(cAttribute);
     String attributeName = this.generateAttributeName(label);
 
     MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
@@ -785,4 +836,77 @@ public class TargetBuilder
     return ( query.getCount() == 0 );
   }
 
+  public void setupLocationExclusions()
+  {
+    try
+    {
+      Map<String, Set<String>> exclusions = new HashMap<String, Set<String>>();
+
+      if (this.configuration.has("locationExclusions"))
+      {
+        JSONArray locationExclusionsArr = this.configuration.getJSONArray("locationExclusions");
+
+        // convert to native Java data structure rather than JSON
+        for (int i = 0; i < locationExclusionsArr.length(); i++)
+        {
+          JSONObject object = locationExclusionsArr.getJSONObject(i);
+
+          String universal = object.getString("universal");
+          String parentId = object.getString("parentId");
+          String label = object.getString("locationLabel");
+
+          String key = universal + "-" + parentId;
+          
+          exclusions.putIfAbsent(key, new HashSet<String>());
+          exclusions.get(key).add(label);
+        }
+      }
+
+      this.target.setLocationExclusions(exclusions);
+    }
+    catch (JSONException e)
+    {
+      String devMsg = "Could not parse dataset configuration string to JSON.";
+      throw new ProgrammingErrorException(devMsg, e);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setupCategoryExclusions()
+  {
+    try
+    {
+      Map<String, Set<String>> exclusions = new HashMap<String, Set<String>>();
+
+      if (this.configuration.has("categoryExclusion"))
+      {
+        JSONObject categoryExclusion = this.configuration.getJSONObject("categoryExclusion");
+
+        Iterator<String> keys = categoryExclusion.keys();
+
+        while (keys.hasNext())
+        {
+          String mdAttributeId = keys.next();
+
+          exclusions.putIfAbsent(mdAttributeId, new HashSet<String>());
+
+          JSONArray labels = categoryExclusion.getJSONArray(mdAttributeId);
+
+          for (int i = 0; i < labels.length(); i++)
+          {
+            String label = labels.getString(i);
+
+            exclusions.get(mdAttributeId).add(label);
+          }
+        }
+      }
+
+      this.target.setCategoryExclusions(exclusions);
+    }
+    catch (JSONException e)
+    {
+      String devMsg = "Could not parse dataset configuration string to JSON.";
+      throw new ProgrammingErrorException(devMsg, e);
+    }
+  }
 }

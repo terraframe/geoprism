@@ -70,44 +70,17 @@
       net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
     }
     
+    service.createClassifierSynonym = function(connection, classifierId, label) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.createClassifierSynonym(request, classifierId, label);
+    }
+    
     service.createGeoEntity = function(connection, parentId, universalId, label) {
       var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
     }    
-    
-
-    service.removeLocationExclusion = function(locationExclusionObj) {
-      var config = this.getDatasetConfiguration();
-       if(config.locationExclusions){
-         
-         function findLocObjIndex(locationExclusions, locationExclusionObj){
-           for(var i=0; i<locationExclusions.length; i++){
-             var le = locationExclusions[i];
-             if(le.locationLabel === locationExclusionObj.locationLabel && le.universal === locationExclusionObj.universal){
-               return i;
-             }
-           }
-         }
-         
-         var index = findLocObjIndex(config.locationExclusions, locationExclusionObj);
-         
-         if (index > -1) {
-           config.locationExclusions.splice(index, 1);
-         }
-      }
-    }
-    
-    service.addLocationExclusion = function(locationExclusionObj) {
-      var config = this.getDatasetConfiguration();
-       if(config.locationExclusions){
-         config.locationExclusions.push(locationExclusionObj);
-      }
-      else{
-        config.locationExclusions = [locationExclusionObj];
-      }
-    }
-    
 
     service.deleteGeoEntity = function(connection, entityId) {
       var request = runwayService.createConnectionRequest(connection);
@@ -119,6 +92,12 @@
       var request = runwayService.createConnectionRequest(connection);
       
       net.geoprism.DataUploaderController.deleteGeoEntitySynonym(request, synonymId);
+    }    
+    
+    service.deleteClassifierSynonym = function(connection, synonymId) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.deleteClassifierSynonym(request, synonymId);
     }    
     
     service.getAll = function(connection) {
@@ -161,6 +140,24 @@
       var request = runwayService.createConnectionRequest(connection);
     
       net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
+    }
+    
+    service.getClassifierSuggestions = function(connection, mdAttributeId, text, limit) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.DataUploaderController.getClassifierSuggestions(request, mdAttributeId, text, limit);
+    }
+    
+    service.validateDatasetName = function(connection, label, id) {
+      var request = runwayService.createConnectionRequest(connection);
+        
+      net.geoprism.DataUploaderController.validateDatasetName(request, label, id);      
+    }
+    
+    service.validateCategoryName = function(connection, label, id) {
+      var request = runwayService.createConnectionRequest(connection);
+    
+      net.geoprism.DataUploaderController.validateCategoryName(request, label, id);      
     }
     
     //
