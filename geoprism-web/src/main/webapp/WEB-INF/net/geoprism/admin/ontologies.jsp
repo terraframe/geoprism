@@ -39,18 +39,6 @@
 </head>
 
 <div id="tree-container">
-  <div class="row-holder" fire-on-ready>
-    <div class="label-holder"></div>                    
-    <div class="holder">
-      <div class="button-holder">
-        <button type="submit" class="btn btn-primary" id="add-button">
-          <gdb:localize key="classifier.addNewManagedCategory"/>
-            &nbsp;
-          <i class="fa fa-plus"></i>
-        </button>
-      </div>
-    </div>
-  </div>
   <div id="tree"></div>
   <div id="problem-panel">
     <h4 id="problem-panel-heading"><gdb:localize key="classifier.problems.header"/></h4>
@@ -106,14 +94,6 @@ com.runwaysdk.ui.DOMFacade.execOnPageLoad(function(){
         }
       });
       tree.renderWithProblems("#tree", views);
-      
-      
-      /*
-       * Add on click handler for adding a new managed category
-       */ 
-      $('#add-button').click(function(){
-        tree.createTerm('${rootId}', '${relationshipType}');
-      });
     },
     onFailure : function(ex) {
       // TODO fix this to use standard error popup
