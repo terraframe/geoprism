@@ -52,25 +52,27 @@
             <label><gdb:localize key="category.management.descendants"/></label>
           </div>    
           <div class="holder" >
-            <table class="list-table table table-bordered table-striped">
-              <tbody>
-                <tr ng-repeat="descendant in category.descendants" class="fade-ngRepeat-item">
-                  <td class="button-column">
-                    <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
-                    <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
-                  </td>
-                  <td class="label-column">{{descendant.label}}</td>
-                </tr>
-                <tr>
-                  <td class="button-column">
-                    <a class="fa fa-plus" ng-show="!instance.isNew" ng-click="ctrl.newInstance()"></a>
-                  </td>                 
-                  <td ng-show="instance.isNew" class="submit-form">
-                    <input class="list-table-input" type="text" ng-model="instance.label" ng-show="instance.isNew" press-esc="ctrl.cancel()" press-enter="ctrl.apply()" focus-on-show></input>                    
-                  </td>                
-                </tr>
-              </tbody>
-            </table>
+            <div class="list-table-wrapper">
+	            <table class="list-table table table-bordered table-striped">
+	              <tbody>
+	                <tr ng-repeat="descendant in category.descendants" class="fade-ngRepeat-item">
+	                  <td class="button-column">
+	                    <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
+	                    <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
+	                  </td>
+	                  <td class="label-column">{{descendant.label}}</td>
+	                </tr>
+	                <tr>
+	                  <td class="button-column">
+	                    <a class="fa fa-plus" ng-show="!instance.isNew" ng-click="ctrl.newInstance()" title="<gdb:localize key="category.management.createCategoryOptionTooltip"/>"></a>
+	                  </td>                 
+	                  <td ng-show="instance.isNew" class="submit-form">
+	                    <input class="list-table-input" type="text" ng-model="instance.label" ng-show="instance.isNew" press-esc="ctrl.cancel()" press-enter="ctrl.apply()" focus-on-show></input>                    
+	                  </td>                
+	                </tr>
+	              </tbody>
+	            </table>
+	        </div>
           </div>
         </div>
         <div class="row-holder" fire-on-ready>

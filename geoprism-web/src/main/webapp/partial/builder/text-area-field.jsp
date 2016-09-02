@@ -23,7 +23,8 @@
 <div>
   <div ng-if="field.writable">
     	<span class="text">
-    		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" placeholder="{{field.placeholdertext}}" name="{{field.name}}" class="" type="textarea">
+<!--     		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" placeholder="{{field.placeholdertext}}" name="{{field.name}}" class="" type="textarea"> -->
+    		<textarea ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" placeholder="{{field.placeholdertext}}" name="{{field.name}}">
     	</span>
     	<div class="error-message">
       		<p ng-show="form[field.name].$error.required"><gdb:localize key="dashboard.Required"/></p>    
@@ -33,7 +34,8 @@
   </div>
   <div ng-if="!field.writable && field.readable">
     	<span class="text">
-    		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" name="{{field.name}}" class="" type="textarea" ng-disabled="true">
+<!--     		<input ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" name="{{field.name}}" class="" type="textarea" ng-disabled="true"> -->
+    	    <textarea ng-model="model[field.name]" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" name="{{field.name}}" ng-disabled="true">
     	</span>
   </div>
 </div>

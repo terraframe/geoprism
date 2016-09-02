@@ -21,14 +21,16 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
-  <a style="cursor: pointer;" ng-click="ctrl.toggle()">
+  <a ng-click="ctrl.toggle()">
+  	<i class="fa fa-caret-right" aria-hidden="true"></i>
+  	<i class="fa fa-caret-down" style="display:none;" aria-hidden="true"></i>
     <gdb:localize key="dataUploader.resolvedSynonym"/> [{{action.label}}]
   </a>
   
   <span ng-show="show">
-    <ul style="margin-left: -30px">
+    <ul>
       <gdb:localize key="dataUploader.locatedWithin"/>
-      <li ng-repeat="ancestor in action.ancestors" style="margin-left: 25px">{{ancestor.label}}</li>
+      <li ng-repeat="ancestor in action.ancestors">{{ancestor.label}}</li>
     </ul>
   </span>
 </div>

@@ -37,8 +37,9 @@
   </div>
   
   <div ng-if="category.management === null"><gdb:localize key='category.management.loadingData'/></div>
-  <div class="table-list-wrapper">
-    <table class="list-table table table-bordered table-striped">        
+  
+  <div class="list-table-wrapper">
+    <table id="manage-categories-table" class="list-table table table-bordered table-striped">        
       <tbody>
         <tr ng-repeat="category in categories" class="fade-ngRepeat-item" ng-cloak>
           <td class="button-column">

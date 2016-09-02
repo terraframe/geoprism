@@ -36,17 +36,17 @@
   </div>
   <div class="holder">
   		<div class="large-icon-stack-wrapper">
-    		<a href="#" class="fa-stack fa-3x" ng-click="ctrl.next('MATCH', 'MATCH-INITIAL')" title="<gdb:localize key="dataUploader.updateExistingDatasetButtonTooltip"/>">
+    		<i class="fa-stack fa-3x" ng-click="ctrl.next('MATCH', 'MATCH-INITIAL')" title="<gdb:localize key="dataUploader.updateExistingDatasetButtonTooltip"/>">
     			<i class="fa fa-table fa-stack-2x"></i>
       			<i class="fa-stack-3x fa-stack-text file-text fa fa-pencil-square"></i>
-  			</a>
+  			</i>
   			<h4><gdb:localize key="dataUploader.updateExistingDatasetButtonLabel"/></h4>
   		</div>
   		<div class="large-icon-stack-wrapper">
-  			<a href="#" class="fa-stack fa-3x" ng-click="ctrl.next('BEGINNING-INFO', 'MATCH-INITIAL')" title="<gdb:localize key="dataUploader.createNewDatasetButtonTooltip"/>">
+  			<i class="fa-stack fa-3x" ng-click="ctrl.next('BEGINNING-INFO', 'MATCH-INITIAL')" title="<gdb:localize key="dataUploader.createNewDatasetButtonTooltip"/>">
     			<i class="fa fa-table fa-stack-2x"></i>
       			<i class="fa-stack-3x fa-stack-text file-text fa fa-plus-square"></i>
-  			</a>
+  			</i>
   			<h4><gdb:localize key="dataUploader.createNewDatasetButtonLabel"/></h4>
   		</div>
   </div> 
