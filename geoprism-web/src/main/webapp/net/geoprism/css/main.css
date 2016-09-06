@@ -519,6 +519,10 @@ i {
 	height:20px;
 	background:#eee;
 }
+.chk-area:hover,
+.rad-area:hover{
+	cursor: pointer;
+}
 .rad-area{
 	padding:5px;
 	border-radius:50%;
@@ -1323,6 +1327,24 @@ input :focus::-moz-placeholder{opacity:0 !important;}
 .modal-form .vertical-checkbox-container .check-block{ 
 	min-width: 0;
 }
+
+.builder-data-set{
+	width: 100%;
+}
+.builder-data-set ul li{
+/* 	height: 25px; */
+    width: 100%;
+}
+.builder-data-set .builder-data-set-inner-list{
+    margin-left: 20px;
+}
+.builder-data-set .builder-data-set-inner-list li {
+	width: 100%;
+}
+.builder-data-set .builder-data-set-inner-list li .check-block {
+	width: 100%;
+}
+
 .modal-form .check-block .chk-area{margin:25px 0px 0 0;}
 .modal-form .check-block label{
 	float:left;
@@ -2051,7 +2073,7 @@ div.alert.alertbox {
 
 .vertical-checkbox-container{
 	float: left;
-	width: 100%;
+    width: 100%;
 }
 
 a.opener-link.checkbox-label{
