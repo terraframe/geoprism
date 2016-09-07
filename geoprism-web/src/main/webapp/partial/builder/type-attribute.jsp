@@ -20,8 +20,8 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<div style="padding-left:10px;">
+<li>
   <styled-check-box model="attribute.selected" name="attribute_{{$index}}" label="{{attribute.label}}"></styled-check-box>
-</div>
+</li>
 
 

@@ -104,20 +104,24 @@
                    <div ng-show="showWidgetType == 'DATASETS'" class="row-holder vertical-checkbox-list">
                     <div class="builder-data-set" ng-if="dashboard.options.types != null && dashboard.options.types.length > 0" >
                       <div id="type-field-row" class="collapse in">
-                        <div ng-repeat="type in dashboard.options.types">
-                          <div class="vertical-checkbox-container">
-                            <styled-check-box model="type.value" name="type_{{$index}}" label=""></styled-check-box>
-                            <a class="opener-link checkbox-label" data-toggle="collapse" ng-href="#type{{$index}}">
-                            	<i class="fa fa-caret-right" aria-hidden="true"></i>
-  								<i class="fa fa-caret-down" style="display:none;" aria-hidden="true"></i>
-                            	{{type.label}}
-                            </a>
-                          </div>
-                  
-                          <div id="type{{$index}}" class="collapse">
-                            <type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
-                          </div>              
-                        </div>
+	                      <ul class="list-unstyled">
+	                        <li ng-repeat="type in dashboard.options.types">
+	                          <div class="vertical-checkbox-container">
+	                            <styled-check-box model="type.value" name="type_{{$index}}" label=""></styled-check-box>
+	                            <a class="opener-link checkbox-label" data-toggle="collapse" ng-href="#type{{$index}}">
+	                            	<i class="fa fa-caret-right" aria-hidden="true"></i>
+	  								<i class="fa fa-caret-down" style="display:none;" aria-hidden="true"></i>
+	                            	{{type.label}}
+	                            </a>
+	                          </div>
+	                  
+	                          <div id="type{{$index}}" class="collapse">
+	                          	<ul class="builder-data-set-inner-list list-unstyled">
+	                            	<type-attribute ng-repeat="attribute in type.attributes" attribute="attribute" type="type"></type-attribute>
+	                          	</ul>
+	                          </div>              
+	                        </li>
+	                      </ul>
                       </div>
                     </div>
                     <div class="" ng-if="dashboard.options.types != null && dashboard.options.types.length < 1">
