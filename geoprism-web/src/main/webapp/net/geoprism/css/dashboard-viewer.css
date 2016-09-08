@@ -295,7 +295,7 @@ a.fa.fa-bars.opener-drop {
 }
 .dropdown-menu li:hover,
 .dropdown-menu li:focus{
-	color:#333;
+	color:#00bfff;
 	background:#ddd;
 	text-decoration:none;
 }
@@ -318,7 +318,7 @@ a.fa.fa-bars.opener-drop {
     display: block;
     margin-top: 0;
     width: 100%;
-    min-width: 150px;
+    min-width: 155px;
  }
  
  .dropdown.navigation-dropdown {
@@ -336,8 +336,9 @@ a.fa.fa-bars.opener-drop {
     white-space: nowrap;
     padding-left: 5px;
 }
-.dropdown-menu.navigation-menu li:hover > i {
-	color: black;
+.dropdown-menu.navigation-menu li:hover > i,
+.dropdown-menu.navigation-menu li:hover > p {
+	color: #00bfff;
 }
 
 
