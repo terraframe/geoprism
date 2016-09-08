@@ -66,6 +66,7 @@ import net.geoprism.dashboard.layer.DashboardThematicLayer;
 import net.geoprism.dashboard.layer.HasLayer;
 import net.geoprism.dashboard.layer.HasLayerQuery;
 import net.geoprism.dashboard.query.MdAttributeViewPredicate;
+import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.etl.excel.ValueQueryExcelExporter;
 import net.geoprism.gis.geoserver.GeoserverBatch;
 import net.geoprism.gis.geoserver.GeoserverFacade;
@@ -161,8 +162,10 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (DashboardLayer layer : layers)
     {
-      batch.addLayerToDrop(layer);
+      DatabaseUtil.dropView(layer.getViewName(), "", false);
 
+      batch.addLayerToDrop(layer);
+      
       this.generateSessionViewName(layer);
 
       layer.setConditions(Arrays.asList(conditions));

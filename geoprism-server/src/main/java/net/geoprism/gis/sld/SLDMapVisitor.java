@@ -176,14 +176,22 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       );
     }
     
-    protected NodeBuilder getPropertyIsEqualToExclusionsNode()
+    protected NodeBuilder getPropertyIsEqualToTrueNode(String attribute)
     {
       return node(OGC, "PropertyIsEqualTo").child(
-          node(OGC, "Literal").text("NEVER"), 
+          node(OGC, "PropertyName").text(attribute), 
           node(OGC, "Literal").text("TRUE")
       );
     }
 
+    protected NodeBuilder getPropertyIsEqualToNeverNode(String attribute)
+    {
+      return node(OGC, "PropertyIsEqualTo").child(
+          node(OGC, "PropertyName").text(attribute), 
+          node(OGC, "Literal").text("NEVER")
+          );
+    }
+    
     protected Node getPropertyValueNode(ThematicLayer tLayer)
     {
       AttributeType type = tLayer.getAttributeType();
@@ -379,13 +387,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                             node(OGC, "Or").child(
                                 node(OGC, "PropertyIsNull").child(
                                     node(OGC, "PropertyName").text(attributeName)), 
-                                    node(OGC, "PropertyIsEqualTo").child(
-                                        node(OGC, "Literal").text("NEVER"), 
-                                        node(OGC, "Literal").text("TRUE")))), 
-                                        node(OGC, "PropertyIsEqualTo").child(
-                                            node(OGC, "PropertyName").text(attributeName), 
-                                            node(OGC, "Literal").text(key))) 
-                                            };
+                                getPropertyIsEqualToTrueNode(attributeName),
+                                getPropertyIsEqualToNeverNode(attributeName)
+                            )), 
+                            node(OGC, "PropertyIsEqualTo").child(
+                                node(OGC, "PropertyName").text(attributeName), 
+                                node(OGC, "Literal").text(key))) 
+                };
   
                 this.createRule(root, filterNodes, color, key, radius);
               }
@@ -493,9 +501,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                 node(OGC, "Or").child(
                                     node(OGC, "PropertyIsNull").child(
                                         node(OGC, "PropertyName").text(attribute)),
-                                    node(OGC, "PropertyIsEqualTo").child(
-                                        node(OGC, "Literal").text("NEVER"),
-                                        node(OGC, "Literal").text("TRUE"))))),
+                                    getPropertyIsEqualToTrueNode(attribute),
+                                    getPropertyIsEqualToNeverNode(attribute)
+                                ))),
                         node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
                             node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(currentCatMin)),
                             node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(currentCatMax))))),
@@ -591,10 +599,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                           node(OGC, "Or").child(
                               node(OGC, "PropertyIsNull").child(
                                   node(OGC, "PropertyName").text(attributeName)
-                              ), node(OGC, "PropertyIsEqualTo").child(
-                                  node(OGC, "Literal").text("NEVER"), 
-                                  node(OGC, "Literal").text("TRUE")
-                              )
+                              ),
+                              getPropertyIsEqualToTrueNode(attributeName),
+                              getPropertyIsEqualToNeverNode(attributeName)
                           )
                       ),
                       this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
@@ -615,10 +622,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                               node(OGC, "Or").child(
                                   node(OGC, "PropertyIsNull").child(
                                       node(OGC, "PropertyName").text(attributeName)
-                                  ), node(OGC, "PropertyIsEqualTo").child(
-                                      node(OGC, "Literal").text("NEVER"), 
-                                      node(OGC, "Literal").text("TRUE")
-                                  )
+                                  ),
+                                  getPropertyIsEqualToTrueNode(attributeName),
+                                  getPropertyIsEqualToNeverNode(attributeName)
                               )
                           ), 
                           node(OGC, "PropertyIsEqualTo").child(
@@ -766,7 +772,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                       getAllLabelClassesEnabledNode(),
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute),
-                                          getPropertyIsEqualToExclusionsNode()
+                                          getPropertyIsEqualToTrueNode(attribute),
+                                          getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   )
                               ),
@@ -803,7 +810,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                       getAllLabelClassesEnabledNode(),
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute),
-                                          getPropertyIsEqualToExclusionsNode()
+                                          getPropertyIsEqualToTrueNode(attribute),
+                                          getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   )
                               ),
@@ -1110,11 +1118,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           Node orNode = node(OGC, "Or").build(secondAndNode);
           Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
           node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
-
-          Node propEqualToNode = node(OGC, "PropertyIsEqualTo").build(orNode);
-          node(OGC, "Literal").text("NEVER").build(propEqualToNode);
-          node(OGC, "Literal").text("TRUE").build(propEqualToNode);
-
+          
+          getPropertyIsEqualToTrueNode(attribute).build(orNode);
+          getPropertyIsEqualToNeverNode(attribute).build(orNode);
+          
           Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
           node(OGC, "PropertyName").text(attribute).build(propIsBetween);
           node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(currentCatMin)).build(propIsBetween);
@@ -1450,7 +1457,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                 getAllLabelClassesEnabledNode(), 
                                 node(OGC, "Or").child(
                                     getPropertyIsNullNode(attribute), 
-                                    getPropertyIsEqualToExclusionsNode()
+                                    getPropertyIsEqualToTrueNode(attribute),
+                                    getPropertyIsEqualToNeverNode(attribute)
                                 )
                             )
                         ), 
@@ -1545,7 +1553,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                   node(OGC, "Not").child(
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute), 
-                                          getPropertyIsEqualToExclusionsNode()
+                                          getPropertyIsEqualToTrueNode(attribute),
+                                          getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   ), 
                                   this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
@@ -1581,7 +1590,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                   node(OGC, "Not").child(
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute), 
-                                          getPropertyIsEqualToExclusionsNode()
+                                          getPropertyIsEqualToTrueNode(attribute),
+                                          getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   ), 
                                   getPropertyIsEqualToNode(attribute, catVal)

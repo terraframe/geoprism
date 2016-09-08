@@ -119,7 +119,10 @@ public class GeoserverRestService implements GeoserverService, Reloadable
   {
     try
     {
-      if (GeoserverProperties.getPublisher().createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getLocalPath())))
+      GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
+      
+      // IMPORTANT: The URI must match the namespace of the store or rendering doesn't work
+      if (publisher.createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getWorkspace())))
       {
         log.info("Created the workspace [" + GeoserverProperties.getWorkspace() + "].");
       }
@@ -130,7 +133,7 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     }
     catch (URISyntaxException e)
     {
-      throw new ConfigurationException("The URI [" + GeoserverProperties.getLocalPath() + "] is invalid.", e);
+      throw new ConfigurationException("The URI [" + GeoserverProperties.getWorkspace() + "] is invalid.", e);
     }
   }
 
@@ -158,6 +161,7 @@ public class GeoserverRestService implements GeoserverService, Reloadable
   public void publishStore()
   {
     String dbSchema = DatabaseProperties.getNamespace().length() != 0 ? DatabaseProperties.getNamespace() : "public";
+    String workspace = GeoserverProperties.getWorkspace();
 
     GSPostGISDatastoreEncoder encoder = new GSPostGISDatastoreEncoder(GeoserverProperties.getStore());
     encoder.setDatabase(DatabaseProperties.getDatabaseName());
@@ -167,7 +171,7 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     encoder.setHost(DatabaseProperties.getServerName());
     encoder.setPort(DatabaseProperties.getPort());
     encoder.setSchema(dbSchema);
-    encoder.setNamespace(GeoserverProperties.getWorkspace());
+    encoder.setNamespace(workspace);
     encoder.setEnabled(true);
     encoder.setMaxConnections(10);
     encoder.setMinConnections(1);
@@ -178,7 +182,8 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     encoder.setExposePrimaryKeys(true);
 
     GeoServerRESTStoreManager manager = GeoserverProperties.getManager();
-    if (manager.create(GeoserverProperties.getWorkspace(), encoder))
+    
+    if (manager.create(workspace, encoder))
     {
       log.info("Published the store [" + GeoserverProperties.getStore() + "].");
     }
@@ -186,6 +191,18 @@ public class GeoserverRestService implements GeoserverService, Reloadable
     {
       log.warn("Failed to publish the store [" + GeoserverProperties.getStore() + "].");
     }
+  }
+  
+  /**
+   * Checks if the given workspace exists.
+   * 
+   * @return
+   */
+  public boolean workspaceExists()
+  {
+    GeoServerRESTReader reader = GeoserverProperties.getReader();
+
+    return reader.existsWorkspace(GeoserverProperties.getWorkspace());
   }
 
   /**

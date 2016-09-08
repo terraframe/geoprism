@@ -149,4 +149,6 @@ public interface GeoserverService extends Reloadable
    * @return double[] {minx, miny, maxx, maxy}
    */
   public double[] getExpandedBBOX(List<String> views, double expandVal);
+  
+  public boolean workspaceExists();
 }

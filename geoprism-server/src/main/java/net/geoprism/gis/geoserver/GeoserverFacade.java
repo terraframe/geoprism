@@ -56,6 +56,12 @@ public class GeoserverFacade implements Reloadable
   {
     getService().removeStore();
   }
+  
+  public static boolean workspaceExists()
+  {
+    return getService().workspaceExists();
+  }
+
 
   public static void removeWorkspace()
   {

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
@@ -67,11 +65,14 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
           {
             log.debug("Geoserver available.");
 
-            // To prevent a problem if the database connection information of the 
+            // To prevent a problem if the database connection information of the
             // datastore ever changes we must delete and recreate the store and workspace.
-            GeoserverFacade.removeWorkspace();
-            GeoserverFacade.removeStore();
-            
+            if (GeoserverFacade.workspaceExists())
+            {
+              GeoserverFacade.removeWorkspace();
+              GeoserverFacade.removeStore();
+            }
+
             GeoserverFacade.publishWorkspace();
             GeoserverFacade.publishStore();
 

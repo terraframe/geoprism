@@ -778,14 +778,14 @@
 	            if(featureType === "multipolygon"){
 	            	var featureGeom = new ol.geom.MultiPolygon(featureResponse.features[0].geometry.coordinates)
 	                var featureGeomExtent = featureGeom.getExtent();
-	                var featureGeomExtentFormatted = [featureGeomExtent[3], featureGeomExtent[0], featureGeomExtent[1], featureGeomExtent[2]];
-	                that.setView(featureGeomExtentFormatted, null, null);
+//	                var featureGeomExtentFormatted = [featureGeomExtent[3], featureGeomExtent[0], featureGeomExtent[1], featureGeomExtent[2]];
+	                that.setView(featureGeomExtent, null, null);
 	            }
 	            else if(featureType === "point"){
 	            	var featureGeom = new ol.geom.Point(featureResponse.features[0].geometry.coordinates);
 	            	var featureGeomCenter = featureGeom.getCoordinates();
-	            	var featureGeomCenterFormatted = [featureGeomCenter[1], featureGeomCenter[0]];
-	            	that.setView(null, featureGeomCenterFormatted, 15);
+//	            	var featureGeomCenterFormatted = [featureGeomCenter[1], featureGeomCenter[0]];
+	            	that.setView(null, featureGeomCenter, 15);
 	            }
         	}
         	

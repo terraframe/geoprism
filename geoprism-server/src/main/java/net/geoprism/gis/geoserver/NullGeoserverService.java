@@ -167,6 +167,12 @@ public class NullGeoserverService implements GeoserverService
 
     return false;
   }
+  
+  @Override
+  public boolean workspaceExists()
+  {
+    return false;
+  }
 
   @Override
   public double[] getBBOX(String... views)

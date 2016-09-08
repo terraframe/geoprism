@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.geoprism.SessionParameterFacade;
+import net.geoprism.data.DatabaseUtil;
 import net.geoprism.util.Iterables;
 
 import org.apache.commons.io.FileUtils;
@@ -47,7 +48,7 @@ public class CleanupFacade implements Reloadable
   @Transaction
   private static void cleanupUnusedLayers_Transaction()
   {
-    List<String> viewNames = Database.getViewsByPrefix(SessionPredicate.PREFIX);
+    List<String> viewNames = DatabaseUtil.getViewsByPrefix(SessionPredicate.PREFIX);
 
     new Iterables<String>().remove(viewNames, new SessionPredicate());
 
@@ -62,7 +63,7 @@ public class CleanupFacade implements Reloadable
     }
 
     // Second delete the database views
-    Database.dropViews(viewNames);
+    DatabaseUtil.dropViews(viewNames);
   }
 
   @Request
