@@ -1772,6 +1772,11 @@ option[selected]{ font-weight:bold}
 }
 
 
+.modal-form .table.table-bordered {
+    font-size: 12px;
+}
+
+
 .fa.fa-question-circle.help-info-ico{
 	font-size: 17px;
     color: #02789E;

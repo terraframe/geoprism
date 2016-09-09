@@ -164,6 +164,10 @@ i.fa.fa-angle-double-right.toggle-left:focus{
 	margin:4px 11px 0 0;
 }
 
+.control-form #collapse-overlay .accordion-inner .row-form .fa{
+	margin:4px 4px 0 0;
+}
+
 
 /**
 * Reference Layer Panel
