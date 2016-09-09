@@ -275,6 +275,8 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
         thematicSel = F.COUNT(thematicAttr, "COUNT");
         AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), id));
+        stringAgg.setUserDefinedDisplayLabel(thematicAttr.getUserDefinedDisplayLabel());
+        
         AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(id), new OrderBy(F.COUNT(thematicAttr), sortOrder));
 
         winFuncQuery.SELECT_DISTINCT(thematicSel);

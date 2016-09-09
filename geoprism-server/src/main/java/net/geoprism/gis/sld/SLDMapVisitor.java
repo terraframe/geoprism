@@ -176,14 +176,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       );
     }
     
-    protected NodeBuilder getPropertyIsEqualToTrueNode(String attribute)
-    {
-      return node(OGC, "PropertyIsEqualTo").child(
-          node(OGC, "PropertyName").text(attribute), 
-          node(OGC, "Literal").text("TRUE")
-      );
-    }
-
+//    protected NodeBuilder getPropertyIsEqualToTrueNode(String attribute)
+//    {
+//      return node(OGC, "PropertyIsEqualTo").child(
+//          node(OGC, "PropertyName").text(attribute), 
+//          node(OGC, "Literal").text("TRUE")
+//      );
+//    }
+//
     protected NodeBuilder getPropertyIsEqualToNeverNode(String attribute)
     {
       return node(OGC, "PropertyIsEqualTo").child(
@@ -387,7 +387,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                             node(OGC, "Or").child(
                                 node(OGC, "PropertyIsNull").child(
                                     node(OGC, "PropertyName").text(attributeName)), 
-                                getPropertyIsEqualToTrueNode(attributeName),
                                 getPropertyIsEqualToNeverNode(attributeName)
                             )), 
                             node(OGC, "PropertyIsEqualTo").child(
@@ -501,7 +500,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                 node(OGC, "Or").child(
                                     node(OGC, "PropertyIsNull").child(
                                         node(OGC, "PropertyName").text(attribute)),
-                                    getPropertyIsEqualToTrueNode(attribute),
                                     getPropertyIsEqualToNeverNode(attribute)
                                 ))),
                         node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
@@ -600,7 +598,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                               node(OGC, "PropertyIsNull").child(
                                   node(OGC, "PropertyName").text(attributeName)
                               ),
-                              getPropertyIsEqualToTrueNode(attributeName),
                               getPropertyIsEqualToNeverNode(attributeName)
                           )
                       ),
@@ -623,7 +620,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                   node(OGC, "PropertyIsNull").child(
                                       node(OGC, "PropertyName").text(attributeName)
                                   ),
-                                  getPropertyIsEqualToTrueNode(attributeName),
                                   getPropertyIsEqualToNeverNode(attributeName)
                               )
                           ), 
@@ -772,7 +768,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                       getAllLabelClassesEnabledNode(),
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute),
-                                          getPropertyIsEqualToTrueNode(attribute),
                                           getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   )
@@ -810,7 +805,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                       getAllLabelClassesEnabledNode(),
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute),
-                                          getPropertyIsEqualToTrueNode(attribute),
                                           getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   )
@@ -1119,7 +1113,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
           node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
           
-          getPropertyIsEqualToTrueNode(attribute).build(orNode);
           getPropertyIsEqualToNeverNode(attribute).build(orNode);
           
           Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
@@ -1457,7 +1450,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                 getAllLabelClassesEnabledNode(), 
                                 node(OGC, "Or").child(
                                     getPropertyIsNullNode(attribute), 
-                                    getPropertyIsEqualToTrueNode(attribute),
                                     getPropertyIsEqualToNeverNode(attribute)
                                 )
                             )
@@ -1553,7 +1545,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                   node(OGC, "Not").child(
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute), 
-                                          getPropertyIsEqualToTrueNode(attribute),
                                           getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   ), 
@@ -1590,7 +1581,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                                   node(OGC, "Not").child(
                                       node(OGC, "Or").child(
                                           getPropertyIsNullNode(attribute), 
-                                          getPropertyIsEqualToTrueNode(attribute),
                                           getPropertyIsEqualToNeverNode(attribute)
                                       )
                                   ), 
