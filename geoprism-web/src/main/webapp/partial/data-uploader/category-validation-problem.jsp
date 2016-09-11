@@ -37,6 +37,7 @@
         </div>
         <div class="inline-actions">
           <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymCategoryTooltip"/>" ></i>
+          <i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" ng-click="ctrl.createOption()" title="<gdb:localize key="dataUploader.createNewOptionTooltip"/>" ></i>          
           <span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreCategoryTooltip"/>" ng-click="ctrl.ignoreValue()">
             <i class="fa fa-square fa-stack-2x"></i>
             <i class="fa fa-times fa-stack-1x"></i>
@@ -44,6 +45,9 @@
         </div>
       </div>
       <div ng-if="problem.resolved">
+        <div class="inline-combo" ng-if="problem.action.name == 'OPTION'">
+          <gdb:localize key="dataUploader.resolvedCategoryOption"/>
+        </div>            
         <div class="inline-combo" ng-if="problem.action.name == 'SYNONYM'">
           <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
         </div> 
