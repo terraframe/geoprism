@@ -63,6 +63,12 @@
       net.geoprism.ontology.ClassifierController.applyOption(request, config);
     }
     
+    service.updateCategory = function(connection, category) {
+      var request = runwayService.createConnectionRequest(connection);
+      
+      net.geoprism.ontology.ClassifierController.updateCategory(request, category);
+    }
+    
     return service;  
   }
   

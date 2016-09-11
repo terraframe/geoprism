@@ -91,10 +91,10 @@
       $window.onclick = function (event) {
         if( !event.target.classList.contains("dataset-list-input") && event.target.type !== 'button' ){
           if(dataset.label.length > 0 && dataset.label !== $scope.orignialDatasetState.label){
-        	  controller.apply(dataset);
+            controller.apply(dataset);
           }
           else{
-          	controller.cancelDatasetEdit(dataset);
+            controller.cancelDatasetEdit(dataset);
           }
           $scope.$apply();
         }
@@ -193,7 +193,7 @@
       // Reset the file Errors
       $scope.errors = [];
       if(files && files.length > 0){
-      	datasetService.uploadSpreadsheet(connection, files[0]);
+        datasetService.uploadSpreadsheet(connection, files[0]);
       }
     }    
     
@@ -248,8 +248,8 @@
         elementId : '#modal-div',
         onSuccess : function() {
           $scope.$emit('datasetChange', {datasets:[$scope.dataset]});
-          $scope.show = false;	
-        	
+          $scope.show = false;  
+          
           $scope.$apply();          
         },
         onFailure : function(e){
@@ -323,6 +323,17 @@
     }    
     
     $rootScope.$on('categoryOk', function(event, data){
+      
+      if(data != null && data.category != null) {          
+        for (var i = 0; i < $scope.dataset.attributes.length; i++) {
+          var attribute = $scope.dataset.attributes[i];
+          
+          if(attribute.type === 'Category' && attribute.root.id === data.category.id) {
+            attribute.root.label = data.category.label;
+          }
+        }
+      }    	
+      
       $scope.show = true;      
     });
     

@@ -47,6 +47,22 @@
       categoryService.get(connection, category.value);
     }
     
+    $scope.$on('categoryOk', function(event, data){
+      if(data != null && data.category != null) {
+        var index = -1;
+      
+        for (var i = 0; i < $scope.categories.length; i++) {
+          if(data.category.id =  $scope.categories[i].value) {
+            index = i;
+          }
+        }
+    
+        if(index != -1){
+          $scope.categories[index].label = data.category.label;
+        }    
+      }
+    });    
+    
     controller.init();
   }
   
@@ -110,7 +126,7 @@
     }   
   }
   
-  function CategoryPageController($scope, categoryService, widgetService, localizationService, $window) {
+  function CategoryPageController($scope, categoryService, datasetService, widgetService, localizationService, $window) {
     var controller = this;
     
     controller.init = function() {
@@ -123,26 +139,64 @@
       $window.onclick = null;
     }
       
-    controller.ok = function() {      
-      $scope.$emit('categoryOk');
+    controller.ok = function() {
+      if(controller.form.$dirty) {
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function() {
+            $scope.$emit('categoryOk', {category : $scope.category});        
+
+            $scope.$apply();
+          },
+          onFailure : function(e){
+            $scope.errors.push(e.message);
+                   
+            $scope.$apply();
+          }        
+        };
+              
+        $scope.errors = [];
+              
+        categoryService.updateCategory(connection, JSON.stringify($scope.category));
+      }
+      else {
+        $scope.$emit('categoryOk');        
+      }
     }
     
     controller.newInstance = function() {
       $scope.instance.isNew = true;
       
       $window.onclick = function (event) {
-      	if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
-  	        if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
-  	        	controller.apply();
-  	        }
-  	        else{
-  	        	$scope.instance.isNew = false;
-  	        }
-  	        
-  	        $scope.$apply();
-      	}
+        if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
+            if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
+              controller.apply();
+            }
+            else{
+              $scope.instance.isNew = false;
+            }
+            
+            $scope.$apply();
+        }
       };
     }
+    
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+              
+      if(label != null && label != '') {      
+        datasetService.validateCategoryName(connection, label, $scope.category.id);
+      }        
+    }        
     
     controller.apply = function() {
       var connection = {
@@ -297,7 +351,7 @@
         restore : $scope.actions.restore
       }
       
-      categoryService.applyOption(connection, JSON.stringify(config));              
+      categoryService.applyOption(connection, JSON.stringify(config));
     }
     
     controller.cancel = function() {
@@ -381,7 +435,7 @@
     }   
   }
   
-  angular.module("category-management", ["styled-inputs", "category-service", "widget-service", "localization-service"]);
+  angular.module("category-management", ["styled-inputs", "category-service", "dataset-service", "widget-service", "localization-service"]);
   angular.module("category-management")
    .controller('CategoryController', CategoryController)
    .directive('categoryModal', CategoryModal)
