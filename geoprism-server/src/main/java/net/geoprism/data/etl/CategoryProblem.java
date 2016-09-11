@@ -31,12 +31,12 @@ public class CategoryProblem implements ImportProblemIF, Comparable<ImportProble
 
   private String             attributeLabel;
 
-  private String             rootId;
+  private String             categoryId;
 
-  public CategoryProblem(String label, String rootId, String mdAttributeId, String attributeLabel)
+  public CategoryProblem(String label, String categoryId, String mdAttributeId, String attributeLabel)
   {
     this.label = label;
-    this.rootId = rootId;
+    this.categoryId = categoryId;
     this.mdAttributeId = mdAttributeId;
     this.attributeLabel = attributeLabel;
   }
@@ -48,7 +48,7 @@ public class CategoryProblem implements ImportProblemIF, Comparable<ImportProble
 
   public String getKey()
   {
-    return this.rootId + "-" + this.label;
+    return this.categoryId + "-" + this.label;
   }
 
   @Override
@@ -57,6 +57,7 @@ public class CategoryProblem implements ImportProblemIF, Comparable<ImportProble
     JSONObject object = new JSONObject();
     object.put("type", "DOMAIN");
     object.put("label", label);
+    object.put("categoryId", categoryId);
     object.put("mdAttributeId", mdAttributeId);
     object.put("attributeLabel", attributeLabel);
 

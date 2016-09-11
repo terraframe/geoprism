@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -322,7 +320,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
-  
+
   @Override
   public void editOption(String id) throws IOException, ServletException
   {
@@ -430,7 +428,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
-  
+
   @Override
   public void validateCategoryName(String name, String id) throws IOException, ServletException
   {
@@ -439,6 +437,28 @@ public class ClassifierController extends ClassifierControllerBase implements co
     try
     {
       ClassifierDTO.validateCategoryName(request, name, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void updateCategory(String category) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      JSONObject config = new JSONObject();
+      config.put("option", new JSONObject(category));
+      config.put("restore", new JSONArray());
+      config.put("synonym", "");
+
+      ClassifierDTO.applyOption(request, config.toString());
 
       JSONControllerUtil.writeReponse(this.resp);
     }

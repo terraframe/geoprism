@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function CategoryValidationProblemController($scope, datasetService) {
+  function CategoryValidationProblemController($scope, datasetService, categoryService) {
     var controller = this;
     $scope.problem.synonym = null;
     
@@ -74,6 +74,38 @@
       datasetService.createClassifierSynonym(connection, $scope.problem.synonym, $scope.problem.label);
     }
     
+    
+    controller.createOption = function() {
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(response){
+          $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'OPTION',
+            optionId : response.id
+          };
+      
+          $scope.$apply();        
+        },
+        onFailure : function(e){
+          $scope.errors = [];
+          $scope.errors.push(e.localizedMessage);
+      
+          $scope.$apply();
+        }      
+      };
+        
+      $scope.errors = undefined;
+      
+      var option = {
+        parentId : $scope.problem.categoryId,
+        label : $scope.problem.label
+      };
+      
+      categoryService.createOption(connection, JSON.stringify(option));
+    }
+
+    
     controller.ignoreValue = function() {
       $scope.problem.resolved = true;
       
@@ -126,7 +158,7 @@
           
           controller.removeExclusion();
         }
-        else {
+        else if (action.name === 'SYNONYM'){
           var connection = {
             elementId : '#uploader-overlay',
             onSuccess : function(response){
@@ -146,6 +178,25 @@
           };
           
           datasetService.deleteClassifierSynonym(connection, action.synonymId);                    
+        }
+        else {
+          var connection = {
+            elementId : '#uploader-overlay',
+            onSuccess : function(response){
+              $scope.problem.resolved = false;
+              $scope.problem.optionId = null;
+                              
+              $scope.$apply();        
+            },
+            onFailure : function(e){
+              $scope.errors = [];
+              $scope.errors.push(e.localizedMessage);
+                              
+              $scope.$apply();
+            }      
+          };
+                  
+          categoryService.deleteOption(connection, action.optionId);
         }
       }
     }
@@ -590,7 +641,13 @@
       for(var i = 0; i < $scope.sheet.fields.length; i++) {
         controller.accept($scope.sheet.fields[i]);
       }
-    }    
+    }
+    
+    controller.initializeField = function(field) {
+      if(field.categoryLabel == null) {
+        field.categoryLabel = field.label;
+      }
+    }
   
     controller.isUniqueLabel = function(label) {
       if($scope.sheet != null) {
@@ -2032,7 +2089,7 @@
   };  
   
   
-  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "widget-service", "runway-service", "ngAnimate" ]);
+  angular.module("data-uploader", ["styled-inputs", "dataset-service", "category-service", "localization-service", "widget-service", "runway-service", "ngAnimate" ]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchInitialPage', MatchInitialPage)
