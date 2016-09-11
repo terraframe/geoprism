@@ -71,12 +71,12 @@ public class FieldInfoContentsHandler implements SheetHandler
 
     public void setName(String name)
     {
-      this.name = name;
+      this.name = name.trim();
     }
 
     public String getName()
     {
-      return name;
+      return name.trim();
     }
     
     public void setInputPosition(int position)
@@ -115,8 +115,8 @@ public class FieldInfoContentsHandler implements SheetHandler
     public JSONObject toJSON() throws JSONException
     {
       JSONObject object = new JSONObject();
-      object.put("name", this.name);
-      object.put("label", this.name);
+      object.put("name", this.name.trim());
+      object.put("label", this.name.trim());
       object.put("aggregatable", true);
       object.put("fieldPosition", this.getInputPosition());
 

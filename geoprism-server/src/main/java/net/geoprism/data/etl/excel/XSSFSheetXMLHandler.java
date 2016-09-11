@@ -321,7 +321,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
           {
             int idx = Integer.parseInt(sstIndex);
             XSSFRichTextString rtss = new XSSFRichTextString(sharedStringsTable.getEntryAt(idx));
-            thisStr = rtss.toString();
+            thisStr = rtss.toString().trim();
             thisData = new String(thisStr);
           }
           catch (NumberFormatException ex)
