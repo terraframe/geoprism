@@ -98,7 +98,7 @@
       </div>      
       <div class="inline-text fade-ngIf" ng-if="field.type == 'CATEGORY' && field.root == null">
         <label><gdb:localize key="dataUploader.categoryLabel"/></label>
-        <input ng-model="field.categoryLabel" name="{{::$index + '-categoryLabel'}}" ng-init="field.categoryLabel = field.label" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueCategory"></input>
+        <input ng-model="field.categoryLabel" name="{{::$index + '-categoryLabel'}}" ng-init="ctrl.initializeField(field)" ng-required="true" type="text" validate-unique validator="ctrl.isUniqueCategory"></input>
       </div>      
 
       <div class="inline-error-message pull-right">

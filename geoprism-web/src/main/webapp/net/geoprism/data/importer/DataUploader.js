@@ -590,7 +590,13 @@
       for(var i = 0; i < $scope.sheet.fields.length; i++) {
         controller.accept($scope.sheet.fields[i]);
       }
-    }    
+    }
+    
+    controller.initializeField = function(field) {
+      if(field.categoryLabel == null) {
+        field.categoryLabel = field.label;
+      }
+    }
   
     controller.isUniqueLabel = function(label) {
       if($scope.sheet != null) {
