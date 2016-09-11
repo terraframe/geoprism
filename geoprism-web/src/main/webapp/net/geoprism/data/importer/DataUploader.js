@@ -862,11 +862,57 @@
     
     controller.edit = function(attribute) {
       $scope.attribute = angular.copy(attribute);
+      
+      controller.setLocationFieldAssigned();
+      
+      // TODO: remove this
+      // removes the attribute from the sheet because it is no longer set
+      //controller.remove(attribute);
+      
+      var locFieldsSelectedButNotYetAssigned = controller.getLocationFieldsSelectedInWidget();
+      controller.refreshUnassignedFields(locFieldsSelectedButNotYetAssigned);
             
       var fieldLabel = $scope.attribute.fields[attribute.universal];      
       var field = controller.getField(fieldLabel);
 
       controller.setUniversalOptions(field);      
+    }
+    
+    
+    controller.setLocationFieldAssigned = function(){
+    	for (var key in $scope.attribute.fields) {
+    		if ($scope.attribute.fields.hasOwnProperty(key)) {
+    			var attributeFieldLabel = $scope.attribute.fields[key];
+    			var locFields = $scope.locationFields[key];
+    			for(var i=0; i<locFields.length; i++){
+          	    	var locField = locFields[i];
+          	    	if(locField.label === attributeFieldLabel){
+          	    		locField.assigned = false;
+          	    	}
+    			}
+    		}
+    	}
+    }
+    
+    
+    controller.getLocationFieldsSelectedInWidget = function() {
+        var unassignedFields = [];
+        for (var key in $scope.attribute.fields) {
+      	  if ($scope.attribute.fields.hasOwnProperty(key)) {
+      		var attributeFieldLabel = $scope.attribute.fields[key];
+      	    var locFields = $scope.locationFields[key];
+      	    
+      	    for(var i=0; i<locFields.length; i++){
+      	    	var locField = locFields[i];
+      	    	// making sure to only add fields that are part of $scope.attribute
+      	    	if(locField.label === attributeFieldLabel && !locField.assigned){
+      	    		unassignedFields.push(locField.label);
+      	    	}
+      	    }
+      	  }
+        }
+        
+        return unassignedFields;
     }
     
     
@@ -907,7 +953,12 @@
         }                          
       }
     }
-      
+    
+    /**
+     * Remove attribute from the sheet 
+     * 
+     * @attribute - attribute to remove
+     */
     controller.remove = function(attribute) {
       if($scope.sheet.attributes.values[attribute.id] != null) {
               
@@ -942,8 +993,10 @@
           $scope.sheet.attributes.values[$scope.attribute.id] = {};              
         }     
         
-        var attribute = $scope.sheet.attributes.values[$scope.attribute.id];      
-        angular.copy($scope.attribute, attribute);              
+        var attribute = $scope.sheet.attributes.values[$scope.attribute.id];    
+        
+        // copy the properties from the attribute (cofigurable widget in the ui) to sheet.attributes
+        angular.copy($scope.attribute, attribute);            
         
         // Update the field.assigned status
         controller.setFieldAssigned();
@@ -964,10 +1017,9 @@
           };
 
           controller.addField(field);
+          
           controller.setUniversalOptions(field);
           
-          // After manually setting an attribute there may be an auto-assignement possible for the remaining fields
-          controller.setLocationFieldAutoAssignment();
         }
         else {
           controller.refreshUnassignedFields([]);
@@ -1202,7 +1254,7 @@
     controller.change = function(selectedFields){
       var selectedFieldsArr = [];
       for (var key in selectedFields) {
-          if (selectedFields.hasOwnProperty(key)) {
+          if (selectedFields.hasOwnProperty(key) && selectedFields[key] !== "EXCLUDE") {
             selectedFieldsArr.push(selectedFields[key]);
           }
         }
