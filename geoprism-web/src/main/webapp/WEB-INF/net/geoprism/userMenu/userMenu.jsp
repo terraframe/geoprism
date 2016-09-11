@@ -124,7 +124,7 @@
   <script type="text/javascript">	   
 		$(document).ready(function(){
 				$("#dashboard-link").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}/dashboards", "_self");
+					window.open(window.location.origin +"${pageContext.request.contextPath}/kaleidoscopes", "_self");
 				});	
 
 				$("#data-management").click(function(){

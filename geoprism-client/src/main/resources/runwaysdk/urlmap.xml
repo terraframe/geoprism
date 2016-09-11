@@ -39,7 +39,7 @@
     <action method="dataManagement" uri=""/>    
   </map>
   
-  <map uri="dashboards" controller="net.geoprism.UserMenuController">
+  <map uri="kaleidoscopes" controller="net.geoprism.UserMenuController">
     <action method="dashboards" uri=""/>    
   </map>
   
