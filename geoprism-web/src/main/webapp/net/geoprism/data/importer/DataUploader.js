@@ -639,7 +639,8 @@
       $scope.textFields = {};
       
       for(var i = 0; i < $scope.sheet.fields.length; i++) {
-        controller.accept($scope.sheet.fields[i]);
+    	var sheetField = $scope.sheet.fields[i];
+        controller.accept(sheetField);
       }
     }
     
@@ -822,7 +823,7 @@
         var field = $scope.sheet.fields[j];
             
         if(field.type == 'LOCATION') {
-          if($scope.locationFields[field.universal]  == null) {
+          if($scope.locationFields[field.universal] == null) {
             $scope.locationFields[field.universal] = [];
           }
             
@@ -893,10 +894,8 @@
      * Gets the next location moving from low to high in the universal hierarchy. 
      * Valid returns include another field at the same universal level or a higher universal level.
      * 
-     * @currentFieldUniversal - universal id of a field that is considered the current and which 
-     *               this method seeks to find the the next.
      */
-    controller.getNextLocationField = function(currentFieldUniversal) {
+    controller.getNextLocationField = function() {
         for(var i = ($scope.universals.length - 1); i >= 0; i--) {
             var universal = $scope.universals[i];
             
@@ -913,18 +912,27 @@
             }        
           }  
           
-      return null;
+          return null;
     } 
     
     
     controller.edit = function(attribute) {
+      // This should only be hit if trying to edit when an existing edit session is in place. 
+      if($scope.attribute && $scope.sheet.attributes.values[$scope.attribute.id]){
+    	  if($scope.sheet.attributes.values[$scope.attribute.id].editing){
+    		  $scope.sheet.attributes.values[$scope.attribute.id].editing = false;
+    	  }
+    	  
+    	  // all fields that are in the current attribute (ui widget) should be set back to assigned
+    	  // which creates a save type behavior for the current state of the attribute.
+    	  controller.setFieldAssigned();
+      }
+      
       $scope.attribute = angular.copy(attribute);
       
-      controller.setLocationFieldAssigned();
+      $scope.sheet.attributes.values[$scope.attribute.id].editing = true;
       
-      // TODO: remove this
-      // removes the attribute from the sheet because it is no longer set
-      //controller.remove(attribute);
+      controller.unassignLocationFields();
       
       var locFieldsSelectedButNotYetAssigned = controller.getLocationFieldsSelectedInWidget();
       controller.refreshUnassignedFields(locFieldsSelectedButNotYetAssigned);
@@ -936,7 +944,10 @@
     }
     
     
-    controller.setLocationFieldAssigned = function(){
+    /**
+     * Sets all $scope.locationFields to false if the location field is part of $scope.attribute.fields.
+     */
+    controller.unassignLocationFields = function(){
     	for (var key in $scope.attribute.fields) {
     		if ($scope.attribute.fields.hasOwnProperty(key)) {
     			var attributeFieldLabel = $scope.attribute.fields[key];
@@ -1004,7 +1015,7 @@
         for(var i = 0; i < $scope.sheet.fields.length; i++) {     
           var field = $scope.sheet.fields[i];
               
-          if(field.type == 'LOCATION' && !field.assigned && field.name != $scope.attribute.name && selectedFields.indexOf(field.name) === -1 ) {
+          if(field.type == 'LOCATION' && !field.assigned && field.name != $scope.attribute.label && selectedFields.indexOf(field.name) === -1 ) {
             $scope.unassignedFields.push(field);
           }
         }                          
@@ -1017,15 +1028,14 @@
      * @attribute - attribute to remove
      */
     controller.remove = function(attribute) {
-      if($scope.sheet.attributes.values[attribute.id] != null) {
+      if($scope.sheet.attributes.values[attribute.id]) {
               
         delete $scope.sheet.attributes.values[attribute.id];        
         $scope.sheet.attributes.ids.splice( $.inArray(attribute.id, $scope.sheet.attributes.ids), 1 );
         
-        // Update the field.assigned status which sets assigned for all fields that are in sheet.attributes
         controller.setFieldAssigned();
         
-        if($scope.attribute == null) {
+        if(!$scope.attribute) {
           controller.newAttribute();
         } 
         else {
@@ -1043,28 +1053,32 @@
      */
     controller.newAttribute = function() {
       
-      if($scope.attribute != null) {      
-        if($scope.attribute.id == -1) {
-          $scope.attribute.id = runwayService.generateId();
-          $scope.sheet.attributes.ids.push($scope.attribute.id);
-          $scope.sheet.attributes.values[$scope.attribute.id] = {};              
-        }     
+	    if($scope.attribute) {      
+	        if($scope.attribute.id === -1) {
+	          $scope.attribute.id = runwayService.generateId();
+	          $scope.sheet.attributes.ids.push($scope.attribute.id);
+	          $scope.sheet.attributes.values[$scope.attribute.id] = {};              
+	        }     
+	        
+	        var attributeInSheet = $scope.sheet.attributes.values[$scope.attribute.id];    
+	        attributeInSheet.editing = false;
+	        
+	        // copy the properties from the attribute (cofigurable widget in the ui) to sheet.attributes
+	        // $scope.attribute is coppied to --> attributeInSheet
+	        angular.copy($scope.attribute, attributeInSheet);            
+	        
+	        // Set the assigned prop in sheet.fields if an attribute stored in sheet.attributes.values
+	        // also references the field.  This means that a saved attribute has claimed that field.
+	        controller.setFieldAssigned();
+	    }
         
-        var attribute = $scope.sheet.attributes.values[$scope.attribute.id];    
-        
-        // copy the properties from the attribute (cofigurable widget in the ui) to sheet.attributes
-        angular.copy($scope.attribute, attribute);            
-        
-        // Update the field.assigned status
-        controller.setFieldAssigned();
-        
-        var location = controller.getNextLocationField($scope.attribute.universal);      
+        var nextLocation = controller.getNextLocationField();      
         
         // This typically passes when a user manually sets an attribute and 
         // there are more location fields yet to be set
-        if(location != null) {
-          var field = location.field;
-          var universal = location.universal;
+        if(nextLocation) {
+          var field = nextLocation.field;
+          var universal = nextLocation.universal;
           
           $scope.attribute = {
             label : field.label,
@@ -1074,15 +1088,13 @@
           };
 
           controller.addField(field);
-          
           controller.setUniversalOptions(field);
-          
+          controller.refreshUnassignedFields([field.label]);
         }
         else {
           controller.refreshUnassignedFields([]);
           $scope.attribute = null;
         }
-      }
     }
     
     
@@ -1285,7 +1297,7 @@
           var id = $scope.sheet.attributes.ids[i];
           var attribute = $scope.sheet.attributes.values[id];          
             
-          if(attribute.label == label) {
+          if(attribute.label === label && $scope.attribute.id !== attribute.id) {
             count++;
           }            
         }

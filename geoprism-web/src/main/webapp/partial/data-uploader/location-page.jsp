@@ -93,7 +93,7 @@
     <div class="holder">
       <div class="row-holder">
         
-        <div ng-repeat="(id, attribute) in sheet.attributes.values" class="location-selector-container scale-fade">
+        <div ng-repeat="(id, attribute) in sheet.attributes.values" ng-show="!attribute.editing" class="location-selector-container scale-fade">
             <h3 class="location-field-info-card-title">{{attribute.label}}</h3>
             <div class="cell" style="float: right;">            
             	<i class="fa fa-pencil ico-edit" ng-click="ctrl.edit(attribute)" title="<gdb:localize key="dataUploader.editToolTip"/>"></i>
