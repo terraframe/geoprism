@@ -64,6 +64,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdTypeDAO;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -613,6 +614,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
+      System.out.println("HELLO");
+      
       QueryFactory factory = new QueryFactory();
 
       MappableClassQuery mcQuery = new MappableClassQuery(factory);
@@ -628,7 +631,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
       ClassifierQuery classifierRootQ = new ClassifierQuery(factory);
       classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(rootQuery));
-      classifierRootQ.AND(classifierRootQ.getCategory().EQ(false));
+      classifierRootQ.AND(OR.get(classifierRootQ.getCategory().EQ(false), classifierRootQ.getCategory().EQ((Boolean) null)));
 
       OIterator<? extends Classifier> iterator = classifierRootQ.getIterator();
 
@@ -637,6 +640,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
         while (iterator.hasNext())
         {
           Classifier classifier = iterator.next();
+          
+          System.out.println("Upgrading classifier [" + classifier.getDisplayLabel().getValue() + "]");
 
           classifier.lock();
           classifier.setCategory(true);

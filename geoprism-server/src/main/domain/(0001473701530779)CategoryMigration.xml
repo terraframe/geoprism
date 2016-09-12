@@ -1,0 +1,10 @@
+<version xsi:noNamespaceSchemaLocation="classpath:geoprism/xsd/version_geoprism.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <patchCategoryTask></patchCategoryTask>      
+    </create>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
