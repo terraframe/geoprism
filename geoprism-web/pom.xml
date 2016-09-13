@@ -58,7 +58,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.16</version>
+      <version>2.0.17</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -132,28 +132,6 @@
               </webResources>
             </configuration>
           </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>package-deployable-filemerge</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>net.geoprism.FileMerger</mainClass>
-                  <arguments>
-                    <argument>--baseDir=${project.build.directory}/classes</argument>
-                    <argument>--overrideDir=${configuration.dir}</argument>
-                    <argument>--exportDir=${project.build.directory}/classes</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -194,7 +172,7 @@
                   <cargo.jvmargs>
                     -Xmx5120M
                     -Xdebug
-                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+                    -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
                     -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
                     -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
                     -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
@@ -203,6 +181,7 @@
                     -Djava.rmi.server.hostname=127.0.0.1
                     -Dbirt-server=true
                     -Dendpoint.cache=/${project.basedir}/cache
+                    -Dgeoprism.config.dir=${configuration.dir}
                   </cargo.jvmargs>
                 </properties>
               </configuration>
@@ -232,40 +211,6 @@
                 <goals>
                   <goal>run</goal>
                 </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>config.dir.filemerge</id>
-      <activation>
-        <property>
-          <name>configuration.dir</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>config.dir.filemerge</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>net.geoprism.FileMerger</mainClass>
-                  <arguments>
-                    <argument>--baseDir=${project.build.directory}/classes</argument>
-                    <argument>--overrideDir=${configuration.dir}</argument>
-                    <argument>--exportDir=${project.build.directory}/classes</argument>
-                  </arguments>
-                </configuration>
               </execution>
             </executions>
           </plugin>

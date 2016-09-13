@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package net.geoprism.configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -32,75 +34,45 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 /**
- * This class performs merge operations between files or directories. This is designed for use in the build system for custom resource merging.
+ * This class performs merge operations between files, directories or input streams. This is designed for use in the build system for custom resource merging.
  * 
  * @author rrowlands
  */
-public class FileMerger
+public class MergeUtility
 {
   public static void main(String[] args) throws ParseException, IOException
   {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
-    options.addOption(Option.builder("b").hasArg().argName("baseFile").longOpt("baseFile").desc("The path to the base properties file.").build());
-    options.addOption(Option.builder("o").hasArg().argName("overrideFile").longOpt("overrideFile").desc("The path to the override properties file.").build());
-    options.addOption(Option.builder("e").hasArg().argName("exportFile").longOpt("exportFile").desc("The path to the export properties file. A null value defaults to base.").build());
-    options.addOption(Option.builder("B").hasArg().argName("baseDir").longOpt("baseDir").desc("The path to the base directory.").build());
-    options.addOption(Option.builder("O").hasArg().argName("overrideDir").longOpt("overrideDir").desc("The path to the override directory.").build());
-    options.addOption(Option.builder("E").hasArg().argName("exportDir").longOpt("exportDir").desc("The path to the export directory. A null value defaults to base.").build());
+    options.addOption(Option.builder("b").hasArg().argName("base").longOpt("base").desc("The path to the base properties file or directory.").build());
+    options.addOption(Option.builder("o").hasArg().argName("override").longOpt("override").desc("The path to the override properties file or directory.").build());
+    options.addOption(Option.builder("e").hasArg().argName("export").longOpt("export").desc("The path to the export file or directory. A null value defaults to base.").build());
     CommandLine line = parser.parse( options, args );
     
     String sBase = line.getOptionValue("b");
     String sOverride = line.getOptionValue("o");
     String sExport = line.getOptionValue("e");
-    String sBaseDir = line.getOptionValue("B");
-    String sOverrideDir = line.getOptionValue("O");
-    String sExportDir = line.getOptionValue("E");
     
-    if (sBase != null && sOverride != null)
+    if (sExport == null)
     {
-      if (sExport == null)
-      {
-        sExport = sBase;
-      }
-      
-      File fBase = new File(sBase);
-      File fOverride = new File(sOverride);
-      File fExport = new File(sExport);
-      if (!fBase.exists() || !fOverride.exists())
-      {
-        throw new RuntimeException("The base [" + sBase + "] and the override [" + sOverride + "] paths must both exist.");
-      }
-      
-      FileMerger merger = new FileMerger();
-      merger.mergeProperties(fBase, fOverride, fExport);
+      sExport = sBase;
     }
-    else if (sBaseDir != null && sOverrideDir != null)
+    
+    File fBase = new File(sBase);
+    File fOverride = new File(sOverride);
+    File fExport = new File(sExport);
+    if (!fBase.exists() || !fOverride.exists())
     {
-      if (sExportDir == null)
-      {
-        sExportDir = sBaseDir;
-      }
-      
-      File fBaseDir = new File(sBaseDir);
-      File fOverrideDir = new File(sOverrideDir);
-      File fExportDir = new File(sExportDir);
-      if (!fBaseDir.exists() || !fOverrideDir.exists())
-      {
-        throw new RuntimeException("The base [" + sBaseDir + "] and the override [" + sOverrideDir + "] paths must both exist.");
-      }
-      
-      FileMerger merger = new FileMerger();
-      merger.mergeDirectories(fBaseDir, fOverrideDir, fExportDir);
+      throw new RuntimeException("The base [" + sBase + "] and the override [" + sOverride + "] paths must both exist.");
     }
-    else
-    {
-      throw new RuntimeException("Invalid arguments");
-    }
+    
+    MergeUtility merger = new MergeUtility();
+    merger.mergeFiles(fBase, fOverride, fExport);
   }
   
-  public FileMerger()
+  public MergeUtility()
   {
     
   }
@@ -116,19 +88,19 @@ public class FileMerger
     {
       for (File overrideChild : override.listFiles())
       {
-        mergeFile(new File(base, overrideChild.getName()), overrideChild, new File(export, overrideChild.getName()));
+        mergeFiles(new File(base, overrideChild.getName()), overrideChild, new File(export, overrideChild.getName()));
       }
     }
     if (!export.equals(base))
     {
       for (File baseChild : base.listFiles())
       {
-        mergeFile(baseChild, new File(override, baseChild.getName()), new File(export, baseChild.getName()));
+        mergeFiles(baseChild, new File(override, baseChild.getName()), new File(export, baseChild.getName()));
       }
     }
   }
   
-  public void mergeFile(File base, File override, File export) throws IOException
+  public void mergeFiles(File base, File override, File export) throws IOException
   {
     if (base == null || !base.exists())
     {
@@ -166,7 +138,22 @@ public class FileMerger
       }
       else if (override.getName().endsWith(".properties"))
       {
-        mergeProperties(base, override, export);
+        if (!export.exists())
+        {
+          export.createNewFile();
+        }
+        
+        if (!base.exists())
+        {
+          if (override != export)
+          {
+            FileUtils.copyFile(override, export);
+          }
+        }
+        else
+        {
+          mergeProperties(new FileInputStream(base), new FileInputStream(override), new FileOutputStream(export));
+        }
       }
       else if (!override.equals(export))
       {
@@ -175,26 +162,25 @@ public class FileMerger
     }
   }
   
-  public void mergeProperties(File base, File override, File export) throws IOException
+  public void mergeStreams(InputStream base, InputStream override, OutputStream export, String extension) throws IOException
   {
-    if (!export.exists())
+    if (extension.equals("properties"))
     {
-      export.createNewFile();
+      mergeProperties(base, override, export);
     }
-    if (!base.exists())
+    else
     {
-      if (override != export)
-      {
-        FileUtils.copyFile(override, export);
-      }
-      return;
+      IOUtils.copy(override, export);
     }
-    
+  }
+  
+  public void mergeProperties(InputStream base, InputStream override, OutputStream export) throws IOException
+  {
     Properties baseProps = new Properties();
-    baseProps.load(new FileInputStream(base));
+    baseProps.load(base);
     
     Properties overrideProps = new Properties();
-    overrideProps.load(new FileInputStream(override));
+    overrideProps.load(override);
     
     Iterator<Object> i = overrideProps.keySet().iterator();
     while (i.hasNext())
@@ -212,6 +198,6 @@ public class FileMerger
       }
     }
     
-    baseProps.store(new FileOutputStream(export), null);
+    baseProps.store(export, null);
   }
 }
