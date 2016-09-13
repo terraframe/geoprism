@@ -155,7 +155,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/category-validation-problem.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/category-validation-problem.jsp',
       scope: {
         problem : '=',
         options : '='
@@ -198,7 +198,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/category-validation-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/category-validation-page.jsp',
       scope: true,
       controller : CategoryValidationPageController,
       controllerAs : 'ctrl',      
@@ -399,7 +399,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/geo-validation-problem.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/geo-validation-problem.jsp',
       scope: {
         problem : '=' 
       },
@@ -442,7 +442,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/geo-validation-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/geo-validation-page.jsp',
       scope: true,
       controller : GeoValidationPageController,
       controllerAs : 'ctrl',      
@@ -475,7 +475,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/match-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/match-page.jsp',
       scope: true,
       controller : MatchPageController,
       controllerAs : 'ctrl',      
@@ -501,7 +501,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/match-initial-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/match-initial-page.jsp',
       scope: true,
       controller : MatchInitialPageController,
       controllerAs : 'ctrl',      
@@ -521,7 +521,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/beginning-info-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/beginning-info-page.jsp',
       scope: true,
       controller : BeginningInfoPageController,
       controllerAs : 'ctrl',      
@@ -555,7 +555,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/name-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/name-page.jsp',
       scope: true,
       controller : NamePageController,
       controllerAs : 'ctrl',    	  
@@ -706,7 +706,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/attributes-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/attributes-page.jsp',
       scope: true,
       controller : AttributesPageController,
       controllerAs : 'ctrl',      
@@ -1189,7 +1189,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/location-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/location-page.jsp',
       scope: true,
       controller : LocationPageController,
       controllerAs : 'ctrl',      
@@ -1371,7 +1371,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/coordinate-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/coordinate-page.jsp',
       scope: true,
       controller : CoordinatePageController,
       controllerAs : 'ctrl',      
@@ -1428,7 +1428,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/summary-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/summary-page.jsp',
       scope: true,
       controller : SummaryPageController,
       controllerAs : 'ctrl',            
@@ -1897,7 +1897,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/uploader-dialog.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/uploader-dialog.jsp',
       scope: {
       },
       controller : UploaderDialogController,
@@ -1925,7 +1925,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/synonym-action.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/synonym-action.jsp',
       scope: {
         action : '='
       },

@@ -56,7 +56,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/dashboard-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/dashboard-panel.jsp',
       scope: {
         dashboard:'='
       },

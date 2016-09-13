@@ -79,7 +79,7 @@
 	  
 	  <script type="text/javascript">${js}</script>
 	  <%-- <jwr:style src="/net/geoprism/MapConfig.json" useRandomParam="false"/>   --%>
-	  <script src="/net/geoprism/MapConfig.json"></script>
+	  <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>
 	  
 	  <!-- Google maps API -->
 	  <script src="https://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>  

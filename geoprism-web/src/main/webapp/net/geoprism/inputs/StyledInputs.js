@@ -37,7 +37,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/inputs/styled-check-box.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/inputs/styled-check-box.jsp',    
       scope: {
         model:'=',
         label:'@',
@@ -77,7 +77,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/inputs/styled-basic-select.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/inputs/styled-basic-select.jsp',    
       scope: {
         model:'=',
         options:'&',
@@ -110,7 +110,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/inputs/styled-select.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/inputs/styled-select.jsp',    
       scope: {
         model:'=',
         options:'=',
@@ -144,7 +144,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/inputs/styled-radio.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/inputs/styled-radio.jsp',    
       scope: {
         model:'=',
         value:'=',
@@ -400,7 +400,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/inputs/styled-color-picker.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/inputs/styled-color-picker.jsp',
       scope: {
         model:'=',
         scroll:'@',
@@ -455,7 +455,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/inputs/simple-color-picker.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/inputs/simple-color-picker.jsp',
       scope: {
         category:'=',
         scroll:'@',
@@ -551,7 +551,7 @@
       },
       replace: true, // Replace with the template below
       transclude: true, // we want to insert custom content inside the directive
-      templateUrl: '/partial/dialog/modal-dialog.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dialog/modal-dialog.jsp',
       link: function(scope, element, attrs) {
         scope.dialogStyle = {};
         

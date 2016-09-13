@@ -225,7 +225,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/builder/builder-dialog.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/builder/builder-dialog.jsp',
       scope: {
       },
       controller : BuilderDialogController,
@@ -239,7 +239,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/builder/text-field.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/builder/text-field.jsp',
       require: '^form',      
       scope: {
         field:'=',
@@ -286,7 +286,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/builder/text-area-field.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/builder/text-area-field.jsp',
       require: '^form',      
       scope: {
         field:'=',
@@ -333,7 +333,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/builder/select-field.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/builder/select-field.jsp',
       scope: {
         field:'=',
         model:'='
@@ -436,7 +436,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/builder/type-attribute.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/builder/type-attribute.jsp',
       scope: {
         attribute:'=',
         type:'='
