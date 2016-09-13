@@ -1324,7 +1324,7 @@
           var id = $scope.sheet.attributes.ids[i];
           var sheetAttribute = $scope.sheet.attributes.values[id];          
             
-          if(sheetAttribute.label === label) {
+          if(sheetAttribute.label === label && !sheetAttribute.editing) {
             count++;
           }   
           if($scope.attribute && $scope.attribute.label === sheetAttribute.label && !sheetAttribute.editing){
