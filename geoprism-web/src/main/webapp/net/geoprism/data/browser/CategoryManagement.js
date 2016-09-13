@@ -86,10 +86,12 @@
           $scope.$apply();
         }
       };
-              
-      $scope.errors = [];
-              
-      categoryService.createOption(connection, JSON.stringify($scope.instance));
+                            
+      if($scope.instance.label.trim().length > 0) {
+        $scope.errors = [];
+        
+        categoryService.createOption(connection, JSON.stringify($scope.instance));        
+      }
     }
     
     controller.cancel = function() {
@@ -285,9 +287,11 @@
         }        
       };
               
-      $scope.errors = [];
+      if($scope.instance.label.trim().length > 0) {      
+        $scope.errors = [];
               
-      categoryService.createOption(connection, JSON.stringify($scope.instance));
+        categoryService.createOption(connection, JSON.stringify($scope.instance));
+      }
     }
     
     controller.cancel = function() {
