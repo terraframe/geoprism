@@ -940,7 +940,10 @@
       var fieldLabel = $scope.attribute.fields[attribute.universal];      
       var field = controller.getField(fieldLabel);
 
-      controller.setUniversalOptions(field);      
+      // EXCLUDEed fields should be skipped
+      if(field){
+    	  controller.setUniversalOptions(field);  
+      }
     }
     
     
@@ -1006,7 +1009,8 @@
      * Populate the unassigned field array from sheet.fields
      * 
      * @selectedFields - fields that are to be excluded from the unassignedFields array. Typically this is because they are set in the 
-     *            location field attribute by the user in the UI and that location card has not yet been set.
+     *            location field attribute by the user in the UI and that location card has not yet been set. Keeping these fields out
+     *            of the unassignedFields array ensures the fields aren't displayed as unassigned in the UI.
      */
     controller.refreshUnassignedFields = function(selectedFields) {
       $scope.unassignedFields = [];
@@ -1060,6 +1064,8 @@
 	          $scope.sheet.attributes.values[$scope.attribute.id] = {};              
 	        }     
 	        
+	        //controller.handleExcludedFields();
+	        
 	        var attributeInSheet = $scope.sheet.attributes.values[$scope.attribute.id];    
 	        attributeInSheet.editing = false;
 	        
@@ -1089,13 +1095,34 @@
 
           controller.addField(field);
           controller.setUniversalOptions(field);
-          controller.refreshUnassignedFields([field.label]);
+          controller.refreshUnassignedFields([]);
         }
         else {
           controller.refreshUnassignedFields([]);
           $scope.attribute = null;
         }
     }
+    
+    //TODO: remove this if not needed
+//    controller.handleExcludedFields = function() {
+//    	var attributeFieldsToDelete = [];
+//    	for (var key in $scope.attribute.fields) {
+//    		if ($scope.attribute.fields.hasOwnProperty(key)) {
+//    			var attributeFieldLabel = $scope.attribute.fields[key];
+//    			if(attributeFieldLabel === "EXCLUDE"){
+//    				attributeFieldsToDelete.push(key);
+//    			}
+//    		}
+//    	}
+//    	
+//    	for(var i=0; i<attributeFieldsToDelete.length; i++){
+//    		var field = attributeFieldsToDelete[i];
+//    		
+//    		if(field){
+//    			delete $scope.attribute.fields[field];
+//    		}
+//    	}
+//    }
     
     
     /**
@@ -1295,11 +1322,14 @@
           
         for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
           var id = $scope.sheet.attributes.ids[i];
-          var attribute = $scope.sheet.attributes.values[id];          
+          var sheetAttribute = $scope.sheet.attributes.values[id];          
             
-          if(attribute.label === label && $scope.attribute.id !== attribute.id) {
+          if(sheetAttribute.label === label && !sheetAttribute.editing) {
             count++;
-          }            
+          }   
+          if($scope.attribute && $scope.attribute.label === sheetAttribute.label && !sheetAttribute.editing){
+        	  count++;
+          }
         }
               
         if(count > 0) {

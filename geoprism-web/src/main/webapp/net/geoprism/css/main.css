@@ -177,6 +177,7 @@ i.fa:hover,
 i.fa:focus
 {
 	color: #00bfff;
+	cursor: pointer;
 }
 
 .fa-stack:hover .fa {
