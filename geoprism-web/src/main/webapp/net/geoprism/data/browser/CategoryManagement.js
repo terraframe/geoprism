@@ -47,6 +47,29 @@
       categoryService.get(connection, category.value);
     }
     
+    controller.remove = function(category) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(response) {
+          var index = -1;
+            
+          for (var i = 0; i < $scope.categories.length; i++) {
+            if(category.id =  $scope.categories[i].value) {
+              index = i;
+            }
+          }
+        
+          if(index != -1){
+            $scope.categories.splice(index, 1);
+          }
+            
+          $scope.$apply();
+        }
+      };
+      
+      categoryService.deleteOption(connection, category.value);
+    }
+    
     $scope.$on('categoryOk', function(event, data){
       if(data != null && data.category != null) {
         var index = -1;
