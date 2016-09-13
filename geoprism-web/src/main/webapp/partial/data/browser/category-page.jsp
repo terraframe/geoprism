@@ -43,7 +43,7 @@
           </div>    
           <div class="holder" >
             <span class="text">
-              <input type="text" ng-model="category.label" name="label" required  validate-unique validator="ctrl.isUniqueLabel">
+              <input type="text" ng-model="category.label" name="label" required validate-unique validator="ctrl.isUniqueLabel">
             </span>
             <div class="inline-error-message">
               <p ng-show="ctrl.form.label.$error.unique">
