@@ -50,7 +50,7 @@
 	       					<p ><gdb:localize key="dashboardViewer.userMenuLinkLabel"/></p>
 	       				</li>
        				</a>
-       				<a href="/dashboards">
+       				<a href="/kaleidoscopes">
 	       				<li>
 	       					<i class="fa fa-th"></i> 
 	       					<p><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></p>

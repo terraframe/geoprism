@@ -24,7 +24,7 @@
     <item name="Log_out" uri="session/logout" synch="true" />
     <item name="Account" uri="admin/account" synch="false" />
     <item name="Menu" uri="menu" synch="true" />
-    <item name="User_Dashboards" uri="dashboards" synch="true" classes="link-viewer" />
+    <item name="User_Dashboards" uri="kaleidoscopes" synch="true" classes="link-viewer" />
   </link-list>
   <nav-list>
 

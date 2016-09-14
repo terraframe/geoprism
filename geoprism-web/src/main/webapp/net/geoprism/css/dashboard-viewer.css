@@ -66,21 +66,6 @@
 }
 
 
-.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked {
-	border-color: #02789e;
-	background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
-	float: left;
-	display: block;
-	margin-top: 0 !important;
-}
-.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget {
-	border-color: #02789e;
-	float: left;
-	display: block;
-	margin-right: 7px;
-	margin-top: 0 !important;
-}
-
 
 .control-form h3{
 	font-size:12px;
