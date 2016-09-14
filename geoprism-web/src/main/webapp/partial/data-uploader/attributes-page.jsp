@@ -92,7 +92,7 @@
       </div>      
       <div class="inline-box fade-ngIf" ng-if="field.type == 'CATEGORY'">
         <label><gdb:localize key="dataUploader.domainRoot"/></label>
-        <select class="select-area" ng-model="field.root" name="{{::$index + '-root'}}" ng-options="opt.value as opt.label for opt in classifiers">
+        <select class="select-area" ng-model="field.root" name="{{::$index + '-root'}}" ng-options="opt.value as opt.label for opt in classifiers  | orderBy:'opt.value'">
           <option value=""><gdb:localize key="dataUploader.new"/></option>          
         </select>
       </div>      

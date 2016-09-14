@@ -162,7 +162,7 @@
     
     //
     // Used to structure the data uploader steps widget
-    // config - Configuration array containing additional steps. Can be an empty array.
+    // @config - Configuration array containing additional steps. Can be an empty array.
     //
     service.getUploaderSteps = function(config){
       var basicSteps = [
@@ -172,19 +172,38 @@
       
       var locationStep = {"label": "4", "page":"LOCATION"};
       var coordinateStep = {"label": "5", "page":"COORDINATE"};
-      var problemResStep = {"label": "6", "page":"GEO-VALIDATION"}; 
+      var geoProblemResStep = {"label": "6", "page":"GEO-VALIDATION"}; 
+      var categoryProblemResStep = {"label": "7", "page":"CATEGORY-VALIDATION"}; 
       
-      if(config.indexOf("LOCATION") !== -1 && config.indexOf("COORDINATE") !== -1){
+      if(config.indexOf("LOCATION") > -1 && config.indexOf("COORDINATE") > -1 && config.indexOf("CATEGORY") > -1){
+    	basicSteps.splice(2, 0, locationStep, coordinateStep);
+        basicSteps.splice(5, 0, geoProblemResStep);
+        basicSteps.splice(6, 0, categoryProblemResStep);
+      }
+      else if(config.indexOf("LOCATION") === -1 && config.indexOf("COORDINATE") > -1 && config.indexOf("CATEGORY") > -1){
+      	basicSteps.splice(2, 0, coordinateStep);
+        basicSteps.splice(4, 0, geoProblemResStep);
+        basicSteps.splice(5, 0, categoryProblemResStep);
+      }
+      else if(config.indexOf("LOCATION") > -1 && config.indexOf("COORDINATE") === -1 && config.indexOf("CATEGORY") > -1){
+      	basicSteps.splice(2, 0, locationStep);
+        basicSteps.splice(4, 0, geoProblemResStep);
+        basicSteps.splice(5, 0, categoryProblemResStep);
+      }
+      else if(config.indexOf("LOCATION") > -1 && config.indexOf("COORDINATE") > -1 && config.indexOf("CATEGORY") === -1){
         basicSteps.splice(2, 0, locationStep, coordinateStep);
-        basicSteps.splice(5, 0, problemResStep);
+        basicSteps.splice(5, 0, geoProblemResStep);
       }
-      else if(config.indexOf("LOCATION") !== -1){
+      else if(config.indexOf("LOCATION") > -1 ){
         basicSteps.splice(2, 0, locationStep);
-        basicSteps.splice(4, 0, problemResStep);
+        basicSteps.splice(4, 0, geoProblemResStep);
       }
-      else if(config.indexOf("COORDINATE") !== -1){
+      else if(config.indexOf("COORDINATE") > -1){
         basicSteps.splice(2, 0, coordinateStep);
-        basicSteps.splice(4, 0, problemResStep);
+        basicSteps.splice(4, 0, geoProblemResStep);
+      }
+      else if(config.indexOf("CATEGORY") > -1){
+    	  basicSteps.splice(3, 0, categoryProblemResStep);
       }
 
       return basicSteps;

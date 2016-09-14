@@ -30,7 +30,7 @@
       <div class="inline-value">{{problem.attributeLabel}}</div>    
       <div class="inline-value error-message">{{problem.label}}</div>
       <div ng-if="!problem.resolved">      
-        <div class="inline-box">
+        <div class="inline-combo">
           <select class="select-area" ng-model="problem.synonym" ng-change="ctrl.setSynonym()" ng-options="opt.id as opt.label for opt in options">
             <option value=""></option>          
           </select>          
