@@ -54,7 +54,7 @@ cp .ebextensions/server.xml $TOMCAT_HOME/conf/server.xml
 # cp .ebextensions/geoserver.war $TOMCAT_HOME/conf/geoserver.war
 
 # Download the latest geoserver war to a temp directory. This will be moved into webapps in the post install script.
-wget -O $TOMCAT_HOME/conf/geoserver.war "http://nexus.terraframe.com/service/local/repositories/releases/content/org/geoserver/geoserver/2.5.0.1/geoserver-2.5.0.1.war"
+wget -O $TOMCAT_HOME/conf/geoserver.war "http://nexus.terraframe.com/service/local/repositories/releases/content/org/geoserver/geoserver/2.9.1/geoserver-2.9.1.war"
 
 # Copy Post Installation Script:
 # mkdir /opt/elasticbeanstalk/hooks/appdeploy/post
