@@ -27,13 +27,14 @@
       	
       	<div class="uploader-step-indicator-container" ng-if="page.current != 'MATCH-INITIAL' && page.current != 'MATCH' && !updateExistingDataset">
 	      	<ol class="wizard-progress clearfix">
-			    <li ng-class="{'active-step' : page.current == step.page, 'status-li-disabled' : $index < currentStep}" ng-repeat="step in userSteps track by $index">
+			    <li ng-class="{'active-step' : page.current === step.page, 'status-li-disabled' : page.current !== step.page}" ng-repeat="step in userSteps track by $index">
 			        <span ng-if="step.label == '1'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
 			        <span ng-if="step.label == '2'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep2"/></span>
 			        <span ng-if="step.label == '3'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep3"/></span>
 			        <span ng-if="step.label == '4'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep4"/></span>
 			        <span ng-if="step.label == '5'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep5"/></span>
 			        <span ng-if="step.label == '6'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep6"/></span>
+			        <span ng-if="step.label == '7'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep7"/></span>
 			        <span class="visuallyhidden">Step </span><span class="step-num">{{$index + 1}}</span>
 			    </li>
 			</ol>
