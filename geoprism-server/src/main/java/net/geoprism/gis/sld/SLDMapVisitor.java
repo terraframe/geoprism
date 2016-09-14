@@ -140,14 +140,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return node(this.getSymbolizerName()).build();
     }
     
-    protected NodeBuilder getAllLabelClassesEnabledNode()
-    {
-      return node(OGC, "PropertyIsEqualTo").child(
-          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-      );
-    }
-    
     protected NodeBuilder getPropertyIsNullNode(String attribute)
     {
       return node(OGC, "PropertyIsNull").child(
@@ -176,6 +168,14 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       );
     }
     
+//  protected NodeBuilder getAllLabelClassesEnabledNode()
+//  {
+//    return node(OGC, "PropertyIsEqualTo").child(
+//        node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
+//        node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
+//    );
+//  }
+//  
 //    protected NodeBuilder getPropertyIsEqualToTrueNode(String attribute)
 //    {
 //      return node(OGC, "PropertyIsEqualTo").child(
@@ -184,13 +184,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 //      );
 //    }
 //
-    protected NodeBuilder getPropertyIsEqualToNeverNode(String attribute)
-    {
-      return node(OGC, "PropertyIsEqualTo").child(
-          node(OGC, "PropertyName").text(attribute), 
-          node(OGC, "Literal").text("NEVER")
-          );
-    }
+//    protected NodeBuilder getPropertyIsEqualToNeverNode(String attribute)
+//    {
+//      return node(OGC, "PropertyIsEqualTo").child(
+//          node(OGC, "PropertyName").text(attribute), 
+//          node(OGC, "Literal").text("NEVER")
+//          );
+//    }
     
     protected Node getPropertyValueNode(ThematicLayer tLayer)
     {
@@ -378,20 +378,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 String key = category.getString(ThematicStyle.VAL);
                 String color = category.getString(ThematicStyle.COLOR);
   
-                NodeBuilder[] filterNodes = new NodeBuilder[] { 
-                    node(OGC, "PropertyIsEqualTo").child(
-                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")), 
-                    node(OGC, "And").child(
-                        node(OGC, "Not").child(
-                            node(OGC, "Or").child(
-                                node(OGC, "PropertyIsNull").child(
-                                    node(OGC, "PropertyName").text(attributeName)), 
-                                getPropertyIsEqualToNeverNode(attributeName)
-                            )), 
-                            node(OGC, "PropertyIsEqualTo").child(
-                                node(OGC, "PropertyName").text(attributeName), 
-                                node(OGC, "Literal").text(key))) 
+                NodeBuilder[] filterNodes = new NodeBuilder[] {
+                  node(OGC, "Not").child(getPropertyIsNullNode(attributeName))
                 };
   
                 this.createRule(root, filterNodes, color, key, radius);
@@ -492,16 +480,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
                 node(OGC, "Filter").child(
                     node(OGC, "And").child(
-                        node(OGC, "Not").child(
-                            node(OGC, "And").child(
-                                node(OGC, "PropertyIsEqualTo").child(
-                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"),
-                                    node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")),
-                                node(OGC, "Or").child(
-                                    node(OGC, "PropertyIsNull").child(
-                                        node(OGC, "PropertyName").text(attribute)),
-                                    getPropertyIsEqualToNeverNode(attribute)
-                                ))),
+                        node(OGC, "Not").child(getPropertyIsNullNode(attribute)),                        
                         node(OGC, "PropertyIsBetween").child(node(OGC, "PropertyName").text(attribute),
                             node(OGC, "LowerBoundary").child(node(OGC, "Literal").text(currentCatMin)),
                             node(OGC, "UpperBoundary").child(node(OGC, "Literal").text(currentCatMax))))),
@@ -586,21 +565,9 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               if (catOtherCat == false)
               {
                 if(isRangeCat == true)
-                {
-                  
+                {                  
                   NodeBuilder[] filterNodes = new NodeBuilder[] { 
-                      node(OGC, "PropertyIsEqualTo").child(
-                          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-                          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                      ), 
-                      node(OGC, "Not").child(
-                          node(OGC, "Or").child(
-                              node(OGC, "PropertyIsNull").child(
-                                  node(OGC, "PropertyName").text(attributeName)
-                              ),
-                              getPropertyIsEqualToNeverNode(attributeName)
-                          )
-                      ),
+                      node(OGC, "Not").child( this.getPropertyIsNullNode(attributeName)),
                       this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                   };
 
@@ -610,30 +577,17 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 else
                 {
                   NodeBuilder[] filterNodes = new NodeBuilder[] { 
-                      node(OGC, "PropertyIsEqualTo").child(
-                          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED"), 
-                          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED")
-                      ), 
-                      node(OGC, "And").child(
-                          node(OGC, "Not").child(
-                              node(OGC, "Or").child(
-                                  node(OGC, "PropertyIsNull").child(
-                                      node(OGC, "PropertyName").text(attributeName)
-                                  ),
-                                  getPropertyIsEqualToNeverNode(attributeName)
-                              )
-                          ), 
-                          node(OGC, "PropertyIsEqualTo").child(
-                              node(OGC, "PropertyName").text(attributeName), 
-                              node(OGC, "Literal").text(catVal)
-                          )
-                      ) 
+                    node(OGC, "Not").child(getPropertyIsNullNode(attributeName)),
+                    node(OGC, "PropertyIsEqualTo").child(
+                      node(OGC, "PropertyName").text(attributeName), 
+                      node(OGC, "Literal").text(catVal))
                   };
 
                   this.createRule(root, filterNodes, color, catVal, minAttrVal, maxAttrVal, minSize, maxSize);
                 }
               }
               
+              // TODO : The "Other" category should use the style of the thematic attribute           
             }
           }
           catch (JSONException e)
@@ -763,16 +717,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                       node("Title").text(catTitle),
                       node(OGC, "Filter").child(
                           node(OGC, "And").child(
-                              node(OGC, "Not").child(
-                                  node(OGC, "And").child(
-                                      getAllLabelClassesEnabledNode(),
-                                      node(OGC, "Or").child(
-                                          getPropertyIsNullNode(attribute),
-                                          getPropertyIsEqualToNeverNode(attribute)
-                                      )
-                                  )
-                              ),
-                              this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
+                            node(OGC, "Not").child(getPropertyIsNullNode(attribute)),
+                            this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                           )
                       ),
                       this.getSymbolNode(wkn, catColor, fillOpacity, stroke, width, strokeOpacity, categoryRadius, enableIcon, iconPath)
@@ -800,15 +746,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                       node("Title").text(catTitle),
                       node(OGC, "Filter").child(
                           node(OGC, "And").child(
-                              node(OGC, "Not").child(
-                                  node(OGC, "And").child(
-                                      getAllLabelClassesEnabledNode(),
-                                      node(OGC, "Or").child(
-                                          getPropertyIsNullNode(attribute),
-                                          getPropertyIsEqualToNeverNode(attribute)
-                                      )
-                                  )
-                              ),
+                              node(OGC, "Not").child(getPropertyIsNullNode(attribute)),
                               getPropertyIsEqualToNode(attribute, catVal)
                           )
                       ),
@@ -868,10 +806,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                      node("Name").text(label), 
                      node("Title").text(label), 
                      node(OGC, "Filter").child(
-                         node(OGC, "And").child(
-                             getAllLabelClassesEnabledNode(), 
-                             wrapperAndNode
-                         )
+                       wrapperAndNode
                      ),
                      this.getSymbolNode(wkn, otherCatColor, fillOpacity, stroke, width, strokeOpacity, radius, otherCatEnableIcon, otherCatIconPath)
                  ).build(root);
@@ -892,14 +827,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                      node("Name").text(label), 
                      node("Title").text(label), 
                      node(OGC, "Filter").child(
-                         node(OGC, "And").child(
-                             getAllLabelClassesEnabledNode(), 
-                             node(OGC, "Not").child(
-                                 otherOrNode.child(
-                                     getPropertyIsNullNode(attribute)
-                                 )
-                             )
+                       node(OGC, "Not").child(
+                         otherOrNode.child(
+                           getPropertyIsNullNode(attribute)
                          )
+                       )
                      ),
                      this.getSymbolNode(wkn, otherCatColor, fillOpacity, stroke, width, strokeOpacity, radius, otherCatEnableIcon, otherCatIconPath)
                  ).build(root);
@@ -970,8 +902,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
         if (filterNodes != null)
         {
-          NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
-          filterNode.build(ruleNode);
+          if(filterNodes.length > 1)
+          {
+            NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
+            filterNode.build(ruleNode);
+          }
+          else
+          {
+            NodeBuilder filterNode = node(OGC, "Filter").child(filterNodes);
+            filterNode.build(ruleNode);            
+          }
         }
 
         // Point styles
@@ -1029,9 +969,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
         if (filterNodes != null)
         {
-          NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
-
-          filterNode.build(ruleNode);
+          if(filterNodes.length > 1)
+          {
+            NodeBuilder filterNode = node(OGC, "Filter").child(node(OGC, "And").child(filterNodes));
+            filterNode.build(ruleNode);
+          }
+          else
+          {
+            NodeBuilder filterNode = node(OGC, "Filter").child(filterNodes);
+            filterNode.build(ruleNode);            
+          }
         }
 
         Node bubbleSymbolNode = node("PointSymbolizer").build(ruleNode);
@@ -1103,17 +1050,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           }
 
           Node notNode = node(OGC, "Not").build(firstAndNode);
-          Node secondAndNode = node(OGC, "And").build(notNode);
-
-          Node firstPropEqualToNode = node(OGC, "PropertyIsEqualTo").build(secondAndNode);
-          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-          node(OGC, "Literal").text("ALL_LABEL_CLASSES_ENABLED").build(firstPropEqualToNode);
-
-          Node orNode = node(OGC, "Or").build(secondAndNode);
-          Node propIsNullNode = node(OGC, "PropertyIsNull").build(orNode);
+          Node propIsNullNode = node(OGC, "PropertyIsNull").build(notNode);
           node(OGC, "PropertyName").text(attribute).build(propIsNullNode);
-          
-          getPropertyIsEqualToNeverNode(attribute).build(orNode);
           
           Node propIsBetween = node(OGC, "PropertyIsBetween").build(firstAndNode);
           node(OGC, "PropertyName").text(attribute).build(propIsBetween);
@@ -1445,15 +1383,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 node("Title").text(currentCatMinDisplay + " - " + currentCatMaxDisplay),
                 node(OGC, "Filter").child(
                     node(OGC, "And").child(
-                        node(OGC, "Not").child(
-                            node(OGC, "And").child(
-                                getAllLabelClassesEnabledNode(), 
-                                node(OGC, "Or").child(
-                                    getPropertyIsNullNode(attribute), 
-                                    getPropertyIsEqualToNeverNode(attribute)
-                                )
-                            )
-                        ), 
+                        node(OGC, "Not").child(getPropertyIsNullNode(attribute)),
                         getPropertyIsBetweenNode(attribute, currentCatMin, currentCatMax)
                     )
                 ),
@@ -1540,16 +1470,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                       node("Title").text(catTitle), 
                       node(OGC, "Filter").child(
                           node(OGC, "And").child(
-                              getAllLabelClassesEnabledNode(), 
-                              node(OGC, "And").child(
-                                  node(OGC, "Not").child(
-                                      node(OGC, "Or").child(
-                                          getPropertyIsNullNode(attribute), 
-                                          getPropertyIsEqualToNeverNode(attribute)
-                                      )
-                                  ), 
-                                  this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
-                              )
+                              node(OGC, "Not").child(getPropertyIsNullNode(attribute)),
+                              this.getCategoryRangeNode(attribute, catVal, catMaxVal, rangeAllMin, rangeAllMax)
                           )
                       ),
                       getSymbolNode(catColor, fillOpacity, stroke, width, strokeOpacity)
@@ -1576,16 +1498,8 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                       node("Title").text(catTitle), 
                       node(OGC, "Filter").child(
                           node(OGC, "And").child(
-                              getAllLabelClassesEnabledNode(), 
-                              node(OGC, "And").child(
-                                  node(OGC, "Not").child(
-                                      node(OGC, "Or").child(
-                                          getPropertyIsNullNode(attribute), 
-                                          getPropertyIsEqualToNeverNode(attribute)
-                                      )
-                                  ), 
-                                  getPropertyIsEqualToNode(attribute, catVal)
-                              )
+                              node(OGC, "Not").child(getPropertyIsNullNode(attribute)),
+                              getPropertyIsEqualToNode(attribute, catVal)
                           )
                       ),
                       getSymbolNode(catColor, fillOpacity, stroke, width, strokeOpacity)
@@ -1640,10 +1554,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                     node("Title").text(label), 
                     getSymbolNode(otherCatColor, fillOpacity, stroke, width, strokeOpacity), 
                     node(OGC, "Filter").child(
-                        node(OGC, "And").child(
-                            getAllLabelClassesEnabledNode(), 
-                            wrapperAndNode
-                        )
+                      wrapperAndNode
                     )
                 ).build(root);
               }
@@ -1663,16 +1574,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                     node("Name").text(label), 
                     node("Title").text(label), 
                     node(OGC, "Filter").child(
-                        node(OGC, "And").child(
-                            getAllLabelClassesEnabledNode(), 
-                            node(OGC, "Not").child(
-                                otherOrNode.child(
-                                    node(OGC, "Or").child(
-                                        getPropertyIsNullNode(attribute)
-                                    )
-                                )
-                            )
+                      node(OGC, "Not").child(
+                        otherOrNode.child(
+                          node(OGC, "Or").child(
+                            getPropertyIsNullNode(attribute)
+                          )
                         )
+                      )
                     ),
                     getSymbolNode(otherCatColor, fillOpacity, stroke, width, strokeOpacity)
                 ).build(root);
