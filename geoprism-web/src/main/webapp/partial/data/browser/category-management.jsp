@@ -44,9 +44,20 @@
         <tr ng-repeat="category in categories" class="fade-ngRepeat-item" ng-cloak>
           <td class="button-column">
             <a class="fa fa-tasks ico-edit" ng-click="ctrl.edit(category)" title="<gdb:localize key="category.management.editTooltip"/>"></a>                             
+            <a class="fa fa-trash-o ico-remove" ng-click="ctrl.remove(category)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                       
           </td>
           <td class="label-column"> {{category.label}} </td>
         </tr>
+        <tr>
+          <td class="button-column">
+            <a class="fa fa-plus" ng-show="!instance.isNew" ng-click="ctrl.newInstance()" title="<gdb:localize key="category.management.createCategoryOptionTooltip"/>"></a>
+          </td>                 
+          <td ng-show="instance.isNew" class="submit-form">
+            <form name="ctrl.form">
+              <input class="list-table-input" type="text" ng-model="instance.label" ng-show="instance.isNew" press-esc="ctrl.cancel()" press-enter="ctrl.apply()" focus-on-show></input>                    
+            </form>
+          </td>                
+        </tr>        
       </tbody>    
     </table>
    </div>  

@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function CategoryController($scope, $timeout, categoryService) {
+  function CategoryController($scope, $timeout, categoryService, datasetService) {
     var controller = this;
     
     controller.init = function() {
@@ -31,8 +31,10 @@
         } 
       };      
       
+      controller.cancel();
+      
       categoryService.getAll(connection);
-    }    
+    }
     
     controller.edit = function(category) {
       var connection = {
@@ -46,6 +48,76 @@
 
       categoryService.get(connection, category.value);
     }
+    
+    controller.remove = function(category) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(response) {
+          var index = -1;
+            
+          for (var i = 0; i < $scope.categories.length; i++) {
+            if(category.id =  $scope.categories[i].value) {
+              index = i;
+            }
+          }
+        
+          if(index != -1){
+            $scope.categories.splice(index, 1);
+          }
+            
+          $scope.$apply();
+        }
+      };
+      
+      categoryService.deleteOption(connection, category.value);
+    }
+
+    
+    controller.apply = function() {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(option) {
+          option.value = option.id;
+          
+          $scope.categories.push(option);
+          
+          controller.cancel();          
+                
+          $scope.$apply();
+        }
+      };
+                            
+      if($scope.instance.label.trim().length > 0) {
+        $scope.errors = [];
+        
+        categoryService.createOption(connection, JSON.stringify($scope.instance));        
+      }
+    }
+    
+    controller.cancel = function() {
+      $scope.instance = {
+        isNew : false,
+        label : '',
+        validate : true
+      };      
+    }        
+        
+    controller.newInstance = function() {
+      $scope.instance.isNew = true;
+      
+      $window.onclick = function (event) {
+        if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
+          if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
+            controller.apply();
+          }
+          else{
+            $scope.instance.isNew = false;
+          }
+            
+          $scope.$apply();
+        }
+      };
+    }    
     
     $scope.$on('categoryOk', function(event, data){
       if(data != null && data.category != null) {
@@ -215,9 +287,11 @@
         }        
       };
               
-      $scope.errors = [];
+      if($scope.instance.label.trim().length > 0) {      
+        $scope.errors = [];
               
-      categoryService.createOption(connection, JSON.stringify($scope.instance));
+        categoryService.createOption(connection, JSON.stringify($scope.instance));
+      }
     }
     
     controller.cancel = function() {

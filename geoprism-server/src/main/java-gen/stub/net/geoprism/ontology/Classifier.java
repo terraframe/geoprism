@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -217,7 +215,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
     return null;
   }
-  
+
   /**
    * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
    * that are children of the given attribute root nodes including the root nodes.
@@ -229,14 +227,14 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {
     QueryFactory qf = new QueryFactory();
-    
+
     ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
     ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
-    
+
     carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
-    
+
     classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
-    
+
     OIterator<? extends Classifier> i = classifierRootQ.getIterator();
     try
     {
@@ -381,7 +379,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       classifier.getDisplayLabel().setDefaultValue(classifierLabel);
       classifier.setClassifierId(classifierLabel);
       classifier.setClassifierPackage(packageString);
-      
+
       classifier.apply();
 
       // Create a new Classifier problem
@@ -878,20 +876,42 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     try
     {
       JSONObject object = new JSONObject(option);
-
-      String parentId = object.getString("parentId");
       String label = object.getString("label");
+      
+      if(object.has("validate") && object.getBoolean("validate"))
+      {
+        Classifier.validateCategoryName(label, null);
+      }
 
-      Classifier parent = Classifier.get(parentId);
+      if (object.has("parentId"))
+      {
+        String parentId = object.getString("parentId");
 
-      Classifier classifier = new Classifier();
-      classifier.setClassifierPackage(parent.getClassifierPackage());
-      classifier.setClassifierId(IDGenerator.nextID());
-      classifier.getDisplayLabel().setValue(label);
+        Classifier parent = Classifier.get(parentId);
 
-      Classifier.create(classifier, parentId);
+        Classifier classifier = new Classifier();
+        classifier.setClassifierPackage(parent.getClassifierPackage());
+        classifier.setClassifierId(IDGenerator.nextID());
+        classifier.getDisplayLabel().setValue(label);
 
-      return classifier;
+        Classifier.create(classifier, parentId);
+
+        return classifier;
+      }
+      else
+      {
+        Classifier parent = Classifier.getRoot();
+        
+        Classifier classifier = new Classifier();
+        classifier.setClassifierPackage(IDGenerator.nextID());
+        classifier.setClassifierId(IDGenerator.nextID());
+        classifier.getDisplayLabel().setValue(label);
+        classifier.setCategory(true);
+        
+        Classifier.create(classifier, parent.getId());
+        
+        return classifier;
+      }
     }
     catch (JSONException e)
     {
@@ -917,7 +937,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   {
     Classifier.unlock(id);
   }
-  
 
   public static void validateCategoryName(String name, String id)
   {
