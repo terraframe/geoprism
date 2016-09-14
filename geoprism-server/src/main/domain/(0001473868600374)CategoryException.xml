@@ -20,13 +20,13 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <update>
-      <object key="Roles.geoprism.admin.DashboardBuilder" type="com.runwaysdk.system.Roles">
-        <attributeStruct name="displayLabel">
-          <attribute name="defaultLocale" value="Data Manager"/>
-        </attributeStruct>
-      </object>
-    </update>
+    <create>
+      <mdException name="net.geoprism.ontology.CategoryInUseException" label="Category in use exception" message="Category [{label}] cannot be deleted because it is being used by a dataset">
+        <attributes>
+          <text name="label" label="Display label"/>
+        </attributes>
+      </mdException>
+    </create>
   </doIt>
   <undoIt>
     <delete></delete>

@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function CategoryController($scope, $timeout, categoryService, datasetService) {
+  function CategoryController($scope, $timeout, categoryService, datasetService, localizationService, widgetService) {
     var controller = this;
     
     controller.init = function() {
@@ -50,6 +50,29 @@
     }
     
     controller.remove = function(category) {
+      var title = localizationService.localize("category.management", "removeOptionTitle", "Delete option");
+
+      var message = localizationService.localize("category.management", "removeCategoryConfirm", "Are you sure you want to delete the category [{0}]?");
+      message = message.replace('{0}', category.label);
+            
+      var buttons = [];
+      buttons.push({
+        label : localizationService.localize("layer.category", "ok", "Ok"),
+        config : {class:'btn btn-primary'},
+        callback : function(){
+          controller.performRemove(category);
+        }
+      });
+      buttons.push({
+        label : localizationService.localize("dataset", "cancel", "Cancel"),
+        config : {class:'btn'}
+      });
+            
+      widgetService.createDialog(title, message, buttons);    
+    }
+    
+    
+    controller.performRemove = function(category) {
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(response) {
