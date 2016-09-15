@@ -137,10 +137,10 @@
     </profile>
 
     <profile>
-      <id>geoprism-cargo-run</id>
+      <id>cargo-run</id>
       <activation>
         <property>
-          <name>geoprism-cargo-run</name>
+          <name>cargo-run</name>
         </property>
       </activation>
       <build>
@@ -172,7 +172,7 @@
                   <cargo.jvmargs>
                     -Xmx5120M
                     -Xdebug
-                    -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
+                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
                     -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
                     -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
                     -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
