@@ -278,15 +278,21 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         
-        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
-            node(OGC, "Function").attr("name", "isNull").child(
-                node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase())).build(),
-            node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-            node(OGC, "Function").attr("name", "Concatenate").child(
-                node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
-                node(OGC, "Literal").text(" (").build(),
-                this.getPropertyValueNode(tLayer),
-                node(OGC, "Literal").text(")").build()).build()).build();
+//        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
+//            node(OGC, "Function").attr("name", "isNull").child(
+//                node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase())).build(),
+//            node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+//            node(OGC, "Function").attr("name", "Concatenate").child(
+//                node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+//                node(OGC, "Literal").cdata(" ").build(),
+//                this.getPropertyValueNode(tLayer)
+////                node(OGC, "Literal").text(")").build()
+//              ).build()).build();
+        Node node = node(OGC, "Function").attr("name", "Concatenate").child(
+          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+          node(OGC, "Literal").cdata(" ").build(),
+          this.getPropertyValueNode(tLayer)
+        ).build();
         
         return new TextSymbolizer(visitor, layer, style, node);
       }
@@ -300,14 +306,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         ThematicLayer tLayer = (ThematicLayer) layer;
         
-        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
-            node(OGC, "Function").attr("name", "isNull").child(
-                node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase())).build(),
-            node(OGC, "Literal").text("").build(),
-            node(OGC, "Function").attr("name", "Concatenate").child(
-                node(OGC, "Literal").text(" (").build(),
-                this.getPropertyValueNode(tLayer),
-                node(OGC, "Literal").text(")").build()).build()).build();
+        Node node = this.getPropertyValueNode(tLayer);
 
         return new TextSymbolizer(visitor, layer, style, node);
       }
@@ -585,10 +584,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
                   this.createRule(root, filterNodes, color, catVal, minAttrVal, maxAttrVal, minSize, maxSize);
                 }
-              }
-              
-              // TODO : The "Other" category should use the style of the thematic attribute           
+              }              
             }
+            
+            // TODO : The "Other" category should use the style of the thematic attribute           
           }
           catch (JSONException e)
           {
@@ -1770,16 +1769,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       return this;
     }
-//    
-//    private NodeBuilder cdata(String text)
-//    {
-//      if (text != null)
-//      {
-//        el.appendChild(this.doc.createCDATASection(text));
-//      }
-//      
-//      return this;
-//    }
+    
+    private NodeBuilder cdata(String text)
+    {
+      if (text != null)
+      {
+        el.appendChild(this.doc.createCDATASection(text));
+      }
+      
+      return this;
+    }
 
     private Node build(Node parent)
     {

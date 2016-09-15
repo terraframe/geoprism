@@ -323,7 +323,7 @@ public class GeoserverRestService implements GeoserverService, Reloadable
       publisher.removeStyle(styleName, true);
     }
 
-    if (publisher.publishStyle(body, styleName))
+    if (publisher.publishStyle(body, styleName, true))
     {
       log.info("Published the SLD [" + styleName + "].");
       return true;
