@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.configuration.CommonsConfigurationResolver;
 import com.runwaysdk.configuration.ConfigurationManager.ConfigGroupIF;
+import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.configuration.RunwayConfigurationException;
 
 /**
@@ -54,13 +55,15 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
     
     if (sConfigDir != null)
     {
-      externalConfigDir = new File(sConfigDir);
-      logger.info("Geoprism external config set to [" + sConfigDir + "].");
+      String appName = DeployProperties.getAppName();
+      
+      externalConfigDir = new File(sConfigDir, appName);
+      logger.info("Geoprism external config set to [" + externalConfigDir.getAbsolutePath() + "].");
       
       // No funny business!
       if (!externalConfigDir.exists() || !externalConfigDir.isDirectory())
       {
-        logger.error("geoprism.config.dir was specified as [" + sConfigDir + "] but that directory does not exist.");
+        logger.error("geoprism.config.dir was specified as [" + externalConfigDir.getAbsolutePath() + "] but that directory does not exist.");
         externalConfigDir = null;
       }
     }
