@@ -28,8 +28,16 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 public interface ThematicStyle extends Style
 {
   public static final String VAL   = "val";
-
+  public static final String VALMAX = "valMax";
   public static final String COLOR = "color";
+  public static final String ISRANGECATEGORY = "isRangeCat";
+  public static final String ISOTHERCAT = "otherCat";
+  public static final String RANGEALLMIN = "rangeAllMin";
+  public static final String RANGEALLMAX = "rangeAllMax";
+  public static final String CATEGORYVALUE = "catVal";
+  public static final String CATEGORYCOLOR = "catColor";
+  public static final String CATEGORYTITLE = "catTitle";
+  public static final String CATEGORYMAXVALUE = "catMaxVal";
 
   public Integer getBubbleMinSize();
   public void setBubbleMinSize(Integer size);
