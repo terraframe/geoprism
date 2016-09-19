@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.database.Database;
 
 public class DatabaseUtil
@@ -101,7 +100,12 @@ public class DatabaseUtil
       {
         while (resultSet.next())
         {
-          list.add(resultSet.getString("viewName"));
+          String viewName = resultSet.getString("viewName");
+
+          if (viewName.startsWith(prefix))
+          {
+            list.add(viewName);
+          }
         }
       }
       catch (SQLException sqlEx1)

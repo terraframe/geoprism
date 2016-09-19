@@ -70,8 +70,7 @@
             
       widgetService.createDialog(title, message, buttons);    
     }
-    
-    
+        
     controller.performRemove = function(category) {
       var connection = {
         elementId : '#innerFrameHtml',
@@ -94,7 +93,6 @@
       
       categoryService.deleteOption(connection, category.value);
     }
-
     
     controller.apply = function() {
       var connection = {
@@ -126,35 +124,26 @@
     }        
         
     controller.newInstance = function() {
-      $scope.instance.isNew = true;
-      
-      $window.onclick = function (event) {
-        if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
-          if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
-            controller.apply();
-          }
-          else{
-            $scope.instance.isNew = false;
-          }
-            
-          $scope.$apply();
+      $scope.instance.isNew = true;      
+    }
+    
+    controller.updateCategory = function(category) {
+      var index = -1;
+        
+      for (var i = 0; i < $scope.categories.length; i++) {
+        if(category.id === $scope.categories[i].value) {
+          index = i;
         }
-      };
-    }    
+      }
+    
+      if(index != -1){
+        $scope.categories[index].label = category.label;
+      }
+    }
     
     $scope.$on('categoryOk', function(event, data){
       if(data != null && data.category != null) {
-        var index = -1;
-      
-        for (var i = 0; i < $scope.categories.length; i++) {
-          if(data.category.id =  $scope.categories[i].value) {
-            index = i;
-          }
-        }
-    
-        if(index != -1){
-          $scope.categories[index].label = data.category.label;
-        }    
+        controller.updateCategory(data.category);
       }
     });    
     

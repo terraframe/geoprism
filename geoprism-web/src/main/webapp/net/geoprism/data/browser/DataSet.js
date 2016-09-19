@@ -63,22 +63,26 @@
     }
     
     controller.apply = function(dataset) {
-      
-      var connection = {
-        elementId : '#innerFrameHtml',
-        onSuccess : function(dataset) {
-          var index = controller.getIndex(dataset);
-          var ds = $scope.datasets[index];
-          ds.label = dataset.label;
-          ds.editMode = false;
-          
-          $window.onclick = null;
-          $scope.orignialDatasetState = null;
-          $scope.$apply();
-        }
-      };
-      
-      datasetService.applyDatasetUpdate(connection, dataset);        
+      if(dataset.label.length > 0 && dataset.label !== $scope.orignialDatasetState.label){
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(dataset) {
+            var index = controller.getIndex(dataset);
+            var ds = $scope.datasets[index];
+            ds.label = dataset.label;
+            ds.editMode = false;
+                    
+            $window.onclick = null;
+            $scope.orignialDatasetState = null;
+            $scope.$apply();
+          }
+        };
+                
+        datasetService.applyDatasetUpdate(connection, dataset);        
+      }
+      else{
+        controller.cancelDatasetEdit(dataset);
+      }      
     }
     
     controller.setDatasetState = function(dataset) {
@@ -87,15 +91,11 @@
         $scope.orignialDatasetState = angular.copy(dataset);
       }
       
-      // cancel edit mode if clicking outsid of the input element unless its a button (i.e. submit or cancel)
+      // cancel edit mode if clicking outside of the input element unless its a button (i.e. submit or cancel)
       $window.onclick = function (event) {
         if( !event.target.classList.contains("dataset-list-input") && event.target.type !== 'button' ){
-          if(dataset.label.length > 0 && dataset.label !== $scope.orignialDatasetState.label){
-            controller.apply(dataset);
-          }
-          else{
-            controller.cancelDatasetEdit(dataset);
-          }
+          controller.apply(dataset);
+          
           $scope.$apply();
         }
       };
