@@ -104,9 +104,21 @@
     <url>scm:git:ssh://git@github.com/terraframe/Runway-SDK</url>
     <tag>v2.0.18-SNAPSHOT</tag>
   </scm>
-
+      
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4.2</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-gitexe</artifactId>
+            <version>1.8.1</version>
+          </dependency>
+         </dependencies>
+      </plugin>
+    
       <!-- Add generated source directories -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
