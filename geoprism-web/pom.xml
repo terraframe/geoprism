@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.runwaysdk</groupId>
+    <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0005</version>
+    <version>1.01.0006-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-web</artifactId>
   <packaging>war</packaging>
@@ -41,24 +41,24 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-common</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-client</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-server</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.17</version>
+      <version>2.0.18-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -93,37 +93,6 @@
   </dependencies>
 
   <profiles>
-    <profile>
-      <id>package-deployable</id>
-      <activation>
-        <property>
-          <name>package-deployable</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-              <packagingExcludes>
-                <!-- Source/class project jars must be excluded for reloaded to work -->
-                **/*geoprism-common*.jar,
-                **/*geoprism-client*.jar,
-                **/*geoprism-server*.jar,
-                <!-- Exclude all jars provided by tomcat -->
-                **/*catalina*.jar,
-                **/*servlet-api*.jar,
-                **/*annotations-api*.jar,
-                <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
-                **/aspectjtools*.jar
-              </packagingExcludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <id>cargo-run</id>
       <activation>
@@ -160,7 +129,7 @@
                   <cargo.jvmargs>
                     -Xmx5120M
                     -Xdebug
-                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+                    -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
                     -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
                     -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
                     -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
@@ -175,11 +144,11 @@
               </configuration>
               <deployables>
                 <deployable>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-web</artifactId>
                   <type>war</type>
                   <properties>
-                    <context>geoprism</context>
+                    <context>${geoprism.app}</context>
                   </properties>
                 </deployable>
                 <deployable>
@@ -307,46 +276,46 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-common</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-client</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-server</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-common</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-client</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-server</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>

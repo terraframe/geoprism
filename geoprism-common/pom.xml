@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.runwaysdk</groupId>
+    <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0005</version>
+    <version>1.01.0006-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-common</artifactId>
   <packaging>jar</packaging>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-common</artifactId>
-      <version>2.0.17</version>
+      <version>2.0.18-SNAPSHOT</version>
     </dependency>
     
 		<dependency>
