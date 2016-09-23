@@ -54,7 +54,7 @@
 	        </td>
 	        <td class="submit-form label-column">
 	          <ng-form name="form{{$index}}">
-  	          <input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="orignialDatasetState || ctrl.setDatasetState(dataset)" press-enter="ctrl.apply(dataset)" ng-readonly="!dataset.editMode" validate-unique validator="ctrl.isUniqueLabel">
+  	          <input class="dataset-list-input" type="text" name="datasetListInput.{{$index}}" ng-model="dataset.label" value="{{ dataset.label }}" ng-attr-title="{{ datasetListInputTitle }}" ng-mouseover="ctrl.datasetElementHover($event)" ng-click="orignialDatasetState || ctrl.setDatasetState(dataset, this)" press-enter="ctrl.applyWithUniqueCheck(dataset,this)" ng-readonly="!dataset.editMode" validate-unique validator="ctrl.isUniqueLabel">
 	              <i class="fa fa-pencil ico-edit" ng-show="!dataset.editMode"></i>
 	            </input>
 <%-- 	            <button type="button" class="btn btn-primary btn" role="button" aria-disabled="false" ng-show="dataset.editMode" ng-click="ctrl.apply(dataset)" ng-disabled="form{{$index}}.$invalid"><gdb:localize key="dataset.submit"/></button> --%>
