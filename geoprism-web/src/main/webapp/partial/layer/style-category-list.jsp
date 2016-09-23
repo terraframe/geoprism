@@ -65,7 +65,7 @@
   </div>
   
   <!-- enable/disable range categories -->
-  <div class="style-options-block" ng-if="type === 'number'">    
+  <div class="style-options-block" ng-if="type === 'number' && is-secondary-attribute-list === 'false'">    
     <styled-check-box id="cat-range-categories" model="categories.rangeCategoriesEnabled" label="<gdb:localize key="DashboardThematicLayer.form.categoryRangeCategoriesLabel"/>"></styled-check-box>
   </div>
 </div>

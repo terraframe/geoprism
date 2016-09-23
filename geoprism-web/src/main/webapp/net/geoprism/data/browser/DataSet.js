@@ -49,7 +49,7 @@
       var connection = {
         onSuccess : function() {
           ngModel.$setValidity('unique', true);       
-          scope.$apply();          
+          scope.$apply();      
         },
         onFailure : function(e){
           ngModel.$setValidity('unique', false);          
@@ -57,13 +57,42 @@
         }
       };
         
-      if(label != null && label != '') {
+      if(label !== null && label !== '') {
         datasetService.validateDatasetName(connection, label, scope.$parent.dataset.id);
+      }
+      else{
+    	  ngModel.$setValidity('unique', false);          
+          scope.$apply();
+      }
+    }
+    
+    controller.applyWithUniqueCheck = function(dataset, inputElementScope) {
+      var connection = {
+        onSuccess : function() {
+          controller.apply(dataset);
+          
+          // getting the input element scope in this way is a bit fragile but works for the current use case
+          var inputElementModel = inputElementScope["form"+inputElementScope.$index]["datasetListInput."+inputElementScope.$index];
+          inputElementModel.$setValidity('unique', true); 
+      	  inputElementScope.$apply();
+        },
+        onFailure : function(e){
+        	
+        	// getting the input element scope in this way is a bit fragile but works for the current use case
+        	var inputElementModel = inputElementScope["form"+inputElementScope.$index]["datasetListInput."+inputElementScope.$index];
+        	inputElementModel.$setValidity('unique', false); 
+        	inputElementScope.$apply();
+        }
+      };
+        
+      if(dataset.label !== null && dataset.label !== '' && dataset.label !== $scope.orignialDatasetState.label) {
+        datasetService.validateDatasetName(connection, dataset.label, dataset.id);
       }
     }
     
     controller.apply = function(dataset) {
       if(dataset.label.length > 0 && dataset.label !== $scope.orignialDatasetState.label){
+    	  
         var connection = {
           elementId : '#innerFrameHtml',
           onSuccess : function(dataset) {
@@ -85,7 +114,7 @@
       }      
     }
     
-    controller.setDatasetState = function(dataset) {
+    controller.setDatasetState = function(dataset, inputElementScope) {
       dataset.editMode = true;
       if(!$scope.orignialDatasetState){
         $scope.orignialDatasetState = angular.copy(dataset);
@@ -94,7 +123,7 @@
       // cancel edit mode if clicking outside of the input element unless its a button (i.e. submit or cancel)
       $window.onclick = function (event) {
         if( !event.target.classList.contains("dataset-list-input") && event.target.type !== 'button' ){
-          controller.apply(dataset);
+          controller.applyWithUniqueCheck(dataset, inputElementScope);
           
           $scope.$apply();
         }
