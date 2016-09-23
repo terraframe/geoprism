@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function CategoryController($scope, $timeout, categoryService) {
+  function CategoryController($scope, $timeout, categoryService, datasetService, localizationService, widgetService) {
     var controller = this;
     
     controller.init = function() {
@@ -31,8 +31,10 @@
         } 
       };      
       
+      controller.cancel();
+      
       categoryService.getAll(connection);
-    }    
+    }
     
     controller.edit = function(category) {
       var connection = {
@@ -46,6 +48,104 @@
 
       categoryService.get(connection, category.value);
     }
+    
+    controller.remove = function(category) {
+      var title = localizationService.localize("category.management", "removeOptionTitle", "Delete option");
+
+      var message = localizationService.localize("category.management", "removeCategoryConfirm", "Are you sure you want to delete the category [{0}]?");
+      message = message.replace('{0}', category.label);
+            
+      var buttons = [];
+      buttons.push({
+        label : localizationService.localize("layer.category", "ok", "Ok"),
+        config : {class:'btn btn-primary'},
+        callback : function(){
+          controller.performRemove(category);
+        }
+      });
+      buttons.push({
+        label : localizationService.localize("dataset", "cancel", "Cancel"),
+        config : {class:'btn'}
+      });
+            
+      widgetService.createDialog(title, message, buttons);    
+    }
+        
+    controller.performRemove = function(category) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(response) {
+          var index = -1;
+            
+          for (var i = 0; i < $scope.categories.length; i++) {
+            if(category.id =  $scope.categories[i].value) {
+              index = i;
+            }
+          }
+        
+          if(index != -1){
+            $scope.categories.splice(index, 1);
+          }
+            
+          $scope.$apply();
+        }
+      };
+      
+      categoryService.deleteOption(connection, category.value);
+    }
+    
+    controller.apply = function() {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(option) {
+          option.value = option.id;
+          
+          $scope.categories.push(option);
+          
+          controller.cancel();          
+                
+          $scope.$apply();
+        }
+      };
+                            
+      if($scope.instance.label.trim().length > 0) {
+        $scope.errors = [];
+        
+        categoryService.createOption(connection, JSON.stringify($scope.instance));        
+      }
+    }
+    
+    controller.cancel = function() {
+      $scope.instance = {
+        isNew : false,
+        label : '',
+        validate : true
+      };      
+    }        
+        
+    controller.newInstance = function() {
+      $scope.instance.isNew = true;      
+    }
+    
+    controller.updateCategory = function(category) {
+      var index = -1;
+        
+      for (var i = 0; i < $scope.categories.length; i++) {
+        if(category.id === $scope.categories[i].value) {
+          index = i;
+        }
+      }
+    
+      if(index != -1){
+        $scope.categories[index].label = category.label;
+      }
+    }
+    
+    $scope.$on('categoryOk', function(event, data){
+      if(data != null && data.category != null) {
+        controller.updateCategory(data.category);
+      }
+    });    
     
     controller.init();
   }
@@ -110,7 +210,7 @@
     }   
   }
   
-  function CategoryPageController($scope, categoryService, widgetService, localizationService, $window) {
+  function CategoryPageController($scope, categoryService, datasetService, widgetService, localizationService, $window) {
     var controller = this;
     
     controller.init = function() {
@@ -123,26 +223,64 @@
       $window.onclick = null;
     }
       
-    controller.ok = function() {      
-      $scope.$emit('categoryOk');
+    controller.ok = function() {
+      if(controller.form.$dirty) {
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function() {
+            $scope.$emit('categoryOk', {category : $scope.category});        
+
+            $scope.$apply();
+          },
+          onFailure : function(e){
+            $scope.errors.push(e.message);
+                   
+            $scope.$apply();
+          }        
+        };
+              
+        $scope.errors = [];
+              
+        categoryService.updateCategory(connection, JSON.stringify($scope.category));
+      }
+      else {
+        $scope.$emit('categoryOk');        
+      }
     }
     
     controller.newInstance = function() {
       $scope.instance.isNew = true;
       
       $window.onclick = function (event) {
-      	if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
-  	        if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
-  	        	controller.apply();
-  	        }
-  	        else{
-  	        	$scope.instance.isNew = false;
-  	        }
-  	        
-  	        $scope.$apply();
-      	}
+        if(!event.target.classList.contains("list-table-input") && !event.target.classList.contains("fa") && event.target.type !== 'button' ){
+            if( $scope.instance.isNew && $scope.instance.label.length > 0 ){
+              controller.apply();
+            }
+            else{
+              $scope.instance.isNew = false;
+            }
+            
+            $scope.$apply();
+        }
       };
     }
+    
+    controller.isUniqueLabel = function(label, ngModel, scope) {
+      var connection = {
+        onSuccess : function() {
+          ngModel.$setValidity('unique', true);       
+          scope.$apply();          
+        },
+        onFailure : function(e){
+          ngModel.$setValidity('unique', false);          
+          scope.$apply();
+        }
+      };
+              
+      if(label != null && label != '') {      
+        datasetService.validateCategoryName(connection, label, $scope.category.id);
+      }        
+    }        
     
     controller.apply = function() {
       var connection = {
@@ -161,9 +299,11 @@
         }        
       };
               
-      $scope.errors = [];
+      if($scope.instance.label.trim().length > 0) {      
+        $scope.errors = [];
               
-      categoryService.createOption(connection, JSON.stringify($scope.instance));
+        categoryService.createOption(connection, JSON.stringify($scope.instance));
+      }
     }
     
     controller.cancel = function() {
@@ -297,7 +437,7 @@
         restore : $scope.actions.restore
       }
       
-      categoryService.applyOption(connection, JSON.stringify(config));              
+      categoryService.applyOption(connection, JSON.stringify(config));
     }
     
     controller.cancel = function() {
@@ -381,7 +521,7 @@
     }   
   }
   
-  angular.module("category-management", ["styled-inputs", "category-service", "widget-service", "localization-service"]);
+  angular.module("category-management", ["styled-inputs", "category-service", "dataset-service", "widget-service", "localization-service"]);
   angular.module("category-management")
    .controller('CategoryController', CategoryController)
    .directive('categoryModal', CategoryModal)

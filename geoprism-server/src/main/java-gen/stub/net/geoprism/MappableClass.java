@@ -34,6 +34,7 @@ import net.geoprism.dashboard.DashboardAttributes;
 import net.geoprism.dashboard.DashboardMetadata;
 import net.geoprism.dashboard.MetadataWrapper;
 import net.geoprism.dashboard.MetadataWrapperQuery;
+import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.etl.TargetBinding;
 import net.geoprism.ontology.Classifier;
 
@@ -189,7 +190,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
      */
     List<String> viewNames = Database.getReferencingViews(MdElementDAO.getMdElementDAO(mdClass.definesType()));
 
-    Database.dropViews(viewNames);
+    DatabaseUtil.dropViews(viewNames);
 
     mdClass.delete();
   }

@@ -42,9 +42,14 @@
             <label><gdb:localize key="category.management.label"/></label>
           </div>    
           <div class="holder" >
-            <div class="box">
-              <label>{{category.label}}</label>
-            </div>
+            <span class="text">
+              <input type="text" ng-model="category.label" name="label" required validate-unique validator="ctrl.isUniqueLabel">
+            </span>
+            <div class="inline-error-message">
+              <p ng-show="ctrl.form.label.$error.unique">
+                <gdb:localize key="dataUploader.unique"/>
+              </p>
+            </div>         
           </div>
         </div>
         <div class="row-holder">

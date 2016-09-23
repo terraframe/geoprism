@@ -177,6 +177,7 @@ i.fa:hover,
 i.fa:focus
 {
 	color: #00bfff;
+	cursor: pointer;
 }
 
 .fa-stack:hover .fa {
@@ -519,6 +520,10 @@ i {
 	height:20px;
 	background:#eee;
 }
+.chk-area:hover,
+.rad-area:hover{
+	cursor: pointer;
+}
 .rad-area{
 	padding:5px;
 	border-radius:50%;
@@ -578,6 +583,33 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	float: left;
 	display: block;
 	margin-left: 7px;
+}
+
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox{
+	cursor: pointer;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox:hover{
+	border-color:#00bfff;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked {
+	border-color: #02789e;
+	background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
+	float: left;
+	display: block;
+	margin-top: 0 !important;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget {
+	border-color: #02789e;
+	float: left;
+	display: block;
+	margin-right: 7px;
+	margin-top: 0 !important;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget:hover {
+	border-color:#00bfff;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked:hover {
+	border-color: #02789e;
 }
 	
 
@@ -1323,6 +1355,24 @@ input :focus::-moz-placeholder{opacity:0 !important;}
 .modal-form .vertical-checkbox-container .check-block{ 
 	min-width: 0;
 }
+
+.builder-data-set{
+	width: 100%;
+}
+.builder-data-set ul li{
+/* 	height: 25px; */
+    width: 100%;
+}
+.builder-data-set .builder-data-set-inner-list{
+    margin-left: 20px;
+}
+.builder-data-set .builder-data-set-inner-list li {
+	width: 100%;
+}
+.builder-data-set .builder-data-set-inner-list li .check-block {
+	width: 100%;
+}
+
 .modal-form .check-block .chk-area{margin:25px 0px 0 0;}
 .modal-form .check-block label{
 	float:left;
@@ -1750,6 +1800,11 @@ option[selected]{ font-weight:bold}
 }
 
 
+.modal-form .table.table-bordered {
+    font-size: 12px;
+}
+
+
 .fa.fa-question-circle.help-info-ico{
 	font-size: 17px;
     color: #02789E;
@@ -2051,7 +2106,7 @@ div.alert.alertbox {
 
 .vertical-checkbox-container{
 	float: left;
-	width: 100%;
+    width: 100%;
 }
 
 a.opener-link.checkbox-label{

@@ -92,7 +92,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     SLDMapVisitor visitor = new SLDMapVisitor();
     layer.accepts(visitor);
     String sld = visitor.getSLD(layer);
-
+    
     return sld;
   }
 

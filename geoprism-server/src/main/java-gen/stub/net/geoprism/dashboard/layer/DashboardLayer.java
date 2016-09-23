@@ -27,6 +27,7 @@ import net.geoprism.dashboard.DashboardMap;
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.HasStyle;
 import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.data.DatabaseUtil;
 import net.geoprism.gis.geoserver.GeoserverBatch;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.geoserver.GeoserverProperties;
@@ -261,12 +262,12 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
 
     if (dropExisting)
     {
-      Database.dropView(this.getViewName(), sql, false);
+      DatabaseUtil.dropView(this.getViewName(), sql, false);
     }
 
-    Database.createView(this.getViewName(), sql);
+    DatabaseUtil.createView(this.getViewName(), sql);
   }
-
+  
   /**
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
    * does not exist yet.

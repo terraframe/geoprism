@@ -43,6 +43,13 @@
   
   <div class="list-table-wrapper">
 	  <table id="manage-icons-table" class="list-table table table-bordered table-striped">        
+      <thead>
+        <tr>
+          <th></th>
+          <th class="label-column"><gdb:localize key='category.icon.label'/></th>
+          <th class="label-column"><gdb:localize key='category.icon.preview'/></th>
+        </tr>
+      </thead>	  
 	    <tbody>
 	      <tr ng-repeat="icon in icons" class="fade-ngRepeat-item">
 	        <td class="button-column">
@@ -57,6 +64,13 @@
 	          <img ng-if="icon.id && icon.id.length > 0" style="width:42px;height:42px;" class="thumb" ng-src="/iconimage/getCategoryIconImage?iconId={{ icon.id }}&{{ icon.timeStamp }}" alt="Icon">                  
 	        </td>
 	      </tr>      
+        <tr>
+          <td class="button-column">
+            <a class="fa fa-plus" ng-click="ctrl.add()" title="<gdb:localize key="category.icon.addTooltip"/>"></a>
+          </td>                 
+          <td colspan="2">
+          </td>                 
+        </tr>	      
 	    </tbody>    
 	  </table>
   </div>
@@ -145,18 +159,4 @@
       </dl>
     </div>
   </div> <!-- end modal wrapper -->
-  
-  <div class="row-holder" fire-on-ready>
-    <div class="label-holder"></div>                    
-    <div class="holder">
-      <div class="button-holder">
-        <button type="submit" class="btn btn-primary" ng-click="ctrl.add(icon)" >
-        	<gdb:localize key="category.icon.addTooltip"/>
-            &nbsp;
-        	<i class="fa fa-plus"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-  
 </div>

@@ -66,6 +66,12 @@
 }
 
 
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox{
+	cursor: pointer;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox:hover{
+	border-color:#00bfff;
+}
 .com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked {
 	border-color: #02789e;
 	background: #00bfff url(../images/sprite.png) no-repeat -43px -20px;
@@ -79,6 +85,12 @@
 	display: block;
 	margin-right: 7px;
 	margin-top: 0 !important;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget:hover {
+	border-color:#00bfff;
+}
+.com-runwaysdk-ui-factory-runway-checkbox-CheckBox.com-runwaysdk-ui-factory-runway-Widget.checked:hover {
+	border-color: #02789e;
 }
 
 
@@ -162,6 +174,10 @@ i.fa.fa-angle-double-right.toggle-left:focus{
 .control-form .fa{
 	float:left;
 	margin:4px 11px 0 0;
+}
+
+.control-form #collapse-overlay .accordion-inner .row-form .fa{
+	margin:4px 4px 0 0;
 }
 
 
@@ -295,7 +311,7 @@ a.fa.fa-bars.opener-drop {
 }
 .dropdown-menu li:hover,
 .dropdown-menu li:focus{
-	color:#333;
+	color:#00bfff;
 	background:#ddd;
 	text-decoration:none;
 }
@@ -318,7 +334,7 @@ a.fa.fa-bars.opener-drop {
     display: block;
     margin-top: 0;
     width: 100%;
-    min-width: 150px;
+    min-width: 155px;
  }
  
  .dropdown.navigation-dropdown {
@@ -336,8 +352,9 @@ a.fa.fa-bars.opener-drop {
     white-space: nowrap;
     padding-left: 5px;
 }
-.dropdown-menu.navigation-menu li:hover > i {
-	color: black;
+.dropdown-menu.navigation-menu li:hover > i,
+.dropdown-menu.navigation-menu li:hover > p {
+	color: #00bfff;
 }
 
 

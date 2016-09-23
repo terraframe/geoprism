@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function CategoryValidationProblemController($scope, datasetService) {
+  function CategoryValidationProblemController($scope, datasetService, categoryService) {
     var controller = this;
     $scope.problem.synonym = null;
     
@@ -74,6 +74,38 @@
       datasetService.createClassifierSynonym(connection, $scope.problem.synonym, $scope.problem.label);
     }
     
+    
+    controller.createOption = function() {
+      var connection = {
+        elementId : '#uploader-overlay',
+        onSuccess : function(response){
+          $scope.problem.resolved = true;
+          $scope.problem.action = {
+            name : 'OPTION',
+            optionId : response.id
+          };
+      
+          $scope.$apply();        
+        },
+        onFailure : function(e){
+          $scope.errors = [];
+          $scope.errors.push(e.localizedMessage);
+      
+          $scope.$apply();
+        }      
+      };
+        
+      $scope.errors = undefined;
+      
+      var option = {
+        parentId : $scope.problem.categoryId,
+        label : $scope.problem.label
+      };
+      
+      categoryService.createOption(connection, JSON.stringify(option));
+    }
+
+    
     controller.ignoreValue = function() {
       $scope.problem.resolved = true;
       
@@ -126,7 +158,7 @@
           
           controller.removeExclusion();
         }
-        else {
+        else if (action.name === 'SYNONYM'){
           var connection = {
             elementId : '#uploader-overlay',
             onSuccess : function(response){
@@ -144,8 +176,27 @@
               $scope.$apply();
             }      
           };
-        	
+          
           datasetService.deleteClassifierSynonym(connection, action.synonymId);                    
+        }
+        else {
+          var connection = {
+            elementId : '#uploader-overlay',
+            onSuccess : function(response){
+              $scope.problem.resolved = false;
+              $scope.problem.optionId = null;
+                              
+              $scope.$apply();        
+            },
+            onFailure : function(e){
+              $scope.errors = [];
+              $scope.errors.push(e.localizedMessage);
+                              
+              $scope.$apply();
+            }      
+          };
+                  
+          categoryService.deleteOption(connection, action.optionId);
         }
       }
     }
@@ -206,8 +257,8 @@
       }
     }   
   }  
-	
-  function GeoValidationProblemController($scope, datasetService) {
+  
+  function GeoValidationProblemController($scope, datasetService, runwayService) {
     var controller = this;
     $scope.problem.synonym = null;
     
@@ -322,17 +373,10 @@
       }
     }
     
-    controller.guid = function() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-          return v.toString(16);
-      });
-    }
-    
     controller.ignoreDataAtLocation = function() {
       var locationLabel = $scope.problem.label;
       var universal = $scope.problem.universalId;
-      var id = controller.guid();
+      var id = runwayService.generateId();
       
       $scope.problem.resolved = true;
       
@@ -352,8 +396,7 @@
       else{
         config.locationExclusions = [exclusion];
       }
-    }
-    
+    }    
 
     controller.undoAction = function() {
       var locationLabel = $scope.problem.label;
@@ -464,7 +507,7 @@
           $scope.$emit('loadConfiguration', {sheet: sheet});
       
           $scope.$apply();
-        }    		  
+        }          
       };
       
       datasetService.getSavedConfiguration(connection, match.id, $scope.sheet.name);      
@@ -492,8 +535,8 @@
      * @param leavingPage <optional> 
      */
     controller.next = function(targetPage, leavingPage) {
-    	// emiting to UploaderDialogController
-    	$scope.$emit('nextPage', {targetPage:targetPage, leavingPage:leavingPage});
+      // emiting to UploaderDialogController
+      $scope.$emit('nextPage', {targetPage:targetPage, leavingPage:leavingPage});
     }
   }
   
@@ -558,7 +601,7 @@
       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/name-page.jsp',
       scope: true,
       controller : NamePageController,
-      controllerAs : 'ctrl',    	  
+      controllerAs : 'ctrl',        
       link: function (scope, element, attrs) {
       }
     }   
@@ -588,9 +631,16 @@
       $scope.textFields = {};
       
       for(var i = 0; i < $scope.sheet.fields.length; i++) {
-        controller.accept($scope.sheet.fields[i]);
+    	var sheetField = $scope.sheet.fields[i];
+        controller.accept(sheetField);
       }
-    }    
+    }
+    
+    controller.initializeField = function(field) {
+      if(field.categoryLabel == null) {
+        field.categoryLabel = field.label;
+      }
+    }
   
     controller.isUniqueLabel = function(label) {
       if($scope.sheet != null) {
@@ -611,26 +661,58 @@
         
       return true;
     }
-    
-    controller.isUniqueCategory = function(label, ngModel, scope) {
-      var connection = {
-        onSuccess : function() {
-          ngModel.$setValidity('unique', true);       
-          scope.$apply();          
-        },
-        onFailure : function(e){
-          ngModel.$setValidity('unique', false);          
-          scope.$apply();
-        }
-      };
         
-      if(label != null && label != '') {      
-        datasetService.validateCategoryName(connection, label, '');
+    controller.isUniqueCategory = function(label, ngModel, scope) {
+      
+      // First: Ensure the category label is unique with respect to the local categories
+      var valid = true;
+      
+      if($scope.sheet != null) {
+        var count = 0;
+            
+        for(var i = 0; i < $scope.sheet.fields.length; i++) {
+          var field = $scope.sheet.fields[i];
+              
+          if(field.type == 'CATEGORY' && field.root == null && field.categoryLabel == label) {
+            count++;
+          }            
+        }
+            
+        if(count > 1) {
+          valid = false;
+        }
+      }      
+      
+      // Second: Ensure the category label is unique with respect to the remote categories
+      if(valid) {
+        var connection = {
+          onSuccess : function() {
+            ngModel.$setValidity('unique', true);       
+            scope.$apply();          
+          },
+          onFailure : function(e){
+            ngModel.$setValidity('unique', false);          
+            scope.$apply();
+          }
+        };
+        
+        if(label != null && label != '') {      
+          datasetService.validateCategoryName(connection, label, '');
+        }        
       }
+      else {
+        ngModel.$setValidity('unique', false);          
+        scope.$apply();      
+      }
+      
     }
     
     controller.accept = function(field) {
       field.accepted = true;
+      
+      if(field.type === "IGNORE"){
+    	  
+      }
       
       if(field.type === "LOCATION" || field.type === 'COORDINATE'){
         controller.setLocationSelected(field.type);
@@ -658,6 +740,10 @@
       }
       else {
         delete $scope.textFields[field.name];
+      }
+      
+      if(field.type === "CATEGORY") {
+    	  controller.setCategorySelected(field.type);
       }
       
       var matched = (Object.keys($scope.latitudeFields).length == Object.keys($scope.longitudeFields).length);
@@ -689,13 +775,28 @@
         for(var i=0; i<$scope.sheet.fields.length; i++){
           var field = $scope.sheet.fields[i];
           
-          if((field.type === "LOCATION" || field.type === "LONGITUDE" || field.type === "LATITUDE") && locationTypeArr.indexOf(field.type) === -1){
+          if(field.type === "LOCATION" && locationTypeArr.indexOf(field.type) === -1){
             locationTypeArr.push(field.type);
           }
+          else if(field.type === "LONGITUDE" || field.type === "LATITUDE"){
+	          for(var c=0; c<$scope.sheet.fields.length; c++){
+	    		  var field2 = $scope.sheet.fields[c];
+	    		  if(field2.type !== field.type && field2.type === "LATITUDE" || field2.type === "LONGITUDE"){
+	    			  if(locationTypeArr.indexOf(field.type) === -1){
+	    				  locationTypeArr.push(field.type);
+		    		  }
+	    		  }
+	    	  }
+          }
+          
         }
       }
       
-      $scope.$emit('hasLocationEvent', locationTypeArr);
+      $scope.$emit('hasSpecialTypeEvent', {type:"LOCATION", typeConstant:locationTypeArr});
+    }
+    
+    controller.setCategorySelected = function(category) {
+    	$scope.$emit('hasSpecialTypeEvent', {type:"CATEGORY", typeConstant:category});
     }
     
     controller.initialize();
@@ -737,7 +838,7 @@
         var field = $scope.sheet.fields[j];
             
         if(field.type == 'LOCATION') {
-          if($scope.locationFields[field.universal]  == null) {
+          if($scope.locationFields[field.universal] == null) {
             $scope.locationFields[field.universal] = [];
           }
             
@@ -754,7 +855,7 @@
      */
     controller.getLowestUnassignedLocationFields = function() {
       var unassignedLowestFields = [];
-    	
+      
       for(var i = ($scope.universals.length - 1); i >= 0; i--) {
         var universal = $scope.universals[i];
         
@@ -765,12 +866,12 @@
             var field = fields[j];
             
             if(!field.assigned) {              
-            	unassignedLowestFields.push({field:field, universal:universal});
+              unassignedLowestFields.push({field:field, universal:universal});
             }
           }
           
           if(unassignedLowestFields.length > 0){
-        	  return unassignedLowestFields;
+            return unassignedLowestFields;
           }
         }        
       }  
@@ -786,18 +887,18 @@
      */
     controller.getUnassignedLocationFields = function(universalId) {
       if($scope.locationFields.hasOwnProperty(universalId)){
-	      var fields = $scope.locationFields[universalId];
-	      var unassignedFields = [];
-	  
-	      for(var j = 0; j < fields.length; j++) {
-	        var field = fields[j];
-	        
-	        if(!field.assigned) {              
-	        	unassignedFields.push(field);
-	        }
-	      }
-	          
-	      return unassignedFields;
+        var fields = $scope.locationFields[universalId];
+        var unassignedFields = [];
+    
+        for(var j = 0; j < fields.length; j++) {
+          var field = fields[j];
+          
+          if(!field.assigned) {              
+            unassignedFields.push(field);
+          }
+        }
+            
+        return unassignedFields;
       }
       
       return [];
@@ -808,10 +909,8 @@
      * Gets the next location moving from low to high in the universal hierarchy. 
      * Valid returns include another field at the same universal level or a higher universal level.
      * 
-     * @currentFieldUniversal - universal id of a field that is considered the current and which 
-     * 							this method seeks to find the the next.
      */
-    controller.getNextLocationField = function(currentFieldUniversal) {
+    controller.getNextLocationField = function() {
         for(var i = ($scope.universals.length - 1); i >= 0; i--) {
             var universal = $scope.universals[i];
             
@@ -828,17 +927,78 @@
             }        
           }  
           
-      return null;
+          return null;
     } 
     
     
     controller.edit = function(attribute) {
+      // This should only be hit if trying to edit when an existing edit session is in place. 
+      if($scope.attribute && $scope.sheet.attributes.values[$scope.attribute.id]){
+    	  if($scope.sheet.attributes.values[$scope.attribute.id].editing){
+    		  $scope.sheet.attributes.values[$scope.attribute.id].editing = false;
+    	  }
+    	  
+    	  // all fields that are in the current attribute (ui widget) should be set back to assigned
+    	  // which creates a save type behavior for the current state of the attribute.
+    	  controller.setFieldAssigned();
+      }
+      
       $scope.attribute = angular.copy(attribute);
+      
+      $scope.sheet.attributes.values[$scope.attribute.id].editing = true;
+      
+      controller.unassignLocationFields();
+      
+      var locFieldsSelectedButNotYetAssigned = controller.getLocationFieldsSelectedInWidget();
+      controller.refreshUnassignedFields(locFieldsSelectedButNotYetAssigned);
             
       var fieldLabel = $scope.attribute.fields[attribute.universal];      
       var field = controller.getField(fieldLabel);
 
-      controller.setUniversalOptions(field);      
+      // EXCLUDEed fields should be skipped
+      if(field){
+    	  controller.setUniversalOptions(field);  
+      }
+    }
+    
+    
+    /**
+     * Sets all $scope.locationFields to false if the location field is part of $scope.attribute.fields.
+     */
+    controller.unassignLocationFields = function(){
+    	for (var key in $scope.attribute.fields) {
+    		if ($scope.attribute.fields.hasOwnProperty(key)) {
+    			var attributeFieldLabel = $scope.attribute.fields[key];
+    			var locFields = $scope.locationFields[key];
+    			for(var i=0; i<locFields.length; i++){
+          	    	var locField = locFields[i];
+          	    	if(locField.label === attributeFieldLabel){
+          	    		locField.assigned = false;
+          	    	}
+    			}
+    		}
+    	}
+    }
+    
+    
+    controller.getLocationFieldsSelectedInWidget = function() {
+        var unassignedFields = [];
+        for (var key in $scope.attribute.fields) {
+      	  if ($scope.attribute.fields.hasOwnProperty(key)) {
+      		var attributeFieldLabel = $scope.attribute.fields[key];
+      	    var locFields = $scope.locationFields[key];
+      	    
+      	    for(var i=0; i<locFields.length; i++){
+      	    	var locField = locFields[i];
+      	    	// making sure to only add fields that are part of $scope.attribute
+      	    	if(locField.label === attributeFieldLabel && !locField.assigned){
+      	    		unassignedFields.push(locField.label);
+      	    	}
+      	    }
+      	  }
+        }
+        
+        return unassignedFields;
     }
     
     
@@ -864,7 +1024,8 @@
      * Populate the unassigned field array from sheet.fields
      * 
      * @selectedFields - fields that are to be excluded from the unassignedFields array. Typically this is because they are set in the 
-     * 					 location field attribute by the user in the UI and that location card has not yet been set.
+     *            location field attribute by the user in the UI and that location card has not yet been set. Keeping these fields out
+     *            of the unassignedFields array ensures the fields aren't displayed as unassigned in the UI.
      */
     controller.refreshUnassignedFields = function(selectedFields) {
       $scope.unassignedFields = [];
@@ -873,23 +1034,27 @@
         for(var i = 0; i < $scope.sheet.fields.length; i++) {     
           var field = $scope.sheet.fields[i];
               
-          if(field.type == 'LOCATION' && !field.assigned && field.name != $scope.attribute.name && selectedFields.indexOf(field.name) === -1 ) {
+          if(field.type == 'LOCATION' && !field.assigned && field.name != $scope.attribute.label && selectedFields.indexOf(field.name) === -1 ) {
             $scope.unassignedFields.push(field);
           }
-        }                      	  
+        }                          
       }
     }
-      
+    
+    /**
+     * Remove attribute from the sheet 
+     * 
+     * @attribute - attribute to remove
+     */
     controller.remove = function(attribute) {
-      if($scope.sheet.attributes.values[attribute.id] != null) {
+      if($scope.sheet.attributes.values[attribute.id]) {
               
         delete $scope.sheet.attributes.values[attribute.id];        
         $scope.sheet.attributes.ids.splice( $.inArray(attribute.id, $scope.sheet.attributes.ids), 1 );
         
-        // Update the field.assigned status which sets assigned for all fields that are in sheet.attributes
         controller.setFieldAssigned();
         
-        if($scope.attribute == null) {
+        if(!$scope.attribute) {
           controller.newAttribute();
         } 
         else {
@@ -903,30 +1068,38 @@
      * Create a new attribute from a location field in the source data
      * 
      * @attribute - location field that is being constructed. 
-     * 				It corresponds to a configurable location card on the UI where the user can set the location.
+     *         It corresponds to a configurable location card on the UI where the user can set the location.
      */
     controller.newAttribute = function() {
-    	
-      if($scope.attribute != null) {      
-        if($scope.attribute.id == -1) {
-          $scope.attribute.id = runwayService.generateId();
-          $scope.sheet.attributes.ids.push($scope.attribute.id);
-          $scope.sheet.attributes.values[$scope.attribute.id] = {};              
-        }     
+      
+	    if($scope.attribute) {      
+	        if($scope.attribute.id === -1) {
+	          $scope.attribute.id = runwayService.generateId();
+	          $scope.sheet.attributes.ids.push($scope.attribute.id);
+	          $scope.sheet.attributes.values[$scope.attribute.id] = {};              
+	        }     
+	        
+	        //controller.handleExcludedFields();
+	        
+	        var attributeInSheet = $scope.sheet.attributes.values[$scope.attribute.id];    
+	        attributeInSheet.editing = false;
+	        
+	        // copy the properties from the attribute (cofigurable widget in the ui) to sheet.attributes
+	        // $scope.attribute is coppied to --> attributeInSheet
+	        angular.copy($scope.attribute, attributeInSheet);            
+	        
+	        // Set the assigned prop in sheet.fields if an attribute stored in sheet.attributes.values
+	        // also references the field.  This means that a saved attribute has claimed that field.
+	        controller.setFieldAssigned();
+	    }
         
-        var attribute = $scope.sheet.attributes.values[$scope.attribute.id];      
-        angular.copy($scope.attribute, attribute);              
-        
-        // Update the field.assigned status
-        controller.setFieldAssigned();
-        
-        var location = controller.getNextLocationField($scope.attribute.universal);      
+        var nextLocation = controller.getNextLocationField();      
         
         // This typically passes when a user manually sets an attribute and 
         // there are more location fields yet to be set
-        if(location != null) {
-          var field = location.field;
-          var universal = location.universal;
+        if(nextLocation) {
+          var field = nextLocation.field;
+          var universal = nextLocation.universal;
           
           $scope.attribute = {
             label : field.label,
@@ -937,16 +1110,34 @@
 
           controller.addField(field);
           controller.setUniversalOptions(field);
-          
-          // After manually setting an attribute there may be an auto-assignement possible for the remaining fields
-          controller.setLocationFieldAutoAssignment();
+          controller.refreshUnassignedFields([]);
         }
         else {
           controller.refreshUnassignedFields([]);
           $scope.attribute = null;
         }
-      }
     }
+    
+    //TODO: remove this if not needed
+//    controller.handleExcludedFields = function() {
+//    	var attributeFieldsToDelete = [];
+//    	for (var key in $scope.attribute.fields) {
+//    		if ($scope.attribute.fields.hasOwnProperty(key)) {
+//    			var attributeFieldLabel = $scope.attribute.fields[key];
+//    			if(attributeFieldLabel === "EXCLUDE"){
+//    				attributeFieldsToDelete.push(key);
+//    			}
+//    		}
+//    	}
+//    	
+//    	for(var i=0; i<attributeFieldsToDelete.length; i++){
+//    		var field = attributeFieldsToDelete[i];
+//    		
+//    		if(field){
+//    			delete $scope.attribute.fields[field];
+//    		}
+//    	}
+//    }
     
     
     /**
@@ -958,71 +1149,71 @@
      *  
      */
     controller.setLocationFieldAutoAssignment = function() {
-    	
-    	var lowestLevelUnassignedLocationFields = controller.getLowestUnassignedLocationFields();  
-    	var lowestLevelUnassignedUniversal;
-    	if(lowestLevelUnassignedLocationFields.length > 0){
-    		lowestLevelUnassignedUniversal = lowestLevelUnassignedLocationFields[0].universal.value;
-    	}
+      
+      var lowestLevelUnassignedLocationFields = controller.getLowestUnassignedLocationFields();  
+      var lowestLevelUnassignedUniversal;
+      if(lowestLevelUnassignedLocationFields.length > 0){
+        lowestLevelUnassignedUniversal = lowestLevelUnassignedLocationFields[0].universal.value;
+      }
             
         if(lowestLevelUnassignedLocationFields.length === 1){
             for(var j = 0; j < lowestLevelUnassignedLocationFields.length; j++) {
                 var field = lowestLevelUnassignedLocationFields[j].field;
                 
-	            // construct the initial model for a location field
-	            $scope.attribute = {
-	              label : field.label,
-	              name : field.name,
-	              universal : field.universal,
-	              fields : {},
-	              id : -1
-	            };
-	    
-	            // add the targetLocationField.field (remember, it's from the source data) 
-	            // to the new location field (i.e. attribute)
-	            controller.addField(field);
-	            
-	            // sets all valid universal options (excluding the current universal) for this location field
-	            controller.setUniversalOptions(field); 
-	            
-	            // There is only one or no universal options (i.e. context locations) so just set the field
-	            // to save a click for the user
-	            if($scope.universalOptions.length < 1){
-	            	// calling newAttribute() is safe because there are no other location fields so the 
-	            	// location attribute will just be set to null.
-	            	controller.newAttribute(); 
-	            }
-	            else{
-	            	// Attempting auto-assignment of context fields
-	            	controller.constructContextFieldsForAttribute(field);
-	            }
+              // construct the initial model for a location field
+              $scope.attribute = {
+                label : field.label,
+                name : field.name,
+                universal : field.universal,
+                fields : {},
+                id : -1
+              };
+      
+              // add the targetLocationField.field (remember, it's from the source data) 
+              // to the new location field (i.e. attribute)
+              controller.addField(field);
+              
+              // sets all valid universal options (excluding the current universal) for this location field
+              controller.setUniversalOptions(field); 
+              
+              // There is only one or no universal options (i.e. context locations) so just set the field
+              // to save a click for the user
+              if($scope.universalOptions.length < 1){
+                // calling newAttribute() is safe because there are no other location fields so the 
+                // location attribute will just be set to null.
+                controller.newAttribute(); 
+              }
+              else{
+                // Attempting auto-assignment of context fields
+                controller.constructContextFieldsForAttribute(field);
+              }
             }
         }
         // There are more than one lowest level un-assigned fields so lets not assume we can guess context fields.
         else if(lowestLevelUnassignedLocationFields.length > 1){
-        	for(var j = 0; j < lowestLevelUnassignedLocationFields.length; j++) {
+          for(var j = 0; j < lowestLevelUnassignedLocationFields.length; j++) {
                 var field = lowestLevelUnassignedLocationFields[j].field;
                 
-	            // construct the initial model for a location field
-	            $scope.attribute = {
-	              label : field.label,
-	              name : field.name,
-	              universal : field.universal,
-	              fields : {},
-	              id : -1
-	            };
-	            
-	            // add the targetLocationField.field (remember, it's from the source data) 
-	            // to the new location field (i.e. attribute)
-	            controller.addField(field);
-	          
-	            // sets all valid universal options (excluding the current universal) for this location field
-	            controller.setUniversalOptions(field);
-	            
-	            controller.refreshUnassignedFields([field.name]);
-	            
-	            break;
-        	}
+              // construct the initial model for a location field
+              $scope.attribute = {
+                label : field.label,
+                name : field.name,
+                universal : field.universal,
+                fields : {},
+                id : -1
+              };
+              
+              // add the targetLocationField.field (remember, it's from the source data) 
+              // to the new location field (i.e. attribute)
+              controller.addField(field);
+            
+              // sets all valid universal options (excluding the current universal) for this location field
+              controller.setUniversalOptions(field);
+              
+              controller.refreshUnassignedFields([field.name]);
+              
+              break;
+          }
         }
     }
     
@@ -1032,31 +1223,31 @@
      * NOTE: there is an assumption that this will only be called for a lowest level univeral field
      * 
      * @field - the target field to which context fields would be built from. This is typically a field
-     * 			in the lowest level universal of a sheet.
+     *       in the lowest level universal of a sheet.
      */
     controller.constructContextFieldsForAttribute = function(field) {
-    	var unassignedLocationFieldsForTargetFieldUniversal = controller.getUnassignedLocationFields(field.universal); 
-    	
+      var unassignedLocationFieldsForTargetFieldUniversal = controller.getUnassignedLocationFields(field.universal); 
+      
         if($scope.universalOptions.length > 0 && unassignedLocationFieldsForTargetFieldUniversal.length === 1){
-        	var fieldsSetToUniversalOptions = [];
-        	
-        	for(var i=$scope.universalOptions.length; i--;){
-        		var universalOption = $scope.universalOptions[i];
-            	var unassignedLocationFieldsForThisUniversal = controller.getUnassignedLocationFields(universalOption.value); 
-            	// Set the field ONLY if there is a single option per universal
-            	if(unassignedLocationFieldsForThisUniversal.length === 1){
-            		controller.addField(unassignedLocationFieldsForThisUniversal[0]);
-            		fieldsSetToUniversalOptions.push(unassignedLocationFieldsForThisUniversal[0].name);
-            	}
-        	}
-        	
-        	// set the location attribute only if all the universal options have been set automatically
-        	// i.e. The # of universal options must match the # of fields set
-        	if(fieldsSetToUniversalOptions.length === $scope.universalOptions.length){
-        		controller.newAttribute();
-        	}
-        	
-        	controller.refreshUnassignedFields(fieldsSetToUniversalOptions);
+          var fieldsSetToUniversalOptions = [];
+          
+          for(var i=$scope.universalOptions.length; i--;){
+            var universalOption = $scope.universalOptions[i];
+              var unassignedLocationFieldsForThisUniversal = controller.getUnassignedLocationFields(universalOption.value); 
+              // Set the field ONLY if there is a single option per universal
+              if(unassignedLocationFieldsForThisUniversal.length === 1){
+                controller.addField(unassignedLocationFieldsForThisUniversal[0]);
+                fieldsSetToUniversalOptions.push(unassignedLocationFieldsForThisUniversal[0].name);
+              }
+          }
+          
+          // set the location attribute only if all the universal options have been set automatically
+          // i.e. The # of universal options must match the # of fields set
+          if(fieldsSetToUniversalOptions.length === $scope.universalOptions.length){
+            controller.newAttribute();
+          }
+          
+          controller.refreshUnassignedFields(fieldsSetToUniversalOptions);
         }
     }
     
@@ -1083,7 +1274,7 @@
           valid = false;              
         }
         else if(valid && unassignedFieldsForThisUniversal.length > 0) {
-        	$scope.universalOptions.push(universal);
+          $scope.universalOptions.push(universal);
         }
       }
     }
@@ -1146,11 +1337,14 @@
           
         for(var i = 0; i < $scope.sheet.attributes.ids.length; i++) {
           var id = $scope.sheet.attributes.ids[i];
-          var attribute = $scope.sheet.attributes.values[id];          
+          var sheetAttribute = $scope.sheet.attributes.values[id];          
             
-          if(attribute.label == label) {
+          if(sheetAttribute.label === label && !sheetAttribute.editing) {
             count++;
-          }            
+          }   
+          if($scope.attribute && $scope.attribute.label === sheetAttribute.label && !sheetAttribute.editing){
+        	  count++;
+          }
         }
               
         if(count > 0) {
@@ -1172,13 +1366,13 @@
     });   
     
     controller.change = function(selectedFields){
-    	var selectedFieldsArr = [];
-    	for (var key in selectedFields) {
-    		  if (selectedFields.hasOwnProperty(key)) {
-    		    selectedFieldsArr.push(selectedFields[key]);
-    		  }
-    		}
-    	controller.refreshUnassignedFields(selectedFieldsArr);
+      var selectedFieldsArr = [];
+      for (var key in selectedFields) {
+          if (selectedFields.hasOwnProperty(key) && selectedFields[key] !== "EXCLUDE") {
+            selectedFieldsArr.push(selectedFields[key]);
+          }
+        }
+      controller.refreshUnassignedFields(selectedFieldsArr);
     }
     
     // Initialize the scope
@@ -1228,7 +1422,7 @@
         var field = $scope.sheet.fields[i];
         
         if(field.type == 'LATITUDE') {
-        	
+          
           if(!controller.hasCoordinateField(field)) {
             var coordinate = {
               label : "",
@@ -1283,28 +1477,28 @@
     }
     
     controller.getSuggestedLongitude = function(targetField) {
-	   	var fields = $scope.sheet.fields;
-	   	var trackingPosition = null;
-	   	var mostLikelyLongitudeField = null;
-	   	
-		for(var i=0; i<fields.length; i++){
-			var field = fields[i];
-			if(field.type === "LATITUDE" && field.name === targetField.label){
-				trackingPosition = field.fieldPosition;
-			}
-			else if(field.type === "LONGITUDE"){
-				// if fields are located next to each other in the source data (spreadsheet)
-				if(field.fieldPosition === trackingPosition + 1 || field.fieldPosition === trackingPosition - 1){
-					return field.name;
-				}
-				else if(targetField.label.toLowerCase().replace(localizationService.localize("dataUploader", "attributeLatAbbreviation").toLowerCase(), localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase()) === field.label.toLowerCase() ||
-						targetField.label.toLowerCase().replace(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase(), localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) === field.label.toLowerCase() ){
-					return field.name;
-				}
-			}
-		}
-		
-		return false;
+       var fields = $scope.sheet.fields;
+       var trackingPosition = null;
+       var mostLikelyLongitudeField = null;
+       
+    for(var i=0; i<fields.length; i++){
+      var field = fields[i];
+      if(field.type === "LATITUDE" && field.name === targetField.label){
+        trackingPosition = field.fieldPosition;
+      }
+      else if(field.type === "LONGITUDE"){
+        // if fields are located next to each other in the source data (spreadsheet)
+        if(field.fieldPosition === trackingPosition + 1 || field.fieldPosition === trackingPosition - 1){
+          return field.name;
+        }
+        else if(targetField.label.toLowerCase().replace(localizationService.localize("dataUploader", "attributeLatAbbreviation").toLowerCase(), localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase()) === field.label.toLowerCase() ||
+            targetField.label.toLowerCase().replace(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase(), localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) === field.label.toLowerCase() ){
+          return field.name;
+        }
+      }
+    }
+    
+    return false;
     }
     
     controller.hasCoordinateField = function(field) {
@@ -1406,15 +1600,15 @@
     }
     
     controller.hasFieldType = function(type) {
-    	var fields = $scope.sheet.fields;
-    	for(var i=0; i<fields.length; i++){
-    		var field = fields[i];
-    		if(field.type.toLowerCase() === type.toLowerCase()){
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+      var fields = $scope.sheet.fields;
+      for(var i=0; i<fields.length; i++){
+        var field = fields[i];
+        if(field.type.toLowerCase() === type.toLowerCase()){
+          return true;
+        }
+      }
+      
+      return false;
     }
     
     controller.isValid = function(field) {
@@ -1489,15 +1683,15 @@
               $scope.currentStep = 3;
             }
 
-        	  
-            if(result.problems.locations == null || result.problems.locations.length > 0) {
+            
+            if( !result.problems.locations || result.problems.locations.length > 0) {
               $scope.page.current = 'GEO-VALIDATION';
             }
             else {
               $scope.page.current = 'CATEGORY-VALIDATION';
             }
             
-            $scope.page.snapshots = [];        	  
+            $scope.page.snapshots = [];            
             $scope.sheets = result.sheets;
             $scope.sheet = $scope.sheets[0];
             $scope.problems = result.problems;
@@ -1575,30 +1769,30 @@
     }
     
     controller.setAttributeDefaults = function() {
-    	var types = [];
-    	var fields = $scope.sheet.fields;
-    	for(var i=0; i<fields.length; i++){
-    		var field = fields[i];
-    		
-    		if(field.columnType === "NUMBER"){
-    			if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLatAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase()) ){
-    				field.type = 'LATITUDE' 
-    					
-    				if(types.indexOf("COORDINATE") === -1){
-    					types.push("COORDINATE");
-    				}
-    			}
-    			else if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLngAbbreviation").toLowerCase() || field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) ){
-    				field.type = 'LONGITUDE';
-    				
-    				if(types.indexOf("COORDINATE") === -1){
-    					types.push("COORDINATE");
-    				}
-    			}
-    		}
-    	}
-    	
-    	return types;
+      var types = [];
+      var fields = $scope.sheet.fields;
+      for(var i=0; i<fields.length; i++){
+        var field = fields[i];
+        
+        if(field.columnType === "NUMBER"){
+          if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLatAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLatitudeName").toLowerCase()) ){
+            field.type = 'LATITUDE' 
+              
+            if(types.indexOf("COORDINATE") === -1){
+              types.push("COORDINATE");
+            }
+          }
+          else if(field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLngAbbreviation").toLowerCase() || field.label.toLowerCase() === localizationService.localize("dataUploader", "attributeLongAbbreviation").toLowerCase() || field.label.toLowerCase().includes(localizationService.localize("dataUploader", "attributeLongitudeName").toLowerCase()) ){
+            field.type = 'LONGITUDE';
+            
+            if(types.indexOf("COORDINATE") === -1){
+              types.push("COORDINATE");
+            }
+          }
+        }
+      }
+      
+      return types;
     }
     
     /**
@@ -1607,120 +1801,115 @@
      */
     controller.next = function(targetPage, leavingPage) {
       $scope.pageDirection = "NEXT";
-    	
+      
       if(targetPage && leavingPage){
-    	  $scope.page.current = targetPage
-    		  
-  	        var snapshot = {
-  	            page : leavingPage,
-  	            sheet : angular.copy($scope.sheet)        
-  	        };
-  	        $scope.page.snapshots.push(snapshot);
+        $scope.page.current = targetPage
+          
+            var snapshot = {
+                page : leavingPage,
+                sheet : angular.copy($scope.sheet)        
+            };
+            $scope.page.snapshots.push(snapshot);
       }
       else{
-	      // Linear logic
-	      if($scope.page.current == 'MATCH-INITIAL') {
-	    	  $scope.page.current = 'MATCH'
-	    		  
-	    	        var snapshot = {
-	    	            page : 'MATCH-INITIAL',
-	    	            sheet : angular.copy($scope.sheet)        
-	    	        };
-	    	        $scope.page.snapshots.push(snapshot);
-	      }
-	      else if($scope.page.current == 'MATCH') {
-	        $scope.page.current = 'BEGINNING-INFO';      
-	        
-	        var snapshot = {
-	            page : 'MATCH',
-	            sheet : angular.copy($scope.sheet)        
-	        };
-	        $scope.page.snapshots.push(snapshot);
-	      }
-	      else if($scope.page.current == 'BEGINNING-INFO') {
-	        $scope.page.current = 'INITIAL'; 
-	        $scope.currentStep = -1;
-	      }
-	      else if($scope.page.current == 'INITIAL') {
-	        // Go to fields page  
-	        $scope.page.current = 'FIELDS';      
-	        
-	        var stepTypes = controller.setAttributeDefaults();
-	        
-	        var snapshot = {
-	          page : 'INITIAL',
-	          sheet : angular.copy($scope.sheet)        
-	        };
-	        $scope.page.snapshots.push(snapshot);
-	        
-	        // re-set the step indicator since the snapshot re-sets the attributes page
-	        $scope.locationType = []; 
-	        $scope.userSteps = datasetService.getUploaderSteps(stepTypes);
-	        $scope.currentStep = 1;        
-	      }
-	      else if($scope.page.current == 'FIELDS') {
-	        if(controller.hasLocationField()) {
-	          // Go to location attribute page
-	          $scope.page.current = 'LOCATION';      
-	          $scope.currentStep = 3;
-	        }
-	        else if (controller.hasCoordinateField()) {
-	          // Go to coordinate page
-	          $scope.page.current = 'COORDINATE';   
-	          $scope.currentStep = 3;
-	        }
-	        else {
-	          // Go to summary page
-	          $scope.page.current = 'SUMMARY'; 
-	          $scope.currentStep = 3;
-	        }
-	        
-	        var snapshot = {
-	          page : 'FIELDS',
-	          sheet : angular.copy($scope.sheet)        
-	        };
-	        $scope.page.snapshots.push(snapshot);
-	        
-	        $scope.currentStep = 2;
-	      }
-	      else if($scope.page.current == 'LOCATION') {
-	        if (controller.hasCoordinateField()) {
-	          // Go to coordinate page
-	          $scope.page.current = 'COORDINATE'; 
-	          $scope.currentStep = 3;
-	        }
-	        else {
-	          // Go to summary page
-	          $scope.page.current = 'SUMMARY';    
-	          $scope.currentStep = 3;
-	        }
-	        
-	        var snapshot = {
-	          page : 'LOCATION',
-	          sheet : angular.copy($scope.sheet)        
-	        };        
-	        $scope.page.snapshots.push(snapshot);
-	      }
-	      else if($scope.page.current == 'COORDINATE') {
-	        // Go to summary page
-	        $scope.page.current = 'SUMMARY';  
-	        
-	        if(controller.hasLocationField()) {
-	          $scope.currentStep = 4;
-	        }
-	        else{
-	          $scope.currentStep = 3;
-	        }
-	        
-	        var snapshot = {
-	          page : 'COORDINATE',
-	          sheet : angular.copy($scope.sheet)        
-	        };        
-	        $scope.page.snapshots.push(snapshot);
-	      }
-        else if($scope.page.current == 'GEO-VALIDATION') {
+        // Linear logic
+        if($scope.page.current == 'MATCH-INITIAL') {
+          $scope.page.current = 'MATCH'
+            
+                var snapshot = {
+                    page : 'MATCH-INITIAL',
+                    sheet : angular.copy($scope.sheet)        
+                };
+                $scope.page.snapshots.push(snapshot);
+        }
+        else if($scope.page.current == 'MATCH') {
+          $scope.page.current = 'BEGINNING-INFO';      
+          
+          var snapshot = {
+              page : 'MATCH',
+              sheet : angular.copy($scope.sheet)        
+          };
+          $scope.page.snapshots.push(snapshot);
+        }
+        else if($scope.page.current == 'BEGINNING-INFO') {
+          $scope.page.current = 'INITIAL'; 
+          controller.incrementStep($scope.page.current);
+          $scope.currentStep = -1;
+        }
+        else if($scope.page.current === 'INITIAL') {
+          // Go to fields page  
+          $scope.page.current = 'FIELDS';      
+          
+          var stepTypes = controller.setAttributeDefaults();
+          
+          var snapshot = {
+            page : 'INITIAL',
+            sheet : angular.copy($scope.sheet)        
+          };
+          $scope.page.snapshots.push(snapshot);
+          
+          // re-set the step indicator since the snapshot re-sets the attributes page
+          $scope.locationType = []; 
+          $scope.userSteps = datasetService.getUploaderSteps(stepTypes);
+          controller.incrementStep($scope.page.current);
+        }
+        else if($scope.page.current === 'FIELDS') {
+          if(controller.hasLocationField()) {
+            // Go to location attribute page
+            $scope.page.current = 'LOCATION';      
+          }
+          else if (controller.hasCoordinateField()) {
+            // Go to coordinate page
+            $scope.page.current = 'COORDINATE';   
+          }
+          else {
+            // Go to summary page
+            $scope.page.current = 'SUMMARY'; 
+          }
+          
+          controller.incrementStep($scope.page.current);
+          
+          var snapshot = {
+            page : 'FIELDS',
+            sheet : angular.copy($scope.sheet)        
+          };
+          $scope.page.snapshots.push(snapshot);
+        }
+        else if($scope.page.current === 'LOCATION') {
+          if (controller.hasCoordinateField()) {
+            // Go to coordinate page
+            $scope.page.current = 'COORDINATE'; 
+          }
+          else {
+            // Go to summary page
+            $scope.page.current = 'SUMMARY';    
+          }
+          
+          controller.incrementStep($scope.page.current);
+          
+          var snapshot = {
+            page : 'LOCATION',
+            sheet : angular.copy($scope.sheet)        
+          };        
+          $scope.page.snapshots.push(snapshot);
+        }
+        else if($scope.page.current === 'COORDINATE') {
           // Go to summary page
+          $scope.page.current = 'SUMMARY';  
+          
+          controller.incrementStep($scope.page.current);
+          
+          var snapshot = {
+            page : 'COORDINATE',
+            sheet : angular.copy($scope.sheet)        
+          };        
+          $scope.page.snapshots.push(snapshot);
+        }
+        else if($scope.page.current === 'GEO-VALIDATION') {
+          
           $scope.page.current = 'CATEGORY-VALIDATION';  
+          
+          controller.incrementStep($scope.page.current);
           
           var snapshot = {
             page : 'GEO-VALIDATION',
@@ -1732,10 +1921,53 @@
       }
     }
     
+    controller.incrementStep = function(targetPage) {
+    	  if(targetPage === 'MATCH-INITIAL') {
+    		  $scope.currentStep = -1;
+          }
+          else if(targetPage == 'MATCH') {
+        	  $scope.currentStep = -1;
+          }
+          else if(targetPage == 'BEGINNING-INFO') {
+            $scope.currentStep = -1;
+          }
+          else if(targetPage == 'INITIAL') {
+            $scope.currentStep = 1;        
+          }
+          else if(targetPage === 'FIELDS') {
+            $scope.currentStep = 2; 
+          }
+          else if(targetPage === 'LOCATION') {
+        	  $scope.currentStep = 3;
+          }
+          else if(targetPage === 'COORDINATE') {
+            if(controller.hasLocationField()) {
+              $scope.currentStep = 4;
+            }
+            else{
+              $scope.currentStep = 3;
+            }
+          }
+          else if(targetPage === 'GEO-VALIDATION') {
+            if(controller.hasLocationField() && controller.hasCoordinateField()) {
+            	$scope.currentStep = 5;
+            }
+            else if (controller.hasLocationField()){
+            	$scope.currentStep = 4;
+            }
+            else if (controller.hasCoordinateField()) {
+            	$scope.currentStep = 4;
+            }
+            else {
+            	$scope.currentStep = 3;
+            }
+          }
+    }
+    
     controller.prev = function() {
       $scope.pageDirection = "PREVIOUS";
       if($scope.page.current === 'MATCH' || $scope.page.current === "SUMMARY" || $scope.page.current === "BEGINNING-INFO" || $scope.page.current === "CATEGORY-VALIDATION") {
-        controller.handlePrev();    	  
+        controller.handlePrev();        
       }
       else {
         var title = localizationService.localize("dataUploader", "prevDialogTitle");
@@ -1764,22 +1996,22 @@
     controller.isReady = function() {
       var current = $scope.page.current;
       
-      return (current == 'SUMMARY' || current == 'CATEGORY-VALIDATION' || (current == 'GEO-VALIDATION' && $scope.problems.categories != null && $scope.problems.categories.length == 0));
+      return (current === 'SUMMARY' || current === 'CATEGORY-VALIDATION' || (current === 'GEO-VALIDATION' && $scope.problems.categories !== null && $scope.problems.categories.length === 0));
     }
     
     controller.hasNextPage = function() {
       var current = $scope.page.current;
       
       if(current == 'GEO-VALIDATION') {
-        return ($scope.problems.categories != null && $scope.problems.categories.length > 0);
+        return ($scope.problems.categories !== null && $scope.problems.categories.length > 0);
       }
       
-      return (current != 'MATCH-INITIAL' && current != 'SUMMARY' && current != 'MATCH' && current != 'CATEGORY-VALIDATION');
+      return (current !== 'MATCH-INITIAL' && current !== 'SUMMARY' && current !== 'MATCH' && current !== 'CATEGORY-VALIDATION');
     }
     
     controller.handlePrev = function() {
       if($scope.page.snapshots.length > 0) { 
-        if($scope.page.current == 'INITIAL') {
+        if($scope.page.current === 'INITIAL') {
           $scope.page.current = 'BEGINNING-INFO'; 
         }
         else{
@@ -1792,9 +2024,10 @@
           
           $scope.updateExistingDataset = false;
         }
-      }     
+      }
       
-      if($scope.page.current === "SUMMARY"){
+      
+      if($scope.page.current === "SUMMARY" || $scope.page.current === 'CATEGORY-VALIDATION'){
         var stepCt = 4;
         if (!controller.hasCoordinateField()) {
           stepCt = stepCt - 1;
@@ -1802,6 +2035,10 @@
         
         if(!controller.hasLocationField()) {
           stepCt = stepCt - 1;
+        }
+        
+        if($scope.page.current === 'CATEGORY-VALIDATION') {
+        	stepCt = stepCt - 1;
         }
         
         $scope.currentStep = stepCt;
@@ -1870,26 +2107,77 @@
     });
     
     // AttributePageController emit's event when user toggles attribute types between location and non-location types
-    $scope.$on('hasLocationEvent', function(event, locationType) { 
-      $scope.locationType = locationType;
-      
-      if(locationType.length === 1 && locationType[0] === "LOCATION"){
-        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION"]);
-      }
-      else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
-        $scope.userSteps = datasetService.getUploaderSteps(["COORDINATE"]);
-      }
-      else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LATITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
-        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION", "COORDINATE"]);
-      }
-      else{
-        $scope.userSteps = datasetService.getUploaderSteps([]);
-      }
+//    $scope.$on('hasLocationEvent', function(event, locationType) { 
+//      $scope.locationType = locationType;
+//      
+//      if(locationType.length === 1 && locationType[0] === "LOCATION"){
+//        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION"]);
+//      }
+//      else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
+//        $scope.userSteps = datasetService.getUploaderSteps(["COORDINATE"]);
+//      }
+//      else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LATITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
+//        $scope.userSteps = datasetService.getUploaderSteps(["LOCATION", "COORDINATE"]);
+//      }
+//      else{
+//        $scope.userSteps = datasetService.getUploaderSteps([]);
+//      }
+//    });
+    
+    $scope.$on('hasSpecialTypeEvent', function(event, type) { 
+    	var stepsConfigArr = [];
+    	
+    	if(type.type === "LOCATION"){
+    		var locationType = type.typeConstant;
+    		$scope.locationType = locationType;
+    	      
+    	    if(locationType.length === 1 && locationType[0] === "LOCATION"){
+    	        stepsConfigArr.push("LOCATION");
+    	    }
+    	    else if(locationType.length === 1 && locationType[0] === "LONGITUDE" || locationType[0] === "LATITUDE"){
+    	        stepsConfigArr.push("COORDINATE");
+    	    }
+    	    else if(locationType.length > 1 && locationType.indexOf("LOCATION") !== -1 && (locationType.indexOf("LATITUDE") !== -1 || locationType.indexOf("LONGITUDE")) ){
+    	        stepsConfigArr.push("LOCATION");
+    	        stepsConfigArr.push("COORDINATE");
+    	    }
+    	    
+    		for(var i=0; i<$scope.sheet.fields.length; i++){
+      		  var field = $scope.sheet.fields[i];
+      		
+      		  if(field.type === "CATEGORY" && stepsConfigArr.indexOf("CATEGORY") === -1){
+      			  stepsConfigArr.push("CATEGORY");
+      	      }
+      		}
+    	}
+    	else if(type.type === "CATEGORY"){
+    		stepsConfigArr.push("CATEGORY");
+    		
+    		for(var i=0; i<$scope.sheet.fields.length; i++){
+    		  var field = $scope.sheet.fields[i];
+    		
+    		  if(field.type === "LOCATION" && stepsConfigArr.indexOf("LOCATION") === -1){
+    			  stepsConfigArr.push("LOCATION");
+    	      }
+    	      else if(field.type === "LATITUDE" || field.type === "LONGITUDE"){
+    	    	  for(var c=0; c<$scope.sheet.fields.length; c++){
+    	    		  var field2 = $scope.sheet.fields[c];
+    	    		  if(field2.type !== field.type && field2.type === "LATITUDE" || field2.type === "LONGITUDE"){
+    	    			  if(stepsConfigArr.indexOf("COORDINATE") === -1){
+        	    			  stepsConfigArr.push("COORDINATE");
+        	    		  }
+    	    		  }
+    	    	  }
+    	      }
+    		}
+    	}
+
+    	$scope.userSteps = datasetService.getUploaderSteps(stepsConfigArr);
     });
     
     $scope.$on('nextPage', function(event, args) {
-    	// emitted from MatchInitialPageController
-    	controller.next(args.targetPage, args.leavingPage);
+      // emitted from MatchInitialPageController
+      controller.next(args.targetPage, args.leavingPage);
     });
   } 
   
@@ -1952,7 +2240,7 @@
   };  
   
   
-  angular.module("data-uploader", ["styled-inputs", "dataset-service", "localization-service", "widget-service", "runway-service", "ngAnimate" ]);
+  angular.module("data-uploader", ["styled-inputs", "dataset-service", "category-service", "localization-service", "widget-service", "runway-service", "ngAnimate" ]);
   angular.module("data-uploader")
    .directive('attributesPage', AttributesPage)
    .directive('matchInitialPage', MatchInitialPage)

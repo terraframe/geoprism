@@ -38,19 +38,13 @@
           <input class="synonym" name="{{::$index + '-name'}}" type="text" placeholder="<gdb:localize key="dataUploader.synonymSearchPlaceholder"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.setSynonym"></input>
         </div>
         <div class="inline-actions">
-            <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymFromLocationTooltip"/>" ></i>
+          <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" ng-class="{disabled: ctrl.problemForm.$invalid}" ng-click="ctrl.problemForm.$invalid || ctrl.createSynonym()" title="<gdb:localize key="dataUploader.createSynonymFromLocationTooltip"/>" ></i>
         	<i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" ng-click="ctrl.createEntity()" title="<gdb:localize key="dataUploader.createNewLocationTooltip"/>" ></i>
         	<span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" ng-click="ctrl.ignoreDataAtLocation()">
         		<i class="fa fa-square fa-stack-2x"></i>
         		<i class="fa fa-times fa-stack-1x"></i>
         	</span>
-        	
-<%--         	<input type="button" value="<gdb:localize key="dataUploader.createSynonym"/>" class="btn btn-primary" ng-click="ctrl.createSynonym()" ng-disabled="ctrl.problemForm.$invalid"/> --%>
-<!--         		<i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon"></i> -->
-<!--         	</input> -->
         </div>
-<%--         <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.createNewEntity"/>" class="btn" ng-click="ctrl.createEntity()" /></div> --%>
-<%--         <div class="inline-value"><input type="button"  value="<gdb:localize key="dataUploader.ignoreAtLocation"/>" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" class="btn" ng-click="ctrl.ignoreDataAtLocation()" /></div> --%>
       </div>
       <div ng-if="problem.resolved">
         <div class="inline-combo" ng-if="problem.action.name == 'ENTITY'">
@@ -65,7 +59,6 @@
         <div class="inline-actions">    
         	<i class="fa fa-undo" ng-click="ctrl.undoAction()" title="<gdb:localize key="dataUploader.undoFixedLocationTooltip"/>" ></i> 
         </div>
-<%--         <div class="inline-value"><input type="button" value="<gdb:localize key="dataUploader.undo"/>" class="btn btn-primary" ng-click="ctrl.undoAction()"/></div> --%>
       </div>
     </ng-form>
   </div>

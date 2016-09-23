@@ -217,7 +217,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
     return null;
   }
-  
+
   /**
    * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
    * that are children of the given attribute root nodes including the root nodes.
@@ -229,14 +229,14 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {
     QueryFactory qf = new QueryFactory();
-    
+
     ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
     ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
-    
+
     carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
-    
+
     classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
-    
+
     OIterator<? extends Classifier> i = classifierRootQ.getIterator();
     try
     {
@@ -381,7 +381,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       classifier.getDisplayLabel().setDefaultValue(classifierLabel);
       classifier.setClassifierId(classifierLabel);
       classifier.setClassifierPackage(packageString);
-      
+
       classifier.apply();
 
       // Create a new Classifier problem
@@ -878,20 +878,42 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     try
     {
       JSONObject object = new JSONObject(option);
-
-      String parentId = object.getString("parentId");
       String label = object.getString("label");
+      
+      if(object.has("validate") && object.getBoolean("validate"))
+      {
+        Classifier.validateCategoryName(label, null);
+      }
 
-      Classifier parent = Classifier.get(parentId);
+      if (object.has("parentId"))
+      {
+        String parentId = object.getString("parentId");
 
-      Classifier classifier = new Classifier();
-      classifier.setClassifierPackage(parent.getClassifierPackage());
-      classifier.setClassifierId(IDGenerator.nextID());
-      classifier.getDisplayLabel().setValue(label);
+        Classifier parent = Classifier.get(parentId);
 
-      Classifier.create(classifier, parentId);
+        Classifier classifier = new Classifier();
+        classifier.setClassifierPackage(parent.getClassifierPackage());
+        classifier.setClassifierId(IDGenerator.nextID());
+        classifier.getDisplayLabel().setValue(label);
 
-      return classifier;
+        Classifier.create(classifier, parentId);
+
+        return classifier;
+      }
+      else
+      {
+        Classifier parent = Classifier.getRoot();
+        
+        Classifier classifier = new Classifier();
+        classifier.setClassifierPackage(IDGenerator.nextID());
+        classifier.setClassifierId(IDGenerator.nextID());
+        classifier.getDisplayLabel().setValue(label);
+        classifier.setCategory(true);
+        
+        Classifier.create(classifier, parent.getId());
+        
+        return classifier;
+      }
     }
     catch (JSONException e)
     {
@@ -900,9 +922,28 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   @Authenticate
+  @Transaction
   public static void deleteOption(String id)
   {
     Classifier classifier = Classifier.get(id);
+    
+    Boolean category = classifier.getCategory();
+    
+    if(category != null && category)
+    {
+      // Validate that the category isn't being used as an attribute root any more
+      ClassifierTermAttributeRootQuery query = new ClassifierTermAttributeRootQuery(new QueryFactory());
+      query.WHERE(query.getChild().EQ(classifier));
+      
+      if(query.getCount() > 0)
+      {
+        CategoryInUseException ex = new CategoryInUseException();
+        ex.setLabel(classifier.getDisplayLabel().getValue());
+        
+        throw ex;
+      }
+    }
+    
     classifier.delete();
   }
 
@@ -917,7 +958,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   {
     Classifier.unlock(id);
   }
-  
 
   public static void validateCategoryName(String name, String id)
   {

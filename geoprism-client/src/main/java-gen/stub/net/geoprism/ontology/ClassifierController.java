@@ -322,7 +322,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
-  
+
   @Override
   public void editOption(String id) throws IOException, ServletException
   {
@@ -430,7 +430,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
       JSONControllerUtil.handleException(this.resp, t, request);
     }
   }
-  
+
   @Override
   public void validateCategoryName(String name, String id) throws IOException, ServletException
   {
@@ -439,6 +439,28 @@ public class ClassifierController extends ClassifierControllerBase implements co
     try
     {
       ClassifierDTO.validateCategoryName(request, name, id);
+
+      JSONControllerUtil.writeReponse(this.resp);
+    }
+    catch (Throwable t)
+    {
+      JSONControllerUtil.handleException(this.resp, t, request);
+    }
+  }
+
+  @Override
+  public void updateCategory(String category) throws IOException, ServletException
+  {
+    ClientRequestIF request = this.getClientRequest();
+
+    try
+    {
+      JSONObject config = new JSONObject();
+      config.put("option", new JSONObject(category));
+      config.put("restore", new JSONArray());
+      config.put("synonym", "");
+
+      ClassifierDTO.applyOption(request, config.toString());
 
       JSONControllerUtil.writeReponse(this.resp);
     }

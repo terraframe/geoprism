@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 318394875)
+@com.runwaysdk.business.ClassSignature(hash = 1267452787)
 public class ClassifierControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.ontology.ClassifierController";
@@ -277,6 +277,20 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failUpdate");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:category", post=true)
+  public void updateCategory(java.lang.String category) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.updateCategory");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:category", post=true)
+  public void failUpdateCategory(java.lang.String category) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failUpdateCategory");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
