@@ -477,6 +477,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           try
           {
             JSONArray secondaryCategories = tStyle.getSecondaryAttributeCategoriesAsJSON();
+            Boolean hasRangeCat = false;
             for (int i = 0; i < secondaryCategories.length(); i++)
             {
               Boolean isRangeCat = false;
@@ -491,6 +492,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               
               if(catOtherCat == false && secondaryCategory.has(ThematicStyle.ISRANGECATEGORY) && secondaryCategory.getBoolean(ThematicStyle.ISRANGECATEGORY) == true)
               {
+                hasRangeCat = true;
                 secondayryCatMaxVal = secondaryCategory.getString(ThematicStyle.VALMAX);
                 isRangeCat = secondaryCategory.getBoolean(ThematicStyle.ISRANGECATEGORY); 
                 
@@ -525,11 +527,16 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
             
             /**
              * Build the other rule
+             * 
+             * NOTE: The other rule is not needed for range categories
              */
-//            String fill = tStyle.getBubbleFill();
-//            NodeBuilder[] filterNodes = this.getElseNode(attribute, secondaryCategories);
-//            String label = LocalizationFacade.getFromBundles("Other");
-//            this.createRule(root, filterNodes, fill, null, minAttrVal, maxAttrVal, minSize, maxSize, label, null);
+            if(hasRangeCat != true)
+            {
+              String fill = tStyle.getBubbleFill();
+              NodeBuilder[] filterNodes = this.getElseNode(attribute, secondaryCategories);
+              String label = LocalizationFacade.getFromBundles("Other");
+              this.createRule(root, filterNodes, fill, null, minAttrVal, maxAttrVal, minSize, maxSize, label, null);
+            }
             
           }
           catch (JSONException e)
