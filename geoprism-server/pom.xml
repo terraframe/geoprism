@@ -183,20 +183,6 @@
                     <argument>${root.db}</argument>
                     <argument>com/runwaysdk/resources/xsd/schema.xsd</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -230,20 +216,6 @@
                   <arguments>
                     <argument>${project.basedir}/src/main/domain</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -277,20 +249,6 @@
                   <arguments>
                     <argument>-compile</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -324,20 +282,6 @@
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -373,20 +317,6 @@
                     <argument></argument>
                     <argument>false</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -422,20 +352,6 @@
                     <argument></argument>
                     <argument>false</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
