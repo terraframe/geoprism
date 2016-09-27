@@ -152,7 +152,14 @@ public class MergeUtility
         }
         else
         {
-          mergeProperties(new FileInputStream(base), new FileInputStream(override), new FileOutputStream(export));
+          Properties baseProps = new Properties();
+          baseProps.load(new FileInputStream(base));
+          
+          Properties overrideProps = new Properties();
+          overrideProps.load(new FileInputStream(override));
+          
+          // When we open a FileOutputStream it wipes the file. Its absolutely required that we've read base and override into memory by now otherwise it screws up the override.
+          mergeProperties(baseProps, overrideProps, new FileOutputStream(export));
         }
       }
       else if (!override.equals(export))
@@ -166,7 +173,13 @@ public class MergeUtility
   {
     if (extension.equals("properties"))
     {
-      mergeProperties(base, override, export);
+      Properties baseProps = new Properties();
+      baseProps.load(base);
+      
+      Properties overrideProps = new Properties();
+      overrideProps.load(override);
+      
+      mergeProperties(baseProps, overrideProps, export);
     }
     else
     {
@@ -174,30 +187,24 @@ public class MergeUtility
     }
   }
   
-  public void mergeProperties(InputStream base, InputStream override, OutputStream export) throws IOException
+  public void mergeProperties(Properties base, Properties override, OutputStream export) throws IOException
   {
-    Properties baseProps = new Properties();
-    baseProps.load(base);
-    
-    Properties overrideProps = new Properties();
-    overrideProps.load(override);
-    
-    Iterator<Object> i = overrideProps.keySet().iterator();
+    Iterator<Object> i = override.keySet().iterator();
     while (i.hasNext())
     {
       String key = (String) i.next();
       
-      String value = overrideProps.getProperty(key);
+      String value = override.getProperty(key);
       if (value.equals("$REMOVE$"))
       {
-        baseProps.remove(key);
+        base.remove(key);
       }
       else
       {
-        baseProps.setProperty(key, value);
+        base.setProperty(key, value);
       }
     }
     
-    baseProps.store(export, null);
+    base.store(export, null);
   }
 }
