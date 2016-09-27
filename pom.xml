@@ -48,7 +48,7 @@
     <aspectj.plugin.version>1.7</aspectj.plugin.version>
     
     <geotools.version>11.0</geotools.version>
-    <runway.version>2.0.18</runway.version>
+    <runway.version>2.0.19-SNAPSHOT</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
   </properties>
 
@@ -103,7 +103,7 @@
     <connection>scm:git:ssh://git@github.com/terraframe/Runway-SDK</connection>
     <developerConnection>scm:git:ssh://git@github.com/terraframe/Runway-SDK</developerConnection>
     <url>scm:git:ssh://git@github.com/terraframe/Runway-SDK</url>
-    <tag>v2.0.18-SNAPSHOT</tag>
+    <tag>v1.01.0006-SNAPSHOT</tag>
   </scm>
       
   <build>
