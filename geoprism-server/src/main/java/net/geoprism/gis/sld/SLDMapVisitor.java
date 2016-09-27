@@ -844,7 +844,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       {
         JSONObject category = array.getJSONObject(i);
         NodeBuilder builder;
-        if(category.getBoolean(ThematicStyle.ISRANGECATEGORY))
+        if(category.has(ThematicStyle.ISRANGECATEGORY) == true && category.getBoolean(ThematicStyle.ISRANGECATEGORY) == true)
         {
           boolean rangeAllMin = false;
           boolean rangeAllMax = false;
@@ -1162,7 +1162,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   node(OGC, "Function").attr("name", "isNull").child(
                       this.getCategorizeNode(tStyle)
                   ),
-                  node("ogc:Literal").text(fill), 
+                  node("ogc:Literal").text(bubbleFill), 
                   this.getCategorizeNode(tStyle)
               );
             }
@@ -1172,7 +1172,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                   node(OGC, "Function").attr("name", "isNull").child(
                       this.getRecodeNode(tStyle)
                   ),
-                  node("ogc:Literal").text(fill), 
+                  node("ogc:Literal").text(bubbleFill), 
                   this.getRecodeNode(tStyle)
               );
             }
@@ -1202,7 +1202,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           JSONObject category = array.getJSONObject(i);
           String catVal = category.getString(ThematicStyle.VAL);
           String color = category.getString(ThematicStyle.COLOR);
-          boolean isRangeCat = category.getBoolean(ThematicStyle.ISRANGECATEGORY);
+          boolean isRangeCat = false;
+          if(category.has(ThematicStyle.ISRANGECATEGORY) == true)
+          {
+            isRangeCat = category.getBoolean(ThematicStyle.ISRANGECATEGORY);
+          }
           boolean otherCat = category.getBoolean(ThematicStyle.ISOTHERCAT);
           
           if(otherCat == false)
@@ -1294,7 +1298,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         String secondaryAttributeName = tStyle.getSecondaryAttributeDAO().definesAttribute().toLowerCase();
 
         List<NodeBuilder> children = new LinkedList<NodeBuilder>();
-        children.add(node(OGC, "PropertyName").text(secondaryAttributeName));
+        children.add(
+            node(OGC, "Function").attr("name", "strTrim").child(
+                node(OGC, "PropertyName").text(secondaryAttributeName)
+            )
+         );
 
         JSONArray array = tStyle.getSecondaryAttributeCategoriesAsJSON();
         for (int i = 0; i < array.length(); i++)
@@ -1563,7 +1571,10 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
                 isOntologyCat = thisObj.getBoolean("isOntologyCat");
                 if (isOntologyCat == false)
                 {
-                  isRangeCat = thisObj.getBoolean(ThematicStyle.ISRANGECATEGORY);
+                  if(thisObj.has(ThematicStyle.ISRANGECATEGORY) == true)
+                  {
+                    isRangeCat = thisObj.getBoolean(ThematicStyle.ISRANGECATEGORY);
+                  }
                 }
               }
               catch (JSONException e)
