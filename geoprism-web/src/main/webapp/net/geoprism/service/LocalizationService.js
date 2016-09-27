@@ -39,8 +39,8 @@
         var number = value;
             
         if(typeof number === 'string') {
-          if(number.length > 0) {
-            number = parseInt(value);        	  
+          if(number.length > 0 && Number(number)) {
+            number = Number(value);        	  
           }
           else {
             return "";

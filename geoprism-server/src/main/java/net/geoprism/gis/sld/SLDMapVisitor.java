@@ -81,7 +81,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.transport.conversion.ConversionException;
 
 /**
@@ -1308,13 +1310,32 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         for (int i = 0; i < array.length(); i++)
         {
           JSONObject category = array.getJSONObject(i);
-          String catVAl = category.getString(ThematicStyle.VAL);
+          String catVal = category.getString(ThematicStyle.VAL);
           String color = category.getString(ThematicStyle.COLOR);
           boolean otherCat = category.getBoolean(ThematicStyle.ISOTHERCAT);
           
+          // We need the appended '.00' so that the sld category will work against the value for geoserver (whish is read from the db view). 
+          // It is relatively safe to make the assumption that MdAttributeLong values with 'SUM' aggregation should have this because those values
+          // are cast to numberix(x,x) in the database view. 
+          if(tStyle.getSecondaryAttributeDAO() instanceof MdAttributeLongDAO && tStyle.getSecondaryAttributeAggregationMethod().toString().equals("SUM"))
+          {
+            if(catVal.contains(".00") == false)
+            {
+              catVal = catVal.concat(".00");
+            }
+          }
+          else if(tStyle.getSecondaryAttributeAggregationMethod().toString().equals("AVERAGE"))
+          {
+            // Averages might result in a whole numbers whoes .00 is truncated.  if this is the case we want to re-append.
+            if(catVal.contains(".") == false)
+            {
+              catVal = catVal.concat(".00");
+            }
+          }
+          
           if(otherCat == false)
           {
-            children.add(node(OGC, "Literal").text(catVAl));
+            children.add(node(OGC, "Literal").text(catVal));
             children.add(node(OGC, "Literal").text(color));
           }
         }
