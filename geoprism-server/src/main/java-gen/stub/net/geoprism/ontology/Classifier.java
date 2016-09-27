@@ -21,19 +21,17 @@ package net.geoprism.ontology;
 import java.sql.Savepoint;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
-import net.geoprism.TermSynonymRelationship;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.Relationship;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
@@ -57,6 +55,8 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.TermSynonymRelationship;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -111,7 +111,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
   @Override
   @Transaction
-  public void delete()
+  public void deletePerTerm()
   {
     this.delete(new TreeSet<Classifier>(new Comparator<Classifier>()
     {
@@ -135,43 +135,6 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     for (ClassifierSynonym synonym : synonyms)
     {
       synonym.delete();
-    }
-
-    super.delete();
-
-    /*
-     * Delete all orphaned children
-     */
-    QueryFactory factory = new QueryFactory();
-
-    ClassifierQuery query = new ClassifierQuery(factory);
-    query.WHERE(query.NOT_IN_isAParent());
-    query.AND(query.getId().NE(Classifier.getRoot().getId()));
-
-    OIterator<? extends Classifier> iterator = null;
-
-    try
-    {
-      iterator = query.getIterator();
-
-      orphans.addAll(iterator.getAll());
-    }
-    finally
-    {
-      if (iterator != null)
-      {
-        iterator.close();
-      }
-    }
-
-    Iterator<Classifier> it = orphans.iterator();
-
-    if (it.hasNext())
-    {
-      Classifier classifier = it.next();
-      it.remove();
-
-      classifier.delete(orphans);
     }
   }
 
@@ -518,9 +481,47 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
      */
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
+    /*
+     * Remove the source from the allpaths table so we don't violate allpaths uniqueness constraints
+     */
+    List<? extends Business> parents = source.getParents(ClassifierIsARelationship.CLASS).getAll();
+    for (Business parent : parents)
+    {
+      source.removeLink((Term) parent, ClassifierIsARelationship.CLASS);
+    }
+    Classifier.getStrategy().removeTerm(source, ClassifierIsARelationship.CLASS);
+    
     BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
+    
+    /*
+     * Add the dest to the allpaths table
+     */
+    Classifier.getStrategy().add(destination, ClassifierIsARelationship.CLASS);
+    for (Business parent : parents)
+    {
+      Savepoint savepoint = Database.setSavepoint();
+      
+      try
+      {
+        destination.addLink((Term) parent, ClassifierIsARelationship.CLASS);
+      }
+      catch (DuplicateDataException e)
+      {
+        // Rollback the savepoint
+        Database.rollbackSavepoint(savepoint);
+
+        savepoint = null;
+      }
+      finally
+      {
+        if (savepoint != null)
+        {
+          Database.releaseSavepoint(savepoint);
+        }
+      }
+    }
 
     return synonym;
   }
