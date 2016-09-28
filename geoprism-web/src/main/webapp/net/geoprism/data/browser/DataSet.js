@@ -88,6 +88,9 @@
       if(dataset.label !== null && dataset.label !== '' && dataset.label !== $scope.orignialDatasetState.label) {
         datasetService.validateDatasetName(connection, dataset.label, dataset.id);
       }
+      else{
+    	  controller.cancelDatasetEdit(dataset);
+      }
     }
     
     controller.apply = function(dataset) {
@@ -122,7 +125,7 @@
       
       // cancel edit mode if clicking outside of the input element unless its a button (i.e. submit or cancel)
       $window.onclick = function (event) {
-        if( !event.target.classList.contains("dataset-list-input") && event.target.type !== 'button' ){
+        if( (!event.target.classList.contains("dataset-list-input") || event.target.readOnly) && event.target.type !== 'button' ){
           controller.applyWithUniqueCheck(dataset, inputElementScope);
           
           $scope.$apply();
