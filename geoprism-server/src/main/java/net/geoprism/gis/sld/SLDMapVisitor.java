@@ -532,13 +532,13 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
              * 
              * NOTE: The other rule is not needed for range categories
              */
-            if(hasRangeCat != true)
-            {
-              String fill = tStyle.getBubbleFill();
-              NodeBuilder[] filterNodes = this.getElseNode(attribute, secondaryCategories);
-              String label = LocalizationFacade.getFromBundles("Other");
-              this.createRule(root, filterNodes, fill, null, minAttrVal, maxAttrVal, minSize, maxSize, label, null);
-            }
+//            if(hasRangeCat != true)
+//            {
+//              String fill = tStyle.getBubbleFill();
+//              NodeBuilder[] filterNodes = this.getElseNode(attribute, secondaryCategories);
+//              String label = LocalizationFacade.getFromBundles("Other");
+//              this.createRule(root, filterNodes, fill, null, minAttrVal, maxAttrVal, minSize, maxSize, label, null);
+//            }
             
           }
           catch (JSONException e)
@@ -833,6 +833,32 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
       return nodes;
     }
+    
+    private String getFormattedNumericValue(String value)
+    {
+      ThematicStyle tStyle = (ThematicStyle) style;
+      
+      // We need the appended '.00' so that the sld category will work against the value for geoserver (whish is read from the db view). 
+      // It is relatively safe to make the assumption that MdAttributeLong values with 'SUM' aggregation should have this because those values
+      // are cast to numberix(x,x) in the database view. 
+      if(tStyle.getSecondaryAttributeDAO() instanceof MdAttributeLongDAO && tStyle.getSecondaryAttributeAggregationMethod().toString().equals("SUM"))
+      {
+        if(value.contains(".00") == false)
+        {
+          value = value.concat(".00");
+        }
+      }
+      else if(tStyle.getSecondaryAttributeAggregationMethod().toString().equals("AVERAGE"))
+      {
+        // Averages might result in a whole numbers whoes .00 is truncated.  if this is the case we want to re-append.
+        if(value.contains(".") == false)
+        {
+          value = value.concat(".00");
+        }
+      }
+      
+      return value;
+    }
 
     private NodeBuilder[] getNotChildren(String attributeName, JSONArray array) throws JSONException
     {
@@ -874,9 +900,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
         else
         {
           String key = category.getString(ThematicStyle.VAL);
+          String formattedCategoryVal = getFormattedNumericValue(key);
+          
           builder = node(OGC, "PropertyIsEqualTo").child(
               node(OGC, "PropertyName").text(attributeName), 
-              node(OGC, "Literal").text(key)
+              node(OGC, "Literal").text(formattedCategoryVal)
           );
         }
         
@@ -1314,28 +1342,11 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           String color = category.getString(ThematicStyle.COLOR);
           boolean otherCat = category.getBoolean(ThematicStyle.ISOTHERCAT);
           
-          // We need the appended '.00' so that the sld category will work against the value for geoserver (whish is read from the db view). 
-          // It is relatively safe to make the assumption that MdAttributeLong values with 'SUM' aggregation should have this because those values
-          // are cast to numberix(x,x) in the database view. 
-          if(tStyle.getSecondaryAttributeDAO() instanceof MdAttributeLongDAO && tStyle.getSecondaryAttributeAggregationMethod().toString().equals("SUM"))
-          {
-            if(catVal.contains(".00") == false)
-            {
-              catVal = catVal.concat(".00");
-            }
-          }
-          else if(tStyle.getSecondaryAttributeAggregationMethod().toString().equals("AVERAGE"))
-          {
-            // Averages might result in a whole numbers whoes .00 is truncated.  if this is the case we want to re-append.
-            if(catVal.contains(".") == false)
-            {
-              catVal = catVal.concat(".00");
-            }
-          }
+          String formattedCatVal = getFormattedNumericValue(catVal);
           
           if(otherCat == false)
           {
-            children.add(node(OGC, "Literal").text(catVal));
+            children.add(node(OGC, "Literal").text(formattedCatVal));
             children.add(node(OGC, "Literal").text(color));
           }
         }
