@@ -22,5 +22,13 @@ def extensionDir = session.executionRootDirectory;
 def extensionPom = new File(extensionDir + "/pom.xml").text;
 def projectName = StringUtils.substringBetween(extensionPom, "<artifactId>", "</artifactId>");
 
-project.properties["overrideServerPropertiesPath"] = extensionDir + "/" + projectName + "-server/src/main/resources/runwaysdk/server.properties";
+if (projectName.equals("geoprism"))
+{
+  project.properties["overrideServerPropertiesPath"] = extensionDir + "/" + projectName + "-server/target/classes/runwaysdk/server.properties";
+}
+else
+{
+  project.properties["overrideServerPropertiesPath"] = extensionDir + "/" + projectName + "-server/src/main/resources/runwaysdk/server.properties";
+}
+
 println "Extension server.properties file resolved to [" + project.properties["overrideServerPropertiesPath"] + "]";
