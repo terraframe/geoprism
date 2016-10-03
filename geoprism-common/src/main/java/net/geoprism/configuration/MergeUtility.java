@@ -173,13 +173,21 @@ public class MergeUtility
   {
     if (extension.equals("properties"))
     {
-      Properties baseProps = new Properties();
-      baseProps.load(base);
-      
-      Properties overrideProps = new Properties();
-      overrideProps.load(override);
-      
-      mergeProperties(baseProps, overrideProps, export);
+      try
+      {
+        Properties baseProps = new Properties();
+        baseProps.load(base);
+        
+        Properties overrideProps = new Properties();
+        overrideProps.load(override);
+        
+        mergeProperties(baseProps, overrideProps, export);
+      }
+      finally
+      {
+        base.close();
+        override.close();
+      }
     }
     else
     {
@@ -189,22 +197,29 @@ public class MergeUtility
   
   public void mergeProperties(Properties base, Properties override, OutputStream export) throws IOException
   {
-    Iterator<Object> i = override.keySet().iterator();
-    while (i.hasNext())
+    try
     {
-      String key = (String) i.next();
+      Iterator<Object> i = override.keySet().iterator();
+      while (i.hasNext())
+      {
+        String key = (String) i.next();
+        
+        String value = override.getProperty(key);
+        if (value.equals("$REMOVE$"))
+        {
+          base.remove(key);
+        }
+        else
+        {
+          base.setProperty(key, value);
+        }
+      }
       
-      String value = override.getProperty(key);
-      if (value.equals("$REMOVE$"))
-      {
-        base.remove(key);
-      }
-      else
-      {
-        base.setProperty(key, value);
-      }
+      base.store(export, null);
     }
-    
-    base.store(export, null);
+    finally
+    {
+      export.close();
+    }
   }
 }

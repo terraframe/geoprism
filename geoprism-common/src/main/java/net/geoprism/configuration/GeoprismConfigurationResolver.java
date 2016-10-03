@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.util.Iterator;
+import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -102,14 +104,51 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
             return fOverride.toURI().toURL();
           }
           
-          ByteArrayOutputStream os = new ByteArrayOutputStream();
-          
           MergeUtility merger = new MergeUtility();
-          merger.mergeStreams(urlBase.openStream(), new FileInputStream(fOverride), os, FilenameUtils.getExtension(fOverride.getAbsolutePath()));
+          InputStream urlBaseStream = urlBase.openStream();
+          InputStream baseStream = urlBaseStream;
+          FileInputStream overrideStream = new FileInputStream(fOverride);
           
-          InputStream is = new ByteArrayInputStream(os.toByteArray());
+          try
+          {
+            // Resolve includes
+//            Properties baseProps = new Properties();
+//            baseProps.load(baseStream);
+//            
+//            Iterator<Object> i = baseProps.keySet().iterator();
+//            while (i.hasNext())
+//            {
+//              String key = (String) i.next();
+//              
+//              String value = baseProps.getProperty(key);
+//              if (key.equals("include") && !value.equals("$REMOVE$"))
+//              {
+//                ByteArrayOutputStream noInclude = new ByteArrayOutputStream();
+//                baseProps.remove(key);
+//                baseProps.store(noInclude, null);
+//                baseStream = new ByteArrayInputStream(noInclude.toByteArray());
+//                
+//                ByteArrayOutputStream resolvedInclude = new ByteArrayOutputStream();
+//                URL includeURL = this.getResource(GeoprismConfigGroup.ROOT, location.getPath() + value);
+//                merger.mergeStreams(includeURL.openStream(), baseStream, resolvedInclude, FilenameUtils.getExtension(fOverride.getAbsolutePath()));
+//                baseStream = new ByteArrayInputStream(resolvedInclude.toByteArray());
+//              }
+//            }
           
-          return new URL(null, "inputstream://" + name, new InputStreamURLStreamHandler(is));
+            // Override
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            merger.mergeStreams(baseStream, overrideStream, os, FilenameUtils.getExtension(fOverride.getAbsolutePath()));
+            
+            InputStream is = new ByteArrayInputStream(os.toByteArray());
+            
+            return new URL(null, "inputstream://" + name, new InputStreamURLStreamHandler(is));
+          }
+          finally
+          {
+            // Byte array streams don't need to be closed, but our original streams do.
+            urlBaseStream.close();
+            overrideStream.close();
+          }
         }
         catch (IOException e)
         {
