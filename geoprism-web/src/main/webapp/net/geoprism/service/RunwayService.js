@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function RunwayService() {
+  function RunwayService($http) {
     var service = {};
     
     service.createRequest = function(onSuccess, onFailure){
@@ -69,7 +69,21 @@
         return service.createRequest(connection.onSuccess, connection.onFailure );
       }
     }    
-
+    
+    service.execute = function(req, connection) {
+      if(connection.elementId != null) {
+        var standby = service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
+        
+        $http(req).then(connection.onSuccess, connection.onFailure).finally(function(){
+          standby._hideStandby();
+        });
+        
+        standby._showStandby();
+      }  
+      else {
+        $http(req).then(connection.onSuccess, connection.onFailure);
+      }
+    }
     
     service.generateId = function() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

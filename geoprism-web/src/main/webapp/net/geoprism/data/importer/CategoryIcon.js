@@ -26,13 +26,15 @@
       
       var connection = {
         onSuccess : function(response) {
-          for(var i=0; i<response.icons.length; i++){
-        	  //timestamps are only needed to force angular re-render of image get request
-        	  response.icons[i].timeStamp = new Date().getTime(); 
+          var data = response.data;
+
+          for(var i=0; i< data.icons.length; i++){
+            //timestamps are only needed to force angular re-render of image get request
+            data.icons[i].timeStamp = new Date().getTime(); 
           }
-          $scope.icons = response.icons;
+          $scope.icons = data.icons;
             
-          $scope.$apply();
+//          $scope.$apply();
         } 
       };      
       
@@ -92,14 +94,21 @@
         elementId : '#innerFrameHtml',
         onSuccess : function() {
 
-        	var tempFile = {name:icon.label, type:icon.type, filePath:icon.filePath, fileReference:"NONE"}
+          var tempFile = {name:icon.label, type:icon.type, filePath:icon.filePath, fileReference:"NONE"}
             
-        	$scope.editIcon = icon.id;
-            $scope.icon = {id:icon.id, label:icon.label, file:tempFile};
-            $scope.show = true;            
-            $scope.$apply();
-        }
+          $scope.editIcon = icon.id;
+          $scope.icon = {id:icon.id, label:icon.label, file:tempFile};
+          $scope.show = true;            
+//          $scope.$apply();
+        },
+        onFailure : function(response){
+          $scope.errors.push(response.data.localizedMessage);
+//          $scope.$apply();
+        }        
       };
+      
+      // Reset the errors          
+      $scope.errors = [];      
                         
       categoryIconService.edit(connection, icon.id);            
     }
@@ -125,12 +134,12 @@
                 $scope.icons.splice(index, 1);        
               }
               
-              $scope.$apply();
+//              $scope.$apply();
             },
-            onFailure : function(e){
-              $scope.errors.push(e.message);
+            onFailure : function(response){
+              $scope.errors.push(response.data.localizedMessage);
               
-              $scope.$apply();
+//              $scope.$apply();
             }
           
           };
@@ -155,19 +164,21 @@
     controller.create = function() {
       var connection = {
         elementId : '#innerFrameHtml',
-        onSuccess : function(result) {
-        	
+        onSuccess : function(response) {
+          var result = response.data;
+          
           controller.addCategoryIcons(result);
           controller.clear();
           
           $scope.show = false;                      
-          $scope.$apply();
+//          $scope.$apply();
         },
-        onFailure : function(e){
-          $scope.errors.push(e.message);
-          
-          $scope.$apply();
+        onFailure : function(response){
+          $scope.errors.push(response.data.localizedMessage);
+            
+//          $scope.$apply();
         }
+
       };
       
       // Reset the file Errors
@@ -182,17 +193,19 @@
     controller.apply = function() {
       var connection = {
         elementId : '#innerFrameHtml',
-        onSuccess : function(result) {               
+        onSuccess : function(response) {
+          var result = response.data;
+          
           controller.updateCategoryIcons([result]);
           controller.clear();
           
           $scope.show = false;          
-          $scope.$apply();
+//          $scope.$apply();
         },
-        onFailure : function(e){
-          $scope.errors.push(e.message);
-          
-          $scope.$apply();
+        onFailure : function(response){
+          $scope.errors.push(response.data.localizedMessage);
+            
+//            $scope.$apply();
         }
       };
       
@@ -218,7 +231,7 @@
           var icon = icons[i];
         
           if(controller.exists(icon)) {
-        	controller.updateIcon(icon);        
+            controller.updateIcon(icon);        
           }
         }
     }
@@ -244,7 +257,7 @@
     }
     
     $scope.$watch('icon.file', function(file){
-      controller.form.$setValidity('file', (file != null) && (file.type == 'image/png' || $scope.editIcon));    	
+      controller.form.$setValidity('file', (file != null) && (file.type == 'image/png' || $scope.editIcon));      
     }, true);
     
     controller.init();

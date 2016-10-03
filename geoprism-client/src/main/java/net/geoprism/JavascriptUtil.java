@@ -36,7 +36,6 @@ import net.geoprism.dashboard.DashboardStyleDTO;
 import net.geoprism.dashboard.DashboardThematicStyleDTO;
 import net.geoprism.dashboard.GeometryAggregationStrategyDTO;
 import net.geoprism.dashboard.UniversalAggregationStrategyDTO;
-import net.geoprism.dashboard.layer.CategoryIconController;
 import net.geoprism.dashboard.layer.DashboardLayerController;
 import net.geoprism.dashboard.layer.DashboardLayerDTO;
 import net.geoprism.dashboard.layer.DashboardLayerViewDTO;
@@ -256,7 +255,7 @@ public class JavascriptUtil implements Reloadable
     types.add(AllAggregationTypeDTO.CLASS);
     types.add(AggregationTypeDTO.CLASS);
     types.add(DataUploaderController.CLASS);
-    types.add(CategoryIconController.CLASS);
+//    types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -294,7 +293,7 @@ public class JavascriptUtil implements Reloadable
   public static void loadIcons(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-    types.add(CategoryIconController.CLASS);
+//    types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -302,7 +301,7 @@ public class JavascriptUtil implements Reloadable
   public static void loadDataManagementBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-    types.add(CategoryIconController.CLASS);
+//    types.add(CategoryIconController.CLASS);
     types.add(ClassifierController.CLASS);
     types.add(DataSetController.CLASS);
     types.add(DataUploaderController.CLASS);

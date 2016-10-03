@@ -30,7 +30,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
 import net.geoprism.JSONControllerUtil;
-import net.geoprism.MappableClassDTO;
 import net.geoprism.dashboard.DashboardDTO;
 import net.geoprism.localization.LocalizationFacadeDTO;
 
@@ -322,7 +321,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
     }
   }
 
-  public void run(ReportItemDTO item, String configuration) throws UnsupportedEncodingException, ServletException, IOException
+  private void run(ReportItemDTO item, String configuration) throws UnsupportedEncodingException, ServletException, IOException
   {
     if (item != null)
     {
