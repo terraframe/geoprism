@@ -25,8 +25,7 @@
       $scope.show = false;
       
       var connection = {
-        onSuccess : function(response) {
-          var data = response.data;
+        onSuccess : function(data) {
 
           for(var i=0; i< data.icons.length; i++){
             //timestamps are only needed to force angular re-render of image get request
@@ -101,8 +100,8 @@
           $scope.show = true;            
 //          $scope.$apply();
         },
-        onFailure : function(response){
-          $scope.errors.push(response.data.localizedMessage);
+        onFailure : function(data){
+          $scope.errors.push(data.localizedMessage);
 //          $scope.$apply();
         }        
       };
@@ -136,8 +135,8 @@
               
 //              $scope.$apply();
             },
-            onFailure : function(response){
-              $scope.errors.push(response.data.localizedMessage);
+            onFailure : function(data){
+              $scope.errors.push(data.localizedMessage);
               
 //              $scope.$apply();
             }
@@ -164,8 +163,7 @@
     controller.create = function() {
       var connection = {
         elementId : '#innerFrameHtml',
-        onSuccess : function(response) {
-          var result = response.data;
+        onSuccess : function(result) {
           
           controller.addCategoryIcons(result);
           controller.clear();
@@ -173,8 +171,8 @@
           $scope.show = false;                      
 //          $scope.$apply();
         },
-        onFailure : function(response){
-          $scope.errors.push(response.data.localizedMessage);
+        onFailure : function(data){
+          $scope.errors.push(data.localizedMessage);
             
 //          $scope.$apply();
         }
@@ -193,17 +191,15 @@
     controller.apply = function() {
       var connection = {
         elementId : '#innerFrameHtml',
-        onSuccess : function(response) {
-          var result = response.data;
-          
+        onSuccess : function(result) {
           controller.updateCategoryIcons([result]);
           controller.clear();
           
           $scope.show = false;          
 //          $scope.$apply();
         },
-        onFailure : function(response){
-          $scope.errors.push(response.data.localizedMessage);
+        onFailure : function(data){
+          $scope.errors.push(data.localizedMessage);
             
 //            $scope.$apply();
         }

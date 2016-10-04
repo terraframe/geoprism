@@ -71,17 +71,25 @@
     }    
     
     service.execute = function(req, connection) {
+      var success = function(response) {
+        connection.onSuccess(response.data);
+      }
+      
+      var failure = function(response) {
+        connection.onFailure(response.data);        
+      }
+      
       if(connection.elementId != null) {
         var standby = service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
         
-        $http(req).then(connection.onSuccess, connection.onFailure).finally(function(){
+        $http(req).then(success, failure).finally(function(){
           standby._hideStandby();
         });
         
         standby._showStandby();
       }  
       else {
-        $http(req).then(connection.onSuccess, connection.onFailure);
+        $http(req).then(success, failure);
       }
     }
     

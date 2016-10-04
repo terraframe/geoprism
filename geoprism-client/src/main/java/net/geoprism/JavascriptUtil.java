@@ -153,7 +153,7 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
-    types.add(DataUploaderController.CLASS);
+//    types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
@@ -254,7 +254,7 @@ public class JavascriptUtil implements Reloadable
     types.add(MappableClassDTO.CLASS);
     types.add(AllAggregationTypeDTO.CLASS);
     types.add(AggregationTypeDTO.CLASS);
-    types.add(DataUploaderController.CLASS);
+//    types.add(DataUploaderController.CLASS);
 //    types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
@@ -274,8 +274,8 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
-    types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+//    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -284,8 +284,8 @@ public class JavascriptUtil implements Reloadable
   {
     Set<String> types = new HashSet<String>();
     types.add(DataSetController.CLASS);
-    types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+//    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -301,11 +301,11 @@ public class JavascriptUtil implements Reloadable
   public static void loadDataManagementBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-//    types.add(CategoryIconController.CLASS);
     types.add(ClassifierController.CLASS);
     types.add(DataSetController.CLASS);
-    types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
+//    types.add(CategoryIconController.CLASS);
+//    types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

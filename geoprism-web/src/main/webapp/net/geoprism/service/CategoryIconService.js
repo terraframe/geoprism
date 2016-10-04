@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function CategoryIconService($http, runwayService) {
+  function CategoryIconService(runwayService) {
     var service = {};
     
     service.create = function(connection, file, label) {
@@ -27,14 +27,6 @@
       data.append('file', file);
       data.append('label', label)
 
-      /*
-       * IMPORTANT: This method cannot be invoked through the generated javascript
-       * controller because you can't pass in a FormData to the method.  Thus, we
-       * are invoking it directly through the Facade.  FormData is required for
-       * submitting file objects through javascript.
-       */
-//      Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.dashboard.layer.CategoryIconController.create.mojax', request, params);
-      
       var req = {
         method: 'POST',
         url: '/iconimage/create',
@@ -58,14 +50,6 @@
     	  data.append('file', file);
       }
 
-      /*
-       * IMPORTANT: This method cannot be invoked through the generated javascript
-       * controller because you can't pass in a FormData to the method.  Thus, we
-       * are invoking it directly through the Facade.  FormData is required for
-       * submitting file objects through javascript.
-       */
-//        Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.dashboard.layer.CategoryIconController.apply.mojax', request, params);
-      
       var req = {
         method: 'POST',
         url: '/iconimage/apply',
@@ -80,10 +64,6 @@
     }    
     
     service.getAll = function(connection) {
-//      var request = runwayService.createConnectionRequest(connection);
-//    
-//      net.geoprism.dashboard.layer.CategoryIconController.getAll(request);
-      
       var req = {
         method: 'GET',
         url: '/iconimage/getAll'
@@ -93,10 +73,6 @@
     }
     
     service.remove = function(connection, id) {
-//      var request = runwayService.createConnectionRequest(connection);
-//      
-//      net.geoprism.dashboard.layer.CategoryIconController.remove(request, id);
-      
       var req = {
         method: 'POST',
         url: '/iconimage/remove',
@@ -107,10 +83,6 @@
     }
     
     service.edit = function(connection, id) {
-//      var request = runwayService.createConnectionRequest(connection);
-//      
-//      net.geoprism.dashboard.layer.CategoryIconController.edit(request, id);
-      
       var req = {
         method: 'POST',
         url: '/iconimage/edit',
@@ -121,10 +93,6 @@
     }
     
     service.getImage = function(connection, id) {      
-//      var request = runwayService.createConnectionRequest(connection);
-//        
-//      net.geoprism.dashboard.layer.CategoryIconController.getCategoryIconImage(request, id);
-      
       var req = {
         method: 'GET',
         url: '/iconimage/getCategoryIconImage',
