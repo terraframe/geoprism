@@ -76,7 +76,12 @@
       }
       
       var failure = function(response) {
-        connection.onFailure(response.data);        
+        if(response.status === 401) {
+          window.location = '/session/form';
+        }
+        else {
+          connection.onFailure(response.data);                
+        }
       }
       
       if(connection.elementId != null) {

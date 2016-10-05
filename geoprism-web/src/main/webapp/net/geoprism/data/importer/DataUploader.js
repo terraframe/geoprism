@@ -35,7 +35,7 @@
             response( results );
           },
           onFailure : function(e){
-            console.log(e);
+//            console.log(e);
           }
       };
       
@@ -186,7 +186,7 @@
               $scope.problem.resolved = false;
               $scope.problem.optionId = null;
                               
-              $scope.$apply();
+               $scope.$apply();
             },
             onFailure : function(e){
               $scope.errors = [];
@@ -281,7 +281,6 @@
           response( results );
         },
         onFailure : function(e){
-          console.log(e);
         }
       };
       
@@ -1702,7 +1701,7 @@
           // $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
          
           // $scope.$apply();
         }
@@ -1728,7 +1727,7 @@
           // $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
          
           // $scope.$apply();
         }             

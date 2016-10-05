@@ -26,6 +26,7 @@ import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -53,13 +54,13 @@ public class SessionFilter implements Filter, Reloadable
 
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
   {
-    HttpServletRequest httpReq = (HttpServletRequest) req;
-    HttpServletResponse httpRes = (HttpServletResponse) res;
+    HttpServletRequest request = (HttpServletRequest) req;
+    HttpServletResponse response = (HttpServletResponse) res;
 
     // response time logging
     req.setAttribute("startTime", (Long) ( new Date().getTime() ));
 
-    HttpSession session = httpReq.getSession();
+    HttpSession session = request.getSession();
 
     WebClientSession clientSession = (WebClientSession) session.getAttribute(ClientConstants.CLIENTSESSION);
 
@@ -82,15 +83,21 @@ public class SessionFilter implements Filter, Reloadable
 
         if (t instanceof InvalidSessionExceptionDTO)
         {
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          response.addHeader("WWW-Authenticate", "FormBased");
+
           // If we're asynchronous, we want to return a serialized exception
-          if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax"))
+          if (StringUtils.endsWith(request.getRequestURL().toString(), ".mojax"))
           {
-            ErrorUtility.prepareAjaxThrowable(t, httpRes);
+            ErrorUtility.prepareAjaxThrowable(t, response);
           }
           else
           {
-            // Not an asynchronous request, redirect to the login page.
-            httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/loginRedirect.jsp");
+            dispatcher.forward(request, response);
+            
+//            // Not an asynchronous request, redirect to the login page.
+//            response.sendRedirect(request.getContextPath() + "/loginRedirect");
           }
         }
         else
@@ -108,24 +115,29 @@ public class SessionFilter implements Filter, Reloadable
 
       return;
     }
-    else if (pathAllowed(httpReq))
+    else if (pathAllowed(request))
     {
       chain.doFilter(req, res);
       return;
     }
     else
     {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.addHeader("WWW-Authenticate", "FormBased");
+      
       // The user is not logged in
-
       // If we're asynchronous, we want to return a serialized exception
-      if (StringUtils.endsWith(httpReq.getRequestURL().toString(), ".mojax"))
+      if (StringUtils.endsWith(request.getRequestURL().toString(), ".mojax"))
       {
-        ErrorUtility.prepareAjaxThrowable(new InvalidSessionExceptionDTO(), httpRes);
+        ErrorUtility.prepareAjaxThrowable(new InvalidSessionExceptionDTO(), response);
       }
       else
       {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/loginRedirect.jsp");
+        dispatcher.forward(request, response);
+        
         // Not an asynchronous request, redirect to the login page.
-        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+//        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
       }
     }
   }
