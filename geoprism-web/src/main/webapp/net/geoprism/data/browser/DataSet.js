@@ -381,7 +381,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data/browser/dataset-modal.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/dataset-modal.jsp',
       scope: {
       },
       controller : DatasetModalController,

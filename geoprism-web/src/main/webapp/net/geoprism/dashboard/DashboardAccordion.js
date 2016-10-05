@@ -45,7 +45,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/location-filter.jsp',      
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/location-filter.jsp',      
       scope: {
         filter:'=',
         dashboardId:'='
@@ -110,7 +110,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/dashboard-accordion.jsp',      
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/dashboard-accordion.jsp',      
       scope: {
         types:'=',
         newLayer:'&'
@@ -160,7 +160,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/attribute-panel.jsp',      
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/attribute-panel.jsp',      
       scope: {
         type:'=',
         index:'='
@@ -203,7 +203,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/accordion-attribute.jsp', 
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/accordion-attribute.jsp', 
       scope: {
         attribute:'=',
         identifier:'@'
@@ -251,7 +251,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/number-type.jsp',      
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/number-type.jsp',      
       require: ['^form', 'numberType'],
       controller : AttributeTypeController,
       controllerAs : 'ctrl',
@@ -271,7 +271,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/date-type.jsp',      
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/date-type.jsp',      
       require: ['^form'],
       scope: {
         attribute:'='
@@ -363,7 +363,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/character-type.jsp',      
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/character-type.jsp',      
       require: ['^form', 'characterType'],      
       scope: {
         attribute:'='
@@ -424,7 +424,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/ontology-type.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/ontology-type.jsp',
       controller : OntologyTypeController,
       controllerAs : 'ctrl',
       scope: {
@@ -446,7 +446,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/boolean-type.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/boolean-type.jsp',
       require: '^form',
       scope: {
         attribute:'='

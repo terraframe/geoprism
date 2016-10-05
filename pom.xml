@@ -24,9 +24,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.runwaysdk</groupId>
+  <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>1.01.0005</version>
+  <version>1.01.0006-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -34,9 +34,9 @@
   <url>http://www.terraframe.com/products/runwaysdk</url>
 
   <modules>
-    <module>geoprism-server</module>
     <module>geoprism-common</module>
     <module>geoprism-client</module>
+    <module>geoprism-server</module>
     <module>geoprism-web</module>
   </modules>
 
@@ -48,6 +48,8 @@
     <aspectj.plugin.version>1.7</aspectj.plugin.version>
     
     <geotools.version>11.0</geotools.version>
+    <runway.version>2.0.19</runway.version>
+    <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
   </properties>
 
   <dependencies>
@@ -72,9 +74,52 @@
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
   </repositories>
+  
+  <distributionManagement>
+    <repository>
+      <id>terraframe-releases</id>
+      <name>terraframe-releases</name>
+      <url>${mvn.server.url}content/repositories/releases/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <id>terraframe-snapshots</id>
+      <name>terraframe-snapshots</name>
+      <url>${mvn.server.url}content/repositories/snapshots/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
 
+  <licenses>
+    <license>
+      <name>
+        GNU Library or Lesser General Public License (LGPL)
+      </name>
+      <url>http://www.gnu.org/licenses/lgpl.html</url>
+    </license>
+  </licenses>
+  
+  <scm>
+    <connection>scm:git:ssh://git@github.com/terraframe/geoprism</connection>
+    <developerConnection>scm:git:ssh://git@github.com/terraframe/geoprism</developerConnection>
+    <url>scm:git:ssh://git@github.com/terraframe/geoprism</url>
+    <tag>v1.01.0006-SNAPSHOT</tag>
+  </scm>
+  
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4.2</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-gitexe</artifactId>
+            <version>1.8.1</version>
+          </dependency>
+         </dependencies>
+      </plugin>
+    
       <!-- Add generated source directories -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

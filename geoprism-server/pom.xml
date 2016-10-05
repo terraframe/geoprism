@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.runwaysdk</groupId>
+    <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0005</version>
+    <version>1.01.0006-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-server</artifactId>
   <packaging>jar</packaging>
@@ -49,18 +49,18 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-server</artifactId>
-      <version>2.0.16</version>
+      <version>${runway.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-common</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <!-- Need to have a dependency on the client jar for code generation and compiling. -->
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-client</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -141,11 +141,11 @@
                   <goal>java</goal>
                 </goals>
                 <configuration>
-                  <mainClass>net.geoprism.FileMerger</mainClass>
+                  <mainClass>net.geoprism.configuration.MergeUtility</mainClass>
                   <arguments>
-                    <argument>--baseDir=${project.build.directory}/classes</argument>
-                    <argument>--overrideDir=${project.basedir}/src/deployed/resources</argument>
-                    <argument>--exportDir=${project.build.directory}/classes</argument>
+                    <argument>--base=${project.build.directory}/classes</argument>
+                    <argument>--override=${project.basedir}/src/deployed/resources</argument>
+                    <argument>--export=${project.build.directory}/classes</argument>
                   </arguments>
                 </configuration>
               </execution>
@@ -183,20 +183,6 @@
                     <argument>${root.db}</argument>
                     <argument>com/runwaysdk/resources/xsd/schema.xsd</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -230,20 +216,6 @@
                   <arguments>
                     <argument>${project.basedir}/src/main/domain</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -277,20 +249,6 @@
                   <arguments>
                     <argument>-compile</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -324,20 +282,6 @@
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -373,20 +317,6 @@
                     <argument></argument>
                     <argument>false</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -422,20 +352,6 @@
                     <argument></argument>
                     <argument>false</argument>
                   </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>database.user</key>
-                      <value>${database.user}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.password</key>
-                      <value>${database.pass}</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <key>database.name</key>
-                      <value>${database.name}</value>
-                    </systemProperty>
-                  </systemProperties>
                 </configuration>
               </execution>
             </executions>
@@ -491,20 +407,24 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+			<plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0-alpha-2</version>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
         <executions>
           <execution>
-            <phase>initialize</phase>
+            <id>ExtendableServerProperties-Merge</id>
+            <phase>process-resources</phase>
             <goals>
-              <goal>read-project-properties</goal>
+              <goal>java</goal>
             </goals>
             <configuration>
-              <files>
-                <file>${overrideServerPropertiesPath}</file>
-              </files>
+              <mainClass>net.geoprism.configuration.MergeUtility</mainClass>
+              <arguments>
+                <argument>--base=${project.basedir}/target/classes/runwaysdk/server.properties</argument>
+                <argument>--override=${overrideServerPropertiesPath}</argument>
+                <argument>--export=${project.basedir}/target/classes/runwaysdk/server.properties</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>

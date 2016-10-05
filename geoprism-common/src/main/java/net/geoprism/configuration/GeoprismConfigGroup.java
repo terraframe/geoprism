@@ -16,34 +16,35 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
-
+package net.geoprism.configuration;
 
 import com.runwaysdk.configuration.ConfigurationManager.ConfigGroupIF;
 
-public class GDBConfigurationManager
-{
-  public static enum GDBConfigGroup implements ConfigGroupIF {
-    CLIENT("geoprism/", "client"), COMMON("geoprism/", "common"), SERVER("geoprism/", "server"), ROOT("", "root");
+/**
+ * Defines the bundle locations for configuration groups. Intended for use with Runway's ConfigurationManager API.
+ * 
+ * @author Richard Rowlands
+ */
+public enum GeoprismConfigGroup implements ConfigGroupIF {
+  CLIENT("geoprism/", "client"),
+  COMMON("geoprism/", "common"),
+  SERVER("geoprism/", "server"),
+  ROOT("", "root");
 
-    private String path;
+  private String path;
 
-    private String identifier;
+  private String identifier;
 
-    GDBConfigGroup(String path, String identifier)
-    {
-      this.path = path;
-      this.identifier = identifier;
-    }
+  GeoprismConfigGroup(String path, String identifier) {
+    this.path = path;
+    this.identifier = identifier;
+  }
 
-    public String getPath()
-    {
-      return this.path;
-    }
+  public String getPath() {
+    return this.path;
+  }
 
-    public String getIdentifier()
-    {
-      return identifier;
-    }
+  public String getIdentifier() {
+    return identifier;
   }
 }

@@ -81,7 +81,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/clone-form.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/clone-form.jsp',
       scope: {},
       controller : CloneFormController,
       controllerAs : 'ctrl',

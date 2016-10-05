@@ -22,7 +22,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-category-list.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/style-category-list.jsp',    
       scope: {
         categories : '=',
         autoComplete : '&',
@@ -180,7 +180,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-category-ontology.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/style-category-ontology.jsp',    
       scope: {
         nodes : '&',
         categories : '=',
@@ -264,7 +264,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-basic-fill.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/style-basic-fill.jsp',    
       scope: {
         fill:'=',
         opacity:'='
@@ -280,7 +280,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-gradient-fill.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/style-gradient-fill.jsp',    
       scope: {
         minFill:'=',
         maxFill:'=',
@@ -303,7 +303,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/style-stroke.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/style-stroke.jsp',    
       scope: {
         stroke:'=',
         strokeWidth:'=',
@@ -323,7 +323,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/layer/dashboard-layer-form-name.jsp',    
+        templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-name.jsp',    
         scope: {
           layerModel : '=',
           disabled : '&'
@@ -339,7 +339,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl : '/partial/layer/dashboard-layer-form-label.jsp',    
+        templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-label.jsp',    
         scope: true,
         link: function (scope, element, attrs, ctrl) {
         }
@@ -350,7 +350,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/layer/dashboard-layer-form-geonode.jsp',    
+        templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-geonode.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
         }
@@ -371,7 +371,7 @@
      return {
        restrict: 'E',
        replace: true,
-       templateUrl: '/partial/layer/dashboard-layer-form-aggregation.jsp',    
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-aggregation.jsp',    
        scope: true,
        controller : LayerAggregationController,
        controllerAs : 'ctrl',
@@ -395,7 +395,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/layer/dashboard-layer-form-layer-types.jsp',    
+        templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-layer-types.jsp',    
         scope: true,
         controller : LayerTypesController,
         controllerAs : 'ctrl',
@@ -414,7 +414,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/layer/basic-point.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/basic-point.jsp',    
       scope: true,
       link: function (scope, element, attrs) {
       }
@@ -425,7 +425,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/layer/basic-polygon.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/basic-polygon.jsp',    
       scope: true,
       link: function (scope, element, attrs) {
       }
@@ -587,7 +587,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/layer/dashboard-layer-form-layer-types-styling.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-layer-types-styling.jsp',    
       scope: true,
       controller : LayerTypesStyleController,
       controllerAs : 'ctrl',
@@ -602,7 +602,7 @@
       return {
         restrict: 'E',
         replace: true,
-        templateUrl: '/partial/layer/dashboard-layer-form-legend-option.jsp',    
+        templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-legend-option.jsp',    
         scope: true,
         link: function (scope, element, attrs) {
         }
@@ -614,7 +614,7 @@
      return {
        restrict: 'E',
        replace: true,
-       templateUrl: '/partial/layer/dashboard-layer-form-action-buttons.jsp',    
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/dashboard-layer-form-action-buttons.jsp',    
        scope: {
          persist : '&',
          cancel : '&'
@@ -924,7 +924,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/layer/thematic-layer.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/thematic-layer.jsp',    
       scope: {
       
       },
@@ -1073,7 +1073,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/layer/reference-layer.jsp',    
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/reference-layer.jsp',    
       scope: {
         
       },
@@ -1106,7 +1106,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/styled-category-popup.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/styled-category-popup.jsp',
       scope: {
         category:'='
       },
@@ -1176,7 +1176,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl : '/partial/layer/styled-category.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/layer/styled-category.jsp',
       scope: {
         category:'=',
         scroll:'@',
