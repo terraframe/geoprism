@@ -69,8 +69,8 @@
       <nav class="navbar navbar-default">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a>
-            <a class="navbar-brand" href="/management"><gdb:localize key="data.management.title"/></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/management"><gdb:localize key="data.management.title"/></a>
 <%-- 			<h3 class="navbar-brand"><gdb:localize key="data.management.title"/></h3> --%>
           </div>
 
@@ -78,8 +78,8 @@
             <li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
             <li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
             <li><a href="#category"><i></i><gdb:localize key="category.management.title"/></a></li>
-<%--             <li><a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
-<%--             <li><a href="/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
+<%--             <li><a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
+<%--             <li><a href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
           </ul>
         </div>
       </nav>

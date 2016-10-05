@@ -60,17 +60,17 @@
 		<div id="geodash-landing-top-div">
 			<header id="header">
 				<div id="header-link-container" class="text-right">
-					<a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
+					<a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
 					  <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
 					</a>
 					<p id="user-link-container" class="text-right">				        
 					  <c:if test="${isAdmin}">
-              <a class="user-command-link" href="/"><gdb:localize key="geoprismLanding.administration"/></a>
+              <a class="user-command-link" href="${pageContext.request.contextPath}/"><gdb:localize key="geoprismLanding.administration"/></a>
               <i class="user-command-link"> | </i>					
             </c:if>
 		        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
 						<i class="user-command-link"> | </i>
-	 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+	 					<a class="user-command-link" href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a>
 	 				</p>
 	 			</div>
 				<div class="row-fluid header-logo-row">

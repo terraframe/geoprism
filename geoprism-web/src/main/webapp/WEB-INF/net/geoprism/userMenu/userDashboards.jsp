@@ -33,7 +33,7 @@
 			<link rel="icon" href="${miniLogoFilePath}"/>
 		</c:when>
 		<c:otherwise>
-			<link rel="icon" href="/net/geoprism/images/splash_logo_icon.png"/>
+			<link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png"/>
 		</c:otherwise>
 	</c:choose>
   
@@ -69,7 +69,7 @@
   <div id="container" ng-controller="DashboardMenuController as ctrl" >
     <header id="header">
     	<div id="header-link-container" class="text-right">
-	      <a href="/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
+	      <a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
 <%-- 	        <c:if test="${not empty miniLogoFilePath}" > --%>
 <%--             <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
 <%--           </c:if> --%>
@@ -78,7 +78,7 @@
 	      <p id="user-link-container" class="text-right">
 <%-- 	        <c:choose> --%>
 <%-- 	          <c:when test="${isAdmin}"> --%>
-<%-- 	            <a class="user-command-link" href="/" class="link-active"><gdb:localize key="userDashboards.admin"/></a> --%>
+<%-- 	            <a class="user-command-link" href="${pageContext.request.contextPath}/" class="link-active"><gdb:localize key="userDashboards.admin"/></a> --%>
 <!-- 	            <i class="user-command-link"> | </i> -->
 <%-- 	          </c:when> --%>
 <%-- 	          <c:otherwise> --%>
@@ -87,7 +87,7 @@
 	       
 	        <a id="account-btn" ng-click="ctrl.account()" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
 	        <i class="user-command-link"> | </i>
-	        <a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+	        <a class="user-command-link" href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a>
 	      </p>
 	    </div>
       <div class="heading text-center"><gdb:localize key="userDashboards.heading"/></div>
@@ -104,7 +104,7 @@
 		          <div  class="thumbnail text-center">
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" class="" >
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" 
+		              <img ng-src="${pageContext.request.contextPath}/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" 
 		              		onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" 
 		              		alt="Dashboard">
 		              
@@ -136,7 +136,7 @@
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" class="" >
 		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="${pageContext.request.contextPath}/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
@@ -166,7 +166,7 @@
 		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" class="" >
 		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="${pageContext.request.contextPath}/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>

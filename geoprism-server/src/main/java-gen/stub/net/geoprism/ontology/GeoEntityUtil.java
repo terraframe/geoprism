@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
@@ -175,9 +176,47 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     // Copy over any synonyms to the destination and delete the originals
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
+    /*
+     * Remove the source from the allpaths table so we don't violate allpaths uniqueness constraints
+     */
+    List<? extends Business> parents = source.getParents(LocatedIn.CLASS).getAll();
+    for (Business parent : parents)
+    {
+      source.removeLink((Term) parent, LocatedIn.CLASS);
+    }
+    GeoEntity.getStrategy().removeTerm(source, LocatedIn.CLASS);
+    
     BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
+    
+    /*
+     * Add the dest to the allpaths table
+     */
+    GeoEntity.getStrategy().add(destination, LocatedIn.CLASS);
+    for (Business parent : parents)
+    {
+      Savepoint savepoint = Database.setSavepoint();
+      
+      try
+      {
+        destination.addLink((Term) parent, LocatedIn.CLASS);
+      }
+      catch (DuplicateDataException e)
+      {
+        // Rollback the savepoint
+        Database.rollbackSavepoint(savepoint);
+
+        savepoint = null;
+      }
+      finally
+      {
+        if (savepoint != null)
+        {
+          Database.releaseSavepoint(savepoint);
+        }
+      }
+    }
 
     return synonym;
   }

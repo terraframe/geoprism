@@ -60,7 +60,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/map-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/map-panel.jsp',
       scope: {
         dashboard:'='
       },
@@ -194,7 +194,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/thematic-layer-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/thematic-layer-panel.jsp',
       scope: {
         cache:'=',
         dashboard:'='
@@ -297,7 +297,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/reference-layer-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/reference-layer-panel.jsp',
       scope: {
         cache:'='
       },
@@ -347,7 +347,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/base-layer-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/base-layer-panel.jsp',
       scope: {
         layers:'=',
         dashboard:'='
@@ -414,7 +414,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/legend-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/legend-panel.jsp',
       scope: {
         thematicCache:'=',
         referenceCache:'='
@@ -430,7 +430,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/floating-legends.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/floating-legends.jsp',
       scope: {
         thematicCache:'=',
         referenceCache:'='

@@ -23,7 +23,7 @@
   <parent>
     <groupId>com.runwaysdk</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0005</version>
+    <version>1.01.0006-SNAPSHOT</version>
   </parent>
 
   <artifactId>geoprism-shapefile-importer</artifactId>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>geoprism-server</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

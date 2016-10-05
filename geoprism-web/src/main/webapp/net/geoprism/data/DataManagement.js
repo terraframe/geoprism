@@ -27,14 +27,14 @@
      .when('/icon', {
        bundle : 'category.icon',
        key : 'title',       
-       templateUrl : '/partial/data/importer/icons.jsp',
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/importer/icons.jsp',
        controller : 'CategoryIconController',
        controllerAs : 'ctrl'
      })
      .when('/category', {
        bundle : 'category.management',
        key : 'title',       
-       templateUrl : '/partial/data/browser/category-management.jsp',
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/category-management.jsp',
        controller : 'CategoryController',
        controllerAs : 'ctrl'
      })
@@ -43,7 +43,7 @@
      .otherwise({
        bundle : 'dataset',
        key : 'title',
-       templateUrl : '/partial/data/browser/datasets.jsp',
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/datasets.jsp',
        controller : 'DatasetController',
        controllerAs : 'ctrl'
      });    

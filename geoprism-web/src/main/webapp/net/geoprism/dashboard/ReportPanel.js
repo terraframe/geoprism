@@ -156,7 +156,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/dashboard/report-panel.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/report-panel.jsp',
       scope: {
         hasReport:'=',
       },
