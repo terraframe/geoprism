@@ -2400,6 +2400,10 @@ li.list-group-item a{
   padding-bottom: 10px;
 }
 	
+.navbar-nav>li>.dropdown-menu {
+    min-width: 100%;
+}
+
 	
 /*
 * Scroll bar styling

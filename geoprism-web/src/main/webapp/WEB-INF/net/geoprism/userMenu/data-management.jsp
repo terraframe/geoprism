@@ -56,6 +56,8 @@
     
     <!-- Individual Page Javascript -->
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
+    <jwr:script src="/bundles/location-management.js" useRandomParam="false"/>
+    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
     
     <script type="text/javascript">${js}</script>
     
@@ -75,9 +77,21 @@
           </div>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
-            <li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
-            <li><a href="#category"><i></i><gdb:localize key="category.management.title"/></a></li>
+            <li class="dropdown">
+            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Data_Management"/><span class="caret"></span></a>
+            	<ul class="dropdown-menu">
+            		<li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
+            		<li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
+            		<li><a href="#category"><i></i><gdb:localize key="Categories"/></a></li>
+            	</ul>
+            </li>
+            <li class="dropdown">
+            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Location_Configurations"/><span class="caret"></span></a>
+            	<ul class="dropdown-menu">
+            		<li><a href="#locations"><i></i><gdb:localize key="Location_Management"/></a></li>
+            	</ul>
+            </li>
+
 <%--             <li><a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
 <%--             <li><a href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
           </ul>
