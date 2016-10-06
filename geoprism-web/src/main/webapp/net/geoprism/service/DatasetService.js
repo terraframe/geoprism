@@ -22,83 +22,218 @@
     var service = {};
     var _datasetConfiguration = {};
     
-    service.uploadSpreadsheet = function(connection, file) {
-      
-      var request = runwayService.createConnectionRequest(connection);
-      
-      var params = new FormData();
-      params.append('file', file);
-
-      /*
-       * IMPORTANT: This method cannot be invoked through the generated javascript
-       * controller because you can't pass in a FormData to the method.  Thus, we
-       * are invoking it directly through the Facade.  FormData is required for
-       * submitting file objects through javascript.
-       */
-      Mojo.$.com.runwaysdk.Facade._controllerWrapper('net.geoprism.DataUploaderController.getAttributeInformation.mojax', request, params);
-    }
-    
     service.setDatasetConfiguration = function(config) {
       this._datasetConfiguration = config;
     }
-    
+      
     service.getDatasetConfiguration = function() {
       return this._datasetConfiguration;
     }
     
-    service.importData = function(connection, configuration) {
-      var request = runwayService.createConnectionRequest(connection);
+    service.uploadSpreadsheet = function(connection, file) {
       
-      net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
+      var data = new FormData();
+      data.append('file', file);
+      
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/getAttributeInformation',
+        headers: {
+          'Content-Type': undefined
+        },
+        data: data,
+        transformRequest: angular.identity        
+      }
+            
+      runwayService.execute(req, connection);            
+    }
+    
+    service.importData = function(connection, configuration) {
+//      var request = runwayService.createConnectionRequest(connection);
+//      net.geoprism.DataUploaderController.importData(request, JSON.stringify(configuration));
+      
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/importData',
+        data : {configuration : configuration }
+      }
+      
+      runwayService.execute(req, connection);
     }
     
     service.cancelImport = function(connection, configuration) {
-      var request = runwayService.createConnectionRequest(connection);
-          
-      net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));      
+//      var request = runwayService.createConnectionRequest(connection);          
+//      net.geoprism.DataUploaderController.cancelImport(request, JSON.stringify(configuration));
+    
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/cancelImport',
+        data : {configuration : configuration }
+      }
+              
+      runwayService.execute(req, connection);    
     }
     
     service.getSavedConfiguration = function(connection, id, sheetName) {
-      var request = runwayService.createConnectionRequest(connection);
+//      var request = runwayService.createConnectionRequest(connection);            
+//      net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
             
-      net.geoprism.DataUploaderController.getSavedConfiguration(request, id, sheetName);
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/getSavedConfiguration',
+        data : {
+          id : id,
+          sheetName : sheetName
+        }
+      }
+              
+      runwayService.execute(req, connection);      
     }
     
     service.createGeoEntitySynonym = function(connection, entityId, label) {
-      var request = runwayService.createConnectionRequest(connection);
+//      var request = runwayService.createConnectionRequest(connection);        
+//      net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
+      
         
-      net.geoprism.DataUploaderController.createGeoEntitySynonym(request, entityId, label);
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/createGeoEntitySynonym',
+        data : {
+          entityId : entityId,
+          label : label
+        }
+      }
+                
+      runwayService.execute(req, connection);            
     }
     
     service.createClassifierSynonym = function(connection, classifierId, label) {
-      var request = runwayService.createConnectionRequest(connection);
-      
-      net.geoprism.DataUploaderController.createClassifierSynonym(request, classifierId, label);
+//      var request = runwayService.createConnectionRequest(connection);      
+//      net.geoprism.DataUploaderController.createClassifierSynonym(request, classifierId, label);
+    
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/createClassifierSynonym',
+        data : {
+          classifierId : classifierId,
+          label : label
+        }
+      }
+                        
+      runwayService.execute(req, connection);    
     }
     
     service.createGeoEntity = function(connection, parentId, universalId, label) {
-      var request = runwayService.createConnectionRequest(connection);
+//      var request = runwayService.createConnectionRequest(connection);      
+//      net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
       
-      net.geoprism.DataUploaderController.createGeoEntity(request, parentId, universalId, label);
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/createGeoEntity',
+        data : {
+          parentId : parentId,
+          universalId : universalId,
+          label : label
+        }
+      }
+                            
+      runwayService.execute(req, connection);          
     }    
 
     service.deleteGeoEntity = function(connection, entityId) {
-      var request = runwayService.createConnectionRequest(connection);
-      
-      net.geoprism.DataUploaderController.deleteGeoEntity(request, entityId);
+//      var request = runwayService.createConnectionRequest(connection);      
+//      net.geoprism.DataUploaderController.deleteGeoEntity(request, entityId);
+    
+        
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/deleteGeoEntity',
+        data : {
+          entityId : entityId
+        }
+      }
+                              
+      runwayService.execute(req, connection);
     }    
     
     service.deleteGeoEntitySynonym = function(connection, synonymId) {
-      var request = runwayService.createConnectionRequest(connection);
+//      var request = runwayService.createConnectionRequest(connection);      
+//      net.geoprism.DataUploaderController.deleteGeoEntitySynonym(request, synonymId);
+    
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/deleteGeoEntitySynonym',
+        data : {
+          synonymId : synonymId
+        }
+      }
       
-      net.geoprism.DataUploaderController.deleteGeoEntitySynonym(request, synonymId);
-    }    
+      runwayService.execute(req, connection);
+    }
     
     service.deleteClassifierSynonym = function(connection, synonymId) {
-      var request = runwayService.createConnectionRequest(connection);
+//      var request = runwayService.createConnectionRequest(connection);      
+//      net.geoprism.DataUploaderController.deleteClassifierSynonym(request, synonymId);    
+    
+      var req = {
+        method: 'POST',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/deleteClassifierSynonym',
+        data : {
+          synonymId : synonymId
+        }
+      }
       
-      net.geoprism.DataUploaderController.deleteClassifierSynonym(request, synonymId);
+      runwayService.execute(req, connection);
     }    
+    
+    service.getClassifierSuggestions = function(connection, mdAttributeId, text, limit) {
+//      var request = runwayService.createConnectionRequest(connection);        
+//      net.geoprism.DataUploaderController.getClassifierSuggestions(request, mdAttributeId, text, limit);
+        
+      var req = {
+        method: 'GET',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/getClassifierSuggestions',
+        params : {
+          mdAttributeId : mdAttributeId,
+          text : text,
+          limit : limit          
+        }
+      }
+      
+      runwayService.execute(req, connection);      
+    }
+      
+    service.validateDatasetName = function(connection, name, id) {
+//      var request = runwayService.createConnectionRequest(connection);          
+//      net.geoprism.DataUploaderController.validateDatasetName(request, label, id);      
+      
+      var req = {
+        method: 'GET',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/validateDatasetName',
+        params : {
+          name : name,
+          id : id          
+        }
+      }
+              
+      runwayService.execute(req, connection);
+    }
+      
+    service.validateCategoryName = function(connection, name, id) {
+//      var request = runwayService.createConnectionRequest(connection);      
+//      net.geoprism.DataUploaderController.validateCategoryName(request, label, id);
+      
+      var req = {
+        method: 'GET',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/validateCategoryName',
+        params : {
+          name : name,
+          id : id          
+        }
+      }
+                      
+      runwayService.execute(req, connection);      
+    }
     
     service.getAll = function(connection) {
       var request = runwayService.createConnectionRequest(connection);
@@ -142,24 +277,6 @@
       net.geoprism.ontology.GeoEntityUtil.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
     }
     
-    service.getClassifierSuggestions = function(connection, mdAttributeId, text, limit) {
-      var request = runwayService.createConnectionRequest(connection);
-      
-      net.geoprism.DataUploaderController.getClassifierSuggestions(request, mdAttributeId, text, limit);
-    }
-    
-    service.validateDatasetName = function(connection, label, id) {
-      var request = runwayService.createConnectionRequest(connection);
-        
-      net.geoprism.DataUploaderController.validateDatasetName(request, label, id);      
-    }
-    
-    service.validateCategoryName = function(connection, label, id) {
-      var request = runwayService.createConnectionRequest(connection);
-    
-      net.geoprism.DataUploaderController.validateCategoryName(request, label, id);      
-    }
-    
     //
     // Used to structure the data uploader steps widget
     // @config - Configuration array containing additional steps. Can be an empty array.
@@ -176,17 +293,17 @@
       var categoryProblemResStep = {"label": "7", "page":"CATEGORY-VALIDATION"}; 
       
       if(config.indexOf("LOCATION") > -1 && config.indexOf("COORDINATE") > -1 && config.indexOf("CATEGORY") > -1){
-    	basicSteps.splice(2, 0, locationStep, coordinateStep);
+        basicSteps.splice(2, 0, locationStep, coordinateStep);
         basicSteps.splice(5, 0, geoProblemResStep);
         basicSteps.splice(6, 0, categoryProblemResStep);
       }
       else if(config.indexOf("LOCATION") === -1 && config.indexOf("COORDINATE") > -1 && config.indexOf("CATEGORY") > -1){
-      	basicSteps.splice(2, 0, coordinateStep);
+      basicSteps.splice(2, 0, coordinateStep);
         basicSteps.splice(4, 0, geoProblemResStep);
         basicSteps.splice(5, 0, categoryProblemResStep);
       }
       else if(config.indexOf("LOCATION") > -1 && config.indexOf("COORDINATE") === -1 && config.indexOf("CATEGORY") > -1){
-      	basicSteps.splice(2, 0, locationStep);
+      basicSteps.splice(2, 0, locationStep);
         basicSteps.splice(4, 0, geoProblemResStep);
         basicSteps.splice(5, 0, categoryProblemResStep);
       }
@@ -203,7 +320,7 @@
         basicSteps.splice(4, 0, geoProblemResStep);
       }
       else if(config.indexOf("CATEGORY") > -1){
-    	  basicSteps.splice(3, 0, categoryProblemResStep);
+        basicSteps.splice(3, 0, categoryProblemResStep);
       }
 
       return basicSteps;

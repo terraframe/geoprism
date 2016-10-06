@@ -39,4 +39,6 @@
   <h1><gdb:localize key="splash.header" /></h1>
 </header>
 
-<p><gdb:localize key="splash.powered" /></p>
+<div id="finePrint" style="position: absolute; bottom: 0; font-size:70%">
+	<span style="padding-right:20px;"><gdb:localize key="splash.powered" /></span><span><gdb:localize key="app.version" /></span>
+</div>

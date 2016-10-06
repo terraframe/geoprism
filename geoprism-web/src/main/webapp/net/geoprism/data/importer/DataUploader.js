@@ -35,7 +35,7 @@
             response( results );
           },
           onFailure : function(e){
-            console.log(e);
+//            console.log(e);
           }
       };
       
@@ -59,13 +59,13 @@
             label : response.label
           };
             
-          $scope.$apply();
+//          $scope.$apply();
         },
         onFailure : function(e){
           $scope.errors = [];
           $scope.errors.push(e.localizedMessage);
             
-          $scope.$apply();
+//          $scope.$apply();
         }        
       };
       
@@ -85,7 +85,7 @@
             optionId : response.id
           };
       
-          $scope.$apply();        
+          $scope.$apply();
         },
         onFailure : function(e){
           $scope.errors = [];
@@ -167,13 +167,13 @@
                       
               controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
                       
-              $scope.$apply();        
+              // $scope.$apply();
             },
             onFailure : function(e){
               $scope.errors = [];
               $scope.errors.push(e.localizedMessage);
                       
-              $scope.$apply();
+              // $scope.$apply();
             }      
           };
           
@@ -186,7 +186,7 @@
               $scope.problem.resolved = false;
               $scope.problem.optionId = null;
                               
-              $scope.$apply();        
+               $scope.$apply();
             },
             onFailure : function(e){
               $scope.errors = [];
@@ -281,7 +281,6 @@
           response( results );
         },
         onFailure : function(e){
-          console.log(e);
         }
       };
       
@@ -308,13 +307,13 @@
             ancestors : response.ancestors            
           };
          
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e){
          $scope.errors = [];
          $scope.errors.push(e.localizedMessage);
          
-         $scope.$apply();
+         // $scope.$apply();
         }        
       };
       
@@ -333,13 +332,13 @@
             entityId : response.entityId
           };
       
-          $scope.$apply();        
+          // $scope.$apply();
         },
         onFailure : function(e){
           $scope.errors = [];
           $scope.errors.push(e.localizedMessage);
       
-          $scope.$apply();
+          // $scope.$apply();
         }      
       };
         
@@ -412,13 +411,13 @@
             
             controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
             
-            $scope.$apply();        
+            // $scope.$apply();
           },
           onFailure : function(e){
             $scope.errors = [];
             $scope.errors.push(e.localizedMessage);
                 
-            $scope.$apply();
+            // $scope.$apply();
           }      
         };
       
@@ -506,7 +505,7 @@
       
           $scope.$emit('loadConfiguration', {sheet: sheet});
       
-          $scope.$apply();
+          // $scope.$apply();
         }          
       };
       
@@ -580,11 +579,11 @@
       var connection = {
         onSuccess : function() {
           ngModel.$setValidity('unique', true);       
-          scope.$apply();          
+          // $scope.$apply();
         },
         onFailure : function(e){
           ngModel.$setValidity('unique', false);          
-          scope.$apply();
+          // $scope.$apply();
         }
       };
       
@@ -688,11 +687,11 @@
         var connection = {
           onSuccess : function() {
             ngModel.$setValidity('unique', true);       
-            scope.$apply();          
+            // $scope.$apply();
           },
           onFailure : function(e){
             ngModel.$setValidity('unique', false);          
-            scope.$apply();
+            // $scope.$apply();
           }
         };
         
@@ -1699,12 +1698,12 @@
             $scope.$emit('datasetChange', {datasets:result.datasets, finished : false});
           }
          
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
          
-          $scope.$apply();
+          // $scope.$apply();
         }
       };
       // Reset the file Errors
@@ -1725,12 +1724,12 @@
          
           $scope.$emit('datasetChange', {finished : true});                
          
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
          
-          $scope.$apply();
+          // $scope.$apply();
         }             
       };
       // Reset the file Errors
@@ -1765,7 +1764,7 @@
         $scope.page.current = 'MATCH-INITIAL';
       }
       
-      $scope.$apply();
+      // $scope.$apply();
     }
     
     controller.setAttributeDefaults = function() {
@@ -1981,7 +1980,7 @@
           callback : function(){
             controller.handlePrev();
             
-            $scope.$apply();
+            // $scope.$apply();
           }
         });
         buttons.push({

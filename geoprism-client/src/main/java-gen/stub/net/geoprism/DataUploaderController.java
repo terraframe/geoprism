@@ -22,284 +22,167 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.geoprism.ontology.ClassifierDTO;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.ValueObjectDTO;
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
+import com.runwaysdk.controller.ServletMethod;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.mvc.Controller;
+import com.runwaysdk.mvc.Endpoint;
+import com.runwaysdk.mvc.ErrorSerialization;
+import com.runwaysdk.mvc.RequestParamter;
+import com.runwaysdk.mvc.ResponseIF;
+import com.runwaysdk.mvc.RestBodyResponse;
 
-public class DataUploaderController extends DataUploaderControllerBase implements Reloadable
+@Controller(url = "uploader")
+public class DataUploaderController implements Reloadable
 {
-  public DataUploaderController(HttpServletRequest req, HttpServletResponse resp, java.lang.Boolean isAsynchronous)
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF getAttributeInformation(ClientRequestIF request, @RequestParamter(name = "file") MultipartFileParameter file) throws IOException, JSONException
   {
-    super(req, resp, isAsynchronous);
-  }
-
-  @Override
-  public void getAttributeInformation(MultipartFileParameter file) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
+    String fileName = file.getFilename();
+    InputStream stream = file.getInputStream();
 
     try
     {
-      String fileName = file.getFilename();
-      InputStream stream = file.getInputStream();
-
-      try
-      {
-        JSONObject object = new JSONObject();
-        object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
-        object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
-        object.put("classifiers", new JSONArray(ClassifierDTO.getCategoryClassifiersAsJSON(request)));
-
-        JSONControllerUtil.writeReponse(this.resp, object);
-      }
-      finally
-      {
-        /*
-         * Just in case the stream isn't closed by the server method
-         */
-        stream.close();
-      }
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
-    }
-  }
-
-  @Override
-  public void importData(String configuration) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      String result = DataUploaderDTO.importData(request, configuration);
-
-      JSONControllerUtil.writeReponse(this.resp, new JSONObject(result));
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-
-  @Override
-  public void cancelImport(String configuration) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      DataUploaderDTO.cancelImport(request, configuration);
-
-      JSONControllerUtil.writeReponse(this.resp, "");
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-
-  @Override
-  public void getSavedConfiguration(String id, String sheetName) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      String configuration = DataUploaderDTO.getSavedConfiguration(request, id, sheetName);
-
       JSONObject object = new JSONObject();
-      object.put("datasets", new JSONObject(configuration));
+      object.put("information", new JSONObject(DataUploaderDTO.getAttributeInformation(request, fileName, stream)));
+      object.put("options", new JSONObject(DataUploaderDTO.getOptionsJSON(request)));
+      object.put("classifiers", new JSONArray(ClassifierDTO.getCategoryClassifiersAsJSON(request)));
 
-      JSONControllerUtil.writeReponse(this.resp, object);
+      return new RestBodyResponse(object);
     }
-    catch (Throwable t)
+    finally
     {
-      JSONControllerUtil.handleException(this.resp, t, request);
+      /*
+       * Just in case the stream isn't closed by the server method
+       */
+      stream.close();
     }
   }
 
-  @Override
-  public void createGeoEntity(String parentId, String universalId, String label) throws IOException, ServletException
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF importData(ClientRequestIF request, @RequestParamter(name = "configuration") String configuration) throws JSONException
   {
-    ClientRequestIF request = this.getClientRequest();
+    String result = DataUploaderDTO.importData(request, configuration);
 
-    try
+    return new RestBodyResponse(new JSONObject(result));
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF cancelImport(ClientRequestIF request, @RequestParamter(name = "configuration") String configuration)
+  {
+    DataUploaderDTO.cancelImport(request, configuration);
+
+    return new RestBodyResponse("");
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF getSavedConfiguration(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "sheetName") String sheetName) throws JSONException
+  {
+    String configuration = DataUploaderDTO.getSavedConfiguration(request, id, sheetName);
+
+    JSONObject object = new JSONObject();
+    object.put("datasets", new JSONObject(configuration));
+
+    return new RestBodyResponse(object);
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF createGeoEntity(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "label") String label) throws JSONException
+  {
+    String entityId = DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
+
+    JSONObject object = new JSONObject();
+    object.put("entityId", entityId);
+
+    return new RestBodyResponse(object);
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF createGeoEntitySynonym(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId, @RequestParamter(name = "label") String label) throws JSONException
+  {
+    String response = DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
+
+    JSONObject object = new JSONObject(response);
+
+    return new RestBodyResponse(object);
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF deleteGeoEntity(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId)
+  {
+    DataUploaderDTO.deleteGeoEntity(request, entityId);
+
+    return new RestBodyResponse("");
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF deleteGeoEntitySynonym(ClientRequestIF request, @RequestParamter(name = "synonymId") String synonymId)
+  {
+    DataUploaderDTO.deleteGeoEntitySynonym(request, synonymId);
+
+    return new RestBodyResponse("");
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF createClassifierSynonym(ClientRequestIF request, @RequestParamter(name = "classifierId") String classifierId, @RequestParamter(name = "label") String label) throws JSONException
+  {
+    String response = DataUploaderDTO.createClassifierSynonym(request, classifierId, label);
+
+    JSONObject object = new JSONObject(response);
+
+    return new RestBodyResponse(object);
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF deleteClassifierSynonym(ClientRequestIF request, @RequestParamter(name = "synonymId") String synonymId)
+  {
+    DataUploaderDTO.deleteClassifierSynonym(request, synonymId);
+
+    return new RestBodyResponse("");
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF getClassifierSuggestions(ClientRequestIF request, @RequestParamter(name = "mdAttributeId") String mdAttributeId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  {
+    JSONArray response = new JSONArray();
+
+    ValueQueryDTO query = ClassifierDTO.getClassifierSuggestions(request, mdAttributeId, text, limit);
+    List<ValueObjectDTO> results = query.getResultSet();
+
+    for (ValueObjectDTO result : results)
     {
-      String entityId = DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
-
       JSONObject object = new JSONObject();
-      object.put("entityId", entityId);
+      object.put("label", result.getValue(ClassifierDTO.DISPLAYLABEL));
+      object.put("value", result.getValue(ClassifierDTO.ID));
 
-      JSONControllerUtil.writeReponse(this.resp, object);
+      response.put(object);
     }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
+
+    return new RestBodyResponse(response);
   }
 
-  @Override
-  public void createGeoEntitySynonym(String entityId, String label) throws IOException, ServletException
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF validateDatasetName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "id") String id)
   {
-    ClientRequestIF request = this.getClientRequest();
+    DataUploaderDTO.validateDatasetName(request, name, id);
 
-    try
-    {
-      String response = DataUploaderDTO.createGeoEntitySynonym(request, entityId, label);
-
-      JSONObject object = new JSONObject(response);
-
-      JSONControllerUtil.writeReponse(this.resp, object);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
+    return new RestBodyResponse("");
   }
 
-  @Override
-  public void deleteGeoEntity(String entityId) throws IOException, ServletException
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF validateCategoryName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "id") String id)
   {
-    ClientRequestIF request = this.getClientRequest();
+    ClassifierDTO.validateCategoryName(request, name, id);
 
-    try
-    {
-      DataUploaderDTO.deleteGeoEntity(request, entityId);
-
-      JSONControllerUtil.writeReponse(this.resp);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-
-  @Override
-  public void deleteGeoEntitySynonym(String synonymId) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      DataUploaderDTO.deleteGeoEntitySynonym(request, synonymId);
-
-      JSONControllerUtil.writeReponse(this.resp);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-
-  @Override
-  public void createClassifierSynonym(String classifierId, String label) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      String response = DataUploaderDTO.createClassifierSynonym(request, classifierId, label);
-
-      JSONObject object = new JSONObject(response);
-
-      JSONControllerUtil.writeReponse(this.resp, object);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-
-  @Override
-  public void deleteClassifierSynonym(String synonymId) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      DataUploaderDTO.deleteClassifierSynonym(request, synonymId);
-
-      JSONControllerUtil.writeReponse(this.resp);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-
-  @Override
-  public void getClassifierSuggestions(String mdAttributeId, String text, Integer limit) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      JSONArray response = new JSONArray();
-
-      ValueQueryDTO query = ClassifierDTO.getClassifierSuggestions(request, mdAttributeId, text, limit);
-      List<ValueObjectDTO> results = query.getResultSet();
-
-      for (ValueObjectDTO result : results)
-      {
-        JSONObject object = new JSONObject();
-        object.put("label", result.getValue(ClassifierDTO.DISPLAYLABEL));
-        object.put("value", result.getValue(ClassifierDTO.ID));
-
-        response.put(object);
-      }
-
-      JSONControllerUtil.writeReponse(this.resp, response);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-  
-  @Override
-  public void validateDatasetName(String name, String id) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      DataUploaderDTO.validateDatasetName(request, name, id);
-      
-      JSONControllerUtil.writeReponse(this.resp);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
-  }
-  
-  @Override
-  public void validateCategoryName(String name, String id) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      ClassifierDTO.validateCategoryName(request, name, id);
-
-      JSONControllerUtil.writeReponse(this.resp);
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, request);
-    }
+    return new RestBodyResponse("");
   }
 }

@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function RunwayService() {
+  function RunwayService($http) {
     var service = {};
     
     service.createRequest = function(onSuccess, onFailure){
@@ -69,7 +69,35 @@
         return service.createRequest(connection.onSuccess, connection.onFailure );
       }
     }    
-
+    
+    service.execute = function(req, connection) {
+      var request = service.createConnectionRequest(connection);      
+      
+      var success = function(response) {
+        request.onSuccess(response.data);
+      }
+      
+      var failure = function(response) {
+        if(response.status === 401) {
+          window.location = window.com.runwaysdk.__applicationContextPath + '/session/form';
+        }
+        else {
+          request.onFailure(response.data);                
+        }
+      }
+      
+      if(connection.elementId != null) {
+        
+        $http(req).then(success, failure).finally(function(){
+          request._hideStandby();
+        });
+        
+        request._showStandby();
+      }  
+      else {
+        $http(req).then(success, failure);
+      }
+    }
     
     service.generateId = function() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
