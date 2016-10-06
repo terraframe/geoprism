@@ -71,27 +71,28 @@
     }    
     
     service.execute = function(req, connection) {
+      var request = service.createConnectionRequest(connection);      
+      
       var success = function(response) {
-        connection.onSuccess(response.data);
+        request.onSuccess(response.data);
       }
       
       var failure = function(response) {
         if(response.status === 401) {
-          window.location = '/session/form';
+          window.location = window.com.runwaysdk.__applicationContextPath + '/session/form';
         }
         else {
-          connection.onFailure(response.data);                
+          request.onFailure(response.data);                
         }
       }
       
       if(connection.elementId != null) {
-        var standby = service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
         
         $http(req).then(success, failure).finally(function(){
-          standby._hideStandby();
+          request._hideStandby();
         });
         
-        standby._showStandby();
+        request._showStandby();
       }  
       else {
         $http(req).then(success, failure);

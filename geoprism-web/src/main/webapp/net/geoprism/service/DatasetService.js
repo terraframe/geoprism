@@ -37,7 +37,7 @@
       
       var req = {
         method: 'POST',
-        url: '/uploader/getAttributeInformation',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/getAttributeInformation',
         headers: {
           'Content-Type': undefined
         },
@@ -54,7 +54,7 @@
       
       var req = {
         method: 'POST',
-        url: '/uploader/importData',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/importData',
         data : {configuration : configuration }
       }
       
@@ -67,7 +67,7 @@
     
       var req = {
         method: 'POST',
-        url: '/uploader/cancelImport',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/cancelImport',
         data : {configuration : configuration }
       }
               
@@ -80,7 +80,7 @@
             
       var req = {
         method: 'POST',
-        url: '/uploader/getSavedConfiguration',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/getSavedConfiguration',
         data : {
           id : id,
           sheetName : sheetName
@@ -97,7 +97,7 @@
         
       var req = {
         method: 'POST',
-        url: '/uploader/createGeoEntitySynonym',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/createGeoEntitySynonym',
         data : {
           entityId : entityId,
           label : label
@@ -113,7 +113,7 @@
     
       var req = {
         method: 'POST',
-        url: '/uploader/createClassifierSynonym',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/createClassifierSynonym',
         data : {
           classifierId : classifierId,
           label : label
@@ -129,7 +129,7 @@
       
       var req = {
         method: 'POST',
-        url: '/uploader/createGeoEntity',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/createGeoEntity',
         data : {
           parentId : parentId,
           universalId : universalId,
@@ -147,7 +147,7 @@
         
       var req = {
         method: 'POST',
-        url: '/uploader/deleteGeoEntity',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/deleteGeoEntity',
         data : {
           entityId : entityId
         }
@@ -162,7 +162,7 @@
     
       var req = {
         method: 'POST',
-        url: '/uploader/deleteGeoEntitySynonym',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/deleteGeoEntitySynonym',
         data : {
           synonymId : synonymId
         }
@@ -177,7 +177,7 @@
     
       var req = {
         method: 'POST',
-        url: '/uploader/deleteClassifierSynonym',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/deleteClassifierSynonym',
         data : {
           synonymId : synonymId
         }
@@ -192,7 +192,7 @@
         
       var req = {
         method: 'GET',
-        url: '/uploader/getClassifierSuggestions',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/getClassifierSuggestions',
         params : {
           mdAttributeId : mdAttributeId,
           text : text,
@@ -209,7 +209,7 @@
       
       var req = {
         method: 'GET',
-        url: '/uploader/validateDatasetName',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/validateDatasetName',
         params : {
           name : name,
           id : id          
@@ -225,7 +225,7 @@
       
       var req = {
         method: 'GET',
-        url: '/uploader/validateCategoryName',
+        url: window.com.runwaysdk.__applicationContextPath + '/uploader/validateCategoryName',
         params : {
           name : name,
           id : id          

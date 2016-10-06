@@ -1,0 +1,12 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <delete>
+      <object key="net.geoprism.dashboard.layer.CategoryIconController" type="com.runwaysdk.system.metadata.MdController"/>
+      <object key="net.geoprism.DataUploaderController" type="com.runwaysdk.system.metadata.MdController"/>
+    </delete>
+  </doIt>
+  <undoIt>
+    <delete>
+    </delete>
+  </undoIt>
+</version>

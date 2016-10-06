@@ -233,10 +233,12 @@
     }
     
     controller.exists = function(icon) {
-      for(var i = 0; i < $scope.icons.length; i++) {
-        if($scope.icons[i].id == icon.id) {
-          return true;
-        }
+      if($scope.icons != null) {
+        for(var i = 0; i < $scope.icons.length; i++) {
+          if($scope.icons[i].id == icon.id) {
+            return true;
+          }
+        }        
       }
       
       return false;

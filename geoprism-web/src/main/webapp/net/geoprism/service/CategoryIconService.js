@@ -29,7 +29,7 @@
 
       var req = {
         method: 'POST',
-        url: '/iconimage/create',
+        url: window.com.runwaysdk.__applicationContextPath + '/iconimage/create',
         headers: {
           'Content-Type': undefined
         },
@@ -52,7 +52,7 @@
 
       var req = {
         method: 'POST',
-        url: '/iconimage/apply',
+        url: window.com.runwaysdk.__applicationContextPath + '/iconimage/apply',
         headers: {
           'Content-Type': undefined
         },
@@ -66,7 +66,7 @@
     service.getAll = function(connection) {
       var req = {
         method: 'GET',
-        url: '/iconimage/getAll'
+        url: window.com.runwaysdk.__applicationContextPath + '/iconimage/getAll'
       }      
       
       runwayService.execute(req, connection);      
@@ -75,7 +75,7 @@
     service.remove = function(connection, id) {
       var req = {
         method: 'POST',
-        url: '/iconimage/remove',
+        url: window.com.runwaysdk.__applicationContextPath + '/iconimage/remove',
         data : {id : id}
       }      
       
@@ -85,7 +85,7 @@
     service.edit = function(connection, id) {
       var req = {
         method: 'POST',
-        url: '/iconimage/edit',
+        url: window.com.runwaysdk.__applicationContextPath + '/iconimage/edit',
         data : {id : id}
       }      
             
@@ -95,7 +95,7 @@
     service.getImage = function(connection, id) {      
       var req = {
         method: 'GET',
-        url: '/iconimage/getCategoryIconImage',
+        url: window.com.runwaysdk.__applicationContextPath + '/iconimage/getCategoryIconImage',
         params: {id : id}
       }      
                   
