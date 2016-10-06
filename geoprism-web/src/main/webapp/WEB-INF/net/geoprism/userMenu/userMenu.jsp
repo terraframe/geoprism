@@ -65,7 +65,7 @@
 					</a>
 					<p id="user-link-container" class="text-right">				        
 					  <c:if test="${isAdmin}">
-              <a class="user-command-link" href="${pageContext.request.contextPath}/"><gdb:localize key="geoprismLanding.administration"/></a>
+              <a class="user-command-link" href="${pageContext.request.contextPath}/app"><gdb:localize key="geoprismLanding.administration"/></a>
               <i class="user-command-link"> | </i>					
             </c:if>
 		        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -72,7 +70,18 @@ public class SessionFilter implements Filter, Reloadable
       try
       {
         req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
-        chain.doFilter(req, res);
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) req;
+        String path = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
+
+        if (path.equals("/"))
+        {
+          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + "/menu");
+        }
+        else
+        {
+          chain.doFilter(req, res);
+        }
       }
       catch (Throwable t)
       {
@@ -95,9 +104,9 @@ public class SessionFilter implements Filter, Reloadable
           {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/loginRedirect.jsp");
             dispatcher.forward(request, response);
-            
-//            // Not an asynchronous request, redirect to the login page.
-//            response.sendRedirect(request.getContextPath() + "/loginRedirect");
+
+            // // Not an asynchronous request, redirect to the login page.
+            // response.sendRedirect(request.getContextPath() + "/loginRedirect");
           }
         }
         else
@@ -124,7 +133,7 @@ public class SessionFilter implements Filter, Reloadable
     {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.addHeader("WWW-Authenticate", "FormBased");
-      
+
       // The user is not logged in
       // If we're asynchronous, we want to return a serialized exception
       if (StringUtils.endsWith(request.getRequestURL().toString(), ".mojax"))
@@ -135,9 +144,9 @@ public class SessionFilter implements Filter, Reloadable
       {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/loginRedirect.jsp");
         dispatcher.forward(request, response);
-        
+
         // Not an asynchronous request, redirect to the login page.
-//        httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
+        // httpRes.sendRedirect(httpReq.getContextPath() + "/loginRedirect");
       }
     }
   }
@@ -171,7 +180,7 @@ public class SessionFilter implements Filter, Reloadable
 
     // Allow direct hitting of all page resources in login directories.
     directories.add("/net/geoprism/login");
-    
+
     // Directory of uploaded images
     directories.add("uploaded_images/");
 

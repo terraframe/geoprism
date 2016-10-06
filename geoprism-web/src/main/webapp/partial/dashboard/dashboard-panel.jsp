@@ -62,7 +62,7 @@
 	           				<p><gdb:localize key="dashboardViewer.dataManagementLinkLabel"/></p>
 	           			</li>
            			</a>
-	       			<a href="${pageContext.request.contextPath}/">
+	       			<a href="${pageContext.request.contextPath}/app">
 	           			<li ng-if="dashboard.canEdit()">
 	           				<i class="fa fa-lock"></i>
 	           				<p><gdb:localize key="dashboardViewer.administrationLinkLabel"/></p>
