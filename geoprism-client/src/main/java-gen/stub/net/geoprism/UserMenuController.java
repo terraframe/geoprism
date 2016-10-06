@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -23,6 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -157,8 +156,10 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
     Set<String> roleNames = this.getAssignedRoleNames();
 
-    this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
-    this.req.setAttribute("isBuilder", roleNames.contains(RoleConstants.BUILDER_ROLE));
+    List<GeoprismApplication> allApplications = ClientConfigurationService.getApplications(this.getClientRequest());
+    List<GeoprismApplication> authorizedApplications = allApplications.stream().filter(p -> p.isValid(roleNames)).collect(Collectors.toList());
+
+    this.req.setAttribute("applications", authorizedApplications);
 
     setLogoReqAttrs();
 
