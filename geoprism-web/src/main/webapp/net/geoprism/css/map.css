@@ -65,6 +65,12 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 **** Open Layers CSS
 *****/
 
+	.map-popup-table-wrapper{
+	    max-height: 300px;
+    	overflow-y: auto;
+    	margin-top: 10px;
+    	margin-bottom: 10px;
+	}
     .ol-popup {
         position: absolute;
         background-color: white;
@@ -109,7 +115,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
         content: "✖";
       }
       
-      .ol-zoom.ol-unselectable.ol-control{
+      .bg-stretch .ol-zoom.ol-unselectable.ol-control{
       	  left: 290px;
       	  top: 22px;
       	  padding: 0;
