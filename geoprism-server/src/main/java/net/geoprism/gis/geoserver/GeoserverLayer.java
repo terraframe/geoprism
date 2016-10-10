@@ -70,7 +70,6 @@ public class GeoserverLayer implements GeoserverLayerIF
     object.put("layerName", this.layerName);
     object.put("styleName", this.styleName);
     object.put("layerType", this.layerType.name());
-    object.put("workspace", GeoserverProperties.getWorkspace());
 
     return object;
   }
