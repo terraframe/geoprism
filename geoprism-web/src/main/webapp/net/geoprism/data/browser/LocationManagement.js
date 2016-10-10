@@ -17,26 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function LocationController($scope, $timeout, localizationService, mapService) {
+  function LocationController($scope, $timeout, localizationService) {
+	 var controller = this;
 	  
   }
   
   
-//  function LocationPage() {
-//    return {
-//      restrict: 'E',
-//      replace: true,
-//      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/location-page.jsp',
-//      scope: true,
-//      controller : CategoryPageController,
-//      controllerAs : 'ctrl',      
-//      link: function (scope, element, attrs, ctrl) {
-//      }
-//    }   
-//  }
-  
-  
-  angular.module("location-management", ["styled-inputs", "localization-service", "map-service"]);
+  angular.module("location-management", ["styled-inputs", "localization-service", "editable-map"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
 })();

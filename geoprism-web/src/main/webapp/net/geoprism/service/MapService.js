@@ -88,6 +88,80 @@
     	this.clearOverlays(); // the popup doesn't shift appropriately to the new position so clear it
     }
     
+    /////// NEW Services /////
+    
+    service.addVectorLayer = function(layer, styleObj, stackingIndex) {
+    	service.map.addVectorLayer(layer, styleObj, stackingIndex);
+    }
+    
+    service.zoomToVectorDataExtent = function() {
+    	service.map.zoomToVectorDataExtent();
+    }
+    
+    service.addVectorHoverEvents = function() {
+    	service.map.addVectorHoverEvents();
+    }
+    
+    service.addVectorClickEvents = function() {
+    	service.map.addVectorClickEvents();
+    }
+    
+    service.removeAllVectorLayers = function() {
+    	service.map.removeAllVectorLayers();
+    }
+    
+    service.enableEdits = function() {
+    	service.map.enableEdits();
+    }
+    
+    ///////// SERVICES BELOW THIS ARE TEMPORARY ///////
+    ///
+    ///
+    
+    service.getMockJSONMapLayersParent = function(isHoverable, isClickable){
+    	var data = {"type":"FeatureCollection","totalFeatures":1,"features":[
+    	        {"type":"Feature","id":"USA-CO","properties":{"fips":"08","name":"Colorado"},"geometry":{"type":"Polygon","coordinates":[[[-107.919731,41.003906],[-105.728954,40.998429],[-104.053011,41.003906],[-102.053927,41.003906],[-102.053927,40.001626],[-102.042974,36.994786],[-103.001438,37.000263],[-104.337812,36.994786],[-106.868158,36.994786],[-107.421329,37.000263],[-109.042503,37.000263],[-109.042503,38.166851],[-109.058934,38.27639],[-109.053457,39.125316],[-109.04798,40.998429],[-107.919731,41.003906]]]}}]
+    			}
+    	
+    	for(var i=0; i<data.features.length; i++){
+    		var feature = data.features[i];
+    		feature.properties.isHoverable = isHoverable;
+    		feature.properties.isClickable = isClickable;
+    	}
+    	
+    	return data;
+    }
+    
+    service.getMockJSONMapLayersPolygons = function(isHoverable, isClickable){
+    	var data = {"type":"FeatureCollection","properties":{"kind":"state","state":"CO"},"features":[
+				{"type":"Feature","properties":{"kind":"county","name":"Boulder","state":"CO"},"geometry":{"type":"MultiPolygon","coordinates":[[[[-105.3401,40.2590],[-105.0553,40.2645],[-105.0553,40.0016],[-105.0553,39.9140],[-105.0553,39.9140],[-105.4003,39.9140],[-105.4387,39.9359],[-105.6742,39.9304],[-105.6906,40.0126],[-105.6413,40.0345],[-105.6304,40.1166],[-105.6797,40.1878],[-105.6523,40.2590]]]]}},
+				{"type":"Feature","properties":{"kind":"county","name":"Jefferson","state":"CO"},"geometry":{"type":"MultiPolygon","coordinates":[[[[-105.0553,39.9140],[-105.0553,39.9140],[-105.0553,39.7935],[-105.0553,39.6675],[-105.0827,39.6675],[-105.0553,39.6511],[-105.1101,39.6292],[-105.0553,39.6237],[-105.0498,39.5635],[-105.1374,39.4704],[-105.1210,39.4320],[-105.1703,39.4046],[-105.2196,39.2622],[-105.3291,39.1308],[-105.3291,39.1308],[-105.4003,39.1308],[-105.4003,39.5635],[-105.4003,39.7497],[-105.4003,39.9140]]]]}}
+				]}
+    	
+    	for(var i=0; i<data.features.length; i++){
+    		var feature = data.features[i];
+    		feature.properties.isHoverable = isHoverable;
+    		feature.properties.isClickable = isClickable;
+    	}
+    	
+    	return data;
+    }
+    
+    service.getMockJSONMapLayersPoints = function(isHoverable, isClickable){
+     	var data = {"type":"FeatureCollection","totalFeatures":1,"features":[
+       	          {"type":"Feature","id":"1","properties":{"fips":"08","name":"test1"},"geometry":{"type":"Point","coordinates":[-107.919731,41.003906]}},
+       			  {"type":"Feature","id":"2","properties":{"fips":"08","name":"test2"},"geometry":{"type":"Point","coordinates":[-105.0553,39.9140]}}
+       	       ]}
+     	
+    	for(var i=0; i<data.features.length; i++){
+    		var feature = data.features[i];
+    		feature.properties.isHoverable = isHoverable;
+    		feature.properties.isClickable = isClickable;
+    	}
+    	
+    	return data;
+    }
+    
     return service;
   }
   

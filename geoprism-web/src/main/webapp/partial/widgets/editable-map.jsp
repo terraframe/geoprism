@@ -21,10 +21,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<div id="app-container" class="container">
+<div>
 
-<%--   <h2> <gdb:localize key="location.management.title"/> </h2> --%>
-  
   <div ng-if="errors.length > 0" class="error-container" ng-cloak>
     <div class="label-holder">
       <strong><gdb:localize key='dashboard.errorsLabel'/></strong>
@@ -36,18 +34,26 @@
     </div>
   </div>
   
-  <div ng-if="location.management === null"><gdb:localize key='category.management.loadingData'/></div>
+  <!-- TODO: this isn't tested and so most likely doesn't work -->
+  <div ng-if="map.data === null"><gdb:localize key='category.management.loadingData'/></div>
   
-  <div class="row">
-  <div class="col-md-6">
-  
-    <h1>List Widget Here </h1>
-    
+  <!-- map container -->
+  <div class="map-wrapper">
+    <div id="mapDivId" class="dynamicMap">
+		<!-- <map-popup ng-if="dashboard.feature != null && dashboard.feature.show" feature="dashboard.feature"></map-popup> -->
+		<button ng-click="ctrl.replaceVectorData()">Update</button>
+		
+		<form class="form-inline" ng-show="enableEdits">
+	      <label>Geometry type &nbsp;</label>
+	      <select id="type">
+	        <option value="Point">Point</option>
+	        <option value="LineString">LineString</option>
+	        <option value="Polygon">Polygon</option>
+	      </select>
+	    </form>
+	    
+	</div>
   </div>
-  <div class="col-md-6">
-  	<editable-map data-enableedits="true"></editable-map>
-  </div>
-</div>
   
    
 </div>

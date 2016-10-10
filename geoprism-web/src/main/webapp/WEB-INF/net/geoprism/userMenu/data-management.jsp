@@ -45,6 +45,8 @@
     <jwr:style src="/bundles/main.css" useRandomParam="false" />
     <jwr:style src="/bundles/administration.css" useRandomParam="false" />
     <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+    <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>  
+    <jwr:style src="/bundles/management.css" useRandomParam="false"/> 
   
     <!-- Default imports -->
     <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
@@ -55,9 +57,10 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
     
     <!-- Individual Page Javascript -->
+    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
     <jwr:script src="/bundles/location-management.js" useRandomParam="false"/>
-    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
+    <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>
     
     <script type="text/javascript">${js}</script>
     

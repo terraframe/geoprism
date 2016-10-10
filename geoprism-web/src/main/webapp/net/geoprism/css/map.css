@@ -159,3 +159,50 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	}
 	
 	
+	
+	
+	
+button.enable-edit-mode-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.enable-edit-mode-btn:hover,
+button.enable-edit-mode-btn:focus {
+	color: #00bfff;
+	background-color: white;
+}
+.enable-edit-mode-btn-wrapper {  
+	top: 85px;
+  	left: .5em;
+}
+.ol-touch .enable-edit-mode-btn-wrapper {
+   top: 80px;
+}
+ 
+ 
+button.edit-mode-geom-type-btn{
+	width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.edit-mode-geom-type-btn:hover,
+button.edit-mode-geom-type-btn:focus {
+	color: #00bfff;
+	background-color: white;
+}
+.edit-mode-geom-type-btn-wrapper {  
+	top: 135px;
+  	left: .5em;
+}
+.ol-touch .edit-mode-geom-type-btn-wrapper {
+   top: 80px;
+}

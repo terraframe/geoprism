@@ -76,6 +76,18 @@
         IsAbstract : true
       },
       
+      zoomToVectorDataExtent : {
+    	  IsAbstract : true
+      },
+      
+      addVectorHoverEvents : {
+    	  IsAbstract : true
+      },
+      
+      addVectorClickEvents : {
+    	  IsAbstract : true
+      },
+      
       /**
        * Returns the full extent of the map data in the data projection
        * 
@@ -126,6 +138,10 @@
       
       hideLayer : {
         IsAbstract : true
+      },
+      
+      addVectorLayer : {
+    	  IsAbstract : true
       },
       
       createUserLayers : {
@@ -333,7 +349,6 @@
          * 
          * <public> - called externally
          * 
-         * TODO: bubble chopping is worse with openlayers. fix it
          */
         showLayer : function(layer, stackIndex) {
           var oLayer = this._cache[layer.key];
@@ -378,6 +393,148 @@
           }
         },
         
+        addVectorLayer : function(layerAsGeoJSON, styleObj, stackingIndex) {
+        	var map = this.getMap();
+        	
+        	var vectorSource = new ol.source.Vector({
+        		features: (new ol.format.GeoJSON()).readFeatures(layerAsGeoJSON, { featureProjection: MapWidget.MAPSRID })
+        	});
+        	
+        	// Assume all features in a layer are of the same geom type
+        	var firstFeatureGeom = vectorSource.getFeatures()[0].getGeometry();
+        	
+        	var style = null;
+        	if(firstFeatureGeom instanceof ol.geom.MultiPolygon || firstFeatureGeom instanceof ol.geom.Polygon){
+	        	style = new ol.style.Style({
+	    	        fill: new ol.style.Fill({ color: styleObj.fill }),
+	    	        stroke: new ol.style.Stroke({
+	    	          color: styleObj.strokeColor,
+	    	          width: styleObj.strokeWidth
+	    	        })
+	    	    });
+        	}
+        	else if(firstFeatureGeom instanceof ol.geom.MultiPoint || firstFeatureGeom instanceof ol.geom.Point){
+        		
+        		style = new ol.style.Style({
+    	          image: new ol.style.Circle({
+    	              radius: 5,
+    	              fill: new ol.style.Fill({ color: styleObj.fill }),
+    	              stroke: new ol.style.Stroke({ color: styleObj.strokeColor, width: styleObj.strokeWidth })
+    	            })
+    	        })
+        	}
+
+            // a vector layer to render the source
+            var vectorLayer = new ol.layer.Vector({
+              source: vectorSource,
+              style: style,
+              projection: MapWidget.MAPSRID
+            });
+            
+            map.getLayers().insertAt(stackingIndex, vectorLayer);
+        },
+        
+        addVectorClickEvents : function() {
+        	var map = this.getMap();
+        	
+        	map.on('click', function(evt) {
+    		  var feature = map.forEachFeatureAtPixel(evt.pixel,
+    		    function(feature, layer) {
+    			  if(feature.getProperties().isClickable){
+    				  console.log("single clicked on: ", feature)
+    			  }
+    			  else{
+    				  console.log("not clickable feature", feature)
+    			  }
+    		    });
+        	}); 
+        },
+        
+        addVectorHoverEvents : function() {
+        	var map = this.getMap();
+        	
+        	var hoverPolygonStyle = new ol.style.Style({
+        	    fill: new ol.style.Fill({
+        	        color: 'rgba(255, 255, 0, 0.5)'
+        	    }),
+        	    stroke: new ol.style.Stroke({
+        	        color: 'yellow'
+        	    })
+        	});
+        	
+        	var hoverPointStyle = new ol.style.Style({
+  	          image: new ol.style.Circle({
+  	              radius: 5,
+  	              fill: new ol.style.Fill({ color: "rgba(255, 255, 0, 0.5)" }),
+  	              stroke: new ol.style.Stroke({ color: "yellow", width: 3 })
+  	            })
+  	        })
+        	
+        	var selectedFeatures = [];
+        	var clearSelctedFeatures = function(){
+        		if(selectedFeatures.length > 0){
+    	    		for(var i=0; i<selectedFeatures.length; i++){
+    	    			selectedFeatures[i].setStyle(null);
+    	    		}
+     	    		selectedFeatures = [];
+     	        }
+        	}
+        	
+        	
+        	// a bit of a hack to restore original cursor css to take advantage of openlayers handling of 
+        	// cursor settings for browser compatibility (i.e. -webkit-grab)
+        	var originalCursor = $("#"+map.getTarget()).children(".ol-viewport").css("cursor");
+        	map.on('pointermove', function (evt) {
+        		if(evt.dragging) return;
+        	    
+        	    var feature = map.forEachFeatureAtPixel( evt.pixel, function(ft, l){return ft;} );
+        	    
+        	    if(feature && feature !== selectedFeatures[0] && feature.getProperties().isHoverable){
+        	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "pointer");
+        	    	
+        	    	// clear existing selected feature if transitioning directly to another feature.
+        	    	// usually caused by overlapping features at the edge of one of the features.
+        	    	clearSelctedFeatures();
+        	    	
+        	    	// control for styling of different geometry types
+        	    	if(feature.getGeometry() instanceof ol.geom.MultiPolygon || feature.getGeometry() instanceof ol.geom.Polygon){
+        	    		feature.setStyle(hoverPolygonStyle);
+        	    	}
+        	    	else if(feature.getGeometry() instanceof ol.geom.MultiPoint || feature.getGeometry() instanceof ol.geom.Point){
+        	    		feature.setStyle(hoverPointStyle);
+        	    	}
+        	        selectedFeatures.push(feature);
+        	    } 
+        	    else if(feature && feature !== selectedFeatures[0] && !feature.getProperties().isHoverable){
+        	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	
+        	    	clearSelctedFeatures();
+        	    }
+        	    else if(!feature) {
+        	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	
+        	    	clearSelctedFeatures();
+        	    }
+    		});
+        },
+        
+        removeAllVectorLayers : function() {
+        	var map = this.getMap();
+        	var layers = map.getLayers().getArray();
+        	
+        	var vecLayers = [];
+        	for(var i=0; i<layers.length; i++){
+        		var layer = layers[i];
+        		if(layer instanceof ol.layer.Vector){
+        			vecLayers.push(layer);
+        		}
+        	}
+        	
+        	for(var l=0; l<vecLayers.length; l++){
+        		map.removeLayer(vecLayers[l]);
+        	}
+        },
+        
         hideLayers : function(layers) {
           if(layers != null) {
             for(var i = 0; i < layers.length; i++) {
@@ -386,6 +543,12 @@
               this.hideLayer(layer, true);
             }          
           }
+        },
+        
+        enableEdits : function() {
+        	
+        	this.addEditControl();
+
         },
         
         /**
@@ -704,6 +867,40 @@
           };
         },
         
+        zoomToVectorDataExtent : function() {
+        	var map = this.getMap();
+        	var layers = map.getLayers().getArray();
+        	var fullExt = null;
+        	
+        	for(var i=0; i<layers.length; i++){
+        		var layer = layers[i];
+        		if(layer instanceof ol.layer.Vector){
+        			var layerExt = layer.getSource().getExtent();
+        			if(fullExt){
+        				if(layerExt[0] < fullExt[0]){
+        					fullExt[0] = layerExt[0];
+        				}
+        				if(layerExt[1] < fullExt[1]){
+        					fullExt[1] = layerExt[1];
+        				}
+        				if(layerExt[2] > fullExt[2]){
+        					fullExt[2] = layerExt[2];
+        				}
+        				if(layerExt[3] > fullExt[3]){
+        					fullExt[3] = layerExt[3];
+        				}
+        			}
+        			else{
+        				fullExt = layerExt;
+        			}
+        		}
+        	}
+        	
+        	if(fullExt){
+        		map.getView().fit(fullExt, map.getSize());
+        	}
+        },
+        
         /**
          * <private> - internal method
          */
@@ -731,6 +928,8 @@
             tipLabel: this.localize("attributionELTooltip")
           });
           
+          
+          
           var view = new ol.View({ 
               center: this.getCenter(), 
               zoom: this.getZoomLevel(),
@@ -750,7 +949,7 @@
           var baseMaps = MapConfig._BASEMAPS;
           for(var i=1; i<baseMaps.length; i++){
         	  var base = baseMaps[i];
-        	  if(base.LAYER_TYPE.toLowerCase() === "google"){
+        	  if(base.LAYER_TYPE.toLowerCase() === "google" && base.ENABLED === "true"){
         		  googleEnabled = true;
         		  mapConfig.interactions = olgm.interaction.defaults();
         		  break;
@@ -766,7 +965,112 @@
         	
           this.setMap(map);
           this.configureMap();     
-          
+        },
+        
+        addEditControl : function() {
+        	var map = this.getMap();
+        	
+        	map.setProperties({"editFeatures":new ol.Collection()})
+        	var editFeatureOverlay = new ol.layer.Vector({
+        	  map: map,
+        	  source: new ol.source.Vector({
+        	    features: map.getProperties().editFeatures,
+        	    useSpatialIndex: false // optional, might improve performance
+        	  }),
+        	  style: new ol.style.Style({
+    		      fill: new ol.style.Fill({
+      		        color: 'rgba(255,0,191,0.4)' 
+      		      })
+      		    , stroke: new ol.style.Stroke({
+      		          color: 'rgb(255,0,191)' 
+      		        , width: 2
+      		      })
+      		    , image: new ol.style.Circle({
+      		        radius: 7,
+      		        fill: new ol.style.Fill({
+      		          color: 'rgb(255,0,191)' 
+      		        })
+      		      })
+      		  }),
+        	  updateWhileAnimating: true, // optional, for instant visual feedback
+        	  updateWhileInteracting: true // optional, for instant visual feedback
+        	});
+        	
+        	editFeatureOverlay.setMap(map);
+        	
+
+            var modify = new ol.interaction.Modify({
+              features: map.getProperties().editFeatures,
+              // the SHIFT key must be pressed to delete vertices, so
+              // that new vertices can be drawn at the same position
+              // of existing vertices
+              deleteCondition: function(event) {
+                return ol.events.condition.shiftKeyOnly(event) &&
+                    ol.events.condition.singleClick(event);
+              }
+            });
+            map.addInteraction(modify);
+            
+            
+        	 /**
+             * @constructor
+             * @extends {ol.control.Control}
+             * @param {Object=} opt_options Control options.
+             */
+            var enableEditModeControl = function(opt_options) {
+
+              var options = opt_options || {};
+
+              var button = document.createElement('button');
+              button.className = 'enable-edit-mode-btn fa fa-pencil'
+
+              var draw; 
+              var typeSelect = document.getElementById('type');
+
+              /** @type {ol.geom.GeometryType} */
+              function addInteraction() {
+                draw = new ol.interaction.Draw({
+                  features: map.getProperties().editFeatures,
+                  type: (typeSelect.value),
+                  freehandCondition: function(event){
+                	  return ol.events.condition.never(event);
+                	  }
+                });
+                map.addInteraction(draw);
+                map.setProperties({"gdbEditModeEnabled":true});
+              }
+
+              button.addEventListener('click', addInteraction, false);
+              button.addEventListener('touchstart', addInteraction, false);
+
+              var element = document.createElement('div');
+              element.className = 'enable-edit-mode-btn-wrapper ol-unselectable ol-control';
+              element.appendChild(button);
+
+              ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+              });
+              
+              /**
+               * Handle change event.
+               */
+              typeSelect.onchange = function() {
+                map.removeInteraction(draw);
+                addInteraction();
+              };
+              
+//              var geomTypeButton1 = document.createElement('button');
+//              geomTypeButton1.className = 'edit-mode-geom-type-btn fa fa-pencil';
+//            	  
+//              var geomTypeElement1 = document.createElement('div');
+//              geomTypeElement1.className = 'edit-mode-geom-type-btn-wrapper ol-unselectable ol-control';
+//              geomTypeElement1.appendChild(geomTypeButton1);
+            };
+            
+            ol.inherits(enableEditModeControl, ol.control.Control);
+            
+            map.addControl(new enableEditModeControl());
         },
         
         zoomToFeatureExtent : function(featureJSON) {
