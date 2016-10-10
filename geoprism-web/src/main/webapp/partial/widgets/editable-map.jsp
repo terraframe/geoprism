@@ -41,7 +41,6 @@
   <div class="map-wrapper">
     <div id="mapDivId" class="dynamicMap">
 		<!-- <map-popup ng-if="dashboard.feature != null && dashboard.feature.show" feature="dashboard.feature"></map-popup> -->
-		<button ng-click="ctrl.replaceVectorData()">Update</button>
 		
 		<form class="form-inline" ng-show="enableEdits">
 	      <label>Geometry type &nbsp;</label>

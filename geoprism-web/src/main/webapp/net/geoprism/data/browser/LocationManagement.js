@@ -42,6 +42,8 @@
       $scope.entity = data.entity;
       $scope.universal = data.universal;
       $scope.universals = data.universals;      
+      
+      $scope.$broadcast('sharedGeoData', data);
     }
     
     controller.select = function(entity) {

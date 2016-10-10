@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function EditableMapController($scope, localizationService, mapService, $attrs) {
+  function EditableMapController($scope, localizationService, mapService, locationService, $attrs) {
 	 var controller = this;
 	  
 	 $scope.enableEdits = $attrs.enableedits == "true"; // evaluate string to boolean... JavaScript is rediculous
@@ -28,8 +28,6 @@
 	 $scope.contextStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"black", strokeWidth:3};
 	 $scope.targetStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"red", strokeWidth:2};
 	 
-	 $scope.contextGeoJSON = null;
-	 $scope.targetGeoJSON = null;
 	 
 	 controller.init = function() {
 		 
@@ -38,12 +36,6 @@
 		// enable the default base layer 
 	    $scope.baseLayers[0].isActive = true;
 		controller.refreshBaseLayer();
-		
-		var parentLayer = controller.getParentLayerData(false, false);
-		$scope.contextGeoJSON = parentLayer;
-		
-		var childLayer = controller.getDirectChildLayerData(true, true);
-		$scope.targetGeoJSON = childLayer;
 		
 		controller.addVectorHoverEvents();
 		controller.addVectorClickEvents();
@@ -60,12 +52,12 @@
 		 mapService.enableEdits();
 	 }
 	 
-	 controller.replaceVectorData = function() {
+	 controller.removeVectorData = function() {
 		 mapService.removeAllVectorLayers();
-		 
-		 $scope.contextGeoJSON = controller.getParentLayerData(false, false);
-		 $scope.targetGeoJSON = controller.getDirectChildLayerPointData(true, true);
-//		 controller.addVectorLayer(newData, $scope.targetStyle, 2);
+	 }
+	 
+	 controller.getMapData = function(callback, data) {
+		 mapService.getGeoJSONData(callback, data);
 	 }
 	 
 	 controller.getParentLayerData = function(isHoverable, isClickable) {
@@ -92,17 +84,6 @@
 		 mapService.zoomToVectorDataExtent();
 	 }
 	  
-	 controller.loadMapState = function() {  
-		controller.clearMapState();
-	      
-		  //
-		  //
-		  // Get map data and update with setMapState
-		  //
-		  // controller.setMapState(state, true);
-
-	 }
-	  
 	 controller.clearMapState = function() {
 		$scope.overlayLayerCache = {values:{}, ids:[]};
 		$scope.bbox = [];
@@ -111,31 +92,6 @@
 	 
 	 controller.addVectorLayer = function(layerGeoJSON, styleObj, stackingIndex) {
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, stackingIndex);
-	 }
-	  
-	  
-	 /* Layer Cache Getters/Setters */
-	 controller.getLayerCache = function() {
-	    return $scope.overlayLayerCache;
-	 }
-	    
-	 controller.getLayer = function(layerId) {
-	      //// replaced because this doesn't actually get the layer
-	      //return controller.getLayerCache()[layerId];   
-	      ////
-	    return controller.getLayerCache().values[layerId];
-	 }
-	    
-	 controller.getThematicLayers = function() {
-	      var layers = [];
-	      
-	      for(var i = 0; i < $scope.overlayLayerCache.ids.length; i++) {
-	        var layerId = $scope.overlayLayerCache.ids[i];
-	        
-	        layers.push($scope.overlayLayerCache.values[layerId]);
-	      }
-	      
-	      return layers;
 	 }
 	  
 	  
@@ -159,17 +115,49 @@
     	
       }
       
+      function isEmptyJSONObject(obj) {
+	    for(var prop in obj) {
+	        if(obj.hasOwnProperty(prop))
+	            return false;
+	    }
+
+	    return true && JSON.stringify(obj) === JSON.stringify({});
+	  }
       
-      $scope.$watch('contextGeoJSON', function(newValue, oldValue) {
-    	  controller.addVectorLayer(newValue, $scope.contextStyle, 1);
-    	  controller.zoomToVectorDataExtent();
+      // Recieve shared data from LocationManagement controller based on user selection of target location
+      $scope.$on('sharedGeoData', function(event, data) {
+    	  if(!isEmptyJSONObject(data)){
+    		  
+    		  var contextCallback = function(data) {
+    			  for(var i=0; i<data.features.length; i++){
+      	    		var feature = data.features[i];
+      	    		feature.properties.isHoverable = false;
+      	    		feature.properties.isClickable = false;
+      			  }
+    			  
+    			  controller.addVectorLayer(data, $scope.contextStyle, 1);
+        		  controller.zoomToVectorDataExtent();
+    		  }
+    		  
+    		  var targetCallback = function(data) {
+    			  for(var i=0; i<data.features.length; i++){
+    	    		var feature = data.features[i];
+    	    		feature.properties.isHoverable = true;
+    	    		feature.properties.isClickable = true;
+    			  }
+    			  
+    			  controller.addVectorLayer(data, $scope.targetStyle, 2);
+    	    	  controller.zoomToVectorDataExtent();
+    		  }
+    		  
+    		  // get context geo data
+    		  controller.getMapData(contextCallback, data.layers[0]);
+    		  
+    		  // get target geo data
+    		  controller.getMapData(targetCallback, data.layers[1]);
+    	  }
       });
       
-      $scope.$watch('targetGeoJSON', function(newValue, oldValue) {
-    	  controller.addVectorLayer(newValue, $scope.targetStyle, 2);
-    	  controller.zoomToVectorDataExtent();
-      });
-    
       controller.init();
   }
   
@@ -188,7 +176,7 @@
   }
   
   
-  angular.module("editable-map", ["styled-inputs", "localization-service", "map-service"]);
+  angular.module("editable-map", ["styled-inputs", "localization-service", "map-service", "location-service"]);
   angular.module("editable-map")
    .controller('EditableMapController', EditableMapController)
    .directive('editableMap', EditableMap)

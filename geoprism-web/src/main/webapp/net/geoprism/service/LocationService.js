@@ -20,6 +20,7 @@
 
   function LocationService(runwayService) {
     var service = {};
+    var sharedGeoData = {};
     
     service.select = function(connection, id, type, existingLayers) {
       var req = {
@@ -33,6 +34,14 @@
       }      
       
       runwayService.execute(req, connection);      
+    }
+    
+    service.getSharedGeoData = function(){
+    	return sharedGeoData;
+    }
+    
+    service.setSharedGeoData = function(value){
+    	sharedGeoData = value;
     }
     
     

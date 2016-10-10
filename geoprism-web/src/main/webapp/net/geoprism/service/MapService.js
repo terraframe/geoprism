@@ -114,6 +114,29 @@
     	service.map.enableEdits();
     }
     
+    service.getGeoJSONData = function(callback, config) {
+       	var params = {
+                REQUEST:'GetFeature',
+                SERVICE:'WFS',
+                VERSION:'2.0.0',
+                TYPENAMES:"dev"+":"+ config.layerName,
+//                CQL_FILTER : "geoid='"+ config.geoId + "'",
+                //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
+                outputFormat : 'application/json'
+          };
+	
+          var url = window.location.origin+"/geoserver/" + "dev" +"/wfs?" + $.param(params);
+          
+          $.ajax({
+              url: url,
+              context: document.body 
+            }).done(function(response) {
+              if(response.totalFeatures > 0) {
+                callback(response);
+              }
+            });
+    }
+    
     ///////// SERVICES BELOW THIS ARE TEMPORARY ///////
     ///
     ///
