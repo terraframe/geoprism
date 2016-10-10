@@ -18,14 +18,18 @@
  */
 package net.geoprism.gis.geoserver;
 
+import net.geoprism.ontology.LocationLayerPublisher.LayerType;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GeoserverLayer implements GeoserverLayerIF
 {
-  private String layerName;
+  private String    layerName;
 
-  private String styleName;
+  private String    styleName;
+
+  private LayerType layerType;
 
   public void setLayerName(String layerName)
   {
@@ -49,12 +53,23 @@ public class GeoserverLayer implements GeoserverLayerIF
     return this.styleName;
   }
 
+  public void setLayerType(LayerType layerType)
+  {
+    this.layerType = layerType;
+  }
+
+  public LayerType getLayerType()
+  {
+    return layerType;
+  }
+
   @Override
   public JSONObject toJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
-    object.put("layerName", layerName);
-    object.put("styleName", styleName);
+    object.put("layerName", this.layerName);
+    object.put("styleName", this.styleName);
+    object.put("layerType", this.layerType.name());
 
     return object;
   }
