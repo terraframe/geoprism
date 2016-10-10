@@ -43,6 +43,29 @@
   
     <h1>List Widget Here </h1>
     
+    <div ng-show="previous.length > 1">
+      <span>Bread Crumbs</span>
+      <ul>
+        <li ng-repeat="entity in previous" ng-if="$index < previous.length - 1" ng-click="ctrl.back($index)">
+          {{entity.displayLabel}} ({{entity.geoId}})
+        </li>
+      </ul>
+    </div>
+    <div>
+      <span>{{entity.displayLabel}} ({{entity.geoId}})</span>
+      <ul ng-if="universal != null && universals.length > 0">
+        <select ng-model="universal" ng-options="opt as opt.displayLabel for opt in universals track by opt.id" ng-change="ctrl.setUniversal()">
+        </select>
+      </ul>
+    </div>
+    <div ng-show="children.length > 0">
+      <span>Children</span>
+      <ul>
+        <li ng-repeat="child in children" ng-click="ctrl.select(child)">
+          {{child.displayLabel}} ({{child.geoId}})
+        </li>
+      </ul>
+    </div>    
   </div>
   <div class="col-md-6">
   

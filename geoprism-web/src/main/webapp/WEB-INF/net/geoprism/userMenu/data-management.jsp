@@ -56,7 +56,6 @@
     
     <!-- Individual Page Javascript -->
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
-    <jwr:script src="/bundles/location-management.js" useRandomParam="false"/>
     <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
     
     <script type="text/javascript">${js}</script>

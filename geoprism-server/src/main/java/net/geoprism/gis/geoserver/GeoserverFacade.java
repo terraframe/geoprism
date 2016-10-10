@@ -171,6 +171,16 @@ public class GeoserverFacade implements Reloadable
   }
 
   /**
+   * Publishes the layer if necessary.
+   * 
+   * @param layer
+   */
+  public static boolean publishLayer(GeoserverLayerIF layer)
+  {
+    return getService().publishLayer(layer.getLayerName(), layer.getStyleName());
+  }
+  
+  /**
    * Removes the layer from geoserver.
    * 
    * @param layer

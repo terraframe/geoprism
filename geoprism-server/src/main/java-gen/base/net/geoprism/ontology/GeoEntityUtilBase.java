@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -504658012)
+@com.runwaysdk.business.ClassSignature(hash = 1742570338)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -504658012;
+  private static final long serialVersionUID = 1742570338;
   
   public GeoEntityUtilBase()
   {
@@ -75,6 +75,18 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
+  public static com.runwaysdk.query.ValueQuery getChildren(java.lang.String id, java.lang.String universalId, java.lang.Integer limit)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.system.gis.geo.GeoEntity getEntity(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String getEntityLabel(java.lang.String entityId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
@@ -94,6 +106,12 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
   }
   
   public static java.lang.String[] makeSynonym(java.lang.String sourceId, java.lang.String destinationId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String publishLayers(java.lang.String id, java.lang.String universalId, java.lang.String existingLayerNames)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
