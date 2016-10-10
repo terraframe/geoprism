@@ -50,10 +50,10 @@
       <div><label>Location</label></div>
       <div class="text">{{entity.displayLabel}} ({{entity.geoId}})</div>
     </div>
-    <div ng-if="universals.length > 0">
+    <div ng-if="universal.options.length > 0">
       <div><label>Sub location types</label></div>
       <div>
-        <select ng-model="universal" ng-options="opt.id as opt.displayLabel for opt in universals" ng-change="ctrl.setUniversal()">
+        <select ng-model="universal.value" ng-options="opt.id as opt.displayLabel for opt in universal.options" ng-change="ctrl.setUniversal()">
           <option value="">All</option>
         </select>                
       </div>
