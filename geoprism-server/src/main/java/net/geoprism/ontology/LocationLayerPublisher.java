@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -143,7 +141,7 @@ public class LocationLayerPublisher
   {
     LayerType layerType = this.getChildLayerType(descendants);
     String viewName = SessionPredicate.generateId();
-    String sql = this.getChildQuery(entity, descendants).getSQL();
+    String sql = this.getChildQuery(entity, layerType).getSQL();
 
     DatabaseUtil.createView(viewName, sql);
 
@@ -158,7 +156,7 @@ public class LocationLayerPublisher
   {
     LayerType layerType = this.getEntityLayerType(descendants);
     String viewName = SessionPredicate.generateId();
-    String sql = this.getEntityQuery(entity, descendants).getSQL();
+    String sql = this.getEntityQuery(entity, layerType).getSQL();
 
     DatabaseUtil.createView(viewName, sql);
 
@@ -169,7 +167,7 @@ public class LocationLayerPublisher
     return layer;
   }
 
-  private ValueQuery getEntityQuery(GeoEntity entity, List<Term> descendants)
+  private ValueQuery getEntityQuery(GeoEntity entity, LayerType type)
   {
     QueryFactory factory = new QueryFactory();
     ValueQuery query = new ValueQuery(factory);
@@ -183,17 +181,7 @@ public class LocationLayerPublisher
     Selectable geoId = geQ1.getGeoId(GeoEntity.GEOID);
     geoId.setColumnAlias(GeoEntity.GEOID);
 
-    Selectable geom;
-
-    if (descendants.size() == 0)
-    {
-      geom = geQ1.get(GeoEntity.GEOPOINT);
-    }
-    else
-    {
-      geom = geQ1.get(GeoEntity.GEOMULTIPOLYGON);
-    }
-
+    Selectable geom = ( type.equals(LayerType.POINT) ? geQ1.get(GeoEntity.GEOPOINT) : geQ1.get(GeoEntity.GEOMULTIPOLYGON) );
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
@@ -203,7 +191,7 @@ public class LocationLayerPublisher
     return query;
   }
 
-  private ValueQuery getChildQuery(GeoEntity entity, List<Term> descendants)
+  private ValueQuery getChildQuery(GeoEntity entity, LayerType type)
   {
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
     LocatedInQuery liQuery = new LocatedInQuery(vQuery);
@@ -215,17 +203,7 @@ public class LocationLayerPublisher
     Selectable geoId = query.getGeoId(GeoEntity.GEOID);
     geoId.setColumnAlias(GeoEntity.GEOID);
 
-    Selectable geom;
-
-    if (descendants.size() <= 1)
-    {
-      geom = query.get(GeoEntity.GEOPOINT);
-    }
-    else
-    {
-      geom = query.get(GeoEntity.GEOMULTIPOLYGON);
-    }
-
+    Selectable geom = ( type.equals(LayerType.POINT) ? query.get(GeoEntity.GEOPOINT) : query.get(GeoEntity.GEOMULTIPOLYGON) );
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
