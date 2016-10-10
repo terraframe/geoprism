@@ -24,7 +24,7 @@
     service.select = function(connection, id, universalId, existingLayers) {
       var req = {
         method: 'POST',
-        url: window.com.runwaysdk.__applicationContextPath + '/location/select',
+        url: com.runwaysdk.__applicationContextPath + '/location/select',
         data : {
           id : id,
           universalId : universalId,

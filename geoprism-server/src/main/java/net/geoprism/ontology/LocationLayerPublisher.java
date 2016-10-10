@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -130,11 +128,7 @@ public class LocationLayerPublisher
 
     List<GeoserverLayerIF> layers = new LinkedList<GeoserverLayerIF>();
     layers.add(this.publishEntityLayer(entity, descendants));
-
-    if (this.universalId != null)
-    {
-      layers.add(this.publishChildLayer(entity, descendants));
-    }
+    layers.add(this.publishChildLayer(entity, descendants));
 
     return layers;
   }
@@ -214,7 +208,11 @@ public class LocationLayerPublisher
     vQuery.SELECT(label, geoId, geom);
     vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
     vQuery.AND(query.locatedIn(liQuery));
-    vQuery.AND(query.getUniversal().EQ(this.universalId));
+    
+    if(this.universalId != null && this.universalId.length() > 0)
+    {
+      vQuery.AND(query.getUniversal().EQ(this.universalId));
+    }
 
     return vQuery;
   }
