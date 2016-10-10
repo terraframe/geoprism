@@ -35,7 +35,6 @@
       runwayService.execute(req, connection);      
     }
     
-    
     return service;  
   }
   

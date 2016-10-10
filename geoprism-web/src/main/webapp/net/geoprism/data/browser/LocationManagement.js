@@ -44,6 +44,8 @@
         value : data.universal,
         options : data.universals
       };
+      
+      $scope.$broadcast('sharedGeoData', data);
     }
     
     controller.select = function(entity) {
