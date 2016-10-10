@@ -342,3 +342,10 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
 #manage-categories-table.list-table .button-column {
 	width: 15%;
 }
+
+ /* Location editor styles */
+
+.lw-inner-col {
+ overflow-y: auto;
+ height: 90%;	
+}

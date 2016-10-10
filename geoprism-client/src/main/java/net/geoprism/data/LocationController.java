@@ -20,6 +20,7 @@ package net.geoprism.data;
 
 import java.util.List;
 
+import net.geoprism.ListSerializable;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
 
@@ -55,7 +56,7 @@ public class LocationController implements Reloadable
     response.set("children", children);
     response.set("layers", new JSONArray(layers));
     response.set("universals", new ListSerializable(universals));
-    response.set("entity", entity, new GeoEntityJsonConfiguration());
+    response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", (universalId != null && universalId.length() > 0) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());
 

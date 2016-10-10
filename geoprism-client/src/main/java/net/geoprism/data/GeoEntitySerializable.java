@@ -18,34 +18,30 @@
  */
 package net.geoprism.data;
 
-import java.util.List;
-
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.mvc.JsonConfiguration;
 import com.runwaysdk.mvc.JsonSerializable;
 import com.runwaysdk.mvc.RestSerializer;
+import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
-public class ListSerializable implements JsonSerializable
+public class GeoEntitySerializable implements JsonSerializable
 {
-  private List<?> list;
+  private GeoEntityDTO entity;
 
-  public ListSerializable(List<?> list)
+  public GeoEntitySerializable(GeoEntityDTO entity)
   {
-    this.list = list;
+    this.entity = entity;
   }
 
   @Override
   public Object serialize(RestSerializer serializer, JsonConfiguration configuration) throws JSONException
   {
-    JSONArray serialized = new JSONArray();
-
-    for (Object object : this.list)
-    {
-      serialized.put(serializer.serialize(object, configuration));
-    }
-
-    return serialized;
+    JSONObject object = (JSONObject) serializer.serialize(this.entity, configuration);
+    object.put("universal", this.entity.getUniversal().getDisplayLabel().getValue());
+    
+    return object;
   }
+
 }

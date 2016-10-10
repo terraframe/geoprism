@@ -22,6 +22,7 @@
     
     controller.init = function() {
       var connection = {
+        elementId : '#innerFrameHtml',
         onSuccess : function(data) {
           $scope.previous.push(data.entity);
           
@@ -50,6 +51,7 @@
     
     controller.select = function(entity) {
       var connection = {
+        elementId : '#innerFrameHtml',      
         onSuccess : function(data) {
           $scope.previous.push(entity);          
           
@@ -63,6 +65,7 @@
     controller.back = function(index) {
       if(index !== ($scope.previous.length - 1)) {
         var connection = {
+          elementId : '#innerFrameHtml',        		
           onSuccess : function(data) {            
             $scope.previous.splice(index + 1);
             
@@ -78,6 +81,7 @@
     
     controller.setUniversal = function() {
       var connection = {
+        elementId : '#innerFrameHtml',
         onSuccess : function(data) {          
           $scope.children = data.children.resultSet;
           $scope.layers = data.layers;
