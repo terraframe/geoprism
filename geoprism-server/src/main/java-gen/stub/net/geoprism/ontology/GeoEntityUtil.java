@@ -185,11 +185,11 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       source.removeLink((Term) parent, LocatedIn.CLASS);
     }
     GeoEntity.getStrategy().removeTerm(source, LocatedIn.CLASS);
-    
+
     BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
-    
+
     /*
      * Add the dest to the allpaths table
      */
@@ -197,7 +197,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     for (Business parent : parents)
     {
       Savepoint savepoint = Database.setSavepoint();
-      
+
       try
       {
         destination.addLink((Term) parent, LocatedIn.CLASS);
@@ -658,5 +658,71 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  public static ValueQuery getChildren(String id, String universalId, Integer limit)
+  {
+    GeoEntity entity = GeoEntity.get(id);
+
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
+    GeoEntityQuery query = new GeoEntityQuery(vQuery);
+
+    Coalesce label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
+
+    vQuery.SELECT(query.id());
+    vQuery.SELECT(label);
+    vQuery.SELECT(query.getGeoId());
+    vQuery.SELECT(query.getUniversal().getDisplayLabel().localize(GeoEntity.UNIVERSAL));
+    vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
+    vQuery.AND(query.locatedIn(liQuery));
+
+    if (universalId != null)
+    {
+      vQuery.AND(query.getUniversal().EQ(universalId));
+    }
+
+    vQuery.ORDER_BY_ASC(label);
+
+    if (limit != null)
+    {
+      vQuery.restrictRows(limit, 1);
+    }
+
+    return vQuery;
+  }
+
+  public static GeoEntity getEntity(String id)
+  {
+    if (id == null)
+    {
+      GeoEntity root = GeoEntity.getRoot();
+      OIterator<? extends Business> children = root.getChildren(LocatedIn.CLASS);
+
+      try
+      {
+        if (children.hasNext())
+        {
+          return (GeoEntity) children.next();
+        }
+        else
+        {
+          throw new RuntimeException("No entities have been defined");
+        }
+      }
+      finally
+      {
+        children.close();
+      }
+    }
+
+    return GeoEntity.get(id);
+  }
+
+  public static String publishLayers(String id, String universalId, String existingLayerNames)
+  {
+    LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
+
+    return publisher.publish();
   }
 }

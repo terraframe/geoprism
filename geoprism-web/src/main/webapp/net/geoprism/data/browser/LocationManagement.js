@@ -17,13 +17,77 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function LocationController($scope, $timeout, localizationService) {
-	 var controller = this;
-	  
+  function LocationController($scope, $timeout, locationService) {
+    var controller = this;
+    
+    controller.init = function() {
+      var connection = {
+        onSuccess : function(data) {
+          $scope.previous.push(data.entity);
+          
+          controller.load(data);
+        }      
+      };      
+      
+      $scope.children = [];
+      $scope.previous = [];
+      
+      locationService.select(connection, "", "", "");
+    }
+    
+    controller.load = function(data) {
+      $scope.children = data.children.resultSet;
+      $scope.layers = data.layers;
+        
+      $scope.entity = data.entity;
+      $scope.universal = data.universal;
+      $scope.universals = data.universals;      
+    }
+    
+    controller.select = function(entity) {
+      var connection = {
+        onSuccess : function(data) {
+          $scope.previous.push(entity);          
+          
+          controller.load(data);
+        }
+      };    
+
+      locationService.select(connection, entity.id, $scope.universal, $scope.layers);
+    }
+    
+    controller.back = function(index) {
+      if(index !== ($scope.previous.length - 1)) {
+        var connection = {
+          onSuccess : function(data) {            
+            $scope.previous.splice(index + 1);
+            
+            controller.load(data);
+          }
+        };    
+                
+        var id = $scope.previous[index].id;
+                
+        locationService.select(connection, id, $scope.universal, $scope.layers);        
+      }
+    }
+    
+    controller.setUniversal = function() {
+      var connection = {
+        onSuccess : function(data) {
+          $scope.previous.push(entity);
+          
+          controller.load(data);
+        }
+      };
+
+      locationService.select(connection, $scope.entity.id, $scope.universal, $scope.layers);      
+    }
+
+    controller.init();
   }
   
-  
-  angular.module("location-management", ["styled-inputs", "localization-service", "editable-map"]);
+  angular.module("location-management", ["location-service", "editable-map"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
 })();
