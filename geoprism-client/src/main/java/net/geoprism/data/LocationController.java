@@ -46,18 +46,6 @@ public class LocationController implements Reloadable
     GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, id);
     List<? extends UniversalDTO> universals = entity.getUniversal().getAllContains();
 
-    UniversalDTO universal = null;
-
-    if (universalId != null && universalId.length() > 0)
-    {
-      universal = UniversalDTO.get(request, universalId);
-    }
-    else if (universals.size() > 0)
-    {
-      universal = universals.get(0);
-      universalId = universal.getId();
-    }
-
     String layers = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
 
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getId(), universalId, 200);
@@ -66,8 +54,8 @@ public class LocationController implements Reloadable
     response.set("children", children);
     response.set("layers", new JSONArray(layers));
     response.set("universals", new ListSerializable(universals));
-    response.set("universal", universal);
     response.set("entity", entity, new GeoEntityJsonConfiguration());
+    response.set("universal", (universalId != null && universalId.length() > 0) ? universalId : "");
 
     return response;
   }

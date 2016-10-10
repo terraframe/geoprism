@@ -40,8 +40,10 @@
       $scope.layers = data.layers;
         
       $scope.entity = data.entity;
-      $scope.universal = data.universal;
-      $scope.universals = data.universals;      
+      $scope.universal = {
+        value : data.universal,
+        options : data.universals
+      };
       
       $scope.$broadcast('sharedGeoData', data);
     }
@@ -55,7 +57,7 @@
         }
       };    
 
-      locationService.select(connection, entity.id, $scope.universal, $scope.layers);
+      locationService.select(connection, entity.id, "", $scope.layers);
     }
     
     controller.back = function(index) {
@@ -70,7 +72,7 @@
                 
         var id = $scope.previous[index].id;
                 
-        locationService.select(connection, id, $scope.universal, $scope.layers);        
+        locationService.select(connection, "", $scope.layers);        
       }
     }
     
@@ -82,8 +84,10 @@
           controller.load(data);
         }
       };
+      
+      console.log(JSON.stringify($scope.universal));
 
-      locationService.select(connection, $scope.entity.id, $scope.universal, $scope.layers);      
+      locationService.select(connection, $scope.entity.id, $scope.universal.value, $scope.layers);      
     }
 
     controller.init();

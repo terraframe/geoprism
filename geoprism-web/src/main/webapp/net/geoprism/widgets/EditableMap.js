@@ -84,12 +84,6 @@
 		 mapService.zoomToVectorDataExtent();
 	 }
 	  
-	 controller.clearMapState = function() {
-		$scope.overlayLayerCache = {values:{}, ids:[]};
-		$scope.bbox = [];
-		$scope.renderBase = true;
-	 }
-	 
 	 controller.addVectorLayer = function(layerGeoJSON, styleObj, stackingIndex) {
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, stackingIndex);
 	 }
@@ -110,11 +104,6 @@
 	      }
 	  }
 	  
-	    
-      controller.refreshMap = function() {
-    	
-      }
-      
       function isEmptyJSONObject(obj) {
 	    for(var prop in obj) {
 	        if(obj.hasOwnProperty(prop))
@@ -149,6 +138,8 @@
     			  controller.addVectorLayer(data, $scope.targetStyle, 2);
     	    	  controller.zoomToVectorDataExtent();
     		  }
+    		  
+    		  controller.removeVectorData();
     		  
     		  // get context geo data
     		  controller.getMapData(contextCallback, data.layers[0]);

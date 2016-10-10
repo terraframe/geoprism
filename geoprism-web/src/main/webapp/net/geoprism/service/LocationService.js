@@ -22,13 +22,13 @@
     var service = {};
     var sharedGeoData = {};
     
-    service.select = function(connection, id, type, existingLayers) {
+    service.select = function(connection, id, universalId, existingLayers) {
       var req = {
         method: 'POST',
         url: window.com.runwaysdk.__applicationContextPath + '/location/select',
         data : {
           id : id,
-          type : type,
+          universalId : universalId,
           existingLayers : existingLayers
         }
       }      
