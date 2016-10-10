@@ -78,10 +78,11 @@
     
     controller.setUniversal = function() {
       var connection = {
-        onSuccess : function(data) {
-          $scope.previous.push(entity);
-          
-          controller.load(data);
+        onSuccess : function(data) {          
+          $scope.children = data.children.resultSet;
+          $scope.layers = data.layers;
+            
+          $scope.$broadcast('sharedGeoData', data);          
         }
       };
       
