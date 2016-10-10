@@ -70,7 +70,7 @@
                 
         var id = $scope.previous[index].id;
                 
-        locationService.select(connection, "", $scope.layers);        
+        locationService.select(connection, id, "", $scope.layers);        
       }
     }
     
