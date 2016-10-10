@@ -41,30 +41,32 @@
   <div class="row">
   <div class="col-md-6">
   
-    <h1>List Widget Here </h1>
-    
     <div ng-show="previous.length > 1">
-      <span>Bread Crumbs</span>
-      <ul>
-        <li ng-repeat="entity in previous" ng-if="$index < previous.length - 1" ng-click="ctrl.back($index)">
-          {{entity.displayLabel}} ({{entity.geoId}})
-        </li>
-      </ul>
+      <span ng-repeat="entity in previous" ng-if="$index < previous.length - 1">
+        > <a href ng-click="ctrl.back($index)"> {{entity.displayLabel}} ({{entity.geoId}}) </a>
+      </span>
     </div>
     <div>
-      <span>{{entity.displayLabel}} ({{entity.geoId}})</span>
-      <ul ng-if="universal != null && universals.length > 0">
-        <select ng-model="universal" ng-options="opt as opt.displayLabel for opt in universals track by opt.id" ng-change="ctrl.setUniversal()">
-        </select>
-      </ul>
+      <div><label>Location</label></div>
+      <div class="text">{{entity.displayLabel}} ({{entity.geoId}})</div>
+    </div>
+    <div ng-if="universals.length > 0">
+      <div><label>Sub location types</label></div>
+      <div>
+        <select ng-model="universal" ng-options="opt.id as opt.displayLabel for opt in universals" ng-change="ctrl.setUniversal()">
+          <option value="">All</option>
+        </select>                
+      </div>
     </div>
     <div ng-show="children.length > 0">
-      <span>Children</span>
-      <ul>
-        <li ng-repeat="child in children" ng-click="ctrl.select(child)">
-          {{child.displayLabel}} ({{child.geoId}})
-        </li>
-      </ul>
+      <div><label>Sub locations</label></div>
+      <div>
+        <ul>
+          <li ng-repeat="child in children">
+            <a href ng-click="ctrl.select(child)"> {{child.displayLabel}} ({{child.geoId}}) </a>
+          </li>
+        </ul>
+      </div>
     </div>    
   </div>
   <div class="col-md-6">
