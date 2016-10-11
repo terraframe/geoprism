@@ -27,6 +27,7 @@
 	 $scope.contextStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"black", strokeWidth:3};
 	 $scope.targetStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"red", strokeWidth:2};
 	 $scope.targetFeature = null;
+	 $scope.sharedGeoData = {};
 	 
 	 
 	 controller.init = function() {
@@ -39,13 +40,6 @@
 		
 		controller.addVectorHoverEvents();
 		controller.addVectorClickEvents();
-		
-		//
-		// Use this to enable the edit control
-		//
-//		if($scope.enableEdits){
-//			controller.enableEdits();
-//		}
 	 }
 	 
 	 controller.enableEdits = function() {
@@ -106,9 +100,22 @@
 	    return true && JSON.stringify(obj) === JSON.stringify({});
 	  }
       
+      $scope.$watch("targetFeature", function(newVal, oldVal) {
+    	  $scope.$emit('locationEdit', {
+	        wkt : newVal,
+	        universal : {
+	            value : $scope.sharedGeoData.universal,
+	            options : $scope.sharedGeoData.universals
+	        },
+	        parent : $scope.sharedGeoData.entity
+	      });
+      });
+      
       // Recieve shared data from LocationManagement controller based on user selection of target location
       $scope.$on('sharedGeoData', function(event, data) {
     	  if(!isEmptyJSONObject(data)){
+    		  
+    		  $scope.sharedGeoData = data;
     		  
     		  var contextCallback = function(data) {
     			  for(var i=0; i<data.features.length; i++){

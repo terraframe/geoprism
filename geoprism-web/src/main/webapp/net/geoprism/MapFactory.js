@@ -551,7 +551,10 @@
         	    
         	    var feature = map.forEachFeatureAtPixel( evt.pixel, function(ft, l){return ft;} );
         	    
-        	    if(feature && feature !== selectedFeatures[0] && feature.getProperties().isHoverable){
+        	    if(map.getProperties().hasOwnProperty("gdbEditModeEnabled") && map.getProperties().gdbEditModeEnabled){
+        	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "crosshair");
+        	    }
+        	    else if(feature && feature !== selectedFeatures[0] && feature.getProperties().isHoverable){
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "pointer");
         	    	
         	    	// clear existing selected feature if transitioning directly to another feature.
@@ -1156,28 +1159,50 @@
                 map.setProperties({"gdbEditModeEnabled":true});
               }
               
-              function removeInteraction(interaction) {
+              function removeInteractions(interactions) {
+            	interactions.forEach(function(interaction){
             	  map.removeInteraction(interaction);
+            	})
             	  
             	// make the edit button appear active when an edit session is open
           	    if(button.classList.contains("active")){
           		  button.classList.remove("active")
           	    }
+          	    
+          	    map.setProperties({"gdbEditModeEnabled":false});
+          	    
+          	    //
+          	    // Sending new location data back to angular
+          	    //
+          	    // TODO: This is not ideal. Try to separate angular and the map factory more.
+          	    //
+          	    var editGeom = map.getProperties().editFeatures.getArray()[0].getGeometry().getCoordinates();
+          	    var editGeomWKT = "POINT("+ editGeom[0] + " " + editGeom[1] +")"
+          	    var editableMapScope = angular.element(button).scope();
+          	    editableMapScope.targetFeature = editGeomWKT;
+          	    editableMapScope.$apply();
+          	    //
+          	    //
+          	    //
+          	    
               }
               
               function toggleInteraction() {
             	  var existingInteractions = map.getInteractions().getArray();
             	  var drawInteraction = null;
+            	  var modifyInteraction = null
             	  for(var i=0; i<existingInteractions.length; i++){
             		  var interaction = existingInteractions[i];
             		  if(interaction instanceof ol.interaction.Draw){
             			  drawInteraction = interaction;
-            			  break;
+            		  }
+            		  else if(interaction instanceof ol.interaction.Modify){
+            			  modifyInteraction = interaction;
             		  }
             	  };
             	  
-            	  if(drawInteraction !== null){
-            		  removeInteraction(drawInteraction);
+            	  if(drawInteraction !== null && modifyInteraction !== null){
+            		  removeInteractions([drawInteraction, modifyInteraction]);
             	  }
             	  else{
             		  addInteraction();
