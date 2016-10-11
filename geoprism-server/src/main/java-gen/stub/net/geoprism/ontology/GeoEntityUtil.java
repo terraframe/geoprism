@@ -575,8 +575,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
 
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
-
     SelectableChar id = entityQuery.getId();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
     Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
@@ -589,9 +587,20 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
-    query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
-    query.AND(entityQuery.getUniversal().EQ(universalId));
-    query.AND(aptQuery.getParentTerm().EQ(parentId));
+    
+    if(universalId != null  && universalId.length() > 0)
+    {
+      query.AND(entityQuery.getUniversal().EQ(universalId));
+    }
+    
+    if(parentId != null && parentId.length() > 0)
+    {
+      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+
+
+      query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+      query.AND(aptQuery.getParentTerm().EQ(parentId));
+    }
 
     query.ORDER_BY_ASC(geoLabel);
 
@@ -724,5 +733,5 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
 
     return publisher.publish();
-  }
+  }  
 }

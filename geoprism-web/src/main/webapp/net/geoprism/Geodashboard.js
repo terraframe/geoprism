@@ -154,6 +154,9 @@
         dialog.render();                
       },
       handleException : function(e) {
+        if(e == null) {
+          ExceptionHandler.handleErrorMessage("An error has occured");        
+        }
         if($.type( e ) === "string") {
           ExceptionHandler.handleErrorMessage(e);
         }

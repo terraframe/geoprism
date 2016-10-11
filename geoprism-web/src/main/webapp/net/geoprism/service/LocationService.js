@@ -35,6 +35,32 @@
       runwayService.execute(req, connection);      
     }
     
+    service.open = function(connection, id, existingLayers) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/open',
+        data : {
+          id : id,
+          existingLayers : existingLayers            
+        }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
+    service.getGeoEntitySuggestions = function(connection, text, limit) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/suggestions',
+        data : {
+          text : text,
+          limit : limit
+        }
+      }      
+              
+      runwayService.execute(req, connection);      
+    }
+      
     return service;  
   }
   

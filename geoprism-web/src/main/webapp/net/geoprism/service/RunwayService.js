@@ -64,30 +64,43 @@
     service.createConnectionRequest = function(connection) {
       if(connection.elementId != null) {
         return service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
-      }	
+      }
       else {
         return service.createRequest(connection.onSuccess, connection.onFailure );
       }
     }    
     
     service.execute = function(req, connection) {
-      var request = service.createConnectionRequest(connection);      
       
+      /*
+       * Success handler 
+       */
       var success = function(response) {
-        request.onSuccess(response.data);
+        connection.onSuccess(response.data);
       }
       
+      /*
+       * Failure handler
+       */
       var failure = function(response) {
         if(response.status === 401) {
-          window.location = window.com.runwaysdk.__applicationContextPath + '/session/form';
+          window.location = com.runwaysdk.__applicationContextPath + '/session/form';
         }
         else {
-          request.onFailure(response.data);                
+          var data = response.data;
+         
+          if(connection.onFailure != null) {
+            connection.onFailure(data);
+          }
+          else {
+            GDB.ExceptionHandler.handleException(data.localizedMessage);
+          }
         }
       }
       
       if(connection.elementId != null) {
-        
+        var request = service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
+
         $http(req).then(success, failure).finally(function(){
           request._hideStandby();
         });
@@ -312,7 +325,7 @@
         }
       }
       
-      return decorator;    	
+      return decorator;    
     }  
     
     return service;

@@ -18,8 +18,6 @@
  */
 package net.geoprism;
 
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -29,9 +27,9 @@ import com.runwaysdk.mvc.RestSerializer;
 
 public class ListSerializable implements JsonSerializable
 {
-  private List<?> list;
+  private Iterable<?> list;
 
-  public ListSerializable(List<?> list)
+  public ListSerializable(Iterable<?> list)
   {
     this.list = list;
   }

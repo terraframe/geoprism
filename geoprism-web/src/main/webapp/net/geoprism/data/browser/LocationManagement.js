@@ -94,6 +94,49 @@
 
       locationService.select(connection, $scope.entity.id, $scope.universal.value, $scope.layers);      
     }
+    
+    controller.getGeoEntitySuggestions = function( request, response ) {
+      var limit = 20;
+      
+      var connection = {
+        onSuccess : function(data){
+          var resultSet = data.resultSet;
+            
+          var results = [];
+            
+          $.each(resultSet, function( index, result ) {
+            var label = result.displayLabel;
+            var id = result.id;
+              
+            results.push({'label':label, 'value':label, 'id':id});
+          });
+            
+          response( results );
+        }
+      };
+      
+      var text = request.term;
+        
+      locationService.getGeoEntitySuggestions(connection, text, limit);
+    }
+    
+    controller.open = function(entityId) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(data) {
+          $scope.previous = data.ancestors;
+                  
+          controller.load(data);
+        }      
+      };      
+               
+      $scope.children = [];
+      $scope.previous = [];
+              
+      locationService.open(connection, entityId, $scope.layers);
+    }
+      
+    
 
     controller.init();
   }

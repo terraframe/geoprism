@@ -39,6 +39,10 @@
   
   <div class="row">
   <div class="col-md-3 lw-inner-col">
+    <div>
+      <input type="text" placeholder="<gdb:localize key="location.management.autocomplete"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.open"></input>
+    </div>
+    
     <div ng-show="previous.length > 1">
       <span ng-repeat="entity in previous" ng-if="$index < previous.length - 1">
         > <a href ng-click="ctrl.back($index)"> {{entity.displayLabel}} </a>
@@ -46,7 +50,7 @@
     </div>
     <div ng-show="entity != null">
       <div><label><gdb:localize key="location.management.entity"/></label></div>
-      <div class="text">{{entity.displayLabel}} ({{entity.geoId}}) : {{entity.universal}}</div>
+      <div class="text">{{entity.displayLabel}} ({{entity.universal}}) : {{entity.geoId}}</div>
     </div>
     <div ng-if="universal.options.length > 1">
       <div><label><gdb:localize key="location.management.filter"/></label></div>
@@ -61,7 +65,7 @@
       <div>
         <ul>
           <li ng-repeat="child in children">
-            <a href ng-click="ctrl.select(child)"> {{child.displayLabel}} ({{child.geoId}}) </a>
+            <a href ng-click="ctrl.select(child)"> {{child.displayLabel}} : {{child.geoId}} </a>
           </li>
         </ul>
       </div>
