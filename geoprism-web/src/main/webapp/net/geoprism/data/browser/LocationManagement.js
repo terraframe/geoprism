@@ -17,12 +17,12 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function LocationController($scope, $timeout, locationService) {
+  function LocationController($scope, $rootScope, locationService) {
     var controller = this;
     
     controller.init = function() {
       var connection = {
-        elementId : '#innerFrameHtml',
+        elementId : '#location-explorer',
         onSuccess : function(data) {
           $scope.previous.push(data.entity);
           
@@ -51,7 +51,7 @@
     
     controller.select = function(entity) {
       var connection = {
-        elementId : '#innerFrameHtml',      
+        elementId : '#location-explorer',      
         onSuccess : function(data) {
           $scope.previous.push(entity);          
           
@@ -65,7 +65,7 @@
     controller.back = function(index) {
       if(index !== ($scope.previous.length - 1)) {
         var connection = {
-          elementId : '#innerFrameHtml',        		
+          elementId : '#location-explorer',            
           onSuccess : function(data) {            
             $scope.previous.splice(index + 1);
             
@@ -81,7 +81,7 @@
     
     controller.setUniversal = function() {
       var connection = {
-        elementId : '#innerFrameHtml',
+        elementId : '#location-explorer',
         onSuccess : function(data) {          
           $scope.children = data.children.resultSet;
           $scope.layers = data.layers;
@@ -122,7 +122,7 @@
     
     controller.open = function(entityId) {
       var connection = {
-        elementId : '#innerFrameHtml',
+        elementId : '#location-explorer',
         onSuccess : function(data) {
           $scope.previous = data.ancestors;
                   
@@ -135,13 +135,95 @@
               
       locationService.open(connection, entityId, $scope.layers);
     }
-      
     
+    controller.newInstance = function() {
+      $scope.$emit('locationEdit', {
+        wkt : '',
+        universal : $scope.universal,
+        parent : $scope.entity
+      });
+    }
+    
+    $rootScope.$on('locationChange', function(event, data) {
+      $scope.children.push(data.entity);
+    });    
 
     controller.init();
   }
   
-  angular.module("location-management", ["location-service", "editable-map"]);
+  function LocationModalController($scope, $rootScope, locationService) {
+    var controller = this;
+        
+    controller.init = function() {
+      $scope.show = false;
+    }
+        
+    controller.load = function(data) {
+      if(data.entity == null) {
+        $scope.entity = {
+          type : 'com.runwaysdk.system.gis.geo.GeoEntity',
+          wkt : data.wkt,
+          universal : data.universal.value
+        };        
+      }
+      else {
+        $scope.entity = data.entity;  
+      }
+      
+      $scope.universals = data.universal.options;
+      $scope.parent = data.parent;
+      $scope.show = true;
+    }
+        
+    controller.clear = function() { 
+      $scope.entity = undefined;
+      $scope.parent = undefined;
+      $scope.show = false;
+    }
+    
+    controller.apply = function() {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(entity) {
+          controller.clear();
+          
+          $scope.$emit('locationChange', {
+            entity : entity  
+          });
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.localizedMessage);
+        }                
+      };
+                              
+      $scope.errors = [];
+          
+      locationService.apply(connection, $scope.entity, $scope.parent.id);        
+    }
+      
+    $rootScope.$on('locationEdit', function(event, data) {
+      controller.load(data);
+    });      
+       
+    controller.init();
+  }
+    
+  function LocationModal() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/location-modal.jsp',
+      scope: {
+      },
+      controller : LocationModalController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }   
+  }  
+  
+  angular.module("location-management", ["location-service", "styled-inputs", "editable-map"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
+   .directive('locationModal', LocationModal)
 })();
