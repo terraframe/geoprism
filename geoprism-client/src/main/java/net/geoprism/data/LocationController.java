@@ -26,7 +26,9 @@ import net.geoprism.ontology.GeoEntityUtilDTO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.runwaysdk.business.ValueObjectDTO;
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.constants.ClientRequestIF;
@@ -34,13 +36,16 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
+import com.runwaysdk.mvc.ParseType;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.util.IDGenerator;
 
 @Controller(url = "location")
 public class LocationController implements Reloadable
@@ -96,5 +101,25 @@ public class LocationController implements Reloadable
     ValueQueryDTO results = GeoEntityUtilDTO.getGeoEntitySuggestions(request, null, null, text, limit);
 
     return new RestBodyResponse(results);
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentId") String parentId) throws JSONException
+  {
+    if (entity.getGeoId() == null || entity.getGeoId().length() == 0)
+    {
+      entity.setGeoId(IDGenerator.nextID());
+    }
+
+    GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentId, LocatedInDTO.CLASS);
+
+    JSONObject object = new JSONObject();
+    object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
+    object.put(GeoEntityDTO.ID, dto.getGeoEntityId());
+    object.put(GeoEntityDTO.DISPLAYLABEL, dto.getGeoEntityDisplayLabel());
+    object.put(GeoEntityDTO.GEOID, entity.getGeoId());
+    object.put(GeoEntityDTO.UNIVERSAL, dto.getUniversalDisplayLabel());
+
+    return new RestBodyResponse(object);
   }
 }

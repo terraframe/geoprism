@@ -38,7 +38,7 @@
   <div ng-if="location.management === null"><gdb:localize key='category.management.loadingData'/></div>
   
   <div class="row">
-  <div class="col-md-3 lw-inner-col">
+  <div class="col-md-3 lw-inner-col" id="location-explorer">
     <div>
       <input type="text" placeholder="<gdb:localize key="location.management.autocomplete"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.open"></input>
     </div>
@@ -60,6 +60,9 @@
         </select>                
       </div>
     </div>
+    <div ng-if="universal.options.length > 0">
+      <a class="fa fa-plus" ng-click="ctrl.newInstance()" title="<gdb:localize key="location.management.newInstance"/>"></a>    
+    </div>
     <div ng-show="children.length > 0">
       <div><label><gdb:localize key="location.management.sublocations"/></label></div>
       <div>
@@ -74,7 +77,7 @@
   <div class="col-md-9">
   	<editable-map data-enableedits="true"></editable-map>
   </div>
-</div>
+  </div>
   
-   
+  <location-modal></location-modal>   
 </div>
