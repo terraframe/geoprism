@@ -84,7 +84,9 @@
     }
     
     service.zoomToFeatureExtent = function(feature){
-    	service.map.zoomToFeatureExtent(feature);
+    	// NOTE: this.getWorkspace() will only be set if on the dashboardViewer page
+    	// because that is the only place we are currently passing the var to the client via jsp attributes
+    	service.map.zoomToFeatureExtent(feature, this.getWorkspace());
     	this.clearOverlays(); // the popup doesn't shift appropriately to the new position so clear it
     }
     
@@ -114,18 +116,22 @@
     	service.map.enableEdits();
     }
     
-    service.getGeoJSONData = function(callback, config) {
+    service.disableEdits = function() {
+    	service.map.disableEdits();
+    }
+    
+    service.getGeoJSONData = function(callback, config, workspace) {
        	var params = {
                 REQUEST:'GetFeature',
                 SERVICE:'WFS',
                 VERSION:'2.0.0',
-                TYPENAMES:"dev"+":"+ config.layerName,
+                TYPENAMES:workspace +":"+ config.layerName,
 //                CQL_FILTER : "geoid='"+ config.geoId + "'",
                 //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
                 outputFormat : 'application/json'
           };
 	
-          var url = window.location.origin+"/geoserver/" + "dev" +"/wfs?" + $.param(params);
+          var url = window.location.origin+"/geoserver/" + workspace +"/wfs?" + $.param(params);
           
           $.ajax({
               url: url,

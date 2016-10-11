@@ -171,10 +171,17 @@ button.enable-edit-mode-btn {
 	margin: 0;
 	font-size: 23px;
 }
-button.enable-edit-mode-btn:hover,
-button.enable-edit-mode-btn:focus {
-	color: #00bfff;
+button.enable-edit-mode-btn:hover{
+	color: #00bfff !important;
 	background-color: white;
+}
+button.enable-edit-mode-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.enable-edit-mode-btn.active{
+	color: #00bfff;
 }
 .enable-edit-mode-btn-wrapper {  
 	top: 85px;
@@ -206,3 +213,5 @@ button.edit-mode-geom-type-btn:focus {
 .ol-touch .edit-mode-geom-type-btn-wrapper {
    top: 80px;
 }
+
+
