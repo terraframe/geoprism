@@ -147,10 +147,10 @@
     		  // get target geo data
     		  controller.getMapData(targetCallback, data.layers[1], data.workspace);
     		  
-    		  if($scope.enableEdits && data.children.resultSet.length === 0){
+    		  if($scope.enableEdits && data.layers.length > 1 && data.layers[1].layerType === "POINT" && data.layers[0].layerType === "POLYGON"){
     			controller.enableEdits();
     		  }
-    		  else if(data.children.resultSet.length > 0 && $scope.editWidgetEnabled){
+    		  else if($scope.editWidgetEnabled){
     			controller.disableEdits();
     			$scope.editWidgetEnabled = false;
     		  }
