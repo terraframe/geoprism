@@ -43,10 +43,13 @@
       <input type="text" placeholder="<gdb:localize key="location.management.autocomplete"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.open"></input>
     </div>
     
-    <div class="location-management-widget-section" ng-show="previous.length > 1">
-      <span ng-repeat="entity in previous" ng-if="$index < previous.length - 1">
-        > <a href ng-click="ctrl.back($index)"> {{entity.displayLabel}} </a>
-      </span>
+    <div class="location-management-widget-section">
+      <ul class = "breadcrumb">
+        <li ng-repeat="entity in previous" ng-class="{'active':$last}" ng-if="$index < previous.length">
+          <a ng-if="!$last" href="" ng-click="ctrl.back($index)"> {{entity.displayLabel}}</a>
+          <span ng-if="$last"> {{entity.displayLabel}}</span>
+        </li>
+      </ul>
     </div>
     <div class="location-management-widget-section" ng-show="entity != null">
       <div><label><gdb:localize key="location.management.entity"/></label></div>
@@ -63,12 +66,13 @@
     <div class="location-management-widget-section location-management-list-container" ng-show="children.length > 0">
       <div><label><gdb:localize key="location.management.sublocations"/></label></div>
       <div>
-        <ul class="location-management-list">
-          <li ng-repeat="child in children">
-            <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(child)" title="<gdb:localize key="location.management.editTooltip"/>"></a>                                       
-            <a href ng-click="ctrl.select(child)"> {{child.displayLabel}} : {{child.geoId}} </a>
-          </li>
-        </ul>
+        <div class="list-group">
+          <a href ng-repeat="child in children" class="list-group-item" ng-click="ctrl.select(child, $event)">
+            {{child.displayLabel}} : {{child.geoId}}
+            <span class="pull-right fa fa-pencil ico-edit" ng-click="ctrl.edit(child)">
+            </span>
+          </a>
+        </div>
       </div>
     </div>    
   </div>

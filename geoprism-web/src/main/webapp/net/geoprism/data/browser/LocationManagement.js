@@ -49,17 +49,19 @@
       $scope.$broadcast('sharedGeoData', data);
     }
     
-    controller.select = function(entity) {
-      var connection = {
-        elementId : '#innerFrameHtml',      
-        onSuccess : function(data) {
-          $scope.previous.push(entity);          
-          
-          controller.load(data);
-        }
-      };    
-
-      locationService.select(connection, entity.id, "", $scope.layers);
+    controller.select = function(entity, event) {
+      if(!$(event.target).hasClass('ico-edit')) {
+        var connection = {
+          elementId : '#innerFrameHtml',      
+          onSuccess : function(data) {
+            $scope.previous.push(entity);          
+              
+            controller.load(data);
+          }
+        };    
+        
+        locationService.select(connection, entity.id, "", $scope.layers);        
+      }
     }
     
     controller.back = function(index) {
