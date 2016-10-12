@@ -16,17 +16,35 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.data;
+package net.geoprism;
 
-import net.geoprism.ExcludeConfiguration;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.runwaysdk.mvc.JsonConfiguration;
-import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
-public class GeoEntityJsonConfiguration extends ExcludeConfiguration implements JsonConfiguration
+public class ExcludeConfiguration implements JsonConfiguration
 {
-  public GeoEntityJsonConfiguration()
+  private Set<String> attributeNames;
+
+  private Class<?>    clazz;
+
+  public ExcludeConfiguration(Class<?> clazz, String... attributeNames)
   {
-    super(GeoEntityDTO.class, GeoEntityDTO.WKT, GeoEntityDTO.UNIVERSAL);
+    this.clazz = clazz;
+    this.attributeNames = new TreeSet<String>(Arrays.asList(attributeNames));
+  }
+
+  @Override
+  public boolean supports(Class<?> clazz)
+  {
+    return this.clazz.isAssignableFrom(clazz);
+  }
+
+  @Override
+  public boolean exclude(String name)
+  {
+    return this.attributeNames.contains(name);
   }
 }

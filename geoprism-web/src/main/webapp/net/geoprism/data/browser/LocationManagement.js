@@ -136,6 +136,21 @@
       locationService.open(connection, entityId, $scope.layers);
     }
     
+    controller.edit = function(entity) {
+      var connection = {
+        elementId : '#location-explorer',
+        onSuccess : function(entity) {
+          $scope.$emit('locationEdit', {
+            universal : $scope.universal,
+            parent : $scope.entity,
+            entity : entity
+          });
+        }      
+      };      
+      
+      locationService.edit(connection, entity.id);
+    }
+    
     controller.newInstance = function() {
       $scope.$emit('locationEdit', {
         wkt : '',
@@ -144,8 +159,25 @@
       });
     }
     
+    controller.findIndex = function(entityId) {
+      for(var i = 0; i < $scope.children.length; i++) {
+        if($scope.children[i].id == entityId) {
+          return i;
+        };
+      }
+      
+      return -1;
+    }
+    
     $rootScope.$on('locationChange', function(event, data) {
-      $scope.children.push(data.entity);
+      var index = controller.findIndex(data.entity.id);
+      
+      if(index !== -1) {
+        $scope.children[index] = data.entity;
+      }
+      else {
+        $scope.children.push(data.entity);
+      }
     });    
 
     controller.init();

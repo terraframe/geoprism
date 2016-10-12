@@ -74,6 +74,18 @@
       runwayService.execute(req, connection);      
     }
       
+    service.edit = function(connection, entityId) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/edit',
+        data : {
+          entityId : entityId
+        }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
     return service;  
   }
   
