@@ -162,6 +162,8 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
     List<GeoprismApplication> authorizedApplications = allApplications.stream().filter(p -> p.isValid(roleNames)).collect(Collectors.toList());
 
     this.req.setAttribute("applications", authorizedApplications);
+    this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
+    this.req.setAttribute("isBuilder", roleNames.contains(RoleConstants.BUILDER_ROLE));
 
     setLogoReqAttrs();
 
