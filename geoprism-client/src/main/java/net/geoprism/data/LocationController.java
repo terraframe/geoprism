@@ -129,6 +129,8 @@ public class LocationController implements Reloadable
     }
     else
     {
+      String id = entity.getId();
+      
       entity.apply();
 
       JSONObject object = new JSONObject();
@@ -137,6 +139,7 @@ public class LocationController implements Reloadable
       object.put(GeoEntityDTO.DISPLAYLABEL, entity.getDisplayLabel().getValue());
       object.put(GeoEntityDTO.GEOID, entity.getGeoId());
       object.put(GeoEntityDTO.UNIVERSAL, entity.getUniversal().getDisplayLabel().getValue());
+      object.put("oid", id);
 
       return new RestBodyResponse(object);
     }

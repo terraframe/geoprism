@@ -170,7 +170,9 @@
     }
     
     $rootScope.$on('locationChange', function(event, data) {
-      var index = controller.findIndex(data.entity.id);
+      var id = (data.entity.oid !== undefined) ? data.entity.oid : data.entity.id;
+      
+      var index = controller.findIndex(id);
       
       if(index !== -1) {
         $scope.children[index] = data.entity;
