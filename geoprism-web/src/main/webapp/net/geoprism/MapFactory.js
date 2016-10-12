@@ -1177,7 +1177,8 @@
           	    // TODO: This is not ideal. Try to separate angular and the map factory more.
           	    //
           	    var editGeom = map.getProperties().editFeatures.getArray()[0].getGeometry().getCoordinates();
-          	    var editGeomWKT = "POINT("+ editGeom[0] + " " + editGeom[1] +")"
+          	    var transformedEditGeom = ol.proj.transform(editGeom, MapWidget.MAPSRID, MapWidget.DATASRID)
+          	    var editGeomWKT = "POINT("+ transformedEditGeom[0] + " " + transformedEditGeom[1] +")"
           	    var editableMapScope = angular.element(button).scope();
           	    editableMapScope.targetFeature = editGeomWKT;
           	    editableMapScope.$apply();

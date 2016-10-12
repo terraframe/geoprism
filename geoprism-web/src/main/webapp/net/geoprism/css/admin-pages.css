@@ -17,6 +17,11 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
  
+ #main {
+ 	height: calc(100% - 70px);
+ }
+ 
+ 
  /* sidebar styles */
 #sidebar{
 	float:left;
@@ -347,5 +352,5 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
 
 .lw-inner-col {
  overflow-y: auto;
- height: 90%;	
+ height: 100%;	
 }
