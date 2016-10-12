@@ -22,7 +22,7 @@
     
     controller.init = function() {
       var connection = {
-        elementId : '#location-explorer',
+        elementId : '#innerFrameHtml',
         onSuccess : function(data) {
           $scope.previous.push(data.entity);
           
@@ -51,7 +51,7 @@
     
     controller.select = function(entity) {
       var connection = {
-        elementId : '#location-explorer',      
+        elementId : '#innerFrameHtml',      
         onSuccess : function(data) {
           $scope.previous.push(entity);          
           
@@ -65,7 +65,7 @@
     controller.back = function(index) {
       if(index !== ($scope.previous.length - 1)) {
         var connection = {
-          elementId : '#location-explorer',            
+          elementId : '#innerFrameHtml',            
           onSuccess : function(data) {            
             $scope.previous.splice(index + 1);
             
@@ -81,7 +81,7 @@
     
     controller.setUniversal = function() {
       var connection = {
-        elementId : '#location-explorer',
+        elementId : '#innerFrameHtml',
         onSuccess : function(data) {          
           $scope.children = data.children.resultSet;
           $scope.layers = data.layers;
@@ -122,7 +122,7 @@
     
     controller.open = function(entityId) {
       var connection = {
-        elementId : '#location-explorer',
+        elementId : '#innerFrameHtml',
         onSuccess : function(data) {
           $scope.previous = data.ancestors;
                   
@@ -138,7 +138,7 @@
     
     controller.edit = function(entity) {
       var connection = {
-        elementId : '#location-explorer',
+        elementId : '#innerFrameHtml',
         onSuccess : function(entity) {
           $scope.$emit('locationEdit', {
             universal : $scope.universal,
@@ -213,6 +213,31 @@
       $scope.entity = undefined;
       $scope.parent = undefined;
       $scope.show = false;
+    }
+    
+    controller.cancel = function() {
+      if($scope.entity.id !== undefined) {
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(entity) {
+            controller.clear();
+            
+            $scope.$emit('locationCancel', {});
+          },
+          onFailure : function(e){
+            $scope.errors.push(e.localizedMessage);
+          }                
+        };
+                                        
+        $scope.errors = [];
+                    
+        locationService.unlock(connection, $scope.entity.id);                      
+      }
+      else {
+        controller.clear();
+        
+        $scope.$emit('locationCancel', {});        
+      }
     }
     
     controller.apply = function() {

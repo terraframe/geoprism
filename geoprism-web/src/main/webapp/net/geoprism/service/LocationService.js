@@ -86,6 +86,18 @@
       runwayService.execute(req, connection);      
     }
     
+    service.unlock = function(connection, entityId) {
+      var req = {
+          method: 'POST',
+          url: com.runwaysdk.__applicationContextPath + '/location/unlock',
+          data : {
+            entityId : entityId
+          }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
     return service;  
   }
   

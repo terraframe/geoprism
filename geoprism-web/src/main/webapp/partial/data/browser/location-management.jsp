@@ -60,9 +60,6 @@
         </select>                
       </div>
     </div>
-    <div ng-if="universal.options.length > 0">
-      <a class="fa fa-plus" ng-click="ctrl.newInstance()" title="<gdb:localize key="location.management.newInstance"/>"></a>    
-    </div>
     <div ng-show="children.length > 0">
       <div><label><gdb:localize key="location.management.sublocations"/></label></div>
       <div>

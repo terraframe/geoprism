@@ -152,4 +152,12 @@ public class LocationController implements Reloadable
 
     return new RestBodyResponse(entity, new ExcludeConfiguration(GeoEntityDTO.class, GeoEntityDTO.WKT));
   }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
+  {
+    GeoEntityDTO.unlock(request, entityId);
+    
+    return new RestBodyResponse("");
+  }
 }

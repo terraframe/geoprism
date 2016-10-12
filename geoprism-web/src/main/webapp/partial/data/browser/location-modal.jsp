@@ -30,7 +30,8 @@
         <div class="modal-dialog">
           <div class="modal-content" show-on-ready>
             <div class="heading">
-              <h1><gdb:localize key="location.management.editTooltip"/></h1>
+              <h1 ng-show="!entity.id"><gdb:localize key="location.management.newTooltip"/></h1>
+              <h1 ng-show="entity.id"><gdb:localize key="location.management.editTooltip"/></h1>
             </div>
             <fieldset>
               <div class="row-holder" ng-show="errors.length > 0 && show">
@@ -79,7 +80,7 @@
                 </div>  
                 <div class="holder">
                   <div class="button-holder">
-                    <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" ng-click="ctrl.clear()" />              
+                    <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" ng-click="ctrl.cancel()" />              
                     <input type="button" value="<gdb:localize key="dataset.submit"/>" class="btn btn-primary" ng-click="ctrl.apply()" ng-disabled="ctrl.form.$invalid" />
                   </div>
                 </div>
