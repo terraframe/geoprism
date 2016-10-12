@@ -111,6 +111,10 @@
 	      });
       });
       
+      $scope.$on("locationChange", function(event, data){
+    	  console.log(data)
+      })
+      
       // Recieve shared data from LocationManagement controller based on user selection of target location
       $scope.$on('sharedGeoData', function(event, data) {
     	  if(!isEmptyJSONObject(data)){

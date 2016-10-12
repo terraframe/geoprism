@@ -39,16 +39,16 @@
   
   <div class="row">
   <div class="col-md-3 lw-inner-col" id="location-explorer">
-    <div>
+    <div class="location-management-widget-section">
       <input type="text" placeholder="<gdb:localize key="location.management.autocomplete"/>" autocomplete="on" ng-required="true" callback-auto-complete source="ctrl.getGeoEntitySuggestions" setter="ctrl.open"></input>
     </div>
     
-    <div ng-show="previous.length > 1">
+    <div class="location-management-widget-section" ng-show="previous.length > 1">
       <span ng-repeat="entity in previous" ng-if="$index < previous.length - 1">
         > <a href ng-click="ctrl.back($index)"> {{entity.displayLabel}} </a>
       </span>
     </div>
-    <div ng-show="entity != null">
+    <div class="location-management-widget-section" ng-show="entity != null">
       <div><label><gdb:localize key="location.management.entity"/></label></div>
       <div class="text">{{entity.displayLabel}} ({{entity.universal}}) : {{entity.geoId}}</div>
     </div>
@@ -60,10 +60,10 @@
         </select>                
       </div>
     </div>
-    <div ng-show="children.length > 0">
+    <div class="location-management-widget-section location-management-list-container" ng-show="children.length > 0">
       <div><label><gdb:localize key="location.management.sublocations"/></label></div>
       <div>
-        <ul>
+        <ul class="location-management-list">
           <li ng-repeat="child in children">
             <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(child)" title="<gdb:localize key="location.management.editTooltip"/>"></a>                                       
             <a href ng-click="ctrl.select(child)"> {{child.displayLabel}} : {{child.geoId}} </a>
