@@ -705,6 +705,15 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   {
     if (id == null)
     {
+      try
+      {
+        return GeoEntity.getByKey("1_35");        
+      }
+      catch (Exception e)
+      {
+        // Ignore and just return the first child of root
+      }
+      
       GeoEntity root = GeoEntity.getRoot();
       OIterator<? extends Business> children = root.getChildren(LocatedIn.CLASS);
 
