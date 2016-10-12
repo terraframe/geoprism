@@ -18,32 +18,15 @@
  */
 package net.geoprism.data;
 
-import java.util.HashSet;
-import java.util.Set;
+import net.geoprism.ExcludeConfiguration;
 
 import com.runwaysdk.mvc.JsonConfiguration;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
-public class GeoEntityJsonConfiguration implements JsonConfiguration
+public class GeoEntityJsonConfiguration extends ExcludeConfiguration implements JsonConfiguration
 {
-  private Set<String> names;
-
   public GeoEntityJsonConfiguration()
   {
-    this.names = new HashSet<String>();
-    this.names.add(GeoEntityDTO.WKT);
-    this.names.add(GeoEntityDTO.UNIVERSAL);
-  }
-
-  @Override
-  public boolean exclude(String name)
-  {
-    return this.names.contains(name);
-  }
-
-  @Override
-  public boolean supports(Class<?> clazz)
-  {
-    return GeoEntityDTO.class.isAssignableFrom(clazz);
+    super(GeoEntityDTO.class, GeoEntityDTO.WKT, GeoEntityDTO.UNIVERSAL);
   }
 }

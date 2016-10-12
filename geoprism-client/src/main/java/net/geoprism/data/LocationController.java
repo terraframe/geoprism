@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data;
 
@@ -20,6 +22,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.geoprism.ExcludeConfiguration;
 import net.geoprism.ListSerializable;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
@@ -111,15 +114,39 @@ public class LocationController implements Reloadable
       entity.setGeoId(IDGenerator.nextID());
     }
 
-    GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentId, LocatedInDTO.CLASS);
+    if (entity.isNewInstance())
+    {
+      GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentId, LocatedInDTO.CLASS);
 
-    JSONObject object = new JSONObject();
-    object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
-    object.put(GeoEntityDTO.ID, dto.getGeoEntityId());
-    object.put(GeoEntityDTO.DISPLAYLABEL, dto.getGeoEntityDisplayLabel());
-    object.put(GeoEntityDTO.GEOID, entity.getGeoId());
-    object.put(GeoEntityDTO.UNIVERSAL, dto.getUniversalDisplayLabel());
+      JSONObject object = new JSONObject();
+      object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
+      object.put(GeoEntityDTO.ID, dto.getGeoEntityId());
+      object.put(GeoEntityDTO.DISPLAYLABEL, dto.getGeoEntityDisplayLabel());
+      object.put(GeoEntityDTO.GEOID, entity.getGeoId());
+      object.put(GeoEntityDTO.UNIVERSAL, dto.getUniversalDisplayLabel());
 
-    return new RestBodyResponse(object);
+      return new RestBodyResponse(object);
+    }
+    else
+    {
+      entity.apply();
+
+      JSONObject object = new JSONObject();
+      object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
+      object.put(GeoEntityDTO.ID, entity.getId());
+      object.put(GeoEntityDTO.DISPLAYLABEL, entity.getDisplayLabel().getValue());
+      object.put(GeoEntityDTO.GEOID, entity.getGeoId());
+      object.put(GeoEntityDTO.UNIVERSAL, entity.getUniversal().getDisplayLabel().getValue());
+
+      return new RestBodyResponse(object);
+    }
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
+  {
+    GeoEntityDTO entity = GeoEntityDTO.lock(request, entityId);
+
+    return new RestBodyResponse(entity, new ExcludeConfiguration(GeoEntityDTO.class, GeoEntityDTO.WKT));
   }
 }

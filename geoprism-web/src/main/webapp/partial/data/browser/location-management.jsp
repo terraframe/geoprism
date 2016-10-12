@@ -68,6 +68,7 @@
       <div>
         <ul>
           <li ng-repeat="child in children">
+            <a class="fa fa-pencil ico-edit" ng-click="ctrl.edit(child)" title="<gdb:localize key="location.management.editTooltip"/>"></a>                                       
             <a href ng-click="ctrl.select(child)"> {{child.displayLabel}} : {{child.geoId}} </a>
           </li>
         </ul>
