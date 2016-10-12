@@ -32,7 +32,8 @@
      "bingAerial" : "Bing Satellite",
      "googleSatellite" : "Google Satellite",
      "googleStreets" : "Google Streets",
-     "googleTerrain" : "Google Terrain"
+     "googleTerrain" : "Google Terrain",
+     "editBtnTooltip": "Enable editing to add a location"
   });
     
   var MapWidget = Mojo.Meta.newClass('net.geoprism.gis.MapWidget', {
@@ -452,6 +453,7 @@
         
         addVectorHoverEvents : function() {
         	var map = this.getMap();
+        	var selectedFeatures = [];
         	
         	var hoverPolygonStyle = new ol.style.Style({
         	    fill: new ol.style.Fill({
@@ -470,7 +472,67 @@
   	            })
   	        })
         	
-        	var selectedFeatures = [];
+        	
+        	
+        	//
+        	// Map popup HTML generation
+        	//
+        	// We are generating this hear because Angular dom render timing and hover interactivity make the 
+        	// angular implementation overly complicated.
+        	//
+        	var mapEl = document.getElementById("mapDivId");
+        	
+        	var popup = document.createElement("div");
+        	popup.className += " ol-popup";
+        	popup.id = "popup";
+        	
+        	var popupHeading = document.createElement("h3");
+        	popupHeading.className += "popup-Heading";
+        	var headingText = document.createTextNode("");
+        	popupHeading.appendChild(headingText);
+        	
+        	var popupContent = document.createElement("div");
+        	popupContent.id = "popup-content";
+        	
+        	var closer = document.createElement('a');
+        	closer.id = "popup-closer";
+        	closer.className += "ol-popup-closer";
+        	closer.href = "#";
+        	
+        	mapEl.appendChild(popup);
+        	popup.appendChild(popupHeading);
+        	popup.appendChild(popupContent);
+        	popup.appendChild(closer);
+        	//
+        	// End map popup HTML generation
+        	//
+        	
+
+	        /**
+	         * Create an overlay to anchor the popup to the map.
+	         */
+	        var overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+	          element: popup,
+	          autoPan: true,
+	          autoPanAnimation: {
+	            duration: 250
+	          }
+	        }));
+
+
+	        /**
+	         * Add a click handler to hide the popup.
+	         * @return {boolean} Don't follow the href.
+	         */
+	        closer.onclick = function() {
+	          overlay.setPosition(undefined);
+	          closer.blur();
+	          return false;
+	        };
+	        
+	        map.addOverlay(overlay);
+        	
+	        
         	var clearSelctedFeatures = function(){
         		if(selectedFeatures.length > 0){
     	    		for(var i=0; i<selectedFeatures.length; i++){
@@ -489,7 +551,10 @@
         	    
         	    var feature = map.forEachFeatureAtPixel( evt.pixel, function(ft, l){return ft;} );
         	    
-        	    if(feature && feature !== selectedFeatures[0] && feature.getProperties().isHoverable){
+        	    if(map.getProperties().hasOwnProperty("gdbEditModeEnabled") && map.getProperties().gdbEditModeEnabled){
+        	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "crosshair");
+        	    }
+        	    else if(feature && feature !== selectedFeatures[0] && feature.getProperties().isHoverable){
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "pointer");
         	    	
         	    	// clear existing selected feature if transitioning directly to another feature.
@@ -504,14 +569,27 @@
         	    		feature.setStyle(hoverPointStyle);
         	    	}
         	        selectedFeatures.push(feature);
+        	        
+        	        popupHeading.innerHTML = feature.getProperties().displaylabel;
+        	        //popupContent.innerHTML = feature.getProperties().displaylabel;
+        	        
+        	        overlay.setPosition(evt.coordinate);
+        	        
         	    } 
+        	    else if(feature && feature === selectedFeatures[0]){
+        	    	overlay.setPosition(evt.coordinate);
+        	    }
         	    else if(feature && feature !== selectedFeatures[0] && !feature.getProperties().isHoverable){
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	
+        	    	overlay.setPosition(undefined);
         	    	
         	    	clearSelctedFeatures();
         	    }
         	    else if(!feature) {
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	
+        	    	overlay.setPosition(undefined);
         	    	
         	    	clearSelctedFeatures();
         	    }
@@ -546,9 +624,23 @@
         },
         
         enableEdits : function() {
-        	
         	this.addEditControl();
-
+        },
+        
+        disableEdits : function() {
+        	var map = this.getMap();
+        	var mapControls = map.getControls().getArray();
+        	var editControl = null;
+        	
+        	for(var i=0; i<mapControls.length; i++){
+        		var ctrl = mapControls[i];
+        		var ctrlProps = ctrl.getProperties();
+        		if(ctrlProps.hasOwnProperty("isEnableEditModeControl") && ctrlProps.isEnableEditModeControl === true){
+        			editControl = ctrl;
+        			break;
+        		}
+        	}
+        	this.removeEditControl(editControl);
         },
         
         /**
@@ -969,6 +1061,7 @@
         
         addEditControl : function() {
         	var map = this.getMap();
+        	var editBtnTooltip = this.localize("editBtnTooltip");;
         	
         	map.setProperties({"editFeatures":new ol.Collection()})
         	var editFeatureOverlay = new ol.layer.Vector({
@@ -1018,30 +1111,107 @@
              * @param {Object=} opt_options Control options.
              */
             var enableEditModeControl = function(opt_options) {
-
+              var draw; 
+              var selectedDrawType = "Point"; // currently only supporting point
               var options = opt_options || {};
 
               var button = document.createElement('button');
-              button.className = 'enable-edit-mode-btn fa fa-pencil'
+              button.className = 'enable-edit-mode-btn fa fa-pencil';
+              button.title = editBtnTooltip;
+              
 
-              var draw; 
-              var typeSelect = document.getElementById('type');
 
-              /** @type {ol.geom.GeometryType} */
               function addInteraction() {
+            	
+            	// make the edit button appear active when an edit session is open
+        	    if(!button.classList.contains("active")){
+        		  button.classList.add("active")
+        	    }
+        	    
                 draw = new ol.interaction.Draw({
                   features: map.getProperties().editFeatures,
-                  type: (typeSelect.value),
+                  type: (selectedDrawType),
                   freehandCondition: function(event){
                 	  return ol.events.condition.never(event);
                 	  }
                 });
+                
+                // controlling for only having one line or Polygon being created at a time.
+	            draw.on('drawstart', function (e) {
+	                 if(selectedDrawType !== 'Point') {
+	                	 editFeatureOverlay.getSource().clear();  // implicit remove of last feature.
+	                 }
+	            });
+                
+                // controlling for only having one point being created at a time. 
+                draw.on('drawend', function(e) {
+                	e.preventDefault();
+                	
+                	if(selectedDrawType === "Point"){
+	                	var existingEditFeatures = map.getProperties().editFeatures;
+	                	if(existingEditFeatures.getArray().length > 0){
+	                		var editFeaturesSource = editFeatureOverlay.getSource();
+	                		editFeaturesSource.removeFeature(editFeaturesSource.getFeatures()[0])
+	                	}
+                	}
+                });
                 map.addInteraction(draw);
                 map.setProperties({"gdbEditModeEnabled":true});
               }
+              
+              function removeInteractions(interactions) {
+            	interactions.forEach(function(interaction){
+            	  map.removeInteraction(interaction);
+            	})
+            	  
+            	// make the edit button appear active when an edit session is open
+          	    if(button.classList.contains("active")){
+          		  button.classList.remove("active")
+          	    }
+          	    
+          	    map.setProperties({"gdbEditModeEnabled":false});
+          	    
+          	    //
+          	    // Sending new location data back to angular
+          	    //
+          	    // TODO: This is not ideal. Try to separate angular and the map factory more.
+          	    //
+          	    var editGeom = map.getProperties().editFeatures.getArray()[0].getGeometry().getCoordinates();
+          	    var editGeomWKT = "POINT("+ editGeom[0] + " " + editGeom[1] +")"
+          	    var editableMapScope = angular.element(button).scope();
+          	    editableMapScope.targetFeature = editGeomWKT;
+          	    editableMapScope.$apply();
+          	    //
+          	    //
+          	    //
+          	    
+              }
+              
+              function toggleInteraction() {
+            	  var existingInteractions = map.getInteractions().getArray();
+            	  var drawInteraction = null;
+            	  var modifyInteraction = null
+            	  for(var i=0; i<existingInteractions.length; i++){
+            		  var interaction = existingInteractions[i];
+            		  if(interaction instanceof ol.interaction.Draw){
+            			  drawInteraction = interaction;
+            		  }
+            		  else if(interaction instanceof ol.interaction.Modify){
+            			  modifyInteraction = interaction;
+            		  }
+            	  };
+            	  
+            	  if(drawInteraction !== null && modifyInteraction !== null){
+            		  removeInteractions([drawInteraction, modifyInteraction]);
+            	  }
+            	  else{
+            		  addInteraction();
+            	  }
+            	  
+              }
 
-              button.addEventListener('click', addInteraction, false);
-              button.addEventListener('touchstart', addInteraction, false);
+              button.addEventListener('click', toggleInteraction, false);
+              //button.addEventListener('touchstart', addInteraction, false);
 
               var element = document.createElement('div');
               element.className = 'enable-edit-mode-btn-wrapper ol-unselectable ol-control';
@@ -1051,29 +1221,21 @@
                 element: element,
                 target: options.target
               });
-              
-              /**
-               * Handle change event.
-               */
-              typeSelect.onchange = function() {
-                map.removeInteraction(draw);
-                addInteraction();
-              };
-              
-//              var geomTypeButton1 = document.createElement('button');
-//              geomTypeButton1.className = 'edit-mode-geom-type-btn fa fa-pencil';
-//            	  
-//              var geomTypeElement1 = document.createElement('div');
-//              geomTypeElement1.className = 'edit-mode-geom-type-btn-wrapper ol-unselectable ol-control';
-//              geomTypeElement1.appendChild(geomTypeButton1);
             };
             
             ol.inherits(enableEditModeControl, ol.control.Control);
             
-            map.addControl(new enableEditModeControl());
+            var thisEnableEditModeControl = new enableEditModeControl();
+            thisEnableEditModeControl.setProperties({"isEnableEditModeControl":true});
+            map.addControl(thisEnableEditModeControl);
         },
         
-        zoomToFeatureExtent : function(featureJSON) {
+        removeEditControl : function(editControl) {
+        	var map = this.getMap();
+        	map.removeControl(editControl);
+        },
+        
+        zoomToFeatureExtent : function(featureJSON, workspace) {
         	var that = this;
         	var map = this.getMap();
         	
@@ -1082,18 +1244,16 @@
 	            if(featureType === "multipolygon"){
 	            	var featureGeom = new ol.geom.MultiPolygon(featureResponse.features[0].geometry.coordinates)
 	                var featureGeomExtent = featureGeom.getExtent();
-//	                var featureGeomExtentFormatted = [featureGeomExtent[3], featureGeomExtent[0], featureGeomExtent[1], featureGeomExtent[2]];
 	                that.setView(featureGeomExtent, null, null);
 	            }
 	            else if(featureType === "point"){
 	            	var featureGeom = new ol.geom.Point(featureResponse.features[0].geometry.coordinates);
 	            	var featureGeomCenter = featureGeom.getCoordinates();
-//	            	var featureGeomCenterFormatted = [featureGeomCenter[1], featureGeomCenter[0]];
 	            	that.setView(null, featureGeomCenter, 15);
 	            }
         	}
         	
-        	this.getWFSFeature(callback, featureJSON);
+        	this.getWFSFeature(callback, featureJSON, workspace);
         },
         
         setClickHandler : function(handler) {
@@ -1108,19 +1268,19 @@
          * @param callback
          * @param featureJSON - json object defining the feature to return
          */
-        getWFSFeature : function(callback, featureJSON) {
+        getWFSFeature : function(callback, featureJSON, workspace) {
         	
         	var params = {
                     REQUEST:'GetFeature',
                     SERVICE:'WFS',
                     VERSION:'2.0.0',
-                    TYPENAMES:"geoprism:"+ featureJSON.layerViewName,
+                    TYPENAMES:workspace+":"+ featureJSON.layerViewName,
                     CQL_FILTER : "geoid='"+ featureJSON.geoId + "'",
                     //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
                     outputFormat : 'application/json'
               };
     	
-              var url = window.location.origin+"/geoserver/" + "geoprism" +"/wfs?" + $.param(params);
+              var url = window.location.origin+"/geoserver/" + workspace +"/wfs?" + $.param(params);
               
               $.ajax({
                   url: url,
