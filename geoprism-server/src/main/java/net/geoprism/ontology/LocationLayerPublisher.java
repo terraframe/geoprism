@@ -36,6 +36,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -172,8 +173,13 @@ public class LocationLayerPublisher
     QueryFactory factory = new QueryFactory();
     ValueQuery query = new ValueQuery(factory);
 
-    // geoentity label
     GeoEntityQuery geQ1 = new GeoEntityQuery(query);
+    
+    // Id column
+    SelectableChar id = geQ1.getId(GeoEntity.ID);
+    id.setColumnAlias(GeoEntity.ID);
+    
+    // geoentity label
     SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
     label.setColumnAlias(GeoEntity.DISPLAYLABEL);
 
@@ -185,7 +191,7 @@ public class LocationLayerPublisher
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
-    query.SELECT(label, geoId, geom);
+    query.SELECT(id, label, geoId, geom);
     query.WHERE(geQ1.getId().EQ(entity.getId()));
 
     return query;
@@ -196,6 +202,10 @@ public class LocationLayerPublisher
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
     LocatedInQuery liQuery = new LocatedInQuery(vQuery);
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
+    
+    // Id column
+    SelectableChar id = query.getId(GeoEntity.ID);
+    id.setColumnAlias(GeoEntity.ID);    
 
     SelectableSingle label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
     label.setColumnAlias(GeoEntity.DISPLAYLABEL);
@@ -207,7 +217,7 @@ public class LocationLayerPublisher
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
-    vQuery.SELECT(label, geoId, geom);
+    vQuery.SELECT(id, label, geoId, geom);
     vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
     vQuery.AND(query.locatedIn(liQuery));
     
