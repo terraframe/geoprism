@@ -97,7 +97,8 @@
 	  }
 	 
 	 controller.refreshAll = function() {
-		var data = $scope.sharedGeoData;
+		  var data = $scope.sharedGeoData;
+		  var targetIsClickable = canEnableEditToolbar(data);
 		
 		  var contextCallback = function(data) {
 			  for(var i=0; i<data.features.length; i++){
@@ -114,7 +115,7 @@
 			  for(var i=0; i<data.features.length; i++){
 	    		var feature = data.features[i];
 	    		feature.properties.isHoverable = true;
-	    		feature.properties.isClickable = true;
+	    		feature.properties.isClickable = targetIsClickable;
 			  }
 			  
 			  controller.addVectorLayer(data, $scope.targetStyle, "TARGET", 2);
@@ -129,13 +130,21 @@
 		  // get target geo data
 		  controller.getMapData(targetCallback, data.layers[1], data.workspace);
 		  
-		  if($scope.enableEdits && data.layers.length > 1 && data.layers[1].layerType === "POINT" && data.layers[0].layerType === "POLYGON"){
+		  if(canEnableEditToolbar(data)){
 			controller.enableEdits();
 		  }
 		  else if($scope.editWidgetEnabled){
 			controller.disableEdits();
 			$scope.editWidgetEnabled = false;
 		  }		 
+	 }
+	 
+	 function canEnableEditToolbar(data) {
+		 if($scope.enableEdits && data.layers.length > 1 && data.layers[1].layerType === "POINT" && data.layers[0].layerType === "POLYGON"){
+			 return true;
+		 }
+		 
+		 return false;
 	 }
 	  
       function isEmptyJSONObject(obj) {

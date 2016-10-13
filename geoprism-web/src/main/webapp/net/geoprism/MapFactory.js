@@ -604,7 +604,12 @@
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "crosshair");
         	    }
         	    else if(feature && feature !== selectedFeatures[0] && feature.getProperties().isHoverable){
-        	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "pointer");
+        	    	if(feature.getProperties().isClickable){
+        	    		$("#"+map.getTarget()).children(".ol-viewport").css("cursor", "pointer");
+        	    	}
+        	    	else{
+        	    		$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	}
         	    	
         	    	// clear existing selected feature if transitioning directly to another feature.
         	    	// usually caused by overlapping features at the edge of one of the features.
@@ -1368,9 +1373,9 @@
         	}
             // else should only be true when entering a universal level that allows edits
             else{
-            	var thisEnableEditModeControl = new enableEditModeControl();
-                thisEnableEditModeControl.setProperties({"customControl":"addNewPointControl"});
-                map.addControl(thisEnableEditModeControl);
+            	var thisAddNewPointControl = new enableEditModeControl();
+            	thisAddNewPointControl.setProperties({"customControl":"addNewPointControl"});
+                map.addControl(thisAddNewPointControl);
             }
         },
         
