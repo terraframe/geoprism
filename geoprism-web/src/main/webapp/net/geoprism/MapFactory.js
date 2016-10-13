@@ -1094,8 +1094,37 @@
         	var map = this.getMap();
         	var that = this;
         	var editBtnTooltip = this.localize("editBtnTooltip");
+        	var targetStyle = {fill:"rgba(255, 0, 0, 0.75)", strokeColor:"rgba(255, 0, 0, 0.5)", strokeWidth:2, radius:10};
         	
         	map.setProperties({"editFeatures":new ol.Collection()});
+        	
+	          var editFeatureOverlay = new ol.layer.Vector({
+	          	  map: map,
+	          	  source: new ol.source.Vector({
+	          	    features: map.getProperties().editFeatures,
+	          	    useSpatialIndex: false // optional, might improve performance
+	          	  }),
+	          	  style: new ol.style.Style({
+	      		      fill: new ol.style.Fill({
+	        		        color: targetStyle.fill 
+	        		      })
+	        		    , stroke: new ol.style.Stroke({
+	        		          color: targetStyle.strokeColor 
+	        		        , width: targetStyle.strokeWidth
+	        		      })
+	        		    , image: new ol.style.Circle({
+	        		        radius: targetStyle.radius,
+	        		        fill: new ol.style.Fill({
+	        		          color: targetStyle.fill 
+	        		        })
+	        		      })
+	        	  }),
+	          	  updateWhileAnimating: true, // optional, for instant visual feedback
+	          	  updateWhileInteracting: true // optional, for instant visual feedback
+	          });
+	          
+	          editFeatureOverlay.setProperties({"editLayer":true});
+	          editFeatureOverlay.setMap(map);
         	
         	var addEditInteractions = function() {
         		var draw;
@@ -1164,38 +1193,7 @@
               var button = document.createElement('button');
               button.className = 'enable-edit-mode-btn fa fa-pencil';
               button.title = editBtnTooltip;
-              var targetStyle = {fill:"rgba(255, 0, 0, 0.75)", strokeColor:"rgba(255, 0, 0, 0.5)", strokeWidth:2, radius:5};
               
-              
-	          var editFeatureOverlay = new ol.layer.Vector({
-	          	  map: map,
-	          	  source: new ol.source.Vector({
-	          	    features: map.getProperties().editFeatures,
-	          	    useSpatialIndex: false // optional, might improve performance
-	          	  }),
-	          	  style: new ol.style.Style({
-	      		      fill: new ol.style.Fill({
-	        		        color: targetStyle.fill 
-	        		      })
-	        		    , stroke: new ol.style.Stroke({
-	        		          color: targetStyle.strokeColor 
-	        		        , width: targetStyle.strokeWidth
-	        		      })
-	        		    , image: new ol.style.Circle({
-	        		        radius: targetStyle.radius,
-	        		        fill: new ol.style.Fill({
-	        		          color: targetStyle.fill 
-	        		        })
-	        		      })
-	        	  }),
-	          	  updateWhileAnimating: true, // optional, for instant visual feedback
-	          	  updateWhileInteracting: true // optional, for instant visual feedback
-	          });
-	          
-	          editFeatureOverlay.setProperties({"editLayer":true});
-	          editFeatureOverlay.setMap(map);
-              
-
               
               // TODO: remove if unused
               function copyTargetFeaturesToEditFeatures() {
@@ -1323,10 +1321,11 @@
       	    		var editGeom = editFeature.getGeometry().getCoordinates();
 	          	    var transformedEditGeom = ol.proj.transform(editGeom, MapWidget.MAPSRID, MapWidget.DATASRID);
 	          	    var editGeomWKT = "POINT("+ transformedEditGeom[0] + " " + transformedEditGeom[1] +")";
+	          	    editFeature.setProperties({"wktGeom":editGeomWKT});
 	          	    var editableMapScope = angular.element(button).scope();
       	    		
       	    		if(editFeatureProps.hasOwnProperty("isEditFeature") && editFeatureProps.isEditFeature){
-      	    			editableMapScope.editFeatureGeom = editGeomWKT;
+      	    			editableMapScope.editFeature = editFeature;
 		          	    editableMapScope.$apply();
       	    		}
       	    		else{

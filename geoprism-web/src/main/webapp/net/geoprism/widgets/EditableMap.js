@@ -27,7 +27,7 @@
 	 $scope.contextStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"black", strokeWidth:3};
 	 $scope.targetStyle = {fill:"rgba(255, 255, 255, 0.5)", strokeColor:"red", strokeWidth:2, radius:5};
 	 $scope.newFeatureGeom = null;
-	 $scope.editFeatureGeom = null;
+	 $scope.editFeature = null;
 	 $scope.sharedGeoData = {};
 	 
 	 
@@ -112,15 +112,15 @@
 	      });
       });
       
-      $scope.$watch("editFeatureGeom", function(newVal, oldVal) {
-    	  var geoEntityId = "";
-    	  if($scope.sharedGeoData.entity){
-    		  geoEntityId = $scope.sharedGeoData.entity.id;
+      $scope.$watch("editFeature", function(newVal, oldVal) {
+    	  if(newVal){
+    		  var editFeatureProps = newVal.getProperties()
+    		  var featureId = newVal.getId();
+	    	  $scope.$emit('locationLock', {
+		        wkt : editFeatureProps.wktGeom,
+		        entityId : featureId.substring(0, featureId.indexOf(".fid") )
+		      });
     	  }
-    	  $scope.$emit('locationLock', {
-	        wkt : newVal,
-	        entityId : geoEntityId
-	      });
       });
       
       $scope.$on("locationChange", function(event, data){
