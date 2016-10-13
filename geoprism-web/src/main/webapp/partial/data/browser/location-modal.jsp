@@ -49,7 +49,7 @@
                 </div>    
                 <div class="holder">
                   <span class="text">
-                    <input type="text" ng-model="entity.displayLabel" name="label" required="required">
+                    <input type="text" ng-model="entity.displayLabel" name="label" required="required" placeholder="<gdb:localize key="location.management.labelPlaceholder"/>">
                   </span>
                 </div>
               </div>
@@ -59,7 +59,7 @@
                 </div>    
                 <div class="holder">
                   <span class="text">
-                    <input type="text" ng-model="entity.geoId" name="geoId">
+                    <input type="text" ng-model="entity.geoId" name="geoId" placeholder="<gdb:localize key="location.management.geoIdPlaceholder"/>">
                   </span>
                 </div>
               </div>

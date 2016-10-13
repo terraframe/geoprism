@@ -184,6 +184,25 @@
       }
     });    
 
+    $rootScope.$on('locationLock', function(event, data) {
+      if(data.entityId != null) {
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(entity) {
+            entity.wkt = data.wkt;
+            
+            $scope.$emit('locationEdit', {
+              universal : $scope.universal,
+              parent : $scope.entity,
+              entity : entity
+            });
+          }      
+        };      
+        
+        locationService.edit(connection, data.entityId);        
+      }
+    });    
+    
     controller.init();
   }
   
@@ -203,7 +222,7 @@
         };        
       }
       else {
-        $scope.entity = data.entity;  
+        $scope.entity = data.entity;        
       }
       
       $scope.universals = data.universal.options;
