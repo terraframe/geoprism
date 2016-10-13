@@ -20,6 +20,20 @@
 //						 to the method we are using.  Unless we change our mechanism this should always be true. 
 //  "ENABLED" - (boolean) Whether the layer option should be included in the application deployment. 
 //
+//  _CONTROLS META:
+//
+//  	Default Openlayers 3 controls: http://openlayers.org/en/latest/apidoc/ol.control.html
+//
+//  "TYPE" - Official OpenLayer 3 control class name (not fully namespaced)
+//  
+//  Attribution Control specific:
+//  "COLLAPSIBLE" = (boolean) whether to collapse the attribution control by default
+//  
+//  ScaleLine Control specific:
+//  "CLASSNAME" - class to be added to the control wrapper element
+//  "TARGET" - Target element class which will be replaced by the CLASSNAME class
+//  "UNITS" - Scale units ('degrees', 'imperial', 'nautical', 'metric', 'us')
+//
 ////
 
 var MapConfig ={
@@ -28,7 +42,19 @@ var MapConfig ={
             "DATASRID" : "EPSG:4326",
       		"MAPSRID" : "EPSG:3857"
      },
-    "_BASEMAPS":[
+     "_CONTROLS":[
+     	{
+     		"TYPE":"Attribution",
+     		"COLLAPSIBLE": "true"
+     	},
+     	{
+     		"TYPE":"ScaleLine",
+     		"CLASSNAME":"ol-scale-line", 
+        	"TARGET":"scale-line",
+        	"UNITS":"us"
+     	}
+     ],
+     "_BASEMAPS":[
     	{
     		"NAME":"Open Street Map",
     		"LOCLIZATION_KEY":"osmBasic",

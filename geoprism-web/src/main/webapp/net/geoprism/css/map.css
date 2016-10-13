@@ -142,7 +142,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
       }
       
       .ol-attribution.ol-unselectable.ol-control button{
-      	background: rgba(0,0,0,0.7);
+      	background: rgba(0,0,0,0.5);
 	  }
 
 
@@ -278,6 +278,18 @@ button.cancel-edits-btn.active{
 }
 .ol-touch .cancel-edits-btn-wrapper {
    top: 160px;
+}
+
+.scale-line {
+  position: absolute;
+  top: 350px;
+}
+.ol-scale-line {
+    position: relative;
+    bottom: 29px;
+    float: right;
+    left: -5px;
+    background: rgba(0,0,0,.3);
 }
 
 

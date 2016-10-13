@@ -547,7 +547,6 @@
         	mapEl.appendChild(popup);
         	popup.appendChild(popupHeading);
         	popup.appendChild(popupContent);
-//        	popup.appendChild(closer);
         	//
         	// End map popup HTML generation
         	//
@@ -617,7 +616,6 @@
         	        
         	        
         	        var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
-//        	        editableMapScope.hoverChange = feature;
         	        editableMapScope.$emit('hoverChange', {
         	              id : feature.getProperties().id
         	            });
@@ -636,6 +634,14 @@
         	    }
         	    else if(!feature) {
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	
+        	    	if(selectedFeatures.length >0){
+        	    		var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
+        	    		editableMapScope.$emit('hoverChange', {
+        	              id : null
+        	            });
+        	    		editableMapScope.$apply();
+        	    	}
         	    	
         	    	overlay.setPosition(undefined);
         	    	
@@ -1077,15 +1083,30 @@
          * <private> - internal method
          */
         renderMap : function() {
+          var that = this;
           if(this.getMap() != null){
             this.removeStaleMapFragments();
           }
           
-          var attribution = new ol.control.Attribution({
-            collapsible: true,
-            tipLabel: this.localize("attributionELTooltip")
-          });
-          
+          var configControls = MapConfig._CONTROLS;
+          var controls = [];
+          configControls.forEach(function(ctrl){
+        	  if(ctrl.TYPE.toUpperCase() === "ATTRIBUTION"){
+        		  var attribution = new ol.control.Attribution({
+        	            collapsible: ctrl.COLLAPSIBLE ? ctrl.COLLAPSIBLE : true,
+        	            tipLabel: that.localize("attributionELTooltip")
+        	      });
+        		  controls.push(attribution);
+        	  }
+        	  else if(ctrl.TYPE.toUpperCase() === "SCALELINE"){
+        		  var scaleLine = new ol.control.ScaleLine({
+        			  className: ctrl.CLASSNAME, 
+        			  target: document.getElementById(ctrl.TARGET),
+        			  units: ctrl.UNITS ? ctrl.UNITS : "metric"
+        		  });
+        		  controls.push(scaleLine);
+        	  }
+          })
           
           
           var view = new ol.View({ 
@@ -1096,7 +1117,7 @@
           
           var mapConfig = {
                 layers: [], // base maps will be added later
-                controls: ol.control.defaults({ attribution: false }).extend([attribution]),
+                controls: ol.control.defaults({ attribution: false }).extend(controls),
                 target: this.getMapElementId(),
                 loadTilesWhileInteracting: true,
                 loadTilesWhileAnimating: true,
