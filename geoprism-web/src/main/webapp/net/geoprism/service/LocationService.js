@@ -61,13 +61,14 @@
       runwayService.execute(req, connection);      
     }
     
-    service.apply = function(connection, entity, parentId) {
+    service.apply = function(connection, entity, parentId, existingLayers) {
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/apply',
         data : {
           entity : entity,
-          parentId : parentId
+          parentId : parentId,          
+          existingLayers : existingLayers
         }
       }      
       
@@ -88,10 +89,23 @@
     
     service.unlock = function(connection, entityId) {
       var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/unlock',
+        data : {
+          entityId : entityId
+        }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
+    service.remove = function(connection, entityId, existingLayers) {
+      var req = {
           method: 'POST',
-          url: com.runwaysdk.__applicationContextPath + '/location/unlock',
+          url: com.runwaysdk.__applicationContextPath + '/location/remove',
           data : {
-            entityId : entityId
+            entityId : entityId,
+            existingLayers : existingLayers            
           }
       }      
       

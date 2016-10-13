@@ -36,6 +36,9 @@
             <mdParameter name="universalId" label="Universal" order="1" type="java.lang.String"/>            
             <mdParameter name="existingLayerNames" label="Existing layer names" order="2" type="java.lang.String"/>
           </mdMethod>
+          <mdMethod name="refreshViews" label="Refresh views" static="true" returnType="void">
+            <mdParameter name="existingLayerNames" label="Existing layer names" order="0" type="java.lang.String"/>
+          </mdMethod>
         </create>
       </mdUtil>
     </update>
@@ -45,6 +48,7 @@
       <object key="net.geoprism.ontology.GeoEntityUtil.getChildren" type="com.runwaysdk.system.metadata.MdMethod"/>
       <object key="net.geoprism.ontology.GeoEntityUtil.getEntity" type="com.runwaysdk.system.metadata.MdMethod"/>
       <object key="net.geoprism.ontology.GeoEntityUtil.publishLayers" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.ontology.GeoEntityUtil.refreshViews" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>
 </version>

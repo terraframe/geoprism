@@ -133,4 +133,18 @@ public class DatabaseUtil
     }
   }
 
+  public static void refreshView(String viewName)
+  {
+    if (IS_MATERIALIZED)
+    {
+      String statement = "REFRESH MATERIALIZED VIEW " + viewName;
+
+      Database.executeStatement(statement);
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
+    }
+  }
+
 }
