@@ -25,8 +25,9 @@
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
 	 $scope.contextStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"black", strokeWidth:3};
-	 $scope.targetStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"red", strokeWidth:2};
-	 $scope.targetFeature = null;
+	 $scope.targetStyle = {fill:"rgba(255, 255, 255, 0.5)", strokeColor:"red", strokeWidth:2, radius:5};
+	 $scope.newFeatureGeom = null;
+	 $scope.editFeature = null;
 	 $scope.sharedGeoData = {};
 	 
 	 
@@ -71,8 +72,8 @@
 		 mapService.zoomToVectorDataExtent();
 	 }
 	  
-	 controller.addVectorLayer = function(layerGeoJSON, styleObj, stackingIndex) {
-		 mapService.addVectorLayer(layerGeoJSON, styleObj, stackingIndex);
+	 controller.addVectorLayer = function(layerGeoJSON, styleObj, type, stackingIndex) {
+		 mapService.addVectorLayer(layerGeoJSON, styleObj, type, stackingIndex);
 	 }
 	  
 	  
@@ -100,7 +101,7 @@
 	    return true && JSON.stringify(obj) === JSON.stringify({});
 	  }
       
-      $scope.$watch("targetFeature", function(newVal, oldVal) {
+      $scope.$watch("newFeatureGeom", function(newVal, oldVal) {
     	  $scope.$emit('locationEdit', {
 	        wkt : newVal,
 	        universal : {
@@ -109,6 +110,17 @@
 	        },
 	        parent : $scope.sharedGeoData.entity
 	      });
+      });
+      
+      $scope.$watch("editFeature", function(newVal, oldVal) {
+    	  if(newVal){
+    		  var editFeatureProps = newVal.getProperties()
+    		  var featureId = newVal.getId();
+	    	  $scope.$emit('locationLock', {
+		        wkt : editFeatureProps.wktGeom,
+		        entityId : featureId.substring(0, featureId.indexOf(".fid") )
+		      });
+    	  }
       });
       
       $scope.$on("locationChange", function(event, data){
@@ -128,7 +140,7 @@
       	    		feature.properties.isClickable = false;
       			  }
     			  
-    			  controller.addVectorLayer(data, $scope.contextStyle, 1);
+    			  controller.addVectorLayer(data, $scope.contextStyle, "CONTEXT", 1);
         		  controller.zoomToVectorDataExtent();
     		  }
     		  
@@ -139,7 +151,7 @@
     	    		feature.properties.isClickable = true;
     			  }
     			  
-    			  controller.addVectorLayer(data, $scope.targetStyle, 2);
+    			  controller.addVectorLayer(data, $scope.targetStyle, "TARGET", 2);
     	    	  controller.zoomToVectorDataExtent();
     		  }
     		  

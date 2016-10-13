@@ -215,3 +215,61 @@ button.edit-mode-geom-type-btn:focus {
 }
 
 
+button.save-edits-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.save-edits-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.save-edits-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.save-edits-btn.active{
+	color: #00bfff;
+}
+.save-edits-btn-wrapper {  
+	top: 125px;
+  	left: .5em;
+}
+.ol-touch .save-edits-btn-wrapper {
+   top: 120px;
+}
+
+
+button.cancel-edits-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.cancel-edits-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.cancel-edits-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.cancel-edits-btn.active{
+	color: #00bfff;
+}
+.cancel-edits-btn-wrapper {  
+	top: 165px;
+  	left: .5em;
+}
+.ol-touch .cancel-edits-btn-wrapper {
+   top: 160px;
+}

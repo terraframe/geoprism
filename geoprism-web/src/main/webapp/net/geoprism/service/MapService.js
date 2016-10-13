@@ -92,8 +92,8 @@
     
     /////// NEW Services /////
     
-    service.addVectorLayer = function(layer, styleObj, stackingIndex) {
-    	service.map.addVectorLayer(layer, styleObj, stackingIndex);
+    service.addVectorLayer = function(layer, styleObj, type, stackingIndex) {
+    	service.map.addVectorLayer(layer, styleObj, type, stackingIndex);
     }
     
     service.zoomToVectorDataExtent = function() {
