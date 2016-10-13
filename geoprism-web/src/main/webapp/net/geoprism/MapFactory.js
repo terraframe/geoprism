@@ -1129,7 +1129,7 @@
         addEditComponents : function(targetFeature) {
         	var map = this.getMap();
         	var that = this;
-        	var targetStyle = {fill:"rgba(255, 0, 0, 0.75)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:2, radius:10};
+        	var targetStyle = {fill:"rgba(255, 255, 0, 0.5)", strokeColor:"yellow", strokeWidth:3, radius:5};
         	
         	map.setProperties({"editFeatures":new ol.Collection()});
         	
@@ -1151,7 +1151,8 @@
 	        		        radius: targetStyle.radius,
 	        		        fill: new ol.style.Fill({
 	        		          color: targetStyle.fill 
-	        		        })
+	        		        }),
+	        		        stroke: new ol.style.Stroke({ color: targetStyle.strokeColor , width: targetStyle.strokeWidth })
 	        		      })
 	        	  }),
 	          	  updateWhileAnimating: true, // optional, for instant visual feedback
@@ -1184,10 +1185,6 @@
         	var addEditInteractions = function() {
         		var draw;
         		var selectedDrawType = "Point";
-            	// make the edit button appear active when an edit session is open
-//        	    if(!button.classList.contains("active")){
-//        		  button.classList.add("active")
-//        	    }
         	    
                 draw = new ol.interaction.Draw({
                   features: map.getProperties().editFeatures,
@@ -1199,23 +1196,58 @@
                 
                 // controlling for only having one line or Polygon being created at a time.
 	            draw.on('drawstart', function (e) {
-	                 if(selectedDrawType !== 'Point') {
-	                	 map.getProperties().editFeatures.clear();  // implicit remove of last feature.
-	                 }
+	                
+	                var featureInEditCacheIsExistingGeoEntity = false;
+	            	var existingEditFeature = null;
+	            	var existingEditFeatures = map.getProperties().editFeatures;
+                	if(existingEditFeatures.getArray().length === 2){
+                		var existingEditFeature = existingEditFeatures.getArray()[0];
+                		var existingEditFeatureProps = existingEditFeature.getProperties();
+          	    		
+          	    		if(existingEditFeatureProps.hasOwnProperty("isEditFeature") && existingEditFeatureProps.isEditFeature){
+          	    			featureInEditCacheIsExistingGeoEntity = true;
+          	    		}
+                	}
+                	
+                	if(selectedDrawType !== 'Point') {
+	                	map.getProperties().editFeatures.clear();  // implicit remove of last feature.
+	                }
+                	else if(featureInEditCacheIsExistingGeoEntity){
+                		var mapProps = map.getProperties();
+                		if(mapProps.hasOwnProperty("editFeatureOverlay")){
+                			var editFeatureOverlay = mapProps.editFeatureOverlay;
+                			var editFeaturesSource = editFeatureOverlay.getSource();
+                			editFeaturesSource.removeFeature(editFeaturesSource.getFeatures()[1])
+                		}
+                	}
 	            });
                 
                 // controlling for only having one point being created at a time. 
                 draw.on('drawend', function(e) {
                 	e.preventDefault();
                 	
+	                var featureInEditCacheIsExistingGeoEntity = false;
+	            	var existingEditFeature = null;
+	            	var existingEditFeatures = map.getProperties().editFeatures;
+                	if(existingEditFeatures.getArray().length > 0){
+                		var existingEditFeature = existingEditFeatures.getArray()[0];
+                		var existingEditFeatureProps = existingEditFeature.getProperties();
+          	    		
+          	    		if(existingEditFeatureProps.hasOwnProperty("isEditFeature") && existingEditFeatureProps.isEditFeature){
+          	    			featureInEditCacheIsExistingGeoEntity = true;
+          	    		}
+                	}
+                	
                 	if(selectedDrawType === "Point"){
 	                	var existingEditFeatures = map.getProperties().editFeatures;
 	                	if(existingEditFeatures.getArray().length > 0){
-	                		var mapProps = map.getProperties();
-	                		if(mapProps.hasOwnProperty("editFeatureOverlay")){
-	                			var editFeatureOverlay = mapProps.editFeatureOverlay;
-	                			var editFeaturesSource = editFeatureOverlay.getSource();
-	                			editFeaturesSource.removeFeature(editFeaturesSource.getFeatures()[0])
+	                		if(!featureInEditCacheIsExistingGeoEntity){
+		                		var mapProps = map.getProperties();
+		                		if(mapProps.hasOwnProperty("editFeatureOverlay")){
+		                			var editFeatureOverlay = mapProps.editFeatureOverlay;
+		                			var editFeaturesSource = editFeatureOverlay.getSource();
+		                			editFeaturesSource.removeFeature(editFeaturesSource.getFeatures()[0])
+		                		}
 	                		}
 	                	}
                 	}
