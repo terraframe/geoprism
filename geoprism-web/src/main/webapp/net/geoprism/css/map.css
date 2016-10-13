@@ -240,6 +240,9 @@ button.save-edits-btn.active{
 	top: 125px;
   	left: .5em;
 }
+.save-edits-btn-wrapper.move-up {  
+	top: 85px;
+}
 .ol-touch .save-edits-btn-wrapper {
    top: 120px;
 }
@@ -269,6 +272,9 @@ button.cancel-edits-btn.active{
 .cancel-edits-btn-wrapper {  
 	top: 165px;
   	left: .5em;
+}
+.cancel-edits-btn-wrapper.move-up {  
+	top: 125px;
 }
 .ol-touch .cancel-edits-btn-wrapper {
    top: 160px;

@@ -119,10 +119,9 @@
       $scope.$watch("editFeature", function(newVal, oldVal) {
     	  if(newVal){
     		  var editFeatureProps = newVal.getProperties()
-    		  var featureId = newVal.getId();
 	    	  $scope.$emit('locationLock', {
 		        wkt : editFeatureProps.wktGeom,
-		        entityId : featureId.substring(0, featureId.indexOf(".fid") )
+		        entityId : editFeatureProps.id 
 		      });
     	  }
       });
