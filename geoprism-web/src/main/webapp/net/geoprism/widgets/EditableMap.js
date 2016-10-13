@@ -198,6 +198,11 @@
     	  }
       });
       
+      
+//      $scope.$on('hoverChange', function(event, data) {
+//    	  console.log("hoverChange: ", data)
+//      })
+      
       controller.init();
   }
   

@@ -502,6 +502,7 @@
         
         addVectorHoverEvents : function() {
         	var map = this.getMap();
+        	var that = this;
         	var selectedFeatures = [];
         	
         	var hoverPolygonStyle = new ol.style.Style({
@@ -529,7 +530,7 @@
         	// We are generating this hear because Angular dom render timing and hover interactivity make the 
         	// angular implementation overly complicated.
         	//
-        	var mapEl = document.getElementById("mapDivId");
+        	var mapEl = document.getElementById(this.getElementId());
         	
         	var popup = document.createElement("div");
         	popup.className += " ol-popup";
@@ -542,11 +543,6 @@
         	
         	var popupContent = document.createElement("div");
         	popupContent.id = "popup-content";
-        	
-//        	var closer = document.createElement('a');
-//        	closer.id = "popup-closer";
-//        	closer.className += "ol-popup-closer";
-//        	closer.href = "#";
         	
         	mapEl.appendChild(popup);
         	popup.appendChild(popupHeading);
@@ -569,16 +565,6 @@
 	        }));
 
 
-	        /**
-	         * Add a click handler to hide the popup.
-	         * @return {boolean} Don't follow the href.
-	         */
-//	        closer.onclick = function() {
-//	          overlay.setPosition(undefined);
-//	          closer.blur();
-//	          return false;
-//	        };
-	        
 	        map.addOverlay(overlay);
         	
 	        
@@ -628,6 +614,14 @@
 //        	        popupContent.innerHTML = feature.getProperties().geoid;
         	        
         	        overlay.setPosition(evt.coordinate);
+        	        
+        	        
+        	        var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
+//        	        editableMapScope.hoverChange = feature;
+        	        editableMapScope.$emit('hoverChange', {
+        	              id : feature.getProperties().id
+        	            });
+        	        editableMapScope.$apply();
         	        
         	    } 
         	    else if(feature && feature === selectedFeatures[0]){
