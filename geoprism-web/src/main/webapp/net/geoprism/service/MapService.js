@@ -143,6 +143,10 @@
             });
     }
     
+    service.addFeatureToTargetLayer = function(feature){
+    	service.map.addFeatureToTargetLayer(feature);
+    }
+    
     ///////// SERVICES BELOW THIS ARE TEMPORARY ///////
     ///
     ///

@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function EditableMapController($scope, localizationService, mapService, locationService, $attrs) {
+  function EditableMapController($scope, $rootScope, localizationService, mapService, locationService, $attrs) {
 	 var controller = this;
 	  
 	 $scope.enableEdits = $attrs.enableedits == "true"; // evaluate string to boolean... JavaScript is ridiculous
@@ -75,6 +75,10 @@
 	 controller.addVectorLayer = function(layerGeoJSON, styleObj, type, stackingIndex) {
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, type, stackingIndex);
 	 }
+	 
+	 controller.addFeatureToTargetLayer = function(feature) {
+		 mapService.addFeatureToTargetLayer(feature);
+	 }
 	  
 	  
 	 controller.refreshBaseLayer = function() {
@@ -123,8 +127,12 @@
     	  }
       });
       
-      $scope.$on("locationChange", function(event, data){
-    	  console.log(data)
+      $rootScope.$on("locationChange", function(event, data){
+    	  //
+    	  // IMPORTANT: this event should only be called from a success callback of an entity create or update
+    	  //
+    	  console.log("locationChange event: ", data)
+    	  controller.addFeatureToTargetLayer(data);
       })
       
       // Recieve shared data from LocationManagement controller based on user selection of target location

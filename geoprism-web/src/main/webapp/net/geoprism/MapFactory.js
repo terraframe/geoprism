@@ -438,6 +438,32 @@
             map.getLayers().insertAt(stackingIndex, vectorLayer);
         },
         
+        addFeatureToTargetLayer : function(feature) {
+          var map = this.getMap();
+          var layers = map.getLayers().getArray();
+      	  for(var i=0; i<layers.length; i++){
+        		var layer = layers[i];
+        		if(layer instanceof ol.layer.Vector){
+        			var layerProps = layer.getProperties()
+        			if(layerProps.hasOwnProperty("type") && layerProps.type === "TARGET"){
+        				
+        				console.log("returned! : ", feature)
+        				
+        				var userCreatedFeatureClone = map.getProperties().editFeatures.getArray()[0].clone();
+        				userCreatedFeatureClone.setId(feature.entity.id);
+        				userCreatedFeatureClone.setProperties({"isHoverable":true});
+        				userCreatedFeatureClone.setProperties({"isClickable":true});
+        				userCreatedFeatureClone.setProperties({"geoid":feature.entity.geoId});
+        				userCreatedFeatureClone.setProperties({"displaylabel":feature.entity.displayLabel})
+        				
+        				layer.getSource().addFeature(userCreatedFeatureClone);
+        			}
+        		}
+      	  }
+      	  
+      	  this.closeEditSession();
+        },
+        
         addVectorClickEvents : function() {
         	var map = this.getMap();
         	var that = this;
@@ -1337,7 +1363,7 @@
           	    //
           	    //
       	    	
-      	    	that.closeEditSession();
+//      	    	that.closeEditSession();
               }
               
 
