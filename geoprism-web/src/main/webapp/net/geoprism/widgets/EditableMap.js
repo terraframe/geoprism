@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function EditableMapController($scope, localizationService, mapService, locationService, $attrs) {
+  function EditableMapController($scope, $rootScope, localizationService, mapService, locationService, $attrs) {
 	 var controller = this;
 	  
 	 $scope.enableEdits = $attrs.enableedits == "true"; // evaluate string to boolean... JavaScript is ridiculous
@@ -91,6 +91,48 @@
 	        }
 	      }
 	  }
+	 
+	 controller.refreshAll = function() {
+		var data = $scope.sharedGeoData;
+		
+		  var contextCallback = function(data) {
+			  for(var i=0; i<data.features.length; i++){
+  	    		var feature = data.features[i];
+  	    		feature.properties.isHoverable = false;
+  	    		feature.properties.isClickable = false;
+  			  }
+			  
+			  controller.addVectorLayer(data, $scope.contextStyle, "CONTEXT", 1);
+    		  controller.zoomToVectorDataExtent();
+		  }
+		  
+		  var targetCallback = function(data) {
+			  for(var i=0; i<data.features.length; i++){
+	    		var feature = data.features[i];
+	    		feature.properties.isHoverable = true;
+	    		feature.properties.isClickable = true;
+			  }
+			  
+			  controller.addVectorLayer(data, $scope.targetStyle, "TARGET", 2);
+	    	  controller.zoomToVectorDataExtent();
+		  }
+		  
+		  controller.removeVectorData();
+		  
+		  // get context geo data
+		  controller.getMapData(contextCallback, data.layers[0], data.workspace);
+		  
+		  // get target geo data
+		  controller.getMapData(targetCallback, data.layers[1], data.workspace);
+		  
+		  if($scope.enableEdits && data.layers.length > 1 && data.layers[1].layerType === "POINT" && data.layers[0].layerType === "POLYGON"){
+			controller.enableEdits();
+		  }
+		  else if($scope.editWidgetEnabled){
+			controller.disableEdits();
+			$scope.editWidgetEnabled = false;
+		  }		 
+	 }
 	  
       function isEmptyJSONObject(obj) {
 	    for(var prop in obj) {
@@ -123,8 +165,8 @@
     	  }
       });
       
-      $scope.$on("locationChange", function(event, data){
-    	  console.log(data)
+      $rootScope.$on("locationChange", function(event, data){
+		  controller.refreshAll();
       })
       
       // Recieve shared data from LocationManagement controller based on user selection of target location
@@ -133,43 +175,10 @@
     		  
     		  $scope.sharedGeoData = data;
     		  
-    		  var contextCallback = function(data) {
-    			  for(var i=0; i<data.features.length; i++){
-      	    		var feature = data.features[i];
-      	    		feature.properties.isHoverable = false;
-      	    		feature.properties.isClickable = false;
-      			  }
-    			  
-    			  controller.addVectorLayer(data, $scope.contextStyle, "CONTEXT", 1);
-        		  controller.zoomToVectorDataExtent();
-    		  }
-    		  
-    		  var targetCallback = function(data) {
-    			  for(var i=0; i<data.features.length; i++){
-    	    		var feature = data.features[i];
-    	    		feature.properties.isHoverable = true;
-    	    		feature.properties.isClickable = true;
-    			  }
-    			  
-    			  controller.addVectorLayer(data, $scope.targetStyle, "TARGET", 2);
-    	    	  controller.zoomToVectorDataExtent();
-    		  }
-    		  
-    		  controller.removeVectorData();
-    		  
-    		  // get context geo data
-    		  controller.getMapData(contextCallback, data.layers[0], data.workspace);
-    		  
-    		  // get target geo data
-    		  controller.getMapData(targetCallback, data.layers[1], data.workspace);
-    		  
-    		  if($scope.enableEdits && data.layers.length > 1 && data.layers[1].layerType === "POINT" && data.layers[0].layerType === "POLYGON"){
-    			controller.enableEdits();
-    		  }
-    		  else if($scope.editWidgetEnabled){
-    			controller.disableEdits();
-    			$scope.editWidgetEnabled = false;
-    		  }
+    		  controller.refreshAll();
+    	  }
+    	  else if(!isEmptyJSONObject($scope.sharedGeoData)) {
+    		  controller.refreshAll();
     	  }
       });
       

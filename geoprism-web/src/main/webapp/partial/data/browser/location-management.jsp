@@ -83,5 +83,5 @@
   </div>
   </div>
   
-  <location-modal></location-modal>   
+  <location-modal layers="layers"></location-modal>   
 </div>

@@ -186,13 +186,11 @@
             $scope.children.splice(index, 1);
           }          
           
-          $scope.$emit('locationRemove', {
-            entityId : entity.id
-          });
+          $scope.$broadcast('sharedGeoData', {});          
         }
       };
       
-      locationService.remove(connection, entity.id);
+      locationService.remove(connection, entity.id, $scope.layers);
     }    
     
     controller.newInstance = function() {
@@ -320,7 +318,7 @@
                               
       $scope.errors = [];
           
-      locationService.apply(connection, $scope.entity, $scope.parent.id);        
+      locationService.apply(connection, $scope.entity, $scope.parent.id, $scope.layers);        
     }
       
     $rootScope.$on('locationEdit', function(event, data) {
@@ -336,6 +334,7 @@
       replace: true,
       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/location-modal.jsp',
       scope: {
+        layers : '='
       },
       controller : LocationModalController,
       controllerAs : 'ctrl',      

@@ -30,7 +30,9 @@ import java.util.Set;
 
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
+import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
+import net.geoprism.gis.geoserver.GeoserverFacade;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -587,16 +589,15 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
-    
-    if(universalId != null  && universalId.length() > 0)
+
+    if (universalId != null && universalId.length() > 0)
     {
       query.AND(entityQuery.getUniversal().EQ(universalId));
     }
-    
-    if(parentId != null && parentId.length() > 0)
+
+    if (parentId != null && parentId.length() > 0)
     {
       GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
-
 
       query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
       query.AND(aptQuery.getParentTerm().EQ(parentId));
@@ -707,13 +708,13 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       try
       {
-        return GeoEntity.getByKey("1_35");        
+        return GeoEntity.getByKey("1_35");
       }
       catch (Exception e)
       {
         // Ignore and just return the first child of root
       }
-      
+
       GeoEntity root = GeoEntity.getRoot();
       OIterator<? extends Business> children = root.getChildren(LocatedIn.CLASS);
 
@@ -742,5 +743,29 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
 
     return publisher.publish();
-  }  
+  }
+
+  @Transaction
+  public static void refreshViews(String layers)
+  {
+    try
+    {
+      if (layers != null)
+      {
+        JSONArray deserialized = new JSONArray(layers);
+
+        for (int i = 0; i < deserialized.length(); i++)
+        {
+          JSONObject layer = deserialized.getJSONObject(i);
+          String layerName = layer.getString("layerName");
+          
+          DatabaseUtil.refreshView(layerName);
+        }
+      }
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
 }

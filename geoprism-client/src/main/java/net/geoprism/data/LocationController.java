@@ -107,7 +107,7 @@ public class LocationController implements Reloadable
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentId") String parentId) throws JSONException
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
     if (entity.getGeoId() == null || entity.getGeoId().length() == 0)
     {
@@ -117,6 +117,8 @@ public class LocationController implements Reloadable
     if (entity.isNewInstance())
     {
       GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentId, LocatedInDTO.CLASS);
+      
+      GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
       JSONObject object = new JSONObject();
       object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
@@ -132,6 +134,8 @@ public class LocationController implements Reloadable
       String id = entity.getId();
       
       entity.apply();
+      
+      GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
       JSONObject object = new JSONObject();
       object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
@@ -162,10 +166,12 @@ public class LocationController implements Reloadable
   }
   
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
     entity.delete();
+    
+    GeoEntityUtilDTO.refreshViews(request, existingLayers);
     
     return new RestBodyResponse("");
   }
