@@ -33,7 +33,9 @@
      "googleSatellite" : "Google Satellite",
      "googleStreets" : "Google Streets",
      "googleTerrain" : "Google Terrain",
-     "editBtnTooltip": "Enable editing to add a location"
+     "editBtnTooltip": "Enable editing to add a location",
+     "saveEditsBtnTooltip": "Save all your edits",
+     "cancelEditsBtnTooltip": "Cancel any edits and close this edit session"
   });
     
   var MapWidget = Mojo.Meta.newClass('net.geoprism.gis.MapWidget', {
@@ -394,7 +396,7 @@
           }
         },
         
-        addVectorLayer : function(layerAsGeoJSON, styleObj, stackingIndex) {
+        addVectorLayer : function(layerAsGeoJSON, styleObj, type, stackingIndex) {
         	var map = this.getMap();
         	
         	var vectorSource = new ol.source.Vector({
@@ -418,7 +420,7 @@
         		
         		style = new ol.style.Style({
     	          image: new ol.style.Circle({
-    	              radius: 5,
+    	              radius: styleObj.radius,
     	              fill: new ol.style.Fill({ color: styleObj.fill }),
     	              stroke: new ol.style.Stroke({ color: styleObj.strokeColor, width: styleObj.strokeWidth })
     	            })
@@ -432,23 +434,35 @@
               projection: MapWidget.MAPSRID
             });
             
+            vectorLayer.setProperties({"type":type});
             map.getLayers().insertAt(stackingIndex, vectorLayer);
         },
         
         addVectorClickEvents : function() {
         	var map = this.getMap();
+        	var that = this;
         	
         	map.on('click', function(evt) {
     		  var feature = map.forEachFeatureAtPixel(evt.pixel,
     		    function(feature, layer) {
     			  if(feature.getProperties().isClickable){
-    				  console.log("single clicked on: ", feature)
-    			  }
-    			  else{
-    				  console.log("not clickable feature", feature)
+    				  that.addEditControl(feature);
     			  }
     		    });
         	}); 
+        	
+        	
+        	map.getViewport().addEventListener('contextmenu', function(evt) {
+              evt.preventDefault();
+              evt.stopPropagation();
+              
+      		  var feature = map.forEachFeatureAtPixel(map.getEventPixel(evt),
+      		    function(feature, layer) {
+      			  if(feature.getProperties().isClickable){
+      				  that.addEditControl(feature);
+      			  }
+      		    });
+          	}); 
         },
         
         addVectorHoverEvents : function() {
@@ -494,15 +508,15 @@
         	var popupContent = document.createElement("div");
         	popupContent.id = "popup-content";
         	
-        	var closer = document.createElement('a');
-        	closer.id = "popup-closer";
-        	closer.className += "ol-popup-closer";
-        	closer.href = "#";
+//        	var closer = document.createElement('a');
+//        	closer.id = "popup-closer";
+//        	closer.className += "ol-popup-closer";
+//        	closer.href = "#";
         	
         	mapEl.appendChild(popup);
         	popup.appendChild(popupHeading);
         	popup.appendChild(popupContent);
-        	popup.appendChild(closer);
+//        	popup.appendChild(closer);
         	//
         	// End map popup HTML generation
         	//
@@ -524,11 +538,11 @@
 	         * Add a click handler to hide the popup.
 	         * @return {boolean} Don't follow the href.
 	         */
-	        closer.onclick = function() {
-	          overlay.setPosition(undefined);
-	          closer.blur();
-	          return false;
-	        };
+//	        closer.onclick = function() {
+//	          overlay.setPosition(undefined);
+//	          closer.blur();
+//	          return false;
+//	        };
 	        
 	        map.addOverlay(overlay);
         	
@@ -571,7 +585,7 @@
         	        selectedFeatures.push(feature);
         	        
         	        popupHeading.innerHTML = feature.getProperties().displaylabel;
-        	        //popupContent.innerHTML = feature.getProperties().displaylabel;
+//        	        popupContent.innerHTML = feature.getProperties().geoid;
         	        
         	        overlay.setPosition(evt.coordinate);
         	        
@@ -630,17 +644,34 @@
         disableEdits : function() {
         	var map = this.getMap();
         	var mapControls = map.getControls().getArray();
-        	var editControl = null;
+    		var editModeCtrl = null;
+    		var saveEditsCtrl = null;
+    		var cancelEditsCtrl = null;
         	
         	for(var i=0; i<mapControls.length; i++){
         		var ctrl = mapControls[i];
         		var ctrlProps = ctrl.getProperties();
-        		if(ctrlProps.hasOwnProperty("isEnableEditModeControl") && ctrlProps.isEnableEditModeControl === true){
-        			editControl = ctrl;
-        			break;
+        		if(ctrlProps.hasOwnProperty("customControl")){
+	        		if(ctrlProps.customControl === "enableEditModeControl"){
+	        			editModeCtrl = ctrl;
+	        		}
+	        		else if(ctrlProps.customControl === "saveEditsControl"){
+	        			saveEditsCtrl = ctrl;
+	        		}
+	        		else if(ctrlProps.customControl === "cancelEditsControl"){
+	        			cancelEditsCtrl = ctrl;
+	        		}
         		}
         	}
-        	this.removeEditControl(editControl);
+        	
+        	if(editModeCtrl !== null){
+        		this.removeControl(editModeCtrl);
+        	}
+        	
+        	if(saveEditsCtrl !== null && cancelEditsCtrl !== null){
+        		this.removeControl(saveEditsCtrl);
+        		this.removeControl(cancelEditsCtrl);
+        	}
         },
         
         /**
@@ -1059,74 +1090,20 @@
           this.configureMap();     
         },
         
-        addEditControl : function() {
+        addEditControl : function(targetFeature) {
         	var map = this.getMap();
-        	var editBtnTooltip = this.localize("editBtnTooltip");;
+        	var that = this;
+        	var editBtnTooltip = this.localize("editBtnTooltip");
         	
-        	map.setProperties({"editFeatures":new ol.Collection()})
-        	var editFeatureOverlay = new ol.layer.Vector({
-        	  map: map,
-        	  source: new ol.source.Vector({
-        	    features: map.getProperties().editFeatures,
-        	    useSpatialIndex: false // optional, might improve performance
-        	  }),
-        	  style: new ol.style.Style({
-    		      fill: new ol.style.Fill({
-      		        color: 'rgba(255,0,191,0.4)' 
-      		      })
-      		    , stroke: new ol.style.Stroke({
-      		          color: 'rgb(255,0,191)' 
-      		        , width: 2
-      		      })
-      		    , image: new ol.style.Circle({
-      		        radius: 7,
-      		        fill: new ol.style.Fill({
-      		          color: 'rgb(255,0,191)' 
-      		        })
-      		      })
-      		  }),
-        	  updateWhileAnimating: true, // optional, for instant visual feedback
-        	  updateWhileInteracting: true // optional, for instant visual feedback
-        	});
+        	map.setProperties({"editFeatures":new ol.Collection()});
         	
-        	editFeatureOverlay.setMap(map);
-        	
-
-            var modify = new ol.interaction.Modify({
-              features: map.getProperties().editFeatures,
-              // the SHIFT key must be pressed to delete vertices, so
-              // that new vertices can be drawn at the same position
-              // of existing vertices
-              deleteCondition: function(event) {
-                return ol.events.condition.shiftKeyOnly(event) &&
-                    ol.events.condition.singleClick(event);
-              }
-            });
-            map.addInteraction(modify);
-            
-            
-        	 /**
-             * @constructor
-             * @extends {ol.control.Control}
-             * @param {Object=} opt_options Control options.
-             */
-            var enableEditModeControl = function(opt_options) {
-              var draw; 
-              var selectedDrawType = "Point"; // currently only supporting point
-              var options = opt_options || {};
-
-              var button = document.createElement('button');
-              button.className = 'enable-edit-mode-btn fa fa-pencil';
-              button.title = editBtnTooltip;
-              
-
-
-              function addInteraction() {
-            	
+        	var addEditInteractions = function() {
+        		var draw;
+        		var selectedDrawType = "Point";
             	// make the edit button appear active when an edit session is open
-        	    if(!button.classList.contains("active")){
-        		  button.classList.add("active")
-        	    }
+//        	    if(!button.classList.contains("active")){
+//        		  button.classList.add("active")
+//        	    }
         	    
                 draw = new ol.interaction.Draw({
                   features: map.getProperties().editFeatures,
@@ -1139,7 +1116,7 @@
                 // controlling for only having one line or Polygon being created at a time.
 	            draw.on('drawstart', function (e) {
 	                 if(selectedDrawType !== 'Point') {
-	                	 editFeatureOverlay.getSource().clear();  // implicit remove of last feature.
+	                	 map.getProperties().editFeatures.clear();  // implicit remove of last feature.
 	                 }
 	            });
                 
@@ -1155,37 +1132,95 @@
 	                	}
                 	}
                 });
+                
+                var modify = new ol.interaction.Modify({
+                    features: map.getProperties().editFeatures,
+                    // the SHIFT key must be pressed to delete vertices, so
+                    // that new vertices can be drawn at the same position
+                    // of existing vertices
+                    deleteCondition: function(event) {
+                      return ol.events.condition.shiftKeyOnly(event) &&
+                          ol.events.condition.singleClick(event);
+                    }
+                });
+                
+                
+                map.addInteraction(modify);
                 map.addInteraction(draw);
                 map.setProperties({"gdbEditModeEnabled":true});
+                
+                that.addEditSessionControls();
+            }
+
+        	
+        	 /**
+             * @constructor
+             * @extends {ol.control.Control}
+             * @param {Object=} opt_options Control options.
+             */
+            var enableEditModeControl = function(opt_options) {
+              var options = opt_options || {};
+
+              var button = document.createElement('button');
+              button.className = 'enable-edit-mode-btn fa fa-pencil';
+              button.title = editBtnTooltip;
+              var targetStyle = {fill:"rgba(255, 0, 0, 0.75)", strokeColor:"rgba(255, 0, 0, 0.5)", strokeWidth:2, radius:5};
+              
+              
+	          var editFeatureOverlay = new ol.layer.Vector({
+	          	  map: map,
+	          	  source: new ol.source.Vector({
+	          	    features: map.getProperties().editFeatures,
+	          	    useSpatialIndex: false // optional, might improve performance
+	          	  }),
+	          	  style: new ol.style.Style({
+	      		      fill: new ol.style.Fill({
+	        		        color: targetStyle.fill 
+	        		      })
+	        		    , stroke: new ol.style.Stroke({
+	        		          color: targetStyle.strokeColor 
+	        		        , width: targetStyle.strokeWidth
+	        		      })
+	        		    , image: new ol.style.Circle({
+	        		        radius: targetStyle.radius,
+	        		        fill: new ol.style.Fill({
+	        		          color: targetStyle.fill 
+	        		        })
+	        		      })
+	        	  }),
+	          	  updateWhileAnimating: true, // optional, for instant visual feedback
+	          	  updateWhileInteracting: true // optional, for instant visual feedback
+	          });
+	          
+	          editFeatureOverlay.setProperties({"editLayer":true});
+	          editFeatureOverlay.setMap(map);
+              
+
+              
+              // TODO: remove if unused
+              function copyTargetFeaturesToEditFeatures() {
+            	  var layers = map.getLayers().getArray();
+            	  for(var i=0; i<layers.length; i++){
+              		var layer = layers[i];
+              		if(layer instanceof ol.layer.Vector){
+              			var layerProps = layer.getProperties()
+              			if(layerProps.hasOwnProperty("type") && layerProps.type === "TARGET"){
+              				console.log("edit layer")
+              				var originalFeatures = layer.getSource().getFeatures();
+              				originalFeatures.forEach(function(feature){
+              					map.getProperties().editFeatures.push(feature);
+              				})
+              			}
+              		}
+            	  }
               }
               
-              function removeInteractions(interactions) {
-            	interactions.forEach(function(interaction){
-            	  map.removeInteraction(interaction);
-            	})
+              function toggleEditButton() {
             	  
             	// make the edit button appear active when an edit session is open
           	    if(button.classList.contains("active")){
-          		  button.classList.remove("active")
+          		  button.classList.remove("active");
           	    }
-          	    
-          	    map.setProperties({"gdbEditModeEnabled":false});
-          	    
-          	    //
-          	    // Sending new location data back to angular
-          	    //
-          	    // TODO: This is not ideal. Try to separate angular and the map factory more.
-          	    //
-          	    var editGeom = map.getProperties().editFeatures.getArray()[0].getGeometry().getCoordinates();
-          	    var transformedEditGeom = ol.proj.transform(editGeom, MapWidget.MAPSRID, MapWidget.DATASRID)
-          	    var editGeomWKT = "POINT("+ transformedEditGeom[0] + " " + transformedEditGeom[1] +")"
-          	    var editableMapScope = angular.element(button).scope();
-          	    editableMapScope.targetFeature = editGeomWKT;
-          	    editableMapScope.$apply();
-          	    //
-          	    //
-          	    //
-          	    
               }
               
               function toggleInteraction() {
@@ -1203,16 +1238,16 @@
             	  };
             	  
             	  if(drawInteraction !== null && modifyInteraction !== null){
-            		  removeInteractions([drawInteraction, modifyInteraction]);
+            		  toggleEditButton();
+            		  that.closeEditSession();
             	  }
             	  else{
-            		  addInteraction();
+            		  addEditInteractions();
             	  }
             	  
               }
 
               button.addEventListener('click', toggleInteraction, false);
-              //button.addEventListener('touchstart', addInteraction, false);
 
               var element = document.createElement('div');
               element.className = 'enable-edit-mode-btn-wrapper ol-unselectable ol-control';
@@ -1224,16 +1259,202 @@
               });
             };
             
+            
+            // extend
             ol.inherits(enableEditModeControl, ol.control.Control);
             
             var thisEnableEditModeControl = new enableEditModeControl();
-            thisEnableEditModeControl.setProperties({"isEnableEditModeControl":true});
+            thisEnableEditModeControl.setProperties({"customControl":"enableEditModeControl"});
             map.addControl(thisEnableEditModeControl);
+            
+            
+            if(targetFeature){
+            	targetFeature.setProperties({"isEditFeature":true})
+        		map.getProperties().editFeatures.push(targetFeature);
+        		addEditInteractions();
+        		this.addEditSessionControls();
+        	}
         },
         
-        removeEditControl : function(editControl) {
+        
+        removeInteractions : function(interactions) {
         	var map = this.getMap();
-        	map.removeControl(editControl);
+        	
+        	interactions.forEach(function(interaction){
+        	  if(interaction){
+        		  map.removeInteraction(interaction);
+        	  }
+          	});
+        },
+        
+        
+        addEditSessionControls : function() {
+        	var map = this.getMap();
+        	var that = this;
+        	var saveEditsBtnTooltip = this.localize("saveEditsBtnTooltip");
+        	var cancelEditsBtnTooltip = this.localize("cancelEditsBtnTooltip");
+        	
+        	
+            /**
+             * @constructor
+             * @extends {ol.control.Control}
+             * @param {Object=} opt_options Control options.
+             */
+            var saveEditsControl = function(opt_options) {
+              var selectedDrawType = "Point"; // currently only supporting point
+              var options = opt_options || {};
+
+              var button = document.createElement('button');
+              button.className = 'save-edits-btn fa fa-floppy-o';
+              button.title = saveEditsBtnTooltip;
+              
+
+              function saveAllFeatures() {
+            	
+      	    	//
+          	    // Sending new location data back to angular
+          	    //
+          	    // TODO: This is not ideal. Try to separate angular and the map factory more.
+          	    //
+      	    	var editFeatures = map.getProperties().editFeatures.getArray();
+      	    	if(editFeatures.length === 1){
+      	    		var editFeature = editFeatures[0];
+      	    		var editFeatureProps = editFeature.getProperties();
+      	    		var editGeom = editFeature.getGeometry().getCoordinates();
+	          	    var transformedEditGeom = ol.proj.transform(editGeom, MapWidget.MAPSRID, MapWidget.DATASRID);
+	          	    var editGeomWKT = "POINT("+ transformedEditGeom[0] + " " + transformedEditGeom[1] +")";
+	          	    var editableMapScope = angular.element(button).scope();
+      	    		
+      	    		if(editFeatureProps.hasOwnProperty("isEditFeature") && editFeatureProps.isEditFeature){
+      	    			editableMapScope.editFeatureGeom = editGeomWKT;
+		          	    editableMapScope.$apply();
+      	    		}
+      	    		else{
+		          	    editableMapScope.newFeatureGeom = editGeomWKT;
+		          	    editableMapScope.$apply();
+      	    		}
+      	    	}
+          	    //
+          	    //
+          	    //
+      	    	
+      	    	that.closeEditSession();
+              }
+              
+
+              button.addEventListener('click', saveAllFeatures, false);
+              //button.addEventListener('touchstart', addInteraction, false);
+
+              var element = document.createElement('div');
+              element.className = 'save-edits-btn-wrapper ol-unselectable ol-control';
+              element.appendChild(button);
+
+              ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+              });
+            };
+            
+            
+            /**
+             * @constructor
+             * @extends {ol.control.Control}
+             * @param {Object=} opt_options Control options.
+             */
+            var cancelEditsControl = function(opt_options) {
+              var selectedDrawType = "Point"; // currently only supporting point
+              var options = opt_options || {};
+
+              var button = document.createElement('button');
+              button.className = 'cancel-edits-btn fa fa-times';
+              button.title = cancelEditsBtnTooltip;
+              
+
+              function restoreOriginalFeatures() {
+            	// TODO: restore original points 
+        	    
+        	    that.closeEditSession();
+              }
+              
+
+              button.addEventListener('click', restoreOriginalFeatures, false);
+
+              var element = document.createElement('div');
+              element.className = 'cancel-edits-btn-wrapper ol-unselectable ol-control';
+              element.appendChild(button);
+
+              ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+              });
+            };
+            
+        	ol.inherits(saveEditsControl, ol.control.Control);
+        	ol.inherits(cancelEditsControl, ol.control.Control);
+        	
+        	var thisSaveEditsControl = new saveEditsControl();
+        	thisSaveEditsControl.setProperties({"customControl":"saveEditsControl"});
+        	map.addControl(thisSaveEditsControl);
+        	
+        	var thisCancelEditsControl = new cancelEditsControl();
+        	thisCancelEditsControl.setProperties({"customControl":"cancelEditsControl"});
+        	map.addControl(thisCancelEditsControl);
+        },
+        
+        
+        closeEditSession : function() {
+        	var map = this.getMap();
+        	
+        	map.getProperties().editFeatures.clear();
+        	this.removeEditSessionControls();
+        	
+        	var existingInteractions = map.getInteractions().getArray();
+      	    var drawInteraction = null;
+      	    var modifyInteraction = null
+      	    for(var i=0; i<existingInteractions.length; i++){
+      		  var interaction = existingInteractions[i];
+      		  if(interaction instanceof ol.interaction.Draw){
+      			  drawInteraction = interaction;
+      		  }
+      		  else if(interaction instanceof ol.interaction.Modify){
+      			  modifyInteraction = interaction;
+      		  }
+      	    };
+        	
+      	    this.removeInteractions([drawInteraction, modifyInteraction]);
+        	
+        	map.setProperties({"gdbEditModeEnabled":false});
+        },
+        
+        
+        removeEditSessionControls : function() {
+        	var map = this.getMap();
+        	var mapControls = map.getControls().getArray();
+        	var saveEditsCtrl = null;
+    		var cancelEditsCtrl = null;
+    		
+        	for(var i=0; i<mapControls.length; i++){
+        		var ctrl = mapControls[i];
+        		var ctrlProps = ctrl.getProperties();
+        		if(ctrlProps.hasOwnProperty("customControl")){
+	        		if(ctrlProps.customControl === "saveEditsControl"){
+	        			saveEditsCtrl = ctrl;
+	        		}
+	        		else if(ctrlProps.customControl === "cancelEditsControl"){
+	        			cancelEditsCtrl = ctrl;
+	        		}
+        		}
+        	}
+        	
+        	if(saveEditsCtrl !== null && cancelEditsCtrl !== null){
+        		this.removeControl(saveEditsCtrl);
+        		this.removeControl(cancelEditsCtrl);
+        	}
+        },
+        
+        removeControl : function(control) {
+        	var map = this.getMap();
+        	map.removeControl(control);
         },
         
         zoomToFeatureExtent : function(featureJSON, workspace) {
