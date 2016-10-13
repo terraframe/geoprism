@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function LocationController($scope, $rootScope, locationService) {
+  function LocationController($scope, $rootScope, locationService, localizationService, widgetService) {
     var controller = this;
     
     controller.init = function() {
@@ -50,7 +50,7 @@
     }
     
     controller.select = function(entity, event) {
-      if(!$(event.target).hasClass('ico-edit')) {
+      if(!$(event.target).hasClass('inner-action')) {
         var connection = {
           elementId : '#innerFrameHtml',      
           onSuccess : function(data) {
@@ -152,6 +152,48 @@
       
       locationService.edit(connection, entity.id);
     }
+    
+    controller.remove = function(entity) {
+      var title = localizationService.localize("location.management", "removeOptionTitle", "Delete location");
+
+      var message = localizationService.localize("location.management", "removeConfirm", "Are you sure you want to delete the location [{0}]?");
+      message = message.replace('{0}', entity.displayLabel);
+              
+      var buttons = [];
+      buttons.push({
+        label : localizationService.localize("layer.category", "ok", "Ok"),
+        config : {class:'btn btn-primary'},
+        callback : function(){
+          controller.performRemove(entity);
+        }
+      });
+      buttons.push({
+        label : localizationService.localize("dataset", "cancel", "Cancel"),
+        config : {class:'btn'}
+      });
+              
+      widgetService.createDialog(title, message, buttons);    
+    }
+    
+    
+    controller.performRemove = function(entity) {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(response) {
+          var index = controller.findIndex(entity.id);
+          
+          if(index != -1){
+            $scope.children.splice(index, 1);
+          }          
+          
+          $scope.$emit('locationRemove', {
+            entityId : entity.id
+          });
+        }
+      };
+      
+      locationService.remove(connection, entity.id);
+    }    
     
     controller.newInstance = function() {
       $scope.$emit('locationEdit', {
@@ -302,7 +344,7 @@
     }   
   }  
   
-  angular.module("location-management", ["location-service", "styled-inputs", "editable-map"]);
+  angular.module("location-management", ["location-service", "styled-inputs", "editable-map", "widget-service", "localization-service"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
    .directive('locationModal', LocationModal)

@@ -160,4 +160,13 @@ public class LocationController implements Reloadable
     
     return new RestBodyResponse("");
   }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
+  {
+    GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
+    entity.delete();
+    
+    return new RestBodyResponse("");
+  }
 }

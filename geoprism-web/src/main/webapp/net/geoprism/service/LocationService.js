@@ -88,8 +88,20 @@
     
     service.unlock = function(connection, entityId) {
       var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/unlock',
+        data : {
+          entityId : entityId
+        }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
+    service.remove = function(connection, entityId) {
+      var req = {
           method: 'POST',
-          url: com.runwaysdk.__applicationContextPath + '/location/unlock',
+          url: com.runwaysdk.__applicationContextPath + '/location/remove',
           data : {
             entityId : entityId
           }

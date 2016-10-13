@@ -69,8 +69,10 @@
         <div class="list-group">
           <a href ng-repeat="child in children" class="list-group-item" ng-click="ctrl.select(child, $event)">
             {{child.displayLabel}} : {{child.geoId}}
-            <span class="pull-right fa fa-pencil ico-edit" ng-click="ctrl.edit(child)">
-            </span>
+            <div class="pull-right">
+              <span class="inner-action fa fa-pencil ico-edit" ng-click="ctrl.edit(child)"></span>
+              <span class="inner-action fa fa-trash-o ico-remove" ng-click="ctrl.remove(child)"></span>                         
+            </div>
           </a>
         </div>
       </div>
