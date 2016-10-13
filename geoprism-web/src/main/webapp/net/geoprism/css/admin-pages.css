@@ -384,3 +384,8 @@ ul.location-management-list {
 }
 .location-management-widget-section > input[type="text"]:focus,
 .location-management-widget-section > input[type="text"]:active{border-color:#019edc;}
+.location-management-list-container .hover {
+  background: #cef0fb
+}
+
+
