@@ -279,3 +279,12 @@ button.cancel-edits-btn.active{
 .ol-touch .cancel-edits-btn-wrapper {
    top: 160px;
 }
+
+
+span.fa {
+	font-size: 18px;
+}
+span.fa:hover,
+span.fa:focus{
+	color: #00bfff
+}

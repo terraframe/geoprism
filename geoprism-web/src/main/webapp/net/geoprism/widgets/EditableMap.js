@@ -172,8 +172,8 @@
     	  //
     	  // IMPORTANT: this event should only be called from a success callback of an entity create or update
     	  //
-//    	  controller.addFeatureToTargetLayer(data);
-		  controller.refreshAll();
+    	  controller.addFeatureToTargetLayer(data);
+//		  controller.refreshAll();
       })
       
       // Recieve shared data from LocationManagement controller based on user selection of target location

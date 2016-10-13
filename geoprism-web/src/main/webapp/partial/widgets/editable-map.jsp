@@ -42,21 +42,6 @@
     <div id="mapDivId" class="dynamicMap">
 <!-- 		<editable-map-popup ng-if="targetFeature != null && showTargetFeaturePopup" feature="targetFeature"></editable-map-popup> -->
 
-<!-- 	<div id="popup" class="ol-popup"> -->
-<!--       <a href="#" id="popup-closer" class="ol-popup-closer"></a> -->
-<!--       <div id="popup-content"></div> -->
-<!--     </div> -->
-
-
-<!-- 		<form class="form-inline" ng-show="enableEdits"> -->
-<!-- 	      <label>Geometry type &nbsp;</label> -->
-<!-- 	      <select id="type"> -->
-<!-- 	        <option value="Point">Point</option> -->
-<!-- 	        <option value="LineString">LineString</option> -->
-<!-- 	        <option value="Polygon">Polygon</option> -->
-<!-- 	      </select> -->
-<!-- 	    </form> -->
-	    
 	</div>
   </div>
   
