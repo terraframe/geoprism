@@ -39,7 +39,7 @@
     controller.load = function(data) {
       $scope.children = data.children.resultSet;
       $scope.layers = data.layers;
-        
+      
       $scope.entity = data.entity;
       $scope.universal = {
         value : data.universal,
@@ -210,6 +210,10 @@
       
       return -1;
     }
+    
+    $scope.$on('hoverChange', function(event, data){
+      $scope.hoverId = data.id;
+    });
     
     $rootScope.$on('locationChange', function(event, data) {
       var id = (data.entity.oid !== undefined) ? data.entity.oid : data.entity.id;
