@@ -217,7 +217,7 @@
     	
     	  this.hoverPointStyle = new ol.style.Style({
 	          image: new ol.style.Circle({
-	              radius: 5,
+	              radius: 7,
 	              fill: new ol.style.Fill({ color: "rgba(255, 255, 0, 0.75)" }),
 	              stroke: new ol.style.Stroke({ color: "yellow", width: 3 })
 	            })
@@ -227,7 +227,7 @@
   		      fill: new ol.style.Fill({color: "rgba(255, 0, 0, 0.5)"}),
   		      stroke: new ol.style.Stroke({color: "rgba(255, 0, 0, 1)", width: 3}),
   		      image: new ol.style.Circle({
-  		        radius: 7,
+  		        radius: 9,
   		        fill: new ol.style.Fill({color: "rgba(255, 0, 0, 0.5)"}),
   		        stroke: new ol.style.Stroke({ color: "rgba(255, 0, 0, 1)", width: 3})
   		      })
@@ -1079,22 +1079,32 @@
          * @bounds - <OPTIONAL> array of coordinates [southwest long, southwest lat, northeast long, northeast lat]
          * @center - <OPTIONAL> array of coordintes [long, lat]
          * @zoomLevel - <OPTIONAL> integer zoom level
+         * @dataSRID - <OPTIONAL> string defining SRID of the data (ex: 'EPSG:4326'). 
+         * 
+         * NOTE: dataSRID also operates like a flag only applying transforms if not null
          * 
          * <public> - called externally
          */
-        setView : function(bounds, center, zoomLevel) {
+        setView : function(bounds, center, zoomLevel, dataSRID) {
           var map = this.getMap();
           
           if(center && zoomLevel){
-            map.getView().setCenter(ol.proj.transform(center, MapWidget.DATASRID, MapWidget.MAPSRID));
+        	if(dataSRID){
+        		center = ol.proj.transform(center, dataSRID, MapWidget.MAPSRID);
+        	}
+            map.getView().setCenter(center);
             map.getView().setZoom(zoomLevel);
           }
           else if(bounds){
             // Handle points (2 coord sets) & polygons (4 coord sets)
             if (bounds.length === 2){
               this.setBounds(bounds[0], bounds[1]);
-                
-              map.getView().setCenter(bounds, MapWidget.DATASRID, MapWidget.MAPSRID);
+              
+              // TODO: test set center with dataSRID. 
+              if(!dataSRID){
+            	dataSRID = MapWidget.DATASRID;
+              }
+              map.getView().setCenter(bounds, dataSRID, MapWidget.MAPSRID);
             }
             else if (bounds.length === 4){
               // OpenLayers 3 standard format = [minx, miny, maxx, maxy]
@@ -1108,8 +1118,10 @@
                 fromattedBounds._northEast.lat
               ];
               
-              var areaExtent = ol.extent.applyTransform(bBox, ol.proj.getTransform(MapWidget.DATASRID, MapWidget.MAPSRID));
-              map.getView().fit(areaExtent, map.getSize());
+              if(dataSRID){
+            	bBox = ol.extent.applyTransform(bBox, ol.proj.getTransform(dataSRID, MapWidget.MAPSRID));
+          	  }
+              map.getView().fit(bBox, map.getSize());
             };
           };
         },
@@ -1144,8 +1156,41 @@
         	}
         	
         	if(fullExt){
-        		map.getView().fit(fullExt, map.getSize());
+        		var singlePointCoords = null;
+        		var vecLayers = this.getAllVectorLayers();
+        		if(vecLayers.length === 1){
+        			var layerFeatures = vecLayers[0].getSource().getFeatures();
+        			if(layerFeatures.length === 1){
+        				var theOnlyFeatureGeom = layerFeatures[0].getGeometry();
+        				var theOnlyFeatureGeomType = theOnlyFeatureGeom.getType();
+        				if(theOnlyFeatureGeomType === "Point"){
+        					singlePointCoords = theOnlyFeatureGeom.getCoordinates();
+        				}
+        			}
+        		}
+        		
+        		if(singlePointCoords){
+        			this.setView(null, singlePointCoords, 12, null);
+        		}
+        		else{
+        			map.getView().fit(fullExt, map.getSize());
+        		}
         	}
+        },
+        
+        getAllVectorLayers : function() {
+        	var map = this.getMap();
+        	var layers = map.getLayers().getArray();
+        	var allVectorLayers = [];
+        	
+        	for(var i=0; i<layers.length; i++){
+        		var layer = layers[i];
+        		if(layer instanceof ol.layer.Vector){
+        			allVectorLayers.push(layer);
+        		}
+        	}
+        	
+        	return allVectorLayers;
         },
         
         /**
@@ -1649,12 +1694,12 @@
 	            if(featureType === "multipolygon"){
 	            	var featureGeom = new ol.geom.MultiPolygon(featureResponse.features[0].geometry.coordinates)
 	                var featureGeomExtent = featureGeom.getExtent();
-	                that.setView(featureGeomExtent, null, null);
+	                that.setView(featureGeomExtent, null, null, MapWidget.DATASRID);
 	            }
 	            else if(featureType === "point"){
 	            	var featureGeom = new ol.geom.Point(featureResponse.features[0].geometry.coordinates);
 	            	var featureGeomCenter = featureGeom.getCoordinates();
-	            	that.setView(null, featureGeomCenter, 15);
+	            	that.setView(null, featureGeomCenter, 15, MapWidget.DATASRID);
 	            }
         	}
         	

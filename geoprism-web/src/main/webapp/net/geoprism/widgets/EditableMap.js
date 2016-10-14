@@ -24,8 +24,8 @@
 	 $scope.editWidgetEnabled = false;
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
-	 $scope.contextStyle = {fill:"rgba(255, 255, 255, 0.0)", strokeColor:"black", strokeWidth:3};
-	 $scope.targetStyle = {fill:"rgba(255, 255, 255, 0.5)", strokeColor:"red", strokeWidth:2, radius:5};
+	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.5)", strokeWidth:5, radius:7};
+	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.1)", strokeColor:"rgba(255, 0, 0, 0.5)", strokeWidth:3, radius:7};
 	 $scope.newFeatureGeom = null;
 	 $scope.editFeature = null;
 	 $scope.sharedGeoData = {};
@@ -36,7 +36,7 @@
 		$scope.baseLayers = mapService.createBaseLayers();
 		 
 		// enable the default base layer 
-	    $scope.baseLayers[0].isActive = true;
+	    $scope.baseLayers[1].isActive = true;
 		controller.refreshBaseLayer();
 		
 		controller.addVectorHoverEvents();

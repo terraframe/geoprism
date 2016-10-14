@@ -63,8 +63,8 @@
       service.map.showLayer(layer, index);    
     }    
     
-    service.setView = function(bounds, center, zoomLevel){
-      service.map.setView(bounds, center, zoomLevel);    
+    service.setView = function(bounds, center, zoomLevel, dataSRID){
+      service.map.setView(bounds, center, zoomLevel, dataSRID);    
     }
 
     service.getCurrentBounds = function(srid) {
