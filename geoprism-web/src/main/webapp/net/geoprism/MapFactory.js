@@ -206,7 +206,32 @@
           this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
           this._cache = {};
           
+      	  this.hoverPolygonStyle = new ol.style.Style({
+    	    fill: new ol.style.Fill({
+    	        color: 'rgba(255, 255, 0, 0.5)'
+    	    }),
+    	    stroke: new ol.style.Stroke({
+    	        color: 'yellow'
+    	    })
+    	  });
+    	
+    	  this.hoverPointStyle = new ol.style.Style({
+	          image: new ol.style.Circle({
+	              radius: 5,
+	              fill: new ol.style.Fill({ color: "rgba(255, 255, 0, 0.5)" }),
+	              stroke: new ol.style.Stroke({ color: "yellow", width: 3 })
+	            })
+	      });
+          
           this.renderMap();
+        },
+        
+        getHoverPointStyle : function() {
+        	return this.hoverPointStyle;
+        },
+        
+        getHoverPolygonStyle : function() {
+        	return this.hoverPolygonStyle;
         },
         
         /**
@@ -438,19 +463,36 @@
             map.getLayers().insertAt(stackingIndex, vectorLayer);
         },
         
+        // called from success callback on edit/submit of feature
         addFeatureToTargetLayer : function(feature) {
           var map = this.getMap();
-          
+          var mapProps = map.getProperties();
           var layer = this.getVectorLayerByTypeProp("TARGET");
           
-          var userCreatedFeatureClone = map.getProperties().editFeatures.getArray()[0].clone();
-		  userCreatedFeatureClone.setId(feature.entity.id);
-		  userCreatedFeatureClone.setProperties({"isHoverable":true});
-		  userCreatedFeatureClone.setProperties({"isClickable":true});
-		  userCreatedFeatureClone.setProperties({"geoid":feature.entity.geoId});
-		  userCreatedFeatureClone.setProperties({"displaylabel":feature.entity.displayLabel})
-			
-		  layer.getSource().addFeature(userCreatedFeatureClone);
+          if(mapProps.editFeatures.length > 0){
+        	  var userCreatedFeatureClone = mapProps.editFeatures.getArray()[0].clone();
+        	  userCreatedFeatureClone.setId(feature.entity.id);
+    		  userCreatedFeatureClone.setProperties({"isHoverable":true});
+    		  userCreatedFeatureClone.setProperties({"isClickable":true});
+    		  userCreatedFeatureClone.setProperties({"geoid":feature.entity.geoId});
+    		  userCreatedFeatureClone.setProperties({"displaylabel":feature.entity.displayLabel})
+    			
+    		  layer.getSource().addFeature(userCreatedFeatureClone);
+          }
+          else{
+        	  // else is true if an edit was made from the list widget meaning there was no feature in an edit session cache
+        	  var features = layer.getSource().getFeatures();
+        	  for(var i=0; i<features.length; i++){
+        		  var featureInLayer = features[i];
+        		  
+        		  if(feature.entity.id === featureInLayer.getProperties()){
+        			  featureInLayer.setProperties( 
+        					  {"displaylabel":feature.entity.displayLabel},
+        					  {"geoid":feature.entity.geoId}
+        			  )
+        		  }
+        	  }
+          }
 			
       	  this.closeEditSession();
         },
@@ -504,24 +546,6 @@
         	var map = this.getMap();
         	var that = this;
         	var selectedFeatures = [];
-        	
-        	var hoverPolygonStyle = new ol.style.Style({
-        	    fill: new ol.style.Fill({
-        	        color: 'rgba(255, 255, 0, 0.5)'
-        	    }),
-        	    stroke: new ol.style.Stroke({
-        	        color: 'yellow'
-        	    })
-        	});
-        	
-        	var hoverPointStyle = new ol.style.Style({
-  	          image: new ol.style.Circle({
-  	              radius: 5,
-  	              fill: new ol.style.Fill({ color: "rgba(255, 255, 0, 0.5)" }),
-  	              stroke: new ol.style.Stroke({ color: "yellow", width: 3 })
-  	            })
-  	        })
-        	
         	
         	
         	//
@@ -580,6 +604,7 @@
         	// a bit of a hack to restore original cursor css to take advantage of openlayers handling of 
         	// cursor settings for browser compatibility (i.e. -webkit-grab)
         	var originalCursor = $("#"+map.getTarget()).children(".ol-viewport").css("cursor");
+        	var unHoverableFeatureCache = null;
         	map.on('pointermove', function (evt) {
         		if(evt.dragging) return;
         	    
@@ -602,10 +627,10 @@
         	    	
         	    	// control for styling of different geometry types
         	    	if(feature.getGeometry() instanceof ol.geom.MultiPolygon || feature.getGeometry() instanceof ol.geom.Polygon){
-        	    		feature.setStyle(hoverPolygonStyle);
+        	    		feature.setStyle(that.getHoverPolygonStyle());
         	    	}
         	    	else if(feature.getGeometry() instanceof ol.geom.MultiPoint || feature.getGeometry() instanceof ol.geom.Point){
-        	    		feature.setStyle(hoverPointStyle);
+        	    		feature.setStyle(that.getHoverPointStyle());
         	    	}
         	        selectedFeatures.push(feature);
         	        
@@ -614,19 +639,32 @@
         	        
         	        overlay.setPosition(evt.coordinate);
         	        
-        	        
         	        var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
         	        editableMapScope.$emit('hoverChange', {
         	              id : feature.getProperties().id
         	            });
         	        editableMapScope.$apply();
         	        
+        	        unHoverableFeatureCache = null;
         	    } 
         	    else if(feature && feature === selectedFeatures[0]){
         	    	overlay.setPosition(evt.coordinate);
+        	    	unHoverableFeatureCache = null;
         	    }
         	    else if(feature && feature !== selectedFeatures[0] && !feature.getProperties().isHoverable){
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
+        	    	
+        	    	// preventing $emit of hoverchange on every pixel diring scroll over context geographies
+        	    	if(feature !== unHoverableFeatureCache){
+        	    		unHoverableFeatureCache = feature;
+        	    		if(selectedFeatures.length > 0){
+        	    			var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
+        	    			editableMapScope.$emit('hoverChange', {
+        	    				id : null
+        	    			});
+        	    			editableMapScope.$apply();
+        	    		}
+        	    	}
         	    	
         	    	overlay.setPosition(undefined);
         	    	
@@ -635,7 +673,7 @@
         	    else if(!feature) {
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
         	    	
-        	    	if(selectedFeatures.length >0){
+        	    	if(selectedFeatures.length > 0){
         	    		var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
         	    		editableMapScope.$emit('hoverChange', {
         	              id : null
@@ -646,6 +684,8 @@
         	    	overlay.setPosition(undefined);
         	    	
         	    	clearSelctedFeatures();
+        	    	
+        	    	unHoverableFeatureCache = null;
         	    }
     		});
         },
@@ -685,25 +725,11 @@
         disableEdits : function() {
         	var map = this.getMap();
         	var mapControls = map.getControls().getArray();
-    		var editModeCtrl = null;
-    		var saveEditsCtrl = null;
-    		var cancelEditsCtrl = null;
-        	
-        	for(var i=0; i<mapControls.length; i++){
-        		var ctrl = mapControls[i];
-        		var ctrlProps = ctrl.getProperties();
-        		if(ctrlProps.hasOwnProperty("customControl")){
-	        		if(ctrlProps.customControl === "addNewPointControl"){
-	        			editModeCtrl = ctrl;
-	        		}
-	        		else if(ctrlProps.customControl === "saveEditsControl"){
-	        			saveEditsCtrl = ctrl;
-	        		}
-	        		else if(ctrlProps.customControl === "cancelEditsControl"){
-	        			cancelEditsCtrl = ctrl;
-	        		}
-        		}
-        	}
+    		var editModeCtrl = this.getCustomControl("addNewPointControl");
+    		var saveEditsCtrl = this.getCustomControl("saveEditsControl");
+    		var cancelEditsCtrl = this.getCustomControl("cancelEditsControl");
+    		
+    		this.closeEditSession();
         	
         	if(editModeCtrl !== null){
         		this.removeControl(editModeCtrl);
@@ -714,6 +740,80 @@
         		this.removeControl(cancelEditsCtrl);
         	}
         },
+        
+        
+        focusOnFeature : function(feature) {
+        	var map = this.getMap();
+        	var selectedFeatures = [];
+        	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
+        	if(targetLayer){
+        		var features = targetLayer.getSource().getFeatures();
+        		for(var i=0; i<features.length; i++){
+        			var targetFeature = features[i];
+        			var featureProps = targetFeature.getProperties();
+        			if(feature.id === featureProps.id){
+        				
+        				var clearSelctedFeatures = function(){
+        	        		if(selectedFeatures.length > 0){
+        	    	    		for(var i=0; i<selectedFeatures.length; i++){
+        	    	    			selectedFeatures[i].setStyle(null);
+        	    	    		}
+        	     	    		selectedFeatures = [];
+        	     	        }
+        	        	}
+        				
+        				// clear existing selected feature if transitioning directly to another feature.
+            	    	// usually caused by overlapping features at the edge of one of the features.
+            	    	clearSelctedFeatures();
+            	    	
+            	    	// control for styling of different geometry types
+            	    	if(targetFeature.getGeometry() instanceof ol.geom.MultiPolygon || targetFeature.getGeometry() instanceof ol.geom.Polygon){
+            	    		targetFeature.setStyle(this.getHoverPolygonStyle());
+            	    	}
+            	    	else if(targetFeature.getGeometry() instanceof ol.geom.MultiPoint || targetFeature.getGeometry() instanceof ol.geom.Point){
+            	    		targetFeature.setStyle(this.getHoverPointStyle());
+            	    	}
+            	        selectedFeatures.push(targetFeature);
+        				
+//        				var geomType = targetFeature.getGeometry().getType();
+//        				if(geomType === "Point"){
+//        					var coords = targetFeature.getGeometry().getCoordinates();
+//        					coords = ol.proj.transform(coords, MapWidget.MAPSRID, MapWidget.DATASRID);
+//        					this.setView(null, coords, map.getView().getZoom());
+//        				}
+//        				else{
+//        					var extent = targetFeature.getGeometry().getExtent();
+//            				extent = ol.extent.applyTransform(extent, ol.proj.getTransform(MapWidget.MAPSRID, MapWidget.DATASRID));
+//        					this.setView(extent, null, null);
+//        				}
+        				
+        				break;
+        			}
+        		}
+        	}
+        },
+        
+        
+        focusOffFeature : function(feature) {
+        	var map = this.getMap();
+        	var selectedFeatures = [];
+        	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
+        	if(targetLayer){
+        		var features = targetLayer.getSource().getFeatures();
+        		for(var i=0; i<features.length; i++){
+        			var targetFeature = features[i];
+        			var featureProps = targetFeature.getProperties();
+        			if(feature.id === featureProps.id){
+        				
+        				targetFeature.setStyle(null);
+        				
+        				
+        				break;
+        			}
+        		}
+        	}
+        },
+        
         
         /**
          * Create and return an array of all base layer objects.
@@ -1106,7 +1206,7 @@
         		  });
         		  controls.push(scaleLine);
         	  }
-          })
+          });
           
           
           var view = new ol.View({ 
@@ -1298,21 +1398,12 @@
              * @extends {ol.control.Control}
              * @param {Object=} opt_options Control options.
              */
-            var enableEditModeControl = function(opt_options) {
+            var addNewPointControl = function(opt_options) {
               var options = opt_options || {};
 
               var button = document.createElement('button');
               button.className = 'enable-edit-mode-btn fa fa-map-marker';
               button.title = editBtnTooltip;
-              
-              
-              function toggleEditButton() {
-            	  
-            	// make the edit button appear active when an edit session is open
-          	    if(button.classList.contains("active")){
-          		  button.classList.remove("active");
-          	    }
-              }
               
               function toggleInteraction() {
             	  var existingInteractions = map.getInteractions().getArray();
@@ -1329,7 +1420,6 @@
             	  };
             	  
             	  if(drawInteraction !== null && modifyInteraction !== null){
-            		  toggleEditButton();
             		  that.closeEditSession();
             	  }
             	  else{
@@ -1352,12 +1442,12 @@
             
             
             // extend
-            ol.inherits(enableEditModeControl, ol.control.Control);
+            ol.inherits(addNewPointControl, ol.control.Control);
             
             
             // if there is a target feature this should be an edit session opened for an existing feature. 
             // probably as a result of clicking on the feature in the map. 
-            if(targetFeature){
+            if(targetFeature && map.getProperties().editFeatures.getArray().length < 1){
             	var targetFeatureClone = targetFeature.clone();
             	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
             	targetLayer.setProperties({"editFeatureCache":[targetFeature]});
@@ -1367,17 +1457,7 @@
         		map.getProperties().editFeatures.push(targetFeatureClone);
             	
             	// remove the create point control if editing an existing feature
-            	var mapControls = map.getControls().getArray();
-        		var editModeCtrl = null;
-            	for(var i=0; i<mapControls.length; i++){
-            		var ctrl = mapControls[i];
-            		var ctrlProps = ctrl.getProperties();
-            		if(ctrlProps.hasOwnProperty("customControl")){
-    	        		if(ctrlProps.customControl === "addNewPointControl"){
-    	        			editModeCtrl = ctrl;
-    	        		}
-            		}
-            	}
+        		var editModeCtrl = this.getCustomControl("addNewPointControl");
             	
             	if(editModeCtrl !== null){
             		this.removeControl(editModeCtrl);
@@ -1388,7 +1468,7 @@
         	}
             // else should only be true when entering a universal level that allows edits
             else{
-            	var thisAddNewPointControl = new enableEditModeControl();
+            	var thisAddNewPointControl = new addNewPointControl();
             	thisAddNewPointControl.setProperties({"customControl":"addNewPointControl"});
                 map.addControl(thisAddNewPointControl);
             }
@@ -1445,8 +1525,6 @@
           	    //
           	    //
           	    //
-      	    	
-//      	    	that.closeEditSession();
               }
               
 
@@ -1479,8 +1557,6 @@
               
 
               function restoreOriginalFeatures() {
-            	
-            	  // TODO: restore original points... this doesnt work
             	var targetLayer = that.getVectorLayerByTypeProp("TARGET");
               	var targetLayerProps = targetLayer.getProperties();
               	if(targetLayerProps.hasOwnProperty("editFeatureCache")){
@@ -1521,7 +1597,6 @@
         	var map = this.getMap();
         	
         	map.getProperties().editFeatures.clear();
-        	this.removeEditSessionControls();
         	
         	var existingInteractions = map.getInteractions().getArray();
       	    var drawInteraction = null;
@@ -1538,7 +1613,9 @@
         	
       	    this.removeInteractions([drawInteraction, modifyInteraction]);
       	    
-      	    var newPointControlExists = this.customControlExists("addNewPointControl");
+      	    this.removeEditSessionControls();
+      	    
+      	    var newPointControlExists = this.getCustomControl("addNewPointControl");
       	    if(!newPointControlExists){
       	    	this.addNewPointControl();
       	    }
@@ -1546,17 +1623,16 @@
         	map.setProperties({"gdbEditModeEnabled":false});
         },
         
-        customControlExists : function(controlName) {
+        getCustomControl : function(controlName) {
         	var map = this.getMap();
         	var mapControls = map.getControls().getArray();
-        	var customCtrl = null;
         	
         	for(var i=0; i<mapControls.length; i++){
         		var ctrl = mapControls[i];
         		var ctrlProps = ctrl.getProperties();
         		if(ctrlProps.hasOwnProperty("customControl")){
 	        		if(ctrlProps.customControl === controlName){
-	        			return true;
+	        			return ctrl;
 	        		}
         		}
         	}
@@ -1568,22 +1644,9 @@
         moveEditSessionControls : function(direction) {
         	var map = this.getMap();
         	var mapControls = map.getControls().getArray();
-        	var saveEditsCtrl = null;
-    		var cancelEditsCtrl = null;
+        	var saveEditsCtrl = this.getCustomControl("saveEditsControl");
+    		var cancelEditsCtrl = this.getCustomControl("cancelEditsControl");
     		
-        	for(var i=0; i<mapControls.length; i++){
-        		var ctrl = mapControls[i];
-        		var ctrlProps = ctrl.getProperties();
-        		if(ctrlProps.hasOwnProperty("customControl")){
-	        		if(ctrlProps.customControl === "saveEditsControl"){
-	        			saveEditsCtrl = ctrl;
-	        		}
-	        		else if(ctrlProps.customControl === "cancelEditsControl"){
-	        			cancelEditsCtrl = ctrl;
-	        		}
-        		}
-        	}
-        	
         	if(saveEditsCtrl !== null && cancelEditsCtrl !== null){
         		if(direction === "UP"){
         			saveEditsCtrl.element.classList.add("move-up");
@@ -1600,22 +1663,9 @@
         removeEditSessionControls : function() {
         	var map = this.getMap();
         	var mapControls = map.getControls().getArray();
-        	var saveEditsCtrl = null;
-    		var cancelEditsCtrl = null;
+        	var saveEditsCtrl = this.getCustomControl("saveEditsControl");
+    		var cancelEditsCtrl = this.getCustomControl("cancelEditsControl");
     		
-        	for(var i=0; i<mapControls.length; i++){
-        		var ctrl = mapControls[i];
-        		var ctrlProps = ctrl.getProperties();
-        		if(ctrlProps.hasOwnProperty("customControl")){
-	        		if(ctrlProps.customControl === "saveEditsControl"){
-	        			saveEditsCtrl = ctrl;
-	        		}
-	        		else if(ctrlProps.customControl === "cancelEditsControl"){
-	        			cancelEditsCtrl = ctrl;
-	        		}
-        		}
-        	}
-        	
         	if(saveEditsCtrl !== null && cancelEditsCtrl !== null){
         		this.removeControl(saveEditsCtrl);
         		this.removeControl(cancelEditsCtrl);

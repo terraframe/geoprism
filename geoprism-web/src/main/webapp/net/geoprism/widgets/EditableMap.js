@@ -71,6 +71,14 @@
 	 controller.zoomToVectorDataExtent = function() {
 		 mapService.zoomToVectorDataExtent();
 	 }
+	 
+	 controller.focusOnFeature = function(feature) {
+		 mapService.focusOnFeature(feature);
+	 }
+	 
+	 controller.focusOffFeature = function(feature) {
+		 mapService.focusOffFeature(feature);
+	 }
 	  
 	 controller.addVectorLayer = function(layerGeoJSON, styleObj, type, stackingIndex) {
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, type, stackingIndex);
@@ -78,6 +86,10 @@
 	 
 	 controller.addFeatureToTargetLayer = function(feature) {
 		 mapService.addFeatureToTargetLayer(feature);
+	 }
+	 
+	 controller.closeEditSession = function() {
+		 mapService.closeEditSession();
 	 }
 	  
 	  
@@ -96,7 +108,7 @@
 	      }
 	  }
 	 
-	 controller.refreshAll = function() {
+	 controller.refreshAll = function(triggeringEvent) {
 		  var data = $scope.sharedGeoData;
 		  var targetIsClickable = canEnableEditToolbar(data);
 		
@@ -130,17 +142,32 @@
 		  // get target geo data
 		  controller.getMapData(targetCallback, data.layers[1], data.workspace);
 		  
-		  if(canEnableEditToolbar(data)){
+		  if(canEnableEditToolbar(data) && !$scope.editWidgetEnabled){
 			controller.enableEdits();
 		  }
 		  else if($scope.editWidgetEnabled){
-			controller.disableEdits();
-			$scope.editWidgetEnabled = false;
+			// locationChange is requesting simple refresh of the map layers after an edit
+			// else will be true if the universal level is not appropriate for edits and it is now a 
+			// feature edit based refresh
+			if(triggeringEvent === "locationChange"){
+				controller.closeEditSession();
+			}
+			else{
+				controller.disableEdits();
+				$scope.editWidgetEnabled = false;
+			}
 		  }		 
+		  else if(triggeringEvent === "locationChange"){
+			  controller.closeEditSession();
+		  }
 	 }
 	 
 	 function canEnableEditToolbar(data) {
-		 if($scope.enableEdits && data.layers.length > 1 && data.layers[1].layerType === "POINT" && data.layers[0].layerType === "POLYGON"){
+		 if($scope.enableEdits 
+				 && data.layers.length > 1
+				 && data.layers[1].layerType === "POINT" 
+				 && data.layers[0].layerType === "POLYGON"
+			     ){
 			 return true;
 		 }
 		 
@@ -177,12 +204,20 @@
     	  }
       });
       
+      $scope.$on('listHoverOver', function(event, data){
+    	  controller.focusOnFeature(data);
+      });
+      
+      $scope.$on('listHoverOff', function(event, data){
+    	  controller.focusOffFeature(data);
+      });
+      
       $rootScope.$on("locationChange", function(event, data){
     	  //
     	  // IMPORTANT: this event should only be called from a success callback of an entity create or update
     	  //
-    	  controller.addFeatureToTargetLayer(data);
-//		  controller.refreshAll();
+//    	  controller.addFeatureToTargetLayer(data);
+		  controller.refreshAll("locationChange");
       })
       
       // Recieve shared data from LocationManagement controller based on user selection of target location
@@ -191,17 +226,13 @@
     		  
     		  $scope.sharedGeoData = data;
     		  
-    		  controller.refreshAll();
+    		  controller.refreshAll('sharedGeoData');
     	  }
     	  else if(!isEmptyJSONObject($scope.sharedGeoData)) {
-    		  controller.refreshAll();
+    		  controller.refreshAll('sharedGeoData');
     	  }
       });
-      
-      
-//      $scope.$on('hoverChange', function(event, data) {
-//    	  console.log("hoverChange: ", data)
-//      })
+
       
       controller.init();
   }

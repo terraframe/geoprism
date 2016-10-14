@@ -147,6 +147,18 @@
     	service.map.addFeatureToTargetLayer(feature);
     }
     
+    service.closeEditSession = function(){
+    	service.map.closeEditSession();
+    }
+    
+    service.focusOnFeature = function(feature) {
+    	service.map.focusOnFeature(feature);
+    }
+    
+    service.focusOffFeature = function(feature) {
+    	service.map.focusOffFeature(feature);
+    }
+    
     ///////// SERVICES BELOW THIS ARE TEMPORARY ///////
     ///
     ///

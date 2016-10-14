@@ -211,6 +211,16 @@
       return -1;
     }
     
+    
+    controller.listItemHover = function(entity, event){
+    	$scope.$broadcast('listHoverOver', entity);
+    }
+    
+    controller.listItemHoverOff = function(entity, event){
+    	$scope.$broadcast('listHoverOff', entity);
+    }
+    
+    
     $scope.$on('hoverChange', function(event, data){
       $scope.hoverId = data.id;
     });
