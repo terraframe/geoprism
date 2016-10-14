@@ -104,7 +104,7 @@
     </header>
         
     <!-- MAIN CONTENT AND INJECTED VIEWS -->
-    <div id="main">
+    <div id="main" class="new-admin-design-main">
       <!-- angular templating -->
       <!-- this is where content will be injected -->
       <ng-view></ng-view> 

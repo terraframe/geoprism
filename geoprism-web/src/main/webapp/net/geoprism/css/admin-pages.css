@@ -17,7 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
  
- #main {
+ .new-admin-design-main {
 	/* Accounting for the height of the header bar + a margin at the bottom */
  	height: calc(100% - 88px);
  }
