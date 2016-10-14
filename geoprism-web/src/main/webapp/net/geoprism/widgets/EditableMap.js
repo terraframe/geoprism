@@ -84,10 +84,6 @@
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, type, stackingIndex);
 	 }
 	 
-	 controller.addFeatureToTargetLayer = function(feature) {
-		 mapService.addFeatureToTargetLayer(feature);
-	 }
-	 
 	 controller.closeEditSession = function() {
 		 mapService.closeEditSession();
 	 }
@@ -216,7 +212,6 @@
     	  //
     	  // IMPORTANT: this event should only be called from a success callback of an entity create or update
     	  //
-//    	  controller.addFeatureToTargetLayer(data);
 		  controller.refreshAll("locationChange");
       })
       

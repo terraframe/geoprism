@@ -143,10 +143,6 @@
             });
     }
     
-    service.addFeatureToTargetLayer = function(feature){
-    	service.map.addFeatureToTargetLayer(feature);
-    }
-    
     service.closeEditSession = function(){
     	service.map.closeEditSession();
     }

@@ -33,7 +33,7 @@
      "googleSatellite" : "Google Satellite",
      "googleStreets" : "Google Streets",
      "googleTerrain" : "Google Terrain",
-     "editBtnTooltip": "Enable editing to add a location",
+     "editBtnTooltip": "Add a new location",
      "saveEditsBtnTooltip": "Save all your edits",
      "cancelEditsBtnTooltip": "Cancel any edits and close this edit session"
   });
@@ -208,7 +208,7 @@
           
       	  this.hoverPolygonStyle = new ol.style.Style({
     	    fill: new ol.style.Fill({
-    	        color: 'rgba(255, 255, 0, 0.5)'
+    	        color: 'rgba(255, 255, 0, 0.75)'
     	    }),
     	    stroke: new ol.style.Stroke({
     	        color: 'yellow'
@@ -218,10 +218,20 @@
     	  this.hoverPointStyle = new ol.style.Style({
 	          image: new ol.style.Circle({
 	              radius: 5,
-	              fill: new ol.style.Fill({ color: "rgba(255, 255, 0, 0.5)" }),
+	              fill: new ol.style.Fill({ color: "rgba(255, 255, 0, 0.75)" }),
 	              stroke: new ol.style.Stroke({ color: "yellow", width: 3 })
 	            })
 	      });
+    	 
+    	  this.editFeatureStyle = new ol.style.Style({
+  		      fill: new ol.style.Fill({color: "rgba(255, 0, 0, 0.5)"}),
+  		      stroke: new ol.style.Stroke({color: "rgba(255, 0, 0, 1)", width: 3}),
+  		      image: new ol.style.Circle({
+  		        radius: 7,
+  		        fill: new ol.style.Fill({color: "rgba(255, 0, 0, 0.5)"}),
+  		        stroke: new ol.style.Stroke({ color: "rgba(255, 0, 0, 1)", width: 3})
+  		      })
+    	  });
           
           this.renderMap();
         },
@@ -232,6 +242,10 @@
         
         getHoverPolygonStyle : function() {
         	return this.hoverPolygonStyle;
+        },
+        
+        getEditFeatureStyle : function() {
+        	return this.editFeatureStyle;
         },
         
         /**
@@ -463,40 +477,6 @@
             map.getLayers().insertAt(stackingIndex, vectorLayer);
         },
         
-        // called from success callback on edit/submit of feature
-        addFeatureToTargetLayer : function(feature) {
-          var map = this.getMap();
-          var mapProps = map.getProperties();
-          var layer = this.getVectorLayerByTypeProp("TARGET");
-          
-          if(mapProps.editFeatures.length > 0){
-        	  var userCreatedFeatureClone = mapProps.editFeatures.getArray()[0].clone();
-        	  userCreatedFeatureClone.setId(feature.entity.id);
-    		  userCreatedFeatureClone.setProperties({"isHoverable":true});
-    		  userCreatedFeatureClone.setProperties({"isClickable":true});
-    		  userCreatedFeatureClone.setProperties({"geoid":feature.entity.geoId});
-    		  userCreatedFeatureClone.setProperties({"displaylabel":feature.entity.displayLabel})
-    			
-    		  layer.getSource().addFeature(userCreatedFeatureClone);
-          }
-          else{
-        	  // else is true if an edit was made from the list widget meaning there was no feature in an edit session cache
-        	  var features = layer.getSource().getFeatures();
-        	  for(var i=0; i<features.length; i++){
-        		  var featureInLayer = features[i];
-        		  
-        		  if(feature.entity.id === featureInLayer.getProperties()){
-        			  featureInLayer.setProperties( 
-        					  {"displaylabel":feature.entity.displayLabel},
-        					  {"geoid":feature.entity.geoId}
-        			  )
-        		  }
-        	  }
-          }
-			
-      	  this.closeEditSession();
-        },
-        
         
         getVectorLayerByTypeProp : function(type) {
         	var map = this.getMap();
@@ -522,7 +502,9 @@
     		    function(feature, layer) {
     			  if(feature.getProperties().isClickable){
     				  var popup = map.getOverlays().getArray()[0].setPosition(undefined);
-    				  that.addNewPointControl(feature);
+    				  if(map.getProperties().editFeatures.getArray().length === 0){
+    					  that.addNewPointControl(feature);
+    				  }
     			  }
     		    });
         	}); 
@@ -536,7 +518,9 @@
       		    function(feature, layer) {
       			  if(feature.getProperties().isClickable){
       				  var popup = map.getOverlays().getArray()[0].setPosition(undefined);
-      				  that.addNewPointControl(feature);
+      				  if(map.getProperties().editFeatures.getArray().length === 0){
+      					  that.addNewPointControl(feature);
+      				  }
       			  }
       		    });
           	}); 
@@ -806,7 +790,6 @@
         			if(feature.id === featureProps.id){
         				
         				targetFeature.setStyle(null);
-        				
         				
         				break;
         			}
@@ -1249,7 +1232,6 @@
         addEditComponents : function(targetFeature) {
         	var map = this.getMap();
         	var that = this;
-        	var targetStyle = {fill:"rgba(255, 255, 0, 0.5)", strokeColor:"yellow", strokeWidth:3, radius:5};
         	
         	map.setProperties({"editFeatures":new ol.Collection()});
         	
@@ -1259,22 +1241,7 @@
 	          	    features: map.getProperties().editFeatures,
 	          	    useSpatialIndex: false // optional, might improve performance
 	          	  }),
-	          	  style: new ol.style.Style({
-	      		      fill: new ol.style.Fill({
-	        		        color: targetStyle.fill 
-	        		      })
-	        		    , stroke: new ol.style.Stroke({
-	        		          color: targetStyle.strokeColor 
-	        		        , width: targetStyle.strokeWidth
-	        		      })
-	        		    , image: new ol.style.Circle({
-	        		        radius: targetStyle.radius,
-	        		        fill: new ol.style.Fill({
-	        		          color: targetStyle.fill 
-	        		        }),
-	        		        stroke: new ol.style.Stroke({ color: targetStyle.strokeColor , width: targetStyle.strokeWidth })
-	        		      })
-	        	  }),
+	          	  style: that.getEditFeatureStyle(),
 	          	  updateWhileAnimating: true, // optional, for instant visual feedback
 	          	  updateWhileInteracting: true // optional, for instant visual feedback
 	        });
@@ -1303,15 +1270,14 @@
         	
         	
         	var addEditInteractions = function() {
-        		var draw;
         		var selectedDrawType = "Point";
         	    
-                draw = new ol.interaction.Draw({
+        		var draw = new ol.interaction.Draw({
                   features: map.getProperties().editFeatures,
                   type: (selectedDrawType),
                   freehandCondition: function(event){
                 	  return ol.events.condition.never(event);
-                	  }
+                  }
                 });
                 
                 // controlling for only having one line or Polygon being created at a time.
@@ -1447,13 +1413,14 @@
             
             // if there is a target feature this should be an edit session opened for an existing feature. 
             // probably as a result of clicking on the feature in the map. 
-            if(targetFeature && map.getProperties().editFeatures.getArray().length < 1){
+            if(targetFeature){
             	var targetFeatureClone = targetFeature.clone();
             	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
             	targetLayer.setProperties({"editFeatureCache":[targetFeature]});
             	targetLayer.getSource().removeFeature(targetFeature);
             	
             	targetFeatureClone.setProperties({"isEditFeature":true})
+            	targetFeatureClone.setStyle(this.getEditFeatureStyle()); // styles are stored for each feature
         		map.getProperties().editFeatures.push(targetFeatureClone);
             	
             	// remove the create point control if editing an existing feature
@@ -1493,8 +1460,6 @@
 
               var button = document.createElement('button');
               button.className = 'save-edits-btn fa fa-floppy-o';
-              button.title = saveEditsBtnTooltip;
-              
 
               function saveAllFeatures() {
             	
@@ -1553,8 +1518,6 @@
 
               var button = document.createElement('button');
               button.className = 'cancel-edits-btn fa fa-times';
-              button.title = cancelEditsBtnTooltip;
-              
 
               function restoreOriginalFeatures() {
             	var targetLayer = that.getVectorLayerByTypeProp("TARGET");
