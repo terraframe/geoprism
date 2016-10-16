@@ -20,7 +20,7 @@
  .new-admin-design-main {
 	/* Accounting for the height of the header bar + a margin at the bottom */
  	height: calc(100% - 88px);
- }
+ }	
  
  
  /* sidebar styles */
@@ -385,7 +385,7 @@ ul.location-management-list {
 .location-management-widget-section > input[type="text"]:focus,
 .location-management-widget-section > input[type="text"]:active{border-color:#019edc;}
 .location-management-list-container .hover {
-  background: #cef0fb
+  background: #f5f5f5;
 }
 
 
