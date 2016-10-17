@@ -18,7 +18,7 @@
  */
 package net.geoprism.gis.geoserver;
 
-import net.geoprism.ontology.LocationLayerPublisher.LayerType;
+import net.geoprism.ontology.LayerPublisher.LayerType;
 
 import org.json.JSONException;
 import org.json.JSONObject;

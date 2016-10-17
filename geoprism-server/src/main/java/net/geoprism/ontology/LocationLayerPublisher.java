@@ -27,13 +27,7 @@ import net.geoprism.gis.geoserver.GeoserverLayer;
 import net.geoprism.gis.geoserver.GeoserverLayerIF;
 import net.geoprism.gis.geoserver.SessionPredicate;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.runwaysdk.business.ontology.Term;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableChar;
@@ -45,85 +39,23 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class LocationLayerPublisher
+public class LocationLayerPublisher extends LayerPublisher
 {
-  public static enum LayerType {
-    POINT, POLYGON
-  }
-
   private String id;
-
-  private String layers;
 
   private String universalId;
 
   public LocationLayerPublisher(String id, String universalId, String layers)
   {
+    super(layers);
+    
     this.id = id;
     this.universalId = universalId;
-    this.layers = layers;
   }
 
-  public String publish()
+  @Override
+  protected List<GeoserverLayerIF> buildLayers()
   {
-    try
-    {
-      /*
-       * Unpublish any layer existing layers from geoserver
-       */
-      if (this.layers != null)
-      {
-        JSONArray deserialized = new JSONArray(this.layers);
-
-        for (int i = 0; i < deserialized.length(); i++)
-        {
-          JSONObject layer = deserialized.getJSONObject(i);
-          String layerName = layer.getString("layerName");
-
-          GeoserverFacade.removeLayer(layerName);
-        }
-      }
-
-      /*
-       * Create new Database views
-       */
-      List<GeoserverLayerIF> layers = this.createDatabaseViews();
-
-      /*
-       * Publish new layers to geoserver
-       */
-      JSONArray serialized = new JSONArray();
-
-      for (GeoserverLayerIF layer : layers)
-      {
-        GeoserverFacade.publishLayer(layer);
-
-        serialized.put(layer.toJSON());
-      }
-
-      return serialized.toString();
-    }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-  }
-
-  @Transaction
-  private List<GeoserverLayerIF> createDatabaseViews() throws JSONException
-  {
-    if (this.layers != null)
-    {
-      JSONArray deserialized = new JSONArray(this.layers);
-
-      for (int i = 0; i < deserialized.length(); i++)
-      {
-        JSONObject layer = deserialized.getJSONObject(i);
-        String layerName = layer.getString("layerName");
-
-        DatabaseUtil.dropView(layerName, "", false);
-      }
-    }
 
     GeoEntity entity = GeoEntity.get(this.id);
     Universal universal = entity.getUniversal();
@@ -136,7 +68,7 @@ public class LocationLayerPublisher
     return layers;
   }
 
-  private GeoserverLayerIF publishChildLayer(GeoEntity entity, List<Term> descendants) throws JSONException
+  private GeoserverLayerIF publishChildLayer(GeoEntity entity, List<Term> descendants)
   {
     LayerType layerType = this.getChildLayerType(descendants);
     String viewName = SessionPredicate.generateId();
@@ -152,7 +84,7 @@ public class LocationLayerPublisher
     return layer;
   }
 
-  private GeoserverLayerIF publishEntityLayer(GeoEntity entity, List<Term> descendants) throws JSONException
+  private GeoserverLayerIF publishEntityLayer(GeoEntity entity, List<Term> descendants)
   {
     LayerType layerType = this.getEntityLayerType(descendants);
     String viewName = SessionPredicate.generateId();
@@ -237,10 +169,5 @@ public class LocationLayerPublisher
   private LayerType getEntityLayerType(List<Term> descendants)
   {
     return descendants.size() == 0 ? LayerType.POINT : LayerType.POLYGON;
-  }
-
-  private String getStyle(LayerType layerType)
-  {
-    return ( layerType.equals(LayerType.POINT) ? "point" : "polygon" );
   }
 }
