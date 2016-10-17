@@ -38,6 +38,7 @@ public class ClientConfigurationService implements Reloadable
   public static List<ClientConfigurationIF> getConfigurations()
   {
     List<ClientConfigurationIF> configurations = new ArrayList<ClientConfigurationIF>();
+    configurations.add(new DefaultClientConfiguration()); 
 
     ServiceLoader<ClientConfigurationIF> loader = ServiceLoader.load(ClientConfigurationIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
 
@@ -50,7 +51,6 @@ public class ClientConfigurationService implements Reloadable
         configurations.add(it.next());
       }
 
-      configurations.add(new DefaultClientConfiguration()); 
     }
     catch (ServiceConfigurationError serviceError)
     {
