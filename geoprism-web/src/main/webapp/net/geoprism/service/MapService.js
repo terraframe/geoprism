@@ -100,20 +100,24 @@
     	service.map.zoomToVectorDataExtent();
     }
     
-    service.addVectorHoverEvents = function() {
-    	service.map.addVectorHoverEvents();
+    service.addVectorHoverEvents = function(hoverCallback) {
+    	service.map.addVectorHoverEvents(hoverCallback);
     }
     
-    service.addVectorClickEvents = function() {
-    	service.map.addVectorClickEvents();
+    service.addVectorClickEvents = function(featureClickCallback) {
+    	service.map.addVectorClickEvents(featureClickCallback);
+    }
+    
+    service.addNewPointControl = function(feature, saveCallback) {
+    	service.map.addNewPointControl(feature, saveCallback);
     }
     
     service.removeAllVectorLayers = function() {
     	service.map.removeAllVectorLayers();
     }
     
-    service.enableEdits = function() {
-    	service.map.enableEdits();
+    service.enableEdits = function(saveCallback) {
+    	service.map.enableEdits(saveCallback);
     }
     
     service.disableEdits = function() {
@@ -143,8 +147,8 @@
             });
     }
     
-    service.closeEditSession = function(){
-    	service.map.closeEditSession();
+    service.closeEditSession = function(saveCallback){
+    	service.map.closeEditSession(saveCallback);
     }
     
     service.focusOnFeature = function(feature) {

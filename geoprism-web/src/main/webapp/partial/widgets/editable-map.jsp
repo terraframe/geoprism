@@ -39,10 +39,7 @@
   
   <!-- map container -->
   <div class="map-wrapper">
-    <div id="mapDivId" class="dynamicMap">
-<!-- 		<editable-map-popup ng-if="targetFeature != null && showTargetFeaturePopup" feature="targetFeature"></editable-map-popup> -->
-
-	</div>
+    <div id="mapDivId" class="dynamicMap"></div>
   </div>
   
    
