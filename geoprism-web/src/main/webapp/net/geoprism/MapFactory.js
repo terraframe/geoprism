@@ -206,6 +206,8 @@
           this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
           this._cache = {};
           
+          this._saveCallback = null;
+          
       	  this.hoverPolygonStyle = new ol.style.Style({
     	    fill: new ol.style.Fill({
     	        color: 'rgba(255, 255, 0, 0.75)'
@@ -234,6 +236,14 @@
     	  });
           
           this.renderMap();
+        },
+        
+        getSaveCallback : function() {
+        	return this._saveCallback;
+        },
+        
+        setSaveCallback : function(callback) {
+        	this._saveCallback = callback;
         },
         
         getHoverPointStyle : function() {
@@ -493,7 +503,7 @@
         },
         
         
-        addVectorClickEvents : function() {
+        addVectorClickEvents : function(featureClickCallback) {
         	var map = this.getMap();
         	var that = this;
         	
@@ -501,9 +511,9 @@
     		  var feature = map.forEachFeatureAtPixel(evt.pixel,
     		    function(feature, layer) {
     			  if(feature.getProperties().isClickable){
-    				  var popup = map.getOverlays().getArray()[0].setPosition(undefined);
+    				  map.getOverlays().getArray()[0].setPosition(undefined);
     				  if(map.getProperties().editFeatures.getArray().length === 0){
-    					  that.addNewPointControl(feature);
+    					  featureClickCallback(feature);
     				  }
     			  }
     		    });
@@ -517,27 +527,17 @@
       		  var feature = map.forEachFeatureAtPixel(map.getEventPixel(evt),
       		    function(feature, layer) {
       			  if(feature.getProperties().isClickable){
-      				  var popup = map.getOverlays().getArray()[0].setPosition(undefined);
+      				  map.getOverlays().getArray()[0].setPosition(undefined);
       				  if(map.getProperties().editFeatures.getArray().length === 0){
-      					  that.addNewPointControl(feature);
+      					featureClickCallback(feature);
       				  }
       			  }
       		    });
           	}); 
         },
         
-        addVectorHoverEvents : function() {
-        	var map = this.getMap();
-        	var that = this;
-        	var selectedFeatures = [];
-        	
-        	
-        	//
-        	// Map popup HTML generation
-        	//
-        	// We are generating this hear because Angular dom render timing and hover interactivity make the 
-        	// angular implementation overly complicated.
-        	//
+        
+        createBasicFeaturePopup : function() {
         	var mapEl = document.getElementById(this.getElementId());
         	
         	var popup = document.createElement("div");
@@ -545,7 +545,7 @@
         	popup.id = "popup";
         	
         	var popupHeading = document.createElement("h3");
-        	popupHeading.className += "popup-Heading";
+        	popupHeading.className += "popup-heading";
         	var headingText = document.createTextNode("");
         	popupHeading.appendChild(headingText);
         	
@@ -555,9 +555,34 @@
         	mapEl.appendChild(popup);
         	popup.appendChild(popupHeading);
         	popup.appendChild(popupContent);
-        	//
-        	// End map popup HTML generation
-        	//
+        	
+        	return popup;
+        },
+        
+        
+        setPopupHeading : function(popupEl, headingStr){
+        	var children = popupEl.children;
+        	for(var i=0; i<children.length; i++){
+        		var el = children[i];
+        		var elClasses = el.classList;
+        		for(var c=0; c<elClasses.length; c++){
+        			var cls = elClasses[c];
+        			if(cls && cls.indexOf("popup-heading") !== -1){
+        				el.innerHTML = headingStr;
+        				
+        			}
+        		};
+        	};
+        },
+        
+        
+        addVectorHoverEvents : function(hoverCallback) {
+        	var map = this.getMap();
+        	var that = this;
+        	var selectedFeatures = [];
+        	
+        	
+        	var popup = this.createBasicFeaturePopup();
         	
 
 	        /**
@@ -618,16 +643,11 @@
         	    	}
         	        selectedFeatures.push(feature);
         	        
-        	        popupHeading.innerHTML = feature.getProperties().displaylabel;
-//        	        popupContent.innerHTML = feature.getProperties().geoid;
+        	        that.setPopupHeading(popup, feature.getProperties().displaylabel);
         	        
         	        overlay.setPosition(evt.coordinate);
         	        
-        	        var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
-        	        editableMapScope.$emit('hoverChange', {
-        	              id : feature.getProperties().id
-        	            });
-        	        editableMapScope.$apply();
+        	        hoverCallback(feature.getProperties().id);
         	        
         	        unHoverableFeatureCache = null;
         	    } 
@@ -638,15 +658,11 @@
         	    else if(feature && feature !== selectedFeatures[0] && !feature.getProperties().isHoverable){
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
         	    	
-        	    	// preventing $emit of hoverchange on every pixel diring scroll over context geographies
+        	    	// preventing hoverchange on every pixel diring scroll over context geographies
         	    	if(feature !== unHoverableFeatureCache){
         	    		unHoverableFeatureCache = feature;
         	    		if(selectedFeatures.length > 0){
-        	    			var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
-        	    			editableMapScope.$emit('hoverChange', {
-        	    				id : null
-        	    			});
-        	    			editableMapScope.$apply();
+        	    			hoverCallback(null);
         	    		}
         	    	}
         	    	
@@ -658,11 +674,7 @@
         	    	$("#"+map.getTarget()).children(".ol-viewport").css("cursor", originalCursor);
         	    	
         	    	if(selectedFeatures.length > 0){
-        	    		var editableMapScope = angular.element(document.getElementById(that.getElementId())).scope();
-        	    		editableMapScope.$emit('hoverChange', {
-        	              id : null
-        	            });
-        	    		editableMapScope.$apply();
+        	    		hoverCallback(null);
         	    	}
         	    	
         	    	overlay.setPosition(undefined);
@@ -701,7 +713,8 @@
           }
         },
         
-        enableEdits : function() {
+        enableEdits : function(saveCallback) {
+        	this.setSaveCallback(saveCallback);
         	this.addEditComponents();
         	this.addNewPointControl(null);
         },
@@ -1400,7 +1413,7 @@
                 map.addInteraction(draw);
                 map.setProperties({"gdbEditModeEnabled":true});
                 
-                that.addEditSessionControls();
+                that.addEditSessionControls(that.getSaveCallback());
             }
         	
         	
@@ -1436,7 +1449,6 @@
             	  else{
             		  addEditInteractions();
             	  }
-            	  
               }
 
               button.addEventListener('click', toggleInteraction, false);
@@ -1508,11 +1520,6 @@
 
               function saveAllFeatures() {
             	
-      	    	//
-          	    // Sending new location data back to angular
-          	    //
-          	    // TODO: This is not ideal. Try to separate angular and the map factory more.
-          	    //
       	    	var editFeatures = map.getProperties().editFeatures.getArray();
       	    	if(editFeatures.length === 1){
       	    		var editFeature = editFeatures[0];
@@ -1521,20 +1528,16 @@
 	          	    var transformedEditGeom = ol.proj.transform(editGeom, MapWidget.MAPSRID, MapWidget.DATASRID);
 	          	    var editGeomWKT = "POINT("+ transformedEditGeom[0] + " " + transformedEditGeom[1] +")";
 	          	    editFeature.setProperties({"wktGeom":editGeomWKT});
-	          	    var editableMapScope = angular.element(button).scope();
       	    		
+	          	    var saveCallback = that.getSaveCallback();
+	          	  
       	    		if(editFeatureProps.hasOwnProperty("isEditFeature") && editFeatureProps.isEditFeature){
-      	    			editableMapScope.editFeature = editFeature;
-		          	    editableMapScope.$apply();
+      	    			saveCallback(editFeature, false);
       	    		}
       	    		else{
-		          	    editableMapScope.newFeatureGeom = editGeomWKT;
-		          	    editableMapScope.$apply();
+      	    			saveCallback(editGeomWKT, true);
       	    		}
       	    	}
-          	    //
-          	    //
-          	    //
               }
               
 

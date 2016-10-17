@@ -30,6 +30,17 @@
 	 $scope.editFeature = null;
 	 $scope.sharedGeoData = {};
 	 
+	 controller.saveCallback = function(editFeature, isNew) {
+		  if(isNew){
+			  $scope.newFeatureGeom = editFeature;
+			  $scope.$apply();
+		  }
+		  else{
+			  $scope.editFeature = editFeature;
+			  $scope.$apply();
+		  }
+	 }
+	 
 	 
 	 controller.init = function() {
 		 
@@ -39,12 +50,24 @@
 	    $scope.baseLayers[1].isActive = true;
 		controller.refreshBaseLayer();
 		
-		controller.addVectorHoverEvents();
-		controller.addVectorClickEvents();
+		
+		var hoverCallback = function(featureId){
+	        $scope.$emit('hoverChange', {
+	              id : featureId
+	        });
+	        $scope.$apply();
+		}
+		
+		var featureClickCallback = function(feature){
+			controller.addNewPointControl(feature, controller.saveCallback);
+		}
+        
+		controller.addVectorHoverEvents(hoverCallback);
+		controller.addVectorClickEvents(featureClickCallback);
 	 }
 	 
-	 controller.enableEdits = function() {
-		 mapService.enableEdits();
+	 controller.enableEdits = function(saveCallback) {
+		 mapService.enableEdits(saveCallback);
 		 $scope.editWidgetEnabled = true;
 	 }
 	 
@@ -60,12 +83,16 @@
 		 mapService.getGeoJSONData(callback, data, workspace);
 	 }
 	 
-	 controller.addVectorClickEvents = function() {
-		 mapService.addVectorClickEvents();
+	 controller.addNewPointControl = function(feature, saveCallback) {
+		 mapService.addNewPointControl(feature, saveCallback);
 	 }
 	 
-	 controller.addVectorHoverEvents = function() {
-		 mapService.addVectorHoverEvents();
+	 controller.addVectorClickEvents = function(featureClickCallback) {
+		 mapService.addVectorClickEvents(featureClickCallback);
+	 }
+	 
+	 controller.addVectorHoverEvents = function(hoverCallback) {
+		 mapService.addVectorHoverEvents(hoverCallback);
 	 }
 	 
 	 controller.zoomToVectorDataExtent = function() {
@@ -84,8 +111,8 @@
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, type, stackingIndex);
 	 }
 	 
-	 controller.closeEditSession = function() {
-		 mapService.closeEditSession();
+	 controller.closeEditSession = function(saveCallback) {
+		 mapService.closeEditSession(saveCallback);
 	 }
 	  
 	  
@@ -130,6 +157,7 @@
 	    	  controller.zoomToVectorDataExtent();
 		  }
 		  
+		  
 		  controller.removeVectorData();
 		  
 		  // get context geo data
@@ -139,14 +167,14 @@
 		  controller.getMapData(targetCallback, data.layers[1], data.workspace);
 		  
 		  if(canEnableEditToolbar(data) && !$scope.editWidgetEnabled){
-			controller.enableEdits();
+			controller.enableEdits(controller.saveCallback);
 		  }
 		  else if($scope.editWidgetEnabled){
 			// locationChange is requesting simple refresh of the map layers after an edit
 			// else will be true if the universal level is not appropriate for edits and it is now a 
 			// feature edit based refresh
 			if(triggeringEvent === "locationChange"){
-				controller.closeEditSession();
+				controller.closeEditSession(controller.saveCallback);
 			}
 			else{
 				controller.disableEdits();
@@ -154,7 +182,7 @@
 			}
 		  }		 
 		  else if(triggeringEvent === "locationChange"){
-			  controller.closeEditSession();
+			  controller.closeEditSession(controller.saveCallback);
 		  }
 	 }
 	 
@@ -246,30 +274,10 @@
     }   
   }
   
-  function EditableMapPopupController($scope, localizationService, mapService) {
-	  var controller = this;
-  }
-  
-  
-  function EditableMapPopup() {
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/widgets/editable-map-popup.jsp',
-      scope: {
-        feature:'='
-      },
-      controller : EditableMapPopupController,
-      controllerAs : 'ctrl',
-      link: function (scope, element, attrs, ctrl) {
-      }
-    }    
-  }
   
   
   angular.module("editable-map", ["styled-inputs", "localization-service", "map-service", "location-service"]);
   angular.module("editable-map")
    .controller('EditableMapController', EditableMapController)
    .directive('editableMap', EditableMap)
-   .directive("editableMapPopup", EditableMapPopup)
 })();
