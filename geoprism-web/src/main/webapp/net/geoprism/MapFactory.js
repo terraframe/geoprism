@@ -185,6 +185,14 @@
         
       clearOverlays : {
         IsAbstract : true
+      },
+      
+      getSaveCallback : {
+        IsAbstract : true
+      },
+      
+      setSaveCallback : {
+        IsAbstract : true
       }
     }
   });

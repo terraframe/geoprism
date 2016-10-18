@@ -182,14 +182,14 @@
 
 			  
 			  if(canEnableEditToolbar(data) && !$scope.editWidgetEnabled){
-				controller.enableEdits(controller.saveCallback);
+				controller.enableEdits($scope.saveCallback);
 			  }
 			  else if($scope.editWidgetEnabled){
 				// locationChange is requesting simple refresh of the map layers after an edit
 				// else will be true if the universal level is not appropriate for edits and it is now a 
 				// feature edit based refresh
 				if(triggeringEvent === "locationChange"){
-					controller.closeEditSession(controller.saveCallback);
+					controller.closeEditSession($scope.saveCallback);
 				}
 				else{
 					controller.disableEdits();
@@ -197,7 +197,7 @@
 				}
 			  }		 
 			  else if(triggeringEvent === "locationChange"){
-				  controller.closeEditSession(controller.saveCallback);
+				  controller.closeEditSession($scope.saveCallback);
 			  }
 		  }
 	 }
