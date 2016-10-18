@@ -488,18 +488,19 @@
         },
         
         
-        getVectorLayerByTypeProp : function(type) {
+        getVectorLayersByTypeProp : function(type) {
         	var map = this.getMap();
-        	var layers = map.getLayers().getArray();
+        	var layersArr = [];
+        	var layers = this.getAllVectorLayers();
         	for(var i=0; i<layers.length; i++){
-          		var layer = layers[i];
-          		if(layer instanceof ol.layer.Vector){
-          			var layerProps = layer.getProperties()
-          			if(layerProps.hasOwnProperty("type") && layerProps.type === type){
-          				return layer;
-          			}
-          		}
+        		var layer = layers[i];
+      			var layerProps = layer.getProperties()
+      			if(layerProps.hasOwnProperty("type") && layerProps.type === type){
+      				layersArr.push(layer);
+      			}
         	}
+        	
+        	return layersArr;
         },
         
         
@@ -512,9 +513,7 @@
     		    function(feature, layer) {
     			  if(feature.getProperties().isClickable){
     				  map.getOverlays().getArray()[0].setPosition(undefined);
-    				  if(map.getProperties().editFeatures.getArray().length === 0){
-    					  featureClickCallback(feature);
-    				  }
+    				  featureClickCallback(feature, map);
     			  }
     		    });
         	}); 
@@ -528,9 +527,7 @@
       		    function(feature, layer) {
       			  if(feature.getProperties().isClickable){
       				  map.getOverlays().getArray()[0].setPosition(undefined);
-      				  if(map.getProperties().editFeatures.getArray().length === 0){
-      					featureClickCallback(feature);
-      				  }
+      				  featureClickCallback(feature, map);
       			  }
       		    });
           	}); 
@@ -688,18 +685,10 @@
         
         removeAllVectorLayers : function() {
         	var map = this.getMap();
-        	var layers = map.getLayers().getArray();
+        	var vecLayers = this.getAllVectorLayers();
         	
-        	var vecLayers = [];
-        	for(var i=0; i<layers.length; i++){
-        		var layer = layers[i];
-        		if(layer instanceof ol.layer.Vector){
-        			vecLayers.push(layer);
-        		}
-        	}
-        	
-        	for(var l=0; l<vecLayers.length; l++){
-        		map.removeLayer(vecLayers[l]);
+        	for(var i=0; i<vecLayers.length; i++){
+        		map.removeLayer(vecLayers[i]);
         	}
         },
         
@@ -739,74 +728,76 @@
         },
         
         
+        arrayContainsString : function(array, str) {
+        	for(var i=0; i<array.length; i++){
+        		if(array[i] === str){
+        			return true;
+        		}
+        	}
+        	
+        	return false;
+        },
+        
+        
         focusOnFeature : function(feature) {
         	var map = this.getMap();
+        	var that = this;
         	var selectedFeatures = [];
-        	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
-        	if(targetLayer){
-        		var features = targetLayer.getSource().getFeatures();
-        		for(var i=0; i<features.length; i++){
-        			var targetFeature = features[i];
-        			var featureProps = targetFeature.getProperties();
-        			if(feature.id === featureProps.id){
-        				
-        				var clearSelctedFeatures = function(){
-        	        		if(selectedFeatures.length > 0){
-        	    	    		for(var i=0; i<selectedFeatures.length; i++){
-        	    	    			selectedFeatures[i].setStyle(null);
-        	    	    		}
-        	     	    		selectedFeatures = [];
-        	     	        }
-        	        	}
-        				
-        				// clear existing selected feature if transitioning directly to another feature.
-            	    	// usually caused by overlapping features at the edge of one of the features.
-            	    	clearSelctedFeatures();
-            	    	
-            	    	// control for styling of different geometry types
-            	    	if(targetFeature.getGeometry() instanceof ol.geom.MultiPolygon || targetFeature.getGeometry() instanceof ol.geom.Polygon){
-            	    		targetFeature.setStyle(this.getHoverPolygonStyle());
-            	    	}
-            	    	else if(targetFeature.getGeometry() instanceof ol.geom.MultiPoint || targetFeature.getGeometry() instanceof ol.geom.Point){
-            	    		targetFeature.setStyle(this.getHoverPointStyle());
-            	    	}
-            	        selectedFeatures.push(targetFeature);
-        				
-//        				var geomType = targetFeature.getGeometry().getType();
-//        				if(geomType === "Point"){
-//        					var coords = targetFeature.getGeometry().getCoordinates();
-//        					coords = ol.proj.transform(coords, MapWidget.MAPSRID, MapWidget.DATASRID);
-//        					this.setView(null, coords, map.getView().getZoom());
-//        				}
-//        				else{
-//        					var extent = targetFeature.getGeometry().getExtent();
-//            				extent = ol.extent.applyTransform(extent, ol.proj.getTransform(MapWidget.MAPSRID, MapWidget.DATASRID));
-//        					this.setView(extent, null, null);
-//        				}
-        				
-        				break;
-        			}
-        		}
+        	var targetLayers = this.getVectorLayersByTypeProp("TARGET");
+        	if(targetLayers.length > 0){
+        		targetLayers.forEach(function(targetLayer){
+	        		var features = targetLayer.getSource().getFeatures();
+	        		for(var i=0; i<features.length; i++){
+	        			var targetFeature = features[i];
+	        			var featureProps = targetFeature.getProperties();
+	        			if((feature.id && feature.id === featureProps.id) || 
+	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+	        				
+	            	    	// control for styling of different geometry types
+	            	    	if(targetFeature.getGeometry() instanceof ol.geom.MultiPolygon || targetFeature.getGeometry() instanceof ol.geom.Polygon){
+	            	    		targetFeature.setStyle(that.getHoverPolygonStyle());
+	            	    	}
+	            	    	else if(targetFeature.getGeometry() instanceof ol.geom.MultiPoint || targetFeature.getGeometry() instanceof ol.geom.Point){
+	            	    		targetFeature.setStyle(that.getHoverPointStyle());
+	            	    	}
+	            	        selectedFeatures.push(targetFeature);
+	        				
+	//        				var geomType = targetFeature.getGeometry().getType();
+	//        				if(geomType === "Point"){
+	//        					var coords = targetFeature.getGeometry().getCoordinates();
+	//        					coords = ol.proj.transform(coords, MapWidget.MAPSRID, MapWidget.DATASRID);
+	//        					this.setView(null, coords, map.getView().getZoom());
+	//        				}
+	//        				else{
+	//        					var extent = targetFeature.getGeometry().getExtent();
+	//            				extent = ol.extent.applyTransform(extent, ol.proj.getTransform(MapWidget.MAPSRID, MapWidget.DATASRID));
+	//        					this.setView(extent, null, null);
+	//        				}
+	        				
+	        			}
+	        		}
+        		});
         	}
         },
         
         
         focusOffFeature : function(feature) {
         	var map = this.getMap();
+        	var that = this;
         	var selectedFeatures = [];
-        	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
-        	if(targetLayer){
-        		var features = targetLayer.getSource().getFeatures();
-        		for(var i=0; i<features.length; i++){
-        			var targetFeature = features[i];
-        			var featureProps = targetFeature.getProperties();
-        			if(feature.id === featureProps.id){
-        				
-        				targetFeature.setStyle(null);
-        				
-        				break;
-        			}
-        		}
+        	var targetLayers = this.getVectorLayersByTypeProp("TARGET");
+        	if(targetLayers.length > 0){
+        		targetLayers.forEach(function(targetLayer){
+	        		var features = targetLayer.getSource().getFeatures();
+	        		for(var i=0; i<features.length; i++){
+	        			var targetFeature = features[i];
+	        			var featureProps = targetFeature.getProperties();
+	        			if((feature.id && feature.id === featureProps.id) || (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+	        				
+	        				targetFeature.setStyle(null);
+	        			}
+	        		}
+        		});
         	}
         },
         
@@ -1139,57 +1130,100 @@
           };
         },
         
-        zoomToVectorDataExtent : function() {
+        
+        zoomToExtentOfFeatures : function(featureGeoIds) {
         	var map = this.getMap();
-        	var layers = map.getLayers().getArray();
+        	var that = this;
+        	var layers = this.getAllVectorLayers();
         	var fullExt = null;
         	
         	for(var i=0; i<layers.length; i++){
         		var layer = layers[i];
-        		if(layer instanceof ol.layer.Vector){
-        			var layerExt = layer.getSource().getExtent();
-        			if(fullExt){
-        				if(layerExt[0] < fullExt[0]){
-        					fullExt[0] = layerExt[0];
-        				}
-        				if(layerExt[1] < fullExt[1]){
-        					fullExt[1] = layerExt[1];
-        				}
-        				if(layerExt[2] > fullExt[2]){
-        					fullExt[2] = layerExt[2];
-        				}
-        				if(layerExt[3] > fullExt[3]){
-        					fullExt[3] = layerExt[3];
-        				}
-        			}
-        			else{
-        				fullExt = layerExt;
-        			}
-        		}
+    			var features = layer.getSource().getFeatures();
+    			features.forEach(function(feature){
+    				if(that.arrayContainsString(featureGeoIds, feature.getProperties().geoid)){
+    					var featureExt = feature.getGeometry().getExtent();
+    					if(fullExt){
+            				if(featureExt[0] < fullExt[0]){
+            					fullExt[0] = featureExt[0];
+            				}
+            				if(featureExt[1] < fullExt[1]){
+            					fullExt[1] = featureExt[1];
+            				}
+            				if(featureExt[2] > fullExt[2]){
+            					fullExt[2] = featureExt[2];
+            				}
+            				if(featureExt[3] > fullExt[3]){
+            					fullExt[3] = featureExt[3];
+            				}
+            			}
+            			else{
+            				fullExt = featureExt;
+            			}
+    				}
+    			});
+        	}
+        	
+        	this.zoomToExtent(fullExt);
+        },
+        
+        
+        zoomToVectorDataExtent : function() {
+        	var map = this.getMap();
+        	var layers = this.getAllVectorLayers();
+        	var fullExt = null;
+        	
+        	for(var i=0; i<layers.length; i++){
+        		var layer = layers[i];
+    			var layerExt = layer.getSource().getExtent();
+    			if(fullExt){
+    				if(layerExt[0] < fullExt[0]){
+    					fullExt[0] = layerExt[0];
+    				}
+    				if(layerExt[1] < fullExt[1]){
+    					fullExt[1] = layerExt[1];
+    				}
+    				if(layerExt[2] > fullExt[2]){
+    					fullExt[2] = layerExt[2];
+    				}
+    				if(layerExt[3] > fullExt[3]){
+    					fullExt[3] = layerExt[3];
+    				}
+    			}
+    			else{
+    				fullExt = layerExt;
+    			}
         	}
         	
         	if(fullExt){
-        		var singlePointCoords = null;
-        		var vecLayers = this.getAllVectorLayers();
-        		if(vecLayers.length === 1){
-        			var layerFeatures = vecLayers[0].getSource().getFeatures();
-        			if(layerFeatures.length === 1){
-        				var theOnlyFeatureGeom = layerFeatures[0].getGeometry();
-        				var theOnlyFeatureGeomType = theOnlyFeatureGeom.getType();
-        				if(theOnlyFeatureGeomType === "Point"){
-        					singlePointCoords = theOnlyFeatureGeom.getCoordinates();
-        				}
-        			}
-        		}
-        		
-        		if(singlePointCoords){
-        			this.setView(null, singlePointCoords, 12, null);
-        		}
-        		else{
-        			map.getView().fit(fullExt, map.getSize());
-        		}
+        		this.zoomToExtent(fullExt);
         	}
+        	
         },
+        
+        zoomToExtent : function(extent) {
+        	var map = this.getMap();
+    		var singlePointCoords = null;
+    		var vecLayers = this.getAllVectorLayers();
+    		if(vecLayers.length === 1){
+    			var layerFeatures = vecLayers[0].getSource().getFeatures();
+    			if(layerFeatures.length === 1){
+    				var theOnlyFeatureGeom = layerFeatures[0].getGeometry();
+    				var theOnlyFeatureGeomType = theOnlyFeatureGeom.getType();
+    				if(theOnlyFeatureGeomType === "Point"){
+    					singlePointCoords = theOnlyFeatureGeom.getCoordinates();
+    				}
+    			}
+    		}
+    		
+    		if(singlePointCoords){
+    			this.setView(null, singlePointCoords, 12, null);
+    		}
+    		else{
+    			map.getView().fit(extent, map.getSize());
+    		}
+        },
+        
         
         getAllVectorLayers : function() {
         	var map = this.getMap();
@@ -1472,9 +1506,10 @@
             // probably as a result of clicking on the feature in the map. 
             if(targetFeature){
             	var targetFeatureClone = targetFeature.clone();
-            	var targetLayer = this.getVectorLayerByTypeProp("TARGET");
-            	targetLayer.setProperties({"editFeatureCache":[targetFeature]});
-            	targetLayer.getSource().removeFeature(targetFeature);
+            	// there should be only one returned during an edit session
+            	var targetLayers = this.getVectorLayersByTypeProp("TARGET");
+            	targetLayers[0].setProperties({"editFeatureCache":[targetFeature]});
+            	targetLayers[0].getSource().removeFeature(targetFeature);
             	
             	targetFeatureClone.setProperties({"isEditFeature":true})
             	targetFeatureClone.setStyle(this.getEditFeatureStyle()); // styles are stored for each feature
@@ -1568,11 +1603,12 @@
               button.className = 'cancel-edits-btn fa fa-times';
 
               function restoreOriginalFeatures() {
-            	var targetLayer = that.getVectorLayerByTypeProp("TARGET");
-              	var targetLayerProps = targetLayer.getProperties();
+            	// There should be only one returned during an edit session
+            	var targetLayers = that.getVectorLayersByTypeProp("TARGET");
+              	var targetLayerProps = targetLayers[0].getProperties();
               	if(targetLayerProps.hasOwnProperty("editFeatureCache")){
               		var originalEditFeature = targetLayerProps.editFeatureCache[0];
-              		targetLayer.getSource().addFeature(originalEditFeature);
+              		targetLayer[0].getSource().addFeature(originalEditFeature);
               	}
         	    
         	    that.closeEditSession();

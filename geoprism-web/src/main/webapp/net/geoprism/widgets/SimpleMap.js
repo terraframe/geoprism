@@ -17,28 +17,14 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function EditableMapController($scope, $rootScope, localizationService, mapService, locationService) {
+  function SimpleMapController($scope, $rootScope, localizationService, mapService, locationService) {
 	 var controller = this;
 	  
-	 $scope.editWidgetEnabled = false;
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
 	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.5)", strokeWidth:5, radius:7};
 	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.1)", strokeColor:"rgba(255, 0, 0, 0.5)", strokeWidth:3, radius:7};
-	 $scope.newFeatureGeom = null;
-	 $scope.editFeature = null;
 	 $scope.sharedGeoData = {};
-	 
-	 controller.saveCallback = function(editFeature, isNew) {
-		  if(isNew){
-			  $scope.newFeatureGeom = editFeature;
-			  $scope.$apply();
-		  }
-		  else{
-			  $scope.editFeature = editFeature;
-			  $scope.$apply();
-		  }
-	 }
 	 
 	 
 	 controller.init = function() {
@@ -57,23 +43,12 @@
 	        $scope.$apply();
 		}
 		
-		var featureClickCallback = function(feature, map) {
-			  if(map.getProperties().editFeatures && map.getProperties().editFeatures.getArray().length === 0){
-				  controller.addNewPointControl(feature, controller.saveCallback);
-			  }
+		var featureClickCallback = function(feature, map){
+			// TODO: Add zoom to functionality
 		}
         
 		controller.addVectorHoverEvents(hoverCallback);
 		controller.addVectorClickEvents(featureClickCallback);
-	 }
-	 
-	 controller.enableEdits = function(saveCallback) {
-		 mapService.enableEdits(saveCallback);
-		 $scope.editWidgetEnabled = true;
-	 }
-	 
-	 controller.disableEdits = function() {
-		 mapService.disableEdits();
 	 }
 	 
 	 controller.removeVectorData = function() {
@@ -82,10 +57,6 @@
 	 
 	 controller.getMapData = function(callback, data, workspace) {
 		 mapService.getGeoJSONData(callback, data, workspace);
-	 }
-	 
-	 controller.addNewPointControl = function(feature, saveCallback) {
-		 mapService.addNewPointControl(feature, saveCallback);
 	 }
 	 
 	 controller.addVectorClickEvents = function(featureClickCallback) {
@@ -100,6 +71,10 @@
 		 mapService.zoomToVectorDataExtent();
 	 }
 	 
+	 controller.zoomToExtentOfFeatures = function(featureGeoIds) {
+		 mapService.zoomToExtentOfFeatures(featureGeoIds);
+	 }
+	 
 	 controller.focusOnFeature = function(feature) {
 		 mapService.focusOnFeature(feature);
 	 }
@@ -112,10 +87,6 @@
 		 mapService.addVectorLayer(layerGeoJSON, styleObj, type, stackingIndex);
 	 }
 	 
-	 controller.closeEditSession = function(saveCallback) {
-		 mapService.closeEditSession(saveCallback);
-	 }
-	  
 	  
 	 controller.refreshBaseLayer = function() {
 	      if($scope.baseLayers.length > 0) {
@@ -132,11 +103,34 @@
 	      }
 	  }
 	 
+	 controller.refreshInteractiveLayers = function(triggeringEvent) {
+		  if(!isEmptyJSONObject($scope.sharedGeoData)){
+			  var data = $scope.sharedGeoData;
+			
+			  var targetCallback = function(data) {
+				  for(var i=0; i<data.features.length; i++){
+		    		var feature = data.features[i];
+		    		feature.properties.isHoverable = true;
+		    		feature.properties.isClickable = true;
+				  }
+				  
+				  controller.addVectorLayer(data, $scope.targetStyle, "TARGET", 2);
+		    	  controller.zoomToVectorDataExtent();
+			  }
+			  
+			  
+			  controller.removeVectorData();
+			  
+			  data.layers.forEach(function(layer){
+				  controller.getMapData(targetCallback, layer, layer.workspace);
+			  });
+		  }
+	 }
+	 
 	 
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
 			  var data = $scope.sharedGeoData;
-			  var targetIsClickable = canEnableEditToolbar(data);
 			
 			  var contextCallback = function(data) {
 				  for(var i=0; i<data.features.length; i++){
@@ -153,7 +147,7 @@
 				  for(var i=0; i<data.features.length; i++){
 		    		var feature = data.features[i];
 		    		feature.properties.isHoverable = true;
-		    		feature.properties.isClickable = targetIsClickable;
+		    		feature.properties.isClickable = true;
 				  }
 				  
 				  controller.addVectorLayer(data, $scope.targetStyle, "TARGET", 2);
@@ -168,41 +162,9 @@
 			  
 			  // get target geo data
 			  controller.getMapData(targetCallback, data.layers[1], data.workspace);
-
-			  
-			  if(canEnableEditToolbar(data) && !$scope.editWidgetEnabled){
-				controller.enableEdits(controller.saveCallback);
-			  }
-			  else if($scope.editWidgetEnabled){
-				// locationChange is requesting simple refresh of the map layers after an edit
-				// else will be true if the universal level is not appropriate for edits and it is now a 
-				// feature edit based refresh
-				if(triggeringEvent === "locationChange"){
-					controller.closeEditSession(controller.saveCallback);
-				}
-				else{
-					controller.disableEdits();
-					$scope.editWidgetEnabled = false;
-				}
-			  }		 
-			  else if(triggeringEvent === "locationChange"){
-				  controller.closeEditSession(controller.saveCallback);
-			  }
 		  }
 	 }
 	 
-	 function canEnableEditToolbar(data) {
-		 if($scope.enableEdits 
-				 && data.layers.length > 1
-				 && data.layers[1].layerType === "POINT" 
-				 && data.layers[0].layerType === "POLYGON"
-			     ){
-			 return true;
-		 }
-		 
-		 return false;
-	 }
-	  
       function isEmptyJSONObject(obj) {
 	    for(var prop in obj) {
 	        if(obj.hasOwnProperty(prop))
@@ -213,29 +175,6 @@
 	  }
       
       
-      //
-      // START Events emitted from LocationManagement.js
-      //
-      $scope.$watch("newFeatureGeom", function(newVal, oldVal) {
-    	  $scope.$emit('locationEdit', {
-	        wkt : newVal,
-	        universal : {
-	            value : $scope.sharedGeoData.universal,
-	            options : $scope.sharedGeoData.universals
-	        },
-	        parent : $scope.sharedGeoData.entity
-	      });
-      });
-      
-      $scope.$watch("editFeature", function(newVal, oldVal) {
-    	  if(newVal){
-    		  var editFeatureProps = newVal.getProperties()
-	    	  $scope.$emit('locationLock', {
-		        wkt : editFeatureProps.wktGeom,
-		        entityId : editFeatureProps.id 
-		      });
-    	  }
-      });
       
       $scope.$on('listHoverOver', function(event, data){
     	  controller.focusOnFeature(data);
@@ -245,14 +184,12 @@
     	  controller.focusOffFeature(data);
       });
       
-      $rootScope.$on("locationChange", function(event, data){
-    	  //
-    	  // IMPORTANT: this event should only be called from a success callback of an entity create or update
-    	  //
-		  controller.refreshWithContextLayer("locationChange");
-      })
+      $scope.$on('listItemClick', function(event, data){
+    	  controller.zoomToExtentOfFeatures(data.geoIds)
+      });
       
-      // Recieve shared data from LocationManagement controller based on user selection of target location
+      
+      // Recieve shared data from parent controller based on user selection of target location
       $scope.$on('sharedGeoData', function(event, data) {
     	  if(!isEmptyJSONObject(data)){
     		  
@@ -264,25 +201,33 @@
     		  controller.refreshWithContextLayer('sharedGeoData');
     	  }
       });
-      //
-      // END events emitted from LocationMangement.js
-      //
       
+      
+      $scope.$on("layerChange", function(event, data){
+    	  $scope.sharedGeoData = data;
+    	  
+    	  if($scope.includeContextLayer){
+    		  controller.refreshWithContextLayer('layerChange');
+    	  }
+    	  else{
+    		  controller.refreshInteractiveLayers('layerChange');
+    	  }
+      })
+
       
       controller.init();
   }
   
   
-  function EditableMap() {
+  function SimpleMap() {
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/widgets/editable-map.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/widgets/simple-map.jsp',
       scope: {
-    	  enableEdits:'=enableEdits',
     	  includeContextLayer:'=includeContextLayer'
       },
-      controller : EditableMapController,
+      controller : SimpleMapController,
       controllerAs : 'ctrl',      
       link: function (scope, element, attrs, ctrl) {
       }
@@ -291,8 +236,8 @@
   
   
   
-  angular.module("editable-map", ["styled-inputs", "localization-service", "map-service", "location-service"]);
-  angular.module("editable-map")
-   .controller('EditableMapController', EditableMapController)
-   .directive('editableMap', EditableMap)
+  angular.module("simple-map", ["styled-inputs", "localization-service", "map-service", "location-service"]);
+  angular.module("simple-map")
+   .controller('simpleMapController', SimpleMapController)
+   .directive('simpleMap', SimpleMap)
 })();
