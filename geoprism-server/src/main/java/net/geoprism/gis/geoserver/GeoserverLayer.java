@@ -68,8 +68,9 @@ public class GeoserverLayer implements GeoserverLayerIF
   {
     JSONObject object = new JSONObject();
     object.put("layerName", this.layerName);
-    object.put("styleName", this.styleName);
     object.put("layerType", this.layerType.name());
+    object.put("workspace", GeoserverProperties.getWorkspace());
+//    object.put("styleName", this.styleName);
 
     return object;
   }

@@ -32,7 +32,6 @@ import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
-import net.geoprism.gis.geoserver.GeoserverFacade;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -741,8 +740,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   public static String publishLayers(String id, String universalId, String existingLayerNames)
   {
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
+    JSONArray layers = publisher.publish();
 
-    return publisher.publish();
+    return layers.toString();
   }
 
   @Transaction
@@ -758,7 +758,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
         {
           JSONObject layer = deserialized.getJSONObject(i);
           String layerName = layer.getString("layerName");
-          
+
           DatabaseUtil.refreshView(layerName);
         }
       }
