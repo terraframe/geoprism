@@ -78,13 +78,13 @@ public abstract class LayerPublisher
       }
     }
   }
-  
+
   protected String getStyle(LayerType layerType)
   {
     return ( layerType.equals(LayerType.POINT) ? "point" : "polygon" );
   }
 
-  public String publish()
+  public JSONArray publish()
   {
     try
     {
@@ -92,12 +92,12 @@ public abstract class LayerPublisher
        * Create new Database views
        */
       List<GeoserverLayerIF> layers = this.createDatabaseViews();
-      
+
       /*
        * Remove old geoserver layers
        */
       this.removeGeoserverLayers();
-      
+
       /*
        * Publish new layers to geoserver
        */
@@ -110,14 +110,13 @@ public abstract class LayerPublisher
         serialized.put(layer.toJSON());
       }
 
-      return serialized.toString();
+      return serialized;
     }
     catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }
   }
-
 
   @Transaction
   private List<GeoserverLayerIF> createDatabaseViews() throws JSONException
