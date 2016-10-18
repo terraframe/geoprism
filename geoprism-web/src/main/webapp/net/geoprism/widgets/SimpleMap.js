@@ -30,11 +30,21 @@
 	 controller.init = function() {
 		 
 		$scope.baseLayers = mapService.createBaseLayers();
-		 
-		// enable the default base layer 
-	    $scope.baseLayers[1].isActive = true;
-		controller.refreshBaseLayer();
 		
+		// Override default basemap from MapConfig with property passed from directive HTML
+		// Any option passed in must also be included in MapConfig or it will not be available to add. 
+		if($scope.baseMapType){
+			$scope.baseLayers.forEach(function(lyr){
+				if(lyr.layerType.toUpperCase() === $scope.baseMapType.toUpperCase()){
+					lyr.isActive = true;
+				}
+				else{
+					lyr.isActive = false;
+				}
+			});
+		}
+		 
+		controller.refreshBaseLayer();
 		
 		var hoverCallback = function(featureId){
 	        $scope.$emit('hoverChange', {
@@ -44,7 +54,10 @@
 		}
 		
 		var featureClickCallback = function(feature, map){
-			// TODO: Add zoom to functionality
+			$scope.$emit('locationFocus', {
+	              id : feature.getProperties().id
+	        });
+	        $scope.$apply();
 		}
         
 		controller.addVectorHoverEvents(hoverCallback);
@@ -225,7 +238,8 @@
       replace: true,
       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/widgets/simple-map.jsp',
       scope: {
-    	  includeContextLayer:'=includeContextLayer'
+    	  includeContextLayer:'=includeContextLayer',
+    	  baseMapType:"@baseMapType"
       },
       controller : SimpleMapController,
       controllerAs : 'ctrl',      

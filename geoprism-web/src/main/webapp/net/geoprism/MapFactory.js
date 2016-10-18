@@ -850,7 +850,7 @@
 	              var layer = {
 	                layerId : i,
 	                key : i,
-	                isActive : false,
+	                isActive : (base.DEFAULT === 'true'),
 	                layerType : base.LAYER_SOURCE_TYPE,
 	                layerLabel : this.localize(base.LOCLIZATION_KEY)
 	              };

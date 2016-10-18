@@ -29,7 +29,7 @@
 	 $scope.editFeature = null;
 	 $scope.sharedGeoData = {};
 	 
-	 controller.saveCallback = function(editFeature, isNew) {
+	 $scope.saveCallback = function(editFeature, isNew) {
 		  if(isNew){
 			  $scope.newFeatureGeom = editFeature;
 			  $scope.$apply();
@@ -44,9 +44,20 @@
 	 controller.init = function() {
 		 
 		$scope.baseLayers = mapService.createBaseLayers();
+		
+		// Override default basemap from MapConfig with property passed from directive HTML
+		// Any option passed in must also be included in MapConfig or it will not be available to add. 
+		if($scope.baseMapType){
+			$scope.baseLayers.forEach(function(lyr){
+				if(lyr.layerType.toUpperCase() === $scope.baseMapType.toUpperCase()){
+					lyr.isActive = true;
+				}
+				else{
+					lyr.isActive = false;
+				}
+			});
+		}
 		 
-		// enable the default base layer 
-	    $scope.baseLayers[1].isActive = true;
 		controller.refreshBaseLayer();
 		
 		
@@ -59,7 +70,7 @@
 		
 		var featureClickCallback = function(feature, map) {
 			  if(map.getProperties().editFeatures && map.getProperties().editFeatures.getArray().length === 0){
-				  controller.addNewPointControl(feature, controller.saveCallback);
+				  controller.addNewPointControl(feature, $scope.saveCallback);
 			  }
 		}
         
@@ -280,7 +291,8 @@
       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/widgets/editable-map.jsp',
       scope: {
     	  enableEdits:'=enableEdits',
-    	  includeContextLayer:'=includeContextLayer'
+    	  includeContextLayer:'=includeContextLayer', 
+    	  baseMapType:'@baseMapType'
       },
       controller : EditableMapController,
       controllerAs : 'ctrl',      

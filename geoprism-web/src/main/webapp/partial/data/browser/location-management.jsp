@@ -79,7 +79,7 @@
     </div>    
   </div>
   <div class="col-md-9">
-  	<editable-map enable-edits="true" include-context-layer="true"></editable-map>
+  	<editable-map enable-edits="true" include-context-layer="true" base-map-type="Bing"></editable-map>
   </div>
   </div>
   
