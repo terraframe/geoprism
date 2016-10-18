@@ -159,6 +159,10 @@
     	service.map.focusOffFeature(feature);
     }
     
+    service.zoomToExtentOfFeatures = function(featureGeoIds) {
+    	service.map.zoomToExtentOfFeatures(featureGeoIds);
+    }
+    
     ///////// SERVICES BELOW THIS ARE TEMPORARY ///////
     ///
     ///
