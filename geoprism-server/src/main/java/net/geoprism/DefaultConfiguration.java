@@ -32,6 +32,7 @@ import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -141,5 +142,11 @@ public class DefaultConfiguration implements ConfigurationIF
     }
 
     return false;
+  }
+
+  @Override
+  public GeoEntity getDefaultGeoEntity()
+  {
+    return null;
   }
 }
