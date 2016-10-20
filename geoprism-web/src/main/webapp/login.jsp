@@ -19,10 +19,7 @@
 
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
@@ -62,11 +59,6 @@
 					    </p>
 					 </div>
 				
-				<!--     TODO: Forgot password and remember me functionality.
-				<!--     <div> -->
-				<!--       <a class="forgot-password" href="index.html">Forgot your password?</a> -->
-				<!--       <label class="remember-me">&nbsp;Remember me<input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever"/></label> -->
-				<!--     </div> -->
 				  </form>
 	    	</header>
 	    	
