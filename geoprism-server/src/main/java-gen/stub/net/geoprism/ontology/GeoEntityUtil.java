@@ -464,6 +464,16 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     problem.delete();
   }
 
+  public static GeoEntity[] getOrderedAncestors(String id)
+  {
+    GeoEntity root = GeoEntity.getRoot();
+    GeoEntity entity = GeoEntity.get(id);
+
+    Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, entity, LocatedIn.CLASS);
+
+    return ancestors.toArray(new GeoEntity[ancestors.size()]);
+  }
+
   public static Collection<Term> getOrderedAncestors(Term root, Term term, String relationship)
   {
     Map<String, Term> map = new LinkedHashMap<String, Term>();

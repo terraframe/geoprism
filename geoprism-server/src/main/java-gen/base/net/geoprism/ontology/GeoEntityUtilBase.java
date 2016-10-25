@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 953904036)
+@com.runwaysdk.business.ClassSignature(hash = -1839924553)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +30,7 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 953904036;
+  private static final long serialVersionUID = -1839924553;
   
   public GeoEntityUtilBase()
   {
@@ -100,6 +100,12 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
   }
   
   public static java.lang.String getGeoEntityTree(java.lang.String geoEntityId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static com.runwaysdk.system.gis.geo.GeoEntity[] getOrderedAncestors(java.lang.String id)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

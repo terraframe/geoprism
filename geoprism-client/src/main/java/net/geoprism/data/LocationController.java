@@ -19,7 +19,6 @@
 package net.geoprism.data;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.geoprism.ExcludeConfiguration;
@@ -33,7 +32,6 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.ValueObjectDTO;
 import com.runwaysdk.business.ValueQueryDTO;
-import com.runwaysdk.business.ontology.TermDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.mvc.Controller;
@@ -65,13 +63,7 @@ public class LocationController implements Reloadable
   public ResponseIF open(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, id);
-    List<TermDTO> ancestors = new LinkedList<TermDTO>(Arrays.asList(entity.getAllAncestors(new String[] { LocatedInDTO.CLASS })));
-
-    /*
-     * Remove the ROOT entry and add back the entity
-     */
-    ancestors.remove(0);
-    ancestors.add(entity);
+    List<GeoEntityDTO> ancestors = Arrays.asList(GeoEntityUtilDTO.getOrderedAncestors(request, entity.getId()));
 
     RestResponse response = this.getLocationInformation(request, entity, null, existingLayers);
     response.set("ancestors", new ListSerializable(ancestors), new GeoEntityJsonConfiguration());
@@ -117,7 +109,7 @@ public class LocationController implements Reloadable
     if (entity.isNewInstance())
     {
       GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentId, LocatedInDTO.CLASS);
-      
+
       GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
       JSONObject object = new JSONObject();
@@ -132,9 +124,9 @@ public class LocationController implements Reloadable
     else
     {
       String id = entity.getId();
-      
+
       entity.apply();
-      
+
       GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
       JSONObject object = new JSONObject();
@@ -156,23 +148,23 @@ public class LocationController implements Reloadable
 
     return new RestBodyResponse(entity, new ExcludeConfiguration(GeoEntityDTO.class, GeoEntityDTO.WKT));
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
   {
     GeoEntityDTO.unlock(request, entityId);
-    
+
     return new RestBodyResponse("");
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
     entity.delete();
-    
+
     GeoEntityUtilDTO.refreshViews(request, existingLayers);
-    
+
     return new RestBodyResponse("");
   }
 }
