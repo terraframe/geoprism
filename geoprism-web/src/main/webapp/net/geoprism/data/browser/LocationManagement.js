@@ -100,42 +100,48 @@
     controller.getGeoEntitySuggestions = function( request, response ) {
       var limit = 20;
       
-      var connection = {
-        onSuccess : function(data){
-          var resultSet = data.resultSet;
+      if(request.term && request.term.length > 0) {
+    	  
+        var connection = {
+          onSuccess : function(data){
+            var resultSet = data.resultSet;
             
-          var results = [];
+            var results = [];
             
-          $.each(resultSet, function( index, result ) {
-            var label = result.displayLabel;
-            var id = result.id;
+            $.each(resultSet, function( index, result ) {
+              var label = result.displayLabel;
+              var id = result.id;
               
-            results.push({'label':label, 'value':label, 'id':id});
-          });
+              results.push({'label':label, 'value':label, 'id':id});
+            });
             
-          response( results );
-        }
-      };
+            response( results );
+          }
+        };
       
-      var text = request.term;
+        var text = request.term;
         
-      locationService.getGeoEntitySuggestions(connection, text, limit);
+        locationService.getGeoEntitySuggestions(connection, text, limit);
+      }
     }
     
     controller.open = function(entityId) {
-      var connection = {
-        elementId : '#innerFrameHtml',
-        onSuccess : function(data) {
-          $scope.previous = data.ancestors;
+    	
+      if(entityId && entityId.length > 0) {
+    	  
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(data) {
+            $scope.previous = data.ancestors;
                   
-          controller.load(data);
-        }      
-      };      
+            controller.load(data);
+          }      
+        };      
                
-      $scope.children = [];
-      $scope.previous = [];
-              
-      locationService.open(connection, entityId, $scope.layers);
+        $scope.children = [];
+        $scope.previous = [];
+        locationService.open(connection, entityId, $scope.layers);
+      }
     }
     
     controller.edit = function(entity) {
