@@ -21,6 +21,7 @@ package net.geoprism;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +62,7 @@ public class InputStreamResponse implements ResponseIF
     if (this.filename != null && resp instanceof ResponseDecorator)
     {
       HttpServletResponse response = ( (ResponseDecorator) resp ).getResponse();
-      response.setHeader("Content-disposition", "attachment; filename=" + this.filename);
+      response.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(this.filename, "UTF-8"));
     }
 
     try
