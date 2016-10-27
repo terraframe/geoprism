@@ -37,13 +37,13 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     GeoprismApplication kaleidoscope = new GeoprismApplication();
     kaleidoscope.setId("kaleidoscope");
     kaleidoscope.setLabel(LocalizationFacadeDTO.getFromBundles(request, "geoprismLanding.dashboards"));
-    kaleidoscope.setSrc("net/geoprism/images/dashboard_icon.png");
+    kaleidoscope.setSrc("net/geoprism/images/k_icon.svg");
     kaleidoscope.setUrl("kaleidoscopes");
 
     GeoprismApplication management = new GeoprismApplication();
     management.setId("management");
     management.setLabel(LocalizationFacadeDTO.getFromBundles(request, "geoprismLanding.dataManagement"));
-    management.setSrc("net/geoprism/images/admin_icon.png");
+    management.setSrc("net/geoprism/images/dm_icon.svg");
     management.setUrl("management");
     management.addRole(RoleConstants.ADIM_ROLE);
     management.addRole(RoleConstants.BUILDER_ROLE);
