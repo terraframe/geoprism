@@ -39,7 +39,15 @@
   
   <!-- map container -->
   <div class="map-wrapper">
-    <div id="mapDivId" class="dynamicMap"></div>
+    <div id="mapDivId" class="dynamicMap">
+    	<div id="base-layer-switcher-wrapper" ng-show="showBaseLayerPanel" ng-mouseleave="ctrl.baseLayerPanelMouseOut()">
+    		<div class="layer-toggle-wrapper" ng-repeat="lyr in baseLayers">
+    			<input type="radio" name="baseLayer" ng-value="lyr" ng-model="activeBaseLayer" ng-click="ctrl.toggleBaseLayer(lyr)">
+    			{{lyr.layerLabel}} 
+    			<br>
+    		</div>
+    	</div>
+    </div>
   </div>
   
    

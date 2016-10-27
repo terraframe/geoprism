@@ -810,6 +810,53 @@
         },
         
         
+        toggleBaseLayer : function(targetLayer, toggleOffLayer){
+        	var map = this.getMap();
+        	var that = this;
+        	
+        	this.hideLayer(toggleOffLayer);
+        	this.showLayer(targetLayer, 0);
+        },
+        
+        
+        createBaseLayerControl : function(hoverCallback, hoverOffCallback){
+        	var map = this.getMap();
+        	
+        	
+        	/**
+             * @constructor
+             * @extends {ol.control.Control}
+             * @param {Object=} opt_options Control options.
+             */
+            var baseLayerToggleControl = function(opt_options) {
+              var options = opt_options || {};
+
+              var button = document.createElement('button');
+              button.className = 'base-map-btn fa fa-bars';
+              
+              button.addEventListener('mouseover', hoverCallback, false);
+              button.addEventListener('mouseout', hoverOffCallback, false);
+
+
+              var element = document.createElement('div');
+              element.className = 'base-map-btn-wrapper ol-unselectable ol-control';
+              element.appendChild(button);
+
+              ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+              });
+            };
+            
+            
+            // extend
+            ol.inherits(baseLayerToggleControl, ol.control.Control);
+            
+            var thisBaseLayerToggleControl = new baseLayerToggleControl();
+            map.addControl(thisBaseLayerToggleControl);
+        },
+        
+        
         /**
          * Create and return an array of all base layer objects.
          * 

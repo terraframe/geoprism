@@ -161,6 +161,14 @@
     	service.map.zoomToExtentOfFeatures(featureGeoIds);
     }
     
+    service.toggleBaseLayer = function(targetLayer, toggleOffLayer) {
+    	service.map.toggleBaseLayer(targetLayer, toggleOffLayer);
+    }
+    
+    service.addBaseMapControl = function(hoverCallback, hoverOffCallback) {
+    	service.map.createBaseLayerControl(hoverCallback, hoverOffCallback);
+    }
+    
     return service;
   }
   

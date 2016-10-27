@@ -17,13 +17,13 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function SimpleMapController($scope, $rootScope, localizationService, mapService, locationService) {
+  function SimpleMapController($scope, $rootScope, localizationService, mapService, locationService, $sce, $compile) {
 	 var controller = this;
 	  
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
-	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.5)", strokeWidth:5, radius:7};
-	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.1)", strokeColor:"rgba(255, 0, 0, 0.5)", strokeWidth:3, radius:7};
+	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.75)", strokeWidth:5, radius:7};
+	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.5)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
 	 $scope.sharedGeoData = {};
 	 
 	 
@@ -34,14 +34,32 @@
 		// Override default basemap from MapConfig with property passed from directive HTML
 		// Any option passed in must also be included in MapConfig or it will not be available to add. 
 		if($scope.baseMapType){
+			var hasBaseLayer = false;
+			var baseInputElements = '';
 			$scope.baseLayers.forEach(function(lyr){
 				if(lyr.layerType.toUpperCase() === $scope.baseMapType.toUpperCase()){
 					lyr.isActive = true;
+					hasBaseLayer = true;
+					$scope.activeBaseLayer = lyr;
 				}
 				else{
 					lyr.isActive = false;
 				}
 			});
+			
+			if(hasBaseLayer){
+				var hoverCallback = function(){
+					$scope.showBaseLayerPanel = true;
+					$scope.$apply();
+				}
+				
+				var hoverOffCallback = function(){
+//					$scope.showBaseLayerPanel = false;
+//					$scope.$apply();
+				}
+				
+				mapService.addBaseMapControl(hoverCallback, hoverOffCallback);
+			}
 		}
 		 
 		controller.refreshBaseLayer();
@@ -62,6 +80,19 @@
         
 		controller.addVectorHoverEvents(hoverCallback);
 		controller.addVectorClickEvents(featureClickCallback);
+	 }
+	 
+	 controller.baseLayerPanelMouseOut = function() {
+		 $scope.showBaseLayerPanel = false;
+	 }
+	 
+	 controller.toggleBaseLayer = function(targetLayer) {
+		 $scope.baseLayers.forEach(function(lyr){
+			 if(lyr.layerId === targetLayer.layerId){
+				 mapService.toggleBaseLayer(lyr, $scope.activeBaseLayer);
+				 $scope.activeBaseLayer = targetLayer;
+			 }
+		 });
 	 }
 	 
 	 controller.removeVectorData = function() {
@@ -225,7 +256,14 @@
     	  else{
     		  controller.refreshInteractiveLayers('layerChange');
     	  }
-      })
+      });
+      
+      
+//      $scope.$watch("activeBaseLayer", function(newVal, oldVal) {
+//    	  if(newVal){
+//    		  console.log("watched")
+//    	  }
+//      });
 
       
       controller.init();

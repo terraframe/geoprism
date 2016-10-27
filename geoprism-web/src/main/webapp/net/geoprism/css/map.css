@@ -300,3 +300,64 @@ span.fa:hover,
 span.fa:focus{
 	color: #00bfff
 }
+
+#base-layer-switcher-wrapper {
+	position: absolute;
+    z-index: 999;
+    top: 155px;
+    left: 47px;
+    padding: 5px;
+    background-color: white;
+    border: solid 2px #ddd;
+    border-radius: 2px;
+}
+#base-layer-switcher-wrapper > form {
+	margin: 0;
+}
+
+
+
+
+
+button.base-map-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.base-map-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.base-map-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.base-map-btn.active{
+	color: #00bfff;
+}
+.base-map-btn-wrapper {  
+	top: 85px;
+  	left: .5em;
+}
+.base-map-btn-wrapper.move-up {  
+	top: 85px;
+}
+.ol-touch .base-map-btn-wrapper {
+   top: 120px;
+}
+
+/* #base-map-control-btn { */
+/* 	top: 85px; */
+/* } */
+
+/* .generic-map-btn-wrapper {   */
+/* /* 	top: 85px; */ */
+/*   	left: .5em; */
+/*   	position: absolute; */
+/*   	z-index: 999; */
+/* } */
