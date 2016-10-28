@@ -184,6 +184,11 @@
 			  if(canEnableEditToolbar(data) && !$scope.editWidgetEnabled){
 				controller.enableEdits($scope.saveCallback);
 			  }
+			  else if(!canEnableEditToolbar(data) && $scope.editWidgetEnabled){
+				  controller.closeEditSession($scope.saveCallback);
+				  controller.disableEdits();
+				  $scope.editWidgetEnabled = false;
+			  }
 			  else if($scope.editWidgetEnabled){
 				// locationChange is requesting simple refresh of the map layers after an edit
 				// else will be true if the universal level is not appropriate for edits and it is now a 
@@ -275,6 +280,10 @@
     		  controller.refreshWithContextLayer('sharedGeoData');
     	  }
       });
+      
+      $rootScope.$on('locationCancel', function() {
+    	  mapService.restoreOriginalFeatures();
+      })
       //
       // END events emitted from LocationMangement.js
       //

@@ -169,6 +169,10 @@
     	service.map.createBaseLayerControl(hoverCallback, hoverOffCallback);
     }
     
+    service.restoreOriginalFeatures = function() {
+    	service.map.restoreOriginalFeatures();
+    }
+    
     return service;
   }
   

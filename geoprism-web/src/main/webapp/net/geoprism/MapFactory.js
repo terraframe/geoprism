@@ -91,6 +91,10 @@
     	  IsAbstract : true
       },
       
+      restoreOriginalFeatures : {
+    	  IsAbstract : true
+      },
+      
       /**
        * Returns the full extent of the map data in the data projection
        * 
@@ -710,12 +714,18 @@
           }
         },
         
+        /**
+         * Adding edit controls (buttons) to the map
+         */
         enableEdits : function(saveCallback) {
         	this.setSaveCallback(saveCallback);
         	this.addEditComponents();
         	this.addNewPointControl(null);
         },
         
+        /**
+         * Removing edit controls (buttons) from the map
+         */
         disableEdits : function() {
         	var map = this.getMap();
         	var mapControls = map.getControls().getArray();
@@ -1663,7 +1673,7 @@
               	var targetLayerProps = targetLayers[0].getProperties();
               	if(targetLayerProps.hasOwnProperty("editFeatureCache")){
               		var originalEditFeature = targetLayerProps.editFeatureCache[0];
-              		targetLayer[0].getSource().addFeature(originalEditFeature);
+              		targetLayers[0].getSource().addFeature(originalEditFeature);
               	}
         	    
         	    that.closeEditSession();
@@ -1695,6 +1705,25 @@
         },
         
         
+        restoreOriginalFeatures : function() {
+        	// There should be only one returned during an edit session
+        	var targetLayers = this.getVectorLayersByTypeProp("TARGET");
+          	var targetLayerProps = targetLayers[0].getProperties();
+          	if(targetLayerProps.hasOwnProperty("editFeatureCache")){
+          		var originalEditFeature = targetLayerProps.editFeatureCache[0];
+          		targetLayers[0].getSource().addFeature(originalEditFeature);
+          	}
+    	    
+    	    this.closeEditSession();
+        },
+        
+        
+        /** 
+         * Removing edit interactions (underlying edit functionality) from the map. 
+         * 
+         * This is separate from UI elements that might initiate an edit session.  
+         * Interactions are the plumbing that performs the actual edits.
+         */
         closeEditSession : function() {
         	var map = this.getMap();
         	
