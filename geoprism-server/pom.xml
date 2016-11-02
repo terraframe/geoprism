@@ -76,9 +76,9 @@
     </dependency>
     <dependency>
       <groupId>org.eclipse.birt.runtime</groupId>
-       <artifactId>org.eclipse.core.runtime</artifactId>
-       <version>3.10.0.v20140318-2214</version>
-    </dependency>    
+      <artifactId>org.eclipse.core.runtime</artifactId>
+      <version>3.10.0.v20140318-2214</version>
+    </dependency>
     <dependency>
       <groupId>net.geoprism</groupId>
       <artifactId>oda.driver</artifactId>
@@ -100,22 +100,28 @@
       <artifactId>gt-image</artifactId>
       <version>${geotools.version}</version>
     </dependency>
-  <dependency>
-    <groupId>org.geotools</groupId>
-    <artifactId>gt-wms</artifactId>
-    <version>${geotools.version}</version>
-  </dependency>
-  <dependency>
-    <groupId>com.amazonaws</groupId>
-    <artifactId>aws-java-sdk-s3</artifactId>
-    <version>1.10.66</version>
-  </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-wms</artifactId>
+      <version>${geotools.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
+      <version>1.10.66</version>
+    </dependency>
 
-  <dependency>
-    <groupId>net.coobird</groupId>
-    <artifactId>thumbnailator</artifactId>
-    <version>[0.4, 0.5)</version>
-  </dependency>
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>[0.4, 0.5)</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>3.7</version>
+    </dependency>
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->
@@ -407,7 +413,7 @@
           </execution>
         </executions>
       </plugin>
-			<plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.4.0</version>
