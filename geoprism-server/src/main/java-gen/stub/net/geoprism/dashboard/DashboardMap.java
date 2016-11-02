@@ -548,8 +548,16 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     if (dashboard != null)
     {
       List<GeoEntity> countries = dashboard.getCountries();
+      List<? extends DashboardLayer> dashboardLayers = this.getLayers();
 
-      if (countries.size() > 0)
+      if (dashboardLayers.size() > 0)
+      {
+        DashboardLayer[] dashboardLayersArr = new DashboardLayer[dashboardLayers.size()];
+        dashboardLayersArr = dashboardLayers.toArray(dashboardLayersArr);
+      
+        return getExpandedMapLayersBBox(dashboardLayersArr, .001);
+      }
+      else if (countries.size() > 0)
       {
 
         MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
