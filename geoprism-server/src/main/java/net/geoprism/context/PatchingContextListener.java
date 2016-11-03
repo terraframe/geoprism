@@ -48,6 +48,7 @@ import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
@@ -176,5 +177,19 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
     }
 
     return new AmazonEndpoint();
+  }
+
+  public static void main(String[] args)
+  {
+    execute();
+  }
+
+  @Request
+  private static void execute()
+  {
+    PatchingContextListener listener = new PatchingContextListener();
+    listener.initialize();
+    listener.startup();
+    listener.shutdown();
   }
 }
