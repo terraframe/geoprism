@@ -251,17 +251,35 @@
           onSuccess : function(entity) {
             entity.wkt = data.wkt;
             
-            $scope.$emit('locationEdit', {
-              universal : $scope.universal,
-              parent : $scope.entity,
-              entity : entity
-            });
+            $scope.parent = $scope.entity;
+            $scope.entity = entity;
+            
+            controller.apply();
           }      
         };      
         
         locationService.edit(connection, data.entityId);        
       }
     });    
+    
+    controller.apply = function() {
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(entity) {
+            
+            $scope.$emit('locationChange', {
+              entity : entity  
+            });
+          },
+          onFailure : function(e){
+            $scope.errors.push(e.localizedMessage);
+          }                
+        };
+                                
+        $scope.errors = [];
+            
+        locationService.apply(connection, $scope.entity, $scope.parent.id, $scope.layers);        
+    }
     
     controller.init();
   }
