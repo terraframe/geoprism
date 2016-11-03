@@ -57,8 +57,8 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
     
     if (sConfigDir != null)
     {
-      String contextPath = this.getWebappContextPath();
-      String appName = new File(contextPath).getName();
+      File deployedPath = this.getDeployedPath();
+      String appName = deployedPath.getName();
       
       externalConfigDir = new File(sConfigDir, appName);
       logger.info("Geoprism external config set to [" + externalConfigDir.getAbsolutePath() + "].");
