@@ -439,7 +439,26 @@
     // The number of size categories can not exceed the number of size options in the given bubble size
     // range (i.e. maxSize - minSize + 1). 
     controller.getMaxBubbleBucketSize = function(){
-    	return $scope.styleModel.bubbleMaxSize - $scope.styleModel.bubbleMinSize + 1;
+    	var numCats;
+    	var bubbleMaxSize = Number($scope.styleModel.bubbleMaxSize);
+    	var bubbleMinSize = Number($scope.styleModel.bubbleMinSize);
+    	
+    	if(bubbleMaxSize > bubbleMinSize){
+    		numCats = bubbleMaxSize - bubbleMinSize + 1;
+    	}
+    	else if(bubbleMaxSize < bubbleMinSize){
+    		numCats = bubbleMinSize - bubbleMaxSize + 1;
+    	}
+    	else if(bubbleMaxSize === bubbleMinSize){
+    		numCats = 2;
+    	}
+    	
+    	// ensure that the numBubbleSizeCategories prop has a valid value if user changes min/max values 
+		if(!$scope.styleModel.numBubbleSizeCategories || $scope.styleModel.numBubbleSizeCategories > numCats){
+			$scope.styleModel.numBubbleSizeCategories = 5 < numCats ? 5 : Math.round(numCats / 2);
+		}
+		
+		return numCats;
     }
     
     /**
