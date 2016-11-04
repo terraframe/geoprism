@@ -47,5 +47,11 @@ public class CountryDataConfiguration
   {
     return format;
   }
+  
+  @Override
+  public String toString()
+  {
+    return key + ":" + version + ":" + format;
+  }
 
 }
