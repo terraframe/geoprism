@@ -121,7 +121,7 @@
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>3.7</version>
-    </dependency>
+    </dependency>    
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->

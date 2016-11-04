@@ -38,6 +38,7 @@
     <module>geoprism-client</module>
     <module>geoprism-server</module>
     <module>geoprism-web</module>
+    <module>geoprism-solr-post-processor</module>    
   </modules>
 
   <properties>
