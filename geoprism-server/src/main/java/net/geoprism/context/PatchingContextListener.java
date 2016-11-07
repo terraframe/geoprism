@@ -19,58 +19,37 @@
 package net.geoprism.context;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import net.geoprism.GeoprismPatcher;
-import net.geoprism.data.CachedEndpoint;
-import net.geoprism.data.LocationImporter;
-import net.geoprism.data.XMLEndpoint;
-import net.geoprism.data.XMLLocationImporter;
-import net.geoprism.data.aws.AmazonEndpoint;
-import net.geoprism.data.importer.GeoprismImportPlugin;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
-import net.geoprism.ontology.ClassifierIsARelationship;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.constants.DeployProperties;
-import com.runwaysdk.constants.LocalProperties;
-import com.runwaysdk.dataaccess.InstallerCP;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.dataaccess.io.Versioning;
-import com.runwaysdk.dataaccess.io.XMLImporter;
-import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.system.gis.geo.AllowedIn;
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.LocatedIn;
-import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.util.ServerInitializerFacade;
 
 public class PatchingContextListener implements Reloadable, ServerContextListener
 {
-  private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
+  private static Logger   logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
   private GeoprismPatcher patcher;
-  
+
   @Override
   public void initialize()
   {
     patcher = new GeoprismPatcher(new File(DeployProperties.getDeployBin(), "metadata"));
+
+    System.out.println(patcher.toString());
   }
 
   @Override
   public void startup()
   {
+    if (patcher == null)
+    {
+      patcher = new GeoprismPatcher(new File(DeployProperties.getDeployBin(), "metadata"));
+    }
+
     patcher.startup();
   }
 
