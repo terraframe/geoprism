@@ -30,16 +30,12 @@ import com.runwaysdk.generation.loader.Reloadable;
 
 public class PatchingContextListener implements Reloadable, ServerContextListener
 {
-  private static Logger   logger = LoggerFactory.getLogger(PatchingContextListener.class);
-
-  private GeoprismPatcher patcher;
+  protected GeoprismPatcher patcher;
 
   @Override
   public void initialize()
   {
     patcher = new GeoprismPatcher(new File(DeployProperties.getDeployBin(), "metadata"));
-
-    System.out.println(patcher.toString());
   }
 
   @Override
@@ -47,7 +43,7 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
   {
     if (patcher == null)
     {
-      patcher = new GeoprismPatcher(new File(DeployProperties.getDeployBin(), "metadata"));
+      initialize();
     }
 
     patcher.startup();
