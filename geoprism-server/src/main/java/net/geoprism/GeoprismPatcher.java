@@ -69,13 +69,31 @@ public class GeoprismPatcher
   
   public static void main(String[] args)
   {
-    executeWithRequest();
+    String metadataPath = null;
+    
+    if (args.length > 0)
+    {
+      metadataPath = args[0];
+    }
+    
+    executeWithRequest(metadataPath);
   }
 
   @Request
-  private static void executeWithRequest()
+  private static void executeWithRequest(String metadataPath)
   {
-    execute(new File(DeployProperties.getDeployPath(), "metadata"));
+    File fMetadataPath = null;
+    if (metadataPath == null)
+    {
+      metadataPath = DeployProperties.getDeployBin();
+      fMetadataPath = new File(metadataPath, "metadata");
+    }
+    else
+    {
+      fMetadataPath = new File(metadataPath);
+    }
+    
+    execute(fMetadataPath);
   }
   
   public static void execute(File metadataDir)

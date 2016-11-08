@@ -252,6 +252,9 @@
                 <configuration>
                   <executable>java</executable>
                   <mainClass>net.geoprism.GeoprismPatcher</mainClass>
+                  <arguments>
+                    <argument>${project.basedir}/target/classes/metadata</argument>
+                  </arguments>
                 </configuration>
               </execution>
             </executions>
