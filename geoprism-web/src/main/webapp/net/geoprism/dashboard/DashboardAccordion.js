@@ -39,6 +39,29 @@
                       
       dashboardService.getGeoEntitySuggestions($scope.dashboardId, request.term, 10, onSuccess);
     }
+    
+    controller.remove = function($index) {
+      $scope.filter.locations.splice($index, 1);
+    }
+    
+    controller.add = function(item) {
+      if(!controller.contains(item.id)) {
+        $scope.filter.locations.push({
+          label : item.label,
+          value : item.id
+        });
+      }
+    }
+    
+    controller.contains = function(id) {
+      for(var i = 0; i < $scope.filter.locations.length; i++) {
+        if($scope.filter.locations[i].value == id) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
   }
   
   function LocationFilter() {
@@ -58,16 +81,10 @@
         input.autocomplete({
           source: ctrl.source,
           select: function(event, ui) {
-            scope.filter.value = ui.item.id;
-            scope.filter.label = ui.item.label;
+        	ctrl.add(ui.item);
+            
+            scope.$apply();
           }, 
-          change : function(event, ui) {
-            var value = input.val();
-              
-            if(value == null || value == '') {                
-              scope.filter.value= '';
-            }
-          },
           minLength: 2
         });        
       }

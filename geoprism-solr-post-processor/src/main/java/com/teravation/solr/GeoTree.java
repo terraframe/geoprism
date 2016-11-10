@@ -21,12 +21,19 @@ package com.teravation.solr;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 /**
  * @author chris
@@ -40,7 +47,7 @@ import com.opencsv.CSVReader;
 // TODO Actually access Runway directly, rather than through this im-memory map (if performance is good enough)
 public class GeoTree
 {
-  private Map<String, GeoData> data = new HashMap<String, GeoData>();
+  private Map<String, GeoData> data = new LinkedHashMap<String, GeoData>();
 
   /**
    * @param filename
@@ -63,6 +70,43 @@ public class GeoTree
     finally
     {
       reader.close();
+    }
+  }
+
+  public void write(Writer writer) throws IOException
+  {
+    CSVWriter csvWriter = new CSVWriter(writer);
+
+    try
+    {
+      Set<Entry<String, GeoData>> tokens = this.data.entrySet();
+
+      for (Entry<String, GeoData> token : tokens)
+      {
+        String label = token.getKey();
+        GeoData data = token.getValue();
+
+        Map<String, List<String>> map = data.getLocationMap();
+
+        Set<Entry<String, List<String>>> entries = map.entrySet();
+
+        for (Entry<String, List<String>> entry : entries)
+        {
+          String geoId = entry.getKey();
+          List<String> parents = entry.getValue();
+
+          List<String> line = new LinkedList<String>();
+          line.add(label);
+          line.add(geoId);
+          line.addAll(parents);
+
+          csvWriter.writeNext(line.toArray(new String[line.size()]));
+        }
+      }
+    }
+    finally
+    {
+      csvWriter.close();
     }
   }
 

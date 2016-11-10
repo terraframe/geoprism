@@ -18,15 +18,19 @@
  */
 package com.teravation.solr;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.opencsv.CSVWriter;
 
 /**
  * @author chris
@@ -54,7 +58,7 @@ public class GeoData
     super();
 
     this.displayLabel = displayLabel;
-    this.locationMap = new HashMap<String, List<String>>();
+    this.locationMap = new LinkedHashMap<String, List<String>>();
   }
 
   /**
@@ -101,6 +105,11 @@ public class GeoData
      * By default return the first option
      */
     return entries.iterator().next().getKey();
+  }
+
+  public Map<String, List<String>> getLocationMap()
+  {
+    return locationMap;
   }
 
   /*
