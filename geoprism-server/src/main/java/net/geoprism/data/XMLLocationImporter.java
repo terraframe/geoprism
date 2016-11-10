@@ -30,6 +30,7 @@ import net.geoprism.context.CountryDataConfiguration;
 import net.geoprism.context.ProjectDataConfiguration;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,8 @@ public class XMLLocationImporter implements LocationImporter
     boolean additive = false;
 
     List<CountryDataConfiguration> countries = configuration.getCountries();
+    
+    logger.info("Location data will be imported for countries [" + StringUtils.join(countries, ", ") + "].");
 
     for (CountryDataConfiguration country : countries)
     {
@@ -95,6 +98,8 @@ public class XMLLocationImporter implements LocationImporter
 
   public boolean loadCountryData(String country, String version)
   {
+    logger.info("Importing location data for country [" + country + ":" + version + "].");
+    
     boolean additive = false;
 
     Set<Date> timestamps = this.getTimestamps();

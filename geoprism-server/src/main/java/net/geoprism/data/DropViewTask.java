@@ -16,42 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.context;
+package net.geoprism.data;
 
-public class CountryDataConfiguration
+import com.runwaysdk.session.Request;
+
+public class DropViewTask implements Runnable
 {
-  private String key;
+  private String viewName;
 
-  private String version;
-
-  private String format;
-
-  public CountryDataConfiguration(String key, String version, String format)
+  public DropViewTask(String viewName)
   {
-    this.key = key;
-    this.version = version;
-    this.format = format;
+    this.viewName = viewName;
   }
 
-  public String getKey()
-  {
-    return key;
-  }
-
-  public String getVersion()
-  {
-    return version;
-  }
-
-  public String getFormat()
-  {
-    return format;
-  }
-  
   @Override
-  public String toString()
+  @Request
+  public void run()
   {
-    return key + ":" + version + ":" + format;
+    DatabaseUtil.dropView(this.viewName, "", false);
   }
-
 }

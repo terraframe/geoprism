@@ -16,42 +16,36 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.context;
+package net.geoprism;
 
-public class CountryDataConfiguration
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public class TaskExecutor
 {
-  private String key;
+  private static ExecutorService executor;
 
-  private String version;
-
-  private String format;
-
-  public CountryDataConfiguration(String key, String version, String format)
+  static
   {
-    this.key = key;
-    this.version = version;
-    this.format = format;
+    executor = Executors.newFixedThreadPool(2);
   }
 
-  public String getKey()
+  public static void addTask(Runnable task)
   {
-    return key;
+    executor.submit(task);
   }
 
-  public String getVersion()
+  public static void shutdown()
   {
-    return version;
+    try
+    {
+      executor.shutdown();
+      executor.awaitTermination(5, TimeUnit.MINUTES);
+    }
+    catch (InterruptedException e)
+    {
+      // Task Interrupted
+    }
   }
-
-  public String getFormat()
-  {
-    return format;
-  }
-  
-  @Override
-  public String toString()
-  {
-    return key + ":" + version + ":" + format;
-  }
-
 }
