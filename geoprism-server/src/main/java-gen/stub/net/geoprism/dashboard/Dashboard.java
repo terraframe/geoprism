@@ -1588,7 +1588,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
     else
     {
-      object.put("location", new JSONObject());
+      LocationCondition condition = new LocationCondition();
+      
+      object.put("location", condition.getJSON());
     }
 
     return object;

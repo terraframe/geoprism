@@ -85,27 +85,30 @@ public class LocationCondition extends DashboardCondition implements com.runways
     /*
      * Handle legacy data
      */
-    if (this.locations != null && this.locations.length() > 0 && !this.locations.startsWith("["))
+    if (this.locations != null && this.locations.length() > 0)
     {
-      entities.add(GeoEntity.get(this.locations));
-    }
-    else
-    {
-      try
+      if (!this.locations.startsWith("["))
       {
-        JSONArray array = new JSONArray(this.locations);
-
-        for (int i = 0; i < array.length(); i++)
-        {
-          JSONObject location = array.getJSONObject(i);
-          String entityId = location.getString(VALUE_KEY);
-
-          entities.add(GeoEntity.get(entityId));
-        }
+        entities.add(GeoEntity.get(this.locations));
       }
-      catch (JSONException e)
+      else
       {
-        throw new ProgrammingErrorException(e);
+        try
+        {
+          JSONArray array = new JSONArray(this.locations);
+
+          for (int i = 0; i < array.length(); i++)
+          {
+            JSONObject location = array.getJSONObject(i);
+            String entityId = location.getString(VALUE_KEY);
+
+            entities.add(GeoEntity.get(entityId));
+          }
+        }
+        catch (JSONException e)
+        {
+          throw new ProgrammingErrorException(e);
+        }
       }
     }
 

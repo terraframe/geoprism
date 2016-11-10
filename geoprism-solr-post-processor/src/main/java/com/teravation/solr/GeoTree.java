@@ -118,6 +118,11 @@ public class GeoTree
   {
     return data.get(name);
   }
+  
+  public Map<String, GeoData> getData()
+  {
+    return data;
+  }
 
   /**
    * @param locationId

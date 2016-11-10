@@ -33,7 +33,7 @@ public class TaskExecutor
   /**
    * Number of threads to use for task execution
    */
-  private static final int       NUM_THREADS = 2;
+  private static final int       NUM_THREADS = 1;
 
   private static ExecutorService executor;
 
