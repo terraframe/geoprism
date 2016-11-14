@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1316411992)
+@com.runwaysdk.business.ClassSignature(hash = -1725716959)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,6 +13,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public final static String CLASS = "net.geoprism.MappableClass";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DATASOURCE = "dataSource";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -42,7 +25,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 1316411992;
+  private static final long serialVersionUID = -1725716959;
   
   public MappableClassBase()
   {
@@ -91,6 +74,34 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public String getDataSource()
+  {
+    return getValue(DATASOURCE);
+  }
+  
+  public void validateDataSource()
+  {
+    this.validateAttribute(DATASOURCE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeTextDAOIF getDataSourceMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.MappableClass.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeTextDAOIF)mdClassIF.definesAttribute(DATASOURCE);
+  }
+  
+  public void setDataSource(String value)
+  {
+    if(value == null)
+    {
+      setValue(DATASOURCE, "");
+    }
+    else
+    {
+      setValue(DATASOURCE, value);
+    }
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()

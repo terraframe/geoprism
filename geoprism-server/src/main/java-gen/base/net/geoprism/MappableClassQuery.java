@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1716009023)
+@com.runwaysdk.business.ClassSignature(hash = 296544138)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -94,6 +76,23 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.MappableClass.CREATEDBY);
 
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.MappableClass.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getDataSource()
+  {
+    return getDataSource(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDataSource(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.DATASOURCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDataSource(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.MappableClass.DATASOURCE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -618,6 +617,9 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getDataSource();
+    public com.runwaysdk.query.SelectableChar getDataSource(String alias);
+    public com.runwaysdk.query.SelectableChar getDataSource(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -774,6 +776,23 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.CREATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getDataSource()
+  {
+    return getDataSource(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDataSource(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.DATASOURCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDataSource(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.DATASOURCE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
@@ -1245,6 +1264,9 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getDataSource();
+    public com.runwaysdk.query.SelectableChar getDataSource(String alias);
+    public com.runwaysdk.query.SelectableChar getDataSource(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
@@ -1394,6 +1416,23 @@ public  class MappableClassQuery extends com.runwaysdk.query.GeneratedBusinessQu
   public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.MappableClass.CREATEDBY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getDataSource()
+  {
+    return getDataSource(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDataSource(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.DATASOURCE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getDataSource(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.MappableClass.DATASOURCE, alias, displayLabel);
 
   }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()

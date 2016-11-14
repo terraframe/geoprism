@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1249511640)
+@com.runwaysdk.business.ClassSignature(hash = -132590431)
 public abstract class MappableClassDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.MappableClass";
-  private static final long serialVersionUID = 1249511640;
+  private static final long serialVersionUID = -132590431;
   
   protected MappableClassDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -47,6 +29,7 @@ public abstract class MappableClassDTOBase extends com.runwaysdk.business.Busine
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DATASOURCE = "dataSource";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -118,6 +101,43 @@ public abstract class MappableClassDTOBase extends com.runwaysdk.business.Busine
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public String getDataSource()
+  {
+    return getValue(DATASOURCE);
+  }
+  
+  public void setDataSource(String value)
+  {
+    if(value == null)
+    {
+      setValue(DATASOURCE, "");
+    }
+    else
+    {
+      setValue(DATASOURCE, value);
+    }
+  }
+  
+  public boolean isDataSourceWritable()
+  {
+    return isWritable(DATASOURCE);
+  }
+  
+  public boolean isDataSourceReadable()
+  {
+    return isReadable(DATASOURCE);
+  }
+  
+  public boolean isDataSourceModified()
+  {
+    return isModified(DATASOURCE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getDataSourceMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(DATASOURCE).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()
