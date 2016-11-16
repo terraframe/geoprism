@@ -61,7 +61,7 @@
   
   <!-- enable/disable checkbox -->
   <div class="style-options-block" ng-show="dynamic == true">
-    <a href="#" ng-click="ctrl.addOption()" class="fa fa-plus referenceLayer ico-enable"><label><gdb:localize key="DashboardThematicLayer.form.addCategory"/></label></a>       
+    <a href="#" ng-click="ctrl.addOption()" class="fa fa-plus"><gdb:localize key="DashboardThematicLayer.form.addCategory"/></a>       
   </div>    
 
   <!-- enable/disable checkbox -->

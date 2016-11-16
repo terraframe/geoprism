@@ -555,19 +555,15 @@
     };
         
     controller.isOntology = function() {
-      return ($scope.dynamicDataModel.isOntologyAttribute)
-    }
-    
-    controller.isDynamic = function() {
-      return !($scope.dynamicDataModel.optionCount < 10)
+      return ($scope.dynamicDataModel.isOntologyAttribute && !$scope.dynamicDataModel.dynamic)
     }
     
     controller.isSecondaryAttributeOntology = function() {
-      return ($scope.styleModel.secondaryAggregation.attribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm');
+      return ($scope.styleModel.secondaryAggregation.attribute.type === 'com.runwaysdk.system.metadata.MdAttributeTerm'  && !$scope.styleModel.secondaryAggregation.attribute.dynamic);
     }
     
     controller.isSecondaryDynamic = function() {
-      return !($scope.styleModel.secondaryAggregation.attribute.optionCount < 10);      
+      return $scope.styleModel.secondaryAggregation.attribute.dynamic;      
     }
     
     controller.categoryAutocomplete = function(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response ) {

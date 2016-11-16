@@ -73,12 +73,10 @@
           <div class="category-block" id="category-point-colors-container">
 
             <!-- RENDER ONTOLOGY TREE DATA  -->
-            <style-category-ontology ng-if="ctrl.isOntology() && !ctrl.isDynamic()" categories="categoryWidget.basicPointCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
-            
-            <style-category-list ng-if="ctrl.isOntology() && ctrl.isDynamic()" dynamic="true" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
+            <style-category-ontology ng-if="ctrl.isOntology()" categories="categoryWidget.basicPointCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
             
             <!-- RENDER BASIC CATEGORIES -->
-            <style-category-list ng-if="!ctrl.isOntology()" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
+            <style-category-list ng-if="!ctrl.isOntology()" dynamic="dynamicDataModel.dynamic" categories="categoryWidget.basicPointCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
           </div>
         </div>
         
@@ -192,12 +190,10 @@
                 </div>
                 <div class="category-block">
                   <!-- RENDER SECONDARY ONTOLOGY TREE -->
-                  <style-category-ontology ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology() && !ctrl.isSecondaryDynamic()" categories="styleModel.secondaryAggregation" nodes="styleModel.secondaryAggregation.attribute.nodes" show-other="false"></style-category-ontology>
-                  
-                  <style-category-list ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology() && ctrl.isSecondaryDynamic()" dynamic="true" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false" type="{{styleModel.secondaryAggregation.attribute.categoryType}}" is-secondary-attribute-list="false"></style-category-list>                  
+                  <style-category-ontology ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" nodes="styleModel.secondaryAggregation.attribute.nodes" show-other="false"></style-category-ontology>
                   
                   <!-- RENDER SECONDARY CATEGORIES -->
-                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false" type="{{styleModel.secondaryAggregation.attribute.categoryType}}" is-secondary-attribute-list="false"></style-category-list>
+                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()"  dynamic="ctrl.isSecondaryDynamic()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false" type="{{styleModel.secondaryAggregation.attribute.categoryType}}" is-secondary-attribute-list="false"></style-category-list>
                 </div>
               </div>
             </div>
@@ -231,12 +227,10 @@
           
           <div class="category-block" id="category-colors-container">
             <!-- RENDER ONTOLOGY TREE DATA  -->
-            <style-category-ontology ng-if="ctrl.isOntology() && !ctrl.isDynamic()" categories="categoryWidget.polygonCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
+            <style-category-ontology ng-if="ctrl.isOntology()" categories="categoryWidget.polygonCatOptionsObj" nodes="dynamicDataModel.ontologyNodes"></style-category-ontology>
             
-            <style-category-list ng-if="ctrl.isOntology() && ctrl.isDynamic()" dynamic="true" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
-                    
             <!-- RENDER BASIC CATEGORIES -->
-            <style-category-list ng-if="!ctrl.isOntology()" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
+            <style-category-list ng-if="!ctrl.isOntology()" dynamic="dynamicDataModel.dynamic" categories="categoryWidget.polygonCatOptionsObj" auto-complete="ctrl.basicCategoryAutocompleteSource" type="{{dynamicDataModel.thematicAttributeDataType}}"></style-category-list>
           </div>
         </div>
       

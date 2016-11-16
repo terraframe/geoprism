@@ -88,6 +88,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 {
   private static final long serialVersionUID = -810007054;
 
+  public static long        LIMIT            = 10;
+
   public static String      layerType        = "THEMATICLAYER";
 
   public DashboardThematicLayer()
@@ -235,15 +237,15 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       {
         try
         {
-          long count = Dashboard.getOptionCount(mdAttribute.getId());
+          boolean dynamic = ! ( Dashboard.getOptionCount(mdAttribute.getId()) < LIMIT );
 
           attrObj.put("isOntologyAttribute", true);
           attrObj.put("isTextAttribute", false);
           attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
           attrObj.put("termType", Classifier.CLASS);
-          attrObj.put("optionCount", count);
+          attrObj.put("dynamic", dynamic);
 
-          if (count < 10)
+          if (!dynamic)
           {
             attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
           }
@@ -458,11 +460,11 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
           if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
           {
-            long count = Dashboard.getOptionCount(secAttr.getMdAttributeId());
+            boolean dynamic = ! ( Dashboard.getOptionCount(secAttr.getMdAttributeId()) < LIMIT );
 
-            secAttrObj.put("optionCount", count);
+            secAttrObj.put("dynamic", dynamic);
 
-            if (count < 10)
+            if (!dynamic)
             {
               secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
             }
