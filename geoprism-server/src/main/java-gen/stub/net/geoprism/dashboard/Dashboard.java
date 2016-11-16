@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard;
 
@@ -699,6 +697,21 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         iterator.close();
       }
     }
+  }
+
+  public static long getOptionCount(String mdAttributeId)
+  {
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+
+    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(rootQuery.getChild()));
+
+    return aptQuery.getCount();
   }
 
   public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
@@ -1589,7 +1602,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     else
     {
       LocationCondition condition = new LocationCondition();
-      
+
       object.put("location", condition.getJSON());
     }
 

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard.layer;
 
@@ -150,17 +148,13 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     QueryFactory f = new QueryFactory();
     ValueQuery wrapper = new ValueQuery(f);
     wrapper.FROM(getViewName(), "");
-    
+
     List<Selectable> selectables = new LinkedList<Selectable>();
 
     //
     // Only number types can be used
     //
-    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || 
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") ||
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") ||
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") ||
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
+    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
     {
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
       selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
@@ -241,11 +235,18 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       {
         try
         {
+          long count = Dashboard.getOptionCount(mdAttribute.getId());
+
           attrObj.put("isOntologyAttribute", true);
           attrObj.put("isTextAttribute", false);
           attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
           attrObj.put("termType", Classifier.CLASS);
-          attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
+          attrObj.put("optionCount", count);
+
+          if (count < 10)
+          {
+            attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
+          }
         }
         catch (JSONException e)
         {
@@ -457,7 +458,14 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
           if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
           {
-            secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
+            long count = Dashboard.getOptionCount(secAttr.getMdAttributeId());
+
+            secAttrObj.put("optionCount", count);
+
+            if (count < 10)
+            {
+              secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
+            }
           }
         }
 

@@ -31,7 +31,7 @@
           <div class="text category-input-container">
             <p><gdb:localize key="Other"/></p>
           </div>
-		  <styled-category geom-type="geomType" category="categories.other" scroll="#layer-modal"></styled-category>
+          <styled-category geom-type="geomType" category="categories.other" scroll="#layer-modal"></styled-category>
         </div>
       </li>
     </ul>
