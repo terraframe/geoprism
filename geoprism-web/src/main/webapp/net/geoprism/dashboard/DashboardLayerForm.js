@@ -559,7 +559,7 @@
     }
     
     controller.isDynamic = function() {
-      return !($scope.dynamicDataModel.optionCount < 1)
+      return !($scope.dynamicDataModel.optionCount < 10)
     }
     
     controller.isSecondaryAttributeOntology = function() {
@@ -567,7 +567,7 @@
     }
     
     controller.isSecondaryDynamic = function() {
-      return !($scope.styleModel.secondaryAggregation.attribute.optionCount < 1);      
+      return !($scope.styleModel.secondaryAggregation.attribute.optionCount < 10);      
     }
     
     controller.categoryAutocomplete = function(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response ) {
