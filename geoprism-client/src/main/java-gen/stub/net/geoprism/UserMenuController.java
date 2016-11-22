@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -157,6 +158,10 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
     Set<String> roleNames = this.getAssignedRoleNames();
 
+    List<GeoprismApplication> allApplications = ClientConfigurationService.getApplications(this.getClientRequest());
+    List<GeoprismApplication> authorizedApplications = allApplications.stream().filter(p -> p.isValid(roleNames)).collect(Collectors.toList());
+
+    this.req.setAttribute("applications", authorizedApplications);
     this.req.setAttribute("isAdmin", roleNames.contains(RoleConstants.ADIM_ROLE));
     this.req.setAttribute("isBuilder", roleNames.contains(RoleConstants.BUILDER_ROLE));
 

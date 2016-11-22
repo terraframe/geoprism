@@ -65,6 +65,12 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 **** Open Layers CSS
 *****/
 
+	.map-popup-table-wrapper{
+	    max-height: 300px;
+    	overflow-y: auto;
+    	margin-top: 10px;
+    	margin-bottom: 10px;
+	}
     .ol-popup {
         position: absolute;
         background-color: white;
@@ -109,7 +115,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
         content: "✖";
       }
       
-      .ol-zoom.ol-unselectable.ol-control{
+      .bg-stretch .ol-zoom.ol-unselectable.ol-control{
       	  left: 290px;
       	  top: 22px;
       	  padding: 0;
@@ -136,7 +142,7 @@ div.row-holder .chk-area, div.row-holder .rad-area {
       }
       
       .ol-attribution.ol-unselectable.ol-control button{
-      	background: rgba(0,0,0,0.7);
+      	background: rgba(0,0,0,0.5);
 	  }
 
 
@@ -153,3 +159,205 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	}
 	
 	
+	
+	
+	
+button.enable-edit-mode-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.enable-edit-mode-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.enable-edit-mode-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.enable-edit-mode-btn.active{
+	color: #00bfff;
+}
+.enable-edit-mode-btn-wrapper {  
+	top: 85px;
+  	left: .5em;
+}
+.ol-touch .enable-edit-mode-btn-wrapper {
+   top: 80px;
+}
+ 
+ 
+button.edit-mode-geom-type-btn{
+	width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.edit-mode-geom-type-btn:hover,
+button.edit-mode-geom-type-btn:focus {
+	color: #00bfff;
+	background-color: white;
+}
+.edit-mode-geom-type-btn-wrapper {  
+	top: 135px;
+  	left: .5em;
+}
+.ol-touch .edit-mode-geom-type-btn-wrapper {
+   top: 80px;
+}
+
+
+button.save-edits-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.save-edits-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.save-edits-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.save-edits-btn.active{
+	color: #00bfff;
+}
+.save-edits-btn-wrapper {  
+	top: 125px;
+  	left: .5em;
+}
+.save-edits-btn-wrapper.move-up {  
+	top: 85px;
+}
+.ol-touch .save-edits-btn-wrapper {
+   top: 120px;
+}
+
+
+button.cancel-edits-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.cancel-edits-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.cancel-edits-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.cancel-edits-btn.active{
+	color: #00bfff;
+}
+.cancel-edits-btn-wrapper {  
+	top: 165px;
+  	left: .5em;
+}
+.cancel-edits-btn-wrapper.move-up {  
+	top: 125px;
+}
+.ol-touch .cancel-edits-btn-wrapper {
+   top: 160px;
+}
+
+.scale-line {
+  position: absolute;
+  top: 350px;
+}
+.ol-scale-line {
+    position: relative;
+    bottom: 29px;
+    float: right;
+    left: -5px;
+    background: rgba(0,0,0,.3);
+}
+
+
+span.fa {
+	font-size: 18px;
+}
+span.fa:hover,
+span.fa:focus{
+	color: #00bfff
+}
+
+#base-layer-switcher-wrapper {
+	position: absolute;
+    z-index: 999;
+    top: 155px;
+    left: 47px;
+    padding: 5px;
+    background-color: white;
+    border: solid 2px #ddd;
+    border-radius: 2px;
+}
+#base-layer-switcher-wrapper > form {
+	margin: 0;
+}
+
+
+
+
+
+button.base-map-btn {
+    width: 37px;
+ 	height: 36px;
+	color: #bababa;
+	background-color: #fff;
+	border: solid 1px #ddd;
+	margin: 0;
+	font-size: 23px;
+}
+button.base-map-btn:hover{
+	color: #00bfff !important;
+	background-color: white;
+}
+button.base-map-btn:focus{
+	outline: 0;
+	color: #bababa;
+	background-color: white;
+}
+button.base-map-btn.active{
+	color: #00bfff;
+}
+.base-map-btn-wrapper {  
+	top: 85px;
+  	left: .5em;
+}
+.base-map-btn-wrapper.move-up {  
+	top: 85px;
+}
+.ol-touch .base-map-btn-wrapper {
+   top: 120px;
+}
+
+/* #base-map-control-btn { */
+/* 	top: 85px; */
+/* } */
+
+/* .generic-map-btn-wrapper {   */
+/* /* 	top: 85px; */ */
+/*   	left: .5em; */
+/*   	position: absolute; */
+/*   	z-index: 999; */
+/* } */

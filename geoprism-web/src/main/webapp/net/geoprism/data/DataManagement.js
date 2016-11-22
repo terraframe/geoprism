@@ -27,15 +27,22 @@
      .when('/icon', {
        bundle : 'category.icon',
        key : 'title',       
-       templateUrl : '/partial/data/importer/icons.jsp',
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/importer/icons.jsp',
        controller : 'CategoryIconController',
        controllerAs : 'ctrl'
      })
      .when('/category', {
        bundle : 'category.management',
        key : 'title',       
-       templateUrl : '/partial/data/browser/category-management.jsp',
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/category-management.jsp',
        controller : 'CategoryController',
+       controllerAs : 'ctrl'
+     })
+     .when('/locations', {
+       bundle : 'location.management',
+       key : 'title',       
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/location-management.jsp',
+       controller : 'LocationController',
        controllerAs : 'ctrl'
      })
      
@@ -43,13 +50,13 @@
      .otherwise({
        bundle : 'dataset',
        key : 'title',
-       templateUrl : '/partial/data/browser/datasets.jsp',
+       templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/datasets.jsp',
        controller : 'DatasetController',
        controllerAs : 'ctrl'
      });    
   }
   
-  angular.module("data-management", ["ngRoute", "localization-service", "data-set", "category-icon", 'category-management']);
+  angular.module("data-management", ["ngRoute", "localization-service", "map-service", "data-set", "category-icon", 'category-management', 'location-management']);
   angular.module("data-management")
    .config(["$routeProvider", DataManagementConfig])
    .controller('DataManagementController', DataManagementController)

@@ -24,10 +24,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 
 public class DatabaseUtil
 {
-  private static boolean IS_MATERIALIZED = true;
+  private static boolean IS_MATERIALIZED = false;
 
   /**
    * Creates a view.
@@ -35,6 +36,7 @@ public class DatabaseUtil
    * @param viewName
    * @param query
    */
+  @Transaction
   public static void createView(String viewName, String query)
   {
     if (IS_MATERIALIZED)
@@ -55,6 +57,7 @@ public class DatabaseUtil
    * @param viewName
    * @param query
    */
+  @Transaction
   public static void dropView(String viewName, String query, Boolean dropOnEndOfTransaction)
   {
     if (IS_MATERIALIZED)
@@ -69,6 +72,7 @@ public class DatabaseUtil
     }
   }
 
+  @Transaction
   public static void dropViews(List<String> viewNames)
   {
     if (IS_MATERIALIZED)
@@ -84,6 +88,7 @@ public class DatabaseUtil
     }
   }
 
+  @Transaction
   public static List<String> getViewsByPrefix(String prefix)
   {
     if (IS_MATERIALIZED)
@@ -130,6 +135,21 @@ public class DatabaseUtil
     else
     {
       return Database.getViewsByPrefix(prefix);
+    }
+  }
+
+  @Transaction
+  public static void refreshView(String viewName)
+  {
+    if (IS_MATERIALIZED)
+    {
+      String statement = "REFRESH MATERIALIZED VIEW " + viewName;
+
+      Database.executeStatement(statement);
+    }
+    else
+    {
+      throw new UnsupportedOperationException();
     }
   }
 

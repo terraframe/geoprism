@@ -18,11 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-import java.io.IOException;
 import java.io.InputStream;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 
 import net.geoprism.JSONControllerUtil;
 
@@ -31,20 +27,21 @@ import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
-import com.runwaysdk.util.FileIO;
+import com.runwaysdk.controller.ServletMethod;
+import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.mvc.Controller;
+import com.runwaysdk.mvc.Endpoint;
+import com.runwaysdk.mvc.InputStreamResponse;
+import com.runwaysdk.mvc.RequestParamter;
+import com.runwaysdk.mvc.ResponseIF;
+import com.runwaysdk.mvc.RestBodyResponse;
 
-public class CategoryIconController extends CategoryIconControllerBase implements com.runwaysdk.generation.loader.Reloadable
+@Controller(url = "iconimage")
+public class CategoryIconController implements Reloadable
 {
-  public CategoryIconController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
+  @Endpoint(method = ServletMethod.POST)
+  public ResponseIF create(ClientRequestIF request, @RequestParamter(name = "file") MultipartFileParameter file, @RequestParamter(name = "label") String label)
   {
-    super(req, resp, isAsynchronous);
-  }
-
-  
-  public void create(MultipartFileParameter file, String label) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
     try
     {
       String filename = file.getFilename();
@@ -54,7 +51,7 @@ public class CategoryIconController extends CategoryIconControllerBase implement
       {
         String result = CategoryIconDTO.create(request, filename, stream, label);
 
-        JSONControllerUtil.writeReponse(this.resp, new JSONArray(result));
+        return new RestBodyResponse(new JSONArray(result));
       }
       finally
       {
@@ -66,33 +63,13 @@ public class CategoryIconController extends CategoryIconControllerBase implement
     }
     catch (Throwable t)
     {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
-    }
-  }
-
-  public void apply(String id, String label) throws IOException, ServletException
-  {
-    ClientRequestIF request = this.getClientRequest();
-
-    try
-    {
-      CategoryIconDTO icon = CategoryIconDTO.get(request, id);
-      icon.getDisplayLabel().setValue(label);
-
-      icon.apply();
-
-      JSONControllerUtil.writeReponse(this.resp, new JSONObject(icon.getAsJSON()));
-    }
-    catch (Throwable t)
-    {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+      return JSONControllerUtil.handleException(t);
     }
   }
   
-  public void apply(String id, MultipartFileParameter file, String label) throws IOException, ServletException
+  @Endpoint(method = ServletMethod.POST)
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "file") MultipartFileParameter file, @RequestParamter(name = "label") String label)
   {
-    ClientRequestIF request = this.getClientRequest();
-
     try
     {
       CategoryIconDTO icon = CategoryIconDTO.get(request, id);
@@ -120,36 +97,31 @@ public class CategoryIconController extends CategoryIconControllerBase implement
         icon.apply();
       }
 
-      JSONControllerUtil.writeReponse(this.resp, new JSONObject(icon.getAsJSON()));
+      return new RestBodyResponse(new JSONObject(icon.getAsJSON()));
     }
     catch (Throwable t)
     {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+      return JSONControllerUtil.handleException(t);
     }
   }
 
-  
-  public void edit(String iconId) throws IOException, ServletException
+  @Endpoint(method = ServletMethod.GET)
+  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "id") String id)
   {
-    ClientRequestIF request = this.getClientRequest();
-
     try
     {
-      CategoryIconDTO icon = CategoryIconDTO.lock(request, iconId);
+      CategoryIconDTO icon = CategoryIconDTO.lock(request, id);
 
-      JSONControllerUtil.writeReponse(this.resp, new JSONObject(icon.getAsJSON()));
+      return new RestBodyResponse(new JSONObject(icon.getAsJSON()));
     }
     catch (Throwable t)
     {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+      return JSONControllerUtil.handleException(t);
     }
   }
 
-  
-  public void getAll() throws IOException, ServletException
+  public ResponseIF getAll(ClientRequestIF request)
   {
-    ClientRequestIF request = this.getClientRequest();
-
     try
     {
       String icons = CategoryIconDTO.getAllAsJSON(request);
@@ -157,67 +129,34 @@ public class CategoryIconController extends CategoryIconControllerBase implement
       JSONObject object = new JSONObject();
       object.put("icons", new JSONArray(icons));
 
-      JSONControllerUtil.writeReponse(this.resp, object);
+      return new RestBodyResponse(object);
     }
     catch (Throwable t)
     {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+      return JSONControllerUtil.handleException(t);
     }
   }
 
-  
-  public void remove(String id) throws IOException, ServletException
+  @Endpoint(method = ServletMethod.POST)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id)
   {
-    ClientRequestIF request = this.getClientRequest();
-
     try
     {
       CategoryIconDTO.remove(request, id);
 
-      JSONControllerUtil.writeReponse(this.resp, "");
+      return new RestBodyResponse("");
     }
     catch (Throwable t)
     {
-      JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
+      return JSONControllerUtil.handleException(t);
     }
   }
 
-  @Override
-  public void getCategoryIconImage(String iconId) throws IOException, ServletException
+  @Endpoint(method = ServletMethod.GET)
+  public ResponseIF getCategoryIconImage(ClientRequestIF request, @RequestParamter(name = "id") String id)
   {
-    ClientRequestIF request = this.getClientRequest();
+    CategoryIconDTO icon = CategoryIconDTO.get(request, id);
 
-    InputStream iconStream = null;
-    CategoryIconDTO icon = CategoryIconDTO.get(request, iconId);
-
-    try
-    {
-      iconStream = icon.getIcon();
-      try
-      {
-        resp.setContentType("image/png");
-        ServletOutputStream ostream = resp.getOutputStream();
-
-        try
-        {
-          FileIO.write(ostream, iconStream);
-          ostream.flush();
-        }
-        finally
-        {
-          ostream.close();
-        }
-      }
-      finally
-      {
-        iconStream.close();
-      }
-    }
-    catch (IOException e)
-    {
-      // TODO: is this the correct exception to throw?
-      throw new IOException(e);
-    }
+    return new InputStreamResponse(icon.getIcon(), "image/png");
   }
-
 }

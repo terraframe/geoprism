@@ -24,6 +24,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.mvc.ErrorRestResponse;
+import com.runwaysdk.mvc.ResponseIF;
+import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.transport.conversion.json.JSONExceptionDTO;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 import com.runwaysdk.web.json.JSONRunwayExceptionDTO;
@@ -58,11 +61,26 @@ public class JSONControllerUtil
     JSONControllerUtil.writeOutputStream(resp, bytes);
   }
 
+  public static ResponseIF writeReponse(Object returnValue)
+  {
+//    JSONReturnObject ret = new JSONReturnObject();
+//    ret.setReturnValue(returnValue);
+
+    return new RestBodyResponse(returnValue);
+  }
+
   public static void handleException(HttpServletResponse resp, Throwable t, ClientRequestIF request) throws IOException
   {
     JSONRunwayExceptionDTO ex = new JSONRunwayExceptionDTO(t);
 
     JSONControllerUtil.writeException(resp, ex);
+  }
+
+  public static ResponseIF handleException(Throwable t)
+  {
+    JSONRunwayExceptionDTO ex = new JSONRunwayExceptionDTO(t);
+
+    return new ErrorRestResponse(ex.getJSON());
   }
 
   public static void writeException(HttpServletResponse resp, JSONExceptionDTO ex) throws IOException

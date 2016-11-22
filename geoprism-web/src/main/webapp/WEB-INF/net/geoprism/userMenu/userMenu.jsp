@@ -25,28 +25,28 @@
 <%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <head>
-	<gdb:localize var="page_title" key="login.header"/>
-	
-	<c:choose>
-		<c:when test="${not empty miniLogoFilePath}" >
-			<link rel="icon" href="${miniLogoFilePath}">
-		</c:when>
-		<c:otherwise>
-			<link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png">
-		</c:otherwise>
-	</c:choose>
+  <gdb:localize var="page_title" key="login.header"/>
+  
+  <c:choose>
+    <c:when test="${not empty miniLogoFilePath}" >
+      <link rel="icon" href="${miniLogoFilePath}">
+    </c:when>
+    <c:otherwise>
+      <link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png">
+    </c:otherwise>
+  </c:choose>
 
     <!-- User account CSS -->
-	<jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-	<jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
-	<jwr:style src="/bundles/user-menu.css" useRandomParam="false"/>  
-	
+  <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
+  <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
+  <jwr:style src="/bundles/user-menu.css" useRandomParam="false"/>  
+  
     <!-- User account Javascript -->
-	<jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
-	<jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
-	<jwr:script src="/bundles/account.js" useRandomParam="false"/>  
-	
-	<script type="text/javascript">${js}</script>
+  <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
+  <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
+  <jwr:script src="/bundles/account.js" useRandomParam="false"/>  
+  
+  <script type="text/javascript">${js}</script>
 </head>
 <body>
 
@@ -57,95 +57,88 @@
   </c:if>
   
   <div id="container">
-		<div id="geodash-landing-top-div">
-			<header id="header">
-				<div id="header-link-container" class="text-right">
-					<a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
-					  <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
-					</a>
-					<p id="user-link-container" class="text-right">				        
-					  <c:if test="${isAdmin}">
-              <a class="user-command-link" href="/"><gdb:localize key="geoprismLanding.administration"/></a>
-              <i class="user-command-link"> | </i>					
+    <div id="geodash-landing-top-div">
+      <header id="header">
+        <div id="header-link-container" class="text-right">
+          <a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
+            <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
+          </a>
+          <p id="user-link-container" class="text-right">                
+            <c:if test="${isAdmin}">
+              <a class="user-command-link" href="${pageContext.request.contextPath}/app"><gdb:localize key="geoprismLanding.administration"/></a>
+              <i class="user-command-link"> | </i>          
             </c:if>
-		        <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-						<i class="user-command-link"> | </i>
-	 					<a class="user-command-link" href="/session/logout"><gdb:localize key="userDashboards.logout"/></a>
-	 				</p>
-	 			</div>
-				<div class="row-fluid header-logo-row">
-					<div class="hidden-xs col-md-1"></div>
-       				<div class="col-md-8">
-       					<img id="logo" class="pull-left img-responsive" src="${banner}" alt="logo"/>
-       				</div>
-       				<div class="hidden-xs col-md-3"></div>
-		 		</div>
-		 		
- 			</header>
-		</div>    
-		<div id="geodash-landing-bottom-div">
-			<div id="mask"></div>
-			<div class="nav-icon-container container-fluid">
-			  	<div class="row-fluid vertical-center-row">
-			        <div class="col-sm-3 hidden-xs"></div>
-			        <div class="col-xs-12 col-sm-6">
-							<div class="row-fluid">
-							  <div class="col-xs-12 col-sm-6 text-center">
-								<div id="dashboard-link" class="nav-option">
-									<img class="nav-icon-img img-responsive" src="net/geoprism/images/dashboard_icon.png" alt="Navigation" />
-									<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dashboards"/></h3>
-								</div>
-								</div>
-								<c:if test="${isBuilder || isAdmin}">								
-  							  <div class="col-xs-12 col-sm-6 text-center">
-	  							<div class="nav-option">
-		  							<img id="data-management" class="nav-icon-img img-responsive" src="net/geoprism/images/admin_icon.png" alt="Navigation" />
-			  						<h3 class="nav-icon-img-label"><gdb:localize key="geoprismLanding.dataManagement"/></h3>
-				  				</div>
-					  		  </div>
-							  </c:if>							  
-							</div>
-							<!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
-			        </div>
-			        <div class="col-sm-3 hidden-xs"></div>
-		        </div>
-		     </div>
-						
-			<div id="geodash-landing-footer">
-				<h4><gdb:localize key="geoprismLanding.footerMessage"/></h4>
-			</div>
-		</div>
-	
+            <a id="account-btn" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
+            <i class="user-command-link"> | </i>
+             <a class="user-command-link" href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a>
+           </p>
+         </div>
+        <div class="row-fluid header-logo-row">
+          <div class="hidden-xs col-md-1"></div>
+               <div class="col-md-8">
+                 <img id="logo" class="pull-left img-responsive" src="${banner}" alt="logo"/>
+               </div>
+               <div class="hidden-xs col-md-3"></div>
+         </div>
+         
+       </header>
+    </div>    
+    <div id="geodash-landing-bottom-div">
+      <div id="mask"></div>
+      <div class="nav-icon-container container-fluid">
+          <div class="row-fluid vertical-center-row">
+              <div class="col-sm-3 hidden-xs"></div>
+              <div class="col-xs-12 col-sm-6">
+              <div class="row-fluid">
+                <c:forEach var="application" items="${applications}">
+                  <div class="col-xs-12 col-sm-6 text-center">
+                    <div id="${application.id}" class="nav-option">
+                      <img class="nav-icon-img img-responsive" src="${application.src}" alt="Navigation" />
+                      <h3 class="nav-icon-img-label">${application.label}</h3>
+                    </div>                
+                  </div>
+                  <script type="text/javascript">    
+                    $(document).ready(function(){
+                      $("#${application.id}").click(function(){
+                        window.open(window.location.origin +"${pageContext.request.contextPath}/${application.url}", "_self");
+                      });
+                    });
+                  </script>                  
+                </c:forEach>              
+              </div>
+              <!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
+              </div>
+              <div class="col-sm-3 hidden-xs"></div>
+            </div>
+         </div>
+            
+      <div id="geodash-landing-footer">
+        <h4><gdb:localize key="geoprismLanding.footerMessage"/></h4>
+      </div>
+    </div>
+  
   </div>
 
 </body>
 </html>
 
-  <script type="text/javascript">	   
-		$(document).ready(function(){
-				$("#dashboard-link").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}/kaleidoscopes", "_self");
-				});	
+<script type="text/javascript">     
+  $(document).ready(function(){
+    com.runwaysdk.ui.Manager.setFactory("JQuery");
+          
+    $("#account-btn").on("click", function(){
 
-				$("#data-management").click(function(){
-					window.open(window.location.origin +"${pageContext.request.contextPath}/management", "_self");
-				});	
-
-					com.runwaysdk.ui.Manager.setFactory("JQuery");
-					
-					$("#account-btn").on("click", function(){
-
-						var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
-						dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
-					          dialog.close();
-					        }, null, {primary: true});
-						dialog.setStyle("z-index", 2001);
-			        	dialog.render();    
-			        	
-					  var ut = new com.runwaysdk.ui.userstable.UserForm();  
-					  ut.render("#"+dialog.getContentEl().getId());
-					});
-		});
-  </script>
+    var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
+    dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
+      dialog.close();
+    }, null, {primary: true});
+    dialog.setStyle("z-index", 2001);
+    dialog.render();    
+                
+    var ut = new com.runwaysdk.ui.userstable.UserForm();  
+      ut.render("#"+dialog.getContentEl().getId());
+    });
+  });
+</script>
   
   

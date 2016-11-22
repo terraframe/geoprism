@@ -18,53 +18,23 @@
  */
 package net.geoprism.gis.geoserver;
 
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.configuration.ConfigurationManager;
-import com.runwaysdk.configuration.ConfigurationManager.ConfigGroupIF;
 import com.runwaysdk.configuration.ConfigurationReaderIF;
 import com.runwaysdk.configuration.RunwayConfigurationException;
 import com.runwaysdk.generation.loader.Reloadable;
 
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
+import net.geoprism.configuration.GeoprismConfigGroup;
+
 public class GeoserverProperties implements Reloadable
 {
-  public static enum ConfigGroup implements ConfigGroupIF {
-    GEODASHBOARD("geoprism/", "");
-
-    private String path;
-
-    private String identifier;
-
-    ConfigGroup(String path, String identifier)
-    {
-      this.path = path;
-      this.identifier = identifier;
-    }
-
-    public String getPath()
-    {
-      return this.path;
-    }
-
-    public String getIdentifier()
-    {
-      return identifier;
-    }
-
-    @Override
-    public String toString()
-    {
-      return "ConfigGroup : " + getIdentifier();
-    }
-  }
-
   /**
    * The server.properties configuration file
    */
@@ -80,7 +50,7 @@ public class GeoserverProperties implements Reloadable
 
   private GeoserverProperties()
   {
-    this.props = ConfigurationManager.getReader(ConfigGroup.GEODASHBOARD, "geoserver.properties");
+    this.props = ConfigurationManager.getReader(GeoprismConfigGroup.COMMON, "geoserver.properties");
   }
 
   private static class Singleton implements Reloadable

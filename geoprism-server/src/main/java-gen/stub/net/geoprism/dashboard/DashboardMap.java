@@ -59,6 +59,7 @@ import javax.net.ssl.SSLContext;
 
 import net.geoprism.MappableClass;
 import net.geoprism.MappableClassQuery;
+import net.geoprism.TaskExecutor;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.layer.DashboardLayer;
 import net.geoprism.dashboard.layer.DashboardReferenceLayer;
@@ -67,6 +68,7 @@ import net.geoprism.dashboard.layer.HasLayer;
 import net.geoprism.dashboard.layer.HasLayerQuery;
 import net.geoprism.dashboard.query.MdAttributeViewPredicate;
 import net.geoprism.data.DatabaseUtil;
+import net.geoprism.data.DropViewTask;
 import net.geoprism.data.etl.excel.ValueQueryExcelExporter;
 import net.geoprism.gis.geoserver.GeoserverBatch;
 import net.geoprism.gis.geoserver.GeoserverFacade;
@@ -162,10 +164,12 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (DashboardLayer layer : layers)
     {
-      DatabaseUtil.dropView(layer.getViewName(), "", false);
+      TaskExecutor.addTask(new DropViewTask(layer.getViewName()));
+
+      // DatabaseUtil.dropView(layer.getViewName(), "", false);
 
       batch.addLayerToDrop(layer);
-      
+
       this.generateSessionViewName(layer);
 
       layer.setConditions(Arrays.asList(conditions));
@@ -548,8 +552,16 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     if (dashboard != null)
     {
       List<GeoEntity> countries = dashboard.getCountries();
+      List<? extends DashboardLayer> dashboardLayers = this.getLayers();
 
-      if (countries.size() > 0)
+      if (dashboardLayers.size() > 0)
+      {
+        DashboardLayer[] dashboardLayersArr = new DashboardLayer[dashboardLayers.size()];
+        dashboardLayersArr = dashboardLayers.toArray(dashboardLayersArr);
+
+        return getExpandedMapLayersBBox(dashboardLayersArr, .001);
+      }
+      else if (countries.size() > 0)
       {
 
         MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);

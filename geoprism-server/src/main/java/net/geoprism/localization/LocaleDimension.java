@@ -24,11 +24,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import com.runwaysdk.configuration.ConfigurationManager;
+import com.runwaysdk.configuration.RunwayConfigurationException;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.dataaccess.MdDimensionDAOIF;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.metadata.MdDimensionDAO;
 import com.runwaysdk.generation.loader.Reloadable;
+
+import net.geoprism.configuration.GeoprismConfigGroup;
 
 public class LocaleDimension implements Reloadable
 {
@@ -104,29 +108,27 @@ public class LocaleDimension implements Reloadable
   {
     String fileName = this.getResourceName(bundle);
 
-    InputStream stream = this.getClass().getResourceAsStream(fileName);
-
-    if (stream == null)
+    InputStream stream;
+    try
     {
-      // throw new RuntimeException("Unable to get resource [" + fileName +
-      // "]");
+      stream = ConfigurationManager.getResourceAsStream(GeoprismConfigGroup.ROOT, fileName);
+    }
+    catch (RunwayConfigurationException e)
+    {
       return new Properties();
     }
-    else
+    
+    try
     {
-      try
-      {
-        Properties prop = new Properties();
-        prop.load(new InputStreamReader(stream, "UTF-8"));
+      Properties prop = new Properties();
+      prop.load(new InputStreamReader(stream, "UTF-8"));
 
-        return prop;
-      }
-      catch (IOException e)
-      {
-        throw new FileReadException(new File(fileName), e);
-      }
+      return prop;
     }
-
+    catch (IOException e)
+    {
+      throw new FileReadException(new File(fileName), e);
+    }
   }
 
   public String getLocaleString()

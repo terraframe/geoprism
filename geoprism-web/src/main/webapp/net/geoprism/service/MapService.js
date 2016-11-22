@@ -63,8 +63,8 @@
       service.map.showLayer(layer, index);    
     }    
     
-    service.setView = function(bounds, center, zoomLevel){
-      service.map.setView(bounds, center, zoomLevel);    
+    service.setView = function(bounds, center, zoomLevel, dataSRID){
+      service.map.setView(bounds, center, zoomLevel, dataSRID);    
     }
 
     service.getCurrentBounds = function(srid) {
@@ -84,8 +84,93 @@
     }
     
     service.zoomToFeatureExtent = function(feature){
-    	service.map.zoomToFeatureExtent(feature);
+    	// NOTE: this.getWorkspace() will only be set if on the dashboardViewer page
+    	// because that is the only place we are currently passing the var to the client via jsp attributes
+    	service.map.zoomToFeatureExtent(feature, this.getWorkspace());
     	this.clearOverlays(); // the popup doesn't shift appropriately to the new position so clear it
+    }
+    
+    service.addVectorLayer = function(layer, styleObj, type, stackingIndex) {
+    	service.map.addVectorLayer(layer, styleObj, type, stackingIndex);
+    }
+    
+    service.zoomToVectorDataExtent = function() {
+    	service.map.zoomToVectorDataExtent();
+    }
+    
+    service.addVectorHoverEvents = function(hoverCallback) {
+    	service.map.addVectorHoverEvents(hoverCallback);
+    }
+    
+    service.addVectorClickEvents = function(featureClickCallback) {
+    	service.map.addVectorClickEvents(featureClickCallback);
+    }
+    
+    service.addNewPointControl = function(feature, saveCallback) {
+    	service.map.addNewPointControl(feature, saveCallback);
+    }
+    
+    service.removeAllVectorLayers = function() {
+    	service.map.removeAllVectorLayers();
+    }
+    
+    service.enableEdits = function(saveCallback) {
+    	service.map.enableEdits(saveCallback);
+    }
+    
+    service.disableEdits = function() {
+    	service.map.disableEdits();
+    }
+    
+    service.getGeoJSONData = function(callback, config, workspace) {
+       	var params = {
+                REQUEST:'GetFeature',
+                SERVICE:'WFS',
+                VERSION:'2.0.0',
+                TYPENAMES:workspace +":"+ config.layerName,
+//                CQL_FILTER : "geoid='"+ config.geoId + "'",
+                //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
+                outputFormat : 'application/json'
+          };
+	
+          var url = window.location.origin+"/geoserver/" + workspace +"/wfs?" + $.param(params);
+          
+          $.ajax({
+              url: url,
+              context: document.body 
+            }).done(function(response) {
+              if(response.totalFeatures > 0) {
+                callback(response);
+              }
+            });
+    }
+    
+    service.closeEditSession = function(saveCallback){
+    	service.map.closeEditSession(saveCallback);
+    }
+    
+    service.focusOnFeature = function(feature) {
+    	service.map.focusOnFeature(feature);
+    }
+    
+    service.focusOffFeature = function(feature) {
+    	service.map.focusOffFeature(feature);
+    }
+    
+    service.zoomToExtentOfFeatures = function(featureGeoIds) {
+    	service.map.zoomToExtentOfFeatures(featureGeoIds);
+    }
+    
+    service.toggleBaseLayer = function(targetLayer, toggleOffLayer) {
+    	service.map.toggleBaseLayer(targetLayer, toggleOffLayer);
+    }
+    
+    service.addBaseMapControl = function(hoverCallback, hoverOffCallback) {
+    	service.map.createBaseLayerControl(hoverCallback, hoverOffCallback);
+    }
+    
+    service.restoreOriginalFeatures = function() {
+    	service.map.restoreOriginalFeatures();
     }
     
     return service;

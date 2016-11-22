@@ -38,6 +38,7 @@ import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
 import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierQuery;
 import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 
@@ -551,7 +552,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
       GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
 
-      Classifier.getStrategy().initialize(LocatedIn.CLASS);
+      Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
     }
   }
 
@@ -615,7 +616,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
       System.out.println("HELLO");
-      
+
       QueryFactory factory = new QueryFactory();
 
       MappableClassQuery mcQuery = new MappableClassQuery(factory);
@@ -640,7 +641,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
         while (iterator.hasNext())
         {
           Classifier classifier = iterator.next();
-          
+
           System.out.println("Upgrading classifier [" + classifier.getDisplayLabel().getValue() + "]");
 
           classifier.lock();

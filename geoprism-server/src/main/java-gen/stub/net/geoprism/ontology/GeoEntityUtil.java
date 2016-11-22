@@ -28,14 +28,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
+import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
@@ -72,6 +76,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
   public GeoEntityUtil()
   {
+    // Test
     super();
   }
 
@@ -175,9 +180,47 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     // Copy over any synonyms to the destination and delete the originals
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
+    /*
+     * Remove the source from the allpaths table so we don't violate allpaths uniqueness constraints
+     */
+    List<? extends Business> parents = source.getParents(LocatedIn.CLASS).getAll();
+    for (Business parent : parents)
+    {
+      source.removeLink((Term) parent, LocatedIn.CLASS);
+    }
+    GeoEntity.getStrategy().removeTerm(source, LocatedIn.CLASS);
+
     BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
+
+    /*
+     * Add the dest to the allpaths table
+     */
+    GeoEntity.getStrategy().add(destination, LocatedIn.CLASS);
+    for (Business parent : parents)
+    {
+      Savepoint savepoint = Database.setSavepoint();
+
+      try
+      {
+        destination.addLink((Term) parent, LocatedIn.CLASS);
+      }
+      catch (DuplicateDataException e)
+      {
+        // Rollback the savepoint
+        Database.rollbackSavepoint(savepoint);
+
+        savepoint = null;
+      }
+      finally
+      {
+        if (savepoint != null)
+        {
+          Database.releaseSavepoint(savepoint);
+        }
+      }
+    }
 
     return synonym;
   }
@@ -421,6 +464,16 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     problem.delete();
   }
 
+  public static GeoEntity[] getOrderedAncestors(String id)
+  {
+    GeoEntity root = GeoEntity.getRoot();
+    GeoEntity entity = GeoEntity.get(id);
+
+    Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, entity, LocatedIn.CLASS);
+
+    return ancestors.toArray(new GeoEntity[ancestors.size()]);
+  }
+
   public static Collection<Term> getOrderedAncestors(Term root, Term term, String relationship)
   {
     Map<String, Term> map = new LinkedHashMap<String, Term>();
@@ -536,8 +589,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
 
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
-
     SelectableChar id = entityQuery.getId();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
     Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
@@ -550,9 +601,19 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     query.SELECT(id, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
-    query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
-    query.AND(entityQuery.getUniversal().EQ(universalId));
-    query.AND(aptQuery.getParentTerm().EQ(parentId));
+
+    if (universalId != null && universalId.length() > 0)
+    {
+      query.AND(entityQuery.getUniversal().EQ(universalId));
+    }
+
+    if (parentId != null && parentId.length() > 0)
+    {
+      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+
+      query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+      query.AND(aptQuery.getParentTerm().EQ(parentId));
+    }
 
     query.ORDER_BY_ASC(geoLabel);
 
@@ -614,6 +675,116 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       }
 
       return array.toString();
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static ValueQuery getChildren(String id, String universalId, Integer limit)
+  {
+    GeoEntity entity = GeoEntity.get(id);
+
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
+    GeoEntityQuery query = new GeoEntityQuery(vQuery);
+
+    Coalesce label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
+
+    vQuery.SELECT(query.id());
+    vQuery.SELECT(label);
+    vQuery.SELECT(query.getGeoId());
+    vQuery.SELECT(query.getUniversal().getDisplayLabel().localize(GeoEntity.UNIVERSAL));
+    vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
+    vQuery.AND(query.locatedIn(liQuery));
+
+    if (universalId != null)
+    {
+      vQuery.AND(query.getUniversal().EQ(universalId));
+    }
+
+    vQuery.ORDER_BY_ASC(label);
+
+    if (limit != null)
+    {
+      vQuery.restrictRows(limit, 1);
+    }
+
+    return vQuery;
+  }
+
+  public static GeoEntity getEntity(String id)
+  {
+    if (id == null)
+    {
+      try
+      {
+        List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+        for (ConfigurationIF configuration : configurations)
+        {
+          GeoEntity entity = configuration.getDefaultGeoEntity();
+
+          if (entity != null)
+          {
+            return entity;
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        // Ignore and just return the first child of root
+      }
+
+      GeoEntity root = GeoEntity.getRoot();
+      OIterator<? extends Business> children = root.getChildren(LocatedIn.CLASS);
+
+      try
+      {
+        if (children.hasNext())
+        {
+          return (GeoEntity) children.next();
+        }
+        else
+        {
+          throw new RuntimeException("No entities have been defined");
+        }
+      }
+      finally
+      {
+        children.close();
+      }
+    }
+
+    return GeoEntity.get(id);
+  }
+
+  public static String publishLayers(String id, String universalId, String existingLayerNames)
+  {
+    LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
+    JSONArray layers = publisher.publish();
+
+    return layers.toString();
+  }
+
+  @Transaction
+  public static void refreshViews(String layers)
+  {
+    try
+    {
+      if (layers != null)
+      {
+        JSONArray deserialized = new JSONArray(layers);
+
+        for (int i = 0; i < deserialized.length(); i++)
+        {
+          JSONObject layer = deserialized.getJSONObject(i);
+          String layerName = layer.getString("layerName");
+
+          DatabaseUtil.refreshView(layerName);
+        }
+      }
     }
     catch (JSONException e)
     {

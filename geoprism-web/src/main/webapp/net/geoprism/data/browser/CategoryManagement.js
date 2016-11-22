@@ -200,7 +200,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data/browser/category-modal.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/category-modal.jsp',
       scope: {
       },
       controller : CategoryModalController,
@@ -396,7 +396,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data/browser/category-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/category-page.jsp',
       scope: true,
       controller : CategoryPageController,
       controllerAs : 'ctrl',      
@@ -512,7 +512,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data/browser/option-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/option-page.jsp',
       scope: true,
       controller : OptionPageController,
       controllerAs : 'ctrl',

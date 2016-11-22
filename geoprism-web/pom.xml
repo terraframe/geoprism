@@ -22,9 +22,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.runwaysdk</groupId>
+    <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0005</version>
+    <version>1.01.0006-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-web</artifactId>
   <packaging>war</packaging>
@@ -41,24 +41,24 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-common</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-client</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.runwaysdk</groupId>
+      <groupId>net.geoprism</groupId>
       <artifactId>geoprism-server</artifactId>
-      <version>1.01.0005</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
-      <version>2.0.16</version>
+      <version>${runway.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -94,75 +94,10 @@
 
   <profiles>
     <profile>
-      <id>package-deployable</id>
+      <id>cargo-run</id>
       <activation>
         <property>
-          <name>package-deployable</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-              <packagingExcludes>
-                <!-- Source/class project jars must be excluded for reloaded to work -->
-                **/*geoprism-common*.jar,
-                **/*geoprism-client*.jar,
-                **/*geoprism-server*.jar,
-                <!-- Exclude all jars provided by tomcat -->
-                **/*catalina*.jar,
-                **/*servlet-api*.jar,
-                **/*annotations-api*.jar,
-                <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
-                **/aspectjtools*.jar
-              </packagingExcludes>
-              <webResources>
-                <resource>
-                  <directory>${keystore.dir}</directory>
-                  <targetPath>.ebextensions</targetPath>
-                </resource>
-                <resource>
-                  <directory>src/deployed/ebextensions</directory>
-                  <targetPath>.ebextensions</targetPath>
-                  <filtering>false</filtering>
-                </resource>
-                <!-- <resource> <directory>src/main/resources</directory> </resource> -->
-              </webResources>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>package-deployable-filemerge</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>net.geoprism.FileMerger</mainClass>
-                  <arguments>
-                    <argument>--baseDir=${project.build.directory}/classes</argument>
-                    <argument>--overrideDir=${configuration.dir}</argument>
-                    <argument>--exportDir=${project.build.directory}/classes</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>geoprism-cargo-run-debug</id>
-      <activation>
-        <property>
-          <name>geoprism-cargo-run-debug</name>
+          <name>cargo-run</name>
         </property>
       </activation>
       <build>
@@ -203,16 +138,17 @@
                     -Djava.rmi.server.hostname=127.0.0.1
                     -Dbirt-server=true
                     -Dendpoint.cache=/${project.basedir}/cache
+                    -Dgeoprism.config.dir=${configuration.dir}
                   </cargo.jvmargs>
                 </properties>
               </configuration>
               <deployables>
                 <deployable>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-web</artifactId>
                   <type>war</type>
                   <properties>
-                    <context>ROOT</context>
+                    <context>${geoprism.app}</context>
                   </properties>
                 </deployable>
                 <deployable>
@@ -232,40 +168,6 @@
                 <goals>
                   <goal>run</goal>
                 </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>config.dir.filemerge</id>
-      <activation>
-        <property>
-          <name>configuration.dir</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>config.dir.filemerge</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>net.geoprism.FileMerger</mainClass>
-                  <arguments>
-                    <argument>--baseDir=${project.build.directory}/classes</argument>
-                    <argument>--overrideDir=${configuration.dir}</argument>
-                    <argument>--exportDir=${project.build.directory}/classes</argument>
-                  </arguments>
-                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -374,46 +276,46 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-common</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-client</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-server</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <excludes>**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-common</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-client</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>com.runwaysdk</groupId>
+                  <groupId>net.geoprism</groupId>
                   <artifactId>geoprism-server</artifactId>
-                  <version>1.01.0005</version>
+                  <version>${project.version}</version>
                   <type>jar</type>
                   <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
                   <includes>**/*.java</includes>

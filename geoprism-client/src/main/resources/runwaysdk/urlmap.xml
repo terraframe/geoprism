@@ -20,8 +20,9 @@
 
 -->
 <mappings>
-  <map uri="" forward="/index.jsp"/>
-  
+
+  <package name="net.geoprism"/>  
+
   <map uri="DashboardViewer" controller="net.geoprism.dashboard.DashboardMapController">
     <action method="createMapForSession" uri=""/>
   </map>
@@ -46,18 +47,17 @@
   <map uri="mapthumb" controller="net.geoprism.UserMenuController">
   	<action method=".*" uri="${method}" />
   </map>
-  
-  <map uri="iconimage" controller="net.geoprism.dashboard.layer.CategoryIconController">
-  	<action method=".*" uri="${method}" />
-  </map>
 
   <map uri="session" controller="net.geoprism.SessionController">
     <action method=".*" uri="${method}"/>
   </map>
   
+  <map uri="app" forward="/index.jsp"/>
+  
   <map uri="admin" controller="net.geoprism.AdminController">
     <action method=".*" uri="${method}"/>    
-  </map>
+  </map>  
+  
   <map uri="report" controller="net.geoprism.report.ReportItemController">
     <action method=".*" uri="${method}"/>    
   </map>

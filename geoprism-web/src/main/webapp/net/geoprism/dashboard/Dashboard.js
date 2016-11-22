@@ -427,10 +427,10 @@
     
     controller.centerMap = function() {
       if(controller.bbox.length === 2){
-        mapService.setView(null, controller.bbox, 5);
+        mapService.setView(null, controller.bbox, 5, "EPSG:4326");
       }
       else if(controller.bbox.length === 4){
-        mapService.setView(controller.bbox, null, null);
+        mapService.setView(controller.bbox, null, null, "EPSG:4326");
       }    
     }
     

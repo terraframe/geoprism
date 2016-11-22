@@ -20,6 +20,7 @@ package net.geoprism.context;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.runwaysdk.configuration.ConfigurationManager;
+import com.runwaysdk.configuration.RunwayConfigurationException;
+
+import net.geoprism.configuration.GeoprismConfigGroup;
 
 public class ProjectDataConfiguration
 {
@@ -43,7 +49,9 @@ public class ProjectDataConfiguration
 
     try
     {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/project.json")));
+      InputStream stream = ConfigurationManager.getResourceAsStream(GeoprismConfigGroup.ROOT, "project.json");
+      
+      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
       try
       {
@@ -68,7 +76,7 @@ public class ProjectDataConfiguration
         reader.close();
       }
     }
-    catch (IOException | JSONException e)
+    catch (IOException | JSONException | RunwayConfigurationException e)
     {
       logger.error("Unable to load project.json", e);
     }

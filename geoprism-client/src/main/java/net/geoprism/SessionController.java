@@ -91,12 +91,8 @@ public class SessionController extends SessionControllerBase implements Reloadab
       req.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
       req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
 
-      String root = req.getContextPath();
-      if (root.equals(""))
-      {
-        root = "/menu";
-      }
-      resp.sendRedirect(root);
+      String path = req.getContextPath() + "/menu";
+      resp.sendRedirect(path);
     }
     catch (Throwable t)
     {

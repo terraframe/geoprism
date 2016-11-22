@@ -115,6 +115,7 @@ h1 {
 
 .caption p{
 	color: grey;
+	word-wrap: break-word;
 }
 
 .dashboard-card-ico-button-container{

@@ -1,0 +1,71 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <permissions>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdBusinessPermission type="com.runwaysdk.system.gis.geo.GeoEntity">
+            <operation name="CREATE"/>
+            <operation name="WRITE"/>
+            <operation name="WRITE_ALL_ATTRIBUTES"/>
+            <operation name="DELETE"/>
+          </mdBusinessPermission>
+          <mdRelationshipPermission type="com.runwaysdk.system.gis.geo.LocatedIn">
+            <operation name="CREATE"/>
+            <operation name="WRITE"/>
+            <operation name="WRITE_ALL_ATTRIBUTES"/>
+            <operation name="DELETE"/>
+          </mdRelationshipPermission>
+          <mdBusinessPermission type="com.runwaysdk.system.gis.geo.Synonym">
+            <operation name="CREATE"/>
+            <operation name="WRITE"/>
+            <operation name="WRITE_ALL_ATTRIBUTES"/>
+            <operation name="DELETE"/>
+          </mdBusinessPermission>
+          <mdRelationshipPermission type="com.runwaysdk.system.gis.geo.SynonymRelationship">
+            <operation name="CREATE"/>
+            <operation name="WRITE"/>
+            <operation name="WRITE_ALL_ATTRIBUTES"/>
+            <operation name="DELETE"/>
+          </mdRelationshipPermission>
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable">
+            <operation name="CREATE"/>
+            <operation name="WRITE"/>
+            <operation name="WRITE_ALL_ATTRIBUTES"/>
+            <operation name="DELETE"/>
+          </mdBusinessPermission>
+          <mdBusinessPermission type="com.runwaysdk.system.gis.geo.Universal">
+            <operation name="READ"/>
+            <operation name="READ_ALL_ATTRIBUTES"/>
+          </mdBusinessPermission>
+          <mdRelationshipPermission type="com.runwaysdk.system.gis.geo.AllowedIn">
+            <operation name="READ"/>
+            <operation name="READ_ALL_ATTRIBUTES"/>
+          </mdRelationshipPermission>
+        </grant>
+      </role>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

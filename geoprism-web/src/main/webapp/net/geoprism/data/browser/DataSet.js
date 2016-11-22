@@ -43,17 +43,16 @@
       
       return null;
     }
-    
-    
+        
     controller.isUniqueLabel = function(label, ngModel, scope) {
       var connection = {
         onSuccess : function() {
           ngModel.$setValidity('unique', true);       
-          scope.$apply();      
+//          scope.$apply();      
         },
         onFailure : function(e){
           ngModel.$setValidity('unique', false);          
-          scope.$apply();
+//          scope.$apply();
         }
       };
         
@@ -61,8 +60,8 @@
         datasetService.validateDatasetName(connection, label, scope.$parent.dataset.id);
       }
       else{
-    	  ngModel.$setValidity('unique', false);          
-          scope.$apply();
+        ngModel.$setValidity('unique', false);          
+//         scope.$apply();
       }
     }
     
@@ -211,12 +210,12 @@
                 
           // Hide modal, but preserve the elements and values        
           $scope.hidden = true;
-          $scope.$apply();
+//          $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
           
-          $scope.$apply();
+//          $scope.$apply();
           
           $('#app-container').parent().parent().animate({ scrollTop: 0 }, 'slow');
         }
@@ -381,7 +380,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data/browser/dataset-modal.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/dataset-modal.jsp',
       scope: {
       },
       controller : DatasetModalController,

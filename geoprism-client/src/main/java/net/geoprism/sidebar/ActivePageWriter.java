@@ -73,7 +73,7 @@ public class ActivePageWriter
       }
       else
       {
-        href = context + "/#" + url;
+        href = context + "/app#" + url;
       }
     }
 

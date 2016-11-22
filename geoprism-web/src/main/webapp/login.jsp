@@ -19,10 +19,7 @@
 
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<%@ taglib uri="/WEB-INF/tlds/runwayLib.tld" prefix="mjl"%>
-<%@ taglib uri="http://jawr.net/tags" prefix="jwr" %>
 
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
@@ -34,12 +31,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <%--   <title><gdb:localize key="login.title" /></title> --%>
 
-  <link rel="stylesheet" type="text/css" href="/3rd-party/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="/net/geoprism/css/login.css">
+  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/3rd-party/font-awesome-font-icons/font-awesome-4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/net/geoprism/css/login.css">
   
   <title><gdb:localize key="login.title" /> </title>	
   
-  <link rel="icon" href="/net/geoprism/images/splash_logo_icon.png">
+  <link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png">
 </head>
 <body>
   
@@ -62,11 +59,6 @@
 					    </p>
 					 </div>
 				
-				<!--     TODO: Forgot password and remember me functionality.
-				<!--     <div> -->
-				<!--       <a class="forgot-password" href="index.html">Forgot your password?</a> -->
-				<!--       <label class="remember-me">&nbsp;Remember me<input name="rememberme" id="rememberme" type="checkbox" checked="checked" value="forever"/></label> -->
-				<!--     </div> -->
 				  </form>
 	    	</header>
 	    	
@@ -74,8 +66,8 @@
 			<img id="logo" src="<%= request.getAttribute("banner") %>" alt="logo" />
 		</div>    
 		<div id="geoprism-landing-bottom-div">
-		    <img id="logo_gp" src="/net/geoprism/images/geoprism_banner.png" alt="logo" />
-		    <img id="background-img" src="/net/geoprism/images/theme_background.png" alt="background" />
+		    <img id="logo_gp" src="${pageContext.request.contextPath}/net/geoprism/images/geoprism_banner.png" alt="logo" />
+		    <img id="background-img" src="${pageContext.request.contextPath}/net/geoprism/images/theme_background.png" alt="background" />
 		
 			<div id="geoprism-landing-footer">
 				<h4><gdb:localize key="login.footerMessage"/></h4>

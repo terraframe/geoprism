@@ -35,7 +35,7 @@
             response( results );
           },
           onFailure : function(e){
-            console.log(e);
+//            console.log(e);
           }
       };
       
@@ -59,13 +59,13 @@
             label : response.label
           };
             
-          $scope.$apply();
+//          $scope.$apply();
         },
         onFailure : function(e){
           $scope.errors = [];
           $scope.errors.push(e.localizedMessage);
             
-          $scope.$apply();
+//          $scope.$apply();
         }        
       };
       
@@ -85,7 +85,7 @@
             optionId : response.id
           };
       
-          $scope.$apply();        
+          $scope.$apply();
         },
         onFailure : function(e){
           $scope.errors = [];
@@ -167,13 +167,13 @@
                       
               controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
                       
-              $scope.$apply();        
+              // $scope.$apply();
             },
             onFailure : function(e){
               $scope.errors = [];
               $scope.errors.push(e.localizedMessage);
                       
-              $scope.$apply();
+              // $scope.$apply();
             }      
           };
           
@@ -186,7 +186,7 @@
               $scope.problem.resolved = false;
               $scope.problem.optionId = null;
                               
-              $scope.$apply();        
+               $scope.$apply();
             },
             onFailure : function(e){
               $scope.errors = [];
@@ -206,7 +206,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/category-validation-problem.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/category-validation-problem.jsp',
       scope: {
         problem : '=',
         options : '='
@@ -249,7 +249,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/category-validation-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/category-validation-page.jsp',
       scope: true,
       controller : CategoryValidationPageController,
       controllerAs : 'ctrl',      
@@ -281,7 +281,6 @@
           response( results );
         },
         onFailure : function(e){
-          console.log(e);
         }
       };
       
@@ -308,13 +307,13 @@
             ancestors : response.ancestors            
           };
          
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e){
          $scope.errors = [];
          $scope.errors.push(e.localizedMessage);
          
-         $scope.$apply();
+         // $scope.$apply();
         }        
       };
       
@@ -333,13 +332,13 @@
             entityId : response.entityId
           };
       
-          $scope.$apply();        
+          // $scope.$apply();
         },
         onFailure : function(e){
           $scope.errors = [];
           $scope.errors.push(e.localizedMessage);
       
-          $scope.$apply();
+          // $scope.$apply();
         }      
       };
         
@@ -412,13 +411,13 @@
             
             controller.problemForm.$setValidity("synonym-length",  ($scope.problem.synonym != null));      
             
-            $scope.$apply();        
+            // $scope.$apply();
           },
           onFailure : function(e){
             $scope.errors = [];
             $scope.errors.push(e.localizedMessage);
                 
-            $scope.$apply();
+            // $scope.$apply();
           }      
         };
       
@@ -442,7 +441,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/geo-validation-problem.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/geo-validation-problem.jsp',
       scope: {
         problem : '=' 
       },
@@ -485,7 +484,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/geo-validation-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/geo-validation-page.jsp',
       scope: true,
       controller : GeoValidationPageController,
       controllerAs : 'ctrl',      
@@ -506,7 +505,7 @@
       
           $scope.$emit('loadConfiguration', {sheet: sheet});
       
-          $scope.$apply();
+          // $scope.$apply();
         }          
       };
       
@@ -518,7 +517,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/match-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/match-page.jsp',
       scope: true,
       controller : MatchPageController,
       controllerAs : 'ctrl',      
@@ -544,7 +543,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/match-initial-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/match-initial-page.jsp',
       scope: true,
       controller : MatchInitialPageController,
       controllerAs : 'ctrl',      
@@ -564,7 +563,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/beginning-info-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/beginning-info-page.jsp',
       scope: true,
       controller : BeginningInfoPageController,
       controllerAs : 'ctrl',      
@@ -580,11 +579,11 @@
       var connection = {
         onSuccess : function() {
           ngModel.$setValidity('unique', true);       
-          scope.$apply();          
+          // $scope.$apply();
         },
         onFailure : function(e){
           ngModel.$setValidity('unique', false);          
-          scope.$apply();
+          // $scope.$apply();
         }
       };
       
@@ -598,7 +597,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/name-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/name-page.jsp',
       scope: true,
       controller : NamePageController,
       controllerAs : 'ctrl',        
@@ -688,11 +687,11 @@
         var connection = {
           onSuccess : function() {
             ngModel.$setValidity('unique', true);       
-            scope.$apply();          
+            // $scope.$apply();
           },
           onFailure : function(e){
             ngModel.$setValidity('unique', false);          
-            scope.$apply();
+            // $scope.$apply();
           }
         };
         
@@ -807,7 +806,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/attributes-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/attributes-page.jsp',
       scope: true,
       controller : AttributesPageController,
       controllerAs : 'ctrl',      
@@ -1383,7 +1382,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/location-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/location-page.jsp',
       scope: true,
       controller : LocationPageController,
       controllerAs : 'ctrl',      
@@ -1565,7 +1564,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/coordinate-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/coordinate-page.jsp',
       scope: true,
       controller : CoordinatePageController,
       controllerAs : 'ctrl',      
@@ -1622,7 +1621,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/summary-page.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/summary-page.jsp',
       scope: true,
       controller : SummaryPageController,
       controllerAs : 'ctrl',            
@@ -1699,12 +1698,12 @@
             $scope.$emit('datasetChange', {datasets:result.datasets, finished : false});
           }
          
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
          
-          $scope.$apply();
+          // $scope.$apply();
         }
       };
       // Reset the file Errors
@@ -1725,12 +1724,12 @@
          
           $scope.$emit('datasetChange', {finished : true});                
          
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e){
-          $scope.errors.push(e.message);
+          $scope.errors.push(e.localizedMessage);
          
-          $scope.$apply();
+          // $scope.$apply();
         }             
       };
       // Reset the file Errors
@@ -1765,7 +1764,7 @@
         $scope.page.current = 'MATCH-INITIAL';
       }
       
-      $scope.$apply();
+      // $scope.$apply();
     }
     
     controller.setAttributeDefaults = function() {
@@ -1981,7 +1980,7 @@
           callback : function(){
             controller.handlePrev();
             
-            $scope.$apply();
+            // $scope.$apply();
           }
         });
         buttons.push({
@@ -2185,7 +2184,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/uploader-dialog.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/uploader-dialog.jsp',
       scope: {
       },
       controller : UploaderDialogController,
@@ -2213,7 +2212,7 @@
     return {
       restrict: 'E',
       replace: true,
-      templateUrl: '/partial/data-uploader/synonym-action.jsp',
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data-uploader/synonym-action.jsp',
       scope: {
         action : '='
       },

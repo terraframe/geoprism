@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 
 /**
  * Interface for dependency injection for configuring the system
@@ -69,4 +70,6 @@ public interface ConfigurationIF extends Reloadable
    * @return
    */
   public boolean hasAccess(String functionality);
+
+  public GeoEntity getDefaultGeoEntity();
 }

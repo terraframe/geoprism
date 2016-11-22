@@ -18,7 +18,7 @@
  */
 (function(){
 
-  function RunwayService() {
+  function RunwayService($http) {
     var service = {};
     
     service.createRequest = function(onSuccess, onFailure){
@@ -64,12 +64,53 @@
     service.createConnectionRequest = function(connection) {
       if(connection.elementId != null) {
         return service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
-      }	
+      }
       else {
         return service.createRequest(connection.onSuccess, connection.onFailure );
       }
     }    
+    
+    service.execute = function(req, connection) {
+      
+      /*
+       * Success handler 
+       */
+      var success = function(response) {
+        connection.onSuccess(response.data);
+      }
+      
+      /*
+       * Failure handler
+       */
+      var failure = function(response) {
+        if(response.status === 401) {
+          window.location = com.runwaysdk.__applicationContextPath + '/session/form';
+        }
+        else {
+          var data = response.data;
+         
+          if(connection.onFailure != null) {
+            connection.onFailure(data);
+          }
+          else {
+            GDB.ExceptionHandler.handleException(data.localizedMessage);
+          }
+        }
+      }
+      
+      if(connection.elementId != null) {
+        var request = service.createStandbyRequest(connection.elementId, connection.onSuccess, connection.onFailure );
 
+        $http(req).then(success, failure).finally(function(){
+          request._hideStandby();
+        });
+        
+        request._showStandby();
+      }  
+      else {
+        $http(req).then(success, failure);
+      }
+    }
     
     service.generateId = function() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -284,7 +325,7 @@
         }
       }
       
-      return decorator;    	
+      return decorator;    
     }  
     
     return service;

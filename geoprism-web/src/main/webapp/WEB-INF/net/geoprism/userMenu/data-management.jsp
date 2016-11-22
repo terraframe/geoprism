@@ -45,6 +45,7 @@
     <jwr:style src="/bundles/main.css" useRandomParam="false" />
     <jwr:style src="/bundles/administration.css" useRandomParam="false" />
     <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
+    <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>  
   
     <!-- Default imports -->
     <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
@@ -55,7 +56,11 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
     
     <!-- Individual Page Javascript -->
+    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
+
+    <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>
+    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
     
     <script type="text/javascript">${js}</script>
     
@@ -69,24 +74,36 @@
       <nav class="navbar navbar-default">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a>
-            <a class="navbar-brand" href="/management"><gdb:localize key="data.management.title"/></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/management"><gdb:localize key="data.management.title"/></a>
 <%-- 			<h3 class="navbar-brand"><gdb:localize key="data.management.title"/></h3> --%>
           </div>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
-            <li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
-            <li><a href="#category"><i></i><gdb:localize key="category.management.title"/></a></li>
-<%--             <li><a href="/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
-<%--             <li><a href="/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
+            <li class="dropdown">
+            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Data_Management"/><span class="caret"></span></a>
+            	<ul class="dropdown-menu">
+            		<li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
+            		<li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
+            		<li><a href="#category"><i></i><gdb:localize key="Categories"/></a></li>
+            	</ul>
+            </li>
+            <li class="dropdown">
+            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Location_Configurations"/><span class="caret"></span></a>
+            	<ul class="dropdown-menu">
+            		<li><a href="#locations"><i></i><gdb:localize key="Location_Management"/></a></li>
+            	</ul>
+            </li>
+
+<%--             <li><a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
+<%--             <li><a href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
           </ul>
         </div>
       </nav>
     </header>
         
     <!-- MAIN CONTENT AND INJECTED VIEWS -->
-    <div id="main">
+    <div id="main" class="new-admin-design-main">
       <!-- angular templating -->
       <!-- this is where content will be injected -->
       <ng-view></ng-view> 

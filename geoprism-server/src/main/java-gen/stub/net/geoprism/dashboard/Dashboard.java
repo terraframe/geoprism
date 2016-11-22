@@ -25,7 +25,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,6 +48,7 @@ import net.geoprism.MappableClass;
 import net.geoprism.MappableClassGeoNodeQuery;
 import net.geoprism.MappableClassQuery;
 import net.geoprism.RoleView;
+import net.geoprism.TaskExecutor;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 import net.geoprism.dashboard.layer.DashboardLayer;
@@ -119,7 +119,7 @@ import com.runwaysdk.system.metadata.MdClass;
 public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
 {
 
-  private static class ThumbnailThread implements Runnable, Reloadable
+  private static class ThumbnailTask implements Runnable, Reloadable
   {
     private Dashboard      dashboard;
 
@@ -127,7 +127,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     private String         sessionId;
 
-    public ThumbnailThread(String sessionId, Dashboard dashboard, GeoprismUser... users)
+    public ThumbnailTask(String sessionId, Dashboard dashboard, GeoprismUser... users)
     {
       this.dashboard = dashboard;
       this.users = users;
@@ -1172,8 +1172,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         }
       }
     }
-    
-    if(aggregatable && nodesArr.length() == 0)
+
+    if (aggregatable && nodesArr.length() == 0)
     {
       throw new UnsupportedAggregationException();
     }
@@ -1314,17 +1314,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     String sessionId = Session.getCurrentSession().getId();
 
     // Write the thumbnail
-    Thread t = new Thread(new ThumbnailThread(sessionId, this, users));
-    t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
-    {
-      @Override
-      public void uncaughtException(Thread t, Throwable e)
-      {
-        e.printStackTrace();
-      }
-    });
-    t.setDaemon(true);
-    t.start();
+    TaskExecutor.addTask(new ThumbnailTask(sessionId, this, users));
   }
 
   @Transaction
@@ -1339,9 +1329,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       if (state != null)
       {
         state.lock();
-        if(image == null)
+        if (image == null)
         {
-          state.setMapThumbnail(new byte[0]); 
+          state.setMapThumbnail(new byte[0]);
         }
         else
         {
@@ -1372,8 +1362,8 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // Ordering the layers from the default map
     DashboardLayer[] orderedLayers = dashMap.getOrderedLayers();
     JSONArray mapBoundsArr = dashMap.getExpandedMapLayersBBox(orderedLayers, .2);
-    
-    if(mapBoundsArr != null)
+
+    if (mapBoundsArr != null)
     {
 
       // Get bounds of the map
@@ -1383,7 +1373,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         bottom = mapBoundsArr.getDouble(1);
         right = mapBoundsArr.getDouble(2);
         top = mapBoundsArr.getDouble(3);
-  
+
         restructuredBounds.put("left", left);
         restructuredBounds.put("bottom", bottom);
         restructuredBounds.put("right", right);
@@ -1394,40 +1384,40 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         String error = "Could not parse map bounds.";
         throw new ProgrammingErrorException(error, e);
       }
-  
+
       int width = (int) Math.min(defaultWidth, Math.round( ( ( ( right - left ) / ( top - bottom ) ) * defaultHeight )));
       int height = (int) Math.min(defaultHeight, Math.round( ( ( ( top - bottom ) / ( right - left ) ) * defaultWidth )));
-  
+
       base = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-  
+
       // Create the base canvas that all other map elements will be draped on top of
       mapBaseGraphic = base.getGraphics();
       mapBaseGraphic.setColor(Color.white);
       mapBaseGraphic.fillRect(0, 0, width, height);
       mapBaseGraphic.drawImage(base, 0, 0, null);
-  
+
       // Ticket #412: Get base map
       String baseType = "osm";
-  
+
       if (baseType.length() > 0)
       {
         BufferedImage baseMapImage = dashMap.getBaseMapCanvas(width, height, Double.toString(left), Double.toString(bottom), Double.toString(right), Double.toString(top), baseType);
-  
+
         if (baseMapImage != null)
         {
           mapBaseGraphic.drawImage(baseMapImage, 0, 0, null);
         }
       }
-  
+
       // Add layers to the base canvas
       BufferedImage layerCanvas = dashMap.getLayersExportCanvas(width, height, orderedLayers, restructuredBounds.toString());
-  
+
       // Offset the layerCanvas so that it is center
       int widthOffset = (int) ( ( width - layerCanvas.getWidth() ) / 2 );
       int heightOffset = (int) ( ( height - layerCanvas.getHeight() ) / 2 );
-  
+
       mapBaseGraphic.drawImage(layerCanvas, widthOffset, heightOffset, null);
-  
+
       try
       {
         resizedImage = Thumbnails.of(base).size(330, 210).asBufferedImage();
@@ -1437,9 +1427,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         String error = "Could not resize map image to thumbnail size.";
         throw new ProgrammingErrorException(error, e);
       }
-  
+
       ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-  
+
       try
       {
         ImageIO.write(resizedImage, outFileFormat, outStream);
@@ -1465,12 +1455,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
           }
         }
       }
-  
+
       if (mapBaseGraphic != null)
       {
         mapBaseGraphic.dispose();
       }
-      
+
       return outStream.toByteArray();
     }
 
