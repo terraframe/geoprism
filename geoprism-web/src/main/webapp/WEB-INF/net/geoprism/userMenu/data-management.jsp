@@ -56,7 +56,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
     
     <!-- Individual Page Javascript -->
-    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
+<%--     <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> --%>
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
 
     <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>

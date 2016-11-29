@@ -201,7 +201,7 @@
     }
   });
   
-  var MapBoxGLMap = Mojo.Meta.newClass('net.geoprism.gis.MapBoxGLMap', {
+  var OpenLayersMap = Mojo.Meta.newClass('net.geoprism.gis.OpenLayersMap', {
       Extends : MapWidget,  
       IsAbstract : false,
       Constants : {
