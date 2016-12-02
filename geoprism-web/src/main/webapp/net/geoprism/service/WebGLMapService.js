@@ -94,8 +94,12 @@
     	service.map.addVectorLayer(layer, layerName, styleObj, type, stackingIndex);
     }
     
-    service.zoomToVectorDataExtent = function() {
-    	service.map.zoomToVectorDataExtent();
+    service.updateVectorLayer = function(layer, layerName, styleObj, type, stackingIndex) {
+    	service.map.updateVectorLayer(layer, layerName, styleObj, type, stackingIndex);
+    }
+    
+    service.zoomToLayersExtent = function(layersArr) {
+    	service.map.zoomToLayersExtent(layersArr);
     }
     
     service.addVectorHoverEvents = function(hoverCallback) {

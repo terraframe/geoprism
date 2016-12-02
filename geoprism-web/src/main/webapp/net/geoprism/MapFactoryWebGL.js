@@ -237,7 +237,34 @@
          */
         configureMap : function() {
           var map = this.getMap();
+          var that = this;
           
+			map.on("data.updated", function(data){
+          		// TODO: remove hard coded layer names
+          		if( ! map.isEasing()){
+          			console.log("zoom zoom zoom!")
+          			that.zoomToLayersExtent(["point", "multipolygon"]);
+          		}
+          		
+//          		console.log(e, " - data loaded")
+          });
+        },
+        
+        
+        // TODO: convert to webgl
+        getAllVectorLayers : function() {
+        	var map = this.getMap();
+        	var layers = map.getLayers().getArray();
+        	var allVectorLayers = [];
+        	
+        	for(var i=0; i<layers.length; i++){
+        		var layer = layers[i];
+        		if(layer instanceof ol.layer.Vector){
+        			allVectorLayers.push(layer);
+        		}
+        	}
+        	
+        	return allVectorLayers;
         },
         
         
@@ -254,51 +281,268 @@
           	    	data: layerAsGeoJSON
           	    });
           	  
-          	    // add the main layer
-	     	    map.addLayer({
-		 	    	"id": layerName,
-		 	        "source": layerName,
-		 	        "type": "circle",
-		 	        "paint": {
-		 	            "circle-radius": styleObj.radius,
-		 	            "circle-color": styleObj.fill
-		 	        }
-		 	    });
-	     	    
-	     	    // add labels
-	     	    map.addLayer({
-		 	    	"id": layerName + "-label",
-		 	        "source": layerName,
-		 	        "type": "symbol",
-		 	        "paint": {
-		 	            "text-color": "black",
-		 	            "text-halo-color": "#fff",
-	                    "text-halo-width": 2
-		 	        },
-		 	        "layout": {
-         	            "text-field": "{displaylabel}",
-         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-         	            "text-offset": [0, 0.6],
-         	            "text-anchor": "top",
-         	            "text-size": 12
-         	        }
-		 	    });
-	     	    
-	     	    // add the hover layer
-	     	    map.addLayer({
-	     	        "id": layerName + "-hover",
-	     	        "source": layerName,
-		 	        "type": "circle",
-		 	        "paint": {
-		 	            "circle-radius": styleObj.radius,
-		 	            "circle-color": that.getHoverPointStyle().fill
-		 	        },
-	     	        "filter": ["==", "name", ""]
-	     	     });
-	     	    
-	     	   that.zoomToLayersExtent([layerName])
+          	    if(layerName === "point"){
+	          	    // add the main layer
+		     	    map.addLayer({
+			 	    	"id": layerName,
+			 	        "source": layerName,
+			 	        "type": "circle",
+			 	        "paint": {
+			 	            "circle-radius": styleObj.radius,
+			 	            "circle-color": styleObj.fill
+			 	        }
+			 	    });
+		     	    
+		     	    // add labels
+		     	    map.addLayer({
+			 	    	"id": layerName + "-label",
+			 	        "source": layerName,
+			 	        "type": "symbol",
+			 	        "paint": {
+			 	            "text-color": "black",
+			 	            "text-halo-color": "#fff",
+		                    "text-halo-width": 2
+			 	        },
+			 	        "layout": {
+	         	            "text-field": "{displaylabel}",
+	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+	         	            "text-offset": [0, 0.6],
+	         	            "text-anchor": "top",
+	         	            "text-size": 12
+	         	        }
+			 	    });
+		     	    
+		     	    // add the hover layer
+		     	    map.addLayer({
+		     	        "id": layerName + "-hover",
+		     	        "source": layerName,
+			 	        "type": "circle",
+			 	        "paint": {
+			 	            "circle-radius": styleObj.radius,
+			 	            "circle-color": that.getHoverPointStyle().fill
+			 	        },
+		     	        "filter": ["==", "name", ""]
+		     	     });
+          	    }
+          	    else if(layerName === "multipolygon"){
+          	    	map.addLayer({
+			 	    	"id": layerName,
+			 	        "source": layerName,
+			 	        "type": "fill",
+			 	        "paint": {
+			 	            "fill-color": styleObj.fill
+			 	        }
+			 	    });
+          	    	
+          	    	 // add labels
+		     	    map.addLayer({
+			 	    	"id": layerName + "-label",
+			 	        "source": layerName,
+			 	        "type": "symbol",
+			 	        "paint": {
+			 	            "text-color": "black",
+			 	            "text-halo-color": "#fff",
+		                    "text-halo-width": 2
+			 	        },
+			 	        "layout": {
+	         	            "text-field": "{displaylabel}",
+	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+	         	            "text-anchor": "center",
+	         	            "text-size": 12
+	         	        }
+			 	    });
+		     	    
+		     	    // add the hover layer
+		     	    map.addLayer({
+		     	        "id": layerName + "-hover",
+		     	        "source": layerName,
+			 	        "type": "fill",
+			 	        "paint": {
+			 	            "fill-color": that.getHoverPointStyle().fill
+			 	        },
+		     	        "filter": ["==", "name", ""]
+		     	     });
+          	    }
+            });
+            
+            
+            // Won't do anything unless layers are populate with data containing features
+            map.on("source.load", function(e){
+            	if(e.source.id === layerName){
+            		that.zoomToLayersExtent([layerName])
+            	}
             });
    	    
+        },
+        
+        
+        updateVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex) {
+        	var map = this.getMap();
+        	var that = this;
+        	
+        	var layer = map.getLayer(layerName);
+			
+			if(layer){
+	        	var layerSourceName = layer.source;
+	        	map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	        	
+			}
+			
+			map.once('data', function () {
+				map.fire("data.updated", true);
+			});
+        },
+        
+        
+        arrayContainsString : function(array, str) {
+        	for(var i=0; i<array.length; i++){
+        		if(array[i] === str){
+        			return true;
+        		}
+        	}
+        	
+        	return false;
+        },
+        
+        
+        focusOffFeature : function(feature) {
+        	var map = this.getMap();
+        	if( ! map.isEasing()){
+	        	var that = this;
+	        	var selectedFeatures = [];
+	        	var targetLayers = this.getVectorLayersByTypeProp("TARGET");
+	        	
+	        	
+	        	if(targetLayers.length > 0){
+	        		targetLayers.forEach(function(targetLayer){
+	        			
+	        			var layerSourceName = targetLayer.source;
+//	    	        	var layerSourceData = map.querySourceFeatures(layerSourceName);
+	    	        	var layerSourceData = map.getSource(layerSourceName)._data;
+	    	        	
+	    	        	if(layerSourceData.features.length > 0){
+	    	         		for(var i=0; i<layerSourceData.features.length; i++){
+	    	        			var targetFeature = layerSourceData.features[i];
+	    	        			var featureProps = targetFeature.properties;
+	    	        			if((feature.id && feature.id === featureProps.id) || 
+	    	        			  (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+		        				
+	    	        				// control for styling of different geometry types
+	    	        				if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
+	    			        	    	map.setFilter("multipolygon-hover", ["==", "id", ""]);
+	    		        	    	}
+	    	        				else if(targetFeature.geometry.type.toLowerCase() === "point"){
+	    			        	    	map.setFilter("point-hover", ["==", "id", ""]);
+	    		        	    	}
+	    	        			}
+	    	         		}
+		        		}
+	        		});
+	        	}
+        	}
+        },
+        
+        
+        focusOnFeature : function(feature) {
+        	var map = this.getMap();
+        	if( ! map.isEasing()){ 
+	        	var that = this;
+	        	var selectedFeatures = [];
+	        	var targetLayers = this.getVectorLayersByTypeProp("TARGET");
+	        	if(targetLayers.length > 0){
+	        		targetLayers.forEach(function(targetLayer){
+	        			
+	        			var layerSourceName = targetLayer.source;
+//	        			var layerSourceData = map.querySourceFeatures(layerSourceName);
+	        			var layerSourceData = map.getSource(layerSourceName)._data;
+	    	        	
+	    	        	if(layerSourceData.features.length > 0){
+	    	         		for(var i=0; i<layerSourceData.features.length; i++){
+	    	        			var targetFeature = layerSourceData.features[i];
+	    	        			var featureProps = targetFeature.properties;
+	    	        			if((feature.id && feature.id === featureProps.id) || 
+	    	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+	    	            	    		
+		            	    		// control for styling of different geometry types
+	    		        	    	if(targetFeature.geometry.type.toLowerCase() === "multipolygon" || targetFeature.geometry.type.toLowerCase() === "polygon"){
+	    			        	    	map.setFilter("multipolygon-hover", ["==", "id", targetFeature.properties.id]);
+	    		        	    	}
+	    		        	    	else if(targetFeature.geometry.type.toLowerCase() === "point"){
+	    			        	    	map.setFilter("point-hover", ["==", "id", targetFeature.properties.id]);
+	    		        	    	}
+	    	            	        selectedFeatures.push(targetFeature);
+	    	        			}
+	    	        		}
+	    	        	}
+	        			
+	//	        		var features = targetLayer.getSource().getFeatures();
+	//	        		for(var i=0; i<features.length; i++){
+	//	        			var targetFeature = features[i];
+	//	        			var featureProps = targetFeature.getProperties();
+	//	        			if((feature.id && feature.id === featureProps.id) || 
+	//	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+	//	        				
+	//	            	    	// control for styling of different geometry types
+	//	            	    	if(targetFeature.getGeometry() instanceof ol.geom.MultiPolygon || targetFeature.getGeometry() instanceof ol.geom.Polygon){
+	//	            	    		targetFeature.setStyle(that.getHoverPolygonStyle());
+	//	            	    	}
+	//	            	    	else if(targetFeature.getGeometry() instanceof ol.geom.MultiPoint || targetFeature.getGeometry() instanceof ol.geom.Point){
+	//	            	    		targetFeature.setStyle(that.getHoverPointStyle());
+	//	            	    	}
+	//	            	        selectedFeatures.push(targetFeature);
+	//	        			}
+	//	        		}
+	        		});
+	        	}
+        	}
+        },
+        
+        
+        getVectorLayersByTypeProp : function(type) {
+        	var map = this.getMap();
+        	var layersArr = [];
+        	var layersList = ["point", "multipolygon"]
+        	
+        	if(layersList.length > 0){
+        		layersList.forEach(function(layerName){
+        			var layer = map.getLayer(layerName);
+        			
+        			if(layer){
+        				layersArr.push(layer);
+        			}
+        		});
+        	}
+        	
+        	
+//        	var layers = this.getAllVectorLayers();
+//        	for(var i=0; i<layers.length; i++){
+//        		var layer = layers[i];
+//      			var layerProps = layer.getProperties()
+//      			if(layerProps.hasOwnProperty("type") && layerProps.type === type){
+//      				layersArr.push(layer);
+//      			}
+//        	}
+        	
+        	return layersArr;
+        },
+        
+        
+        getAllVectorLayers : function() {
+        	var map = this.getMap();
+        	var layersArr = [];
+        	var layersList = ["point", "multipolygon"]
+        	
+        	if(layersList.length > 0){
+        		layersList.forEach(function(layerName){
+        			var layer = map.getLayer(layerName);
+        			
+        			if(layer){
+        				layersArr.push(layer);
+        			}
+        		});
+        	}
+        	
+        	return layersArr;
         },
         
         
@@ -323,26 +567,110 @@
         			
         			if(layer){
 	    	        	var layerSourceName = layer.source;
+	    	        	// TODO: replace _data with map.querySourceFeatures(layerSourceName);
 	    	        	var layerSourceData = map.getSource(layerSourceName)._data;
 	    	        	
-	    	        	layerSourceData.features.forEach(function(feature) {
-	    	        	    bounds.extend(feature.geometry.coordinates);
-	    	        	});
+	    	        	if(layerSourceData.features.length > 0){
+	    	        		var bbox = turf.extent(layerSourceData);
+	    	        		bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
+	    	        	}
         			}
         		});
 	        	
-	        	map.fitBounds(bounds);
+        		// check if bounds is an empty json object
+        		if(Object.keys(bounds).length > 0){
+        			if(bounds.getSouth() === bounds.getNorth() && bounds.getWest() === bounds.getEast()){
+	        			map.easeTo({
+	        		        center: [ bounds.getEast(), bounds.getNorth() ]
+	        		    });
+	        		}
+	        		else{
+	        			map.fitBounds(bounds, {padding:100});
+	        		}
+        		}
         	}
         },
         
         
-        addVectorClickEvents : function(featureClickCallback) {
+        zoomToExtentOfFeatures : function(featureGeoIds) {
+        	var map = this.getMap();
+        	var that = this;
+        	var layersArr = this.getAllVectorLayers();
+        	var fullExt = null;
+        	
+        	
+        	var bounds = new mapboxgl.LngLatBounds();
+        	
+        	if(layersArr.length > 0){
+        		layersArr.forEach(function(layer){
+        			
+        			if(layer){
+	    	        	var layerSourceName = layer.source;
+	    	        	// TODO: replace _data with map.querySourceFeatures(layerSourceName);
+	    	        	var layerSourceData = map.getSource(layerSourceName)._data;
+	    	        	
+	    	        	if(layerSourceData.features.length > 0){
+	    	        		layerSourceData.features.forEach(function(f){
+	    	        			if(that.arrayContainsString(featureGeoIds, f.properties.geoid)){
+	    	        				var bbox = turf.extent(f);
+	    	    	        		bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
+	    	        			}
+	    	        		});
+	    	        	}
+        			}
+        		});
+	        	
+        		// check if bounds is an empty json object
+        		if(Object.keys(bounds).length > 0){
+        			if(bounds.getSouth() === bounds.getNorth() && bounds.getWest() === bounds.getEast()){
+	        			map.easeTo({
+	        		        center: [ bounds.getEast(), bounds.getNorth() ]
+	        		    });
+	        		}
+	        		else{
+	        			map.fitBounds(bounds, {padding:100});
+	        		}
+        		}
+        	}
+        	
+//        	for(var i=0; i<layers.length; i++){
+//        		var layer = layers[i];
+//    			var features = layer.getSource().getFeatures();
+//    			features.forEach(function(feature){
+//    				if(that.arrayContainsString(featureGeoIds, feature.getProperties().geoid)){
+//    					var featureExt = feature.getGeometry().getExtent();
+//    					if(fullExt){
+//            				if(featureExt[0] < fullExt[0]){
+//            					fullExt[0] = featureExt[0];
+//            				}
+//            				if(featureExt[1] < fullExt[1]){
+//            					fullExt[1] = featureExt[1];
+//            				}
+//            				if(featureExt[2] > fullExt[2]){
+//            					fullExt[2] = featureExt[2];
+//            				}
+//            				if(featureExt[3] > fullExt[3]){
+//            					fullExt[3] = featureExt[3];
+//            				}
+//            			}
+//            			else{
+//            				fullExt = featureExt;
+//            			}
+//    				}
+//    			});
+//        	}
+//        	
+//        	this.zoomToExtent(fullExt);
+        },
+        
+        
+        addVectorClickEvents : function(featureClickCallback, layersArr) {
         	var map = this.getMap();
         	var that = this;
         	
         	map.on('click', function(e) {
     		  
-        		var features = map.queryRenderedFeatures(e.point, { layers: ['point'] });
+        		var features = map.queryRenderedFeatures(e.point, { layers: ['point', "multipolygon"] });
         		
         		if(features.length){
         	    	var feature = features[0]; // only take the 1st feature
@@ -355,7 +683,7 @@
         },
         
         
-        addVectorHoverEvents : function(hoverCallback) {
+        addVectorHoverEvents : function(hoverCallback, layersArr) {
         	var map = this.getMap();
         	var that = this;
         	var selectedFeatures = [];
@@ -365,20 +693,19 @@
         	//TODO: Do we need to wrap this in 'load' event or should we use a different event
         	map.on('load', function () {
 	        	map.on('mousemove', function(e) {
-	        		var features = map.queryRenderedFeatures(e.point, { layers: ["point"] });
+	        		var features = map.queryRenderedFeatures(e.point, { layers: ["point", "multipolygon"] });
 	        	    
 	        	    if(features.length){
 	        	    	var feature = features[0]; // only take the 1st feature
-	        	    	map.setFilter("point-hover", ["==", "id", feature.properties.id]);
 	        	    	
 	        	    	if(popup){
 	        	    		popup.remove();
 	        	    	}
 	        	    	
 	                	popup = new mapboxgl.Popup({closeOnClick: true})
-	                    .setLngLat([e.lngLat.lng, e.lngLat.lat])
-	                    .setHTML(features[0].properties.displaylabel)
-	                    .addTo(map);
+	                    	.setLngLat([e.lngLat.lng, e.lngLat.lat])
+	                    	.setHTML(features[0].properties.displaylabel)
+	                    	.addTo(map);
 	                	
 	                	
 	        	    	if(feature.properties.isClickable){
@@ -392,11 +719,13 @@
 	        	    	// control for styling of different geometry types
 	        	    	// 'fill' === polygon
 	        	    	if(feature.layer.type === "fill"){
-	//        	    		feature.setStyle(that.getHoverPolygonStyle());
+		        	    	map.setFilter("multipolygon-hover", ["==", "id", feature.properties.id]);
+
 	        	    		console.log("polygon hover")
 	        	    	}
 	        	    	else if(feature.layer.type === "circle"){
-	//        	    		feature.setStyle(that.getHoverPointStyle());
+		        	    	map.setFilter("point-hover", ["==", "id", feature.properties.id]);
+
 	        	    		console.log("point hover")
 	        	    	}
 	        	    	
@@ -408,6 +737,7 @@
 	        	    	map.getCanvas().style.cursor = originalCursor;
 	        	    	
 	        	    	map.setFilter("point-hover", ["==", "id", ""]);
+	        	    	map.setFilter("multipolygon-hover", ["==", "id", ""]);
 	        	    	
 	        	    	if(selectedFeatures.length > 0){
 	        	    		hoverCallback(null);

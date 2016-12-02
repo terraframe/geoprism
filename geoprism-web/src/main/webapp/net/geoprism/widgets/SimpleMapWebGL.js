@@ -29,7 +29,6 @@
 	 
 	 controller.init = function() {
 		 
-		
 		var hoverCallback = function(featureId){
 	        $scope.$emit('hoverChange', {
 	              id : featureId
@@ -43,10 +42,21 @@
 	        });
 	        $scope.$apply();
 		}
-        
-		controller.addVectorHoverEvents(hoverCallback);
-		controller.addVectorClickEvents(featureClickCallback);
+		
+		//
+		// Setting up empty layers to be populated later
+		//
+		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
+		controller.addVectorLayer(emptyGeoJSON, "point", $scope.targetStyle, "TARGET", 2);
+		controller.addVectorLayer(emptyGeoJSON, "multipolygon", $scope.targetStyle, "TARGET", 2);
+
+		controller.addVectorHoverEvents(hoverCallback, ["point", "multipolygon"]);
+		controller.addVectorClickEvents(featureClickCallback, ["point", "multipolygon"]);
+		//
+		// end
+		//
 	 }
+	 
 	 
 	 controller.baseLayerPanelMouseOut = function() {
 		 $scope.showBaseLayerPanel = false;
@@ -69,12 +79,12 @@
 		 webGLMapService.getGeoJSONData(callback, data, workspace);
 	 }
 	 
-	 controller.addVectorClickEvents = function(featureClickCallback) {
-		 webGLMapService.addVectorClickEvents(featureClickCallback);
+	 controller.addVectorClickEvents = function(featureClickCallback, layersArr) {
+		 webGLMapService.addVectorClickEvents(featureClickCallback, layersArr);
 	 }
 	 
-	 controller.addVectorHoverEvents = function(hoverCallback) {
-		 webGLMapService.addVectorHoverEvents(hoverCallback);
+	 controller.addVectorHoverEvents = function(hoverCallback, layersArr) {
+		 webGLMapService.addVectorHoverEvents(hoverCallback, layersArr);
 	 }
 	 
 	 controller.zoomToLayersExtent = function(layersArr) {
@@ -95,6 +105,10 @@
 	  
 	 controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
 		 webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
+	 }
+	 
+	 controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
+		 webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
 	 }
 	 
 	  
@@ -118,18 +132,18 @@
 			  var data = $scope.sharedGeoData;
 			
 			  var targetCallback = function(data) {
+				  var geomType;
 				  for(var i=0; i<data.features.length; i++){
 		    		var feature = data.features[i];
 		    		feature.properties.isHoverable = true;
 		    		feature.properties.isClickable = true;
+		    		geomType = feature.geometry.type.toLowerCase();
 				  }
 				  
-				  controller.addVectorLayer(data, "point", $scope.targetStyle, "TARGET", 2);
-//		    	  controller.zoomToLayerExtent("point");
+				  controller.updateVectorLayer(data, geomType, $scope.targetStyle, "TARGET", 2);
+				  
+//				  controller.zoomToLayersExtent(["point", "multipolygon"])
 			  }
-			  
-			  
-//			  controller.removeVectorData();
 			  
 			  data.layers.forEach(function(layer){
 				  controller.getMapData(targetCallback, layer, layer.workspace);
