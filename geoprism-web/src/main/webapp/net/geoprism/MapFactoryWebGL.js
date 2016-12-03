@@ -572,7 +572,9 @@
 	    	        	
 	    	        	if(layerSourceData.features.length > 0){
 	    	        		var bbox = turf.extent(layerSourceData);
-	    	        		bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
+	    	        		bounds.extend(
+	    	        				new mapboxgl.LngLatBounds(bbox)
+	    	        		);
 	    	        	}
         			}
         		});
@@ -580,12 +582,25 @@
         		// check if bounds is an empty json object
         		if(Object.keys(bounds).length > 0){
         			if(bounds.getSouth() === bounds.getNorth() && bounds.getWest() === bounds.getEast()){
-	        			map.easeTo({
-	        		        center: [ bounds.getEast(), bounds.getNorth() ]
-	        		    });
+//	        			map.easeTo({
+//	        		        center: [ bounds.getEast(), bounds.getNorth() ]
+//	        		    });
+        				
+        				var pt = {
+      						  "type": "Feature",
+      						  "properties": {},
+      						  "geometry": {
+      						    "type": "Point",
+      						    "coordinates": [bounds.getEast(), bounds.getNorth()]
+      						  }
+      						};
+      				
+        				var buffered = turf.buffer(pt, 1, "miles");
+        				var bufferedBounds = turf.extent(buffered);
+        				map.fitBounds(bufferedBounds, {padding:0});
 	        		}
 	        		else{
-	        			map.fitBounds(bounds, {padding:100});
+	        			map.fitBounds(bounds, {padding:10});
 	        		}
         		}
         	}
@@ -623,9 +638,22 @@
         		// check if bounds is an empty json object
         		if(Object.keys(bounds).length > 0){
         			if(bounds.getSouth() === bounds.getNorth() && bounds.getWest() === bounds.getEast()){
-	        			map.easeTo({
-	        		        center: [ bounds.getEast(), bounds.getNorth() ]
-	        		    });
+//	        			map.easeTo({
+//	        		        center: [ bounds.getEast(), bounds.getNorth() ]
+//	        		    });
+        				
+        				var pt = {
+        						  "type": "Feature",
+        						  "properties": {},
+        						  "geometry": {
+        						    "type": "Point",
+        						    "coordinates": [bounds.getEast(), bounds.getNorth()]
+        						  }
+        						};
+        				
+        				var buffered = turf.buffer(pt, 10, "miles");
+        				var bufferedBounds = turf.extent(buffered);
+        				map.fitBounds(bufferedBounds, {padding:0});
 	        		}
 	        		else{
 	        			map.fitBounds(bounds, {padding:100});
@@ -715,18 +743,21 @@
 	        	    		map.getCanvas().style.cursor = originalCursor;
 	        	    	}
 	        	    	
+	        	    	if(selectedFeatures.length > 0){
+        	    			map.setFilter("multipolygon-hover", ["==", "id", ""]);
+        	    			map.setFilter("point-hover", ["==", "id", ""]);
+        	    			selectedFeatures = [];
+        	    		}
+	        	    	
 	        	    	
 	        	    	// control for styling of different geometry types
 	        	    	// 'fill' === polygon
 	        	    	if(feature.layer.type === "fill"){
 		        	    	map.setFilter("multipolygon-hover", ["==", "id", feature.properties.id]);
 
-	        	    		console.log("polygon hover")
 	        	    	}
 	        	    	else if(feature.layer.type === "circle"){
 		        	    	map.setFilter("point-hover", ["==", "id", feature.properties.id]);
-
-	        	    		console.log("point hover")
 	        	    	}
 	        	    	
 	        	        selectedFeatures.push(feature);

@@ -23,7 +23,7 @@
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
 	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.75)", strokeWidth:5, radius:7};
-	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.5)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
+	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.75)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
 	 $scope.sharedGeoData = {};
 	 
 	 
@@ -47,8 +47,8 @@
 		// Setting up empty layers to be populated later
 		//
 		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
-		controller.addVectorLayer(emptyGeoJSON, "point", $scope.targetStyle, "TARGET", 2);
 		controller.addVectorLayer(emptyGeoJSON, "multipolygon", $scope.targetStyle, "TARGET", 2);
+		controller.addVectorLayer(emptyGeoJSON, "point", $scope.targetStyle, "TARGET", 2);
 
 		controller.addVectorHoverEvents(hoverCallback, ["point", "multipolygon"]);
 		controller.addVectorClickEvents(featureClickCallback, ["point", "multipolygon"]);
