@@ -254,6 +254,7 @@
                   <mainClass>net.geoprism.GeoprismPatcher</mainClass>
                   <arguments>
                     <argument>${project.basedir}/target/classes/metadata</argument>
+                    <argument>${configuration.dir}/${geoprism.app}</argument>
                   </arguments>
                 </configuration>
               </execution>
@@ -446,6 +447,8 @@
           </execution>
         </executions>
       </plugin>
+      
+      <!-- We only need this for when you're running rebuild-database, import-schema, any sort of database maven tool from a geoprism extension project (module). -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>

@@ -49,7 +49,7 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
 {
   private static Logger logger = LoggerFactory.getLogger(GeoprismConfigurationResolver.class);
   
-  private static File externalConfigDir;
+  private File externalConfigDir;
 
   public GeoprismConfigurationResolver()
   {
@@ -66,7 +66,7 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
       // No funny business!
       if (!externalConfigDir.exists() || !externalConfigDir.isDirectory())
       {
-        logger.error("geoprism.config.dir was specified as [" + externalConfigDir.getAbsolutePath() + "] but that directory does not exist.");
+        logger.error("geoprism.config.dir was specified as [" + externalConfigDir.getAbsolutePath() + "] but that directory does not exist. Using default resource loader strategy.");
         externalConfigDir = null;
       }
     }
@@ -74,6 +74,20 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
     if (externalConfigDir == null)
     {
       logger.info("Geoprism external config dir not set. Using default resource loader strategy.");
+    }
+  }
+  
+  public void setExternalConfigDir(File externalConfigDir)
+  {
+    // No funny business!
+    if (!externalConfigDir.exists() || !externalConfigDir.isDirectory())
+    {
+      logger.error("Geoprism external config dir was manuallly specified as [" + externalConfigDir.getAbsolutePath() + "] but that directory does not exist. Ignoring the command.");
+    }
+    else
+    {
+      this.externalConfigDir = externalConfigDir;
+      logger.info("Geoprism external config dir has been manually set to [" + externalConfigDir + "].");
     }
   }
 
