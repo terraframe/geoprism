@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1327506288)
+@com.runwaysdk.business.ClassSignature(hash = 6270805)
 public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.MappableClassGeoNode";
-  private static final long serialVersionUID = -1327506288;
+  private static final long serialVersionUID = 6270805;
   
   public MappableClassGeoNodeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {
@@ -268,7 +250,7 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.UsersDTO getLockedBy()
+  public com.runwaysdk.system.SingleActorDTO getLockedBy()
   {
     if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
     {
@@ -276,7 +258,7 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
     }
     else
     {
-      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LOCKEDBY));
     }
   }
   

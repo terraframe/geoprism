@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = -172218297)
+@com.runwaysdk.business.ClassSignature(hash = -1806203934)
 public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.DashboardLayer";
-  private static final long serialVersionUID = -172218297;
+  private static final long serialVersionUID = -1806203934;
   
   protected DashboardLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -583,7 +565,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.transport.metadata.AttributeEnumerationMdDTO) getAttributeDTO(LAYERTYPE).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.UsersDTO getLockedBy()
+  public com.runwaysdk.system.SingleActorDTO getLockedBy()
   {
     if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
     {
@@ -591,7 +573,7 @@ public abstract class DashboardLayerDTOBase extends com.runwaysdk.business.Busin
     }
     else
     {
-      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LOCKEDBY));
     }
   }
   

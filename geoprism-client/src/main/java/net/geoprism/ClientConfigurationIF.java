@@ -23,7 +23,7 @@ import java.util.List;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.generation.loader.Reloadable;
 
-public interface ClientConfigurationIF extends Reloadable
+public interface ClientConfigurationIF extends Reloadable, CommonConfigurationIF
 {
   public List<GeoprismApplication> getApplications(ClientRequestIF request);
 }

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -25,6 +23,9 @@ import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.geoprism.account.OauthBridge;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
@@ -61,12 +62,14 @@ public class SessionController extends SessionControllerBase implements Reloadab
   private void form(String errorMessage) throws IOException, ServletException
   {
     CachedImageUtil.setBannerPath(this.req, this.resp);
-    
+
     if (errorMessage != null)
     {
       req.setAttribute("errorMessage", errorMessage);
     }
     
+    req.setAttribute("servers", ClientConfigurationService.getOauthServers());
+
     req.getRequestDispatcher("/login.jsp").forward(req, resp);
   }
 
@@ -125,5 +128,33 @@ public class SessionController extends SessionControllerBase implements Reloadab
     req.getSession().invalidate();
 
     resp.sendRedirect(req.getContextPath() + "/session/form");
+  }
+
+  @Override
+  public void ologin(String code) throws IOException, ServletException
+  {
+    try
+    {
+      Locale[] locales = ServletUtility.getLocales(req);
+
+      String sessionId = OauthBridge.createSession("DHIS2", code, locales);
+
+      WebClientSession clientSession = WebClientSession.getExistingSession(sessionId, locales);
+      ClientRequestIF clientRequest = clientSession.getRequest();
+
+      HttpSession session = req.getSession();
+      
+      session.setMaxInactiveInterval(CommonProperties.getSessionTime());
+      session.setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+      req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
+
+      resp.sendRedirect(req.getContextPath() + "/menu");
+//      req.getRequestDispatcher("/geoprism/menu").forward(req, resp);
+    }
+    catch (Throwable t)
+    {
+      String message = t.getLocalizedMessage() == null ? t.getMessage() : t.getLocalizedMessage();
+      resp.sendRedirect(req.getContextPath() + "/session/form?errorMessage=" + URLEncoder.encode(message, EncodingConstants.ENCODING));
+    }
   }
 }

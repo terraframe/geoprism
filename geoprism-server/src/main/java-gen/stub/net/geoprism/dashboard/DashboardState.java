@@ -18,10 +18,9 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.GeoprismUser;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.SingleActor;
 
 public class DashboardState extends DashboardStateBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -44,7 +43,7 @@ public class DashboardState extends DashboardStateBase implements com.runwaysdk.
     return clone;
   }
 
-  public static DashboardState getDashboardState(Dashboard dashboard, GeoprismUser user)
+  public static DashboardState getDashboardState(Dashboard dashboard, SingleActor user)
   {
     DashboardStateQuery query = new DashboardStateQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(dashboard));

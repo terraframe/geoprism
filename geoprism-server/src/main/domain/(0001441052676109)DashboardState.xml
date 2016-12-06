@@ -25,7 +25,7 @@
         <attributes>
           <blob name="mapThumbnail" label="Map Thumbnail"/>
           <text name="conditions" label="Conditions" />
-          <reference name="GeoprismUser" label="User" type="net.geoprism.GeoprismUser"  />
+          <reference name="geoprismUser" label="User" type="com.runwaysdk.system.SingleActor"  />
           <reference name="dashboard" label="Dashboard" type="net.geoprism.dashboard.Dashboard" indexType="non-unique index" required="true"  />
         </attributes>
       </mdBusiness>

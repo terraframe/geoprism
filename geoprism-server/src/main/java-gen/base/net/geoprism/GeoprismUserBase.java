@@ -18,6 +18,8 @@
  */
 package net.geoprism;
 
+import com.runwaysdk.system.SingleActor;
+
 @com.runwaysdk.business.ClassSignature(hash = 1879029478)
 /**
  * This class is generated automatically.
@@ -192,7 +194,7 @@ public abstract class GeoprismUserBase extends com.runwaysdk.system.Users implem
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static net.geoprism.GeoprismUser getCurrentUser()
+  public static SingleActor getCurrentUser()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

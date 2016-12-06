@@ -33,6 +33,7 @@ import net.geoprism.dashboard.DashboardBuilder;
 import net.geoprism.dashboard.DashboardQuery;
 import net.geoprism.dashboard.DashboardTypeInfo;
 import net.geoprism.data.CachedEndpoint;
+import net.geoprism.data.LocalEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
@@ -535,6 +536,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
       }
 
       return new AmazonEndpoint();
+      
+//      return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
     }
   }
 

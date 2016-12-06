@@ -34,7 +34,7 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class DefaultConfiguration implements ConfigurationIF
+public class DefaultConfiguration extends DefaultCommonConfiguration implements ConfigurationIF
 {
   private static final String ADMIN             = "geoprism.admin.Administrator";
 

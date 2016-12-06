@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1250616532)
+@com.runwaysdk.business.ClassSignature(hash = 383723456)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,12 +11,12 @@ package net.geoprism.dashboard;
 public abstract class DashboardStateBase extends com.runwaysdk.business.Business implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardState";
-  public static java.lang.String GEOPRISMUSER = "GeoprismUser";
   public static java.lang.String CONDITIONS = "conditions";
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
+  public static java.lang.String GEOPRISMUSER = "geoprismUser";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -45,51 +27,11 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1250616532;
+  private static final long serialVersionUID = 383723456;
   
   public DashboardStateBase()
   {
     super();
-  }
-  
-  public net.geoprism.GeoprismUser getGeoprismUser()
-  {
-    if (getValue(GEOPRISMUSER).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return net.geoprism.GeoprismUser.get(getValue(GEOPRISMUSER));
-    }
-  }
-  
-  public String getGeoprismUserId()
-  {
-    return getValue(GEOPRISMUSER);
-  }
-  
-  public void validateGeoprismUser()
-  {
-    this.validateAttribute(GEOPRISMUSER);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeoprismUserMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardState.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEOPRISMUSER);
-  }
-  
-  public void setGeoprismUser(net.geoprism.GeoprismUser value)
-  {
-    if(value == null)
-    {
-      setValue(GEOPRISMUSER, "");
-    }
-    else
-    {
-      setValue(GEOPRISMUSER, value.getId());
-    }
   }
   
   public String getConditions()
@@ -244,6 +186,46 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
     }
   }
   
+  public com.runwaysdk.system.SingleActor getGeoprismUser()
+  {
+    if (getValue(GEOPRISMUSER).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return com.runwaysdk.system.SingleActor.get(getValue(GEOPRISMUSER));
+    }
+  }
+  
+  public String getGeoprismUserId()
+  {
+    return getValue(GEOPRISMUSER);
+  }
+  
+  public void validateGeoprismUser()
+  {
+    this.validateAttribute(GEOPRISMUSER);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getGeoprismUserMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardState.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(GEOPRISMUSER);
+  }
+  
+  public void setGeoprismUser(com.runwaysdk.system.SingleActor value)
+  {
+    if(value == null)
+    {
+      setValue(GEOPRISMUSER, "");
+    }
+    else
+    {
+      setValue(GEOPRISMUSER, value.getId());
+    }
+  }
+  
   public String getId()
   {
     return getValue(ID);
@@ -332,7 +314,7 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -340,7 +322,7 @@ public abstract class DashboardStateBase extends com.runwaysdk.business.Business
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

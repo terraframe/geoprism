@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.importer;
 
@@ -67,61 +65,71 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
   /**
    * URL of the file being imported
    */
-  private URL                 url;
+  private URL                    url;
 
   /**
    * Name of shapefile attribute which is used to derive the type of the entity
    */
-  private String              type;
+  private String                 type;
 
   /**
    * Name of shapefile attribute which is used to derive the entity name
    */
-  private String              name;
+  private String                 name;
 
   /**
    * Optional name of the shapefile attribute which is used to derive the geo id. If this value is null then the geo id
    * is auto-generated.
    */
-  private String              id;
+  private String                 id;
 
   /**
    * Optional name of the shapefile attribute which is used to specify the entity name or geo id of the parent entity
    * for the entity being imported. If this value is null than the parent is assumed to be Earth.
    */
-  private String              parent;
+  private String                 parent;
 
   /**
    * Optional name of the shapefile attribute which is used to restrict the parent to a specific universal type when
    * searching for the parent entity. If this value is null than the search does not restrict by type.
    */
-  private String              parentType;
+  private String                 parentType;
 
   /**
    * Name of the default universal
    */
-  private String              universalId;
+  private String                 universalId;
+
+  /**
+   * Loaded default universal
+   */
+  private Universal              universal;
 
   /**
    * Helper used to convert Geometry data to Point and MultiPolygon data.
    */
-  private GeometryHelper      helper;
+  private GeometryHelper         helper;
 
   /**
    * Cached instance of Root.
    */
-  private GeoEntity           root;
+  private GeoEntity              root;
 
   /**
    * Map between a feature id and its geo entity
    */
-  private Map<String, String> entityIdMap;
-  
+  private Map<String, String>    entityIdMap;
+
+  /**
+   * Map between the parent feature value and the resolved parent GeoEntity
+   */
+  private Map<String, GeoEntity> parentCache;
+
   /**
    * Synonym for the entity
    */
-  private List<String>        synonyms;
-  
+  private List<String>           synonyms;
+
   /**
    * @param url
    *          URL of the shapefile
@@ -134,6 +142,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
     this.helper = new GeometryHelper();
     this.root = GeoEntity.getRoot();
     this.entityIdMap = new HashMap<String, String>();
+    this.parentCache = new HashMap<String, GeoEntity>();
     this.synonyms = new ArrayList<String>();
   }
 
@@ -201,12 +210,12 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
   {
     this.parentType = parentType;
   }
-  
+
   public List<String> getSynonms()
   {
     return synonyms;
   }
-  
+
   public void setSynonym(String synonym)
   {
     this.synonyms.add(synonym);
@@ -275,6 +284,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
    *          Log file writer
    * @throws InvocationTargetException
    */
+  @Transaction
   private void createEntities(GISImportLoggerIF logger) throws InvocationTargetException
   {
     try
@@ -342,7 +352,6 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
    * @param feature
    * @throws Exception
    */
-  @Transaction
   private void importEntity(SimpleFeature feature) throws Exception
   {
     String geoId = this.getGeoId(feature);
@@ -385,13 +394,13 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       entity.getDisplayLabel().setValue(entityName);
       entity.setUniversal(universal);
       entity.setGeoId(geoId);
-      
+
       try
       {
-        entity.apply();
-        
+        entity.applyInternal(false);
+
         synonyms = getSynonms();
-        for(String synonym : synonyms)
+        for (String synonym : synonyms)
         {
           Synonym syn = new Synonym();
           syn.getDisplayLabel().setDefaultValue(feature.getAttribute(synonym).toString());
@@ -503,7 +512,12 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       }
     }
 
-    return Universal.get(this.universalId);
+    if (this.universal == null)
+    {
+      this.universal = Universal.get(this.universalId);
+    }
+
+    return this.universal;
   }
 
   /**
@@ -545,11 +559,22 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       {
         String entityName = _entityName.toString();
 
+        if (this.parentCache.containsKey(entityName))
+        {
+          return this.parentCache.get(entityName);
+        }
+
         GeoEntity parent = GeoEntityShapefileImporter.getByEntityName(entityName);
 
         if (parent != null)
         {
+          this.parentCache.put(entityName, parent);
+
           return parent;
+        }
+        else
+        {
+          System.out.println("Unable to find parent [" + entityName + "]");
         }
       }
     }

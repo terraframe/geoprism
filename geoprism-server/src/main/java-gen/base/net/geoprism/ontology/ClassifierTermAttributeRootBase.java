@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 1494991749)
+@com.runwaysdk.business.ClassSignature(hash = -2051813942)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -42,7 +24,7 @@ public abstract class ClassifierTermAttributeRootBase extends com.runwaysdk.busi
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 1494991749;
+  private static final long serialVersionUID = -2051813942;
   
   public ClassifierTermAttributeRootBase(String parentId, String childId)
   {
@@ -221,7 +203,7 @@ public abstract class ClassifierTermAttributeRootBase extends com.runwaysdk.busi
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -229,7 +211,7 @@ public abstract class ClassifierTermAttributeRootBase extends com.runwaysdk.busi
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

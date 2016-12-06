@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1770936947)
+@com.runwaysdk.business.ClassSignature(hash = -424542318)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -193,27 +175,27 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.SessionEntry.LASTUPDATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy()
   {
     return getLockedBy(null);
 
   }
  
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.SessionEntry.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.SessionEntry.LOCKEDBY, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.SessionEntry.LOCKEDBY, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.SessionEntry.LOCKEDBY);
 
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.SessionEntry.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.SessionEntry.LOCKEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -348,7 +330,7 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     }
     else if (name.equals(net.geoprism.SessionEntry.LOCKEDBY)) 
     {
-       return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.SessionEntry.OWNER)) 
     {
@@ -534,9 +516,9 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
-    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
-    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
-    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
+    public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy();
+    public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias);
+    public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -737,21 +719,21 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.SessionEntry.LASTUPDATEDBY,  alias, displayLabel);
 
   }
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy()
   {
     return getLockedBy(null);
 
   }
  
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY, alias, null);
 
   }
  
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -990,7 +972,7 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     }
     else if (name.equals(net.geoprism.SessionEntry.LOCKEDBY)) 
     {
-       return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.SessionEntry.OWNER)) 
     {
@@ -1037,9 +1019,9 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLastUpdatedBy(String alias, String displayLabel);
-    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy();
-    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias);
-    public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel);
+    public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy();
+    public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias);
+    public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias, String displayLabel);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner();
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias);
     public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner(String alias, String displayLabel);
@@ -1261,21 +1243,21 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.SessionEntry.LASTUPDATEDBY,  alias, displayLabel);
 
   }
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy()
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy()
   {
     return getLockedBy(null);
 
   }
  
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias)
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY, alias, null);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY, alias, null);
 
   }
  
-  public com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF getLockedBy(String alias, String displayLabel)
+  public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getLockedBy(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.UsersQuery.UsersQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY,  alias, displayLabel);
+    return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.SessionEntry.LOCKEDBY,  alias, displayLabel);
 
   }
   public com.runwaysdk.system.ActorQuery.ActorQueryReferenceIF getOwner()
@@ -1398,7 +1380,7 @@ public  class SessionEntryQuery extends com.runwaysdk.query.GeneratedBusinessQue
     }
     else if (name.equals(net.geoprism.SessionEntry.LOCKEDBY)) 
     {
-       return new com.runwaysdk.system.UsersQuery.UsersQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.system.SingleActorQuery.SingleActorQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else if (name.equals(net.geoprism.SessionEntry.OWNER)) 
     {
