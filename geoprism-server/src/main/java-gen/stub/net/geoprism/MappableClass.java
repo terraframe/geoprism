@@ -272,6 +272,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     object.put("id", this.getId());
     object.put("type", mdClass.getKey());
     object.put("value", value);
+    object.put("source", this.getDataSource());
 
     LinkedList<AttributeWrapper> attributes = new LinkedList<AttributeWrapper>();
 
@@ -765,8 +766,12 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       String label = object.getString("label");
       String id = object.getString("id");
       String description = object.getString("description");
+      String source = object.getString("source");
 
       MappableClass ds = MappableClass.get(id);
+      ds.lock();
+      ds.setDataSource(source);
+      ds.apply();
 
       MdClass mdClass = ds.getWrappedMdClass();
       mdClass.lock();

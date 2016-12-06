@@ -211,6 +211,7 @@
         
       if(options.attributeType.isOntologyAttribute){
         dynamicDataModel.ontologyNodes = options.attributeType.nodes;
+        dynamicDataModel.dynamic = options.attributeType.dynamic;
         dynamicDataModel.termType = options.attributeType.termType;
         dynamicDataModel.relationshipType = options.attributeType.relationshipType;
       }

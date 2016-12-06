@@ -22,9 +22,6 @@ import java.io.File;
 
 import net.geoprism.GeoprismPatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.generation.loader.Reloadable;
 

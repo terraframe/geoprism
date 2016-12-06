@@ -27,7 +27,8 @@
         categories : '=',
         autoComplete : '&',
         showOther : '@',
-        type : '@'
+        type : '@',
+        dynamic : '='
       },
       controller : StyleCategoryListController,
       controllerAs : 'ctrl',
@@ -72,38 +73,61 @@
       }
     }
     
-      $scope.$watch("categories.rangeCategoriesEnabled", function(newValue, oldValue) {
-        var scopeRef = $scope;
-        var cats = scopeRef.categories.catLiElems;
+    $scope.$watch("categories.rangeCategoriesEnabled", function(newValue, oldValue) {
+      var scopeRef = $scope;
+      var cats = scopeRef.categories.catLiElems;
         
-        // update the other category
-        if(newValue){
-          scopeRef.categories.other.isRangeCat = true;
-        }
-        else{
-          scopeRef.categories.other.isRangeCat = false;
-        }
+      // update the other category
+      if(newValue){
+        scopeRef.categories.other.isRangeCat = true;
+      }
+      else{
+        scopeRef.categories.other.isRangeCat = false;
+      }
         
-        // update the value categories
+      // update the value categories
       for(var i=0; i<cats.length; i++){
         var cat = cats[i];
+        
         if(newValue){
           cat.isRangeCat = true;
-          }
+        }
         else{
-            cat.isRangeCat = false;
+          cat.isRangeCat = false;
             
-            // make sure min category isn't disabled if set in widget and toggled back to basic categories
-            // we really only need to reset the min val but i'm resetting max to be consistent
-              if(cat.rangeAllMin){
-                cat.rangeAllMin = false;
-              }
-              if(cat.rangeAllMax){
-                cat.rangeAllMax = false;
-              }
+          // make sure min category isn't disabled if set in widget and toggled back to basic categories
+          // we really only need to reset the min val but i'm resetting max to be consistent
+          if(cat.rangeAllMin){
+            cat.rangeAllMin = false;
+          }
+          if(cat.rangeAllMax){
+            cat.rangeAllMax = false;
           }
         }
-      }); 
+      }
+    });
+    
+    controller.addOption = function() {
+      var option = {"val":"","color":"#000000","isOntologyCat":true,"isRangeCat":false,"rangeAllMin":false,"rangeAllMax":false,"otherEnabled":true,"otherCat":false,"enableIcon":false};
+      
+      $scope.categories.catLiElems.push(option);
+    }
+      
+    controller.init = function() {
+      
+      /*
+       * Dynamic categories all require values
+       */
+      if($scope.dynamic) {
+        function predicate(option) {
+          return (option.val != '');
+        }
+
+        $scope.categories.catLiElems = $scope.categories.catLiElems.filter(predicate);
+      }  
+    }
+      
+    controller.init();
   }
   
   
@@ -439,26 +463,26 @@
     // The number of size categories can not exceed the number of size options in the given bubble size
     // range (i.e. maxSize - minSize + 1). 
     controller.getMaxBubbleBucketSize = function(){
-    	var numCats;
-    	var bubbleMaxSize = Number($scope.styleModel.bubbleMaxSize);
-    	var bubbleMinSize = Number($scope.styleModel.bubbleMinSize);
-    	
-    	if(bubbleMaxSize > bubbleMinSize){
-    		numCats = bubbleMaxSize - bubbleMinSize + 1;
-    	}
-    	else if(bubbleMaxSize < bubbleMinSize){
-    		numCats = bubbleMinSize - bubbleMaxSize + 1;
-    	}
-    	else if(bubbleMaxSize === bubbleMinSize){
-    		numCats = 2;
-    	}
-    	
-    	// ensure that the numBubbleSizeCategories prop has a valid value if user changes min/max values 
-		if(!$scope.styleModel.numBubbleSizeCategories || $scope.styleModel.numBubbleSizeCategories > numCats){
-			$scope.styleModel.numBubbleSizeCategories = 5 < numCats ? 5 : Math.round(numCats / 2);
-		}
-		
-		return numCats;
+      var numCats;
+      var bubbleMaxSize = Number($scope.styleModel.bubbleMaxSize);
+      var bubbleMinSize = Number($scope.styleModel.bubbleMinSize);
+      
+      if(bubbleMaxSize > bubbleMinSize){
+        numCats = bubbleMaxSize - bubbleMinSize + 1;
+      }
+      else if(bubbleMaxSize < bubbleMinSize){
+        numCats = bubbleMinSize - bubbleMaxSize + 1;
+      }
+      else if(bubbleMaxSize === bubbleMinSize){
+        numCats = 2;
+      }
+      
+      // ensure that the numBubbleSizeCategories prop has a valid value if user changes min/max values 
+    if(!$scope.styleModel.numBubbleSizeCategories || $scope.styleModel.numBubbleSizeCategories > numCats){
+      $scope.styleModel.numBubbleSizeCategories = 5 < numCats ? 5 : Math.round(numCats / 2);
+    }
+    
+    return numCats;
     }
     
     /**
@@ -529,9 +553,17 @@
       
       return false;
     };
+        
+    controller.isOntology = function() {
+      return ($scope.dynamicDataModel.isOntologyAttribute && !$scope.dynamicDataModel.dynamic)
+    }
     
     controller.isSecondaryAttributeOntology = function() {
-      return ($scope.styleModel.secondaryAggregation.attribute.type == 'com.runwaysdk.system.metadata.MdAttributeTerm');
+      return ($scope.styleModel.secondaryAggregation.attribute.type === 'com.runwaysdk.system.metadata.MdAttributeTerm'  && !$scope.styleModel.secondaryAggregation.attribute.dynamic);
+    }
+    
+    controller.isSecondaryDynamic = function() {
+      return $scope.styleModel.secondaryAggregation.attribute.dynamic;      
     }
     
     controller.categoryAutocomplete = function(mdAttribute, geoNodeId, universalId, aggregationVal, categoryType, request, response ) {
@@ -1148,25 +1180,25 @@
       
       // Set the defaults for the widget
       $scope.category.enableIcon = $scope.category.enableIcon;
-	  $scope.category.icon = $scope.category.enableIcon && $scope.category.icon ? $scope.category.icon : defaultState.icon;
-	  $scope.category.iconSize = $scope.category.iconSize ? $scope.category.iconSize : defaultState.iconSize;
-	  
+      $scope.category.icon = $scope.category.enableIcon && $scope.category.icon ? $scope.category.icon : defaultState.icon;
+      $scope.category.iconSize = $scope.category.iconSize ? $scope.category.iconSize : defaultState.iconSize;
+    
       var buttons = [];
       buttons.push(
-	    {
+      {
           label : localizationService.localize("layer.category", "cancel", "Cancel"),
           config : {class:'btn'},
           callback : function(){
-        	  $scope.category.enableIcon = defaultState.enableIcon;
-        	  $scope.category.icon = defaultState.icon;
-        	  $scope.category.iconSize = defaultState.iconSize;
+            $scope.category.enableIcon = defaultState.enableIcon;
+            $scope.category.icon = defaultState.icon;
+            $scope.category.iconSize = defaultState.iconSize;
           }
-	    }, 
+      }, 
         {
-    	  label : localizationService.localize("layer.category", "ok", "Ok"),
-    	  config : {class:'btn'},
-    	  callback : function(){}
-      	}
+        label : localizationService.localize("layer.category", "ok", "Ok"),
+        config : {class:'btn'},
+        callback : function(){}
+        }
       );
       
       var dialog = widgetService.createDialog(title, html, buttons);
@@ -1179,13 +1211,13 @@
       
       $scope.$watch("category.enableIcon", function(newValue, oldValue) {
           if(!newValue) {    
-        	  
+            
             var defaultState = categoryIconService.getDefaultIconModel();
             
             // Clear the widget if unchecking the enable icon option
             $scope.category.enableIcon = defaultState.enableIcon;
-      	  	$scope.category.icon = defaultState.icon;
-      	  	$scope.category.iconSize = defaultState.iconSize;
+            $scope.category.icon = defaultState.icon;
+            $scope.category.iconSize = defaultState.iconSize;
           }
       }); 
     }    
@@ -1231,12 +1263,12 @@
     .directive('thematicLayer', ThematicLayer)
     .directive('referenceLayer', ReferenceLayer)
     .filter('range', function() {
-    	  return function(input, min, max) {
-    		    min = parseInt(min); //Make string input int
-    		    max = parseInt(max);
-    		    for (var i=min; i<max; i++)
-    		      input.push(i);
-    		    return input;
-    		  };
+        return function(input, min, max) {
+            min = parseInt(min); //Make string input int
+            max = parseInt(max);
+            for (var i=min; i<max; i++)
+              input.push(i);
+            return input;
+          };
     });
 })();

@@ -90,6 +90,8 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 {
   private static final long serialVersionUID = -810007054;
 
+  public static long        LIMIT            = 10;
+
   public static String      layerType        = "THEMATICLAYER";
 
   public DashboardThematicLayer()
@@ -150,17 +152,13 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     QueryFactory f = new QueryFactory();
     ValueQuery wrapper = new ValueQuery(f);
     wrapper.FROM(getViewName(), "");
-    
+
     List<Selectable> selectables = new LinkedList<Selectable>();
 
     //
     // Only number types can be used
     //
-    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || 
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") ||
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") ||
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") ||
-        thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
+    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
     {
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
       selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
@@ -241,11 +239,18 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       {
         try
         {
+          boolean dynamic = ! ( Dashboard.getOptionCount(mdAttribute.getId()) < LIMIT );
+
           attrObj.put("isOntologyAttribute", true);
           attrObj.put("isTextAttribute", false);
           attrObj.put("relationshipType", ClassifierIsARelationship.CLASS);
           attrObj.put("termType", Classifier.CLASS);
-          attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
+          attrObj.put("dynamic", dynamic);
+
+          if (!dynamic)
+          {
+            attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
+          }
         }
         catch (JSONException e)
         {
@@ -457,7 +462,14 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
           if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
           {
-            secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
+            boolean dynamic = ! ( Dashboard.getOptionCount(secAttr.getMdAttributeId()) < LIMIT );
+
+            secAttrObj.put("dynamic", dynamic);
+
+            if (!dynamic)
+            {
+              secAttrObj.put("nodes", Dashboard.getClassifierTreeJSON(secAttr.getMdAttributeId()));
+            }
           }
         }
 
