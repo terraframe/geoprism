@@ -46,6 +46,8 @@
 		//
 		// Setting up empty layers to be populated later
 		//
+		// TODO: pull all boiler place addVectorLayer setup into the factory so the map widget can simply call render() or setup()
+		//
 		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
 		controller.addVectorLayer(emptyGeoJSON, "multipolygon", $scope.targetStyle, "TARGET", 2);
 		controller.addVectorLayer(emptyGeoJSON, "point", $scope.targetStyle, "TARGET", 2);
@@ -141,8 +143,6 @@
 				  }
 				  
 				  controller.updateVectorLayer(data, geomType, $scope.targetStyle, "TARGET", 2);
-				  
-//				  controller.zoomToLayersExtent(["point", "multipolygon"])
 			  }
 			  
 			  data.layers.forEach(function(layer){

@@ -417,6 +417,8 @@
 	        		targetLayers.forEach(function(targetLayer){
 	        			
 	        			var layerSourceName = targetLayer.source;
+	        			
+	    	        	// TODO: replace _data with map.querySourceFeatures(layerSourceName);
 //	    	        	var layerSourceData = map.querySourceFeatures(layerSourceName);
 	    	        	var layerSourceData = map.getSource(layerSourceName)._data;
 	    	        	
@@ -453,6 +455,8 @@
 	        		targetLayers.forEach(function(targetLayer){
 	        			
 	        			var layerSourceName = targetLayer.source;
+	        			
+	    	        	// TODO: replace _data with map.querySourceFeatures(layerSourceName);
 //	        			var layerSourceData = map.querySourceFeatures(layerSourceName);
 	        			var layerSourceData = map.getSource(layerSourceName)._data;
 	    	        	
@@ -567,6 +571,7 @@
         			
         			if(layer){
 	    	        	var layerSourceName = layer.source;
+	    	        	
 	    	        	// TODO: replace _data with map.querySourceFeatures(layerSourceName);
 	    	        	var layerSourceData = map.getSource(layerSourceName)._data;
 	    	        	
@@ -621,6 +626,7 @@
         			
         			if(layer){
 	    	        	var layerSourceName = layer.source;
+	    	        	
 	    	        	// TODO: replace _data with map.querySourceFeatures(layerSourceName);
 	    	        	var layerSourceData = map.getSource(layerSourceName)._data;
 	    	        	
