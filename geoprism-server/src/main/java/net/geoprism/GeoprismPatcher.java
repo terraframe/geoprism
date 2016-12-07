@@ -25,6 +25,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.dataaccess.InstallerCP;
@@ -44,6 +45,7 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.util.ServerInitializerFacade;
 
+import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.context.PatchingContextListener;
 import net.geoprism.context.ProjectDataConfiguration;
 import net.geoprism.data.CachedEndpoint;
@@ -63,6 +65,8 @@ public class GeoprismPatcher
 
   private File metadataDir;
   
+  private File externalConfigDir;
+  
   public GeoprismPatcher(File metadataDir)
   {
     this.metadataDir = metadataDir;
@@ -75,6 +79,13 @@ public class GeoprismPatcher
     if (args.length > 0)
     {
       metadataPath = args[0];
+    }
+    if (args.length > 1)
+    {
+      String externalConfigDir = args[1];
+      
+      GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
+      resolver.setExternalConfigDir(new File(externalConfigDir));
     }
     
     executeWithRequest(metadataPath);
