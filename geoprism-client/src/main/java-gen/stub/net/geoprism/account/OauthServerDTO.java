@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessDTO;
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.generation.loader.Reloadable;
 
 public class OauthServerDTO extends OauthServerDTOBase implements Reloadable, OauthServerIF
@@ -34,7 +35,7 @@ public class OauthServerDTO extends OauthServerDTOBase implements Reloadable, Oa
   
   public String getUrl()
   {
-    String redirect =  "https://localhost:8443/dev/session/ologin";
+    String redirect = DeployProperties.getApplicationURL() + "/session/ologin";
 
     try
     {

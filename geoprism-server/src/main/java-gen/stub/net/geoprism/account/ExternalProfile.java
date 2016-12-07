@@ -21,6 +21,7 @@ import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.SingleActorDAOIF;
+import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.OIterator;
@@ -61,6 +62,8 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
   {
     try
     {
+      String redirect = DeployProperties.getApplicationURL() + "/session/ologin";
+
       OauthServer server = OauthServer.get(serverId);
       /*
        * Get the access token
@@ -69,7 +72,7 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
       tokenBuilder.setGrantType(GrantType.AUTHORIZATION_CODE);
       tokenBuilder.setClientId(server.getClientId());
       tokenBuilder.setClientSecret(server.getSecretKey());
-      tokenBuilder.setRedirectURI("https://localhost:8443/dev/session/ologin");
+      tokenBuilder.setRedirectURI(redirect);
       tokenBuilder.setCode(code);
 
       OAuthClientRequest tokenRequest = tokenBuilder.buildQueryMessage();
