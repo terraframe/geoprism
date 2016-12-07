@@ -24,7 +24,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
 import net.geoprism.account.ExternalProfileDTO;
+import net.geoprism.account.LocaleSerializer;
+import net.geoprism.account.OauthServerDTO;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
@@ -60,6 +64,8 @@ public class SessionController extends SessionControllerBase implements Reloadab
 
   private void form(String errorMessage) throws IOException, ServletException
   {
+    Locale[] locales = ServletUtility.getLocales(req);
+
     CachedImageUtil.setBannerPath(this.req, this.resp);
 
     if (errorMessage != null)
@@ -67,7 +73,20 @@ public class SessionController extends SessionControllerBase implements Reloadab
       req.setAttribute("errorMessage", errorMessage);
     }
 
-    req.setAttribute("servers", ClientConfigurationService.getOauthServers());
+    WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
+
+    try
+    {
+      ClientRequestIF clientRequest = clientSession.getRequest();
+
+      OauthServerDTO[] servers = OauthServerDTO.getAll(clientRequest);
+
+      req.setAttribute("servers", servers);
+    }
+    finally
+    {
+      clientSession.logout();
+    }
 
     req.getRequestDispatcher("/login.jsp").forward(req, resp);
   }
@@ -130,10 +149,13 @@ public class SessionController extends SessionControllerBase implements Reloadab
   }
 
   @Override
-  public void ologin(String code) throws IOException, ServletException
+  public void ologin(String code, String state) throws IOException, ServletException
   {
     try
     {
+      JSONObject stateObject = new JSONObject(state);
+      String serverId = stateObject.getString("serverId");
+
       Locale[] locales = ServletUtility.getLocales(req);
 
       WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
@@ -142,7 +164,7 @@ public class SessionController extends SessionControllerBase implements Reloadab
       {
         ClientRequestIF clientRequest = clientSession.getRequest();
 
-        String sessionId = ExternalProfileDTO.login(clientRequest, "DHIS2", code, locales.toString());
+        String sessionId = ExternalProfileDTO.login(clientRequest, serverId, code, LocaleSerializer.serialize(locales));
 
         this.createSession(sessionId, locales);
 

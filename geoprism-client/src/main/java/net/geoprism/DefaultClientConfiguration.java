@@ -25,7 +25,7 @@ import net.geoprism.localization.LocalizationFacadeDTO;
 
 import com.runwaysdk.constants.ClientRequestIF;
 
-public class DefaultClientConfiguration extends DefaultCommonConfiguration implements ClientConfigurationIF
+public class DefaultClientConfiguration implements ClientConfigurationIF
 {
 
   @Override

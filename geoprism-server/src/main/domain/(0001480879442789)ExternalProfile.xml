@@ -3,13 +3,26 @@
     <create>
       <patchLockedByTask></patchLockedByTask>          
     </create>
-    <create>
+    <create>            
+       <mdBusiness name="net.geoprism.account.OauthServer" label="Oauth Server">        
+        <attributes>
+          <localChar name="displayLabel" label="Display label" size="255"/>
+          <text name="profileLocation" label="Profile location" required="true" />
+          <text name="authorizationLocation" label="Authorization location" required="true" />
+          <text name="tokenLocation" label="Token location" required="true" />
+          <text name="secretKey" label="Secret key" required="true" />
+          <text name="clientId" label="Client id" required="true" />
+          <char name="serverType" label="Server type" required="true" size="255" />          
+        </attributes>
+        <mdMethod name="getAll" static="true" label="Get all" returnType="net.geoprism.account.OauthServer[]" />
+      </mdBusiness>
+      
       <mdBusiness name="net.geoprism.account.ExternalProfile" label="External profile" extends="com.runwaysdk.system.SingleActor">
         <attributes>
           <char name="remoteId" label="Remote id" required="true" size="255" />
           <char name="displayName" label="Display name" size="255" />
           <char name="username" label="Username" size="255" />
-          <char name="serverId" label="Server id" required="true" size="255" />
+          <reference name="server" type="net.geoprism.account.OauthServer" label="Server" required="true" />
         </attributes>
         <mdMethod name="login" static="true" label="Login" returnType="java.lang.String">
           <mdParameter name="serverId" label="Server id" order="0" type="java.lang.String"/>
@@ -26,6 +39,11 @@
     <permissions>
       <role roleName="PUBLIC">
         <grant>
+          <mdBusinessPermission type="net.geoprism.account.OauthServer">
+            <mdMethodPermission methodName="getAll">
+              <operation name="EXECUTE"/>
+            </mdMethodPermission>
+          </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.account.ExternalProfile">
             <mdMethodPermission methodName="login">
               <operation name="EXECUTE"/>
@@ -33,14 +51,18 @@
           </mdBusinessPermission>
         </grant>
       </role>
+      <method methodName="getAll" type="net.geoprism.account.OauthServer">
+        <assignedRole roleName="Administrator"/>
+      </method>
       <method methodName="login" type="net.geoprism.account.ExternalProfile">
         <assignedRole roleName="Administrator"/>
       </method>
-    </permissions>
+    </permissions>    
   </doIt>
   <undoIt>
     <delete>
       <object key="net.geoprism.account.ExternalProfile" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.account.OauthServer" type="com.runwaysdk.system.metadata.MdBusiness"/>
     </delete>
   </undoIt>
 </version>

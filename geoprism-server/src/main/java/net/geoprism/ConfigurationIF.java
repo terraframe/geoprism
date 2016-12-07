@@ -31,7 +31,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
  * @author terraframe
  *
  */
-public interface ConfigurationIF extends Reloadable, CommonConfigurationIF
+public interface ConfigurationIF extends Reloadable
 {
 
   /**

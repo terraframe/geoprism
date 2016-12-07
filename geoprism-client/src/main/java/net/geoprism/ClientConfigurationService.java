@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import net.geoprism.account.OauthServerIF;
-
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
@@ -76,19 +74,4 @@ public class ClientConfigurationService implements Reloadable
 
     return applications;
   }
-
-  public static List<OauthServerIF> getOauthServers()
-  {
-    List<OauthServerIF> servers = new LinkedList<OauthServerIF>();
-    
-    List<ClientConfigurationIF> configurations = ClientConfigurationService.getConfigurations();
-    
-    for (ClientConfigurationIF configuration : configurations)
-    {
-      servers.addAll(configuration.getOauthServers());
-    }
-    
-    return servers;
-  }
-  
 }

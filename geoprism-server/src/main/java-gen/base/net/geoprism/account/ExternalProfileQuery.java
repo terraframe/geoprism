@@ -1,6 +1,6 @@
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = 1279892674)
+@com.runwaysdk.business.ClassSignature(hash = 1279919997)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -72,21 +72,27 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.REMOTEID, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getServerId()
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer()
   {
-    return getServerId(null);
+    return getServer(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getServerId(String alias)
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.SERVERID, alias, null);
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.account.ExternalProfile.SERVER);
+
+    return (net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.account.ExternalProfile.SERVER, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getServerId(String alias, String displayLabel)
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.SERVERID, alias, displayLabel);
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.account.ExternalProfile.SERVER);
+
+    return (net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.account.ExternalProfile.SERVER, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getUsername()
@@ -106,6 +112,20 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.account.ExternalProfile.USERNAME, alias, displayLabel);
 
   }
+  protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(net.geoprism.account.ExternalProfile.SERVER)) 
+    {
+       return new net.geoprism.account.OauthServerQuery.OauthServerQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   /**  
    * Returns an iterator of Business objects that match the query criteria specified
    * on this query object. 
@@ -144,9 +164,9 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     public com.runwaysdk.query.SelectableChar getRemoteId();
     public com.runwaysdk.query.SelectableChar getRemoteId(String alias);
     public com.runwaysdk.query.SelectableChar getRemoteId(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getServerId();
-    public com.runwaysdk.query.SelectableChar getServerId(String alias);
-    public com.runwaysdk.query.SelectableChar getServerId(String alias, String displayLabel);
+    public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer();
+    public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias);
+    public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getUsername();
     public com.runwaysdk.query.SelectableChar getUsername(String alias);
     public com.runwaysdk.query.SelectableChar getUsername(String alias, String displayLabel);
@@ -219,21 +239,21 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.REMOTEID, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getServerId()
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer()
   {
-    return getServerId(null);
+    return getServer(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getServerId(String alias)
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.SERVERID, alias, null);
+    return (net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF)this.get(net.geoprism.account.ExternalProfile.SERVER, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getServerId(String alias, String displayLabel)
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.SERVERID, alias, displayLabel);
+    return (net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF)this.get(net.geoprism.account.ExternalProfile.SERVER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getUsername()
@@ -253,6 +273,20 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.USERNAME, alias, displayLabel);
 
   }
+  protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(net.geoprism.account.ExternalProfile.SERVER)) 
+    {
+       return new net.geoprism.account.OauthServerQuery.OauthServerQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   }
 
 /**
@@ -268,9 +302,9 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     public com.runwaysdk.query.SelectableChar getRemoteId();
     public com.runwaysdk.query.SelectableChar getRemoteId(String alias);
     public com.runwaysdk.query.SelectableChar getRemoteId(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getServerId();
-    public com.runwaysdk.query.SelectableChar getServerId(String alias);
-    public com.runwaysdk.query.SelectableChar getServerId(String alias, String displayLabel);
+    public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer();
+    public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias);
+    public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getUsername();
     public com.runwaysdk.query.SelectableChar getUsername(String alias);
     public com.runwaysdk.query.SelectableChar getUsername(String alias, String displayLabel);
@@ -392,21 +426,21 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.REMOTEID, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getServerId()
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer()
   {
-    return getServerId(null);
+    return getServer(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getServerId(String alias)
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.SERVERID, alias, null);
+    return (net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF)this.get(net.geoprism.account.ExternalProfile.SERVER, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getServerId(String alias, String displayLabel)
+  public net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF getServer(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.SERVERID, alias, displayLabel);
+    return (net.geoprism.account.OauthServerQuery.OauthServerQueryReferenceIF)this.get(net.geoprism.account.ExternalProfile.SERVER,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getUsername()
@@ -426,5 +460,19 @@ public  class ExternalProfileQuery extends com.runwaysdk.system.SingleActorQuery
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.account.ExternalProfile.USERNAME, alias, displayLabel);
 
   }
+  protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(net.geoprism.account.ExternalProfile.SERVER)) 
+    {
+       return new net.geoprism.account.OauthServerQuery.OauthServerQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      return super.referenceFactory(mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+  }
+
   }
 }

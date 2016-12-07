@@ -2,10 +2,12 @@ package net.geoprism.account;
 
 public interface OauthServerIF
 {
+  public static final String SERVER_ID = "serverId";
+
   /**
    * @return Id of the Oauth server (e.g. The dhis2 instance)
    */
-  public String getServerId();
+  public String getId();
 
   /**
    * @return Remote url for authorization requests
@@ -23,11 +25,6 @@ public interface OauthServerIF
   public String getProfileLocation();
 
   /**
-   * @return Name of the property on the remote profile to use for user identification
-   */
-  public String getIdProperty();
-
-  /**
    * @return GeoPrism client id assigned by the Oauth server
    */
   public String getClientId();
@@ -35,7 +32,7 @@ public interface OauthServerIF
   /**
    * @return GeoPrism client secret key assigned by the Oauth server
    */
-  public String getClientSecret();
+  public String getSecretKey();
 
   public String getUrl();
 }

@@ -1,6 +1,6 @@
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = 270640020)
+@com.runwaysdk.business.ClassSignature(hash = -1283098261)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism.account;
 public class ExternalProfileQueryDTO extends com.runwaysdk.system.SingleActorQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 270640020;
+private static final long serialVersionUID = -1283098261;
 
   protected ExternalProfileQueryDTO(String type)
   {

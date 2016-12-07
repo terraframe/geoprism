@@ -18,12 +18,9 @@ package net.geoprism;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
-
-import net.geoprism.account.OauthServerIF;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
@@ -62,19 +59,4 @@ public class ConfigurationService implements Reloadable
 
     return configurations;
   }
-
-  public static List<OauthServerIF> getOauthServers()
-  {
-    List<OauthServerIF> servers = new LinkedList<OauthServerIF>();
-
-    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
-
-    for (ConfigurationIF configuration : configurations)
-    {
-      servers.addAll(configuration.getOauthServers());
-    }
-
-    return servers;
-  }
-
 }

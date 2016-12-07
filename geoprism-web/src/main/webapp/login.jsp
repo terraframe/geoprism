@@ -63,7 +63,7 @@
 					 </div>				
 				  </form>
 				  <c:forEach items="${servers}" var="server">
-				    <a href="${server.url}">Log in with ${server.serverId}</a>
+				    <a href="${server.url}">Log in with ${server.displayLabel.value}</a>
 				  </c:forEach>
 	    	</header>
 	    	

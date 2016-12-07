@@ -221,136 +221,146 @@
           
         // Build the admin role section
         form.appendElement(this._newHeader(this.localize('userInfo')));
-          
-        if(!readOnly && this._user.isFirstNameWritable())
-        {
-          var firstNameInput = FormEntry.newInput('text', 'firstName', {attributes:{type:'text', id:'firstName'}});
-          firstNameInput.setValue(this._user ? this._user.getFirstName() : "");
-          form.addFormEntry(this._user.getFirstNameMd(), firstNameInput);          
-        }
-        else if(this._user.isFirstNameReadable())
-        {
-          var label = this._user.getFirstNameMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('firstName', label, this._user ? this._user.getFirstName() : "");
-          form.addEntry(entry);                  
-        }
-          
-        if(!readOnly && this._user.isLastNameWritable())
-        {
-          var lastNameInput = FormEntry.newInput('text', 'lastName', {attributes:{type:'text', id:'lastName'}});
-          lastNameInput.setValue(this._user ? this._user.getLastName() : "");
-          form.addFormEntry(this._user.getLastNameMd(), lastNameInput);          
-        }
-        else if(this._user.isLastNameReadable())
-        {
-          var label = this._user.getLastNameMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('lastName', label, this._user ? this._user.getLastName() : "");
-          form.addEntry(entry);                  
-        }
-          
-        if(!readOnly && this._user.isPhoneNumberWritable())
-        {
-          var phoneNumberInput = FormEntry.newInput('text', 'phoneNumber', {attributes:{type:'text', id:'phoneNumber'}});
-          phoneNumberInput.setValue(this._user ? this._user.getPhoneNumber() : "");
-          form.addFormEntry(this._user.getPhoneNumberMd(), phoneNumberInput);
-        }
-        else if(this._user.isPhoneNumberReadable())
-        {
-          var label = this._user.getPhoneNumberMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('phoneNumber', label, this._user ? this._user.getPhoneNumber() : "");
-          form.addEntry(entry);                  
-        }
-          
-        if(!readOnly && this._user.isEmailWritable())
-        {
-          var emailInput = FormEntry.newInput('text', 'email', {attributes:{type:'text', id:'email'}});
-          emailInput.setValue(this._user ? this._user.getEmail() : "");
-          form.addFormEntry(this._user.getEmailMd(), emailInput);
-            
-          var validateEmail = Mojo.Util.bind(this, function()
-          {
-            if(emailInput.getValue() !== '')
-            {
-              document.getElementById('user-submit').disabled = true;
-
-              if(!this._isValidEmail(emailInput.getValue()))              
-              {
-                form.getEntry(emailInput.getId()).addInlineError(this.localize('invalidEmail'));          
-              }
-              else
-              {
-                form.getEntry(emailInput.getId()).removeInlineError();
-                document.getElementById('user-submit').disabled = false;              
-              }
-            }
-          });
-            
-          emailInput.addEventListener('blur', validateEmail);
-        }
-        else if(this._user.isEmailReadable())
-        {
-          var label = this._user.getEmailMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('email', label, this._user ? this._user.getEmail() : "");
-          form.addEntry(entry);                  
-        }
-          
-        // Build the admin role section
-        form.appendElement(this._newHeader(this.localize('accountInfo')));
-                  
-        if(!readOnly && this._user.isUsernameWritable())
-        {
-          var usernameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
-          usernameInput.setValue(this._user ? this._user.getUsername() : "");
-            
-          form.addFormEntry(this._user.getUsernameMd(), usernameInput);
-        }
-        else if(this._user.isUsernameReadable())
-        {
-          var label = this._user.getUsernameMd().getDisplayLabel();        
-          var entry = new net.geoprism.ReadEntry('username', label, this._user ? this._user.getUsername() : "");
-          form.addEntry(entry);                  
-        }
         
-        if(!readOnly && this._user.isPasswordWritable())
-        {         
-          var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
-          form.addFormEntry(this._user.getPasswordMd(), passwordInput);
-            
-          var confirmInput = FormEntry.newInput('text', 'confirm', {attributes:{type:'password', id:'confirm'}});
-          form.addEntry(new FormEntry(this.localize("confirmPassword"), confirmInput));
-            
-          var validatePassword = Mojo.Util.bind(this, function()
-          {
-            if(passwordInput.getValue() !== '')
+        if(this._user.getType() === 'net.geoprism.account.ExternalProfile') {
+            if(this._user.isDisplayNameReadable())
             {
-              document.getElementById('user-submit').disabled = true;              
-                
-              if (confirmInput.getValue() === '')
-              {
-                form.getEntry(confirmInput.getId()).addInlineError(this.localize('confirmRequired'));                
-              }
-              else
-              {
-                form.getEntry(confirmInput.getId()).removeInlineError();
-                    
-                if(passwordInput.getValue() !== confirmInput.getValue())
-                {
-                  form.getEntry(passwordInput.getId()).addInlineError(this.localize('passwordMismatch'));                
-                }
-                else
-                {
-                  form.getEntry(passwordInput.getId()).removeInlineError();
-                    
-                  document.getElementById('user-submit').disabled = false;                              
-                }               
-              }
-            }
-          });
-
-          passwordInput.addEventListener('blur', validatePassword);
-          confirmInput.addEventListener('blur', validatePassword);
+              var label = this._user.getDisplayNameMd().getDisplayLabel();        
+              var entry = new net.geoprism.ReadEntry('displayName', label, this._user ? this._user.getDisplayName() : "");
+              form.addEntry(entry);                  
+            }        	
         }
-                  
+        else {
+            if(!readOnly && this._user.isFirstNameWritable())
+            {
+              var firstNameInput = FormEntry.newInput('text', 'firstName', {attributes:{type:'text', id:'firstName'}});
+              firstNameInput.setValue(this._user ? this._user.getFirstName() : "");
+              form.addFormEntry(this._user.getFirstNameMd(), firstNameInput);          
+            }
+            else if(this._user.isFirstNameReadable())
+            {
+              var label = this._user.getFirstNameMd().getDisplayLabel();        
+              var entry = new net.geoprism.ReadEntry('firstName', label, this._user ? this._user.getFirstName() : "");
+              form.addEntry(entry);                  
+            }
+              
+            if(!readOnly && this._user.isLastNameWritable())
+            {
+              var lastNameInput = FormEntry.newInput('text', 'lastName', {attributes:{type:'text', id:'lastName'}});
+              lastNameInput.setValue(this._user ? this._user.getLastName() : "");
+              form.addFormEntry(this._user.getLastNameMd(), lastNameInput);          
+            }
+            else if(this._user.isLastNameReadable())
+            {
+              var label = this._user.getLastNameMd().getDisplayLabel();        
+              var entry = new net.geoprism.ReadEntry('lastName', label, this._user ? this._user.getLastName() : "");
+              form.addEntry(entry);                  
+            }
+              
+            if(!readOnly && this._user.isPhoneNumberWritable())
+            {
+              var phoneNumberInput = FormEntry.newInput('text', 'phoneNumber', {attributes:{type:'text', id:'phoneNumber'}});
+              phoneNumberInput.setValue(this._user ? this._user.getPhoneNumber() : "");
+              form.addFormEntry(this._user.getPhoneNumberMd(), phoneNumberInput);
+            }
+            else if(this._user.isPhoneNumberReadable())
+            {
+              var label = this._user.getPhoneNumberMd().getDisplayLabel();        
+              var entry = new net.geoprism.ReadEntry('phoneNumber', label, this._user ? this._user.getPhoneNumber() : "");
+              form.addEntry(entry);                  
+            }
+              
+            if(!readOnly && this._user.isEmailWritable())
+            {
+              var emailInput = FormEntry.newInput('text', 'email', {attributes:{type:'text', id:'email'}});
+              emailInput.setValue(this._user ? this._user.getEmail() : "");
+              form.addFormEntry(this._user.getEmailMd(), emailInput);
+                
+              var validateEmail = Mojo.Util.bind(this, function()
+              {
+                if(emailInput.getValue() !== '')
+                {
+                  document.getElementById('user-submit').disabled = true;
+
+                  if(!this._isValidEmail(emailInput.getValue()))              
+                  {
+                    form.getEntry(emailInput.getId()).addInlineError(this.localize('invalidEmail'));          
+                  }
+                  else
+                  {
+                    form.getEntry(emailInput.getId()).removeInlineError();
+                    document.getElementById('user-submit').disabled = false;              
+                  }
+                }
+              });
+                
+              emailInput.addEventListener('blur', validateEmail);
+            }
+            else if(this._user.isEmailReadable())
+            {
+              var label = this._user.getEmailMd().getDisplayLabel();        
+              var entry = new net.geoprism.ReadEntry('email', label, this._user ? this._user.getEmail() : "");
+              form.addEntry(entry);                  
+            }
+              
+            // Build the admin role section
+            form.appendElement(this._newHeader(this.localize('accountInfo')));
+                      
+            if(!readOnly && this._user.isUsernameWritable())
+            {
+              var usernameInput = FormEntry.newInput('text', 'username', {attributes:{type:'text', id:'username'}});
+              usernameInput.setValue(this._user ? this._user.getUsername() : "");
+                
+              form.addFormEntry(this._user.getUsernameMd(), usernameInput);
+            }
+            else if(this._user.isUsernameReadable())
+            {
+              var label = this._user.getUsernameMd().getDisplayLabel();        
+              var entry = new net.geoprism.ReadEntry('username', label, this._user ? this._user.getUsername() : "");
+              form.addEntry(entry);                  
+            }
+            
+            if(!readOnly && this._user.isPasswordWritable())
+            {         
+              var passwordInput = FormEntry.newInput('text', 'password', {attributes:{type:'password', id:'password'}});
+              form.addFormEntry(this._user.getPasswordMd(), passwordInput);
+                
+              var confirmInput = FormEntry.newInput('text', 'confirm', {attributes:{type:'password', id:'confirm'}});
+              form.addEntry(new FormEntry(this.localize("confirmPassword"), confirmInput));
+                
+              var validatePassword = Mojo.Util.bind(this, function()
+              {
+                if(passwordInput.getValue() !== '')
+                {
+                  document.getElementById('user-submit').disabled = true;              
+                    
+                  if (confirmInput.getValue() === '')
+                  {
+                    form.getEntry(confirmInput.getId()).addInlineError(this.localize('confirmRequired'));                
+                  }
+                  else
+                  {
+                    form.getEntry(confirmInput.getId()).removeInlineError();
+                        
+                    if(passwordInput.getValue() !== confirmInput.getValue())
+                    {
+                      form.getEntry(passwordInput.getId()).addInlineError(this.localize('passwordMismatch'));                
+                    }
+                    else
+                    {
+                      form.getEntry(passwordInput.getId()).removeInlineError();
+                        
+                      document.getElementById('user-submit').disabled = false;                              
+                    }               
+                  }
+                }
+              });
+
+              passwordInput.addEventListener('blur', validatePassword);
+              confirmInput.addEventListener('blur', validatePassword);
+            }
+        }
+                            
         // Check if the this._user has role permssions
         if(!readOnly && this._hasRoles)
         {

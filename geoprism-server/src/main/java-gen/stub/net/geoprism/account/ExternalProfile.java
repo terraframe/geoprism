@@ -1,9 +1,5 @@
 package net.geoprism.account;
 
-import java.util.List;
-import java.util.Locale;
-
-import net.geoprism.ConfigurationService;
 import net.geoprism.DefaultConfiguration;
 import net.geoprism.GeoprismUserIF;
 
@@ -65,48 +61,39 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
   {
     try
     {
-      List<OauthServerIF> servers = ConfigurationService.getOauthServers();
+      OauthServer server = OauthServer.get(serverId);
+      /*
+       * Get the access token
+       */
+      TokenRequestBuilder tokenBuilder = OAuthClientRequest.tokenLocation(server.getTokenLocation());
+      tokenBuilder.setGrantType(GrantType.AUTHORIZATION_CODE);
+      tokenBuilder.setClientId(server.getClientId());
+      tokenBuilder.setClientSecret(server.getSecretKey());
+      tokenBuilder.setRedirectURI("https://localhost:8443/dev/session/ologin");
+      tokenBuilder.setCode(code);
 
-      for (OauthServerIF server : servers)
-      {
-        if (server.getServerId().equals(serverId))
-        {
-          /*
-           * Get the access token
-           */
-          TokenRequestBuilder tokenBuilder = OAuthClientRequest.tokenLocation(server.getTokenLocation());
-          tokenBuilder.setGrantType(GrantType.AUTHORIZATION_CODE);
-          tokenBuilder.setClientId(server.getClientId());
-          tokenBuilder.setClientSecret(server.getClientSecret());
-          tokenBuilder.setRedirectURI("https://localhost:8443/geoprism/session/ologin");
-          tokenBuilder.setCode(code);
+      OAuthClientRequest tokenRequest = tokenBuilder.buildQueryMessage();
+      tokenRequest.setHeader("Accept", "application/json");
 
-          OAuthClientRequest tokenRequest = tokenBuilder.buildQueryMessage();
-          tokenRequest.setHeader("Accept", "application/json");
+      OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+      OAuthJSONAccessTokenResponse accessToken = oAuthClient.accessToken(tokenRequest);
 
-          OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
-          OAuthJSONAccessTokenResponse accessToken = oAuthClient.accessToken(tokenRequest);
+      /*
+       * Request the user information
+       */
+      OAuthBearerClientRequest requestBuilder = new OAuthBearerClientRequest(server.getProfileLocation());
+      requestBuilder.setAccessToken(accessToken.getAccessToken());
 
-          /*
-           * Request the user information
-           */
-          OAuthBearerClientRequest requestBuilder = new OAuthBearerClientRequest(server.getProfileLocation());
-          requestBuilder.setAccessToken(accessToken.getAccessToken());
+      OAuthClientRequest bearerRequest = requestBuilder.buildQueryMessage();
+      OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
 
-          OAuthClientRequest bearerRequest = requestBuilder.buildQueryMessage();
-          OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+      String body = resourceResponse.getBody();
 
-          String body = resourceResponse.getBody();
+      JSONObject object = new JSONObject(body);
 
-          JSONObject object = new JSONObject(body);
+      SingleActorDAOIF profile = ExternalProfile.getOrCreate(server, object);
 
-          SingleActorDAOIF profile = ExternalProfile.getOrCreate(server, object);
-
-          return SessionFacade.logIn(profile, new Locale[] { ( Locale.US ) });
-        }
-      }
-
-      throw new InvalidLoginException("Unknown remote oauth server [" + serverId + "]");
+      return SessionFacade.logIn(profile, LocaleSerializer.deserialize(locales));
     }
     catch (JSONException | OAuthSystemException | OAuthProblemException e)
     {
@@ -115,9 +102,11 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
   }
 
   @Transaction
-  private static synchronized SingleActorDAOIF getOrCreate(OauthServerIF server, JSONObject object) throws JSONException
+  private static synchronized SingleActorDAOIF getOrCreate(OauthServer server, JSONObject object) throws JSONException
   {
-    String remoteId = object.getString(server.getIdProperty());
+    String serverType = server.getServerType();
+
+    String remoteId = OauthServer.getRemoteId(serverType, object);
 
     ExternalProfileQuery query = new ExternalProfileQuery(new QueryFactory());
     query.WHERE(query.getRemoteId().EQ(remoteId));
@@ -127,18 +116,23 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
     {
       if (it.hasNext())
       {
-        return (SingleActorDAOIF) BusinessFacade.getEntityDAO(it.next());
+        ExternalProfile profile = it.next();
+        profile.lock();
+        OauthServer.populate(serverType, profile, object);
+        profile.apply();
+
+        return (SingleActorDAOIF) BusinessFacade.getEntityDAO(profile);
       }
       else
       {
         ExternalProfile profile = new ExternalProfile();
         profile.setRemoteId(remoteId);
-        profile.setServerId(server.getServerId());
-        profile.setDisplayName(object.getString("displayName"));
+        profile.setServer(server);
+        OauthServer.populate(serverType, profile, object);
         profile.apply();
-        
+
         SingleActorDAOIF actor = (SingleActorDAOIF) BusinessFacade.getEntityDAO(profile);
-        
+
         RoleDAO role = RoleDAO.findRole(DefaultConfiguration.ADMIN).getBusinessDAO();
         role.assignMember(actor);
 

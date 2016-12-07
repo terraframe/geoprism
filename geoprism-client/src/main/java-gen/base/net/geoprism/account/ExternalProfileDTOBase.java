@@ -1,10 +1,10 @@
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = 293046475)
+@com.runwaysdk.business.ClassSignature(hash = 295777236)
 public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.SingleActorDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.account.ExternalProfile";
-  private static final long serialVersionUID = 293046475;
+  private static final long serialVersionUID = 295777236;
   
   protected ExternalProfileDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -29,7 +29,7 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   
   public static java.lang.String DISPLAYNAME = "displayName";
   public static java.lang.String REMOTEID = "remoteId";
-  public static java.lang.String SERVERID = "serverId";
+  public static java.lang.String SERVER = "server";
   public static java.lang.String USERNAME = "username";
   public String getDisplayName()
   {
@@ -105,41 +105,53 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(REMOTEID).getAttributeMdDTO();
   }
   
-  public String getServerId()
+  public net.geoprism.account.OauthServerDTO getServer()
   {
-    return getValue(SERVERID);
-  }
-  
-  public void setServerId(String value)
-  {
-    if(value == null)
+    if(getValue(SERVER) == null || getValue(SERVER).trim().equals(""))
     {
-      setValue(SERVERID, "");
+      return null;
     }
     else
     {
-      setValue(SERVERID, value);
+      return net.geoprism.account.OauthServerDTO.get(getRequest(), getValue(SERVER));
     }
   }
   
-  public boolean isServerIdWritable()
+  public String getServerId()
   {
-    return isWritable(SERVERID);
+    return getValue(SERVER);
   }
   
-  public boolean isServerIdReadable()
+  public void setServer(net.geoprism.account.OauthServerDTO value)
   {
-    return isReadable(SERVERID);
+    if(value == null)
+    {
+      setValue(SERVER, "");
+    }
+    else
+    {
+      setValue(SERVER, value.getId());
+    }
   }
   
-  public boolean isServerIdModified()
+  public boolean isServerWritable()
   {
-    return isModified(SERVERID);
+    return isWritable(SERVER);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getServerIdMd()
+  public boolean isServerReadable()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SERVERID).getAttributeMdDTO();
+    return isReadable(SERVER);
+  }
+  
+  public boolean isServerModified()
+  {
+    return isModified(SERVER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getServerMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(SERVER).getAttributeMdDTO();
   }
   
   public String getUsername()

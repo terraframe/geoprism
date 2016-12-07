@@ -1,6 +1,6 @@
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = -1624733877)
+@com.runwaysdk.business.ClassSignature(hash = -1601428140)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,9 +13,9 @@ public abstract class ExternalProfileBase extends com.runwaysdk.system.SingleAct
   public final static String CLASS = "net.geoprism.account.ExternalProfile";
   public static java.lang.String DISPLAYNAME = "displayName";
   public static java.lang.String REMOTEID = "remoteId";
-  public static java.lang.String SERVERID = "serverId";
+  public static java.lang.String SERVER = "server";
   public static java.lang.String USERNAME = "username";
-  private static final long serialVersionUID = -1624733877;
+  private static final long serialVersionUID = -1601428140;
   
   public ExternalProfileBase()
   {
@@ -78,31 +78,43 @@ public abstract class ExternalProfileBase extends com.runwaysdk.system.SingleAct
     }
   }
   
-  public String getServerId()
+  public net.geoprism.account.OauthServer getServer()
   {
-    return getValue(SERVERID);
-  }
-  
-  public void validateServerId()
-  {
-    this.validateAttribute(SERVERID);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getServerIdMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.account.ExternalProfile.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(SERVERID);
-  }
-  
-  public void setServerId(String value)
-  {
-    if(value == null)
+    if (getValue(SERVER).trim().equals(""))
     {
-      setValue(SERVERID, "");
+      return null;
     }
     else
     {
-      setValue(SERVERID, value);
+      return net.geoprism.account.OauthServer.get(getValue(SERVER));
+    }
+  }
+  
+  public String getServerId()
+  {
+    return getValue(SERVER);
+  }
+  
+  public void validateServer()
+  {
+    this.validateAttribute(SERVER);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getServerMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.account.ExternalProfile.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(SERVER);
+  }
+  
+  public void setServer(net.geoprism.account.OauthServer value)
+  {
+    if(value == null)
+    {
+      setValue(SERVER, "");
+    }
+    else
+    {
+      setValue(SERVER, value.getId());
     }
   }
   
