@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.importer;
 
@@ -31,9 +29,9 @@ import net.geoprism.context.ProjectDataConfiguration;
 import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardBuilder;
 import net.geoprism.dashboard.DashboardQuery;
+import net.geoprism.dashboard.DashboardState;
 import net.geoprism.dashboard.DashboardTypeInfo;
 import net.geoprism.data.CachedEndpoint;
-import net.geoprism.data.LocalEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
@@ -46,7 +44,14 @@ import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 import org.xml.sax.Attributes;
 
 import com.runwaysdk.constants.LocalProperties;
+import com.runwaysdk.constants.MdAttributeConcreteInfo;
+import com.runwaysdk.constants.MdAttributeReferenceInfo;
+import com.runwaysdk.constants.MdElementInfo;
+import com.runwaysdk.constants.ServerProperties;
+import com.runwaysdk.constants.SingleActorInfo;
+import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
@@ -62,9 +67,12 @@ import com.runwaysdk.dataaccess.io.dataDefinition.TagHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.UpdateHandler;
 import com.runwaysdk.dataaccess.io.dataDefinition.XMLTags;
 import com.runwaysdk.dataaccess.io.instance.InstanceImporterUnzipper;
+import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdTypeDAO;
+import com.runwaysdk.query.BusinessDAOQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
@@ -536,8 +544,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
       }
 
       return new AmazonEndpoint();
-      
-//      return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
+
+      // return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
     }
   }
 
@@ -618,8 +626,6 @@ public class GeoprismImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
-      System.out.println("HELLO");
-
       QueryFactory factory = new QueryFactory();
 
       MappableClassQuery mcQuery = new MappableClassQuery(factory);
@@ -659,6 +665,60 @@ public class GeoprismImportPlugin implements ImportPluginIF
     }
   }
 
+  private static class PatchLockedByTypeTaskHandler extends TagHandler
+  {
+    public PatchLockedByTypeTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      System.out.println("TESTING");
+      
+      ServerProperties.setAllowModificationOfMdAttribute(true);
+      ServerProperties.setLogTransactions(true);
+
+      try
+      {
+        /*
+         * Update all lockedBy fields to type SingleActor
+         */
+        MdBusinessDAOIF mdSingleActor = MdBusinessDAO.getMdBusinessDAO(SingleActorInfo.CLASS);
+
+        QueryFactory factory = new QueryFactory();
+        
+        BusinessDAOQuery query = factory.businessDAOQuery(MdAttributeReferenceInfo.CLASS);
+        query.WHERE(query.aCharacter(MdAttributeConcreteInfo.NAME).EQ(MdElementInfo.LOCKED_BY));
+        query.AND(query.aReference(MdAttributeReferenceInfo.REF_MD_ENTITY).NE(mdSingleActor));
+
+        OIterator<BusinessDAOIF> iterator = query.getIterator();
+
+        while (iterator.hasNext())
+        {
+          MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) iterator.next().getBusinessDAO();
+          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
+          lockedBy.apply();
+        }
+
+        /*
+         *  Update the attribute type of DashboardState.geoprismUser to SingleActor
+         */
+        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(DashboardState.CLASS);
+        
+        MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdBusiness.definesAttribute(DashboardState.GEOPRISMUSER).getBusinessDAO();
+        lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
+        lockedBy.apply();        
+      }
+      finally
+      {
+        ServerProperties.setAllowModificationOfMdAttribute(false);
+        ServerProperties.setLogTransactions(false);
+      }
+    }
+  }
+
   private static class PluginHandlerFactory extends HandlerFactory implements HandlerFactoryIF
   {
     private static final String DASHBOARD_TAG                 = "dashboard";
@@ -675,6 +735,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
     private static final String PATCH_CATEGORY_TASK_TAG       = "patchCategoryTask";
 
+    private static final String PATCH_LOCKED_BY_TASK_TAG      = "patchLockedByTask";
+
     public PluginHandlerFactory(ImportManager manager)
     {
       this.addHandler(DASHBOARD_TAG, new DashboardHandler(manager));
@@ -684,6 +746,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       this.addHandler(INITIALIZE_TASK_TAG, new InitializeTaskHandler(manager));
       this.addHandler(PATCH_MAPPABLE_CLASS_TASK_TAG, new PatchMappableClassTaskHandler(manager));
       this.addHandler(PATCH_CATEGORY_TASK_TAG, new PatchCategoryTaskHandler(manager));
+      this.addHandler(PATCH_LOCKED_BY_TASK_TAG, new PatchLockedByTypeTaskHandler(manager));
     }
   }
 

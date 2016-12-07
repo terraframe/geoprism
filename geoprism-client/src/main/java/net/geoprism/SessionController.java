@@ -23,9 +23,8 @@ import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import net.geoprism.account.OauthBridge;
+import net.geoprism.account.ExternalProfileDTO;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
@@ -67,7 +66,7 @@ public class SessionController extends SessionControllerBase implements Reloadab
     {
       req.setAttribute("errorMessage", errorMessage);
     }
-    
+
     req.setAttribute("servers", ClientConfigurationService.getOauthServers());
 
     req.getRequestDispatcher("/login.jsp").forward(req, resp);
@@ -137,24 +136,37 @@ public class SessionController extends SessionControllerBase implements Reloadab
     {
       Locale[] locales = ServletUtility.getLocales(req);
 
-      String sessionId = OauthBridge.createSession("DHIS2", code, locales);
+      WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
 
-      WebClientSession clientSession = WebClientSession.getExistingSession(sessionId, locales);
-      ClientRequestIF clientRequest = clientSession.getRequest();
+      try
+      {
+        ClientRequestIF clientRequest = clientSession.getRequest();
 
-      HttpSession session = req.getSession();
-      
-      session.setMaxInactiveInterval(CommonProperties.getSessionTime());
-      session.setAttribute(ClientConstants.CLIENTSESSION, clientSession);
-      req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
+        String sessionId = ExternalProfileDTO.login(clientRequest, "DHIS2", code, locales.toString());
 
-      resp.sendRedirect(req.getContextPath() + "/menu");
-//      req.getRequestDispatcher("/geoprism/menu").forward(req, resp);
+        this.createSession(sessionId, locales);
+
+        resp.sendRedirect(req.getContextPath() + "/menu");
+      }
+      finally
+      {
+        clientSession.logout();
+      }
     }
     catch (Throwable t)
     {
       String message = t.getLocalizedMessage() == null ? t.getMessage() : t.getLocalizedMessage();
       resp.sendRedirect(req.getContextPath() + "/session/form?errorMessage=" + URLEncoder.encode(message, EncodingConstants.ENCODING));
     }
+  }
+
+  private void createSession(String sessionId, Locale[] locales)
+  {
+    WebClientSession clientSession = WebClientSession.getExistingSession(sessionId, locales);
+    ClientRequestIF clientRequest = clientSession.getRequest();
+
+    req.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+    req.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+    req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
   }
 }

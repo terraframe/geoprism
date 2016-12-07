@@ -19,9 +19,6 @@ package net.geoprism.context;
 import java.util.Collections;
 import java.util.List;
 
-import net.geoprism.account.OauthBridge;
-import net.geoprism.account.OauthHandler;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -46,8 +43,6 @@ public class ServerInitializer implements Reloadable
 
   private static void initialize(List<ServerContextListenerInfo> infos)
   {
-    OauthBridge.addHandler(new OauthHandler());
-
     for (ServerContextListenerInfo info : infos)
     {
       try

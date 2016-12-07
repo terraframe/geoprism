@@ -1,0 +1,46 @@
+<version xsi:noNamespaceSchemaLocation="classpath:geoprism/xsd/version_geoprism.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <patchLockedByTask></patchLockedByTask>          
+    </create>
+    <create>
+      <mdBusiness name="net.geoprism.account.ExternalProfile" label="External profile" extends="com.runwaysdk.system.SingleActor">
+        <attributes>
+          <char name="remoteId" label="Remote id" required="true" size="255" />
+          <char name="displayName" label="Display name" size="255" />
+          <char name="username" label="Username" size="255" />
+          <char name="serverId" label="Server id" required="true" size="255" />
+        </attributes>
+        <mdMethod name="login" static="true" label="Login" returnType="java.lang.String">
+          <mdParameter name="serverId" label="Server id" order="0" type="java.lang.String"/>
+          <mdParameter name="code" label="Code" order="1" type="java.lang.String"/>
+          <mdParameter name="locales" label="Locales" order="2" type="java.lang.String"/>
+        </mdMethod>
+      </mdBusiness>
+    </create>
+    <update>
+      <mdBusiness name="net.geoprism.GeoprismUser">
+        <mdMethod name="getCurrentUser" returnType="com.runwaysdk.system.SingleActor" />
+      </mdBusiness>
+    </update>
+    <permissions>
+      <role roleName="PUBLIC">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.ExternalProfile">
+            <mdMethodPermission methodName="login">
+              <operation name="EXECUTE"/>
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <method methodName="login" type="net.geoprism.account.ExternalProfile">
+        <assignedRole roleName="Administrator"/>
+      </method>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.account.ExternalProfile" type="com.runwaysdk.system.metadata.MdBusiness"/>
+    </delete>
+  </undoIt>
+</version>
