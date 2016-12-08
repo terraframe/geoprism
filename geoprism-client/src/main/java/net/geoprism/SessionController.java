@@ -3,20 +3,23 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
 
@@ -29,6 +32,7 @@ import org.json.JSONObject;
 import net.geoprism.account.ExternalProfileDTO;
 import net.geoprism.account.LocaleSerializer;
 import net.geoprism.account.OauthServerDTO;
+import net.geoprism.account.OauthServerIF;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
@@ -153,8 +157,12 @@ public class SessionController extends SessionControllerBase implements Reloadab
   {
     try
     {
+      URL url = new URL(req.getScheme(), req.getServerName(), req.getServerPort(), req.getContextPath());
+
+      String redirect = url.toString();
+
       JSONObject stateObject = new JSONObject(state);
-      String serverId = stateObject.getString("serverId");
+      String serverId = stateObject.getString(OauthServerIF.SERVER_ID);
 
       Locale[] locales = ServletUtility.getLocales(req);
 
@@ -164,7 +172,7 @@ public class SessionController extends SessionControllerBase implements Reloadab
       {
         ClientRequestIF clientRequest = clientSession.getRequest();
 
-        String sessionId = ExternalProfileDTO.login(clientRequest, serverId, code, LocaleSerializer.serialize(locales));
+        String sessionId = ExternalProfileDTO.login(clientRequest, serverId, code, LocaleSerializer.serialize(locales), redirect);
 
         this.createSession(sessionId, locales);
 
