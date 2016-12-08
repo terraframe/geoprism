@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.importer;
 
@@ -52,6 +50,7 @@ import com.runwaysdk.constants.MdElementInfo;
 import com.runwaysdk.constants.ServerProperties;
 import com.runwaysdk.constants.SingleActorInfo;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -688,7 +687,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
         MdBusinessDAOIF mdSingleActor = MdBusinessDAO.getMdBusinessDAO(SingleActorInfo.CLASS);
 
         QueryFactory factory = new QueryFactory();
-        
+
         BusinessDAOQuery query = factory.businessDAOQuery(MdAttributeReferenceInfo.CLASS);
         query.WHERE(query.aCharacter(MdAttributeConcreteInfo.NAME).EQ(MdElementInfo.LOCKED_BY));
         query.AND(query.aReference(MdAttributeReferenceInfo.REF_MD_ENTITY).NE(mdSingleActor));
@@ -703,13 +702,18 @@ public class GeoprismImportPlugin implements ImportPluginIF
         }
 
         /*
-         *  Update the attribute type of DashboardState.geoprismUser to SingleActor
+         * Update the attribute type of DashboardState.geoprismUser to SingleActor
          */
         MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(DashboardState.CLASS);
+
+        MdAttributeConcreteDAOIF mdAttributeReference = mdBusiness.definesAttribute(DashboardState.GEOPRISMUSER);
         
-        MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdBusiness.definesAttribute(DashboardState.GEOPRISMUSER).getBusinessDAO();
-        lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
-        lockedBy.apply();        
+        if (mdAttributeReference != null)
+        {
+          MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdAttributeReference.getBusinessDAO();
+          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
+          lockedBy.apply();
+        }
       }
       finally
       {
