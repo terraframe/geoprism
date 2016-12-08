@@ -677,10 +677,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
-      System.out.println("TESTING");
-      
       ServerProperties.setAllowModificationOfMdAttribute(true);
-      ServerProperties.setLogTransactions(true);
+      ServerProperties.setIgnoreSiteMaster(true);
 
       try
       {
@@ -716,7 +714,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       finally
       {
         ServerProperties.setAllowModificationOfMdAttribute(false);
-        ServerProperties.setLogTransactions(false);
+        ServerProperties.setIgnoreSiteMaster(false);
       }
     }
   }
