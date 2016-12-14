@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -1126392302)
+@com.runwaysdk.business.ClassSignature(hash = -537901905)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -296,27 +296,50 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     return (com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.SOURCEVIEW, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness()
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy()
+  {
+    return getStrategy(null);
+
+  }
+ 
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.data.etl.TargetBinding.STRATEGY);
+
+    return (net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.STRATEGY, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.data.etl.TargetBinding.STRATEGY);
+
+    return (net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.STRATEGY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness()
   {
     return getTargetBusiness(null);
 
   }
  
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias)
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS);
 
-    return (com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, mdAttributeIF, this, alias, null);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, mdAttributeIF, this, alias, null);
 
   }
  
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias, String displayLabel)
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias, String displayLabel)
   {
 
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS);
 
-    return (com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, mdAttributeIF, this, alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, mdAttributeIF, this, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -364,9 +387,13 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     {
        return new com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(net.geoprism.data.etl.TargetBinding.STRATEGY)) 
+    {
+       return new net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS)) 
     {
-       return new com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -443,9 +470,12 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     public com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF getSourceView();
     public com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF getSourceView(String alias);
     public com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF getSourceView(String alias, String displayLabel);
-    public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness();
-    public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias);
-    public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias, String displayLabel);
+    public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy();
+    public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias);
+    public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias, String displayLabel);
+    public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness();
+    public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias);
+    public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
@@ -688,21 +718,38 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     return (com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.SOURCEVIEW,  alias, displayLabel);
 
   }
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness()
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy()
+  {
+    return getStrategy(null);
+
+  }
+ 
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias)
+  {
+    return (net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.STRATEGY, alias, null);
+
+  }
+ 
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias, String displayLabel)
+  {
+    return (net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.STRATEGY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness()
   {
     return getTargetBusiness(null);
 
   }
  
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias)
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, alias, null);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, alias, null);
 
   }
  
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias, String displayLabel)
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -750,9 +797,13 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     {
        return new com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(net.geoprism.data.etl.TargetBinding.STRATEGY)) 
+    {
+       return new net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS)) 
     {
-       return new com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
@@ -806,9 +857,12 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     public com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF getSourceView();
     public com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF getSourceView(String alias);
     public com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF getSourceView(String alias, String displayLabel);
-    public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness();
-    public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias);
-    public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias, String displayLabel);
+    public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy();
+    public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias);
+    public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias, String displayLabel);
+    public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness();
+    public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias);
+    public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getType();
     public com.runwaysdk.query.SelectableChar getType(String alias);
     public com.runwaysdk.query.SelectableChar getType(String alias, String displayLabel);
@@ -1100,21 +1154,38 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     return (com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.SOURCEVIEW,  alias, displayLabel);
 
   }
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness()
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy()
+  {
+    return getStrategy(null);
+
+  }
+ 
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias)
+  {
+    return (net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.STRATEGY, alias, null);
+
+  }
+ 
+  public net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF getStrategy(String alias, String displayLabel)
+  {
+    return (net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.STRATEGY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness()
   {
     return getTargetBusiness(null);
 
   }
  
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias)
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias)
   {
-    return (com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, alias, null);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS, alias, null);
 
   }
  
-  public com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF getTargetBusiness(String alias, String displayLabel)
+  public com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF getTargetBusiness(String alias, String displayLabel)
   {
-    return (com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS,  alias, displayLabel);
+    return (com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReferenceIF)this.get(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS,  alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getType()
@@ -1162,9 +1233,13 @@ public  class TargetBindingQuery extends com.runwaysdk.query.GeneratedBusinessQu
     {
        return new com.runwaysdk.system.metadata.MdViewQuery.MdViewQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
+    else if (name.equals(net.geoprism.data.etl.TargetBinding.STRATEGY)) 
+    {
+       return new net.geoprism.data.etl.PersistenceStrategyQuery.PersistenceStrategyQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
     else if (name.equals(net.geoprism.data.etl.TargetBinding.TARGETBUSINESS)) 
     {
-       return new com.runwaysdk.system.metadata.MdBusinessQuery.MdBusinessQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+       return new com.runwaysdk.system.metadata.MdClassQuery.MdClassQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {

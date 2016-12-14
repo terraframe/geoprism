@@ -130,6 +130,6 @@ public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.ru
 
   public TargetBinding getTargetBinding()
   {
-    return TargetBinding.getBinding(this.getMdView());
+    return TargetBinding.getBindingForSource(this.getMdView());
   }
 }

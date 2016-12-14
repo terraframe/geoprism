@@ -38,6 +38,8 @@ import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
+import net.geoprism.data.etl.LocalPersistenceStrategy;
+import net.geoprism.data.etl.TargetBinding;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierQuery;
@@ -45,12 +47,16 @@ import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 
 import org.xml.sax.Attributes;
 
+import com.runwaysdk.business.Business;
+import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeReferenceInfo;
+import com.runwaysdk.constants.MdClassInfo;
 import com.runwaysdk.constants.MdElementInfo;
 import com.runwaysdk.constants.ServerProperties;
 import com.runwaysdk.constants.SingleActorInfo;
+import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -709,13 +715,74 @@ public class GeoprismImportPlugin implements ImportPluginIF
         MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(DashboardState.CLASS);
 
         MdAttributeConcreteDAOIF mdAttributeReference = mdBusiness.definesAttribute(DashboardState.GEOPRISMUSER);
-        
+
         if (mdAttributeReference != null)
         {
           MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdAttributeReference.getBusinessDAO();
           lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
           lockedBy.apply();
         }
+      }
+      finally
+      {
+        ServerProperties.setAllowModificationOfMdAttribute(false);
+        ServerProperties.setIgnoreSiteMaster(false);
+      }
+    }
+  }
+
+  private static class PatchTargetBindingTaskHandler extends TagHandler
+  {
+    public PatchTargetBindingTaskHandler(ImportManager manager)
+    {
+      super(manager);
+    }
+
+    @Override
+    public void onStartElement(String localName, Attributes attributes, TagContext context)
+    {
+      ServerProperties.setAllowModificationOfMdAttribute(true);
+      ServerProperties.setIgnoreSiteMaster(true);
+
+      try
+      {
+        /*
+         * Update the attribute type of TargetBinding.targetBusiness to MdClass
+         */
+        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(TargetBinding.CLASS);
+
+        MdAttributeConcreteDAOIF mdAttributeReference = mdBusiness.definesAttribute(TargetBinding.TARGETBUSINESS);
+
+        if (mdAttributeReference != null)
+        {
+          MdBusinessDAOIF mdClass = MdBusinessDAO.getMdBusinessDAO(MdClassInfo.CLASS);
+
+          MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdAttributeReference.getBusinessDAO();
+          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdClass.getId());
+          lockedBy.apply();
+        }
+
+        /*
+         * Update all NULL TargetBinding.strategy fields to equal LocalPersistenceStrategy
+         */
+        QueryFactory factory = new QueryFactory();
+
+        BusinessQuery query = factory.businessQuery(TargetBinding.CLASS);
+        query.WHERE(query.aReference(TargetBinding.TARGETBUSINESS).EQ((String) null));
+
+        OIterator<Business> iterator = query.getIterator();
+
+        while (iterator.hasNext())
+        {
+          LocalPersistenceStrategy strategy = new LocalPersistenceStrategy();
+          strategy.apply();
+
+          Business targetBinding = iterator.next();
+          targetBinding.lock();
+          targetBinding.setValue(TargetBinding.STRATEGY, strategy.getId());
+          targetBinding.apply();
+        }
+
       }
       finally
       {
@@ -743,6 +810,8 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
     private static final String PATCH_LOCKED_BY_TASK_TAG      = "patchLockedByTask";
 
+    private static final String PATCH_TARGET_BINDING_TASK_TAG = "patchTargetBindingTask";
+
     public PluginHandlerFactory(ImportManager manager)
     {
       this.addHandler(DASHBOARD_TAG, new DashboardHandler(manager));
@@ -753,6 +822,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
       this.addHandler(PATCH_MAPPABLE_CLASS_TASK_TAG, new PatchMappableClassTaskHandler(manager));
       this.addHandler(PATCH_CATEGORY_TASK_TAG, new PatchCategoryTaskHandler(manager));
       this.addHandler(PATCH_LOCKED_BY_TASK_TAG, new PatchLockedByTypeTaskHandler(manager));
+      this.addHandler(PATCH_TARGET_BINDING_TASK_TAG, new PatchTargetBindingTaskHandler(manager));
     }
   }
 
