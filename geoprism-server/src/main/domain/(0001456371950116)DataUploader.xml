@@ -41,7 +41,7 @@
       <mdBusiness name="net.geoprism.data.etl.TargetBinding" label="Target Binding">
         <attributes>
           <reference name="sourceView" label="Source Type" type="com.runwaysdk.system.metadata.MdView" required="true" indexType="non-unique index" />
-          <reference name="targetBusiness" label="Target Type" type="com.runwaysdk.system.metadata.MdBusiness" required="true" indexType="non-unique index" />
+          <reference name="targetBusiness" label="Target Type" type="com.runwaysdk.system.metadata.MdClass" required="true" indexType="non-unique index" />
         </attributes>
       </mdBusiness>
       

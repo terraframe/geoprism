@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdView;
 
 public class TargetDefinition implements TargetDefinitionIF
@@ -32,6 +32,8 @@ public class TargetDefinition implements TargetDefinitionIF
   private String                         sourceType;
 
   private String                         targetType;
+
+  private PersistenceStrategyIF          strategy;
 
   private Map<String, TargetFieldIF>     fieldMap;
 
@@ -79,12 +81,12 @@ public class TargetDefinition implements TargetDefinitionIF
   {
     return this.isNew;
   }
-  
+
   public boolean isApplied()
   {
     return isApplied;
   }
-  
+
   public void setApplied(boolean isApplied)
   {
     this.isApplied = isApplied;
@@ -124,7 +126,8 @@ public class TargetDefinition implements TargetDefinitionIF
     {
       TargetBinding binding = new TargetBinding();
       binding.setSourceView(MdView.getMdView(this.sourceType));
-      binding.setTargetBusiness(MdBusiness.getMdBusiness(this.targetType));
+      binding.setTargetBusiness(MdClass.getMdClass(this.targetType));
+      binding.setStrategy((PersistenceStrategy) this.strategy);
       binding.apply();
 
       Collection<TargetFieldIF> fields = this.fieldMap.values();
@@ -137,4 +140,15 @@ public class TargetDefinition implements TargetDefinitionIF
       this.setApplied(true);
     }
   }
+
+  public PersistenceStrategyIF getStrategy()
+  {
+    return strategy;
+  }
+
+  public void setStrategy(PersistenceStrategyIF strategy)
+  {
+    this.strategy = strategy;
+  }
+
 }

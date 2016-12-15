@@ -18,13 +18,13 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 228299462)
-public abstract class TargetBindingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = -1633947733)
+public abstract class PersistenceStrategyDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.data.etl.TargetBinding";
-  private static final long serialVersionUID = 228299462;
+  public final static String CLASS = "net.geoprism.data.etl.PersistenceStrategy";
+  private static final long serialVersionUID = -1633947733;
   
-  protected TargetBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected PersistenceStrategyDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(clientRequest);
   }
@@ -35,7 +35,7 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
   * @param businessDTO The BusinessDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected TargetBindingDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected PersistenceStrategyDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
   }
@@ -56,9 +56,6 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
   public static java.lang.String OWNER = "owner";
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
-  public static java.lang.String SOURCEVIEW = "sourceView";
-  public static java.lang.String STRATEGY = "strategy";
-  public static java.lang.String TARGETBUSINESS = "targetBusiness";
   public static java.lang.String TYPE = "type";
   public java.util.Date getCreateDate()
   {
@@ -406,158 +403,11 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.metadata.MdViewDTO getSourceView()
-  {
-    if(getValue(SOURCEVIEW) == null || getValue(SOURCEVIEW).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdViewDTO.get(getRequest(), getValue(SOURCEVIEW));
-    }
-  }
-  
-  public String getSourceViewId()
-  {
-    return getValue(SOURCEVIEW);
-  }
-  
-  public void setSourceView(com.runwaysdk.system.metadata.MdViewDTO value)
-  {
-    if(value == null)
-    {
-      setValue(SOURCEVIEW, "");
-    }
-    else
-    {
-      setValue(SOURCEVIEW, value.getId());
-    }
-  }
-  
-  public boolean isSourceViewWritable()
-  {
-    return isWritable(SOURCEVIEW);
-  }
-  
-  public boolean isSourceViewReadable()
-  {
-    return isReadable(SOURCEVIEW);
-  }
-  
-  public boolean isSourceViewModified()
-  {
-    return isModified(SOURCEVIEW);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getSourceViewMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(SOURCEVIEW).getAttributeMdDTO();
-  }
-  
-  public net.geoprism.data.etl.PersistenceStrategyDTO getStrategy()
-  {
-    if(getValue(STRATEGY) == null || getValue(STRATEGY).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return net.geoprism.data.etl.PersistenceStrategyDTO.get(getRequest(), getValue(STRATEGY));
-    }
-  }
-  
-  public String getStrategyId()
-  {
-    return getValue(STRATEGY);
-  }
-  
-  public void setStrategy(net.geoprism.data.etl.PersistenceStrategyDTO value)
-  {
-    if(value == null)
-    {
-      setValue(STRATEGY, "");
-    }
-    else
-    {
-      setValue(STRATEGY, value.getId());
-    }
-  }
-  
-  public boolean isStrategyWritable()
-  {
-    return isWritable(STRATEGY);
-  }
-  
-  public boolean isStrategyReadable()
-  {
-    return isReadable(STRATEGY);
-  }
-  
-  public boolean isStrategyModified()
-  {
-    return isModified(STRATEGY);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getStrategyMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(STRATEGY).getAttributeMdDTO();
-  }
-  
-  public com.runwaysdk.system.metadata.MdClassDTO getTargetBusiness()
-  {
-    if(getValue(TARGETBUSINESS) == null || getValue(TARGETBUSINESS).trim().equals(""))
-    {
-      return null;
-    }
-    else
-    {
-      return com.runwaysdk.system.metadata.MdClassDTO.get(getRequest(), getValue(TARGETBUSINESS));
-    }
-  }
-  
-  public String getTargetBusinessId()
-  {
-    return getValue(TARGETBUSINESS);
-  }
-  
-  public void setTargetBusiness(com.runwaysdk.system.metadata.MdClassDTO value)
-  {
-    if(value == null)
-    {
-      setValue(TARGETBUSINESS, "");
-    }
-    else
-    {
-      setValue(TARGETBUSINESS, value.getId());
-    }
-  }
-  
-  public boolean isTargetBusinessWritable()
-  {
-    return isWritable(TARGETBUSINESS);
-  }
-  
-  public boolean isTargetBusinessReadable()
-  {
-    return isReadable(TARGETBUSINESS);
-  }
-  
-  public boolean isTargetBusinessModified()
-  {
-    return isModified(TARGETBUSINESS);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getTargetBusinessMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(TARGETBUSINESS).getAttributeMdDTO();
-  }
-  
-  public static net.geoprism.data.etl.TargetBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.data.etl.PersistenceStrategyDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
     
-    return (net.geoprism.data.etl.TargetBindingDTO) dto;
+    return (net.geoprism.data.etl.PersistenceStrategyDTO) dto;
   }
   
   public void apply()
@@ -576,9 +426,9 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     getRequest().delete(this.getId());
   }
   
-  public static net.geoprism.data.etl.TargetBindingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static net.geoprism.data.etl.PersistenceStrategyQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (net.geoprism.data.etl.TargetBindingQueryDTO) clientRequest.getAllInstances(net.geoprism.data.etl.TargetBindingDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (net.geoprism.data.etl.PersistenceStrategyQueryDTO) clientRequest.getAllInstances(net.geoprism.data.etl.PersistenceStrategyDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -586,12 +436,12 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     getRequest().lock(this);
   }
   
-  public static net.geoprism.data.etl.TargetBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.PersistenceStrategyDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.TargetBindingDTO.CLASS, "lock", _declaredTypes);
-    return (net.geoprism.data.etl.TargetBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.PersistenceStrategyDTO.CLASS, "lock", _declaredTypes);
+    return (net.geoprism.data.etl.PersistenceStrategyDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -599,12 +449,12 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.data.etl.TargetBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.PersistenceStrategyDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.TargetBindingDTO.CLASS, "unlock", _declaredTypes);
-    return (net.geoprism.data.etl.TargetBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.PersistenceStrategyDTO.CLASS, "unlock", _declaredTypes);
+    return (net.geoprism.data.etl.PersistenceStrategyDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

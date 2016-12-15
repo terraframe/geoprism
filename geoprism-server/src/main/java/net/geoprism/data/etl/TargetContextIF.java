@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.runwaysdk.business.Business;
+import com.runwaysdk.business.Mutable;
 
 public interface TargetContextIF
 {
-  public Business newBusiness(String sourceType);
+  public Mutable newMutable(String sourceType);
 
   public String getType(String sourceType);
 
