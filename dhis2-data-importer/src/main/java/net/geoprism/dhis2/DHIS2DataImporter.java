@@ -1,5 +1,7 @@
 package net.geoprism.dhis2;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -7,8 +9,14 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.runwaysdk.configuration.ConfigurationManager;
+import com.runwaysdk.session.Request;
+import com.runwaysdk.system.gis.geo.Universal;
+
+import net.geoprism.configuration.GeoprismConfigurationResolver;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
@@ -18,61 +26,95 @@ import org.json.JSONObject;
  */
 public class DHIS2DataImporter
 {
+  private DHIS2BasicConnector dhis2;
+  
   public static void main(String[] args)
   {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
-    options.addOption(Option.builder("l").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").build());
-    options.addOption(Option.builder("u").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").build());
-    options.addOption(Option.builder("p").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").build());
-
+    options.addOption(Option.builder("url").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
+    options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
+    options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
+    options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
+    
     try {
       CommandLine line = parser.parse( options, args );
       
-      String url = line.getOptionValue("l");
-      String username = line.getOptionValue("u");
-      String password = line.getOptionValue("p");
+      String url = line.getOptionValue("url");
+      String username = line.getOptionValue("username");
+      String password = line.getOptionValue("password");
+      String appcfgPath = line.getOptionValue("appcfgPath");
       
       if (url == null)
       {
         url = "http://127.0.0.1:8085/";
       }
-      if (username == null)
+      if (appcfgPath != null)
       {
-        throw new RuntimeException("Username is required.");
-      }
-      if (password == null)
-      {
-        throw new RuntimeException("Password is required.");
+        GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
+        resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      doIt(url, username, password);
+      new DHIS2DataImporter(url, username, password).importAll();
     }
     catch (ParseException e)
     {
       throw new RuntimeException(e);
     }
   }
-
-  private static void doIt(String url, String username, String password) {
-    DHIS2BasicConnector dhis2 = new DHIS2BasicConnector(url, username, password);
-    dhis2.createOauthClient();
+  
+  public DHIS2DataImporter(String url, String username, String password)
+  {
+    dhis2 = new DHIS2BasicConnector(url, username, password);
+    
+    try
+    {
+      dhis2.createOauthClient();
+    }
+    catch (DHIS2ConflictException e)
+    {
+      // If it threw an error because the oauth client already exists, ignore it.
+      if (!e.isDuplicateGeoprismOauth())
+      {
+        throw e;
+      }
+    }
+    
     dhis2.logIn();
-    
-    // curl -H "Accept: application/xml" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true&lastUpdated=2014-08-01"
-    GetMethod get = new GetMethod(dhis2.getServerUrl() + "api/25/metadata");
-    get.setRequestHeader("Authorization", "Bearer " + dhis2.getAccessToken());
-    get.setRequestHeader("Accept", "application/json");
-    NameValuePair[] params = new NameValuePair[] {
+  }
+
+  @Request
+  private void importAll()
+  {
+    importOrgUnitLevels();
+  }
+  
+  private void importOrgUnitLevels() {
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnitLevels=true"
+    JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
-        new NameValuePair("organisationUnits", "true"),
-        new NameValuePair("lastUpdated", "2014-08-01"),
-    };
-    get.setQueryString(params);
+        new NameValuePair("organisationUnitLevels", "true")
+    });
     
-    JSONObject response = new JSONObject();
-    int statusCode = dhis2.httpRequest(get, response);
+    // Create Universals from OrgUnits
+    JSONArray levels = response.getJSONArray("organisationUnitLevels");
+    Universal[] universals = new Universal[levels.length()];
+    for (int i = 0; i < levels.length(); ++i)
+    {
+      JSONObject level = levels.getJSONObject(i);
+      
+      Universal universal = new Universal();
+      universal.getDisplayLabel().setValue(level.getString("name"));
+      universal.setUniversalId(level.getString("id"));
+      universal.apply();
+      universals[level.getInt("level")-1] = universal;
+    }
     
-    System.out.println(response);
+    // Apply Universal relationships
+    universals[0].addAllowedIn(Universal.getRoot()).apply();
+    for (int i = 1; i < universals.length; ++i)
+    {
+      universals[i].addAllowedIn(universals[i-1]).apply();
+    }
   }
 }

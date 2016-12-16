@@ -6,12 +6,15 @@ import java.util.Iterator;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConstants;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.json.JSONArray;
@@ -79,9 +82,13 @@ public class DHIS2BasicConnector
       JSONObject response = new JSONObject();
       int statusCode = httpRequest(post, response);
 
-      if (statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED || statusCode == HttpStatus.SC_CONFLICT)
+      if (statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED)
       {
         
+      }
+      else if (statusCode == HttpStatus.SC_CONFLICT)
+      {
+        throw new DHIS2ConflictException(response);
       }
       else
       {
@@ -151,6 +158,25 @@ public class DHIS2BasicConnector
     this.client = new HttpClient();
   }
   
+  public JSONObject httpGetRequest(String url, NameValuePair[] params)
+  {
+    GetMethod get = new GetMethod(this.getServerUrl() + url);
+    get.setRequestHeader("Authorization", "Bearer " + this.getAccessToken());
+    get.setRequestHeader("Accept", "application/json");
+    
+    get.setQueryString(params);
+    
+    JSONObject response = new JSONObject();
+    int statusCode = this.httpRequest(get, response);
+    
+    if (statusCode != HttpStatus.SC_OK)
+    {
+      throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
+    }
+    
+    return response;
+  }
+  
   public int httpRequest(HttpMethod method, JSONObject response)
   {
     String sResponse = null;
@@ -160,7 +186,7 @@ public class DHIS2BasicConnector
 
       // Execute the method.
       int statusCode = this.client.executeMethod(method);
-
+      
       // Follow Redirects
       if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY || statusCode == HttpStatus.SC_MOVED_PERMANENTLY || statusCode == HttpStatus.SC_TEMPORARY_REDIRECT || statusCode == HttpStatus.SC_SEE_OTHER)
       {
