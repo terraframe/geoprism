@@ -13,10 +13,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.configuration.ConfigurationManager;
+import com.runwaysdk.dataaccess.InvalidIdException;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 import net.geoprism.configuration.GeoprismConfigurationResolver;
+import net.geoprism.dhis2.orgunit.OrgUnitJsonToGeoEntity;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
@@ -27,6 +33,12 @@ import net.geoprism.configuration.GeoprismConfigurationResolver;
 public class DHIS2DataImporter
 {
   private DHIS2BasicConnector dhis2;
+  
+  private GeometryFactory     geometryFactory;
+
+  private GeometryHelper      geometryHelper;
+  
+  private Universal[] universals;
   
   public static void main(String[] args)
   {
@@ -65,6 +77,9 @@ public class DHIS2DataImporter
   
   public DHIS2DataImporter(String url, String username, String password)
   {
+    this.geometryFactory = new GeometryFactory();
+    this.geometryHelper = new GeometryHelper();
+    
     dhis2 = new DHIS2BasicConnector(url, username, password);
     
     try
@@ -86,7 +101,20 @@ public class DHIS2DataImporter
   @Request
   private void importAll()
   {
+    importAllInTransaction();
+  }
+  
+  @Transaction
+  private void importAllInTransaction()
+  {
+//    createGeoprismOauthData();
     importOrgUnitLevels();
+    importOrgUnits();
+  }
+  
+  public Universal getUniversalByLevel(int level)
+  {
+    return universals[level];
   }
   
   private void importOrgUnitLevels() {
@@ -96,9 +124,9 @@ public class DHIS2DataImporter
         new NameValuePair("organisationUnitLevels", "true")
     });
     
-    // Create Universals from OrgUnits
+    // Create Universals from OrgUnitLevels
     JSONArray levels = response.getJSONArray("organisationUnitLevels");
-    Universal[] universals = new Universal[levels.length()];
+     universals = new Universal[levels.length()];
     for (int i = 0; i < levels.length(); ++i)
     {
       JSONObject level = levels.getJSONObject(i);
@@ -117,4 +145,36 @@ public class DHIS2DataImporter
       universals[i].addAllowedIn(universals[i-1]).apply();
     }
   }
+  
+  private void importOrgUnits()
+  {
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true"
+    // http://localhost:8085/api/organisationUnits.geojson?level=1&level=2&level=3&level=4&level=5&level=6&level=7&level=8&level=9
+    JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("organisationUnits", "true")
+    });
+    
+    // Create GeoEntities from OrgUnits
+    JSONArray units = response.getJSONArray("organisationUnits");
+    OrgUnitJsonToGeoEntity[] converters = new OrgUnitJsonToGeoEntity[units.length()];
+    for (int i = 0; i < units.length(); ++i)
+    {
+      JSONObject unit = units.getJSONObject(i);
+      
+      OrgUnitJsonToGeoEntity converter = new OrgUnitJsonToGeoEntity(this, geometryFactory, geometryHelper, unit);
+      converter.apply();
+      
+      converters[i] = converter;
+    }
+    
+    // Assign parents
+    for (int i = 0; i < converters.length; ++i)
+    {
+      OrgUnitJsonToGeoEntity converter = converters[i];
+      
+      converter.applyLocatedIn();
+    }
+  }
 }
+
