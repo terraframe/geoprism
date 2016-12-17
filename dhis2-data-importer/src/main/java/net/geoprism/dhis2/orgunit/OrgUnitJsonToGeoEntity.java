@@ -1,13 +1,14 @@
 package net.geoprism.dhis2.orgunit;
 
-import java.util.Locale;
+import java.sql.Savepoint;
 
-import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.runwaysdk.dataaccess.InvalidIdException;
+import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -48,7 +49,7 @@ public class OrgUnitJsonToGeoEntity
   {
     geo.getDisplayLabel().setValue(json.getString("name"));
     
-    geo.setGeoId(json.getString("code"));
+    geo.setGeoId(json.getString("id"));
     
     setUniversal();
     
@@ -64,14 +65,29 @@ public class OrgUnitJsonToGeoEntity
     GeoEntity parent;
     try
     {
-      parent = GeoEntity.searchByGeoId(json.getString("parent"));
+      if (json.has("parent"))
+      {
+        // DHIS2 woes: Kinda dumb to have a JSONObject that will always only have an id in it.
+        parent = GeoEntity.getByKey(json.getJSONObject("parent").getString("id"));
+      }
+      else
+      {
+        parent = GeoEntity.getRoot();
+      }
     }
-    catch(InvalidIdException e)
+    catch(DataNotFoundException e)
     {
       throw new RuntimeException("The DHIS2 child OrgUnit [" + json.toString() + "] references a parent [" + json.getString("parent") + "] but that GeoEntity does not exist.", e);
     }
     
     geo.addLocatedIn(parent).apply();
+  }
+  
+  public void swapGeoId()
+  {
+    geo.lock();
+    geo.setGeoId(json.getString("code"));
+    geo.applyInternal(false);
   }
   
   private void setUniversal()
@@ -88,7 +104,7 @@ public class OrgUnitJsonToGeoEntity
     Universal uni;
     try
     {
-      uni = importer.getUniversalByLevel(level);
+      uni = importer.getUniversalByLevel(level).getUniversal();
     }
     catch (ArrayIndexOutOfBoundsException e)
     {
@@ -100,20 +116,23 @@ public class OrgUnitJsonToGeoEntity
   
   private void setLocales()
   {
-    JSONArray translations = json.getJSONArray("translations");
-    
-    for (int i = 0; i < translations.length(); ++i)
-    {
-      JSONObject translation = translations.getJSONObject(i);
-      
-//      String property = translation.getString("property");
-      String locale = translation.getString("locale");
-      String value = translation.getString("value");
-      
-      Locale localeAsLocale = LocaleUtils.toLocale(locale);
-      
-      geo.getDisplayLabel().setValue(localeAsLocale, value);
-    }
+//    JSONArray translations = json.getJSONArray("translations");
+//    
+//    for (int i = 0; i < translations.length(); ++i)
+//    {
+//      JSONObject translation = translations.getJSONObject(i);
+//      
+//      String locale = translation.getString("locale");
+//      String value = translation.getString("value");
+//      
+//      Locale localeAsLocale = LocaleUtils.toLocale(locale);
+//      
+//      
+//      // The locale may not exist in the system
+//      // This code throws an AttributeDoesNotExistException
+//      // One solution is to query for all locales at the start of the data import, or we can just rollback a savepoint here
+//      geo.getDisplayLabel().setValue(localeAsLocale, value);
+//    }
   }
   
   private void setGeometry()
@@ -122,7 +141,7 @@ public class OrgUnitJsonToGeoEntity
     
     if (featureType == null || featureType.equals("NONE")) { return; }
     
-    JSONArray coordinates = json.getJSONArray("coordinates");
+    JSONArray coordinates = new JSONArray(json.getString("coordinates")); // DHIS2 woes: Their coordinates are wrapped in quotes (its a string). We want to parse it as JSON.
     
     if (featureType.equals("POINT"))
     {
@@ -135,6 +154,8 @@ public class OrgUnitJsonToGeoEntity
     }
     else if (featureType.equals("POLYGON"))
     {
+      coordinates = coordinates.getJSONArray(0).getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+      
       Polygon polygon = jsonToPolygon(coordinates);
       
       geo.setGeoPoint(this.geometryHelper.getGeoPoint(polygon));
@@ -143,6 +164,8 @@ public class OrgUnitJsonToGeoEntity
     }
     else if (featureType.equals("MULTI_POLYGON"))
     {
+      coordinates = coordinates.getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+      
       MultiPolygon multipolygon = jsonToMultiPolygon(coordinates);
       
       geo.setGeoPoint(this.geometryHelper.getGeoPoint(multipolygon));

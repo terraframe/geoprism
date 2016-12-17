@@ -35,7 +35,9 @@ public class DHIS2BasicConnector
   
   private String password;
   
-  private static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6";
+  public static final String CLIENT_ID = "geoprism";
+  
+  public static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6";
   
   private String accessToken;
   
@@ -76,7 +78,7 @@ public class DHIS2BasicConnector
       
       post.setRequestHeader("Content-Type", "application/json");
       
-      String body = "{ \"name\" : \"Geoprism\", \"cid\" : \"geoprism\", \"secret\" : \"" + SECRET + "\", \"grantTypes\" : [ \"password\", \"refresh_token\", \"authorization_code\" ], \"redirectUris\" : [ \"\" ]}";
+      String body = "{ \"name\" : \"Geoprism\", \"cid\" : \"" + CLIENT_ID + "\", \"secret\" : \"" + SECRET + "\", \"grantTypes\" : [ \"password\", \"refresh_token\", \"authorization_code\" ], \"redirectUris\" : [ \"\" ]}";
       post.setRequestEntity(new StringRequestEntity(body, null, null));
 
       JSONObject response = new JSONObject();

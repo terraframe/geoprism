@@ -1,6 +1,7 @@
 package net.geoprism.dhis2;
 
 import java.io.File;
+import java.sql.Savepoint;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -13,16 +14,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.configuration.ConfigurationManager;
-import com.runwaysdk.dataaccess.InvalidIdException;
+import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
+import net.geoprism.account.OauthServer;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.dhis2.orgunit.OrgUnitJsonToGeoEntity;
+import net.geoprism.dhis2.orgunit.OrgUnitLevelJsonToUniversal;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
@@ -38,7 +44,7 @@ public class DHIS2DataImporter
 
   private GeometryHelper      geometryHelper;
   
-  private Universal[] universals;
+  private OrgUnitLevelJsonToUniversal[] universals;
   
   public static void main(String[] args)
   {
@@ -81,7 +87,30 @@ public class DHIS2DataImporter
     this.geometryHelper = new GeometryHelper();
     
     dhis2 = new DHIS2BasicConnector(url, username, password);
-    
+  }
+
+  @Request
+  private void importAll()
+  {
+    importAllInTransaction();
+  }
+  
+  @Transaction
+  private void importAllInTransaction()
+  {
+    createGeoprismOauthData();
+    importOrgUnitLevels();
+    importOrgUnits();
+    buildAllpaths();
+  }
+  
+  public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
+  {
+    return universals[level];
+  }
+  
+  private void createGeoprismOauthData()
+  {
     try
     {
       dhis2.createOauthClient();
@@ -95,29 +124,47 @@ public class DHIS2DataImporter
       }
     }
     
+    Savepoint sp = Database.setSavepoint();
+    
+    try
+    {
+      OauthServer oauth = new OauthServer();
+      oauth.setKeyName("dhis2-local");
+      oauth.getDisplayLabel().setValue("DHIS2");
+      oauth.setAuthorizationLocation("http://127.0.0.1:8085/uaa/oauth/authorize");
+      oauth.setTokenLocation("http://127.0.0.1:8085/uaa/oauth/token");
+      oauth.setProfileLocation("http://127.0.0.1:8085/api/me");
+      oauth.setClientId(DHIS2BasicConnector.CLIENT_ID);
+      oauth.setSecretKey(DHIS2BasicConnector.SECRET);
+      oauth.setServerType("DHIS2");
+      oauth.apply();
+    }
+    catch (DuplicateDataException ex)
+    {
+      Database.rollbackSavepoint(sp);
+    }
+    catch (RuntimeException ex)
+    {
+      Database.rollbackSavepoint(sp);
+      throw ex;
+    }
+    finally
+    {
+      Database.releaseSavepoint(sp);
+    }
+    
     dhis2.logIn();
   }
-
-  @Request
-  private void importAll()
+  
+  private void buildAllpaths()
   {
-    importAllInTransaction();
+    Universal.getStrategy().reinitialize(AllowedIn.CLASS);
+    GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
+//    Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
   }
   
-  @Transaction
-  private void importAllInTransaction()
+  private void importOrgUnitLevels()
   {
-//    createGeoprismOauthData();
-    importOrgUnitLevels();
-    importOrgUnits();
-  }
-  
-  public Universal getUniversalByLevel(int level)
-  {
-    return universals[level];
-  }
-  
-  private void importOrgUnitLevels() {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnitLevels=true"
     JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
@@ -126,30 +173,27 @@ public class DHIS2DataImporter
     
     // Create Universals from OrgUnitLevels
     JSONArray levels = response.getJSONArray("organisationUnitLevels");
-     universals = new Universal[levels.length()];
+    universals = new OrgUnitLevelJsonToUniversal[levels.length()];
     for (int i = 0; i < levels.length(); ++i)
     {
       JSONObject level = levels.getJSONObject(i);
       
-      Universal universal = new Universal();
-      universal.getDisplayLabel().setValue(level.getString("name"));
-      universal.setUniversalId(level.getString("id"));
-      universal.apply();
-      universals[level.getInt("level")-1] = universal;
+      OrgUnitLevelJsonToUniversal converter = new OrgUnitLevelJsonToUniversal(this, level);
+      converter.apply();
+      
+      universals[level.getInt("level")-1] = converter;
     }
     
     // Apply Universal relationships
-    universals[0].addAllowedIn(Universal.getRoot()).apply();
-    for (int i = 1; i < universals.length; ++i)
+    for (int i = 0; i < universals.length; ++i)
     {
-      universals[i].addAllowedIn(universals[i-1]).apply();
+      universals[i].applyLocatedIn();
     }
   }
   
   private void importOrgUnits()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true"
-    // http://localhost:8085/api/organisationUnits.geojson?level=1&level=2&level=3&level=4&level=5&level=6&level=7&level=8&level=9
     JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
@@ -174,6 +218,15 @@ public class DHIS2DataImporter
       OrgUnitJsonToGeoEntity converter = converters[i];
       
       converter.applyLocatedIn();
+    }
+    
+    // The OrgUnit parent reference is done by a DIHS2 id. In order to find the parent, we first set the GeoId to the DHIS2 internal id. Now we're swapping out those DHIS2 internal ids with geoids.
+    // This could also be solved with a hashmap from   {DHIS2 id -> geoId}  to help us find the parent, but in the interest of saving memory I decided to loop through it again and hammer the processor instead.
+    for (int i = 0; i < converters.length; ++i)
+    {
+      OrgUnitJsonToGeoEntity converter = converters[i];
+      
+      converter.swapGeoId();
     }
   }
 }
