@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1249511640)
+@com.runwaysdk.business.ClassSignature(hash = -132590431)
 public abstract class MappableClassDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.MappableClass";
-  private static final long serialVersionUID = 1249511640;
+  private static final long serialVersionUID = -132590431;
   
   protected MappableClassDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -47,6 +47,7 @@ public abstract class MappableClassDTOBase extends com.runwaysdk.business.Busine
   
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
+  public static java.lang.String DATASOURCE = "dataSource";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
@@ -118,6 +119,43 @@ public abstract class MappableClassDTOBase extends com.runwaysdk.business.Busine
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getCreatedByMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(CREATEDBY).getAttributeMdDTO();
+  }
+  
+  public String getDataSource()
+  {
+    return getValue(DATASOURCE);
+  }
+  
+  public void setDataSource(String value)
+  {
+    if(value == null)
+    {
+      setValue(DATASOURCE, "");
+    }
+    else
+    {
+      setValue(DATASOURCE, value);
+    }
+  }
+  
+  public boolean isDataSourceWritable()
+  {
+    return isWritable(DATASOURCE);
+  }
+  
+  public boolean isDataSourceReadable()
+  {
+    return isReadable(DATASOURCE);
+  }
+  
+  public boolean isDataSourceModified()
+  {
+    return isModified(DATASOURCE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getDataSourceMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(DATASOURCE).getAttributeMdDTO();
   }
   
   public com.runwaysdk.system.metadata.MdDomainDTO getEntityDomain()

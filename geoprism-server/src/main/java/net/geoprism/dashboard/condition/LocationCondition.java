@@ -25,6 +25,7 @@ import net.geoprism.QueryUtil;
 import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.GeoEntityUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,67 +52,87 @@ public class LocationCondition extends DashboardCondition implements com.runways
    */
   public static final String LABEL_KEY      = "label";
 
-  private String             comparisonValueId;
+  public static final String LOCATIONS_KEY  = "locations";
+
+  private String             locations;
 
   public LocationCondition()
   {
     super();
   }
 
-  public LocationCondition(String comparisonValueId)
+  public LocationCondition(String locations)
   {
     super();
 
-    this.comparisonValueId = comparisonValueId;
+    this.locations = locations;
   }
 
-  public String getComparisonValueId()
+  public String getLocations()
   {
-    return comparisonValueId;
+    return locations;
   }
 
-  public void setComparisonValueId(String comparisonValueId)
+  public void setLocations(String locations)
   {
-    this.comparisonValueId = comparisonValueId;
+    this.locations = locations;
   }
 
-  public GeoEntity getComparisonValue()
+  public List<GeoEntity> getGeoEntities()
   {
-    if (this.comparisonValueId != null && this.comparisonValueId.length() > 0)
+    List<GeoEntity> entities = new LinkedList<GeoEntity>();
+
+    /*
+     * Handle legacy data
+     */
+    if (this.locations != null && this.locations.length() > 0)
     {
-      return GeoEntity.get(comparisonValueId);
+      if (!this.locations.startsWith("["))
+      {
+        entities.add(GeoEntity.get(this.locations));
+      }
+      else
+      {
+        try
+        {
+          JSONArray array = new JSONArray(this.locations);
+
+          for (int i = 0; i < array.length(); i++)
+          {
+            JSONObject location = array.getJSONObject(i);
+            String entityId = location.getString(VALUE_KEY);
+
+            entities.add(GeoEntity.get(entityId));
+          }
+        }
+        catch (JSONException e)
+        {
+          throw new ProgrammingErrorException(e);
+        }
+      }
     }
 
-    return null;
+    return entities;
   }
 
   @Override
   public void restrictQuery(ValueQuery _vQuery, Attribute _attribute)
   {
-    GeoEntity entity = this.getComparisonValue();
+    List<GeoEntity> entities = this.getGeoEntities();
 
-    if (entity != null)
+    if (entities.size() > 0)
     {
       AttributeReference attributeReference = (AttributeReference) _attribute;
 
       GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(_vQuery);
 
-      _vQuery.AND(aptQuery.getParentTerm().EQ(entity));
+      for (GeoEntity entity : entities)
+      {
+        aptQuery.OR(aptQuery.getParentTerm().EQ(entity));
+      }
+
       _vQuery.AND(attributeReference.EQ(aptQuery.getChildTerm()));
     }
-  }
-
-  // @Override
-  public String getComparisonLabel()
-  {
-    GeoEntity entity = this.getComparisonValue();
-
-    if (entity != null)
-    {
-      return GeoEntityUtil.getEntityLabel(entity);
-    }
-
-    return "";
   }
 
   @Override
@@ -119,11 +140,23 @@ public class LocationCondition extends DashboardCondition implements com.runways
   {
     try
     {
+      JSONArray locations = new JSONArray();
+
+      List<GeoEntity> entities = this.getGeoEntities();
+
+      for (GeoEntity entity : entities)
+      {
+        JSONObject location = new JSONObject();
+        location.put(VALUE_KEY, entity.getId());
+        location.put(LABEL_KEY, GeoEntityUtil.getEntityLabel(entity));
+
+        locations.put(location);
+      }
+
       JSONObject object = new JSONObject();
       object.put(TYPE_KEY, CONDITION_TYPE);
       object.put(OPERATION_KEY, OPERATION_KEY);
-      object.put(VALUE_KEY, this.getComparisonValueId());
-      object.put(LABEL_KEY, this.getComparisonLabel());
+      object.put(LOCATIONS_KEY, locations);
 
       return object;
     }
@@ -144,9 +177,9 @@ public class LocationCondition extends DashboardCondition implements com.runways
   {
     List<String> messages = new LinkedList<String>();
 
-    GeoEntity entity = this.getComparisonValue();
+    List<GeoEntity> entities = this.getGeoEntities();
 
-    if (entity != null)
+    for (GeoEntity entity : entities)
     {
       String localizedValue = entity.getDisplayLabel().getValue();
 
@@ -168,7 +201,7 @@ public class LocationCondition extends DashboardCondition implements com.runways
     if (mdAttribute != null)
     {
       AttributeReference attribute = (AttributeReference) _query.get(mdAttribute.definesAttribute());
-      
+
       this.restrictQuery(_vQuery, attribute);
     }
   }

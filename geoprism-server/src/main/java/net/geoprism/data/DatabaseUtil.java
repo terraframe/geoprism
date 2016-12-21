@@ -28,7 +28,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 public class DatabaseUtil
 {
-  private static boolean IS_MATERIALIZED = false;
+  private static boolean IS_MATERIALIZED = true;
 
   /**
    * Creates a view.

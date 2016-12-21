@@ -701,6 +701,21 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
+  public static long getOptionCount(String mdAttributeId)
+  {
+    MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
+
+    QueryFactory factory = new QueryFactory();
+
+    ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+
+    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(factory);
+    aptQuery.WHERE(aptQuery.getParentTerm().EQ(rootQuery.getChild()));
+
+    return aptQuery.getCount();
+  }
+
   public static Classifier[] getClassifierSuggestions(String mdAttributeId, String text, Integer limit)
   {
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
@@ -1588,7 +1603,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
     else
     {
-      object.put("location", new JSONObject());
+      LocationCondition condition = new LocationCondition();
+
+      object.put("location", condition.getJSON());
     }
 
     return object;

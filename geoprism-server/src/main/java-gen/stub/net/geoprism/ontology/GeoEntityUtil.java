@@ -551,12 +551,17 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
   public static String getEntityLabel(GeoEntity entity)
   {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(entity.getDisplayLabel().getValue());
-    buffer.append(" (" + entity.getUniversal().getDisplayLabel().getValue() + ")");
-    buffer.append(" : " + entity.getGeoId());
+    if (entity != null)
+    {
+      StringBuffer buffer = new StringBuffer();
+      buffer.append(entity.getDisplayLabel().getValue());
+      buffer.append(" (" + entity.getUniversal().getDisplayLabel().getValue() + ")");
+      buffer.append(" : " + entity.getGeoId());
 
-    return buffer.toString();
+      return buffer.toString();
+    }
+
+    return "";
   }
 
   public static GeoEntity getCountryByUniversal(String universalId)

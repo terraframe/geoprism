@@ -121,16 +121,30 @@ public abstract class DashboardCondition implements Reloadable
             condition = new ClassifierCondition(mdAttributeId, value);
           }
         }
+        else if (type.equals(LocationCondition.CONDITION_TYPE))
+        {
+          if (object.has(LocationCondition.VALUE_KEY))
+          {
+            String value = object.getString(LocationCondition.VALUE_KEY);
+
+            condition = new LocationCondition(value);
+          }
+          else if (object.has(LocationCondition.LOCATIONS_KEY))
+          {
+            String value = object.getString(LocationCondition.LOCATIONS_KEY);
+
+            if (value != null && !value.equals("[]"))
+            {
+              condition = new LocationCondition(value);
+            }
+          }
+        }
         else if (object.has(OPERATION_KEY) && object.has(VALUE_KEY))
         {
           String operation = object.getString(OPERATION_KEY);
           String value = object.getString(VALUE_KEY);
 
-          if (type.equals(LocationCondition.CONDITION_TYPE))
-          {
-            condition = new LocationCondition(value);
-          }
-          else if (type.equals(DashboardAttributeCondition.CONDITION_TYPE))
+          if (type.equals(DashboardAttributeCondition.CONDITION_TYPE))
           {
             String mdAttributeId = object.getString(DashboardAttributeCondition.MD_ATTRIBUTE_KEY);
 

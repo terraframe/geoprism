@@ -165,6 +165,7 @@ public class TargetBuilder
     String sheetName = cSheet.getString("name");
     String label = cSheet.getString("label");
     String description = ( cSheet.has("description") ? cSheet.getString("description") : "" );
+    String dSource = ( cSheet.has("source") ? cSheet.getString("source") : "" );
     String countryId = cSheet.getString("country");
     List<GeoNode> nodes = new LinkedList<GeoNode>();
 
@@ -318,6 +319,7 @@ public class TargetBuilder
 
     MappableClass mClass = new MappableClass();
     mClass.setWrappedMdClass(mdClass);
+    mClass.setDataSource(dSource);
     mClass.apply();
 
     mClass.addUniversal(lowest).apply();

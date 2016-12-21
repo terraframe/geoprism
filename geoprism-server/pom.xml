@@ -230,38 +230,45 @@
       </build>
     </profile>
     <profile>
-      <id>patch</id>
-      <activation>
-        <property>
-          <name>patch</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>patch</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <executable>java</executable>
-                  <mainClass>net.geoprism.GeoprismPatcher</mainClass>
-                  <arguments>
-                    <argument>${project.basedir}/target/classes/metadata</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+     <id>patch</id>
+     <activation>
+       <property>
+         <name>patch</name>
+       </property>
+     </activation>
+     <build>
+       <plugins>
+         <plugin>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>exec-maven-plugin</artifactId>
+           <version>1.2.1</version>
+           <executions>
+             <execution>
+               <id>patch</id>
+               <phase>verify</phase>
+               <goals>
+                 <goal>java</goal>
+               </goals>
+               <configuration>
+                 <executable>java</executable>
+                 <mainClass>net.geoprism.GeoprismPatcher</mainClass>
+                 <arguments>
+                   <argument>${project.basedir}/target/classes/metadata</argument>
+                   <argument>${configuration.dir}/${geoprism.app}</argument>
+                 </arguments>
+                 <systemProperties>
+                   <systemProperty>
+                     <key>endpoint.cache</key>
+                     <value>${project.basedir}/cache</value>
+                   </systemProperty>
+                 </systemProperties>
+               </configuration>
+             </execution>
+           </executions>
+         </plugin>
+       </plugins>
+     </build>
+   </profile>
     <profile>
       <id>update-source-classes</id>
       <activation>
@@ -446,6 +453,8 @@
           </execution>
         </executions>
       </plugin>
+      
+      <!-- We only need this for when you're running rebuild-database, import-schema, any sort of database maven tool from a geoprism extension project (module). -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -596,6 +605,19 @@
                   <action>
                     <ignore></ignore>
                   </action>
+                </pluginExecution>
+                <pluginExecution>
+                	<pluginExecutionFilter>
+                		<groupId>org.codehaus.mojo</groupId>
+                		<artifactId>exec-maven-plugin</artifactId>
+                		<versionRange>[1.4.0,)</versionRange>
+                		<goals>
+                			<goal>java</goal>
+                		</goals>
+                	</pluginExecutionFilter>
+                	<action>
+                		<ignore></ignore>
+                	</action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>

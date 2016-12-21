@@ -38,7 +38,6 @@
     <module>geoprism-client</module>
     <module>geoprism-server</module>
     <module>geoprism-web</module>
-    <module>geoprism-solr-post-processor</module>    
   </modules>
 
   <properties>
@@ -245,6 +244,19 @@
                   <action>
                     <ignore></ignore>
                   </action>
+                </pluginExecution>
+                <pluginExecution>
+                	<pluginExecutionFilter>
+                		<groupId>org.apache.maven.plugins</groupId>
+                		<artifactId>maven-dependency-plugin</artifactId>
+                		<versionRange>[2.8,)</versionRange>
+                		<goals>
+                			<goal>build-classpath</goal>
+                		</goals>
+                	</pluginExecutionFilter>
+                	<action>
+                		<execute></execute>
+                	</action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
