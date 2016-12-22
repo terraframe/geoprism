@@ -19,7 +19,6 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<?xml version="1.0"?>
 <sidebar>
   <link-list>
     <item name="Log_out" uri="session/logout" synch="true" />
