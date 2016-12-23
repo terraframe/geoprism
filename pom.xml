@@ -35,6 +35,7 @@
     <module>geoprism-client</module>
     <module>geoprism-server</module>
     <module>geoprism-web</module>
+    <module>dhis2-data-importer</module>
   </modules>
 
   <properties>
