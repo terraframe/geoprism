@@ -117,8 +117,8 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
     String identifierAttribute = node.getIdentifierAttribute().getAttributeName();
 
     Selectable geoId2 = entityQuery.get(identifierAttribute, GeoEntity.GEOID);
-    geoId2.setColumnAlias(GeoEntity.GEOID);
-    geoId2.setUserDefinedAlias(GeoEntity.GEOID);
+    geoId2.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+    geoId2.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
     // geometry
     String columnName = this.getGeometryColumn(layer);
@@ -148,9 +148,9 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
     outerQuery.SELECT(geomAttribute);
 
     // Join the geometry query to the values query through the geo id
-    AttributeCharacter geometrySelectable = geometryQuery.aCharacter(GeoEntity.GEOID);
+    AttributeCharacter geometrySelectable = geometryQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS);
 
-    outerQuery.WHERE(geometrySelectable.EQ(valueQuery.aCharacter(GeoEntity.GEOID)));
+    outerQuery.WHERE(geometrySelectable.EQ(valueQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS)));
 
     return outerQuery;
   }

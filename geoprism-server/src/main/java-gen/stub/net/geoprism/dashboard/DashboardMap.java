@@ -67,6 +67,7 @@ import net.geoprism.dashboard.layer.DashboardThematicLayer;
 import net.geoprism.dashboard.layer.HasLayer;
 import net.geoprism.dashboard.layer.HasLayerQuery;
 import net.geoprism.dashboard.query.MdAttributeViewPredicate;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.data.DropViewTask;
 import net.geoprism.data.etl.excel.ValueQueryExcelExporter;
 import net.geoprism.gis.geoserver.GeoserverBatch;
@@ -195,7 +196,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       @Override
       public boolean evaulate(Selectable selectable)
       {
-        if ( ( selectable instanceof SelectableGeometry ) || selectable.getUserDefinedAlias().equals(GeoEntity.GEOID))
+        if ( ( selectable instanceof SelectableGeometry ) || selectable.getUserDefinedAlias().equals(ThematicQueryBuilder.LOCATION_ALIAS))
         {
           return false;
         }

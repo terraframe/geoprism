@@ -21,6 +21,7 @@ package net.geoprism.dashboard;
 import net.geoprism.dashboard.layer.DashboardThematicLayer;
 import net.geoprism.dashboard.layer.EmptyLayerInformation;
 import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.wrapper.FeatureType;
 
@@ -94,7 +95,8 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
     GeoEntityQuery entityQuery = new GeoEntityQuery(geometryQuery);
 
     Selectable geoId2 = entityQuery.getGeoId(GeoEntity.GEOID);
-    geoId2.setColumnAlias(GeoEntity.GEOID);
+    geoId2.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+    geoId2.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
     // geometry
     String columnName = this.getGeometryColumn(layer);
@@ -121,7 +123,7 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
     outerQuery.SELECT(geomAttribute);
 
     // Join the geometry query to the values query through the geo id
-    outerQuery.WHERE(geometryQuery.aCharacter(GeoEntity.GEOID).EQ(valueQuery.aCharacter(GeoEntity.GEOID)));
+    outerQuery.WHERE(geometryQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS).EQ(valueQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS)));
 
     return outerQuery;
   }
