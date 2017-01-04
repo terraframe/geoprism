@@ -113,11 +113,11 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
       if (secondaryMdAttribute != null)
       {
-        AttributeCharacter thematicGeoId = thematicQuery.aCharacter(GeoEntity.GEOID);
+        AttributeCharacter thematicGeoId = thematicQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS);
         thematicGeoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
         thematicGeoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
-        AttributeChar thematicLabel = (AttributeChar) thematicQuery.get(GeoEntity.DISPLAYLABEL);
+        AttributeChar thematicLabel = (AttributeChar) thematicQuery.get(ThematicQueryBuilder.LABEL_ALIAS);
         thematicLabel.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
         thematicLabel.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
@@ -133,7 +133,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
           ValueQuery secondaryQuery = this.build(secondaryMdAttribute, secondaryAggregation);
 
-          AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(GeoEntity.GEOID);
+          AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS);
           secondaryGeoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
           secondaryGeoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
