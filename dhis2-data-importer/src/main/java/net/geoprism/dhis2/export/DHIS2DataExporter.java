@@ -30,102 +30,102 @@ import com.runwaysdk.system.ontology.TermUtil;
 
 public class DHIS2DataExporter
 {
-  private ComponentExporterIF exporter;
-  
-  public static void main(String[] args)
-  {
-    
-  }
-  
-  public DHIS2DataExporter(ComponentExporterIF exporter)
-  {
-    this.exporter = exporter;
-  }
-
-  public DHIS2DataExporter(OutputStream stream)
-  {
-    this.exporter = new SAXExporter(stream, "classpath:com/runwaysdk/resources/xsd/datatype.xsd");
-  }
-
-  /**
-   * Copied from TermExporter.java
-   */
-  public void exportAll()
-  {
-    exporter.open();
-
-    try
-    {
-      if (includeParent)
-      {
-        // exporter.export(parent.getId());
-        exporter.writeCreate(parent);
-
-        // Loop over relationships with parents
-        String[] prelts = TermUtil.getAllChildRelationships(parent.getId());
-        for (String prelt : prelts)
-        {
-          OIterator<? extends Relationship> rel = parent.getParentRelationships(prelt);
-
-          try
-          {
-            while (rel.hasNext())
-            {
-              exporter.writeCreate(rel.next());
-            }
-          }
-          finally
-          {
-            rel.close();
-          }
-        }
-      }
-
-      /*
-       * This stack contains terms that have been exported, but have children
-       * that have not yet been exported.
-       */
-      Stack<Term> s = new Stack<Term>();
-
-      Term p = parent;
-
-      do
-      {
-        String[] relTypes = TermUtil.getAllParentRelationships(p.getId());
-
-        for (String relType : relTypes)
-        {
-          OIterator<? extends Relationship> rChildren = p.getChildRelationships(relType);
-
-          try
-          {
-            for (Relationship rChild : rChildren)
-            {
-              exporter.writeCreate(rChild.getChild());
-              exporter.writeCreate(rChild);
-
-              s.push((Term) rChild.getChild());
-            }
-          }
-          finally
-          {
-            rChildren.close();
-          }
-        }
-
-        if (!s.empty())
-        {
-          p = s.pop();
-        }
-        else
-        {
-          p = null;
-        }
-      } while (s.size() > 0 || p != null);
-    }
-    finally
-    {
-      exporter.close();
-    }
-  }
+//  private ComponentExporterIF exporter;
+//  
+//  public static void main(String[] args)
+//  {
+//    
+//  }
+//  
+//  public DHIS2DataExporter(ComponentExporterIF exporter)
+//  {
+//    this.exporter = exporter;
+//  }
+//
+//  public DHIS2DataExporter(OutputStream stream)
+//  {
+//    this.exporter = new SAXExporter(stream, "classpath:com/runwaysdk/resources/xsd/datatype.xsd");
+//  }
+//
+//  /**
+//   * Copied from TermExporter.java
+//   */
+//  public void exportAll()
+//  {
+//    exporter.open();
+//
+//    try
+//    {
+//      if (includeParent)
+//      {
+//        // exporter.export(parent.getId());
+//        exporter.writeCreate(parent);
+//
+//        // Loop over relationships with parents
+//        String[] prelts = TermUtil.getAllChildRelationships(parent.getId());
+//        for (String prelt : prelts)
+//        {
+//          OIterator<? extends Relationship> rel = parent.getParentRelationships(prelt);
+//
+//          try
+//          {
+//            while (rel.hasNext())
+//            {
+//              exporter.writeCreate(rel.next());
+//            }
+//          }
+//          finally
+//          {
+//            rel.close();
+//          }
+//        }
+//      }
+//
+//      /*
+//       * This stack contains terms that have been exported, but have children
+//       * that have not yet been exported.
+//       */
+//      Stack<Term> s = new Stack<Term>();
+//
+//      Term p = parent;
+//
+//      do
+//      {
+//        String[] relTypes = TermUtil.getAllParentRelationships(p.getId());
+//
+//        for (String relType : relTypes)
+//        {
+//          OIterator<? extends Relationship> rChildren = p.getChildRelationships(relType);
+//
+//          try
+//          {
+//            for (Relationship rChild : rChildren)
+//            {
+//              exporter.writeCreate(rChild.getChild());
+//              exporter.writeCreate(rChild);
+//
+//              s.push((Term) rChild.getChild());
+//            }
+//          }
+//          finally
+//          {
+//            rChildren.close();
+//          }
+//        }
+//
+//        if (!s.empty())
+//        {
+//          p = s.pop();
+//        }
+//        else
+//        {
+//          p = null;
+//        }
+//      } while (s.size() > 0 || p != null);
+//    }
+//    finally
+//    {
+//      exporter.close();
+//    }
+//  }
 }
