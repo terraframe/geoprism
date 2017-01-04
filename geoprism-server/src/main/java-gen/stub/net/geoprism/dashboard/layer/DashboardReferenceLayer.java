@@ -27,6 +27,7 @@ import net.geoprism.dashboard.Dashboard;
 import net.geoprism.dashboard.DashboardMap;
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.DashboardThematicStyle;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.wrapper.FeatureType;
 import net.geoprism.gis.wrapper.MapVisitor;
@@ -113,11 +114,13 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
           // geoentity label
           GeoEntityQuery geQ1 = new GeoEntityQuery(query);
           SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
-          label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+          label.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
+          label.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
           // geo id (for uniqueness)
           Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
-          geoId1.setColumnAlias(GeoEntity.GEOID);
+          geoId1.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+          geoId1.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
           // make sure the parent GeoEntity is of the proper Universal
           Universal universal = this.getUniversal();

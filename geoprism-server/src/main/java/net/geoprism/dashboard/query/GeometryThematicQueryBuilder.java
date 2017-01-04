@@ -87,8 +87,8 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
       throw new ProgrammingErrorException("Error exception");
     }
 
-    label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
-    label.setColumnAlias(GeoEntity.DISPLAYLABEL);
+    label.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
+    label.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
     return label;
   }
@@ -100,8 +100,8 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
     String attributeName = mdAttribute.definesAttribute();
 
     Selectable attribute = query.get(attributeName, GeoEntity.GEOID);
-    attribute.setUserDefinedAlias(GeoEntity.GEOID);
-    attribute.setColumnAlias(GeoEntity.GEOID);
+    attribute.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+    attribute.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
     return attribute;
   }

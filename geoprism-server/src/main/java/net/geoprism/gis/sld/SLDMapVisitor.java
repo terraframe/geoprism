@@ -41,7 +41,18 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.geoprism.dashboard.DashboardStyle;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
+import com.runwaysdk.transport.conversion.ConversionException;
+
 import net.geoprism.dashboard.DashboardThematicStyle;
 import net.geoprism.dashboard.condition.wrapper.And;
 import net.geoprism.dashboard.condition.wrapper.Category;
@@ -59,6 +70,7 @@ import net.geoprism.dashboard.condition.wrapper.NotEqual;
 import net.geoprism.dashboard.condition.wrapper.Or;
 import net.geoprism.dashboard.condition.wrapper.Primitive;
 import net.geoprism.dashboard.layer.CategoryIcon;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.gis.wrapper.AttributeType;
 import net.geoprism.gis.wrapper.FeatureStrategy;
@@ -71,20 +83,6 @@ import net.geoprism.gis.wrapper.Style;
 import net.geoprism.gis.wrapper.ThematicLayer;
 import net.geoprism.gis.wrapper.ThematicStyle;
 import net.geoprism.localization.LocalizationFacade;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.metadata.MdAttributeLongDAO;
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.transport.conversion.ConversionException;
 
 /**
  * Traverses an object graph of map Component objects and creates an SLD document.
@@ -283,15 +281,15 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 //        Node node = node(OGC, "Function").attr("name", "if_then_else").child(
 //            node(OGC, "Function").attr("name", "isNull").child(
 //                node(OGC, "PropertyName").text(tLayer.getAttribute().toLowerCase())).build(),
-//            node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+//            node(OGC, "PropertyName").text(ThematicQueryBuilder.LABEL_ALIAS.toLowerCase()).build(),
 //            node(OGC, "Function").attr("name", "Concatenate").child(
-//                node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+//                node(OGC, "PropertyName").text(ThematicQueryBuilder.LABEL_ALIAS.toLowerCase()).build(),
 //                node(OGC, "Literal").cdata(" ").build(),
 //                this.getPropertyValueNode(tLayer)
 ////                node(OGC, "Literal").text(")").build()
 //              ).build()).build();
         Node node = node(OGC, "Function").attr("name", "Concatenate").child(
-          node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build(),
+          node(OGC, "PropertyName").text(ThematicQueryBuilder.LABEL_ALIAS.toLowerCase()).build(),
           node(OGC, "Literal").cdata(" ").build(),
           this.getPropertyValueNode(tLayer)
         ).build();
@@ -300,7 +298,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       }
       else if (style.getEnableLabel())
       {
-        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(GeoEntity.DISPLAYLABEL.toLowerCase()).build() };
+        Node[] nodes = new Node[] { node(OGC, "PropertyName").text(ThematicQueryBuilder.LABEL_ALIAS.toLowerCase()).build() };
 
         return new TextSymbolizer(visitor, layer, style, nodes);
       }

@@ -26,6 +26,7 @@ import net.geoprism.dashboard.AggregationStrategyView;
 import net.geoprism.dashboard.AllAggregationType;
 import net.geoprism.dashboard.GeometryAggregationStrategy;
 import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
@@ -253,8 +254,8 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     geoLocation.setUserDefinedDisplayLabel(entityAttribute.getDisplayLabel().getValue());
 
     Selectable geoId = query.get(identifierAttribute.getAttributeName());
-    geoId.setColumnAlias(GeoEntity.GEOID);
-    geoId.setUserDefinedAlias(GeoEntity.GEOID);
+    geoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+    geoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
     geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
 
     SelectableSQLCharacter categoryLabel = vQuery.aSQLCharacter("categoryLabel", "'" + layer.getCategoryLabel(categoryId) + "'");
@@ -311,8 +312,8 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     geoLocation.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
 
     SelectableChar geoId = entityQuery.getGeoId();
-    geoId.setColumnAlias(GeoEntity.GEOID);
-    geoId.setUserDefinedAlias(GeoEntity.GEOID);
+    geoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+    geoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
     geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
 
     vQuery.SELECT(geoLocation, geoId);
