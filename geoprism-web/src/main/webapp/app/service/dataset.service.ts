@@ -18,7 +18,7 @@
 ///
 
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+import { Headers, Http, Response, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -32,10 +32,10 @@ declare var acp: any;
 @Injectable()
 export class DatasetService extends BasicService {
 
-  constructor(private http: EventHttpService) { super(); }
+  constructor(private http: Http, private ehttp: EventHttpService) { super(); }
 
   getDatasets(): Promise<Dataset[]> {
-    return this.http
+    return this.ehttp
       .get(acp + '/prism/datasets')
       .toPromise()
       .then(response => {
@@ -50,7 +50,7 @@ export class DatasetService extends BasicService {
       'Content-Type': 'application/json'
     });  
   
-    return this.http
+    return this.ehttp
       .post(acp + '/prism/edit-dataset', JSON.stringify({id:id}), {headers: headers})
       .toPromise()
       .then((response: any) => {
@@ -64,7 +64,7 @@ export class DatasetService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
       .post(acp + '/prism/unlock-dataset', JSON.stringify({id:dataset.id}), {headers: headers})
       .toPromise()
       .catch(this.handleError);
@@ -75,7 +75,7 @@ export class DatasetService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
     .post(acp + '/prism/apply-dataset', JSON.stringify({dataset:dataset}), {headers: headers})
     .toPromise() 
     .then((response: any) => {
@@ -89,9 +89,22 @@ export class DatasetService extends BasicService {
       'Content-Type': 'application/json'
     });  
   
-    return this.http
+    return this.ehttp
       .post(acp + '/prism/remove', JSON.stringify({id:dataset.id}), {headers: headers})
       .toPromise()
       .catch(this.handleError);
   }
+  
+      
+  validateDatasetName(name: string, id: string): Promise<Response> {
+	let params: URLSearchParams = new URLSearchParams();
+    params.set('name', name);
+    params.set('id', id);	  
+	  
+    return this.http
+      .get(acp + '/uploader/validateDatasetName', {search: params})
+      .toPromise()
+      .catch(this.handleError);      
+  }
+  
 }

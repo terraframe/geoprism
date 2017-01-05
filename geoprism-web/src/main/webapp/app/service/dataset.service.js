@@ -38,13 +38,14 @@ var basic_service_1 = require("./basic.service");
 var event_http_service_1 = require("./event-http.service");
 var DatasetService = (function (_super) {
     __extends(DatasetService, _super);
-    function DatasetService(http) {
+    function DatasetService(http, ehttp) {
         var _this = _super.call(this) || this;
         _this.http = http;
+        _this.ehttp = ehttp;
         return _this;
     }
     DatasetService.prototype.getDatasets = function () {
-        return this.http
+        return this.ehttp
             .get(acp + '/prism/datasets')
             .toPromise()
             .then(function (response) {
@@ -56,7 +57,7 @@ var DatasetService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/prism/edit-dataset', JSON.stringify({ id: id }), { headers: headers })
             .toPromise()
             .then(function (response) {
@@ -68,7 +69,7 @@ var DatasetService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/prism/unlock-dataset', JSON.stringify({ id: dataset.id }), { headers: headers })
             .toPromise()
             .catch(this.handleError);
@@ -77,7 +78,7 @@ var DatasetService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/prism/apply-dataset', JSON.stringify({ dataset: dataset }), { headers: headers })
             .toPromise()
             .then(function (response) {
@@ -89,8 +90,17 @@ var DatasetService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/prism/remove', JSON.stringify({ id: dataset.id }), { headers: headers })
+            .toPromise()
+            .catch(this.handleError);
+    };
+    DatasetService.prototype.validateDatasetName = function (name, id) {
+        var params = new http_1.URLSearchParams();
+        params.set('name', name);
+        params.set('id', id);
+        return this.http
+            .get(acp + '/uploader/validateDatasetName', { search: params })
             .toPromise()
             .catch(this.handleError);
     };
@@ -98,7 +108,7 @@ var DatasetService = (function (_super) {
 }(basic_service_1.BasicService));
 DatasetService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [event_http_service_1.EventHttpService])
+    __metadata("design:paramtypes", [http_1.Http, event_http_service_1.EventHttpService])
 ], DatasetService);
 exports.DatasetService = DatasetService;
 //# sourceMappingURL=dataset.service.js.map

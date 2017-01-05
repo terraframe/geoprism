@@ -32,6 +32,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
+var forms_1 = require("@angular/forms");
 require("rxjs/add/operator/switchMap");
 var dataset_1 = require("../model/dataset");
 var dataset_service_1 = require("../service/dataset.service");
@@ -56,9 +57,20 @@ var DatasetDetailComponent = (function () {
         this.route = route;
         this.location = location;
         this.close = new core_1.EventEmitter();
+        this.validName = true;
     }
     DatasetDetailComponent.prototype.ngOnInit = function () {
         this.dataset = this.route.snapshot.data['dataset'];
+    };
+    DatasetDetailComponent.prototype.validateName = function (name) {
+        var _this = this;
+        this.datasetService.validateDatasetName(name, this.dataset.id)
+            .then(function (response) {
+            _this.validName = true;
+        })
+            .catch(function (error) {
+            _this.validName = false;
+        });
     };
     DatasetDetailComponent.prototype.cancel = function () {
         var _this = this;
@@ -95,6 +107,10 @@ __decorate([
     core_1.Output(),
     __metadata("design:type", Object)
 ], DatasetDetailComponent.prototype, "close", void 0);
+__decorate([
+    core_1.ViewChild('form'),
+    __metadata("design:type", forms_1.NgForm)
+], DatasetDetailComponent.prototype, "form", void 0);
 DatasetDetailComponent = __decorate([
     core_1.Component({
         moduleId: module.id,

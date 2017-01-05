@@ -33,6 +33,7 @@ var http_1 = require("@angular/http");
 require("./rxjs-extensions");
 var app_component_1 = require("./app.component");
 var loading_bar_component_1 = require("./core/loading-bar.component");
+var error_message_component_1 = require("./core/error-message.component");
 var app_routing_module_1 = require("./app-routing.module");
 var dataset_service_1 = require("./service/dataset.service");
 var category_service_1 = require("./service/category.service");
@@ -54,6 +55,7 @@ AppModule = __decorate([
         declarations: [
             app_component_1.AppComponent,
             loading_bar_component_1.LoadingBarComponent,
+            error_message_component_1.ErrorMessageComponent,
             app_routing_module_1.routedComponents
         ],
         providers: [

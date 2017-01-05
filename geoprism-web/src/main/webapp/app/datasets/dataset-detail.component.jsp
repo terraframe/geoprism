@@ -21,31 +21,26 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
-  <form #datasetForm="ngForm" class="modal-form" (ngSubmit)="onSubmit()">    
+  <error-message [error]="error"></error-message>  
+
+  <form #form="ngForm" class="modal-form" (ngSubmit)="form.valid && validName && onSubmit()">    
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
           <h1><gdb:localize key="dataset.editTooltip"/></h1>
         </div>      
         <fieldset>            
-          <div class="row-holder" *ngIf="error != null">
-            <div class="label-holder">
-            </div>      
-            <div class="holder">
-              <div class="alert alertbox">
-                <p >{{error.localizedMessage}}</p>
-              </div>
-            </div>
-          </div>
-
           <div class="row-holder">
             <div class="label-holder">
               <label><gdb:localize key="dataset.label"/></label>
             </div>          
             <div class="holder" >
               <span class="text">
-                <input type="text" [(ngModel)]="dataset.label" name="label" required>
+                <input type="text" [ngClass]="{ 'ng-invalid' : !validName }" [(ngModel)]="dataset.label" name="label" required (blur)="validateName($event.target.value)">
               </span>
+              <div *ngIf="!validName" class="inline-error-message">
+                <gdb:localize key="dataUploader.unique"/>
+              </div>              
             </div>
           </div>
           <div class="row-holder">
@@ -97,7 +92,7 @@
             <div class="holder">
               <div class="button-holder">
                 <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" (click)="cancel()" />              
-                <input type="submit" value="<gdb:localize key="dataset.submit"/>" class="btn btn-primary" [disabled]="!datasetForm.form.valid" />
+                <input type="submit" value="<gdb:localize key="dataset.submit"/>" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
               </div>
             </div>
           </div>

@@ -21,6 +21,9 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
+
+  <error-message [error]="error"></error-message>
+  
   <form #form="ngForm" novalidate class="modal-form" (ngSubmit)="form.valid && onSubmit()">    
     <div class="modal-dialog">
       <div class="modal-content">
@@ -28,15 +31,6 @@
           <h1><gdb:localize key="category.management.editTooltip"/></h1>
         </div>
         <fieldset>
-          <div class="row-holder" *ngIf="error != null">
-            <div class="label-holder">
-            </div>
-            <div class="holder">
-              <div class="alert alertbox">
-                <p class="error-message">{{error.localizedMessage}}</p>
-              </div>
-            </div>
-          </div>
           <div class="row-holder">
             <div class="label-holder">
               <label><gdb:localize key="category.management.label"/></label>

@@ -26,6 +26,7 @@ import './rxjs-extensions';
 
 import { AppComponent } from './app.component';
 import { LoadingBarComponent } from './core/loading-bar.component';
+import { ErrorMessageComponent } from './core/error-message.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { DatasetService } from './service/dataset.service';
@@ -45,6 +46,7 @@ import { EventHttpService } from './service/event-http.service';
   declarations: [
     AppComponent,
     LoadingBarComponent,
+    ErrorMessageComponent,
     routedComponents
   ],
   providers: [

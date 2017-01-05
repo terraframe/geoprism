@@ -17,9 +17,10 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, Output, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { NgForm} from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -45,12 +46,14 @@ export class DatasetResolver implements Resolve<Dataset> {
 export class DatasetDetailComponent implements OnInit {
   @Input() dataset: Dataset;
   @Output() close = new EventEmitter();
-  
+  @ViewChild('form') public form: NgForm;
+
+  validName: boolean = true;
   error: any;
 
   constructor(
     private datasetService: DatasetService,
-    private router: Router,		  
+    private router: Router,      
     private route: ActivatedRoute,
     private location: Location) {
   }
@@ -59,18 +62,28 @@ export class DatasetDetailComponent implements OnInit {
     this.dataset = this.route.snapshot.data['dataset'];
   }
   
+  validateName(name: string) {
+    this.datasetService.validateDatasetName(name, this.dataset.id)
+      .then((response:any) => {
+        this.validName = true;
+      })
+     .catch((error:any) => {
+        this.validName = false;       
+     });        
+  }  
+  
   cancel(): void {
     this.datasetService.unlock(this.dataset)
      .then(response => {
-    	this.goBack(this.dataset);
-      })
-     .catch(error => this.error = error);	  
+       this.goBack(this.dataset);
+     })
+     .catch(error => this.error = error);    
   } 
   
   onSubmit(): void {
     this.datasetService.apply(this.dataset)
       .then(dataset => {
-    	this.goBack(dataset);
+        this.goBack(dataset);
       })
       .catch(error => {
         this.error = error;

@@ -25,16 +25,7 @@
 
   <h2> <gdb:localize key="dataset.title"/> </h2>
   
-  <div *ngIf="error" class="error-container">
-    <div class="label-holder">
-      <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
-    </div>
-    <div class="holder">
-      <div>
-        <p class="error-message">{{error}}</p>
-      </div>
-    </div>
-  </div>
+  <error-message [error]="error"></error-message>
   
   <div *ngIf="datasets === null">
     <gdb:localize key='dataset.loadingData'/>
