@@ -14,7 +14,7 @@
 /// GNU Lesser General Public License for more details.
 ///
 /// You should have received a copy of the GNU Lesser General Public
-/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+/// License along with Runway SDK(tm).  If not, see <ehttp://www.gnu.org/licenses/>.
 ///
 
 import { Injectable } from '@angular/core';
@@ -31,7 +31,7 @@ declare var acp: any;
 
 @Injectable()
 export class CategoryService extends BasicService {
-  constructor(private http: EventHttpService) { super(); }
+  constructor(private ehttp: EventHttpService, private http: Http) { super(); }
 //    
 //    service.createOption = function(connection, option) {
 //      var request = runwayService.createConnectionRequest(connection);
@@ -59,7 +59,7 @@ export class CategoryService extends BasicService {
   
 
   getAll(): Promise<Category[]> {
-    return this.http
+    return this.ehttp
       .get(acp + '/category/all')
       .toPromise()
       .then(response => {
@@ -73,7 +73,7 @@ export class CategoryService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
       .post(acp + '/category/edit', JSON.stringify({id:id}), { headers: headers })
       .toPromise()
       .then(response => {
@@ -87,7 +87,7 @@ export class CategoryService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
     .post(acp + '/category/get', JSON.stringify({id:id}), { headers: headers })
     .toPromise()
     .then(response => {
@@ -101,7 +101,7 @@ export class CategoryService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
       .post(acp + '/category/unlock', JSON.stringify({id:category.id}), { headers: headers })
       .toPromise()
       .catch(this.handleError);
@@ -112,7 +112,7 @@ export class CategoryService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
     .post(acp + '/category/apply', JSON.stringify({category:category}), { headers: headers })
     .toPromise()
     .then(response => {
@@ -126,7 +126,7 @@ export class CategoryService extends BasicService {
       'Content-Type': 'application/json'
     });    
     
-    return this.http
+    return this.ehttp
       .post(acp + '/category/remove', JSON.stringify({id:category.id}), { headers: headers })
       .toPromise()
       .catch(this.handleError);

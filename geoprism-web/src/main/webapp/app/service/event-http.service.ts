@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, RequestOptionsArgs, Response, ConnectionBackend } from '@angular/http';
+
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/finally';
 
 import { EventService } from './event.service';
 
@@ -14,11 +16,8 @@ export class EventHttpService extends Http {
   
   public get(url: string, options?: RequestOptionsArgs) : Observable<Response> {
     this.incrementRequestCount();
-    
-    var response = super.get(url, options);
-    response.subscribe(null, error => {
-      this.decrementRequestCount();
-    }, () => {
+   
+    var response = super.get(url, options).finally(() => {
       this.decrementRequestCount();
     });
     return response;
@@ -27,10 +26,7 @@ export class EventHttpService extends Http {
   public post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
     this.incrementRequestCount();
     
-    var response = super.post(url, body, options);
-    response.subscribe(null, error => {
-      this.decrementRequestCount();
-    }, () => {
+    var response = super.post(url, body, options).finally(() => {
       this.decrementRequestCount();
     });
     return response;    

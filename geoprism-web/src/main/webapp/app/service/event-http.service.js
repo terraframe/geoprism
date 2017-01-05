@@ -15,6 +15,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+require("rxjs/add/operator/finally");
 var event_service_1 = require("./event.service");
 var EventHttpService = (function (_super) {
     __extends(EventHttpService, _super);
@@ -27,10 +28,7 @@ var EventHttpService = (function (_super) {
     EventHttpService.prototype.get = function (url, options) {
         var _this = this;
         this.incrementRequestCount();
-        var response = _super.prototype.get.call(this, url, options);
-        response.subscribe(null, function (error) {
-            _this.decrementRequestCount();
-        }, function () {
+        var response = _super.prototype.get.call(this, url, options).finally(function () {
             _this.decrementRequestCount();
         });
         return response;
@@ -38,10 +36,7 @@ var EventHttpService = (function (_super) {
     EventHttpService.prototype.post = function (url, body, options) {
         var _this = this;
         this.incrementRequestCount();
-        var response = _super.prototype.post.call(this, url, body, options);
-        response.subscribe(null, function (error) {
-            _this.decrementRequestCount();
-        }, function () {
+        var response = _super.prototype.post.call(this, url, body, options).finally(function () {
             _this.decrementRequestCount();
         });
         return response;

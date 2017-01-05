@@ -14,7 +14,7 @@
 /// GNU Lesser General Public License for more details.
 ///
 /// You should have received a copy of the GNU Lesser General Public
-/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+/// License along with Runway SDK(tm).  If not, see <ehttp://www.gnu.org/licenses/>.
 ///
 "use strict";
 var __extends = (this && this.__extends) || function (d, b) {
@@ -38,8 +38,9 @@ var basic_service_1 = require("./basic.service");
 var event_http_service_1 = require("./event-http.service");
 var CategoryService = (function (_super) {
     __extends(CategoryService, _super);
-    function CategoryService(http) {
+    function CategoryService(ehttp, http) {
         var _this = _super.call(this) || this;
+        _this.ehttp = ehttp;
         _this.http = http;
         return _this;
     }
@@ -68,7 +69,7 @@ var CategoryService = (function (_super) {
     //      net.geoprism.ontology.ClassifierController.updateCategory(request, category);
     //    }
     CategoryService.prototype.getAll = function () {
-        return this.http
+        return this.ehttp
             .get(acp + '/category/all')
             .toPromise()
             .then(function (response) {
@@ -80,7 +81,7 @@ var CategoryService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/category/edit', JSON.stringify({ id: id }), { headers: headers })
             .toPromise()
             .then(function (response) {
@@ -92,7 +93,7 @@ var CategoryService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/category/get', JSON.stringify({ id: id }), { headers: headers })
             .toPromise()
             .then(function (response) {
@@ -104,7 +105,7 @@ var CategoryService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/category/unlock', JSON.stringify({ id: category.id }), { headers: headers })
             .toPromise()
             .catch(this.handleError);
@@ -113,7 +114,7 @@ var CategoryService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/category/apply', JSON.stringify({ category: category }), { headers: headers })
             .toPromise()
             .then(function (response) {
@@ -125,7 +126,7 @@ var CategoryService = (function (_super) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        return this.http
+        return this.ehttp
             .post(acp + '/category/remove', JSON.stringify({ id: category.id }), { headers: headers })
             .toPromise()
             .catch(this.handleError);
@@ -143,7 +144,7 @@ var CategoryService = (function (_super) {
 }(basic_service_1.BasicService));
 CategoryService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [event_http_service_1.EventHttpService])
+    __metadata("design:paramtypes", [event_http_service_1.EventHttpService, http_1.Http])
 ], CategoryService);
 exports.CategoryService = CategoryService;
 //# sourceMappingURL=category.service.js.map
