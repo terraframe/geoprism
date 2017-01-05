@@ -21,6 +21,8 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div id="innerFrameHtml">
+    <loading-bar></loading-bar>
+    
     <!-- HEADER AND NAVBAR -->
     <header>
       <nav class="navbar navbar-default">

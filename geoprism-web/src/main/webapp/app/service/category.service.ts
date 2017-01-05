@@ -23,6 +23,7 @@ import { Headers, Http, Response, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { BasicService } from './basic.service';
+import { EventHttpService } from './event-http.service';
 
 import { Category } from '../model/category';
 
@@ -30,7 +31,7 @@ declare var acp: any;
 
 @Injectable()
 export class CategoryService extends BasicService {
-  constructor(private http: Http) { super(); }
+  constructor(private http: EventHttpService) { super(); }
 //    
 //    service.createOption = function(connection, option) {
 //      var request = runwayService.createConnectionRequest(connection);

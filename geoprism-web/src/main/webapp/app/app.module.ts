@@ -20,13 +20,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule} from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 
 import './rxjs-extensions';
+
 import { AppComponent } from './app.component';
+import { LoadingBarComponent } from './core/loading-bar.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
+
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
+import { EventService } from './service/event.service';
+
+import { EventHttpService } from './service/event-http.service';
+
 
 @NgModule({
   imports: [
@@ -37,11 +44,20 @@ import { CategoryService } from './service/category.service';
   ],
   declarations: [
     AppComponent,
+    LoadingBarComponent,
     routedComponents
   ],
   providers: [
     DatasetService,
-    CategoryService
+    CategoryService,
+    EventService,
+    { 
+      provide : EventHttpService,
+      useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions, service: EventService) => {
+        return new EventHttpService(xhrBackend, requestOptions, service)
+      },
+      deps: [XHRBackend, RequestOptions, EventService]
+    }   
   ],
   bootstrap: [AppComponent]
 })

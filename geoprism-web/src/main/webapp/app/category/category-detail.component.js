@@ -1,21 +1,21 @@
-/*
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
+///
+/// Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+///
+/// This file is part of Runway SDK(tm).
+///
+/// Runway SDK(tm) is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Lesser General Public License as
+/// published by the Free Software Foundation, either version 3 of the
+/// License, or (at your option) any later version.
+///
+/// Runway SDK(tm) is distributed in the hope that it will be useful, but
+/// WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Lesser General Public License for more details.
+///
+/// You should have received a copy of the GNU Lesser General Public
+/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+///
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -29,12 +29,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var core_1 = require('@angular/core');
-var router_1 = require('@angular/router');
-var common_1 = require('@angular/common');
-require('rxjs/add/operator/switchMap');
-var category_1 = require('../model/category');
-var category_service_1 = require('../service/category.service');
+var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
+var common_1 = require("@angular/common");
+require("rxjs/add/operator/switchMap");
+var category_1 = require("../model/category");
+var category_service_1 = require("../service/category.service");
 var CategoryResolver = (function () {
     function CategoryResolver(categoryService) {
         this.categoryService = categoryService;
@@ -42,12 +42,12 @@ var CategoryResolver = (function () {
     CategoryResolver.prototype.resolve = function (route, state) {
         return this.categoryService.get(route.params['id']);
     };
-    CategoryResolver = __decorate([
-        __param(0, core_1.Inject(category_service_1.CategoryService)), 
-        __metadata('design:paramtypes', [category_service_1.CategoryService])
-    ], CategoryResolver);
     return CategoryResolver;
 }());
+CategoryResolver = __decorate([
+    __param(0, core_1.Inject(category_service_1.CategoryService)),
+    __metadata("design:paramtypes", [category_service_1.CategoryService])
+], CategoryResolver);
 exports.CategoryResolver = CategoryResolver;
 var Instance = (function () {
     function Instance() {
@@ -81,24 +81,26 @@ var CategoryDetailComponent = (function () {
         this.close.emit(category);
         this.location.back();
     };
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', category_1.Category)
-    ], CategoryDetailComponent.prototype, "category", void 0);
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], CategoryDetailComponent.prototype, "close", void 0);
-    CategoryDetailComponent = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'category-detail',
-            templateUrl: 'category-detail.component.jsp',
-            styleUrls: []
-        }), 
-        __metadata('design:paramtypes', [category_service_1.CategoryService, router_1.ActivatedRoute, common_1.Location])
-    ], CategoryDetailComponent);
     return CategoryDetailComponent;
 }());
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", category_1.Category)
+], CategoryDetailComponent.prototype, "category", void 0);
+__decorate([
+    core_1.Output(),
+    __metadata("design:type", Object)
+], CategoryDetailComponent.prototype, "close", void 0);
+CategoryDetailComponent = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'category-detail',
+        templateUrl: 'category-detail.component.jsp',
+        styleUrls: []
+    }),
+    __metadata("design:paramtypes", [category_service_1.CategoryService,
+        router_1.ActivatedRoute,
+        common_1.Location])
+], CategoryDetailComponent);
 exports.CategoryDetailComponent = CategoryDetailComponent;
 //# sourceMappingURL=category-detail.component.js.map

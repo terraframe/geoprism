@@ -23,6 +23,7 @@ import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { BasicService } from './basic.service';
+import { EventHttpService } from './event-http.service';
 
 import { Dataset } from '../model/dataset';
 
@@ -30,7 +31,8 @@ declare var acp: any;
 
 @Injectable()
 export class DatasetService extends BasicService {
-  constructor(private http: Http) { super(); }
+
+  constructor(private http: EventHttpService) { super(); }
 
   getDatasets(): Promise<Dataset[]> {
     return this.http
@@ -43,14 +45,15 @@ export class DatasetService extends BasicService {
   }
   
   edit(id : string): Promise<Dataset> {
+
     let headers = new Headers({
       'Content-Type': 'application/json'
-    });	  
-	  
+    });  
+  
     return this.http
-      .post(acp + '/prism/edit-dataset', JSON.stringify({id:id}), { headers: headers })
+      .post(acp + '/prism/edit-dataset', JSON.stringify({id:id}), {headers: headers})
       .toPromise()
-      .then(response => {
+      .then((response: any) => {
         return response.json() as Dataset;
       })      
       .catch(this.handleError);
@@ -62,7 +65,7 @@ export class DatasetService extends BasicService {
     });    
     
     return this.http
-      .post(acp + '/prism/unlock-dataset', JSON.stringify({id:dataset.id}), { headers: headers })
+      .post(acp + '/prism/unlock-dataset', JSON.stringify({id:dataset.id}), {headers: headers})
       .toPromise()
       .catch(this.handleError);
   }
@@ -73,9 +76,9 @@ export class DatasetService extends BasicService {
     });    
     
     return this.http
-    .post(acp + '/prism/apply-dataset', JSON.stringify({dataset:dataset}), { headers: headers })
-    .toPromise()
-    .then(response => {
+    .post(acp + '/prism/apply-dataset', JSON.stringify({dataset:dataset}), {headers: headers})
+    .toPromise() 
+    .then((response: any) => {
       return response.json() as Dataset;
     })          
     .catch(this.handleError);
@@ -84,10 +87,10 @@ export class DatasetService extends BasicService {
   remove(dataset: Dataset): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
-    });	  
-	  
+    });  
+  
     return this.http
-      .post(acp + '/prism/remove', JSON.stringify({id:dataset.id}), { headers: headers })
+      .post(acp + '/prism/remove', JSON.stringify({id:dataset.id}), {headers: headers})
       .toPromise()
       .catch(this.handleError);
   }

@@ -48,15 +48,16 @@ System.config({
     '@angular/upgrade': 'npm:@angular/upgrade/bundles/upgrade.umd.js',
 
     // other libraries
-    'rxjs':                      'npm:rxjs',
-    'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+    'rxjs': 'npm:rxjs',
+    'ng2-slim-loading-bar': 'npm:ng2-slim-loading-bar/bundles/index.umd.js'    
   },
   // packages tells the System loader how to load when no filename and/or no extension
   packages: {
     'app': { main: './main.js', defaultExtension: 'js' },
     'api' : { defaultExtension : 'js' },
     'rxjs': { defaultExtension: 'js' },
- 
+//    'ng2-slim-loading-bar':  { defaultExtension: 'js' }, 
+    
     // barrels
     // 'app/core':   { main: 'index'},
     // 'app/models': { main: 'index'},
