@@ -24,23 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import net.geoprism.data.etl.DefinitionBuilder;
-import net.geoprism.data.etl.ExcelSourceBinding;
-import net.geoprism.data.etl.ImportResponseIF;
-import net.geoprism.data.etl.ImportRunnable;
-import net.geoprism.data.etl.SourceDefinitionIF;
-import net.geoprism.data.etl.TargetDefinitionIF;
-import net.geoprism.data.etl.excel.ExcelDataFormatter;
-import net.geoprism.data.etl.excel.ExcelSheetReader;
-import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
-import net.geoprism.data.etl.excel.InvalidExcelFileException;
-import net.geoprism.data.importer.SeedKeyGenerator;
-import net.geoprism.gis.geoserver.SessionPredicate;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierSynonym;
-import net.geoprism.ontology.GeoEntityUtil;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.json.JSONArray;
@@ -66,6 +49,25 @@ import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdClassQuery;
+
+import net.geoprism.data.etl.DefinitionBuilder;
+import net.geoprism.data.etl.ExcelSourceBinding;
+import net.geoprism.data.etl.ImportResponseIF;
+import net.geoprism.data.etl.ImportRunnable;
+import net.geoprism.data.etl.LoggingProgressMonitor;
+import net.geoprism.data.etl.ProgressMonitorIF;
+import net.geoprism.data.etl.SourceDefinitionIF;
+import net.geoprism.data.etl.TargetDefinitionIF;
+import net.geoprism.data.etl.excel.ExcelDataFormatter;
+import net.geoprism.data.etl.excel.ExcelSheetReader;
+import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
+import net.geoprism.data.etl.excel.InvalidExcelFileException;
+import net.geoprism.data.importer.SeedKeyGenerator;
+import net.geoprism.gis.geoserver.SessionPredicate;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -292,8 +294,9 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
       File file = new File(directory, filename);
+      ProgressMonitorIF monitor = new LoggingProgressMonitor(file.getName());
 
-      ImportResponseIF response = new ImportRunnable(configuration, file).run();
+      ImportResponseIF response = new ImportRunnable(configuration, file, monitor).run();
 
       if (!response.hasProblems())
       {
