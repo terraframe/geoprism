@@ -32,7 +32,7 @@ export class CategoryResolver implements Resolve<Category> {
   constructor(@Inject(CategoryService) private categoryService: CategoryService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Category> {
-    return this.categoryService.get(route.params['id'] + 'zz')
+    return this.categoryService.get(route.params['id'])
       .catch((error:any) => {
         this.eventService.onError(error); 
     	  
