@@ -35,19 +35,26 @@ var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 require("rxjs/add/operator/switchMap");
 var dataset_1 = require("../model/dataset");
+var core_service_1 = require("../service/core.service");
 var dataset_service_1 = require("../service/dataset.service");
 var DatasetResolver = (function () {
-    function DatasetResolver(datasetService) {
+    function DatasetResolver(datasetService, eventService) {
         this.datasetService = datasetService;
+        this.eventService = eventService;
     }
     DatasetResolver.prototype.resolve = function (route, state) {
-        return this.datasetService.edit(route.params['id']);
+        var _this = this;
+        return this.datasetService.edit(route.params['id'])
+            .catch(function (error) {
+            _this.eventService.onError(error);
+            return Promise.reject(error);
+        });
     };
     return DatasetResolver;
 }());
 DatasetResolver = __decorate([
-    __param(0, core_1.Inject(dataset_service_1.DatasetService)),
-    __metadata("design:paramtypes", [dataset_service_1.DatasetService])
+    __param(0, core_1.Inject(dataset_service_1.DatasetService)), __param(1, core_1.Inject(core_service_1.EventService)),
+    __metadata("design:paramtypes", [dataset_service_1.DatasetService, core_service_1.EventService])
 ], DatasetResolver);
 exports.DatasetResolver = DatasetResolver;
 var DatasetDetailComponent = (function () {
@@ -77,17 +84,13 @@ var DatasetDetailComponent = (function () {
         this.datasetService.unlock(this.dataset)
             .then(function (response) {
             _this.goBack(_this.dataset);
-        })
-            .catch(function (error) { return _this.error = error; });
+        });
     };
     DatasetDetailComponent.prototype.onSubmit = function () {
         var _this = this;
         this.datasetService.apply(this.dataset)
             .then(function (dataset) {
             _this.goBack(dataset);
-        })
-            .catch(function (error) {
-            _this.error = error;
         });
     };
     DatasetDetailComponent.prototype.open = function (category, event) {

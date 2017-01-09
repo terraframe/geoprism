@@ -35,18 +35,25 @@ var common_1 = require("@angular/common");
 require("rxjs/add/operator/switchMap");
 var category_1 = require("../model/category");
 var category_service_1 = require("../service/category.service");
+var core_service_1 = require("../service/core.service");
 var CategoryResolver = (function () {
-    function CategoryResolver(categoryService) {
+    function CategoryResolver(categoryService, eventService) {
         this.categoryService = categoryService;
+        this.eventService = eventService;
     }
     CategoryResolver.prototype.resolve = function (route, state) {
-        return this.categoryService.get(route.params['id']);
+        var _this = this;
+        return this.categoryService.get(route.params['id'] + 'zz')
+            .catch(function (error) {
+            _this.eventService.onError(error);
+            return Promise.reject(error);
+        });
     };
     return CategoryResolver;
 }());
 CategoryResolver = __decorate([
-    __param(0, core_1.Inject(category_service_1.CategoryService)),
-    __metadata("design:paramtypes", [category_service_1.CategoryService])
+    __param(0, core_1.Inject(category_service_1.CategoryService)), __param(1, core_1.Inject(core_service_1.EventService)),
+    __metadata("design:paramtypes", [category_service_1.CategoryService, core_service_1.EventService])
 ], CategoryResolver);
 exports.CategoryResolver = CategoryResolver;
 var Instance = (function () {
@@ -69,17 +76,39 @@ var CategoryDetailComponent = (function () {
     };
     CategoryDetailComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.categoryService.apply(this.category)
+        this.categoryService.update(this.category)
             .then(function (category) {
             _this.goBack(category);
-        })
-            .catch(function (error) {
-            _this.error = error;
         });
     };
     CategoryDetailComponent.prototype.goBack = function (category) {
         this.close.emit(category);
         this.location.back();
+    };
+    CategoryDetailComponent.prototype.newInstance = function () {
+        this.instance.active = true;
+    };
+    CategoryDetailComponent.prototype.create = function () {
+        var _this = this;
+        this.categoryService.create(this.instance.label, this.category.id)
+            .then(function (category) {
+            _this.category.descendants.push(category);
+            _this.instance.active = false;
+            _this.instance.label = '';
+        });
+    };
+    CategoryDetailComponent.prototype.cancel = function () {
+        this.instance.active = false;
+        this.instance.label = '';
+    };
+    CategoryDetailComponent.prototype.remove = function (descendant) {
+        var _this = this;
+        if (confirm('Are you sure you want to delete this?')) {
+            this.categoryService.remove(descendant)
+                .then(function (response) {
+                _this.category.descendants = _this.category.descendants.filter(function (h) { return h !== descendant; });
+            });
+        }
     };
     return CategoryDetailComponent;
 }());

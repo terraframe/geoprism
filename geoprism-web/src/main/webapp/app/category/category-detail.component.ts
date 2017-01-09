@@ -24,20 +24,26 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { Category } from '../model/category';
+import { Category, BasicCategory } from '../model/category';
 import { CategoryService } from '../service/category.service';
+import { EventService } from '../service/core.service';
 
 export class CategoryResolver implements Resolve<Category> {
-  constructor(@Inject(CategoryService) private categoryService: CategoryService) {}
+  constructor(@Inject(CategoryService) private categoryService: CategoryService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Category> {
-    return this.categoryService.get(route.params['id']);
+    return this.categoryService.get(route.params['id'] + 'zz')
+      .catch((error:any) => {
+        this.eventService.onError(error); 
+    	  
+        return Promise.reject(error);
+      });
   }
 }
 
 class Instance {
   active: boolean;
-  label: string; 	
+  label: string;   
 }
 
 @Component({
@@ -51,8 +57,6 @@ export class CategoryDetailComponent implements OnInit {
   @Output() close = new EventEmitter();
   
   instance : Instance = new Instance();  
-  
-  error: any;
 
   constructor(
     private categoryService: CategoryService,
@@ -68,13 +72,10 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   onSubmit(): void {
-    this.categoryService.apply(this.category)
+    this.categoryService.update(this.category)
       .then(category => {
-    	this.goBack(category);
-      })
-      .catch(error => {
-        this.error = error;
-      });        
+        this.goBack(category);
+      });
   }
   
   goBack(category : Category): void {
@@ -82,4 +83,32 @@ export class CategoryDetailComponent implements OnInit {
     
     this.location.back();
   }
+  
+  newInstance() : void {
+    this.instance.active = true;
+  }
+  
+  create() : void {
+    this.categoryService.create(this.instance.label, this.category.id)
+      .then((category:BasicCategory) => {
+        this.category.descendants.push(category);
+        
+        this.instance.active = false;
+        this.instance.label = '';
+      });
+  }
+  
+  cancel(): void {
+    this.instance.active = false;
+    this.instance.label = '';
+  }
+  
+  remove(descendant: BasicCategory) {
+    if(confirm('Are you sure you want to delete this?')) {
+      this.categoryService.remove(descendant)
+       .then((response:any) => {
+         this.category.descendants = this.category.descendants.filter(h => h !== descendant);        
+       });
+    }
+  }  
 }

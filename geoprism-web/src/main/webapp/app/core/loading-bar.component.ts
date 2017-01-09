@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { EventService, IHttpEventListener } from '../service/event.service';
+import { EventService, IEventListener } from '../service/core.service';
 
 @Component({
   moduleId: module.id,
@@ -8,7 +8,7 @@ import { EventService, IHttpEventListener } from '../service/event.service';
   templateUrl: 'loading-bar.component.jsp',
   styleUrls: []
 })
-export class LoadingBarComponent implements OnInit, IHttpEventListener {
+export class LoadingBarComponent implements OnInit, IEventListener {
   showIndicator: boolean = false;
 
   constructor(private service: EventService) { }
@@ -28,4 +28,8 @@ export class LoadingBarComponent implements OnInit, IHttpEventListener {
   complete(): void {
     this.showIndicator = false;    
   }  
+  
+  onError(error:any): void {
+    console.log('error');
+  }
 }

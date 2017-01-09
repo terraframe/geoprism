@@ -22,7 +22,7 @@
 
 <div *ngIf="error" class="error-container">
   <div class="label-holder">
-    <strong style="color: #8c0000;"><gdb:localize key='dashboard.errorsLabel'/></strong>
+    <strong><gdb:localize key='dashboard.errorsLabel'/></strong>
   </div>
   <div class="holder">
     <div>

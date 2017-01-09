@@ -26,14 +26,21 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { Dataset } from '../model/dataset';
-import { BasicCategory } from '../model/basic-category';
+import { BasicCategory } from '../model/category';
+
+import { EventService } from '../service/core.service';
 import { DatasetService } from '../service/dataset.service';
 
 export class DatasetResolver implements Resolve<Dataset> {
-  constructor(@Inject(DatasetService) private datasetService: DatasetService) {}
+  constructor(@Inject(DatasetService) private datasetService: DatasetService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Dataset> {
-    return this.datasetService.edit(route.params['id']);
+    return this.datasetService.edit(route.params['id'])
+      .catch((error:any) => {
+        this.eventService.onError(error); 
+    	  
+        return Promise.reject(error);
+      });    
   }
 }
 
@@ -49,7 +56,6 @@ export class DatasetDetailComponent implements OnInit {
   @ViewChild('form') public form: NgForm;
 
   validName: boolean = true;
-  error: any;
 
   constructor(
     private datasetService: DatasetService,
@@ -77,7 +83,6 @@ export class DatasetDetailComponent implements OnInit {
      .then(response => {
        this.goBack(this.dataset);
      })
-     .catch(error => this.error = error);    
   } 
   
   onSubmit(): void {
@@ -85,9 +90,6 @@ export class DatasetDetailComponent implements OnInit {
       .then(dataset => {
         this.goBack(dataset);
       })
-      .catch(error => {
-        this.error = error;
-      });        
   }
   
   open(category: BasicCategory, event: any) : void {

@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { BasicCategory } from './basic-category';
+import { BasicCategory } from '../model/category';
 
 export class DatasetAttribute { 
   id: string;

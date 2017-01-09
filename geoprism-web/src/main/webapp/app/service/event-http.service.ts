@@ -4,7 +4,7 @@ import { Http, RequestOptions, RequestOptionsArgs, Response, ConnectionBackend }
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
-import { EventService } from './event.service';
+import { EventService } from './core.service';
 
 @Injectable()
 export class EventHttpService extends Http {

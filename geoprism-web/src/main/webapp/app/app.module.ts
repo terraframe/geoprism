@@ -31,7 +31,7 @@ import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
-import { EventService } from './service/event.service';
+import { EventService } from './service/core.service';
 
 import { EventHttpService } from './service/event-http.service';
 

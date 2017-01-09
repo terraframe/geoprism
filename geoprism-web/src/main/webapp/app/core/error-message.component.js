@@ -10,36 +10,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var core_service_1 = require("../service/core.service");
-var LoadingBarComponent = (function () {
-    function LoadingBarComponent(service) {
+var ErrorMessageComponent = (function () {
+    function ErrorMessageComponent(service) {
         this.service = service;
-        this.showIndicator = false;
+        this.error = null;
     }
-    LoadingBarComponent.prototype.ngOnInit = function () {
+    ErrorMessageComponent.prototype.ngOnInit = function () {
         this.service.registerListener(this);
     };
-    LoadingBarComponent.prototype.ngOnDestroy = function () {
+    ErrorMessageComponent.prototype.ngOnDestroy = function () {
         this.service.deregisterListener(this);
     };
-    LoadingBarComponent.prototype.start = function () {
-        this.showIndicator = true;
+    ErrorMessageComponent.prototype.start = function () {
+        this.error = null;
     };
-    LoadingBarComponent.prototype.complete = function () {
-        this.showIndicator = false;
+    ErrorMessageComponent.prototype.complete = function () {
+        console.log('complete');
     };
-    LoadingBarComponent.prototype.onError = function (error) {
-        console.log('error');
+    ErrorMessageComponent.prototype.onError = function (error) {
+        this.error = error;
     };
-    return LoadingBarComponent;
+    return ErrorMessageComponent;
 }());
-LoadingBarComponent = __decorate([
+ErrorMessageComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'loading-bar',
-        templateUrl: 'loading-bar.component.jsp',
-        styleUrls: []
+        selector: 'error-message',
+        templateUrl: 'error-message.component.jsp',
+        styleUrls: ['error-message.component.css']
     }),
     __metadata("design:paramtypes", [core_service_1.EventService])
-], LoadingBarComponent);
-exports.LoadingBarComponent = LoadingBarComponent;
-//# sourceMappingURL=loading-bar.component.js.map
+], ErrorMessageComponent);
+exports.ErrorMessageComponent = ErrorMessageComponent;
+//# sourceMappingURL=error-message.component.js.map

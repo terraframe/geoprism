@@ -22,42 +22,21 @@ import { Headers, Http, Response, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { BasicService } from './basic.service';
+import { EventService, BasicService } from './core.service';
+
 import { EventHttpService } from './event-http.service';
 
-import { Category } from '../model/category';
+import { Category, BasicCategory } from '../model/category';
 
 declare var acp: any;
 
 @Injectable()
 export class CategoryService extends BasicService {
-  constructor(private ehttp: EventHttpService, private http: Http) { super(); }
-//    
-//    service.createOption = function(connection, option) {
-//      var request = runwayService.createConnectionRequest(connection);
-//      
-//      net.geoprism.ontology.ClassifierController.createOption(request, option);
-//    }
-//    
-//    service.deleteOption = function(connection, id) {
-//      var request = runwayService.createConnectionRequest(connection);
-//      
-//      net.geoprism.ontology.ClassifierController.deleteOption(request, id);
-//    }
-//    
-//    service.applyOption = function(connection, config) {
-//      var request = runwayService.createConnectionRequest(connection);
-//      
-//      net.geoprism.ontology.ClassifierController.applyOption(request, config);
-//    }
-//    
-//    service.updateCategory = function(connection, category) {
-//      var request = runwayService.createConnectionRequest(connection);
-//      
-//      net.geoprism.ontology.ClassifierController.updateCategory(request, category);
-//    }
+	
+  constructor(service: EventService, private ehttp: EventHttpService, private http: Http) {
+    super(service); 
+  }
   
-
   getAll(): Promise<Category[]> {
     return this.ehttp
       .get(acp + '/category/all')
@@ -92,8 +71,7 @@ export class CategoryService extends BasicService {
     .toPromise()
     .then(response => {
       return response.json() as Category;
-    })      
-    .catch(this.handleError);
+    });
   }
   
   unlock(category: Category): Promise<Response> {
@@ -121,10 +99,10 @@ export class CategoryService extends BasicService {
     .catch(this.handleError);
   }
   
-  remove(category: Category): Promise<Response> {
+  remove(category: BasicCategory): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
-    });    
+    });
     
     return this.ehttp
       .post(acp + '/category/remove', JSON.stringify({id:category.id}), { headers: headers })
@@ -142,6 +120,37 @@ export class CategoryService extends BasicService {
       .get(acp + '/category/validate', params)
       .toPromise()
       .catch(this.handleError);
+  }
+  
+    
+  create(label: string, parentId: string): Promise<BasicCategory> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });    
+    
+    let option = {label:label, parentId:parentId, validate:false};
+    
+    return this.ehttp
+    .post(acp + '/category/create', JSON.stringify({option:option}), { headers: headers })
+    .toPromise()
+    .then((response:any) => {
+      return response.json() as BasicCategory;
+    })          
+    .catch(this.handleError);
+  }
+  
+  update(category:Category): Promise<Category> {
+	  let headers = new Headers({
+		  'Content-Type': 'application/json'
+	  });    
+	  
+	  return this.ehttp
+	  .post(acp + '/category/update', JSON.stringify({category:category}), { headers: headers })
+	  .toPromise()
+	  .then((response:any) => {
+		  return response.json() as BasicCategory;
+	  })          
+	  .catch(this.handleError);
   }
   
 }

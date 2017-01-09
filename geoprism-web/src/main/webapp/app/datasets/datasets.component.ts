@@ -31,7 +31,6 @@ import { DatasetService } from '../service/dataset.service';
 })
 export class DatasetsComponent implements OnInit {
   datasets: Dataset[];
-  error: any;
 
   constructor(
     private router: Router,
@@ -43,7 +42,6 @@ export class DatasetsComponent implements OnInit {
       .then(datasets => {
         this.datasets = datasets    	  
       })
-      .catch(error => this.error = error);
   }
   
   remove(dataset: Dataset, event: any) : void {
@@ -52,7 +50,6 @@ export class DatasetsComponent implements OnInit {
       .then(response => {
         this.datasets = this.datasets.filter(h => h !== dataset);    	  
       })
-      .catch(error => this.error = error);	  
   }
   
   edit(dataset: Dataset, event: any) : void {

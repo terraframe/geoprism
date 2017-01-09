@@ -22,7 +22,7 @@ import { Headers, Http, Response, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { BasicService } from './basic.service';
+import { EventService, BasicService } from './core.service';
 import { EventHttpService } from './event-http.service';
 
 import { Dataset } from '../model/dataset';
@@ -32,7 +32,7 @@ declare var acp: any;
 @Injectable()
 export class DatasetService extends BasicService {
 
-  constructor(private http: Http, private ehttp: EventHttpService) { super(); }
+  constructor(service: EventService, private ehttp: EventHttpService, private http: Http) { super(service); }
 
   getDatasets(): Promise<Dataset[]> {
     return this.ehttp
@@ -56,7 +56,6 @@ export class DatasetService extends BasicService {
       .then((response: any) => {
         return response.json() as Dataset;
       })      
-      .catch(this.handleError);
   }
   
   unlock(dataset: Dataset): Promise<Response> {

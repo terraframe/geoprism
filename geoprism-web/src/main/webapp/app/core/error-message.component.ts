@@ -1,15 +1,36 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
+import { EventService, IEventListener } from '../service/core.service';
 
 @Component({
   moduleId: module.id,
   selector: 'error-message',
   templateUrl: 'error-message.component.jsp',
-  styleUrls: []
+  styleUrls: ['error-message.component.css']
 })
-export class ErrorMessageComponent {
-
-  @Input('error') error: any;
+export class ErrorMessageComponent implements OnInit, IEventListener {
 	
-  constructor() { }
+  private error: any = null;
+
+  constructor(private service: EventService) { }
+
+  ngOnInit(): void {
+    this.service.registerListener(this);
+  }
+  
+  ngOnDestroy(): void {
+    this.service.deregisterListener(this);
+  }
+  
+  start(): void {
+    this.error = null;
+  }
+  
+  complete(): void {
+    console.log('complete');
+  }  
+  
+  onError(error: any): void {
+    this.error = error;
+  }
 }

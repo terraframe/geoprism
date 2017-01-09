@@ -22,7 +22,7 @@
 
 <div>
 
-  <error-message [error]="error"></error-message>
+  <error-message></error-message>
   
   <form #form="ngForm" novalidate class="modal-form" (ngSubmit)="form.valid && onSubmit()">    
     <div class="modal-dialog">
@@ -59,8 +59,8 @@
                   <tbody>
                     <tr *ngFor="let descendant of category.descendants" class="fade-ngRepeat-item">
                       <td class="button-column">
-                        <a class="fa fa-pencil ico-edit" ng-click="edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
-                        <a class="fa fa-trash-o ico-remove" ng-click="remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
+                        <a class="fa fa-pencil ico-edit" (click)="edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
+                        <a class="fa fa-trash-o ico-remove" (click)="remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
                       </td>
                       <td class="label-column">{{descendant.label}}</td>
                     </tr>
@@ -69,7 +69,9 @@
                         <a class="fa fa-plus" *ngIf="!instance.active" (click)="newInstance()" title="<gdb:localize key="category.management.createCategoryOptionTooltip"/>"></a>
                       </td>
                       <td class="submit-form" *ngIf="instance.active">
-                        <input class="list-table-input" type="text" [(ngModel)]="instance.label" (keyup)="onKey($event)" />
+                        <form #childForm="ngForm" novalidate (ngSubmit)="childForm.valid && create()">
+                          <input class="list-table-input" type="text" [(ngModel)]="instance.label" name="descendant-label" (keyup.esc)="cancel()" required />
+                        </form>                      
                       </td>
                     </tr>
                   </tbody>

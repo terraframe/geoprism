@@ -40,8 +40,7 @@ var DatasetsComponent = (function () {
             .getDatasets()
             .then(function (datasets) {
             _this.datasets = datasets;
-        })
-            .catch(function (error) { return _this.error = error; });
+        });
     };
     DatasetsComponent.prototype.remove = function (dataset, event) {
         var _this = this;
@@ -49,8 +48,7 @@ var DatasetsComponent = (function () {
             .remove(dataset)
             .then(function (response) {
             _this.datasets = _this.datasets.filter(function (h) { return h !== dataset; });
-        })
-            .catch(function (error) { return _this.error = error; });
+        });
     };
     DatasetsComponent.prototype.edit = function (dataset, event) {
         this.router.navigate(['/dataset', dataset.id]);

@@ -34,14 +34,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
-var basic_service_1 = require("./basic.service");
+var core_service_1 = require("./core.service");
 var event_http_service_1 = require("./event-http.service");
 var DatasetService = (function (_super) {
     __extends(DatasetService, _super);
-    function DatasetService(http, ehttp) {
-        var _this = _super.call(this) || this;
-        _this.http = http;
+    function DatasetService(service, ehttp, http) {
+        var _this = _super.call(this, service) || this;
         _this.ehttp = ehttp;
+        _this.http = http;
         return _this;
     }
     DatasetService.prototype.getDatasets = function () {
@@ -62,8 +62,7 @@ var DatasetService = (function (_super) {
             .toPromise()
             .then(function (response) {
             return response.json();
-        })
-            .catch(this.handleError);
+        });
     };
     DatasetService.prototype.unlock = function (dataset) {
         var headers = new http_1.Headers({
@@ -105,10 +104,10 @@ var DatasetService = (function (_super) {
             .catch(this.handleError);
     };
     return DatasetService;
-}(basic_service_1.BasicService));
+}(core_service_1.BasicService));
 DatasetService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http, event_http_service_1.EventHttpService])
+    __metadata("design:paramtypes", [core_service_1.EventService, event_http_service_1.EventHttpService, http_1.Http])
 ], DatasetService);
 exports.DatasetService = DatasetService;
 //# sourceMappingURL=dataset.service.js.map

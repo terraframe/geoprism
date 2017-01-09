@@ -17,10 +17,23 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 "use strict";
-var Category = (function () {
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var BasicCategory = (function () {
+    function BasicCategory() {
+    }
+    return BasicCategory;
+}());
+exports.BasicCategory = BasicCategory;
+var Category = (function (_super) {
+    __extends(Category, _super);
     function Category() {
+        return _super.apply(this, arguments) || this;
     }
     return Category;
-}());
+}(BasicCategory));
 exports.Category = Category;
 //# sourceMappingURL=category.js.map

@@ -23,9 +23,9 @@
 
 <div id="app-container" class="container">
 
+  <error-message ></error-message>
+
   <h2> <gdb:localize key="dataset.title"/> </h2>
-  
-  <error-message [error]="error"></error-message>
   
   <div *ngIf="datasets === null">
     <gdb:localize key='dataset.loadingData'/>

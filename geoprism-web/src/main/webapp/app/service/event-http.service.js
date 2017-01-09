@@ -16,7 +16,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/finally");
-var event_service_1 = require("./event.service");
+var core_service_1 = require("./core.service");
 var EventHttpService = (function (_super) {
     __extends(EventHttpService, _super);
     function EventHttpService(_backend, _defaultOptions, service) {
@@ -55,7 +55,7 @@ var EventHttpService = (function (_super) {
 }(http_1.Http));
 EventHttpService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.ConnectionBackend, http_1.RequestOptions, event_service_1.EventService])
+    __metadata("design:paramtypes", [http_1.ConnectionBackend, http_1.RequestOptions, core_service_1.EventService])
 ], EventHttpService);
 exports.EventHttpService = EventHttpService;
 //# sourceMappingURL=event-http.service.js.map

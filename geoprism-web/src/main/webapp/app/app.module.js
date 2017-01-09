@@ -37,7 +37,7 @@ var error_message_component_1 = require("./core/error-message.component");
 var app_routing_module_1 = require("./app-routing.module");
 var dataset_service_1 = require("./service/dataset.service");
 var category_service_1 = require("./service/category.service");
-var event_service_1 = require("./service/event.service");
+var core_service_1 = require("./service/core.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
     function AppModule() {
@@ -61,13 +61,13 @@ AppModule = __decorate([
         providers: [
             dataset_service_1.DatasetService,
             category_service_1.CategoryService,
-            event_service_1.EventService,
+            core_service_1.EventService,
             {
                 provide: event_http_service_1.EventHttpService,
                 useFactory: function (xhrBackend, requestOptions, service) {
                     return new event_http_service_1.EventHttpService(xhrBackend, requestOptions, service);
                 },
-                deps: [http_1.XHRBackend, http_1.RequestOptions, event_service_1.EventService]
+                deps: [http_1.XHRBackend, http_1.RequestOptions, core_service_1.EventService]
             }
         ],
         bootstrap: [app_component_1.AppComponent]

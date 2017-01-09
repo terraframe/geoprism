@@ -34,40 +34,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
-var basic_service_1 = require("./basic.service");
+var core_service_1 = require("./core.service");
 var event_http_service_1 = require("./event-http.service");
 var CategoryService = (function (_super) {
     __extends(CategoryService, _super);
-    function CategoryService(ehttp, http) {
-        var _this = _super.call(this) || this;
+    function CategoryService(service, ehttp, http) {
+        var _this = _super.call(this, service) || this;
         _this.ehttp = ehttp;
         _this.http = http;
         return _this;
     }
-    //    
-    //    service.createOption = function(connection, option) {
-    //      var request = runwayService.createConnectionRequest(connection);
-    //      
-    //      net.geoprism.ontology.ClassifierController.createOption(request, option);
-    //    }
-    //    
-    //    service.deleteOption = function(connection, id) {
-    //      var request = runwayService.createConnectionRequest(connection);
-    //      
-    //      net.geoprism.ontology.ClassifierController.deleteOption(request, id);
-    //    }
-    //    
-    //    service.applyOption = function(connection, config) {
-    //      var request = runwayService.createConnectionRequest(connection);
-    //      
-    //      net.geoprism.ontology.ClassifierController.applyOption(request, config);
-    //    }
-    //    
-    //    service.updateCategory = function(connection, category) {
-    //      var request = runwayService.createConnectionRequest(connection);
-    //      
-    //      net.geoprism.ontology.ClassifierController.updateCategory(request, category);
-    //    }
     CategoryService.prototype.getAll = function () {
         return this.ehttp
             .get(acp + '/category/all')
@@ -98,8 +74,7 @@ var CategoryService = (function (_super) {
             .toPromise()
             .then(function (response) {
             return response.json();
-        })
-            .catch(this.handleError);
+        });
     };
     CategoryService.prototype.unlock = function (category) {
         var headers = new http_1.Headers({
@@ -140,11 +115,36 @@ var CategoryService = (function (_super) {
             .toPromise()
             .catch(this.handleError);
     };
+    CategoryService.prototype.create = function (label, parentId) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var option = { label: label, parentId: parentId, validate: false };
+        return this.ehttp
+            .post(acp + '/category/create', JSON.stringify({ option: option }), { headers: headers })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    CategoryService.prototype.update = function (category) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.ehttp
+            .post(acp + '/category/update', JSON.stringify({ category: category }), { headers: headers })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
     return CategoryService;
-}(basic_service_1.BasicService));
+}(core_service_1.BasicService));
 CategoryService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [event_http_service_1.EventHttpService, http_1.Http])
+    __metadata("design:paramtypes", [core_service_1.EventService, event_http_service_1.EventHttpService, http_1.Http])
 ], CategoryService);
 exports.CategoryService = CategoryService;
 //# sourceMappingURL=category.service.js.map

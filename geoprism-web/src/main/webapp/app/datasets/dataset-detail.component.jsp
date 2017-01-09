@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <div>
-  <error-message [error]="error"></error-message>  
+  <error-message ></error-message>  
 
   <form #form="ngForm" class="modal-form" (ngSubmit)="form.valid && validName && onSubmit()">    
     <div class="modal-dialog">

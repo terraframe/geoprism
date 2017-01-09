@@ -17,10 +17,11 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { BasicCategory } from './basic-category';
-
-export class Category {
+export class BasicCategory {
   id: string;
   label: string; 
+}
+
+export class Category extends BasicCategory {
   descendants : BasicCategory[];
 }

@@ -36,6 +36,13 @@ var EventService = (function () {
             listener.complete();
         }
     };
+    EventService.prototype.onError = function (error) {
+        var rError = error.json();
+        for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
+            var listener = _a[_i];
+            listener.onError(rError);
+        }
+    };
     return EventService;
 }());
 EventService = __decorate([
@@ -43,4 +50,24 @@ EventService = __decorate([
     __metadata("design:paramtypes", [])
 ], EventService);
 exports.EventService = EventService;
-//# sourceMappingURL=event.service.js.map
+var BasicService = (function () {
+    function BasicService(service) {
+        this.service = service;
+    }
+    //  protected handleError(error: any): Promise<any> {
+    //    console.error('An error occurred', error);
+    //    
+    //    return Promise.reject(error.json() as RunwayException);
+    //  }
+    BasicService.prototype.handleError = function (error) {
+        this.service.onError(error);
+        return Promise.reject(error);
+    };
+    return BasicService;
+}());
+BasicService = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [EventService])
+], BasicService);
+exports.BasicService = BasicService;
+//# sourceMappingURL=core.service.js.map
