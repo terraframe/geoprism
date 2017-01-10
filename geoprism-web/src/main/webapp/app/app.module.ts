@@ -27,6 +27,8 @@ import './rxjs-extensions';
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
+import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
+
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
 import { FilterPipe } from './core/filter.pipe';
@@ -44,7 +46,8 @@ import { EventHttpService } from './service/event-http.service';
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    HttpModule
+    HttpModule,
+    FileUploadModule    
   ],
   declarations: [
     AppComponent,

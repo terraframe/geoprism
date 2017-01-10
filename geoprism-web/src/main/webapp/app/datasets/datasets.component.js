@@ -28,14 +28,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
+var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
+var core_service_1 = require("../service/core.service");
 var localization_service_1 = require("../service/localization.service");
 var dataset_service_1 = require("../service/dataset.service");
 var DatasetsComponent = (function () {
-    function DatasetsComponent(router, datasetService, localizationService) {
+    function DatasetsComponent(router, datasetService, localizationService, eventService) {
         this.router = router;
         this.datasetService = datasetService;
         this.localizationService = localizationService;
+        this.eventService = eventService;
+        this.dropActive = false;
     }
+    DatasetsComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.getDatasets();
+        this.uploader = new ng2_file_upload_1.FileUploader({ url: acp + '/uploader/getAttributeInformation' });
+        this.uploader.onAfterAddingFile = function (fileItem) {
+            _this.uploader.uploadItem(fileItem);
+        };
+        this.uploader.onBeforeUploadItem = function (fileItem) {
+            _this.eventService.start();
+        };
+        this.uploader.onCompleteItem = function (item, response, status, headers) {
+            _this.eventService.complete();
+        };
+        this.uploader.onSuccessItem = function (item, response, status, headers) {
+            console.log('File Uploaded: ' + response);
+        };
+        this.uploader.onErrorItem = function (item, response, status, headers) {
+            _this.eventService.onError(response);
+        };
+    };
     DatasetsComponent.prototype.getDatasets = function () {
         var _this = this;
         this.datasetService
@@ -59,8 +83,8 @@ var DatasetsComponent = (function () {
     DatasetsComponent.prototype.edit = function (dataset, event) {
         this.router.navigate(['/dataset', dataset.id]);
     };
-    DatasetsComponent.prototype.ngOnInit = function () {
-        this.getDatasets();
+    DatasetsComponent.prototype.fileOver = function (e) {
+        this.dropActive = e;
     };
     return DatasetsComponent;
 }());
@@ -73,7 +97,8 @@ DatasetsComponent = __decorate([
     }),
     __metadata("design:paramtypes", [router_1.Router,
         dataset_service_1.DatasetService,
-        localization_service_1.LocalizationService])
+        localization_service_1.LocalizationService,
+        core_service_1.EventService])
 ], DatasetsComponent);
 exports.DatasetsComponent = DatasetsComponent;
 //# sourceMappingURL=datasets.component.js.map

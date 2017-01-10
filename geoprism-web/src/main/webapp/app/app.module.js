@@ -33,6 +33,7 @@ var http_1 = require("@angular/http");
 require("./rxjs-extensions");
 var app_component_1 = require("./app.component");
 var app_routing_module_1 = require("./app-routing.module");
+var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
 var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
 var filter_pipe_1 = require("./core/filter.pipe");
@@ -52,7 +53,8 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
             app_routing_module_1.AppRoutingModule,
-            http_1.HttpModule
+            http_1.HttpModule,
+            ng2_file_upload_1.FileUploadModule
         ],
         declarations: [
             app_component_1.AppComponent,

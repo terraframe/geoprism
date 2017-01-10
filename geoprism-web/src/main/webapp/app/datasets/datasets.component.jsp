@@ -51,4 +51,15 @@
 	    </tbody>    
 	  </table>
    </div>
+   
+  <div class="drop-box-container" ng2FileDrop [ngClass]="{'drop-active': dropActive}" (fileOver)="fileOver($event)" [uploader]="uploader" (click)=fileInput.click()>
+    <div class="drop-box">
+      <div class="inner-drop-box">
+        <i class="fa fa-cloud-upload">
+          <p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
+        </i>
+      </div>
+    </div>
+    <input type="file" ng2FileSelect #fileInput [uploader]="uploader" id="uploader-input" style="display:none" />
+  </div>
 </div>

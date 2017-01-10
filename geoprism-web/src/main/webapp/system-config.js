@@ -39,13 +39,14 @@ System.config({
         '@angular/upgrade': 'npm:@angular/upgrade/bundles/upgrade.umd.js',
         // other libraries
         'rxjs': 'npm:rxjs',
-        'ng2-slim-loading-bar': 'npm:ng2-slim-loading-bar/bundles/index.umd.js'
+        'ng2-file-upload': 'npm:ng2-file-upload'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
         'app': { main: './main.js', defaultExtension: 'js' },
         'api': { defaultExtension: 'js' },
         'rxjs': { defaultExtension: 'js' },
+        'ng2-file-upload': { defaultExtension: 'js' },
     }
 });
 //# sourceMappingURL=system-config.js.map

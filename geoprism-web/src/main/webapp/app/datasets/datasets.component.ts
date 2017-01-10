@@ -20,11 +20,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
+
 import { Dataset } from '../model/dataset';
 
+import { EventService } from '../service/core.service';
 import { LocalizationService } from '../service/localization.service';
 import { DatasetService } from '../service/dataset.service';
 
+
+declare var acp: string;
 
 @Component({
   moduleId: module.id,
@@ -33,13 +38,38 @@ import { DatasetService } from '../service/dataset.service';
   styleUrls: ['datasets.component.css']
 })
 export class DatasetsComponent implements OnInit {
-  datasets: Dataset[];
+  public datasets: Dataset[];
+
+  public uploader:FileUploader;
+  public dropActive:boolean = false;
 
   constructor(
     private router: Router,
     private datasetService: DatasetService,
-    private localizationService: LocalizationService) { }
+    private localizationService: LocalizationService,
+    private eventService: EventService) { }
 
+  ngOnInit(): void {
+    this.getDatasets();
+    
+    this.uploader = new FileUploader({url: acp + '/uploader/getAttributeInformation'});
+    this.uploader.onAfterAddingFile = (fileItem: any) => {
+      this.uploader.uploadItem(fileItem);
+    };    
+    this.uploader.onBeforeUploadItem = (fileItem: any) => {
+      this.eventService.start();
+    };    
+    this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+      this.eventService.complete();
+    };    
+    this.uploader.onSuccessItem = (item: any, response: string, status: number, headers: any) => {
+      console.log('File Uploaded: ' + response)
+    };
+    this.uploader.onErrorItem = (item: any, response: string, status: number, headers: any) => {
+      this.eventService.onError(response);	
+    }
+  }
+  
   getDatasets() : void {
     this.datasetService
       .getDatasets()
@@ -66,7 +96,7 @@ export class DatasetsComponent implements OnInit {
     this.router.navigate(['/dataset', dataset.id]);
   }
   
-  ngOnInit(): void {
-    this.getDatasets();
+  fileOver(e:any):void {
+    this.dropActive = e;
   }
 }
