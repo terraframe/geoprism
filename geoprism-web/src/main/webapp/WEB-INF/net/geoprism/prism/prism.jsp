@@ -35,6 +35,13 @@
   <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>  
   
+  <!-- Default imports -->
+  
+  <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
+  <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
+    
+  <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>  
+  
   <!-- IE required polyfills, in this exact order -->
   <jwr:script src="/bundles/prism.js" useRandomParam="false"/>
 

@@ -62,7 +62,8 @@ var DatasetService = (function (_super) {
             .toPromise()
             .then(function (response) {
             return response.json();
-        });
+        })
+            .catch(this.handleError);
     };
     DatasetService.prototype.unlock = function (dataset) {
         var headers = new http_1.Headers({

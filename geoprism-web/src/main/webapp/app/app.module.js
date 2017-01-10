@@ -36,6 +36,7 @@ var app_routing_module_1 = require("./app-routing.module");
 var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
 var filter_pipe_1 = require("./core/filter.pipe");
+var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
 var category_service_1 = require("./service/category.service");
 var core_service_1 = require("./service/core.service");
@@ -61,6 +62,7 @@ AppModule = __decorate([
             app_routing_module_1.routedComponents
         ],
         providers: [
+            localization_service_1.LocalizationService,
             dataset_service_1.DatasetService,
             category_service_1.CategoryService,
             core_service_1.EventService,

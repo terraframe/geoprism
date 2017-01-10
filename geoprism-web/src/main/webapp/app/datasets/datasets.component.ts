@@ -21,7 +21,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Dataset } from '../model/dataset';
+
+import { LocalizationService } from '../service/localization.service';
 import { DatasetService } from '../service/dataset.service';
+
 
 @Component({
   moduleId: module.id,
@@ -34,22 +37,29 @@ export class DatasetsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private datasetService: DatasetService) { }
+    private datasetService: DatasetService,
+    private localizationService: LocalizationService) { }
 
   getDatasets() : void {
     this.datasetService
       .getDatasets()
       .then(datasets => {
-        this.datasets = datasets    	  
+        this.datasets = datasets        
       })
   }
   
   remove(dataset: Dataset, event: any) : void {
-    this.datasetService
-      .remove(dataset)
-      .then(response => {
-        this.datasets = this.datasets.filter(h => h !== dataset);    	  
-      })
+    let message = this.localizationService.localize("dataset", "removeContent");
+    message = message.replace('{0}', dataset.label);
+
+    if(confirm(message)) {
+    
+      this.datasetService
+        .remove(dataset)
+        .then(response => {
+          this.datasets = this.datasets.filter(h => h !== dataset);    
+        });
+    }
   }
   
   edit(dataset: Dataset, event: any) : void {

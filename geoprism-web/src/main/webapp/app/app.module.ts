@@ -31,6 +31,7 @@ import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
 import { FilterPipe } from './core/filter.pipe';
 
+import { LocalizationService } from './service/localization.service';
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
 import { EventService } from './service/core.service';
@@ -53,6 +54,7 @@ import { EventHttpService } from './service/event-http.service';
     routedComponents
   ],
   providers: [
+	LocalizationService,
     DatasetService,
     CategoryService,
     EventService,

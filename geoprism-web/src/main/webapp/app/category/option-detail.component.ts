@@ -27,8 +27,9 @@ import 'rxjs/add/operator/switchMap';
 import { Category, BasicCategory } from '../model/category';
 import { Synonym } from '../model/synonym';
 
-import { CategoryService } from '../service/category.service';
 import { EventService } from '../service/core.service';
+import { LocalizationService } from '../service/localization.service';
+import { CategoryService } from '../service/category.service';
 
 
 export class OptionResolver implements Resolve<Category> {
@@ -69,7 +70,8 @@ export class OptionDetailComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
-    private location: Location) {
+    private location: Location,
+    private localizationService: LocalizationService) {
   }
 
   ngOnInit(): void {
@@ -105,7 +107,11 @@ export class OptionDetailComponent implements OnInit {
   }
   
   restore(synonym: Synonym): void {
-    if(confirm('Are you sure you want to restore the the synonym [' + synonym.label + '] to its own category option?')) {
+	  
+	let message = this.localizationService.localize("category.management", "restoreConfirm");
+    message = message.replace('{0}', this.category.label);
+
+    if(confirm(message)) {
       this.action.restore.push(synonym.id);
         	
       this.category.synonyms = this.category.synonyms.filter(h => h !== synonym);            	        	

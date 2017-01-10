@@ -28,11 +28,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
+var localization_service_1 = require("../service/localization.service");
 var dataset_service_1 = require("../service/dataset.service");
 var DatasetsComponent = (function () {
-    function DatasetsComponent(router, datasetService) {
+    function DatasetsComponent(router, datasetService, localizationService) {
         this.router = router;
         this.datasetService = datasetService;
+        this.localizationService = localizationService;
     }
     DatasetsComponent.prototype.getDatasets = function () {
         var _this = this;
@@ -44,11 +46,15 @@ var DatasetsComponent = (function () {
     };
     DatasetsComponent.prototype.remove = function (dataset, event) {
         var _this = this;
-        this.datasetService
-            .remove(dataset)
-            .then(function (response) {
-            _this.datasets = _this.datasets.filter(function (h) { return h !== dataset; });
-        });
+        var message = this.localizationService.localize("dataset", "removeContent");
+        message = message.replace('{0}', dataset.label);
+        if (confirm(message)) {
+            this.datasetService
+                .remove(dataset)
+                .then(function (response) {
+                _this.datasets = _this.datasets.filter(function (h) { return h !== dataset; });
+            });
+        }
     };
     DatasetsComponent.prototype.edit = function (dataset, event) {
         this.router.navigate(['/dataset', dataset.id]);
@@ -66,7 +72,8 @@ DatasetsComponent = __decorate([
         styleUrls: ['datasets.component.css']
     }),
     __metadata("design:paramtypes", [router_1.Router,
-        dataset_service_1.DatasetService])
+        dataset_service_1.DatasetService,
+        localization_service_1.LocalizationService])
 ], DatasetsComponent);
 exports.DatasetsComponent = DatasetsComponent;
 //# sourceMappingURL=datasets.component.js.map

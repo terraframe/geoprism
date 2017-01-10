@@ -33,8 +33,9 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
 require("rxjs/add/operator/switchMap");
-var category_service_1 = require("../service/category.service");
 var core_service_1 = require("../service/core.service");
+var localization_service_1 = require("../service/localization.service");
+var category_service_1 = require("../service/category.service");
 var OptionResolver = (function () {
     function OptionResolver(categoryService, eventService) {
         this.categoryService = categoryService;
@@ -63,10 +64,11 @@ var Action = (function () {
     return Action;
 }());
 var OptionDetailComponent = (function () {
-    function OptionDetailComponent(categoryService, route, location) {
+    function OptionDetailComponent(categoryService, route, location, localizationService) {
         this.categoryService = categoryService;
         this.route = route;
         this.location = location;
+        this.localizationService = localizationService;
         this.close = new core_1.EventEmitter();
     }
     OptionDetailComponent.prototype.ngOnInit = function () {
@@ -97,7 +99,9 @@ var OptionDetailComponent = (function () {
         this.location.back();
     };
     OptionDetailComponent.prototype.restore = function (synonym) {
-        if (confirm('Are you sure you want to restore the the synonym [' + synonym.label + '] to its own category option?')) {
+        var message = this.localizationService.localize("category.management", "restoreConfirm");
+        message = message.replace('{0}', this.category.label);
+        if (confirm(message)) {
             this.action.restore.push(synonym.id);
             this.category.synonyms = this.category.synonyms.filter(function (h) { return h !== synonym; });
         }
@@ -117,7 +121,8 @@ OptionDetailComponent = __decorate([
     }),
     __metadata("design:paramtypes", [category_service_1.CategoryService,
         router_1.ActivatedRoute,
-        common_1.Location])
+        common_1.Location,
+        localization_service_1.LocalizationService])
 ], OptionDetailComponent);
 exports.OptionDetailComponent = OptionDetailComponent;
 //# sourceMappingURL=option-detail.component.js.map

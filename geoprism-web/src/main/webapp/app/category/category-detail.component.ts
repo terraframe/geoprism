@@ -25,8 +25,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { Category, BasicCategory } from '../model/category';
-import { CategoryService } from '../service/category.service';
+
 import { EventService } from '../service/core.service';
+import { LocalizationService } from '../service/localization.service';
+import { CategoryService } from '../service/category.service';
 
 export class CategoryResolver implements Resolve<Category> {
   constructor(@Inject(CategoryService) private categoryService: CategoryService, @Inject(EventService) private eventService: EventService) {}
@@ -35,7 +37,7 @@ export class CategoryResolver implements Resolve<Category> {
     return this.categoryService.get(route.params['id'])
       .catch((error:any) => {
         this.eventService.onError(error); 
-    	  
+        
         return Promise.reject(error);
       });
   }
@@ -61,10 +63,11 @@ export class CategoryDetailComponent implements OnInit {
 
 
   constructor(
-    private router: Router,		  
+    private router: Router,      
     private categoryService: CategoryService,
     private route: ActivatedRoute,
-    private location: Location) {
+    private location: Location,
+    private localizationService: LocalizationService) {
   }
 
   ngOnInit(): void {
@@ -107,7 +110,10 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   remove(descendant: BasicCategory) {
-    if(confirm('Are you sure you want to delete this?')) {
+    let message = this.localizationService.localize("category.management", "removeCategoryConfirm");
+    message = message.replace('{0}', this.category.label);
+
+    if(confirm(message)) {
       this.categoryService.remove(descendant)
        .then((response:any) => {
          this.category.descendants = this.category.descendants.filter(h => h !== descendant);        

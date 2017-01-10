@@ -34,8 +34,9 @@ var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
 require("rxjs/add/operator/switchMap");
 var category_1 = require("../model/category");
-var category_service_1 = require("../service/category.service");
 var core_service_1 = require("../service/core.service");
+var localization_service_1 = require("../service/localization.service");
+var category_service_1 = require("../service/category.service");
 var CategoryResolver = (function () {
     function CategoryResolver(categoryService, eventService) {
         this.categoryService = categoryService;
@@ -62,11 +63,12 @@ var Instance = (function () {
     return Instance;
 }());
 var CategoryDetailComponent = (function () {
-    function CategoryDetailComponent(router, categoryService, route, location) {
+    function CategoryDetailComponent(router, categoryService, route, location, localizationService) {
         this.router = router;
         this.categoryService = categoryService;
         this.route = route;
         this.location = location;
+        this.localizationService = localizationService;
         this.close = new core_1.EventEmitter();
         this.instance = new Instance();
         this.validName = true;
@@ -105,7 +107,9 @@ var CategoryDetailComponent = (function () {
     };
     CategoryDetailComponent.prototype.remove = function (descendant) {
         var _this = this;
-        if (confirm('Are you sure you want to delete this?')) {
+        var message = this.localizationService.localize("category.management", "removeCategoryConfirm");
+        message = message.replace('{0}', this.category.label);
+        if (confirm(message)) {
             this.categoryService.remove(descendant)
                 .then(function (response) {
                 _this.category.descendants = _this.category.descendants.filter(function (h) { return h !== descendant; });
@@ -145,7 +149,8 @@ CategoryDetailComponent = __decorate([
     __metadata("design:paramtypes", [router_1.Router,
         category_service_1.CategoryService,
         router_1.ActivatedRoute,
-        common_1.Location])
+        common_1.Location,
+        localization_service_1.LocalizationService])
 ], CategoryDetailComponent);
 exports.CategoryDetailComponent = CategoryDetailComponent;
 //# sourceMappingURL=category-detail.component.js.map
