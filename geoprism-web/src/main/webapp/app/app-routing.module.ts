@@ -25,6 +25,7 @@ import { Observable } from 'rxjs/Observable';
 import { DatasetsComponent } from './datasets/datasets.component';
 import { DatasetDetailComponent, DatasetResolver} from './datasets/dataset-detail.component';
 import { CategoryDetailComponent, CategoryResolver} from './category/category-detail.component';
+import { OptionDetailComponent, OptionResolver} from './category/option-detail.component';
 
 declare var acp: any;
 
@@ -52,13 +53,20 @@ const routes: Routes = [
       category: CategoryResolver
     }    
   },  
+  {
+    path: 'category-option/:parentId/:id',
+    component: OptionDetailComponent,
+    resolve: {
+      category: OptionResolver
+    }    
+  },  
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver]
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver, OptionResolver]
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoryDetailComponent];
+export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoryDetailComponent, OptionDetailComponent];

@@ -17,22 +17,25 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
-import { Router, ActivatedRoute, Params, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output, Inject} from '@angular/core';
+import { ActivatedRoute, Params, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
 import { Category, BasicCategory } from '../model/category';
+import { Synonym } from '../model/synonym';
+
 import { CategoryService } from '../service/category.service';
 import { EventService } from '../service/core.service';
 
-export class CategoryResolver implements Resolve<Category> {
+
+export class OptionResolver implements Resolve<Category> {
   constructor(@Inject(CategoryService) private categoryService: CategoryService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Category> {
-    return this.categoryService.get(route.params['id'])
+    return this.categoryService.edit(route.params['parentId'], route.params['id'])
       .catch((error:any) => {
         this.eventService.onError(error); 
     	  
@@ -41,27 +44,29 @@ export class CategoryResolver implements Resolve<Category> {
   }
 }
 
-class Instance {
-  active: boolean;
-  label: string;   
+class Action {
+  synonym: string;
+  restore: string[];   
+
+  constructor() {
+    this.synonym = '';
+    this.restore = [];
+  }
 }
 
 @Component({
   moduleId: module.id,
-  selector: 'category-detail',
-  templateUrl: 'category-detail.component.jsp',
+  selector: 'option-detail',
+  templateUrl: 'option-detail.component.jsp',
   styleUrls: []
 })
-export class CategoryDetailComponent implements OnInit {
-  @Input() category: Category;
+export class OptionDetailComponent implements OnInit {
   @Output() close = new EventEmitter();
   
-  instance : Instance = new Instance();  
-  validName: boolean = true;
-
-
+  category: Category;
+  action: Action;
+  
   constructor(
-    private router: Router,		  
     private categoryService: CategoryService,
     private route: ActivatedRoute,
     private location: Location) {
@@ -70,16 +75,28 @@ export class CategoryDetailComponent implements OnInit {
   ngOnInit(): void {
     this.category = this.route.snapshot.data['category'];
     
-    this.instance.active = false; 
-    this.instance.label = '';
+    this.action = new Action();
   }
   
   onSubmit(): void {
-    this.categoryService.update(this.category)
-      .then(category => {
-        this.goBack(category);
+    let config = {
+      option : this.category,
+      synonym : this.action.synonym,
+      restore : this.action.restore
+    }
+      
+    this.categoryService.apply(config)
+      .then(response => {
+        this.goBack(this.category);
       });
   }
+  
+  cancel(): void {
+    this.categoryService.unlock(this.category)
+      .then(response => {
+        this.goBack(this.category);
+      })
+  } 
   
   goBack(category : Category): void {
     this.close.emit(category);
@@ -87,46 +104,12 @@ export class CategoryDetailComponent implements OnInit {
     this.location.back();
   }
   
-  newInstance() : void {
-    this.instance.active = true;
-  }
+  restore(synonym: Synonym): void {
+    if(confirm('Are you sure you want to restore the the synonym [' + synonym.label + '] to its own category option?')) {
+      this.action.restore.push(synonym.id);
+        	
+      this.category.synonyms = this.category.synonyms.filter(h => h !== synonym);            	        	
+    }	  
+  } 
   
-  create() : void {
-    this.categoryService.create(this.instance.label, this.category.id)
-      .then((category:BasicCategory) => {
-        this.category.descendants.push(category);
-        
-        this.instance.active = false;
-        this.instance.label = '';
-      });
-  }
-  
-  cancel(): void {
-    this.instance.active = false;
-    this.instance.label = '';
-  }
-  
-  remove(descendant: BasicCategory) {
-    if(confirm('Are you sure you want to delete this?')) {
-      this.categoryService.remove(descendant)
-       .then((response:any) => {
-         this.category.descendants = this.category.descendants.filter(h => h !== descendant);        
-       });
-    }
-  }
-  
-  
-  edit(descendant: BasicCategory) : void {
-    this.router.navigate(['/category-option', this.category.id, descendant.id]);
-  }
-  
-  validateName(name: string) {
-    this.categoryService.validate(name, this.category.id)
-      .then((response:any) => {
-        this.validName = true;
-      })
-     .catch((error:any) => {
-        this.validName = false;       
-     });        
-  }  
 }

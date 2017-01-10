@@ -47,13 +47,13 @@ export class CategoryService extends BasicService {
       .catch(this.handleError);
   }
   
-  edit(id : string): Promise<Category> {
+  edit(parentId: string, id : string): Promise<Category> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
     return this.ehttp
-      .post(acp + '/category/edit', JSON.stringify({id:id}), { headers: headers })
+      .post(acp + '/category/edit', JSON.stringify({parentId:parentId, id:id}), { headers: headers })
       .toPromise()
       .then(response => {
         return response.json() as Category;
@@ -85,17 +85,14 @@ export class CategoryService extends BasicService {
       .catch(this.handleError);
   }
   
-  apply(category: Category): Promise<Category> {
+  apply(config: any): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
-    
+       
     return this.ehttp
-    .post(acp + '/category/apply', JSON.stringify({category:category}), { headers: headers })
+    .post(acp + '/category/apply', JSON.stringify({config:config}), { headers: headers })
     .toPromise()
-    .then(response => {
-      return response.json() as Category;
-    })          
     .catch(this.handleError);
   }
   
@@ -114,10 +111,10 @@ export class CategoryService extends BasicService {
 	  
 	let params: URLSearchParams = new URLSearchParams();
     params.set('name', name);
-    params.set(id, id);	  
+    params.set('id', id);	  
 	  
     return this.http
-      .get(acp + '/category/validate', params)
+      .get(acp + '/category/validate', {search: params})
       .toPromise()
       .catch(this.handleError);
   }

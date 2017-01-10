@@ -43,7 +43,7 @@ var CategoryResolver = (function () {
     }
     CategoryResolver.prototype.resolve = function (route, state) {
         var _this = this;
-        return this.categoryService.get(route.params['id'] + 'zz')
+        return this.categoryService.get(route.params['id'])
             .catch(function (error) {
             _this.eventService.onError(error);
             return Promise.reject(error);
@@ -62,12 +62,14 @@ var Instance = (function () {
     return Instance;
 }());
 var CategoryDetailComponent = (function () {
-    function CategoryDetailComponent(categoryService, route, location) {
+    function CategoryDetailComponent(router, categoryService, route, location) {
+        this.router = router;
         this.categoryService = categoryService;
         this.route = route;
         this.location = location;
         this.close = new core_1.EventEmitter();
         this.instance = new Instance();
+        this.validName = true;
     }
     CategoryDetailComponent.prototype.ngOnInit = function () {
         this.category = this.route.snapshot.data['category'];
@@ -110,6 +112,19 @@ var CategoryDetailComponent = (function () {
             });
         }
     };
+    CategoryDetailComponent.prototype.edit = function (descendant) {
+        this.router.navigate(['/category-option', this.category.id, descendant.id]);
+    };
+    CategoryDetailComponent.prototype.validateName = function (name) {
+        var _this = this;
+        this.categoryService.validate(name, this.category.id)
+            .then(function (response) {
+            _this.validName = true;
+        })
+            .catch(function (error) {
+            _this.validName = false;
+        });
+    };
     return CategoryDetailComponent;
 }());
 __decorate([
@@ -127,7 +142,8 @@ CategoryDetailComponent = __decorate([
         templateUrl: 'category-detail.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [category_service_1.CategoryService,
+    __metadata("design:paramtypes", [router_1.Router,
+        category_service_1.CategoryService,
         router_1.ActivatedRoute,
         common_1.Location])
 ], CategoryDetailComponent);

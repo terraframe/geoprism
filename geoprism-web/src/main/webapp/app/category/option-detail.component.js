@@ -33,93 +33,91 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
 require("rxjs/add/operator/switchMap");
-var dataset_1 = require("../model/dataset");
+var category_service_1 = require("../service/category.service");
 var core_service_1 = require("../service/core.service");
-var dataset_service_1 = require("../service/dataset.service");
-var DatasetResolver = (function () {
-    function DatasetResolver(datasetService, eventService) {
-        this.datasetService = datasetService;
+var OptionResolver = (function () {
+    function OptionResolver(categoryService, eventService) {
+        this.categoryService = categoryService;
         this.eventService = eventService;
     }
-    DatasetResolver.prototype.resolve = function (route, state) {
+    OptionResolver.prototype.resolve = function (route, state) {
         var _this = this;
-        return this.datasetService.edit(route.params['id'])
+        return this.categoryService.edit(route.params['parentId'], route.params['id'])
             .catch(function (error) {
             _this.eventService.onError(error);
             return Promise.reject(error);
         });
     };
-    return DatasetResolver;
+    return OptionResolver;
 }());
-DatasetResolver = __decorate([
-    __param(0, core_1.Inject(dataset_service_1.DatasetService)), __param(1, core_1.Inject(core_service_1.EventService)),
-    __metadata("design:paramtypes", [dataset_service_1.DatasetService, core_service_1.EventService])
-], DatasetResolver);
-exports.DatasetResolver = DatasetResolver;
-var DatasetDetailComponent = (function () {
-    function DatasetDetailComponent(datasetService, router, route, location) {
-        this.datasetService = datasetService;
-        this.router = router;
+OptionResolver = __decorate([
+    __param(0, core_1.Inject(category_service_1.CategoryService)), __param(1, core_1.Inject(core_service_1.EventService)),
+    __metadata("design:paramtypes", [category_service_1.CategoryService, core_service_1.EventService])
+], OptionResolver);
+exports.OptionResolver = OptionResolver;
+var Action = (function () {
+    function Action() {
+        this.synonym = '';
+        this.restore = [];
+    }
+    return Action;
+}());
+var OptionDetailComponent = (function () {
+    function OptionDetailComponent(categoryService, route, location) {
+        this.categoryService = categoryService;
         this.route = route;
         this.location = location;
         this.close = new core_1.EventEmitter();
-        this.validName = true;
     }
-    DatasetDetailComponent.prototype.ngOnInit = function () {
-        this.dataset = this.route.snapshot.data['dataset'];
+    OptionDetailComponent.prototype.ngOnInit = function () {
+        this.category = this.route.snapshot.data['category'];
+        this.action = new Action();
     };
-    DatasetDetailComponent.prototype.validateName = function (name) {
+    OptionDetailComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.datasetService.validateDatasetName(name, this.dataset.id)
+        var config = {
+            option: this.category,
+            synonym: this.action.synonym,
+            restore: this.action.restore
+        };
+        this.categoryService.apply(config)
             .then(function (response) {
-            _this.validName = true;
-        })
-            .catch(function (error) {
-            _this.validName = false;
+            _this.goBack(_this.category);
         });
     };
-    DatasetDetailComponent.prototype.cancel = function () {
+    OptionDetailComponent.prototype.cancel = function () {
         var _this = this;
-        this.datasetService.unlock(this.dataset)
+        this.categoryService.unlock(this.category)
             .then(function (response) {
-            _this.goBack(_this.dataset);
+            _this.goBack(_this.category);
         });
     };
-    DatasetDetailComponent.prototype.onSubmit = function () {
-        var _this = this;
-        this.datasetService.apply(this.dataset)
-            .then(function (dataset) {
-            _this.goBack(dataset);
-        });
-    };
-    DatasetDetailComponent.prototype.open = function (category, event) {
-        this.router.navigate(['/category', category.id]);
-    };
-    DatasetDetailComponent.prototype.goBack = function (dataset) {
-        this.close.emit(dataset);
+    OptionDetailComponent.prototype.goBack = function (category) {
+        this.close.emit(category);
         this.location.back();
     };
-    return DatasetDetailComponent;
+    OptionDetailComponent.prototype.restore = function (synonym) {
+        if (confirm('Are you sure you want to restore the the synonym [' + synonym.label + '] to its own category option?')) {
+            this.action.restore.push(synonym.id);
+            this.category.synonyms = this.category.synonyms.filter(function (h) { return h !== synonym; });
+        }
+    };
+    return OptionDetailComponent;
 }());
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", dataset_1.Dataset)
-], DatasetDetailComponent.prototype, "dataset", void 0);
 __decorate([
     core_1.Output(),
     __metadata("design:type", Object)
-], DatasetDetailComponent.prototype, "close", void 0);
-DatasetDetailComponent = __decorate([
+], OptionDetailComponent.prototype, "close", void 0);
+OptionDetailComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'dataset-detail',
-        templateUrl: 'dataset-detail.component.jsp',
+        selector: 'option-detail',
+        templateUrl: 'option-detail.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [dataset_service_1.DatasetService,
-        router_1.Router,
+    __metadata("design:paramtypes", [category_service_1.CategoryService,
         router_1.ActivatedRoute,
         common_1.Location])
-], DatasetDetailComponent);
-exports.DatasetDetailComponent = DatasetDetailComponent;
-//# sourceMappingURL=dataset-detail.component.js.map
+], OptionDetailComponent);
+exports.OptionDetailComponent = OptionDetailComponent;
+//# sourceMappingURL=option-detail.component.js.map

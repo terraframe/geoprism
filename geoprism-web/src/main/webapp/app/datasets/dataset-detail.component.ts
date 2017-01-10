@@ -20,7 +20,6 @@
 import { Component, EventEmitter, Input, OnInit, OnChanges, Output, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { NgForm} from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -53,7 +52,6 @@ export class DatasetResolver implements Resolve<Dataset> {
 export class DatasetDetailComponent implements OnInit {
   @Input() dataset: Dataset;
   @Output() close = new EventEmitter();
-  @ViewChild('form') public form: NgForm;
 
   validName: boolean = true;
 

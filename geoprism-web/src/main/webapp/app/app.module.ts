@@ -25,9 +25,11 @@ import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 import './rxjs-extensions';
 
 import { AppComponent } from './app.component';
+import { AppRoutingModule, routedComponents } from './app-routing.module';
+
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
-import { AppRoutingModule, routedComponents } from './app-routing.module';
+import { FilterPipe } from './core/filter.pipe';
 
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
@@ -47,6 +49,7 @@ import { EventHttpService } from './service/event-http.service';
     AppComponent,
     LoadingBarComponent,
     ErrorMessageComponent,
+    FilterPipe,
     routedComponents
   ],
   providers: [

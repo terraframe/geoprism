@@ -17,6 +17,8 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
+import { Synonym } from './synonym';
+
 export class BasicCategory {
   id: string;
   label: string; 
@@ -24,4 +26,6 @@ export class BasicCategory {
 
 export class Category extends BasicCategory {
   descendants : BasicCategory[];
+  synonyms : Synonym[];
+  siblings : BasicCategory[];
 }

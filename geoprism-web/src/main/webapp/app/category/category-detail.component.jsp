@@ -24,7 +24,7 @@
 
   <error-message></error-message>
   
-  <form #form="ngForm" novalidate class="modal-form" (ngSubmit)="form.valid && onSubmit()">    
+  <form #form="ngForm" novalidate class="modal-form" (ngSubmit)="form.valid && validName && onSubmit()">    
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
@@ -37,14 +37,12 @@
             </div>    
             <div class="holder" >
               <span class="text">
-                <input type="text" [(ngModel)]="category.label" name="label" required>
+                <input type="text" [(ngModel)]="category.label" [ngClass]="{ 'ng-invalid' : !validName }"  name="label" required (blur)="validateName($event.target.value)">
               </span>
-              <div class="inline-error-message">
-<!-- 
-                <p *ngIf="!form.controls.label.valid">
+              <div *ngIf="!validName" class="inline-error-message">
+                <p>
                   <gdb:localize key="dataUploader.unique"/>
                 </p>
- -->              
               </div>         
             </div>
           </div>
@@ -85,7 +83,7 @@
             </div>  
             <div class="holder">
               <div class="button-holder">
-                <input type="submit" value="<gdb:localize key="category.management.done"/>" class="btn btn-primary" [disabled]="!form.valid" />
+                <input type="submit" value="<gdb:localize key="category.management.done"/>" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
               </div>
             </div>
           </div>

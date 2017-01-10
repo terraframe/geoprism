@@ -53,12 +53,12 @@ var CategoryService = (function (_super) {
         })
             .catch(this.handleError);
     };
-    CategoryService.prototype.edit = function (id) {
+    CategoryService.prototype.edit = function (parentId, id) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
         return this.ehttp
-            .post(acp + '/category/edit', JSON.stringify({ id: id }), { headers: headers })
+            .post(acp + '/category/edit', JSON.stringify({ parentId: parentId, id: id }), { headers: headers })
             .toPromise()
             .then(function (response) {
             return response.json();
@@ -85,16 +85,13 @@ var CategoryService = (function (_super) {
             .toPromise()
             .catch(this.handleError);
     };
-    CategoryService.prototype.apply = function (category) {
+    CategoryService.prototype.apply = function (config) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
         return this.ehttp
-            .post(acp + '/category/apply', JSON.stringify({ category: category }), { headers: headers })
+            .post(acp + '/category/apply', JSON.stringify({ config: config }), { headers: headers })
             .toPromise()
-            .then(function (response) {
-            return response.json();
-        })
             .catch(this.handleError);
     };
     CategoryService.prototype.remove = function (category) {
@@ -109,9 +106,9 @@ var CategoryService = (function (_super) {
     CategoryService.prototype.validate = function (name, id) {
         var params = new http_1.URLSearchParams();
         params.set('name', name);
-        params.set(id, id);
+        params.set('id', id);
         return this.http
-            .get(acp + '/category/validate', params)
+            .get(acp + '/category/validate', { search: params })
             .toPromise()
             .catch(this.handleError);
     };

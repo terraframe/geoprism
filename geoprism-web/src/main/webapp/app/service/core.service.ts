@@ -66,7 +66,9 @@ export class BasicService {
 //  }
   
   protected handleError(error: any): Promise<any> {
-    this.service.onError(error); 
+    if(this != null) {
+      this.service.onError(error);     	
+    }
     	  
     return Promise.reject(error);
   }

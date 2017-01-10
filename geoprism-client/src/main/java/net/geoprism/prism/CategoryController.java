@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.prism;
 
@@ -77,7 +75,7 @@ public class CategoryController
   }
 
   @Endpoint(url = "edit", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF editOption(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF editOption(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "id") String id) throws JSONException
   {
     ClassifierDTO dto = ClassifierDTO.editOption(request, id);
 
@@ -94,10 +92,29 @@ public class CategoryController
       sArray.put(object);
     }
 
+    ClassifierDTO parent = ClassifierDTO.get(request, parentId);
+
+    JSONArray dArray = new JSONArray();
+
+    TermDTO[] descendants = parent.getAllDescendants(new String[] { ClassifierIsARelationshipDTO.CLASS });
+
+    for (TermDTO descendant : descendants)
+    {
+      if (!descendant.getId().equals(id))
+      {
+        JSONObject object = new JSONObject();
+        object.put("label", descendant.getDisplayLabel().getValue());
+        object.put("id", descendant.getId());
+
+        dArray.put(object);
+      }
+    }
+
     JSONObject response = new JSONObject();
     response.put("label", dto.getDisplayLabel().getValue());
     response.put("id", dto.getId());
     response.put("synonyms", sArray);
+    response.put("siblings", dArray);
 
     return new RestBodyResponse(response);
   }
@@ -105,12 +122,13 @@ public class CategoryController
   @Endpoint(url = "apply", method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF applyOption(ClientRequestIF request, @RequestParamter(name = "config") String config) throws JSONException
   {
-    JSONObject object = new JSONObject(config);
-    String categoryId = object.getString("categoryId");
+//    JSONObject object = new JSONObject(config);
+//    String categoryId = object.getString("categoryId");
 
     ClassifierDTO.applyOption(request, config);
 
-    return this.getCategory(request, categoryId);
+//    return this.getCategory(request, categoryId);
+    return new RestBodyResponse("");    
   }
 
   @Endpoint(url = "unlock", method = ServletMethod.POST, error = ErrorSerialization.JSON)
