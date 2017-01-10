@@ -59,13 +59,11 @@ export class BasicService {
     this.service = service;
   }
 
-//  protected handleError(error: any): Promise<any> {
-//    console.error('An error occurred', error);
-//    
-//    return Promise.reject(error.json() as RunwayException);
-//  }
-  
   protected handleError(error: any): Promise<any> {
+	/*
+	 * Must add the null check on this because the this reference gets messed up when
+	 * this code is executed from ng2 zone.js
+	 */ 	  
     if(this != null) {
       this.service.onError(error);     	
     }

@@ -74,7 +74,8 @@ var CategoryService = (function (_super) {
             .toPromise()
             .then(function (response) {
             return response.json();
-        });
+        })
+            .catch(this.handleError);
     };
     CategoryService.prototype.unlock = function (category) {
         var headers = new http_1.Headers({

@@ -55,7 +55,8 @@ export class DatasetService extends BasicService {
       .toPromise()
       .then((response: any) => {
         return response.json() as Dataset;
-      })      
+      })
+      .catch(this.handleError);      
   }
   
   unlock(dataset: Dataset): Promise<Response> {

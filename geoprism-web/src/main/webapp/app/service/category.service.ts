@@ -71,7 +71,8 @@ export class CategoryService extends BasicService {
     .toPromise()
     .then(response => {
       return response.json() as Category;
-    });
+    })
+    .catch(this.handleError);
   }
   
   unlock(category: Category): Promise<Response> {
