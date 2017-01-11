@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2;
+package net.geoprism.dhis2.importer;
 
 import java.io.File;
 import java.sql.Savepoint;
@@ -45,8 +45,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 import net.geoprism.account.OauthServer;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.dhis2.orgunit.OrgUnitJsonToGeoEntity;
-import net.geoprism.dhis2.orgunit.OrgUnitLevelJsonToUniversal;
+import net.geoprism.dhis2.DHIS2BasicConnector;
+import net.geoprism.dhis2.DHIS2ConflictException;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
@@ -184,7 +184,7 @@ public class DHIS2DataImporter
   private void importOrgUnitLevels()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnitLevels=true"
-    JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnitLevels", "true")
     });
@@ -212,7 +212,7 @@ public class DHIS2DataImporter
   private void importOrgUnits()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true"
-    JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
     });

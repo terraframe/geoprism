@@ -24,7 +24,6 @@ import java.util.Iterator;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpConstants;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
@@ -35,11 +34,14 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.geoprism.account.ExternalProfile;
 
 public class DHIS2BasicConnector
 {
@@ -84,6 +86,11 @@ public class DHIS2BasicConnector
   // curl -X POST -H "Content-Type: application/json" -d '{ "name" : "OAuth2 Demo Client", "cid" : "demo", "secret" : "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6", "grantTypes" : [ "password", "refresh_token", "authorization_code" ], "redirectUris" : [ "http://www.example.org" ]}' -u admin:district 
   public void createOauthClient()
   {
+    if (this.accessToken != null || ExternalProfile.getAccessToken() != null)
+    {
+      return;
+    }
+    
     this.client = new HttpClient();
     
     client.getParams().setAuthenticationPreemptive(true);
@@ -135,6 +142,12 @@ public class DHIS2BasicConnector
   public void logIn()
   {
     this.client = new HttpClient();
+    this.accessToken = ExternalProfile.getAccessToken();
+    
+    if (this.accessToken != null)
+    {
+      return;
+    }
     
     client.getParams().setAuthenticationPreemptive(true);
     Credentials defaultcreds = new UsernamePasswordCredentials("geoprism", SECRET);
@@ -166,7 +179,7 @@ public class DHIS2BasicConnector
           throw new RuntimeException(message);
         }
 
-        String message = "Unable to log into sales force.  Ensure that salesforce.properties is up to date.";
+        String message = "Unable to log into DHIS2. Ensure your credentials are correct.";
         throw new RuntimeException(message);
       }
     }
@@ -178,9 +191,10 @@ public class DHIS2BasicConnector
     this.client = new HttpClient();
   }
   
-  public JSONObject httpGetRequest(String url, NameValuePair[] params)
+  public JSONObject httpGet(String url, NameValuePair[] params)
   {
     GetMethod get = new GetMethod(this.getServerUrl() + url);
+    
     get.setRequestHeader("Authorization", "Bearer " + this.getAccessToken());
     get.setRequestHeader("Accept", "application/json");
     
@@ -195,6 +209,33 @@ public class DHIS2BasicConnector
     }
     
     return response;
+  }
+  
+  public JSONObject httpPost(String url, String body)
+  {
+    try
+    {
+      PostMethod post = new PostMethod(this.serverurl + url);
+      
+      post.setRequestHeader("Authorization", "Bearer " + this.getAccessToken());
+      post.setRequestHeader("Content-Type", "application/json");
+      
+      post.setRequestEntity(new StringRequestEntity(body, null, null));
+
+      JSONObject response = new JSONObject();
+      int statusCode = httpRequest(post, response);
+
+      if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED)
+      {
+        throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
+      }
+      
+      return response;
+    }
+    catch (JSONException | UnsupportedEncodingException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
   
   public int httpRequest(HttpMethod method, JSONObject response)

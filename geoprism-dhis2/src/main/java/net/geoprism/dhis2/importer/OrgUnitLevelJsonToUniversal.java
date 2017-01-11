@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2.orgunit;
+package net.geoprism.dhis2.importer;
 
 import java.sql.Savepoint;
 
@@ -25,8 +25,6 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.system.gis.geo.Universal;
-
-import net.geoprism.dhis2.DHIS2DataImporter;
 
 public class OrgUnitLevelJsonToUniversal
 {
