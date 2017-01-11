@@ -676,7 +676,7 @@
     }
     
     controller.editOptions = function() {
-      $scope.$emit('editDashboard', {dashboardId : controller.dashboardId});
+      $scope.$emit('editDashboard', {dashboardId : controller.dashboardId, element : "#mapDivId"});
     }
     
     controller.getFilterMap = function() {
