@@ -211,6 +211,9 @@
       $timeout(function() {
         controller.model = state;
         controller.renderBase = true;
+        
+        // overwrite title with dashboard name
+        document.title = state.label;
 
         // Initialize the default base map
         var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
