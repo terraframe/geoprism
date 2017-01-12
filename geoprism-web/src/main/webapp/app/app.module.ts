@@ -31,7 +31,7 @@ import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
-
+import { AsyncValidator } from './core/async-validator.directive';
 
 import { EventService } from './service/core.service';
 import { LocalizationService } from './service/localization.service';
@@ -43,6 +43,8 @@ import { CategoryService } from './service/category.service';
 import { UploadWizardComponent } from './uploader/upload-wizard.component';
 import { MatchInitialPageComponent } from './uploader/match-initial-page.component';
 import { MatchPageComponent } from './uploader/match-page.component';
+import { BeginningInfoPageComponent } from './uploader/beginning-info-page.component';
+import { NamePageComponent } from './uploader/name-page.component';
 import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
@@ -61,11 +63,14 @@ import { EventHttpService } from './service/event-http.service';
     AppComponent,
     LoadingBarComponent,
     ErrorMessageComponent,
+    AsyncValidator,
     
     // Upload Wizard components
     UploadWizardComponent,
     MatchInitialPageComponent,
     MatchPageComponent,
+    BeginningInfoPageComponent,
+    NamePageComponent,
     
     // Routing components
     routedComponents

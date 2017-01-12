@@ -60,9 +60,9 @@
             <section class="form-container">
               <match-initial-page *ngIf="page.current == 'MATCH-INITIAL'" (onNextPage)="onNextPage($event)" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-initial-page> 
               <match-page *ngIf="page.current == 'MATCH'" [sheet]="sheet" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-page>  
-<!-- 
               <beginning-info-page *ngIf="page.current == 'BEGINNING-INFO'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></beginning-info-page>            
-              <name-page *ngIf="page.current == 'INITIAL'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
+              <name-page *ngIf="page.current == 'INITIAL'" [sheet]="sheet" [options]="info.options" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
+<!-- 
               <attributes-page *ngIf="page.current == 'FIELDS'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
               <location-page *ngIf="page.current == 'LOCATION'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
               <coordinate-page *ngIf="page.current == 'COORDINATE'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
