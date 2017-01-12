@@ -62,4 +62,6 @@
     </div>
     <input type="file" ng2FileSelect #fileInput [uploader]="uploader" id="uploader-input" style="display:none" />
   </div>
+  
+  <upload-wizard (onSuccess)="onSuccess($event)"></upload-wizard>
 </div>

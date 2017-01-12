@@ -36,11 +36,15 @@ var app_routing_module_1 = require("./app-routing.module");
 var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
 var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
-var filter_pipe_1 = require("./core/filter.pipe");
+var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
 var category_service_1 = require("./service/category.service");
-var core_service_1 = require("./service/core.service");
+// Upload wizard imports
+var upload_wizard_component_1 = require("./uploader/upload-wizard.component");
+var match_initial_page_component_1 = require("./uploader/match-initial-page.component");
+var match_page_component_1 = require("./uploader/match-page.component");
+var upload_service_1 = require("./service/upload.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
     function AppModule() {
@@ -57,16 +61,22 @@ AppModule = __decorate([
             ng2_file_upload_1.FileUploadModule
         ],
         declarations: [
+            // Global components
             app_component_1.AppComponent,
             loading_bar_component_1.LoadingBarComponent,
             error_message_component_1.ErrorMessageComponent,
-            filter_pipe_1.FilterPipe,
+            // Upload Wizard components
+            upload_wizard_component_1.UploadWizardComponent,
+            match_initial_page_component_1.MatchInitialPageComponent,
+            match_page_component_1.MatchPageComponent,
+            // Routing components
             app_routing_module_1.routedComponents
         ],
         providers: [
             localization_service_1.LocalizationService,
             dataset_service_1.DatasetService,
             category_service_1.CategoryService,
+            upload_service_1.UploadService,
             core_service_1.EventService,
             {
                 provide: event_http_service_1.EventHttpService,

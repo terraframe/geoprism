@@ -1,0 +1,104 @@
+///
+/// Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+///
+/// This file is part of Runway SDK(tm).
+///
+/// Runway SDK(tm) is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Lesser General Public License as
+/// published by the Free Software Foundation, either version 3 of the
+/// License, or (at your option) any later version.
+///
+/// Runway SDK(tm) is distributed in the hope that it will be useful, but
+/// WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Lesser General Public License for more details.
+///
+/// You should have received a copy of the GNU Lesser General Public
+/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+///
+"use strict";
+var Country = (function () {
+    function Country() {
+    }
+    return Country;
+}());
+exports.Country = Country;
+var CountryRoot = (function () {
+    function CountryRoot() {
+    }
+    return CountryRoot;
+}());
+exports.CountryRoot = CountryRoot;
+var Options = (function () {
+    function Options() {
+    }
+    return Options;
+}());
+exports.Options = Options;
+var Classifier = (function () {
+    function Classifier() {
+    }
+    return Classifier;
+}());
+exports.Classifier = Classifier;
+var Field = (function () {
+    function Field() {
+    }
+    return Field;
+}());
+exports.Field = Field;
+var Locations = (function () {
+    function Locations() {
+    }
+    return Locations;
+}());
+exports.Locations = Locations;
+var Coordinates = (function () {
+    function Coordinates() {
+    }
+    return Coordinates;
+}());
+exports.Coordinates = Coordinates;
+var Sheet = (function () {
+    function Sheet() {
+    }
+    return Sheet;
+}());
+exports.Sheet = Sheet;
+var Workbook = (function () {
+    function Workbook() {
+    }
+    return Workbook;
+}());
+exports.Workbook = Workbook;
+var UploadInformation = (function () {
+    function UploadInformation() {
+    }
+    return UploadInformation;
+}());
+exports.UploadInformation = UploadInformation;
+var Step = (function () {
+    function Step(label, page) {
+        this.label = label;
+        this.page = page;
+    }
+    return Step;
+}());
+exports.Step = Step;
+var Snapshot = (function () {
+    function Snapshot(page, sheet) {
+        this.page = page;
+        this.sheet = sheet;
+    }
+    return Snapshot;
+}());
+exports.Snapshot = Snapshot;
+var Page = (function () {
+    function Page(current) {
+        this.current = current;
+        this.snapshots = new Array();
+    }
+    return Page;
+}());
+exports.Page = Page;
+//# sourceMappingURL=uploader-model.js.map

@@ -31,12 +31,19 @@ import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
-import { FilterPipe } from './core/filter.pipe';
 
+
+import { EventService } from './service/core.service';
 import { LocalizationService } from './service/localization.service';
+
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
-import { EventService } from './service/core.service';
+
+// Upload wizard imports
+import { UploadWizardComponent } from './uploader/upload-wizard.component';
+import { MatchInitialPageComponent } from './uploader/match-initial-page.component';
+import { MatchPageComponent } from './uploader/match-page.component';
+import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
 
@@ -50,16 +57,24 @@ import { EventHttpService } from './service/event-http.service';
     FileUploadModule    
   ],
   declarations: [
+	// Global components
     AppComponent,
     LoadingBarComponent,
     ErrorMessageComponent,
-    FilterPipe,
+    
+    // Upload Wizard components
+    UploadWizardComponent,
+    MatchInitialPageComponent,
+    MatchPageComponent,
+    
+    // Routing components
     routedComponents
   ],
   providers: [
 	LocalizationService,
     DatasetService,
     CategoryService,
+    UploadService,
     EventService,
     { 
       provide : EventHttpService,
