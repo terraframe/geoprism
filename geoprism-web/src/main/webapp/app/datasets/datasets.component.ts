@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
@@ -28,6 +28,7 @@ import { EventService } from '../service/core.service';
 import { LocalizationService } from '../service/localization.service';
 import { DatasetService } from '../service/dataset.service';
 
+import { UploadWizardComponent } from '../uploader/upload-wizard.component';
 
 declare var acp: string;
 
@@ -42,6 +43,9 @@ export class DatasetsComponent implements OnInit {
 
   public uploader:FileUploader;
   public dropActive:boolean = false;
+
+  @ViewChild(UploadWizardComponent)
+  private wizard: UploadWizardComponent;
 
   constructor(
     private router: Router,
@@ -63,7 +67,7 @@ export class DatasetsComponent implements OnInit {
       this.eventService.complete();
     };    
     this.uploader.onSuccessItem = (item: any, response: string, status: number, headers: any) => {
-      console.log('File Uploaded: ' + response)
+      this.wizard.initialize(response);
     };
     this.uploader.onErrorItem = (item: any, response: string, status: number, headers: any) => {
       this.eventService.onError(response);	
@@ -98,5 +102,9 @@ export class DatasetsComponent implements OnInit {
   
   fileOver(e:any):void {
     this.dropActive = e;
+  }
+  
+  onSuccess(event: any): void {
+    console.log('Updating dataset');
   }
 }

@@ -32,6 +32,7 @@ var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
 var core_service_1 = require("../service/core.service");
 var localization_service_1 = require("../service/localization.service");
 var dataset_service_1 = require("../service/dataset.service");
+var upload_wizard_component_1 = require("../uploader/upload-wizard.component");
 var DatasetsComponent = (function () {
     function DatasetsComponent(router, datasetService, localizationService, eventService) {
         this.router = router;
@@ -54,7 +55,7 @@ var DatasetsComponent = (function () {
             _this.eventService.complete();
         };
         this.uploader.onSuccessItem = function (item, response, status, headers) {
-            console.log('File Uploaded: ' + response);
+            _this.wizard.initialize(response);
         };
         this.uploader.onErrorItem = function (item, response, status, headers) {
             _this.eventService.onError(response);
@@ -86,8 +87,15 @@ var DatasetsComponent = (function () {
     DatasetsComponent.prototype.fileOver = function (e) {
         this.dropActive = e;
     };
+    DatasetsComponent.prototype.onSuccess = function (event) {
+        console.log('Updating dataset');
+    };
     return DatasetsComponent;
 }());
+__decorate([
+    core_1.ViewChild(upload_wizard_component_1.UploadWizardComponent),
+    __metadata("design:type", upload_wizard_component_1.UploadWizardComponent)
+], DatasetsComponent.prototype, "wizard", void 0);
 DatasetsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
