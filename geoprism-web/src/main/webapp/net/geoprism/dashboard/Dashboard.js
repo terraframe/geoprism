@@ -616,8 +616,13 @@
           report : dashboardId,
           configuration : JSON.stringify(configuration) 
         }
-                  
-        var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
+        
+        if(format === "rptdesign"){
+        	var url = 'net.geoprism.report.ReportItemController.download.mojo?' + $.param({dashboardId:dashboardId});
+        }
+        else{
+        	var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
+        }
                   
         window.location.href = url;    
       }
