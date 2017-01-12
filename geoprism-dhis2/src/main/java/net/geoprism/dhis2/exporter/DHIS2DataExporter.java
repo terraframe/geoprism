@@ -26,8 +26,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.session.Request;
@@ -96,28 +94,7 @@ public class DHIS2DataExporter
   
   public void exportMetadata(MdBusiness mdbiz)
   {
-    MdBusinessToTrackerJson converter = new MdBusinessToTrackerJson(mdbiz);
-    
-    JSONObject jsonMetadata = new JSONObject();
-    
-    JSONArray trackedEntities = new JSONArray();
-    trackedEntities.put(converter.getTrackedEntityJson());
-    
-    jsonMetadata.put("trackedEntities", trackedEntities);
-    
-    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    
-    System.out.println(response);
-  }
-  
-  public void exportDataToTracker()
-  {
-    
-    
-    
-    // http://localhost:8085/api/25/trackedEntityInstances?ou=DiszpKrYNg8
-    
-    // https://ci.dhis2.org/docs/2.25/en/developer/html/webapi_tracked_entity_instance_management.html#d0e12844
-    // https://ci.dhis2.org/docs/2.25/en/developer/html/webapi_enrollment_instance_query.html
+    MdBusinessExporter exporter = new MdBusinessExporter(mdbiz, dhis2);
+    exporter.exportToTracker();
   }
 }
