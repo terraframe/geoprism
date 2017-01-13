@@ -1,5 +1,8 @@
 package net.geoprism.dhis2.exporter;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +24,8 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdBusiness;
-import com.runwaysdk.system.metadata.MdBusinessDTO;
+
+import net.geoprism.dhis2.DHIS2Util;
 
 /**
  * Responsible for exporting an MdBusiness directly to DHIS2 Tracker
@@ -35,6 +39,8 @@ public class MdBusinessToTrackerJson
   public MdBusinessToTrackerJson(MdBusiness mdbiz)
   {
     this.mdbiz = mdbiz;
+    
+    
   }
   
   /**
@@ -48,6 +54,7 @@ public class MdBusinessToTrackerJson
     
     trackedEntity.put("name", mdbiz.getDisplayLabel().getValue());
     trackedEntity.put("description", mdbiz.getDescription().getValue());
+    trackedEntity.put("id", DHIS2Util.runwayIdToDHIS2Id(mdbiz.getId()));
     
     return trackedEntity;
   }
@@ -57,12 +64,6 @@ public class MdBusinessToTrackerJson
    * 
    * Example format: http://localhost:8085/api/25/metadata.json?trackedEntityAttributes=true
    */
-  private String[] skipAttrs = new String[]{
-    MdBusinessDTO.CACHEALGORITHM, MdBusinessDTO.TABLENAME, MdBusinessDTO.KEYNAME,
-    MdBusinessDTO.BASECLASS, MdBusinessDTO.BASESOURCE, MdBusinessDTO.DTOCLASS, MdBusinessDTO.DTOSOURCE, MdBusinessDTO.STUBCLASS, MdBusinessDTO.STUBDTOCLASS, MdBusinessDTO.STUBDTOSOURCE, MdBusinessDTO.STUBSOURCE,
-    MdAttributeConcreteDTO.GETTERVISIBILITY, MdAttributeConcreteDTO.INDEXTYPE, MdAttributeConcreteDTO.INDEXNAME, MdAttributeConcreteDTO.COLUMNNAME,
-    MdAttributeConcreteDTO.DEFININGMDCLASS, MdAttributeConcreteDTO.ENTITYDOMAIN, MdAttributeConcreteDTO.OWNER, MdAttributeConcreteDTO.SETTERVISIBILITY, MdAttributeConcreteDTO.SITEMASTER
-  };
   public JSONArray getTrackedEntityAttributes()
   {
     JSONArray jsonAttrs = new JSONArray();
@@ -71,7 +72,7 @@ public class MdBusinessToTrackerJson
     for (MdAttribute mdAttr : mdAttrs)
     {
       if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
-          !ArrayUtils.contains(skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
+          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
         )
       {
         JSONObject jsonAttr = new JSONObject();
@@ -130,30 +131,66 @@ public class MdBusinessToTrackerJson
     return jsonAttrs;
   }
   
+  public JSONArray getProgramTrackedEntityAttributes(String programId, Map<String, String> trackedEntityAttributeIds)
+  {
+    JSONArray jsonAttrs = new JSONArray();
+    
+    OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
+    for (MdAttribute mdAttr : mdAttrs)
+    {
+      if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
+          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
+        )
+      {
+        JSONObject jsonAttr = new JSONObject();
+        if (programId != null)
+        {
+          jsonAttr.put("program", new JSONObject().put("id", programId));
+        }
+        jsonAttr.put("trackedEntityAttribute", new JSONObject().put("id", trackedEntityAttributeIds.get(mdAttr.getId())));
+        jsonAttr.put("displayInList", "true");
+        jsonAttr.put("mandatory", "false");
+        jsonAttrs.put(jsonAttr);
+      }
+    }
+    
+    return jsonAttrs;
+  }
+  
   /**
    * Creates the JSON representation of a DHIS2 Program from the MdBusiness.
    * 
    * Example format: http://localhost:8085/api/25/metadata.json?programs=true
    */
-  public JSONObject getProgramJson()
+  public JSONObject getProgramJson(String trackedEntityId, String categoryComboId, Collection<String> attributeIds)
   {
     JSONObject program = new JSONObject();
     
-    program.put("name", mdbiz.getDisplayLabel().getValue());
-    program.put("shortName", mdbiz.getDisplayLabel().getValue());
+    program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
+    program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("programType", "WITH_REGISTRATION");
-    program.put("trackedEntity", new JSONObject().put("id", "???"));
-    program.put("incidentDateLabel", "Date of creation");
-    program.put("enrollmentDateLabel", "Date of enrollment");
+    program.put("trackedEntity", new JSONObject().put("id", DHIS2Util.runwayIdToDHIS2Id(mdbiz.getId())));
+    program.put("incidentDateLabel", "Incident date");
+    program.put("enrollmentDateLabel", "Enrollment date");
+    program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
     
     JSONArray attrs = new JSONArray();
+    if (attributeIds != null)
+    {
+      for (String id : attributeIds)
+      {
+        attrs.put(new JSONObject().put("id", id));
+      }
+    }
     program.put("programTrackedEntityAttributes", attrs);
     
+    return program;
+  }
+  
+  public JSONObject getPatchProgramJson(Collection<String> attributeIds)
+  {
+    JSONObject program = new JSONObject();
     
-//    "displayFrontPageList": false,
-//    "enrollmentDateLabel": "Date of enrollment",
-//    "onlyEnrollOnce": true,
-//    "programType": "WITH_REGISTRATION",
     
     
     return program;

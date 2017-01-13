@@ -116,7 +116,7 @@ public class DHIS2DataImporter
   @Transaction
   private void importAllInTransaction()
   {
-    createGeoprismOauthData();
+    dhis2.initialize();
     importOrgUnitLevels();
     importOrgUnits();
     buildAllpaths();
@@ -125,53 +125,6 @@ public class DHIS2DataImporter
   public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
   {
     return universals[level];
-  }
-  
-  private void createGeoprismOauthData()
-  {
-    try
-    {
-      dhis2.createOauthClient();
-    }
-    catch (DHIS2ConflictException e)
-    {
-      // If it threw an error because the oauth client already exists, ignore it.
-      if (!e.isDuplicateGeoprismOauth())
-      {
-        throw e;
-      }
-    }
-    
-    Savepoint sp = Database.setSavepoint();
-    
-    try
-    {
-      OauthServer oauth = new OauthServer();
-      oauth.setKeyName("dhis2-local");
-      oauth.getDisplayLabel().setValue("DHIS2");
-      oauth.setAuthorizationLocation("http://127.0.0.1:8085/uaa/oauth/authorize");
-      oauth.setTokenLocation("http://127.0.0.1:8085/uaa/oauth/token");
-      oauth.setProfileLocation("http://127.0.0.1:8085/api/me");
-      oauth.setClientId(DHIS2BasicConnector.CLIENT_ID);
-      oauth.setSecretKey(DHIS2BasicConnector.SECRET);
-      oauth.setServerType("DHIS2");
-      oauth.apply();
-    }
-    catch (DuplicateDataException ex)
-    {
-      Database.rollbackSavepoint(sp);
-    }
-    catch (RuntimeException ex)
-    {
-      Database.rollbackSavepoint(sp);
-      throw ex;
-    }
-    finally
-    {
-      Database.releaseSavepoint(sp);
-    }
-    
-    dhis2.logIn();
   }
   
   private void buildAllpaths()

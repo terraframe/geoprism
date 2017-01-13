@@ -87,7 +87,7 @@ public class DHIS2DataExporter
   
   public void exportToTracker(MdBusiness mdbiz)
   {
-    dhis2.logIn();
+    dhis2.initialize();
     exportMetadata(mdbiz);
     // exportData(mdbiz);
   }
