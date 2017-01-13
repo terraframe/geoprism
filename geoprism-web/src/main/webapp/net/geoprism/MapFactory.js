@@ -1848,7 +1848,7 @@
                     SERVICE:'WFS',
                     VERSION:'2.0.0',
                     TYPENAMES:workspace+":"+ featureJSON.layerViewName,
-                    CQL_FILTER : "geoid='"+ featureJSON.geoId + "'",
+                    CQL_FILTER : "geo_id_00='"+ featureJSON.geoId + "'",
                     //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
                     outputFormat : 'application/json'
               };
