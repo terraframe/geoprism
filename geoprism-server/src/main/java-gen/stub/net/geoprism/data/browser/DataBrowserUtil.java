@@ -26,8 +26,9 @@ import net.geoprism.ConfigurationService;
 
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.Entity;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
-import com.runwaysdk.dataaccess.metadata.MdEntityDAO;
+import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.OIterator;
@@ -61,30 +62,32 @@ public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysd
 
     return query;
   }
-  
+
   @Transaction
   public static void deleteData(String type)
   {
-    MdEntityDAOIF mdEntity = MdEntityDAO.getMdEntityDAO(type);
-    
-    QueryFactory factory = new QueryFactory();
-    EntityQuery query = factory.entityQuery(mdEntity);
-    OIterator<? extends ComponentIF> iterator = query.getIterator();
-    
-    try
+    MdClassDAOIF mdClass = MdClassDAO.getMdClassDAO(type);
+
+    if (mdClass instanceof MdEntityDAOIF)
     {
-      while(iterator.hasNext())
+      QueryFactory factory = new QueryFactory();
+      EntityQuery query = factory.entityQuery((MdEntityDAOIF) mdClass);
+      OIterator<? extends ComponentIF> iterator = query.getIterator();
+
+      try
       {
-        Entity entity = (Entity) iterator.next();
-        entity.delete();
+        while (iterator.hasNext())
+        {
+          Entity entity = (Entity) iterator.next();
+          entity.delete();
+        }
+      }
+      finally
+      {
+        iterator.close();
       }
     }
-    finally
-    {
-      iterator.close();
-    }
   }
-
 
   public static MetadataTypeQuery getTypes(String[] packages, String[] types)
   {

@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.geoprism.account.ExternalProfileDTO;
 import net.geoprism.dashboard.AggregationStrategyDTO;
 import net.geoprism.dashboard.AggregationStrategyViewDTO;
 import net.geoprism.dashboard.AggregationTypeDTO;
@@ -150,6 +151,7 @@ public class JavascriptUtil implements Reloadable
     types.add(RolesDTO.CLASS);
     types.add(RoleViewDTO.CLASS);
     types.add(GeoprismUserDTO.CLASS);
+    types.add(ExternalProfileDTO.CLASS);
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);

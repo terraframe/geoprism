@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 727268073)
+@com.runwaysdk.business.ClassSignature(hash = -836701074)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -42,7 +42,7 @@ public abstract class DashboardMetadataBase extends com.runwaysdk.business.Relat
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 727268073;
+  private static final long serialVersionUID = -836701074;
   
   public DashboardMetadataBase(String parentId, String childId)
   {
@@ -249,7 +249,7 @@ public abstract class DashboardMetadataBase extends com.runwaysdk.business.Relat
     }
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -257,7 +257,7 @@ public abstract class DashboardMetadataBase extends com.runwaysdk.business.Relat
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

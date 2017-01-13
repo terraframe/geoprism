@@ -24,7 +24,7 @@ import java.util.List;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdView;
 
 public class TargetBinding extends TargetBindingBase implements com.runwaysdk.generation.loader.Reloadable
@@ -82,11 +82,13 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
   public TargetDefinitionIF getDefinition()
   {
     MdView sourceView = this.getSourceView();
-    MdBusiness targetBusiness = this.getTargetBusiness();
+    MdClass targetBusiness = this.getTargetBusiness();
+    PersistenceStrategy strategy = this.getStrategy();
 
     TargetDefinition definition = new TargetDefinition();
     definition.setSourceType(sourceView.definesType());
     definition.setTargetType(targetBusiness.definesType());
+    definition.setStrategy(strategy);
     definition.setNew(false);
     definition.setApplied(true);
 
@@ -102,13 +104,13 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
 
   public static TargetBinding getBinding(String type)
   {
-    return TargetBinding.getBinding(MdBusiness.getMdBusiness(type));
+    return TargetBinding.getBindingForTarget(MdClass.getMdClass(type));
   }
 
-  public static TargetBinding getBinding(MdBusiness mdBusiness)
+  public static TargetBinding getBindingForTarget(MdClass mdClass)
   {
     TargetBindingQuery query = new TargetBindingQuery(new QueryFactory());
-    query.WHERE(query.getTargetBusiness().EQ(mdBusiness));
+    query.WHERE(query.getTargetBusiness().EQ(mdClass));
 
     OIterator<? extends TargetBinding> iterator = query.getIterator();
 
@@ -129,7 +131,7 @@ public class TargetBinding extends TargetBindingBase implements com.runwaysdk.ge
     }
   }
 
-  public static TargetBinding getBinding(MdView mdView)
+  public static TargetBinding getBindingForSource(MdView mdView)
   {
     TargetBindingQuery query = new TargetBindingQuery(new QueryFactory());
     query.WHERE(query.getSourceView().EQ(mdView));

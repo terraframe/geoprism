@@ -86,7 +86,6 @@ import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
 import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeReference;
-import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
@@ -138,9 +137,9 @@ public class TargetBuilder
 
           if (replace)
           {
-            MdBusiness mdBusiness = tBinding.getTargetBusiness();
+            MdClass mdClass = tBinding.getTargetBusiness();
 
-            DataBrowserUtil.deleteData(mdBusiness.definesType());
+            DataBrowserUtil.deleteData(mdClass.definesType());
           }
         }
         else
@@ -180,7 +179,7 @@ public class TargetBuilder
     definition.setTargetType(PACKAGE_NAME + "." + typeName);
 
     /*
-     * Define the new MdBussiness
+     * Define the new MdView
      */
     MdBusinessDAO mdBusiness = MdBusinessDAO.newInstance();
     mdBusiness.setValue(MdBusinessInfo.PACKAGE, PACKAGE_NAME);
@@ -188,7 +187,6 @@ public class TargetBuilder
     mdBusiness.setStructValue(MdBusinessInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdBusiness.setStructValue(MdBusinessInfo.DESCRIPTION, MdAttributeLocalInfo.DEFAULT_LOCALE, description);
     mdBusiness.setValue(MdViewInfo.GENERATE_SOURCE, MdAttributeBooleanInfo.FALSE);
-    mdBusiness.setGenerateMdController(false);
     mdBusiness.apply();
 
     /*
@@ -350,6 +348,14 @@ public class TargetBuilder
     {
       configuration.configurePermissions(mdBusiness);
     }
+
+    /*
+     * Create the persistence strategy
+     */
+    LocalPersistenceStrategy strategy = new LocalPersistenceStrategy();
+    strategy.apply();
+    
+    definition.setStrategy(strategy);
 
     return definition;
   }
@@ -858,7 +864,7 @@ public class TargetBuilder
           String label = object.getString("locationLabel");
 
           String key = universal + "-" + parentId;
-          
+
           exclusions.putIfAbsent(key, new HashSet<String>());
           exclusions.get(key).add(label);
         }

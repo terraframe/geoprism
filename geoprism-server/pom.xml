@@ -18,6 +18,9 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
+<!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is part of Runway SDK(tm). Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, 
+  or (at your option) any later version. Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received 
+  a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -121,7 +124,13 @@
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>3.7</version>
-    </dependency>    
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.oltu.oauth2</groupId>
+      <artifactId>org.apache.oltu.oauth2.client</artifactId>
+      <version>1.0.2</version>
+    </dependency>
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->
@@ -230,45 +239,45 @@
       </build>
     </profile>
     <profile>
-     <id>patch</id>
-     <activation>
-       <property>
-         <name>patch</name>
-       </property>
-     </activation>
-     <build>
-       <plugins>
-         <plugin>
-           <groupId>org.codehaus.mojo</groupId>
-           <artifactId>exec-maven-plugin</artifactId>
-           <version>1.2.1</version>
-           <executions>
-             <execution>
-               <id>patch</id>
-               <phase>verify</phase>
-               <goals>
-                 <goal>java</goal>
-               </goals>
-               <configuration>
-                 <executable>java</executable>
-                 <mainClass>net.geoprism.GeoprismPatcher</mainClass>
-                 <arguments>
-                   <argument>${project.basedir}/target/classes/metadata</argument>
-                   <argument>${configuration.dir}/${geoprism.app}</argument>
-                 </arguments>
-                 <systemProperties>
-                   <systemProperty>
-                     <key>endpoint.cache</key>
-                     <value>${project.basedir}/cache</value>
-                   </systemProperty>
-                 </systemProperties>
-               </configuration>
-             </execution>
-           </executions>
-         </plugin>
-       </plugins>
-     </build>
-   </profile>
+      <id>patch</id>
+      <activation>
+        <property>
+          <name>patch</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>patch</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <executable>java</executable>
+                  <mainClass>net.geoprism.GeoprismPatcher</mainClass>
+                  <arguments>
+                    <argument>${project.basedir}/target/classes/metadata</argument>
+                    <argument>${configuration.dir}/${geoprism.app}</argument>
+                  </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>endpoint.cache</key>
+                      <value>${project.basedir}/cache</value>
+                    </systemProperty>
+                  </systemProperties>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>update-source-classes</id>
       <activation>

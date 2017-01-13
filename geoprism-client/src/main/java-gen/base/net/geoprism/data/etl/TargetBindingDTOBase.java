@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 1900509006)
+@com.runwaysdk.business.ClassSignature(hash = 228299462)
 public abstract class TargetBindingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.data.etl.TargetBinding";
-  private static final long serialVersionUID = 1900509006;
+  private static final long serialVersionUID = 228299462;
   
   protected TargetBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -57,6 +57,7 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String SOURCEVIEW = "sourceView";
+  public static java.lang.String STRATEGY = "strategy";
   public static java.lang.String TARGETBUSINESS = "targetBusiness";
   public static java.lang.String TYPE = "type";
   public java.util.Date getCreateDate()
@@ -269,7 +270,7 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.UsersDTO getLockedBy()
+  public com.runwaysdk.system.SingleActorDTO getLockedBy()
   {
     if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
     {
@@ -277,7 +278,7 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     }
     else
     {
-      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LOCKEDBY));
     }
   }
   
@@ -454,7 +455,56 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(SOURCEVIEW).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.metadata.MdBusinessDTO getTargetBusiness()
+  public net.geoprism.data.etl.PersistenceStrategyDTO getStrategy()
+  {
+    if(getValue(STRATEGY) == null || getValue(STRATEGY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return net.geoprism.data.etl.PersistenceStrategyDTO.get(getRequest(), getValue(STRATEGY));
+    }
+  }
+  
+  public String getStrategyId()
+  {
+    return getValue(STRATEGY);
+  }
+  
+  public void setStrategy(net.geoprism.data.etl.PersistenceStrategyDTO value)
+  {
+    if(value == null)
+    {
+      setValue(STRATEGY, "");
+    }
+    else
+    {
+      setValue(STRATEGY, value.getId());
+    }
+  }
+  
+  public boolean isStrategyWritable()
+  {
+    return isWritable(STRATEGY);
+  }
+  
+  public boolean isStrategyReadable()
+  {
+    return isReadable(STRATEGY);
+  }
+  
+  public boolean isStrategyModified()
+  {
+    return isModified(STRATEGY);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getStrategyMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(STRATEGY).getAttributeMdDTO();
+  }
+  
+  public com.runwaysdk.system.metadata.MdClassDTO getTargetBusiness()
   {
     if(getValue(TARGETBUSINESS) == null || getValue(TARGETBUSINESS).trim().equals(""))
     {
@@ -462,7 +512,7 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     }
     else
     {
-      return com.runwaysdk.system.metadata.MdBusinessDTO.get(getRequest(), getValue(TARGETBUSINESS));
+      return com.runwaysdk.system.metadata.MdClassDTO.get(getRequest(), getValue(TARGETBUSINESS));
     }
   }
   
@@ -471,7 +521,7 @@ public abstract class TargetBindingDTOBase extends com.runwaysdk.business.Busine
     return getValue(TARGETBUSINESS);
   }
   
-  public void setTargetBusiness(com.runwaysdk.system.metadata.MdBusinessDTO value)
+  public void setTargetBusiness(com.runwaysdk.system.metadata.MdClassDTO value)
   {
     if(value == null)
     {

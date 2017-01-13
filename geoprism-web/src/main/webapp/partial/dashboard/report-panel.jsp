@@ -29,7 +29,8 @@
       
     <span ng-if="ctrl.canEdit()">
       <a ng-click="ctrl.upload()" href="#" id="report-upload" title="<gdb:localize key='dashboardViewer.uploadReportTooltip'/>" ><gdb:localize key="dashboardViewer.upload"/></a>
-      <a ng-show="hasReport" ng-click="ctrl.remove()" href="#" title="<gdb:localize key='dashboardViewer.removeReportTooltip'/>" ><gdb:localize key="dashboardViewer.remove"/></a>
+      <a ng-show="hasReport" href="#" ng-click="ctrl.remove()" title="<gdb:localize key='dashboardViewer.removeReportTooltip'/>" ><gdb:localize key="dashboardViewer.remove"/></a>
+      <a ng-show="hasReport" href="#" ng-click="ctrl.exportReport('rptdesign')" title="<gdb:localize key='dashboardViewer.exportReportTooltip'/>" ><gdb:localize key="report.rptdesign"/></a>
     </span>
      
     <span ng-show="hasReport" id="report-export-container">      

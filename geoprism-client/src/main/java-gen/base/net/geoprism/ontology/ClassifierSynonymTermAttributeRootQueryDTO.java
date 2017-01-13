@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1200327972)
+@com.runwaysdk.business.ClassSignature(hash = -94954633)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ package net.geoprism.ontology;
 public class ClassifierSynonymTermAttributeRootQueryDTO extends com.runwaysdk.business.RelationshipQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -1200327972;
+private static final long serialVersionUID = -94954633;
 
   protected ClassifierSynonymTermAttributeRootQueryDTO(String type)
   {

@@ -22,12 +22,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 import net.geoprism.data.etl.DefinitionBuilder;
 import net.geoprism.data.etl.ExcelSourceBinding;
 import net.geoprism.data.etl.ImportResponseIF;
 import net.geoprism.data.etl.ImportRunnable;
+import net.geoprism.data.etl.LoggingProgressMonitor;
+import net.geoprism.data.etl.ProgressMonitorIF;
 import net.geoprism.data.etl.SourceDefinitionIF;
 import net.geoprism.data.etl.TargetDefinitionIF;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
@@ -237,7 +240,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
         {
           Universal universal = it.next();
 
-          List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+          Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
           // children.add(0, universal);
 
           JSONArray options = new JSONArray();
@@ -292,8 +295,9 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
       File file = new File(directory, filename);
+      ProgressMonitorIF monitor = new LoggingProgressMonitor(file.getName());
 
-      ImportResponseIF response = new ImportRunnable(configuration, file).run();
+      ImportResponseIF response = new ImportRunnable(configuration, file, monitor).run();
 
       if (!response.hasProblems())
       {

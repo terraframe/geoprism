@@ -111,6 +111,13 @@ public class SessionControllerBase implements com.runwaysdk.generation.loader.Re
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.login");
   }
 
+  @com.runwaysdk.controller.ActionParameters(parameters = "java.lang.String:code, java.lang.String:state", post = false)
+  public void ologin(java.lang.String code, java.lang.String state) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in com.runwaysdk.defaults.SessionController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "com.runwaysdk.defaults.SessionController.login");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters = "java.lang.String:username, java.lang.String:password", post = true)
   public void failLogin(java.lang.String username, java.lang.String password) throws java.io.IOException, javax.servlet.ServletException
   {

@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = 1311302827)
+@com.runwaysdk.business.ClassSignature(hash = 1399994032)
 public abstract class HasLayerDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.HasLayer";
-  private static final long serialVersionUID = 1311302827;
+  private static final long serialVersionUID = 1399994032;
   
   public HasLayerDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
   {
@@ -306,7 +306,7 @@ public abstract class HasLayerDTOBase extends com.runwaysdk.business.Relationshi
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(LAYERINDEX).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.UsersDTO getLockedBy()
+  public com.runwaysdk.system.SingleActorDTO getLockedBy()
   {
     if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
     {
@@ -314,7 +314,7 @@ public abstract class HasLayerDTOBase extends com.runwaysdk.business.Relationshi
     }
     else
     {
-      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LOCKEDBY));
     }
   }
   

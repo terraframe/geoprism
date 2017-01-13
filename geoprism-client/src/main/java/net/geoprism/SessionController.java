@@ -19,12 +19,20 @@
 package net.geoprism;
 
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
+
+import net.geoprism.account.ExternalProfileDTO;
+import net.geoprism.account.LocaleSerializer;
+import net.geoprism.account.OauthServerDTO;
+import net.geoprism.account.OauthServerIF;
 
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
@@ -60,13 +68,30 @@ public class SessionController extends SessionControllerBase implements Reloadab
 
   private void form(String errorMessage) throws IOException, ServletException
   {
+    Locale[] locales = ServletUtility.getLocales(req);
+
     CachedImageUtil.setBannerPath(this.req, this.resp);
-    
+
     if (errorMessage != null)
     {
       req.setAttribute("errorMessage", errorMessage);
     }
-    
+
+    WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
+
+    try
+    {
+      ClientRequestIF clientRequest = clientSession.getRequest();
+
+      OauthServerDTO[] servers = OauthServerDTO.getAll(clientRequest);
+
+      req.setAttribute("servers", servers);
+    }
+    finally
+    {
+      clientSession.logout();
+    }
+
     req.getRequestDispatcher("/login.jsp").forward(req, resp);
   }
 
@@ -125,5 +150,53 @@ public class SessionController extends SessionControllerBase implements Reloadab
     req.getSession().invalidate();
 
     resp.sendRedirect(req.getContextPath() + "/session/form");
+  }
+
+  @Override
+  public void ologin(String code, String state) throws IOException, ServletException
+  {
+    try
+    {
+      URL url = new URL(req.getScheme(), req.getServerName(), req.getServerPort(), req.getContextPath());
+
+      String redirect = url.toString();
+
+      JSONObject stateObject = new JSONObject(state);
+      String serverId = stateObject.getString(OauthServerIF.SERVER_ID);
+
+      Locale[] locales = ServletUtility.getLocales(req);
+
+      WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
+
+      try
+      {
+        ClientRequestIF clientRequest = clientSession.getRequest();
+
+        String sessionId = ExternalProfileDTO.login(clientRequest, serverId, code, LocaleSerializer.serialize(locales), redirect);
+
+        this.createSession(sessionId, locales);
+
+        resp.sendRedirect(req.getContextPath() + "/menu");
+      }
+      finally
+      {
+        clientSession.logout();
+      }
+    }
+    catch (Throwable t)
+    {
+      String message = t.getLocalizedMessage() == null ? t.getMessage() : t.getLocalizedMessage();
+      resp.sendRedirect(req.getContextPath() + "/session/form?errorMessage=" + URLEncoder.encode(message, EncodingConstants.ENCODING));
+    }
+  }
+
+  private void createSession(String sessionId, Locale[] locales)
+  {
+    WebClientSession clientSession = WebClientSession.getExistingSession(sessionId, locales);
+    ClientRequestIF clientRequest = clientSession.getRequest();
+
+    req.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+    req.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+    req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
   }
 }

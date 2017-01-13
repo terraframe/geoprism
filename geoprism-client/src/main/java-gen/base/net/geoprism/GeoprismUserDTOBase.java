@@ -18,11 +18,11 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -799106970)
+@com.runwaysdk.business.ClassSignature(hash = 2129247925)
 public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.GeoprismUser";
-  private static final long serialVersionUID = -799106970;
+  private static final long serialVersionUID = 2129247925;
   
   protected GeoprismUserDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -221,12 +221,12 @@ public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
     return (net.geoprism.GeoprismUserDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final net.geoprism.GeoprismUserDTO getCurrentUser(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public static final com.runwaysdk.system.SingleActorDTO getCurrentUser(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "getCurrentUser", _declaredTypes);
-    return (net.geoprism.GeoprismUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return (com.runwaysdk.system.SingleActorDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final java.lang.Boolean hasAccess(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String functionality)

@@ -80,8 +80,8 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getDisplayLabelAttribute().getId());
 
     SelectableSingle label = this.geoEntityQuery.getDisplayLabel().localize(mdAttribute.definesAttribute());
-    label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-    label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
+    label.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
+    label.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
     label.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
 
     return label;
@@ -94,8 +94,8 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
 
     // geo id (for uniqueness)
     Selectable geoId = this.geoEntityQuery.getGeoId(mdAttribute.definesAttribute());
-    geoId.setUserDefinedAlias(GeoEntity.GEOID);
-    geoId.setColumnAlias(GeoEntity.GEOID);
+    geoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+    geoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
     geoId.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
     
     return geoId;

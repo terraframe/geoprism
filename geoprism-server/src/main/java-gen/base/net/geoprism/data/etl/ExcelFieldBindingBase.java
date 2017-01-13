@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -1613353581)
+@com.runwaysdk.business.ClassSignature(hash = -978082706)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -46,7 +46,7 @@ public abstract class ExcelFieldBindingBase extends com.runwaysdk.business.Busin
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String SOURCEDEFINITION = "sourceDefinition";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1613353581;
+  private static final long serialVersionUID = -978082706;
   
   public ExcelFieldBindingBase()
   {
@@ -309,7 +309,7 @@ public abstract class ExcelFieldBindingBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -317,7 +317,7 @@ public abstract class ExcelFieldBindingBase extends com.runwaysdk.business.Busin
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

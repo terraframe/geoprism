@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
-import com.runwaysdk.business.rbac.UserDAOIF;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.constants.VaultFileInfo;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.query.OIterator;
@@ -132,7 +132,7 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
 
       if (!access)
       {
-        UserDAOIF user = SessionFacade.getUser(sessionId);
+        SingleActorDAOIF user = SessionFacade.getUser(sessionId);
         String errorMsg = "User [" + user.getSingleActorName() + "] does not have permission to upload a system logo.";
         throw new CreatePermissionException(errorMsg, entity, user);
       }

@@ -18,11 +18,11 @@
  */
 package net.geoprism.dashboard.layer;
 
-@com.runwaysdk.business.ClassSignature(hash = 268093825)
+@com.runwaysdk.business.ClassSignature(hash = 907338588)
 public abstract class CategoryIconDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.CategoryIcon";
-  private static final long serialVersionUID = 268093825;
+  private static final long serialVersionUID = 907338588;
   
   protected CategoryIconDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -343,7 +343,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.UsersDTO getLockedBy()
+  public com.runwaysdk.system.SingleActorDTO getLockedBy()
   {
     if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
     {
@@ -351,7 +351,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LOCKEDBY));
     }
   }
   

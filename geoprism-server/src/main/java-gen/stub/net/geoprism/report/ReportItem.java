@@ -65,7 +65,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
-import com.runwaysdk.business.rbac.UserDAOIF;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.constants.VaultFileInfo;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -338,7 +338,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
       if (!access)
       {
-        UserDAOIF user = SessionFacade.getUser(sessionId);
+        SingleActorDAOIF user = SessionFacade.getUser(sessionId);
         String errorMsg = "User [" + user.getSingleActorName() + "] does not have permission to upload a new design file ";
         throw new CreatePermissionException(errorMsg, entity, user);
       }

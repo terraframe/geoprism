@@ -27,12 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.geoprism.MappableClass;
-import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
-import net.geoprism.data.etl.excel.ExcelDataFormatter;
-import net.geoprism.data.etl.excel.ExcelSheetReader;
-import net.geoprism.data.etl.excel.SourceContentHandler;
-
 import org.json.JSONArray;
 
 import com.runwaysdk.RunwayException;
@@ -45,8 +39,16 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeDecDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.MappableClass;
+import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
+import net.geoprism.data.etl.excel.ExcelDataFormatter;
+import net.geoprism.data.etl.excel.ExcelSheetReader;
+import net.geoprism.data.etl.excel.SourceContentHandler;
+
 public class ImportRunnable
 {
+  private ProgressMonitorIF monitor;
+  
   static class ValidationResult
   {
     private ImportResponseIF              response;
@@ -74,10 +76,12 @@ public class ImportRunnable
 
   private File   file;
 
-  public ImportRunnable(String configuration, File file)
+  public ImportRunnable(String configuration, File file, ProgressMonitorIF monitor)
   {
     this.configuration = configuration;
     this.file = file;
+    
+    this.monitor = monitor;
   }
 
   @Transaction
@@ -90,7 +94,7 @@ public class ImportRunnable
        */
       DataSetBuilderIF builder = new DataSetBuilder(configuration);
       builder.build();
-
+      
       /*
        * Create and import the view objects from the configuration
        */
@@ -100,10 +104,12 @@ public class ImportRunnable
       /*
        * Before importing the data we must validate that the location text information
        */
+      monitor.setState(DataImportState.VALIDATION);
       ValidationResult result = this.validateData(file, sContext, tContext);
-
+      
       if (result.getResponse() != null)
       {
+        monitor.setState(DataImportState.VALIDATIONFAIL);
         return result.getResponse();
       }
 
@@ -115,8 +121,9 @@ public class ImportRunnable
       /*
        * Import the data
        */
+      monitor.setState(DataImportState.DATAIMPORT);
       this.importData(file, sContext, tContext);
-
+      
       /*
        * Return a JSONArray of the datasets which were created as part of the import. Do not include datasets which have
        * already been created.
@@ -134,6 +141,8 @@ public class ImportRunnable
 
         datasets.put(mClass.toJSON());
       }
+      
+      monitor.setState(DataImportState.COMPLETE);
 
       // Return the new data set definition
       return new SuccessResponse(datasets);
@@ -183,7 +192,7 @@ public class ImportRunnable
 
     try
     {
-      SourceContentHandler handler = new SourceContentHandler(converter, sContext);
+      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
@@ -203,7 +212,7 @@ public class ImportRunnable
 
     try
     {
-      SourceContentHandler handler = new SourceContentHandler(converter, sContext);
+      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);

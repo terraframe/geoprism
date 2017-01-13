@@ -18,11 +18,11 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -2104888576)
+@com.runwaysdk.business.ClassSignature(hash = 1542551323)
 public abstract class ClassifierProblemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.ClassifierProblem";
-  private static final long serialVersionUID = -2104888576;
+  private static final long serialVersionUID = 1542551323;
   
   protected ClassifierProblemDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -318,7 +318,7 @@ public abstract class ClassifierProblemDTOBase extends com.runwaysdk.business.Bu
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LASTUPDATEDBY).getAttributeMdDTO();
   }
   
-  public com.runwaysdk.system.UsersDTO getLockedBy()
+  public com.runwaysdk.system.SingleActorDTO getLockedBy()
   {
     if(getValue(LOCKEDBY) == null || getValue(LOCKEDBY).trim().equals(""))
     {
@@ -326,7 +326,7 @@ public abstract class ClassifierProblemDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      return com.runwaysdk.system.UsersDTO.get(getRequest(), getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActorDTO.get(getRequest(), getValue(LOCKEDBY));
     }
   }
   

@@ -34,6 +34,8 @@
             <xs:element name="initializeTask" type="initializeTask" />
             <xs:element name="patchMappableClassTask" type="patchMappableClassTask" />
             <xs:element name="patchCategoryTask" type="patchCategoryTask" />
+            <xs:element name="patchLockedByTask" type="patchLockedByTask" />
+            <xs:element name="patchTargetBindingTask" type="patchTargetBindingTask" />
           </xs:choice>
         </xs:extension>
       </xs:complexContent>
@@ -110,6 +112,12 @@
   </xs:complexType>
 
   <xs:complexType name="patchCategoryTask">
+  </xs:complexType>
+
+  <xs:complexType name="patchLockedByTask">
+  </xs:complexType>
+
+  <xs:complexType name="patchTargetBindingTask">
   </xs:complexType>
 
 </xs:schema>

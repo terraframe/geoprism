@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1817639210)
+@com.runwaysdk.business.ClassSignature(hash = 818120219)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -43,7 +43,7 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
   public static java.lang.String SESSIONUSER = "sessionUser";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = -1817639210;
+  private static final long serialVersionUID = 818120219;
   
   public SessionEntryBase()
   {
@@ -222,7 +222,7 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -230,7 +230,7 @@ public abstract class SessionEntryBase extends com.runwaysdk.business.Business i
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

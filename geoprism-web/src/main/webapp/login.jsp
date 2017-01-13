@@ -19,7 +19,10 @@
 
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
@@ -57,9 +60,11 @@
 					    <p class="login-submit">
 					      <button type="submit" class="login-button"><i class="fa fa-sign-in"></i><gdb:localize key="login.button" /></button>
 					    </p>
-					 </div>
-				
+					 </div>				
 				  </form>
+				  <c:forEach items="${servers}" var="server">
+				    <a href="${server.getUrl(pageContext.request)}">Log in with ${server.displayLabel.value}</a>
+				  </c:forEach>
 	    	</header>
 	    	
 

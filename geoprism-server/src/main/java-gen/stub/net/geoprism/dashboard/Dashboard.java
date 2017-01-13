@@ -42,6 +42,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.geoprism.AccessConstants;
 import net.geoprism.ClassUniversalQuery;
 import net.geoprism.GeoprismUser;
+import net.geoprism.GeoprismUserIF;
 import net.geoprism.GeoprismUserQuery;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.MappableClass;
@@ -74,6 +75,8 @@ import org.json.JSONObject;
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.RoleDAO;
+import com.runwaysdk.business.rbac.SingleActorDAO;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
@@ -105,6 +108,7 @@ import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
+import com.runwaysdk.system.SingleActor;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -121,13 +125,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   private static class ThumbnailTask implements Runnable, Reloadable
   {
-    private Dashboard      dashboard;
+    private Dashboard     dashboard;
 
-    private GeoprismUser[] users;
+    private SingleActor[] users;
 
-    private String         sessionId;
+    private String        sessionId;
 
-    public ThumbnailTask(String sessionId, Dashboard dashboard, GeoprismUser... users)
+    public ThumbnailTask(String sessionId, Dashboard dashboard, SingleActor... users)
     {
       this.dashboard = dashboard;
       this.users = users;
@@ -167,7 +171,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     if (!GeoprismUser.hasAccess(AccessConstants.ADMIN))
     {
-      GeoprismUser currentUser = GeoprismUser.getCurrentUser();
+      SingleActor currentUser = GeoprismUser.getCurrentUser();
 
       QueryFactory f = new QueryFactory();
 
@@ -429,7 +433,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       if (this.isNew())
       {
         String roleId = this.getDashboardRoleId();
-        UserDAOIF user = Session.getCurrentSession().getUser();
+        SingleActorDAOIF user = Session.getCurrentSession().getUser();
 
         RoleDAO roleDAO = RoleDAO.get(roleId).getBusinessDAO();
         roleDAO.assignMember(user);
@@ -519,12 +523,12 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     DashboardState state = DashboardState.getDashboardState(this, null);
     state.clone(this);
 
-    GeoprismUser user = GeoprismUser.getCurrentUser();
+    SingleActor user = GeoprismUser.getCurrentUser();
 
     if (user != null)
     {
       RoleDAO roleDAO = RoleDAO.get(clone.getDashboardRoleId()).getBusinessDAO();
-      roleDAO.assignMember(UserDAO.get(user.getId()));
+      roleDAO.assignMember((SingleActorDAOIF) SingleActorDAO.get(user.getId()));
     }
 
     // Clone the report
@@ -981,11 +985,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   @Override
   public Boolean hasAccess()
   {
-    GeoprismUser currentUser = GeoprismUser.getCurrentUser();
+    SingleActor currentUser = GeoprismUser.getCurrentUser();
 
-    if (currentUser != null)
+    if (currentUser != null && currentUser instanceof GeoprismUserIF)
     {
-      Boolean access = currentUser.isAssigned(this.getDashboardRole());
+      Boolean access = ( (GeoprismUserIF) currentUser ).isAssigned(this.getDashboardRole());
 
       if (!access)
       {
@@ -1280,7 +1284,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   private DashboardState getDashboardState()
   {
-    GeoprismUser user = GeoprismUser.getCurrentUser();
+    SingleActor user = GeoprismUser.getCurrentUser();
 
     DashboardState state = null;
 
@@ -1297,7 +1301,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return state;
   }
 
-  private DashboardState getOrCreateDashboardState(GeoprismUser user)
+  private DashboardState getOrCreateDashboardState(SingleActor user)
   {
     DashboardState state = DashboardState.getDashboardState(this, user);
 
@@ -1324,7 +1328,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     this.executeThumbnailThread(GeoprismUser.getCurrentUser(), null);
   }
 
-  private void executeThumbnailThread(GeoprismUser... users)
+  private void executeThumbnailThread(SingleActor... users)
   {
     String sessionId = Session.getCurrentSession().getId();
 
@@ -1333,11 +1337,11 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   }
 
   @Transaction
-  private void generateThumbnailImage(GeoprismUser[] users)
+  private void generateThumbnailImage(SingleActor[] users)
   {
     byte[] image = this.generateThumbnail();
 
-    for (GeoprismUser user : users)
+    for (SingleActor user : users)
     {
       DashboardState state = DashboardState.getDashboardState(this, user);
 
@@ -1535,7 +1539,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
      */
     if (!this.hasAccess())
     {
-      UserDAOIF user = Session.getCurrentSession().getUser();
+      SingleActorDAOIF user = Session.getCurrentSession().getUser();
       throw new ReadPermissionException("", this, user);
     }
 
@@ -1639,7 +1643,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     DashboardCondition[] conditions = DashboardCondition.getConditionsFromState(json);
 
-    GeoprismUser user = null;
+    SingleActor user = null;
 
     if (!global)
     {
@@ -1675,17 +1679,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("dashboardId", this.getId());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("description", this.getDescription().getValue());
-
-    List<GeoEntity> countries = this.getCountries();
-
-    JSONArray areas = new JSONArray();
-
-    for (GeoEntity country : countries)
-    {
-      areas.put(country.getDisplayLabel().getValue());
-    }
-
-    object.put("focusAreas", areas);
 
     return object;
   }

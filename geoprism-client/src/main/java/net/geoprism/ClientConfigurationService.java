@@ -74,5 +74,4 @@ public class ClientConfigurationService implements Reloadable
 
     return applications;
   }
-
 }

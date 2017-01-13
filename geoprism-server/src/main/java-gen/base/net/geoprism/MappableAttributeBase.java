@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -371963706)
+@com.runwaysdk.business.ClassSignature(hash = 317198539)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -43,7 +43,7 @@ public abstract class MappableAttributeBase extends com.runwaysdk.business.Busin
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDATTRIBUTE = "wrappedMdAttribute";
-  private static final long serialVersionUID = -371963706;
+  private static final long serialVersionUID = 317198539;
   
   public MappableAttributeBase()
   {
@@ -250,7 +250,7 @@ public abstract class MappableAttributeBase extends com.runwaysdk.business.Busin
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -258,7 +258,7 @@ public abstract class MappableAttributeBase extends com.runwaysdk.business.Busin
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

@@ -37,4 +37,6 @@ public interface TargetDefinitionIF
   public boolean isNew();
   
   public boolean isApplied();
+  
+  public PersistenceStrategyIF getStrategy();
 }

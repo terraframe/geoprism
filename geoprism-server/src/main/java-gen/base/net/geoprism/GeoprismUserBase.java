@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1879029478)
+@com.runwaysdk.business.ClassSignature(hash = -1946070987)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -33,7 +33,7 @@ public abstract class GeoprismUserBase extends com.runwaysdk.system.Users implem
   public static java.lang.String FIRSTNAME = "firstName";
   public static java.lang.String LASTNAME = "lastName";
   public static java.lang.String PHONENUMBER = "phoneNumber";
-  private static final long serialVersionUID = 1879029478;
+  private static final long serialVersionUID = -1946070987;
   
   public GeoprismUserBase()
   {
@@ -192,7 +192,7 @@ public abstract class GeoprismUserBase extends com.runwaysdk.system.Users implem
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static net.geoprism.GeoprismUser getCurrentUser()
+  public static com.runwaysdk.system.SingleActor getCurrentUser()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.GeoprismUser.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

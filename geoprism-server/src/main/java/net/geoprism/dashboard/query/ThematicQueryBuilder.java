@@ -20,18 +20,6 @@ package net.geoprism.dashboard.query;
 
 import java.util.List;
 
-import net.geoprism.QueryUtil;
-import net.geoprism.dashboard.AllAggregationType;
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.DashboardThematicStyle;
-import net.geoprism.dashboard.condition.DashboardAttributeCondition;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.dashboard.condition.LocationCondition;
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-import net.geoprism.gis.geoserver.GeoserverProperties;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierQuery;
-
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -54,8 +42,24 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
+import net.geoprism.QueryUtil;
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicStyle;
+import net.geoprism.dashboard.condition.DashboardAttributeCondition;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.condition.LocationCondition;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
+
 public abstract class ThematicQueryBuilder implements Reloadable
 {
+  public static final String       LOCATION_ALIAS = "geo_id_00";
+
+  public static final String       LABEL_ALIAS    = "display_label_00";
+
   private QueryFactory             factory;
 
   private MdAttributeDAOIF         thematicMdAttribute;
@@ -111,11 +115,13 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
       if (secondaryMdAttribute != null)
       {
-        AttributeCharacter thematicGeoId = thematicQuery.aCharacter(GeoEntity.GEOID);
-        thematicGeoId.setColumnAlias(GeoEntity.GEOID);
+        AttributeCharacter thematicGeoId = thematicQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS);
+        thematicGeoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+        thematicGeoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
-        AttributeChar thematicLabel = (AttributeChar) thematicQuery.get(GeoEntity.DISPLAYLABEL);
-        thematicLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
+        AttributeChar thematicLabel = (AttributeChar) thematicQuery.get(ThematicQueryBuilder.LABEL_ALIAS);
+        thematicLabel.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
+        thematicLabel.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
         Attribute thematicAttribute = thematicQuery.get(thematicMdAttribute.definesAttribute());
         thematicAttribute.setColumnAlias(thematicMdAttribute.definesAttribute());
@@ -129,8 +135,9 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
           ValueQuery secondaryQuery = this.build(secondaryMdAttribute, secondaryAggregation);
 
-          AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(GeoEntity.GEOID);
-          secondaryGeoId.setColumnAlias(GeoEntity.GEOID);
+          AttributeCharacter secondaryGeoId = secondaryQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS);
+          secondaryGeoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+          secondaryGeoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
           Attribute secondaryAttribute = secondaryQuery.get(secondaryMdAttribute.definesAttribute());
           secondaryAttribute.setColumnAlias(secondaryMdAttribute.definesAttribute());
@@ -267,7 +274,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
             ClassifierQuery classifierQ = new ClassifierQuery(winFuncQuery);
             winFuncQuery.WHERE(classifierQ.EQ(thematicTerm));
-            
+
             thematicAttr = classifierQ.getDisplayLabel().localize();
             thematicAttr.setUserDefinedDisplayLabel(mdAttributeTermDAOIF.getDisplayLabel(Session.getCurrentLocale()));
           }
@@ -276,7 +283,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
         thematicSel = F.COUNT(thematicAttr, "COUNT");
         AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), id));
         stringAgg.setUserDefinedDisplayLabel(thematicAttr.getUserDefinedDisplayLabel());
-        
+
         AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(id), new OrderBy(F.COUNT(thematicAttr), sortOrder));
 
         winFuncQuery.SELECT_DISTINCT(thematicSel);
@@ -293,13 +300,13 @@ public abstract class ThematicQueryBuilder implements Reloadable
         outerThematicSel.setUserDefinedAlias(attributeName);
         outerThematicSel.setColumnAlias(attributeName);
 
-        Selectable outerLabel = winFuncQuery.get(GeoEntity.DISPLAYLABEL);
-        outerLabel.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
-        outerLabel.setColumnAlias(GeoEntity.DISPLAYLABEL);
+        Selectable outerLabel = winFuncQuery.get(ThematicQueryBuilder.LABEL_ALIAS);
+        outerLabel.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
+        outerLabel.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
-        Selectable outerGeoId = winFuncQuery.get(GeoEntity.GEOID);
-        outerGeoId.setColumnAlias(GeoEntity.GEOID);
-        outerGeoId.setUserDefinedAlias(GeoEntity.GEOID);
+        Selectable outerGeoId = winFuncQuery.get(ThematicQueryBuilder.LOCATION_ALIAS);
+        outerGeoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
+        outerGeoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
 
         vQuery.SELECT(outerThematicSel);
         vQuery.SELECT(outerLabel);

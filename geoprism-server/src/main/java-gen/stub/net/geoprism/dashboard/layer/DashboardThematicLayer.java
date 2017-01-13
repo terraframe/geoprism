@@ -41,6 +41,7 @@ import net.geoprism.dashboard.GeometryAggregationStrategy;
 import net.geoprism.dashboard.MdAttributeView;
 import net.geoprism.dashboard.MissingLocationAttributeException;
 import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.wrapper.AttributeType;
 import net.geoprism.gis.wrapper.MapVisitor;
 import net.geoprism.gis.wrapper.ThematicLayer;

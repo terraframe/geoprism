@@ -1848,7 +1848,7 @@
                     SERVICE:'WFS',
                     VERSION:'2.0.0',
                     TYPENAMES:workspace+":"+ featureJSON.layerViewName,
-                    CQL_FILTER : "geoid='"+ featureJSON.geoId + "'",
+                    CQL_FILTER : "geo_id_00='"+ featureJSON.geoId + "'",
                     //FEATUREID : featureJSON.featureId,  // We can't use featureid because our views don't include a dedicated primary key id
                     outputFormat : 'application/json'
               };
@@ -1942,8 +1942,8 @@
                 var aggregationMethod = layer.aggregationMethod;
                 var attributeName = layer.aggregationAttribute.toLowerCase();
                         
-                var featureDisplayName = feature.properties.displaylabel;
-                var geoId = feature.properties.geoid;
+                var featureDisplayName = feature.properties.display_label_00;
+                var geoId = feature.properties.geo_id_00;
                 var attributeValue = feature.properties[attributeName];
                 
                 var info = {

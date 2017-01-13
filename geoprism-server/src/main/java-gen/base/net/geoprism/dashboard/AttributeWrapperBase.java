@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1468385691)
+@com.runwaysdk.business.ClassSignature(hash = -494380566)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -42,7 +42,7 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDATTRIBUTE = "wrappedMdAttribute";
-  private static final long serialVersionUID = -1468385691;
+  private static final long serialVersionUID = -494380566;
   
   public AttributeWrapperBase()
   {
@@ -221,7 +221,7 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -229,7 +229,7 @@ public abstract class AttributeWrapperBase extends com.runwaysdk.business.Busine
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

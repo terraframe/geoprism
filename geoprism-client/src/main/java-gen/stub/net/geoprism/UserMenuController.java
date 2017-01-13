@@ -33,6 +33,7 @@ import net.geoprism.dashboard.DashboardQueryDTO;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.system.RolesDTO;
+import com.runwaysdk.system.SingleActorDTO;
 import com.runwaysdk.util.FileIO;
 
 public class UserMenuController extends UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
@@ -191,7 +192,7 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   {
     Set<String> roleNames = new TreeSet<String>();
 
-    GeoprismUserDTO currentUser = GeoprismUserDTO.getCurrentUser(this.getClientRequest());
+    SingleActorDTO currentUser = GeoprismUserDTO.getCurrentUser(this.getClientRequest());
 
     List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
     for (RolesDTO role : userRoles)

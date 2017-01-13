@@ -35,7 +35,6 @@
           
           for(var i = 0; i < response.dashboards.length; i++) {
             var dashboard = response.dashboards[i];
-            dashboard.focusAreasAsString = dashboard.focusAreas.toString();
             
             controller.ids.push(dashboard.dashboardId);
             controller.dashboards[dashboard.dashboardId] = dashboard;  
@@ -141,7 +140,7 @@
     		  dashboardId:dashboard.id, 
     		  label:dashboard.label, 
     		  description:dashboard.description, 
-    		  focusAreasAsString:dashboard.focusAreas.toString(),
+//    		  focusAreasAsString:dashboard.focusAreas.toString(),
     		  isLastDashboard:true};
       var oldDashboard = controller.dashboards[dashboard.id];
       

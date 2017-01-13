@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 659294414)
+@com.runwaysdk.business.ClassSignature(hash = -1715411898)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -41,9 +41,10 @@ public abstract class TargetBindingBase extends com.runwaysdk.business.Business 
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String SOURCEVIEW = "sourceView";
+  public static java.lang.String STRATEGY = "strategy";
   public static java.lang.String TARGETBUSINESS = "targetBusiness";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 659294414;
+  private static final long serialVersionUID = -1715411898;
   
   public TargetBindingBase()
   {
@@ -222,7 +223,7 @@ public abstract class TargetBindingBase extends com.runwaysdk.business.Business 
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -230,7 +231,7 @@ public abstract class TargetBindingBase extends com.runwaysdk.business.Business 
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   
@@ -362,7 +363,47 @@ public abstract class TargetBindingBase extends com.runwaysdk.business.Business 
     }
   }
   
-  public com.runwaysdk.system.metadata.MdBusiness getTargetBusiness()
+  public net.geoprism.data.etl.PersistenceStrategy getStrategy()
+  {
+    if (getValue(STRATEGY).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return net.geoprism.data.etl.PersistenceStrategy.get(getValue(STRATEGY));
+    }
+  }
+  
+  public String getStrategyId()
+  {
+    return getValue(STRATEGY);
+  }
+  
+  public void validateStrategy()
+  {
+    this.validateAttribute(STRATEGY);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF getStrategyMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.etl.TargetBinding.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(STRATEGY);
+  }
+  
+  public void setStrategy(net.geoprism.data.etl.PersistenceStrategy value)
+  {
+    if(value == null)
+    {
+      setValue(STRATEGY, "");
+    }
+    else
+    {
+      setValue(STRATEGY, value.getId());
+    }
+  }
+  
+  public com.runwaysdk.system.metadata.MdClass getTargetBusiness()
   {
     if (getValue(TARGETBUSINESS).trim().equals(""))
     {
@@ -370,7 +411,7 @@ public abstract class TargetBindingBase extends com.runwaysdk.business.Business 
     }
     else
     {
-      return com.runwaysdk.system.metadata.MdBusiness.get(getValue(TARGETBUSINESS));
+      return com.runwaysdk.system.metadata.MdClass.get(getValue(TARGETBUSINESS));
     }
   }
   
@@ -390,7 +431,7 @@ public abstract class TargetBindingBase extends com.runwaysdk.business.Business 
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(TARGETBUSINESS);
   }
   
-  public void setTargetBusiness(com.runwaysdk.system.metadata.MdBusiness value)
+  public void setTargetBusiness(com.runwaysdk.system.metadata.MdClass value)
   {
     if(value == null)
     {

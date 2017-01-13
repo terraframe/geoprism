@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -84059023)
+@com.runwaysdk.business.ClassSignature(hash = 1397744630)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -44,7 +44,7 @@ public abstract class UniversalAttributeBindingBase extends com.runwaysdk.busine
   public static java.lang.String SOURCEATTRIBUTE = "sourceAttribute";
   public static java.lang.String TYPE = "type";
   public static java.lang.String UNIVERSAL = "universal";
-  private static final long serialVersionUID = -84059023;
+  private static final long serialVersionUID = 1397744630;
   
   public UniversalAttributeBindingBase()
   {
@@ -263,7 +263,7 @@ public abstract class UniversalAttributeBindingBase extends com.runwaysdk.busine
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -271,7 +271,7 @@ public abstract class UniversalAttributeBindingBase extends com.runwaysdk.busine
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

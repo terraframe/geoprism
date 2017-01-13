@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 354142461)
+@com.runwaysdk.business.ClassSignature(hash = -1128104232)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -41,7 +41,7 @@ public abstract class ClassifierHasSynonymBase extends com.runwaysdk.business.on
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 354142461;
+  private static final long serialVersionUID = -1128104232;
   
   public ClassifierHasSynonymBase(String parentId, String childId)
   {
@@ -220,7 +220,7 @@ public abstract class ClassifierHasSynonymBase extends com.runwaysdk.business.on
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(LASTUPDATEDBY);
   }
   
-  public com.runwaysdk.system.Users getLockedBy()
+  public com.runwaysdk.system.SingleActor getLockedBy()
   {
     if (getValue(LOCKEDBY).trim().equals(""))
     {
@@ -228,7 +228,7 @@ public abstract class ClassifierHasSynonymBase extends com.runwaysdk.business.on
     }
     else
     {
-      return com.runwaysdk.system.Users.get(getValue(LOCKEDBY));
+      return com.runwaysdk.system.SingleActor.get(getValue(LOCKEDBY));
     }
   }
   

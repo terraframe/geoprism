@@ -25,18 +25,21 @@ import java.util.Map;
 import java.util.Set;
 
 import com.runwaysdk.business.rbac.RoleDAO;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
+import com.runwaysdk.system.SingleActor;
 import com.runwaysdk.system.Users;
 
-public class GeoprismUser extends GeoprismUserBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeoprismUser extends GeoprismUserBase implements Reloadable, GeoprismUserIF
 {
   private static final long serialVersionUID = 394889520;
 
@@ -146,13 +149,15 @@ public class GeoprismUser extends GeoprismUserBase implements com.runwaysdk.gene
     }
   }
 
-  public static GeoprismUser getCurrentUser()
+  public static SingleActor getCurrentUser()
   {
     SessionIF session = Session.getCurrentSession();
 
     if (session != null)
     {
-      return GeoprismUser.get(session.getUser().getId());
+      SingleActorDAOIF user = session.getUser();
+      
+      return SingleActor.get(user.getId());
     }
 
     return null;

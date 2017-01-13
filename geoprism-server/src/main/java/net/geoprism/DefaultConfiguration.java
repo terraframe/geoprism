@@ -36,11 +36,11 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
-  private static final String ADMIN             = "geoprism.admin.Administrator";
+  public static final String ADMIN             = "geoprism.admin.Administrator";
 
-  private static final String DASHBOARD_BUILDER = "geoprism.admin.DashboardBuilder";
+  public static final String DASHBOARD_BUILDER = "geoprism.admin.DashboardBuilder";
 
-  private static final String DECISION_MAKER    = "geoprism.DecisionMaker";
+  public static final String DECISION_MAKER    = "geoprism.DecisionMaker";
 
   @Override
   public Collection<String> getDatabrowserPackages()
