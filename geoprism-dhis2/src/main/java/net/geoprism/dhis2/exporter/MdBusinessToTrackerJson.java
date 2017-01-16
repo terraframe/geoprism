@@ -43,8 +43,6 @@ import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdBusiness;
 
-import net.geoprism.dhis2.DHIS2Util;
-
 /**
  * Responsible for exporting an MdBusiness directly to DHIS2 Tracker
  * 
@@ -72,7 +70,7 @@ public class MdBusinessToTrackerJson
     
     trackedEntity.put("name", mdbiz.getDisplayLabel().getValue());
     trackedEntity.put("description", mdbiz.getDescription().getValue());
-    trackedEntity.put("id", DHIS2Util.runwayIdToDHIS2Id(mdbiz.getId()));
+    trackedEntity.put("id", mdbiz.getId().substring(0, 11));
     
     return trackedEntity;
   }
@@ -187,7 +185,7 @@ public class MdBusinessToTrackerJson
     program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("programType", "WITH_REGISTRATION");
-    program.put("trackedEntity", new JSONObject().put("id", DHIS2Util.runwayIdToDHIS2Id(mdbiz.getId())));
+    program.put("trackedEntity", new JSONObject().put("id", mdbiz.getId().substring(0, 11)));
     program.put("incidentDateLabel", "Incident date");
     program.put("enrollmentDateLabel", "Enrollment date");
     program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
