@@ -22,3 +22,7 @@ This error does not happen when a program is created with an empty programTracke
 
 4) I got a little confused try to create a program using the API because the programTrackedEntityAttributes require a program id, but I can't get the programId till after I've created the program, which requires an array of these attributes. As you can see there's a circular dependency issue here.
 I got it working by first creating the attributes then the program, but I don't know if these program attributes don't have a programId reference and if this may cause errors later on.
+
+5) NOTE: IN THE REGULAR API YOU MUST SPECIFY AN ORG UNIT. Tracked entity instances don't seem to export from the metadata service
+
+https://play.dhis2.org/dev/api/25/metadata?assumeTrue=false&trackedEntityInstances=true

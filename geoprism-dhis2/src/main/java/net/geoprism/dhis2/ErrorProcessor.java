@@ -54,7 +54,7 @@ public class ErrorProcessor
         
         if (value.contains("No org unit"))
         {
-          throw new RuntimeException("No org unit found on TEI. [" + response + "].");
+//          throw new RuntimeException("No org unit found on TEI. [" + response + "].");
         }
       }
     }

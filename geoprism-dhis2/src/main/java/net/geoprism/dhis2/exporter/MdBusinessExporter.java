@@ -63,6 +63,7 @@ public class MdBusinessExporter
     createProgramTrackedEntityAttributes();
     createProgram();
     createTrackedEntityInstances();
+    // registerTrackedEntityInstances();
   }
   
   protected void createTrackedEntityInstances()
