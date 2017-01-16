@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,19 +17,20 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<div class="filter-block" id="location-filter-container">
-  <div class="row-holder">
-    <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
-  </div>
-  <div class="geo">
-	  <input id="filter-geo" type="text" class="gdb-attr-filter filter-geo" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
-  </div>
-  <div class="geo" ng-repeat="location in filter.locations track by location.value">
-    <p>{{location.label}}</p>
-    <div class="cell pull-right">            
-      <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove($index)"></a>
-    </div>
-  </div>  
-</div>
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdController name="net.geoprism.report.ReportItemController">
+        <create>
+          <mdAction name="download" isPost="false" label="Download">
+            <mdParameter name="dashboardId" label="Dashboard id" order="0" type="java.lang.String" />
+          </mdAction>
+        </create>
+      </mdController>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

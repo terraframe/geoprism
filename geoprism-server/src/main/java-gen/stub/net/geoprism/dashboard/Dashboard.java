@@ -1680,17 +1680,6 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("label", this.getDisplayLabel().getValue());
     object.put("description", this.getDescription().getValue());
 
-    List<GeoEntity> countries = this.getCountries();
-
-    JSONArray areas = new JSONArray();
-
-    for (GeoEntity country : countries)
-    {
-      areas.put(country.getDisplayLabel().getValue());
-    }
-
-    object.put("focusAreas", areas);
-
     return object;
   }
 

@@ -211,6 +211,9 @@
       $timeout(function() {
         controller.model = state;
         controller.renderBase = true;
+        
+        // overwrite title with dashboard name
+        document.title = state.label;
 
         // Initialize the default base map
         var layerSourceType = controller.model.activeBaseMap["LAYER_SOURCE_TYPE"];
@@ -613,8 +616,13 @@
           report : dashboardId,
           configuration : JSON.stringify(configuration) 
         }
-                  
-        var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
+        
+        if(format === "rptdesign"){
+        	var url = 'net.geoprism.report.ReportItemController.download.mojo?' + $.param({dashboardId:dashboardId});
+        }
+        else{
+        	var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
+        }
                   
         window.location.href = url;    
       }
