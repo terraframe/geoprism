@@ -56,7 +56,7 @@
      });    
   }
   
-  angular.module("data-management", ["ngRoute", "localization-service", "map-service", "data-set", "category-icon", 'category-management', 'location-management']);
+  angular.module("data-management", ["ngRoute", "localization-service", "webgl-map-service", "data-set", "category-icon", 'category-management', 'location-management']);
   angular.module("data-management")
    .config(["$routeProvider", DataManagementConfig])
    .controller('DataManagementController', DataManagementController)
