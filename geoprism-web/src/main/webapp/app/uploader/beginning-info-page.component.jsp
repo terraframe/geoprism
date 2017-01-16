@@ -20,6 +20,12 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
+<form #form="ngForm" name="form" class="modal-form">
+  <div>
+    <fieldset>
+      <section class="form-container">
+
+
 
 <div>
   <div class="label-holder">
@@ -92,3 +98,11 @@
     </div>  
   </div> 
 </div>
+
+
+      </section>        
+    </fieldset>        
+    
+    <paging [form]="form" [page]="page"></paging>
+  </div>
+</form>

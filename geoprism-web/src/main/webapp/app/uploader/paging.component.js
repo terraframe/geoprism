@@ -27,24 +27,43 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var forms_1 = require("@angular/forms");
 var uploader_model_1 = require("./uploader-model");
-var BeginningInfoPageComponent = (function () {
-    function BeginningInfoPageComponent() {
+var navigation_service_1 = require("./navigation.service");
+var PagingComponent = (function () {
+    function PagingComponent(service) {
+        this.service = service;
     }
-    return BeginningInfoPageComponent;
+    PagingComponent.prototype.next = function () {
+        this.service.navigate('next');
+    };
+    PagingComponent.prototype.prev = function () {
+        this.service.navigate('prev');
+    };
+    PagingComponent.prototype.cancel = function () {
+        this.service.navigate('cancel');
+    };
+    PagingComponent.prototype.ready = function () {
+        this.service.navigate('ready');
+    };
+    return PagingComponent;
 }());
 __decorate([
     core_1.Input(),
+    __metadata("design:type", forms_1.FormGroup)
+], PagingComponent.prototype, "form", void 0);
+__decorate([
+    core_1.Input(),
     __metadata("design:type", uploader_model_1.Page)
-], BeginningInfoPageComponent.prototype, "page", void 0);
-BeginningInfoPageComponent = __decorate([
+], PagingComponent.prototype, "page", void 0);
+PagingComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'beginning-info-page',
-        templateUrl: 'beginning-info-page.component.jsp',
+        selector: 'paging',
+        templateUrl: 'paging.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [])
-], BeginningInfoPageComponent);
-exports.BeginningInfoPageComponent = BeginningInfoPageComponent;
-//# sourceMappingURL=beginning-info-page.component.js.map
+    __metadata("design:paramtypes", [navigation_service_1.NavigationService])
+], PagingComponent);
+exports.PagingComponent = PagingComponent;
+//# sourceMappingURL=paging.component.js.map

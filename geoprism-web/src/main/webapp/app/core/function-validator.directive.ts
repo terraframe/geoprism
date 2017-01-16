@@ -19,28 +19,28 @@
 
 
 import { Directive, forwardRef, Attribute, Input } from '@angular/core';
-import { Validator, AbstractControl, NG_ASYNC_VALIDATORS } from '@angular/forms';
+import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
 
-export interface RemoteValidator {
-  validate(value:string, config:string): Promise<{[key : string] : any}>;
+export interface LocalValidator {
+  localValidate(value:string, config: string): {[key : string] : any};
 }
 
 @Directive({
-  selector: '[asyncValidator][ngModel]',
+  selector: '[funcValidator][ngModel]',
   providers: [
-    { provide: NG_ASYNC_VALIDATORS, useExisting: forwardRef(() => AsyncValidator), multi: true }
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => FunctionValidator), multi: true }
   ]
 })
-export class AsyncValidator implements Validator {
+export class FunctionValidator implements Validator {
   
-  @Input() remoteValidator: RemoteValidator;  
+  @Input() validator: LocalValidator;
   @Input() config: string;
-
+  
   constructor(){}
 
-  validate(c: AbstractControl): Promise<{[key : string] : any}> {
+  validate(c: AbstractControl): {[key : string] : any} {
     if(c.value != null && c.value.length > 0) {
-      return this.remoteValidator.validate(c.value, this.config);    
+      return this.validator.localValidate(c.value, this.config);    
     }
     
     return null;

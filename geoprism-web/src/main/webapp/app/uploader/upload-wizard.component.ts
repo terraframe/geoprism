@@ -17,7 +17,9 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
+
+import { Subscription }   from 'rxjs/Subscription';
 
 import { Dataset } from '../model/dataset';
 import { UploadInformation, Step, Sheet, Snapshot, Page } from './uploader-model';
@@ -26,6 +28,7 @@ import { EventService } from '../service/core.service';
 import { LocalizationService } from '../service/localization.service';
 
 import { UploadService } from '../service/upload.service';
+import { NavigationService } from './navigation.service';
 
 
 @Component({
@@ -34,32 +37,52 @@ import { UploadService } from '../service/upload.service';
   templateUrl: 'upload-wizard.component.jsp',
   styleUrls: []
 })
-export class UploadWizardComponent {
+export class UploadWizardComponent implements OnDestroy {
 
-  @Output() public onSuccess = new EventEmitter<Dataset>();
+  @Output() onSuccess = new EventEmitter<Dataset>();
   
-  public steps : Step[];
+  steps : Step[];
   
-  public info: UploadInformation;
-  public sheet: Sheet;
-  public page: Page;
+  info: UploadInformation;
+  sheet: Sheet;
+  page: Page;
   
-  public pageDirection: string;
-  public currentStep: number;
+  pageDirection: string;
+  currentStep: number;
+  subscription: Subscription;
   
   constructor(
     private localizationService: LocalizationService,
-    private uploadService: UploadService) { }
+    private uploadService: UploadService,
+    private navigationService: NavigationService) {
+ 
+    this.subscription = navigationService.navigationAnnounced$.subscribe(
+      direction => {
+        if(direction === 'next') {
+          this.next(null, null);
+        }         
+        else if(direction === 'prev') {
+          this.prev();
+        }         
+        else if(direction === 'cancel') {
+          this.cancel();
+        } 
+    });      
+  }
+  
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }  
   
   initialize(info: string): void {
     this.info = JSON.parse(info) as UploadInformation;
     this.sheet = this.info.information.sheets[0];
     
     if(this.sheet.matches.length > 0) {
-      this.page = new Page('MATCH-INITIAL');
+      this.page = new Page('MATCH-INITIAL', null);
     }
     else {
-      this.page = new Page('BEGINNING-INFO');    
+      this.page = new Page('BEGINNING-INFO', null);    
     }
                   
     this.initializeAttributes();
@@ -237,104 +260,124 @@ export class UploadWizardComponent {
     this.pageDirection = "NEXT";
       
     if(targetPage && sourcePage){
-      this.page.current = targetPage
-          
-      let snapshot = new Snapshot(sourcePage, Object.assign(new Sheet(), this.sheet) as Sheet);
-        
-      this.page.snapshots.push(snapshot);
+      this.page.name = targetPage
+      
+      this.page.snapshot = Object.assign(new Sheet(), this.sheet) as Sheet;
+      
+      let page = new Page(targetPage, this.page);
+      page.hasNext = this.hasNextPage(targetPage);
+      page.isReady = this.isReady(targetPage);
+      
+      this.page = page;
     }
     else{
+      this.page.snapshot = Object.assign(new Sheet(), this.sheet) as Sheet;
+    	
         // Linear logic
-      if(this.page.current == 'MATCH-INITIAL') {
-        this.page.current = 'MATCH'
+      if(this.page.name == 'MATCH-INITIAL') {
+        let page = new Page('MATCH', this.page);
+        page.hasNext = this.hasNextPage('MATCH');
+        page.isReady = this.isReady('MATCH');
         
-        let snapshot = new Snapshot('MATCH-INITIAL', Object.assign(new Sheet(), this.sheet) as Sheet);
-            
-        this.page.snapshots.push(snapshot);
+        this.page = page;
       }
-      else if(this.page.current == 'MATCH') {
-        this.page.current = 'BEGINNING-INFO';      
-          
-        let snapshot = new Snapshot('MATCH', Object.assign(new Sheet(), this.sheet) as Sheet);
+      else if(this.page.name == 'MATCH') {
+        let page = new Page('BEGINNING-INFO', this.page);
+        page.hasNext = this.hasNextPage('BEGINNING-INFO');
+        page.isReady = this.isReady('BEGINNING-INFO');
+      
+        this.page = page;
+      }
+      else if(this.page.name == 'BEGINNING-INFO') {
+        let page = new Page('INITIAL', this.page);
+        page.hasNext = this.hasNextPage('INITIAL');
+        page.isReady = this.isReady('INITIAL');
+      
+        this.page = page;
         
-        this.page.snapshots.push(snapshot);
+        this.incrementStep(this.page.name);
       }
-      else if(this.page.current == 'BEGINNING-INFO') {
-        this.page.current = 'INITIAL';
-        
-        this.incrementStep(this.page.current);
+      else if(this.page.name === 'INITIAL') {
+        let page = new Page('FIELDS', this.page);
+        page.hasNext = this.hasNextPage('FIELDS');
+        page.isReady = this.isReady('FIELDS');
+        page.layout = 'wide-holder';
+      
+        this.page = page;
       }
-      else if(this.page.current === 'INITIAL') {
-        // Go to fields page  
-        this.page.current = 'FIELDS';      
-          
-        let snapshot = new Snapshot('INITIAL', Object.assign(new Sheet(), this.sheet) as Sheet);
-        
-        this.page.snapshots.push(snapshot);
-      }
-      else if(this.page.current === 'FIELDS') {
+      else if(this.page.name === 'FIELDS') {
         if(this.hasLocationField()) {
           // Go to location attribute page
-          this.page.current = 'LOCATION';      
+          let page = new Page('LOCATION', this.page);
+          page.hasNext = this.hasNextPage('LOCATION');
+          page.isReady = this.isReady('LOCATION');
+      
+          this.page = page;
         }
         else if (this.hasCoordinateField()) {
-          // Go to coordinate page
-          this.page.current = 'COORDINATE';   
+          // Go to location attribute page
+          let page = new Page('COORDINATE', this.page);
+          page.hasNext = this.hasNextPage('COORDINATE');
+          page.isReady = this.isReady('COORDINATE');
+      
+          this.page = page;          
         }
         else {
           // Go to summary page
-          this.page.current = 'SUMMARY'; 
+          let page = new Page('SUMMARY', this.page);
+          page.hasNext = this.hasNextPage('SUMMARY');
+          page.isReady = this.isReady('SUMMARY');
+      
+          this.page = page;          
         }
           
-        this.incrementStep(this.page.current);
-          
-        let snapshot = new Snapshot('FIELDS', Object.assign(new Sheet(), this.sheet) as Sheet);
-        
-        this.page.snapshots.push(snapshot);
+        this.incrementStep(this.page.name);          
       }
-      else if(this.page.current === 'LOCATION') {
+      else if(this.page.name === 'LOCATION') {
         if (this.hasCoordinateField()) {
           // Go to coordinate page
-          this.page.current = 'COORDINATE'; 
+          let page = new Page('COORDINATE', this.page);
+          page.hasNext = this.hasNextPage('COORDINATE');
+          page.isReady = this.isReady('COORDINATE');
+      
+          this.page = page;          
         }
         else {
           // Go to summary page
-          this.page.current = 'SUMMARY';    
+          let page = new Page('SUMMARY', this.page);
+          page.hasNext = this.hasNextPage('SUMMARY');
+          page.isReady = this.isReady('SUMMARY');
+      
+          this.page = page;          
         }
-          
-        this.incrementStep(this.page.current);
-        
-        let snapshot = new Snapshot('LOCATION', Object.assign(new Sheet(), this.sheet) as Sheet);        
-          
-        this.page.snapshots.push(snapshot);
       }
-      else if(this.page.current === 'COORDINATE') {
+      else if(this.page.name === 'COORDINATE') {
         // Go to summary page
-        this.page.current = 'SUMMARY';  
-          
-        this.incrementStep(this.page.current);
-          
-        let snapshot = new Snapshot('COORDINATE', Object.assign(new Sheet(), this.sheet) as Sheet);        
-        
-        this.page.snapshots.push(snapshot);
-      }
-      else if(this.page.current === 'GEO-VALIDATION') {
-          
-        this.page.current = 'CATEGORY-VALIDATION';  
-          
-        this.incrementStep(this.page.current);
-          
-        let snapshot = new Snapshot('GEO-VALIDATION', Object.assign(new Sheet(), this.sheet) as Sheet);        
+        let page = new Page('SUMMARY', this.page);
+        page.hasNext = this.hasNextPage('SUMMARY');
+        page.isReady = this.isReady('SUMMARY');
+      
+        this.page = page;          
 
-        this.page.snapshots.push(snapshot);
+        this.incrementStep(this.page.name);
+      }
+      else if(this.page.name === 'GEO-VALIDATION') {
+        // Go to summary page
+        let page = new Page('CATEGORY-VALIDATION', this.page);
+        page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
+        page.isReady = this.isReady('CATEGORY-VALIDATION');
+      
+        this.page = page;
+        
+        this.incrementStep(this.page.name);
       }
     }
   }
   
-  prev(): void{
+  prev(): void{  
     this.pageDirection = "PREVIOUS";
     
-    if(this.page.current === 'MATCH' || this.page.current === "SUMMARY" || this.page.current === "BEGINNING-INFO" || this.page.current === "CATEGORY-VALIDATION") {
+    if(this.page.name === 'MATCH' || this.page.name === "SUMMARY" || this.page.name === "BEGINNING-INFO" || this.page.name === "CATEGORY-VALIDATION") {
       this.handlePrev();        
     }
     else if(confirm(this.localizationService.localize("dataUploader", "prevDialogContent"))) {
@@ -343,20 +386,13 @@ export class UploadWizardComponent {
   }  
   
   handlePrev(): void {
-    if(this.page.snapshots.length > 0) { 
-      if(this.page.current === 'INITIAL') {
-        this.page.current = 'BEGINNING-INFO'; 
-      }
-      else{
-        let snapshot = this.page.snapshots.pop();
-          
-        this.page.current = snapshot.page;          
-        this.sheet = snapshot.sheet;
-      }
-    }
+    if(this.page.prev != null) { 
+      this.page = this.page.prev;
+      this.sheet = this.page.snapshot;
+      this.page.snapshot = null;
+    }      
       
-      
-    if(this.page.current === "SUMMARY" || this.page.current === 'CATEGORY-VALIDATION'){
+    if(this.page.name === "SUMMARY" || this.page.name === 'CATEGORY-VALIDATION'){
       let stepCt = 4;
       
       if (!this.hasCoordinateField()) {
@@ -367,13 +403,13 @@ export class UploadWizardComponent {
         stepCt = stepCt - 1;
       }
         
-      if(this.page.current === 'CATEGORY-VALIDATION') {
+      if(this.page.name === 'CATEGORY-VALIDATION') {
         stepCt = stepCt - 1;
       }
         
       this.currentStep = stepCt;
     }
-    else if(this.page.current === "COORDINATE"){
+    else if(this.page.name === "COORDINATE"){
       let stepCt = 3;
       if(!this.hasLocationField()) {
         stepCt = stepCt - 1;
@@ -381,13 +417,13 @@ export class UploadWizardComponent {
         
       this.currentStep = stepCt;
     }
-    else if(this.page.current === "LOCATION"){
+    else if(this.page.name === "LOCATION"){
       this.currentStep = 2;
     }
-    else if(this.page.current === "FIELDS"){
+    else if(this.page.name === "FIELDS"){
       this.currentStep = 1;
     }
-    else if(this.page.current === "INITIAL"){
+    else if(this.page.name === "INITIAL"){
       this.currentStep = 0;
     }      
   }
@@ -397,11 +433,11 @@ export class UploadWizardComponent {
     this.clear();
   }
     
-  cancel(): void {	
+  cancel(): void {  
     this.uploadService.cancelImport(this.info.information)
       .then(response => {
         this.clear();
-      });	  
+      });    
   }
   
   clear(): void {
@@ -415,22 +451,19 @@ export class UploadWizardComponent {
   }
   
   
-  isReady() : boolean {
-    let current = this.page.current;
+  isReady(name: string) : boolean {
       
-// TODO   return (current === 'SUMMARY' || current === 'CATEGORY-VALIDATION' || (current === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
-    return (current === 'SUMMARY' || current === 'CATEGORY-VALIDATION');
+// TODO   return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
+    return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION');
   }
       
-  hasNextPage(): boolean {
-    let current = this.page.current;
-      
+  hasNextPage(name: string): boolean {
     //
-//    if(current == 'GEO-VALIDATION') {
+//    if(name == 'GEO-VALIDATION') {
 //      return (this.problems.categories !== null && this.problems.categories.length > 0);
 //    }
       
-    return (current !== 'MATCH-INITIAL' && current !== 'SUMMARY' && current !== 'MATCH' && current !== 'CATEGORY-VALIDATION');
+    return (name !== 'MATCH-INITIAL' && name !== 'SUMMARY' && name !== 'MATCH' && name !== 'CATEGORY-VALIDATION');
   }  
   
   onNextPage(data: any) : void {

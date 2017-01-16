@@ -17,18 +17,18 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 "use strict";
+var Universal = (function () {
+    function Universal() {
+    }
+    return Universal;
+}());
+exports.Universal = Universal;
 var Country = (function () {
     function Country() {
     }
     return Country;
 }());
 exports.Country = Country;
-var CountryRoot = (function () {
-    function CountryRoot() {
-    }
-    return CountryRoot;
-}());
-exports.CountryRoot = CountryRoot;
 var Options = (function () {
     function Options() {
     }
@@ -94,9 +94,12 @@ var Snapshot = (function () {
 }());
 exports.Snapshot = Snapshot;
 var Page = (function () {
-    function Page(current) {
-        this.current = current;
-        this.snapshots = new Array();
+    function Page(name, prev) {
+        this.name = name;
+        this.prev = prev;
+        this.layout = 'holder';
+        this.hasNext = true;
+        this.isReady = false;
     }
     return Page;
 }());

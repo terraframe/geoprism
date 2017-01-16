@@ -20,6 +20,10 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
+<form #form="ngForm" name="form" class="modal-form">
+  <div>
+    <fieldset>
+      <section class="form-container">
 
 <div>
   <div class="label-holder">
@@ -40,12 +44,17 @@
           {{match.label}}            
       
           <div class="medium-icon-wrapper">
-          <i class="fa fa-plus-square" ng-click="select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>"></i>
+          <i class="fa fa-plus-square" (click)="select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>"></i>
         </div>
         <div class="medium-icon-wrapper">
-          <i class="fa fa-minus-square" ng-click="select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>"></i>
+          <i class="fa fa-minus-square" (click)="select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>"></i>
         </div>
       </li>
     </ul>
   </div> 
 </div>
+
+      </section>        
+    </fieldset>    
+  </div>
+</form>

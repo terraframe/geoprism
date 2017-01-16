@@ -52,6 +52,10 @@ __decorate([
     core_1.Input(),
     __metadata("design:type", uploader_model_1.Sheet)
 ], NamePageComponent.prototype, "sheet", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", uploader_model_1.Page)
+], NamePageComponent.prototype, "page", void 0);
 NamePageComponent = __decorate([
     core_1.Component({
         moduleId: module.id,

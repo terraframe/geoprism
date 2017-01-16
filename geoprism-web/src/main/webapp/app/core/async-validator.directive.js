@@ -27,24 +27,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var uploader_model_1 = require("./uploader-model");
-var BeginningInfoPageComponent = (function () {
-    function BeginningInfoPageComponent() {
+var forms_1 = require("@angular/forms");
+var AsyncValidator = AsyncValidator_1 = (function () {
+    function AsyncValidator() {
     }
-    return BeginningInfoPageComponent;
+    AsyncValidator.prototype.validate = function (c) {
+        if (c.value != null && c.value.length > 0) {
+            return this.remoteValidator.validate(c.value, this.config);
+        }
+        return null;
+    };
+    return AsyncValidator;
 }());
 __decorate([
     core_1.Input(),
-    __metadata("design:type", uploader_model_1.Page)
-], BeginningInfoPageComponent.prototype, "page", void 0);
-BeginningInfoPageComponent = __decorate([
-    core_1.Component({
-        moduleId: module.id,
-        selector: 'beginning-info-page',
-        templateUrl: 'beginning-info-page.component.jsp',
-        styleUrls: []
+    __metadata("design:type", Object)
+], AsyncValidator.prototype, "remoteValidator", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", String)
+], AsyncValidator.prototype, "config", void 0);
+AsyncValidator = AsyncValidator_1 = __decorate([
+    core_1.Directive({
+        selector: '[asyncValidator][ngModel]',
+        providers: [
+            { provide: forms_1.NG_ASYNC_VALIDATORS, useExisting: core_1.forwardRef(function () { return AsyncValidator_1; }), multi: true }
+        ]
     }),
     __metadata("design:paramtypes", [])
-], BeginningInfoPageComponent);
-exports.BeginningInfoPageComponent = BeginningInfoPageComponent;
-//# sourceMappingURL=beginning-info-page.component.js.map
+], AsyncValidator);
+exports.AsyncValidator = AsyncValidator;
+var AsyncValidator_1;
+//# sourceMappingURL=async-validator.directive.js.map

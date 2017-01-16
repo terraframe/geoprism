@@ -32,6 +32,7 @@ import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
 import { AsyncValidator } from './core/async-validator.directive';
+import { FunctionValidator } from './core/function-validator.directive';
 
 import { EventService } from './service/core.service';
 import { LocalizationService } from './service/localization.service';
@@ -40,11 +41,14 @@ import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
 
 // Upload wizard imports
+import { NavigationService } from './uploader/navigation.service';
 import { UploadWizardComponent } from './uploader/upload-wizard.component';
+import { PagingComponent } from './uploader/paging.component';
 import { MatchInitialPageComponent } from './uploader/match-initial-page.component';
 import { MatchPageComponent } from './uploader/match-page.component';
 import { BeginningInfoPageComponent } from './uploader/beginning-info-page.component';
 import { NamePageComponent } from './uploader/name-page.component';
+import { AttributesPageComponent } from './uploader/attributes-page.component';
 import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
@@ -64,13 +68,16 @@ import { EventHttpService } from './service/event-http.service';
     LoadingBarComponent,
     ErrorMessageComponent,
     AsyncValidator,
+    FunctionValidator,
     
     // Upload Wizard components
     UploadWizardComponent,
+    PagingComponent,
     MatchInitialPageComponent,
     MatchPageComponent,
     BeginningInfoPageComponent,
     NamePageComponent,
+    AttributesPageComponent,
     
     // Routing components
     routedComponents
@@ -80,6 +87,7 @@ import { EventHttpService } from './service/event-http.service';
     DatasetService,
     CategoryService,
     UploadService,
+    NavigationService,
     EventService,
     { 
       provide : EventHttpService,

@@ -37,16 +37,20 @@ var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
 var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
 var async_validator_directive_1 = require("./core/async-validator.directive");
+var function_validator_directive_1 = require("./core/function-validator.directive");
 var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
 var category_service_1 = require("./service/category.service");
 // Upload wizard imports
+var navigation_service_1 = require("./uploader/navigation.service");
 var upload_wizard_component_1 = require("./uploader/upload-wizard.component");
+var paging_component_1 = require("./uploader/paging.component");
 var match_initial_page_component_1 = require("./uploader/match-initial-page.component");
 var match_page_component_1 = require("./uploader/match-page.component");
 var beginning_info_page_component_1 = require("./uploader/beginning-info-page.component");
 var name_page_component_1 = require("./uploader/name-page.component");
+var attributes_page_component_1 = require("./uploader/attributes-page.component");
 var upload_service_1 = require("./service/upload.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
@@ -69,12 +73,15 @@ AppModule = __decorate([
             loading_bar_component_1.LoadingBarComponent,
             error_message_component_1.ErrorMessageComponent,
             async_validator_directive_1.AsyncValidator,
+            function_validator_directive_1.FunctionValidator,
             // Upload Wizard components
             upload_wizard_component_1.UploadWizardComponent,
+            paging_component_1.PagingComponent,
             match_initial_page_component_1.MatchInitialPageComponent,
             match_page_component_1.MatchPageComponent,
             beginning_info_page_component_1.BeginningInfoPageComponent,
             name_page_component_1.NamePageComponent,
+            attributes_page_component_1.AttributesPageComponent,
             // Routing components
             app_routing_module_1.routedComponents
         ],
@@ -83,6 +90,7 @@ AppModule = __decorate([
             dataset_service_1.DatasetService,
             category_service_1.CategoryService,
             upload_service_1.UploadService,
+            navigation_service_1.NavigationService,
             core_service_1.EventService,
             {
                 provide: event_http_service_1.EventHttpService,

@@ -30,20 +30,37 @@ var core_1 = require("@angular/core");
 var uploader_model_1 = require("./uploader-model");
 var localization_service_1 = require("../service/localization.service");
 var upload_service_1 = require("../service/upload.service");
+var navigation_service_1 = require("./navigation.service");
 var UploadWizardComponent = (function () {
-    function UploadWizardComponent(localizationService, uploadService) {
+    function UploadWizardComponent(localizationService, uploadService, navigationService) {
+        var _this = this;
         this.localizationService = localizationService;
         this.uploadService = uploadService;
+        this.navigationService = navigationService;
         this.onSuccess = new core_1.EventEmitter();
+        this.subscription = navigationService.navigationAnnounced$.subscribe(function (direction) {
+            if (direction === 'next') {
+                _this.next(null, null);
+            }
+            else if (direction === 'prev') {
+                _this.prev();
+            }
+            else if (direction === 'cancel') {
+                _this.cancel();
+            }
+        });
     }
+    UploadWizardComponent.prototype.ngOnDestroy = function () {
+        this.subscription.unsubscribe();
+    };
     UploadWizardComponent.prototype.initialize = function (info) {
         this.info = JSON.parse(info);
         this.sheet = this.info.information.sheets[0];
         if (this.sheet.matches.length > 0) {
-            this.page = new uploader_model_1.Page('MATCH-INITIAL');
+            this.page = new uploader_model_1.Page('MATCH-INITIAL', null);
         }
         else {
-            this.page = new uploader_model_1.Page('BEGINNING-INFO');
+            this.page = new uploader_model_1.Page('BEGINNING-INFO', null);
         }
         this.initializeAttributes();
         this.refreshSteps();
@@ -195,80 +212,103 @@ var UploadWizardComponent = (function () {
     UploadWizardComponent.prototype.next = function (targetPage, sourcePage) {
         this.pageDirection = "NEXT";
         if (targetPage && sourcePage) {
-            this.page.current = targetPage;
-            var snapshot = new uploader_model_1.Snapshot(sourcePage, Object.assign(new uploader_model_1.Sheet(), this.sheet));
-            this.page.snapshots.push(snapshot);
+            this.page.name = targetPage;
+            this.page.snapshot = Object.assign(new uploader_model_1.Sheet(), this.sheet);
+            var page = new uploader_model_1.Page(targetPage, this.page);
+            page.hasNext = this.hasNextPage(targetPage);
+            page.isReady = this.isReady(targetPage);
+            this.page = page;
         }
         else {
+            this.page.snapshot = Object.assign(new uploader_model_1.Sheet(), this.sheet);
             // Linear logic
-            if (this.page.current == 'MATCH-INITIAL') {
-                this.page.current = 'MATCH';
-                var snapshot = new uploader_model_1.Snapshot('MATCH-INITIAL', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
+            if (this.page.name == 'MATCH-INITIAL') {
+                var page = new uploader_model_1.Page('MATCH', this.page);
+                page.hasNext = this.hasNextPage('MATCH');
+                page.isReady = this.isReady('MATCH');
+                this.page = page;
             }
-            else if (this.page.current == 'MATCH') {
-                this.page.current = 'BEGINNING-INFO';
-                var snapshot = new uploader_model_1.Snapshot('MATCH', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
+            else if (this.page.name == 'MATCH') {
+                var page = new uploader_model_1.Page('BEGINNING-INFO', this.page);
+                page.hasNext = this.hasNextPage('BEGINNING-INFO');
+                page.isReady = this.isReady('BEGINNING-INFO');
+                this.page = page;
             }
-            else if (this.page.current == 'BEGINNING-INFO') {
-                this.page.current = 'INITIAL';
-                this.incrementStep(this.page.current);
+            else if (this.page.name == 'BEGINNING-INFO') {
+                var page = new uploader_model_1.Page('INITIAL', this.page);
+                page.hasNext = this.hasNextPage('INITIAL');
+                page.isReady = this.isReady('INITIAL');
+                this.page = page;
+                this.incrementStep(this.page.name);
             }
-            else if (this.page.current === 'INITIAL') {
-                // Go to fields page  
-                this.page.current = 'FIELDS';
-                var snapshot = new uploader_model_1.Snapshot('INITIAL', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
+            else if (this.page.name === 'INITIAL') {
+                var page = new uploader_model_1.Page('FIELDS', this.page);
+                page.hasNext = this.hasNextPage('FIELDS');
+                page.isReady = this.isReady('FIELDS');
+                page.layout = 'wide-holder';
+                this.page = page;
             }
-            else if (this.page.current === 'FIELDS') {
+            else if (this.page.name === 'FIELDS') {
                 if (this.hasLocationField()) {
                     // Go to location attribute page
-                    this.page.current = 'LOCATION';
+                    var page = new uploader_model_1.Page('LOCATION', this.page);
+                    page.hasNext = this.hasNextPage('LOCATION');
+                    page.isReady = this.isReady('LOCATION');
+                    this.page = page;
                 }
                 else if (this.hasCoordinateField()) {
-                    // Go to coordinate page
-                    this.page.current = 'COORDINATE';
+                    // Go to location attribute page
+                    var page = new uploader_model_1.Page('COORDINATE', this.page);
+                    page.hasNext = this.hasNextPage('COORDINATE');
+                    page.isReady = this.isReady('COORDINATE');
+                    this.page = page;
                 }
                 else {
                     // Go to summary page
-                    this.page.current = 'SUMMARY';
+                    var page = new uploader_model_1.Page('SUMMARY', this.page);
+                    page.hasNext = this.hasNextPage('SUMMARY');
+                    page.isReady = this.isReady('SUMMARY');
+                    this.page = page;
                 }
-                this.incrementStep(this.page.current);
-                var snapshot = new uploader_model_1.Snapshot('FIELDS', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
+                this.incrementStep(this.page.name);
             }
-            else if (this.page.current === 'LOCATION') {
+            else if (this.page.name === 'LOCATION') {
                 if (this.hasCoordinateField()) {
                     // Go to coordinate page
-                    this.page.current = 'COORDINATE';
+                    var page = new uploader_model_1.Page('COORDINATE', this.page);
+                    page.hasNext = this.hasNextPage('COORDINATE');
+                    page.isReady = this.isReady('COORDINATE');
+                    this.page = page;
                 }
                 else {
                     // Go to summary page
-                    this.page.current = 'SUMMARY';
+                    var page = new uploader_model_1.Page('SUMMARY', this.page);
+                    page.hasNext = this.hasNextPage('SUMMARY');
+                    page.isReady = this.isReady('SUMMARY');
+                    this.page = page;
                 }
-                this.incrementStep(this.page.current);
-                var snapshot = new uploader_model_1.Snapshot('LOCATION', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
             }
-            else if (this.page.current === 'COORDINATE') {
+            else if (this.page.name === 'COORDINATE') {
                 // Go to summary page
-                this.page.current = 'SUMMARY';
-                this.incrementStep(this.page.current);
-                var snapshot = new uploader_model_1.Snapshot('COORDINATE', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
+                var page = new uploader_model_1.Page('SUMMARY', this.page);
+                page.hasNext = this.hasNextPage('SUMMARY');
+                page.isReady = this.isReady('SUMMARY');
+                this.page = page;
+                this.incrementStep(this.page.name);
             }
-            else if (this.page.current === 'GEO-VALIDATION') {
-                this.page.current = 'CATEGORY-VALIDATION';
-                this.incrementStep(this.page.current);
-                var snapshot = new uploader_model_1.Snapshot('GEO-VALIDATION', Object.assign(new uploader_model_1.Sheet(), this.sheet));
-                this.page.snapshots.push(snapshot);
+            else if (this.page.name === 'GEO-VALIDATION') {
+                // Go to summary page
+                var page = new uploader_model_1.Page('CATEGORY-VALIDATION', this.page);
+                page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
+                page.isReady = this.isReady('CATEGORY-VALIDATION');
+                this.page = page;
+                this.incrementStep(this.page.name);
             }
         }
     };
     UploadWizardComponent.prototype.prev = function () {
         this.pageDirection = "PREVIOUS";
-        if (this.page.current === 'MATCH' || this.page.current === "SUMMARY" || this.page.current === "BEGINNING-INFO" || this.page.current === "CATEGORY-VALIDATION") {
+        if (this.page.name === 'MATCH' || this.page.name === "SUMMARY" || this.page.name === "BEGINNING-INFO" || this.page.name === "CATEGORY-VALIDATION") {
             this.handlePrev();
         }
         else if (confirm(this.localizationService.localize("dataUploader", "prevDialogContent"))) {
@@ -276,17 +316,12 @@ var UploadWizardComponent = (function () {
         }
     };
     UploadWizardComponent.prototype.handlePrev = function () {
-        if (this.page.snapshots.length > 0) {
-            if (this.page.current === 'INITIAL') {
-                this.page.current = 'BEGINNING-INFO';
-            }
-            else {
-                var snapshot = this.page.snapshots.pop();
-                this.page.current = snapshot.page;
-                this.sheet = snapshot.sheet;
-            }
+        if (this.page.prev != null) {
+            this.page = this.page.prev;
+            this.sheet = this.page.snapshot;
+            this.page.snapshot = null;
         }
-        if (this.page.current === "SUMMARY" || this.page.current === 'CATEGORY-VALIDATION') {
+        if (this.page.name === "SUMMARY" || this.page.name === 'CATEGORY-VALIDATION') {
             var stepCt = 4;
             if (!this.hasCoordinateField()) {
                 stepCt = stepCt - 1;
@@ -294,25 +329,25 @@ var UploadWizardComponent = (function () {
             if (!this.hasLocationField()) {
                 stepCt = stepCt - 1;
             }
-            if (this.page.current === 'CATEGORY-VALIDATION') {
+            if (this.page.name === 'CATEGORY-VALIDATION') {
                 stepCt = stepCt - 1;
             }
             this.currentStep = stepCt;
         }
-        else if (this.page.current === "COORDINATE") {
+        else if (this.page.name === "COORDINATE") {
             var stepCt = 3;
             if (!this.hasLocationField()) {
                 stepCt = stepCt - 1;
             }
             this.currentStep = stepCt;
         }
-        else if (this.page.current === "LOCATION") {
+        else if (this.page.name === "LOCATION") {
             this.currentStep = 2;
         }
-        else if (this.page.current === "FIELDS") {
+        else if (this.page.name === "FIELDS") {
             this.currentStep = 1;
         }
-        else if (this.page.current === "INITIAL") {
+        else if (this.page.name === "INITIAL") {
             this.currentStep = 0;
         }
     };
@@ -335,18 +370,16 @@ var UploadWizardComponent = (function () {
         this.pageDirection = null;
         this.currentStep = null;
     };
-    UploadWizardComponent.prototype.isReady = function () {
-        var current = this.page.current;
-        // TODO   return (current === 'SUMMARY' || current === 'CATEGORY-VALIDATION' || (current === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
-        return (current === 'SUMMARY' || current === 'CATEGORY-VALIDATION');
+    UploadWizardComponent.prototype.isReady = function (name) {
+        // TODO   return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
+        return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION');
     };
-    UploadWizardComponent.prototype.hasNextPage = function () {
-        var current = this.page.current;
+    UploadWizardComponent.prototype.hasNextPage = function (name) {
         //
-        //    if(current == 'GEO-VALIDATION') {
+        //    if(name == 'GEO-VALIDATION') {
         //      return (this.problems.categories !== null && this.problems.categories.length > 0);
         //    }
-        return (current !== 'MATCH-INITIAL' && current !== 'SUMMARY' && current !== 'MATCH' && current !== 'CATEGORY-VALIDATION');
+        return (name !== 'MATCH-INITIAL' && name !== 'SUMMARY' && name !== 'MATCH' && name !== 'CATEGORY-VALIDATION');
     };
     UploadWizardComponent.prototype.onNextPage = function (data) {
         this.next(data.targetPage, data.sourcePage);
@@ -365,7 +398,8 @@ UploadWizardComponent = __decorate([
         styleUrls: []
     }),
     __metadata("design:paramtypes", [localization_service_1.LocalizationService,
-        upload_service_1.UploadService])
+        upload_service_1.UploadService,
+        navigation_service_1.NavigationService])
 ], UploadWizardComponent);
 exports.UploadWizardComponent = UploadWizardComponent;
 //# sourceMappingURL=upload-wizard.component.js.map

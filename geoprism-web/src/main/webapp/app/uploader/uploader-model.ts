@@ -17,19 +17,19 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-export class Country {
+export class Universal {
   value: string;
   label: string; 
 }
 
-export class CountryRoot {
-  options : Country[];
+export class Country {
+  options : Universal[];
   value: string;
   label: string;
 }
 
 export class Options {
-  countries : CountryRoot[];  
+  countries : Country[];  
 }
 
 export class Classifier {
@@ -45,6 +45,8 @@ export class Field {
   accepted: boolean;
   label: string;
   type: string;
+  categoryLabel: string;
+  root: string;
 }
 
 export class Locations {
@@ -61,6 +63,7 @@ export class Sheet {
   value: string;
   label: string;
   name: string;
+  country: string;
   replaceExisting: boolean;
 
   fields : Field[];
@@ -92,9 +95,15 @@ export class Snapshot {
 }
 
 export class Page {
-  snapshots : Snapshot[];
+  snapshot: Sheet;
 
-  constructor(public current: string) {
-    this.snapshots = new Array<Snapshot>();
+  hasNext: boolean;
+  isReady: boolean;
+  layout: string;
+
+  constructor(public name: string, public prev: Page) {
+    this.layout = 'holder';
+    this.hasNext = true;
+    this.isReady = false;
   }
 }

@@ -17,7 +17,8 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component} from '@angular/core';
+import { Component, Input} from '@angular/core';
+import { Page } from './uploader-model';
 
 @Component({
   moduleId: module.id,
@@ -26,6 +27,7 @@ import { Component} from '@angular/core';
   styleUrls: []
 })
 export class BeginningInfoPageComponent {
-
+  @Input() page: Page;
+  
   constructor() { }  
 }

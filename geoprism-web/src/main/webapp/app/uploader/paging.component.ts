@@ -17,33 +17,37 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, Input} from '@angular/core';
+import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { FormGroup} from '@angular/forms';
 
-import { Sheet, Options, Field, Page } from './uploader-model';
-
-import { RemoteValidator } from '../core/async-validator.directive';
-import { DatasetService } from '../service/dataset.service';
+import { Page } from './uploader-model';
+import { NavigationService } from './navigation.service';
 
 @Component({
   moduleId: module.id,
-  selector: 'name-page',
-  templateUrl: 'name-page.component.jsp',
+  selector: 'paging',
+  templateUrl: 'paging.component.jsp',
   styleUrls: []
 })
-export class NamePageComponent implements RemoteValidator {
-  @Input() options: Options;
-  @Input() sheet: Sheet;
-  @Input() page: Page;  
-
-  constructor(private service: DatasetService) { }
- 
-  validate(value:string): Promise<{[key : string] : any}> {
-    return this.service.validateDatasetName(value, '')
-      .then((response:any) => {
-        return null;
-      })
-      .catch((error:any) => {
-        return {uniqueName: false};
-      });            
-  }  
+export class PagingComponent {
+  @Input() form: FormGroup;
+  @Input() page: Page;
+  
+  constructor(private service: NavigationService) { } 
+  
+  next(): void {
+    this.service.navigate('next');
+  }
+  
+  prev(): void {
+    this.service.navigate('prev');
+  }
+  
+  cancel(): void {
+    this.service.navigate('cancel');
+  }
+  
+  ready(): void {
+    this.service.navigate('ready');
+  }
 }
