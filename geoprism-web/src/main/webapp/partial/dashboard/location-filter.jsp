@@ -19,7 +19,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<div class="filter-block">
+<div class="filter-block" id="location-filter-container">
   <div class="row-holder">
     <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
   </div>
@@ -27,7 +27,7 @@
 	  <input id="filter-geo" type="text" class="gdb-attr-filter filter-geo" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
   </div>
   <div class="geo" ng-repeat="location in filter.locations track by location.value">
-    {{location.label}}
+    <p>{{location.label}}</p>
     <div class="cell pull-right">            
       <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove($index)"></a>
     </div>

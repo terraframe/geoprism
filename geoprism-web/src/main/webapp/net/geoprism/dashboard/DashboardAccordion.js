@@ -18,7 +18,7 @@
  */
 (function(){
   
-  function LocationFilterController($scope, dashboardService) {
+  function LocationFilterController($scope, dashboardService, $timeout) {
     var controller = this;
     
     controller.source = function( request, response ) {
@@ -42,6 +42,8 @@
     
     controller.remove = function($index) {
       $scope.filter.locations.splice($index, 1);
+      
+      controller.setDatasetListHeight();
     }
     
     controller.add = function(item) {
@@ -53,6 +55,17 @@
       }
     }
     
+    
+	controller.setDatasetListHeight = function(){
+		var offset = function(){
+			var dataSetListContainer = document.getElementById("type-accordion");
+			var offset = $(".nav-bar.sidebar-nav-bar").height() + $("#location-filter-container").height() + 45;
+			dataSetListContainer.style.maxHeight = "calc(100% - "+ offset +"px)";
+		}
+		
+		$timeout(offset, 5);
+	}
+    
     controller.contains = function(id) {
       for(var i = 0; i < $scope.filter.locations.length; i++) {
         if($scope.filter.locations[i].value == id) {
@@ -62,6 +75,15 @@
       
       return false;
     }
+    
+    $scope.$watch('filter.locations', function(newValue, oldValue) {
+        var dataSetListContainer = document.getElementById("type-accordion");
+        if(newValue && dataSetListContainer){
+        	if(!oldValue){
+        		controller.setDatasetListHeight();
+        	}
+        }
+    });
   }
   
   function LocationFilter() {
@@ -84,6 +106,10 @@
         	ctrl.add(ui.item);
             
             scope.$apply();
+            
+            ctrl.setDatasetListHeight();
+            
+            $(this).val(''); return false;
           }, 
           minLength: 2
         });        
