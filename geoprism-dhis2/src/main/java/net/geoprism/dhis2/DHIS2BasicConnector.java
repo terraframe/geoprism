@@ -20,11 +20,11 @@ package net.geoprism.dhis2;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.Savepoint;
 import java.util.Iterator;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpConstants;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
@@ -40,6 +40,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+
+import net.geoprism.account.ExternalProfile;
+import net.geoprism.account.OauthServer;
 
 public class DHIS2BasicConnector
 {
@@ -78,12 +85,69 @@ public class DHIS2BasicConnector
     return serverurl;
   }
   
+  public void initialize()
+  {
+    createOauthData();
+    logIn();
+  }
+  
+  @Transaction
+  public void createOauthData()
+  {
+    try
+    {
+      createOauthClient();
+    }
+    catch (DHIS2ConflictException e)
+    {
+      // If it threw an error because the oauth client already exists, ignore it.
+      if (!e.isDuplicateGeoprismOauth())
+      {
+        throw e;
+      }
+    }
+    
+    Savepoint sp = Database.setSavepoint();
+    
+    try
+    {
+      OauthServer oauth = new OauthServer();
+      oauth.setKeyName("dhis2-local");
+      oauth.getDisplayLabel().setValue("DHIS2");
+      oauth.setAuthorizationLocation("http://127.0.0.1:8085/uaa/oauth/authorize");
+      oauth.setTokenLocation("http://127.0.0.1:8085/uaa/oauth/token");
+      oauth.setProfileLocation("http://127.0.0.1:8085/api/me");
+      oauth.setClientId(DHIS2BasicConnector.CLIENT_ID);
+      oauth.setSecretKey(DHIS2BasicConnector.SECRET);
+      oauth.setServerType("DHIS2");
+      oauth.apply();
+    }
+    catch (DuplicateDataException ex)
+    {
+      Database.rollbackSavepoint(sp);
+    }
+    catch (RuntimeException ex)
+    {
+      Database.rollbackSavepoint(sp);
+      throw ex;
+    }
+    finally
+    {
+      Database.releaseSavepoint(sp);
+    }
+  }
+  
   /**
    * Uses the DHIS2 REST API to register a new OAuth configuration for Geoprism
    */
   // curl -X POST -H "Content-Type: application/json" -d '{ "name" : "OAuth2 Demo Client", "cid" : "demo", "secret" : "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6", "grantTypes" : [ "password", "refresh_token", "authorization_code" ], "redirectUris" : [ "http://www.example.org" ]}' -u admin:district 
-  public void createOauthClient()
+  private void createOauthClient()
   {
+    if (this.accessToken != null || ExternalProfile.getAccessToken() != null)
+    {
+      return;
+    }
+    
     this.client = new HttpClient();
     
     client.getParams().setAuthenticationPreemptive(true);
@@ -135,6 +199,12 @@ public class DHIS2BasicConnector
   public void logIn()
   {
     this.client = new HttpClient();
+    this.accessToken = ExternalProfile.getAccessToken();
+    
+    if (this.accessToken != null)
+    {
+      return;
+    }
     
     client.getParams().setAuthenticationPreemptive(true);
     Credentials defaultcreds = new UsernamePasswordCredentials("geoprism", SECRET);
@@ -166,7 +236,7 @@ public class DHIS2BasicConnector
           throw new RuntimeException(message);
         }
 
-        String message = "Unable to log into sales force.  Ensure that salesforce.properties is up to date.";
+        String message = "Unable to log into DHIS2. Ensure your credentials are correct.";
         throw new RuntimeException(message);
       }
     }
@@ -178,9 +248,10 @@ public class DHIS2BasicConnector
     this.client = new HttpClient();
   }
   
-  public JSONObject httpGetRequest(String url, NameValuePair[] params)
+  public JSONObject httpGet(String url, NameValuePair[] params)
   {
     GetMethod get = new GetMethod(this.getServerUrl() + url);
+    
     get.setRequestHeader("Authorization", "Bearer " + this.getAccessToken());
     get.setRequestHeader("Accept", "application/json");
     
@@ -195,6 +266,33 @@ public class DHIS2BasicConnector
     }
     
     return response;
+  }
+  
+  public JSONObject httpPost(String url, String body)
+  {
+    try
+    {
+      PostMethod post = new PostMethod(this.serverurl + url);
+      
+      post.setRequestHeader("Authorization", "Bearer " + this.getAccessToken());
+      post.setRequestHeader("Content-Type", "application/json");
+      
+      post.setRequestEntity(new StringRequestEntity(body, null, null));
+
+      JSONObject response = new JSONObject();
+      int statusCode = httpRequest(post, response);
+
+      if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED)
+      {
+        throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
+      }
+      
+      return response;
+    }
+    catch (JSONException | UnsupportedEncodingException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
   
   public int httpRequest(HttpMethod method, JSONObject response)

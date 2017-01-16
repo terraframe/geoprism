@@ -78,6 +78,13 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
     return false;
   }
   
+  public static String getAccessToken()
+  {
+    if (accessToken == null) { return null;}
+    
+    return accessToken.getAccessToken();
+  }
+  
   public static JSONObject resourceRequest(String url)
   {
     try

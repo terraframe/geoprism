@@ -26,11 +26,11 @@
     <artifactId>geoprism</artifactId>
     <version>1.01.0006-SNAPSHOT</version>
   </parent>
-  <artifactId>dhis2-data-importer</artifactId>
+  <artifactId>geoprism-dhis2</artifactId>
   <packaging>jar</packaging>
 
-  <name>DHIS2 Data Importer</name>
-  <description>Standalone project for importing data from DHIS2</description>
+  <name>Geoprism-DHIS2</name>
+  <description>Provides DHIS2 integration to Geoprism.</description>
 
   <properties>
   </properties>
