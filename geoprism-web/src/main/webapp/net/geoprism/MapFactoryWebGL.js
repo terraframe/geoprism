@@ -371,6 +371,7 @@
           	        that._updateVectorLayersAfterLoading[i]();
           	      }
           	    }
+          	    that._areLayersLoaded = true;
             });
             
             
@@ -388,7 +389,7 @@
         	var map = this.getMap();
         	var that = this;
         	
-        	if (skipMapLoadedCheck == null && !map.loaded())
+        	if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
       	  {
         	  if (this._updateVectorLayersAfterLoading == null)
       	    {
