@@ -769,6 +769,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   {
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
     JSONArray layers = publisher.publish();
+    
+//  StringWriter writer = new StringWriter();      
+//  publisher.writeGeojson(writer);
+//  response.put("geometries", new JSONObject(writer.toString()));
 
     return layers.toString();
   }
