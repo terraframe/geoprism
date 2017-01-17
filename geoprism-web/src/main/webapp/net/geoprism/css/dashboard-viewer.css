@@ -580,7 +580,10 @@ a.map-layers-opener.opener {
 	border-radius: 0px;
 }
 
-.filter-block{overflow:hidden;}
+.filter-block{
+	overflow:hidden;
+    padding-bottom: 10px;	
+}
 .filter-block .row-holder{
 	position:relative;
 	overflow:hidden;
@@ -674,6 +677,16 @@ a.map-layers-opener.opener {
 	color: #999;
 	outline: medium none;
 }
+
+.geo p {
+    width: 255px;
+    display: inline-block;
+}
+/* .geo .cell.pull-right { */
+/* 	position: relative; */
+/*     top: 50%; */
+/*     transform: translateY(-50%); */
+/* } */
 
 .filter-block select {
     height: 27px;

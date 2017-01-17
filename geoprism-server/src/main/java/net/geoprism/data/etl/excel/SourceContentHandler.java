@@ -25,18 +25,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.geoprism.ExceptionUtil;
-import net.geoprism.data.etl.ColumnType;
-import net.geoprism.data.etl.ConverterIF;
-import net.geoprism.data.etl.SourceContextIF;
-import net.geoprism.data.etl.SourceFieldIF;
-
 import org.apache.poi.ss.util.CellReference;
 
 import com.runwaysdk.business.Transient;
 
+import net.geoprism.ExceptionUtil;
+import net.geoprism.data.etl.ColumnType;
+import net.geoprism.data.etl.ConverterIF;
+import net.geoprism.data.etl.ProgressMonitorIF;
+import net.geoprism.data.etl.SourceContextIF;
+import net.geoprism.data.etl.SourceFieldIF;
+
 public class SourceContentHandler implements SheetHandler
 {
+  /**
+   * Handles progress reporting
+   */
+  private ProgressMonitorIF monitor;
+  
   /**
    * Handler which handles the view object once they have been created.
    */
@@ -82,7 +88,7 @@ public class SourceContentHandler implements SheetHandler
    */
   private DateFormat           dateFormat;
 
-  public SourceContentHandler(ConverterIF converter, SourceContextIF context)
+  public SourceContentHandler(ConverterIF converter, SourceContextIF context, ProgressMonitorIF monitor)
   {
     this.converter = converter;
     this.context = context;
@@ -92,6 +98,8 @@ public class SourceContentHandler implements SheetHandler
 
     this.dateTimeFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_TIME_FORMAT);
     this.dateFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_FORMAT);
+    
+    this.monitor = monitor;
   }
   
   @Override
@@ -113,6 +121,8 @@ public class SourceContentHandler implements SheetHandler
     if (rowNum != 0)
     {
       this.view = this.context.newView(this.sheetName);
+      
+      this.monitor.setCurrentRow(rowNum);
     }
   }
 

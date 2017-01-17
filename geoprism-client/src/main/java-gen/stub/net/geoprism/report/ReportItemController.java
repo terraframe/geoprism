@@ -20,6 +20,7 @@ package net.geoprism.report;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
@@ -29,10 +30,13 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
+import net.geoprism.FileDownloadUtil;
 import net.geoprism.JSONControllerUtil;
 import net.geoprism.dashboard.DashboardDTO;
+import net.geoprism.dashboard.DashboardMapDTO;
 import net.geoprism.localization.LocalizationFacadeDTO;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -476,5 +480,37 @@ public class ReportItemController extends ReportItemControllerBase implements co
     {
       JSONControllerUtil.handleException(this.resp, t, this.getClientRequest());
     }
+  }
+  
+//  @Override
+  public void download(String dashboardId) throws IOException, ServletException {
+	    ClientRequestIF request = this.getClientRequest();
+	    InputStream rStream = null;
+	    
+	    ReportItemDTO report = ReportItemDTO.getReportItemForDashboard(request, dashboardId);
+	    
+	    if(report != null)
+	    {
+		    String reportId = report.getId();
+		    String reportName = report.getReportLabel().getValue().replaceAll("\\s", "_");
+	
+		    try
+		    {
+		      rStream = ReportItemDTO.getDesignAsStream(request, reportId);
+		      
+	    	  // Browser dev tools may throw warnings about mime type. This is valid for a custom type. 
+	    	  // Verify the standard implementation if you are concerned.
+	    	  FileDownloadUtil.writeFile(resp, reportName, "rptdesign", rStream, "application/" + "octet-stream");
+		    }
+		    catch (Exception e)
+		    {
+		      ErrorUtility.prepareThrowable(e, req, resp, false);
+		      this.failDownload(dashboardId);
+		    }
+		    finally
+			{
+		      rStream.close();
+			}
+	    }
   }
 }

@@ -1,4 +1,4 @@
-<%--
+<!--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
 
@@ -17,19 +17,18 @@
     You should have received a copy of the GNU Lesser General Public
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
---%>
-<%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
-<div class="filter-block" id="location-filter-container">
-  <div class="row-holder">
-    <label for="filter-geo"><gdb:localize key="filter.geo"/></label>
-  </div>
-  <div class="geo">
-	  <input id="filter-geo" type="text" class="gdb-attr-filter filter-geo" placeholder="<gdb:localize key="dashboard.entity.label"/>"></input>
-  </div>
-  <div class="geo" ng-repeat="location in filter.locations track by location.value">
-    <p>{{location.label}}</p>
-    <div class="cell pull-right">            
-      <a href="#" class="fa fa-times ico-remove" ng-click="ctrl.remove($index)"></a>
-    </div>
-  </div>  
-</div>
+-->
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>all</id>
+  <formats>
+    <format>tar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+    </dependencySet>
+  </dependencySets>
+</assembly>

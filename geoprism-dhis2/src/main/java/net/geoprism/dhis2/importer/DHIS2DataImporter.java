@@ -1,4 +1,22 @@
-package net.geoprism.dhis2;
+/**
+ * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+ *
+ * This file is part of Runway SDK(tm).
+ *
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ */
+package net.geoprism.dhis2.importer;
 
 import java.io.File;
 import java.sql.Savepoint;
@@ -27,13 +45,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 import net.geoprism.account.OauthServer;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.dhis2.orgunit.OrgUnitJsonToGeoEntity;
-import net.geoprism.dhis2.orgunit.OrgUnitLevelJsonToUniversal;
+import net.geoprism.dhis2.DHIS2BasicConnector;
+import net.geoprism.dhis2.DHIS2ConflictException;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
  * 
- * @author rick
+ * @author rrowlands
  *
  */
 public class DHIS2DataImporter
@@ -98,7 +116,7 @@ public class DHIS2DataImporter
   @Transaction
   private void importAllInTransaction()
   {
-    createGeoprismOauthData();
+    dhis2.initialize();
     importOrgUnitLevels();
     importOrgUnits();
     buildAllpaths();
@@ -107,53 +125,6 @@ public class DHIS2DataImporter
   public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
   {
     return universals[level];
-  }
-  
-  private void createGeoprismOauthData()
-  {
-    try
-    {
-      dhis2.createOauthClient();
-    }
-    catch (DHIS2ConflictException e)
-    {
-      // If it threw an error because the oauth client already exists, ignore it.
-      if (!e.isDuplicateGeoprismOauth())
-      {
-        throw e;
-      }
-    }
-    
-    Savepoint sp = Database.setSavepoint();
-    
-    try
-    {
-      OauthServer oauth = new OauthServer();
-      oauth.setKeyName("dhis2-local");
-      oauth.getDisplayLabel().setValue("DHIS2");
-      oauth.setAuthorizationLocation("http://127.0.0.1:8085/uaa/oauth/authorize");
-      oauth.setTokenLocation("http://127.0.0.1:8085/uaa/oauth/token");
-      oauth.setProfileLocation("http://127.0.0.1:8085/api/me");
-      oauth.setClientId(DHIS2BasicConnector.CLIENT_ID);
-      oauth.setSecretKey(DHIS2BasicConnector.SECRET);
-      oauth.setServerType("DHIS2");
-      oauth.apply();
-    }
-    catch (DuplicateDataException ex)
-    {
-      Database.rollbackSavepoint(sp);
-    }
-    catch (RuntimeException ex)
-    {
-      Database.rollbackSavepoint(sp);
-      throw ex;
-    }
-    finally
-    {
-      Database.releaseSavepoint(sp);
-    }
-    
-    dhis2.logIn();
   }
   
   private void buildAllpaths()
@@ -166,7 +137,7 @@ public class DHIS2DataImporter
   private void importOrgUnitLevels()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnitLevels=true"
-    JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnitLevels", "true")
     });
@@ -194,7 +165,7 @@ public class DHIS2DataImporter
   private void importOrgUnits()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true"
-    JSONObject response = dhis2.httpGetRequest("api/25/metadata", new NameValuePair[] {
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
     });

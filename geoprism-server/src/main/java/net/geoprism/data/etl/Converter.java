@@ -20,11 +20,11 @@ package net.geoprism.data.etl;
 
 import java.util.List;
 
-import net.geoprism.data.importer.ExclusionException;
-
 import com.runwaysdk.business.Mutable;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+
+import net.geoprism.data.importer.ExclusionException;
 
 public class Converter implements ConverterIF
 {
