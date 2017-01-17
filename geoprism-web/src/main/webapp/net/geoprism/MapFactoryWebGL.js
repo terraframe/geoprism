@@ -283,85 +283,93 @@
           	  
           	    if(layerName === "point"){
 	          	    // add the main layer
-		     	    map.addLayer({
-			 	    	"id": layerName,
-			 	        "source": layerName,
-			 	        "type": "circle",
-			 	        "paint": {
-			 	            "circle-radius": styleObj.radius,
-			 	            "circle-color": styleObj.fill
-			 	        }
-			 	    });
-		     	    
-		     	    // add labels
-		     	    map.addLayer({
-			 	    	"id": layerName + "-label",
-			 	        "source": layerName,
-			 	        "type": "symbol",
-			 	        "paint": {
-			 	            "text-color": "black",
-			 	            "text-halo-color": "#fff",
-		                    "text-halo-width": 2
-			 	        },
-			 	        "layout": {
-	         	            "text-field": "{displaylabel}",
-	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-	         	            "text-offset": [0, 0.6],
-	         	            "text-anchor": "top",
-	         	            "text-size": 12
-	         	        }
-			 	    });
-		     	    
-		     	    // add the hover layer
-		     	    map.addLayer({
-		     	        "id": layerName + "-hover",
-		     	        "source": layerName,
-			 	        "type": "circle",
-			 	        "paint": {
-			 	            "circle-radius": styleObj.radius,
-			 	            "circle-color": that.getHoverPointStyle().fill
-			 	        },
-		     	        "filter": ["==", "name", ""]
-		     	     });
+    		     	    map.addLayer({
+    			 	    	"id": layerName,
+    			 	        "source": layerName,
+    			 	        "type": "circle",
+    			 	        "paint": {
+    			 	            "circle-radius": styleObj.radius,
+    			 	            "circle-color": styleObj.fill
+    			 	        }
+    			 	    });
+    		     	    
+    		     	    // add labels
+    		     	    map.addLayer({
+    			 	    	"id": layerName + "-label",
+    			 	        "source": layerName,
+    			 	        "type": "symbol",
+    			 	        "paint": {
+    			 	            "text-color": "black",
+    			 	            "text-halo-color": "#fff",
+    		                    "text-halo-width": 2
+    			 	        },
+    			 	        "layout": {
+    	         	            "text-field": "{displaylabel}",
+    	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+    	         	            "text-offset": [0, 0.6],
+    	         	            "text-anchor": "top",
+    	         	            "text-size": 12
+    	         	        }
+    			 	    });
+    		     	    
+    		     	    // add the hover layer
+    		     	    map.addLayer({
+    		     	        "id": layerName + "-hover",
+    		     	        "source": layerName,
+    			 	        "type": "circle",
+    			 	        "paint": {
+    			 	            "circle-radius": styleObj.radius,
+    			 	            "circle-color": that.getHoverPointStyle().fill
+    			 	        },
+    		     	        "filter": ["==", "name", ""]
+    		     	     });
           	    }
           	    else if(layerName === "multipolygon"){
           	    	map.addLayer({
-			 	    	"id": layerName,
-			 	        "source": layerName,
-			 	        "type": "fill",
-			 	        "paint": {
-			 	            "fill-color": styleObj.fill
-			 	        }
-			 	    });
-          	    	
-          	    	 // add labels
-		     	    map.addLayer({
-			 	    	"id": layerName + "-label",
-			 	        "source": layerName,
-			 	        "type": "symbol",
-			 	        "paint": {
-			 	            "text-color": "black",
-			 	            "text-halo-color": "#fff",
-		                    "text-halo-width": 2
-			 	        },
-			 	        "layout": {
-	         	            "text-field": "{displaylabel}",
-	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-	         	            "text-anchor": "center",
-	         	            "text-size": 12
-	         	        }
-			 	    });
-		     	    
-		     	    // add the hover layer
-		     	    map.addLayer({
-		     	        "id": layerName + "-hover",
-		     	        "source": layerName,
-			 	        "type": "fill",
-			 	        "paint": {
-			 	            "fill-color": that.getHoverPointStyle().fill
-			 	        },
-		     	        "filter": ["==", "name", ""]
-		     	     });
+      			 	    	"id": layerName,
+      			 	        "source": layerName,
+      			 	        "type": "fill",
+      			 	        "paint": {
+      			 	            "fill-color": styleObj.fill
+      			 	        }
+      			 	    });
+                	    	
+                	    	 // add labels
+      		     	    map.addLayer({
+      			 	    	"id": layerName + "-label",
+      			 	        "source": layerName,
+      			 	        "type": "symbol",
+      			 	        "paint": {
+      			 	            "text-color": "black",
+      			 	            "text-halo-color": "#fff",
+      		                    "text-halo-width": 2
+      			 	        },
+      			 	        "layout": {
+      	         	            "text-field": "{displaylabel}",
+      	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+      	         	            "text-anchor": "center",
+      	         	            "text-size": 12
+      	         	        }
+      			 	    });
+      		     	    
+      		     	    // add the hover layer
+      		     	    map.addLayer({
+      		     	        "id": layerName + "-hover",
+      		     	        "source": layerName,
+      			 	        "type": "fill",
+      			 	        "paint": {
+      			 	            "fill-color": that.getHoverPointStyle().fill
+      			 	        },
+      		     	        "filter": ["==", "name", ""]
+      		     	     });
+          	    }
+          	    
+          	    if (that._updateVectorLayersAfterLoading != null)
+          	    {
+          	      for (var i = 0; i < that._updateVectorLayersAfterLoading.length; ++i)
+          	      {
+          	        that._updateVectorLayersAfterLoading[i]();
+          	      }
           	    }
             });
             
@@ -376,21 +384,34 @@
         },
         
         
-        updateVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex) {
+        updateVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, skipMapLoadedCheck) {
         	var map = this.getMap();
         	var that = this;
         	
+        	if (skipMapLoadedCheck == null && !map.loaded())
+      	  {
+        	  if (this._updateVectorLayersAfterLoading == null)
+      	    {
+        	    this._updateVectorLayersAfterLoading = [];
+      	    }
+        	  
+        	  this._updateVectorLayersAfterLoading.push(function(){
+              that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
+            });
+        	  
+        	  return;
+      	  }
+        	
         	var layer = map.getLayer(layerName);
 			
-			if(layer){
-	        	var layerSourceName = layer.source;
-	        	map.getSource(layerSourceName).setData(layerAsGeoJSON);
-	        	
-			}
+    			if (layer) {
+          	var layerSourceName = layer.source;
+          	map.getSource(layerSourceName).setData(layerAsGeoJSON);
+    			}
 			
-			map.once('data', function () {
-				map.fire("data.updated", true);
-			});
+    			map.once('data', function () {
+    				map.fire("data.updated", true);
+    			});
         },
         
         
