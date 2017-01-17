@@ -381,7 +381,7 @@
     }   
   }  
   
-  angular.module("location-management", ["location-service", "styled-inputs", "editable-map", "widget-service", "localization-service"]);
+  angular.module("location-management", ["location-service", "styled-inputs", "editable-map-webgl", "widget-service", "localization-service"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
    .directive('locationModal', LocationModal)

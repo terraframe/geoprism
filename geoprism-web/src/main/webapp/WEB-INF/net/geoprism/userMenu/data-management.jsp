@@ -59,8 +59,8 @@
 <%--     <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/> --%>
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
 
-    <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>
-    <jwr:script src="/bundles/dynamic-map.js" useRandomParam="false"/>
+    <%-- <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>  --%>
+    <jwr:script src="/bundles/webgl-map.js" useRandomParam="false"/>
     
     <script type="text/javascript">${js}</script>
     

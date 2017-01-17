@@ -530,6 +530,14 @@
         	return layersArr;
         },
         
+        removeAllVectorLayers : function() {
+        	var map = this.getMap();
+        	var vecLayers = this.getAllVectorLayers();
+        	
+        	for(var i=0; i<vecLayers.length; i++){
+        		map.removeLayer(vecLayers[i]);
+        	}
+        },
         
         getAllVectorLayers : function() {
         	var map = this.getMap();
