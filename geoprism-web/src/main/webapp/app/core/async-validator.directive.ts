@@ -33,14 +33,14 @@ export interface RemoteValidator {
 })
 export class AsyncValidator implements Validator {
   
-  @Input() remoteValidator: RemoteValidator;  
+  @Input() validator: RemoteValidator;  
   @Input() config: string;
 
   constructor(){}
 
   validate(c: AbstractControl): Promise<{[key : string] : any}> {
     if(c.value != null && c.value.length > 0) {
-      return this.remoteValidator.validate(c.value, this.config);    
+      return this.validator.validate(c.value, this.config);    
     }
     
     return null;

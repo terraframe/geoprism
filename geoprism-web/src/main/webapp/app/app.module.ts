@@ -33,6 +33,7 @@ import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
 import { AsyncValidator } from './core/async-validator.directive';
 import { FunctionValidator } from './core/function-validator.directive';
+import { KeysPipe } from './core/keys.pipe';
 
 import { EventService } from './service/core.service';
 import { LocalizationService } from './service/localization.service';
@@ -49,6 +50,7 @@ import { MatchPageComponent } from './uploader/match-page.component';
 import { BeginningInfoPageComponent } from './uploader/beginning-info-page.component';
 import { NamePageComponent } from './uploader/name-page.component';
 import { AttributesPageComponent } from './uploader/attributes-page.component';
+import { LocationPageComponent } from './uploader/location-page.component';
 import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
@@ -69,6 +71,7 @@ import { EventHttpService } from './service/event-http.service';
     ErrorMessageComponent,
     AsyncValidator,
     FunctionValidator,
+    KeysPipe,
     
     // Upload Wizard components
     UploadWizardComponent,
@@ -78,6 +81,7 @@ import { EventHttpService } from './service/event-http.service';
     BeginningInfoPageComponent,
     NamePageComponent,
     AttributesPageComponent,
+    LocationPageComponent,
     
     // Routing components
     routedComponents

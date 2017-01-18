@@ -45,13 +45,28 @@ export class Field {
   accepted: boolean;
   label: string;
   type: string;
+
+  // Properties for category fields 
   categoryLabel: string;
   root: string;
+
+  // Properties for location fields
+  universal: string;
+  assigned: boolean;
+}
+
+export class LocationAttribute {
+  label: string;
+  name: string;
+  universal: string;
+  fields: { [key:string]:string};
+  id: string;
+  editing: boolean;
 }
 
 export class Locations {
   ids: string[];
-  values: any;
+  values: { [key:string]:LocationAttribute}; 
 }
 
 export class Coordinates {

@@ -28,8 +28,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var uploader_model_1 = require("./uploader-model");
+var category_service_1 = require("../service/category.service");
 var AttributesPageComponent = (function () {
-    function AttributesPageComponent() {
+    function AttributesPageComponent(categoryService) {
+        this.categoryService = categoryService;
         this.onFieldChange = new core_1.EventEmitter();
         this.longitudeFields = {};
         this.latitudeFields = {};
@@ -87,8 +89,8 @@ var AttributesPageComponent = (function () {
         //    } 
         this.onFieldChange.emit(field);
     };
-    AttributesPageComponent.prototype.localValidate = function (value, type) {
-        if (type == 'label') {
+    AttributesPageComponent.prototype.localValidate = function (value, config) {
+        if (config == 'label') {
             return this.validateLabel(value);
         }
         return null;
@@ -107,6 +109,21 @@ var AttributesPageComponent = (function () {
             }
         }
         return null;
+    };
+    AttributesPageComponent.prototype.validate = function (value, config) {
+        if (config == 'category') {
+            return this.validateCategory(value);
+        }
+        return null;
+    };
+    AttributesPageComponent.prototype.validateCategory = function (label) {
+        return this.categoryService.validate(label, '')
+            .then(function (response) {
+            return null;
+        })
+            .catch(function (error) {
+            return { uniqueName: false };
+        });
     };
     return AttributesPageComponent;
 }());
@@ -133,7 +150,7 @@ AttributesPageComponent = __decorate([
         templateUrl: 'attributes-page.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [category_service_1.CategoryService])
 ], AttributesPageComponent);
 exports.AttributesPageComponent = AttributesPageComponent;
 //# sourceMappingURL=attributes-page.component.js.map

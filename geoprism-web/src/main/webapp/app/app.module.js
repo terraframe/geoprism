@@ -38,6 +38,7 @@ var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
 var async_validator_directive_1 = require("./core/async-validator.directive");
 var function_validator_directive_1 = require("./core/function-validator.directive");
+var keys_pipe_1 = require("./core/keys.pipe");
 var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
@@ -51,6 +52,7 @@ var match_page_component_1 = require("./uploader/match-page.component");
 var beginning_info_page_component_1 = require("./uploader/beginning-info-page.component");
 var name_page_component_1 = require("./uploader/name-page.component");
 var attributes_page_component_1 = require("./uploader/attributes-page.component");
+var location_page_component_1 = require("./uploader/location-page.component");
 var upload_service_1 = require("./service/upload.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
@@ -74,6 +76,7 @@ AppModule = __decorate([
             error_message_component_1.ErrorMessageComponent,
             async_validator_directive_1.AsyncValidator,
             function_validator_directive_1.FunctionValidator,
+            keys_pipe_1.KeysPipe,
             // Upload Wizard components
             upload_wizard_component_1.UploadWizardComponent,
             paging_component_1.PagingComponent,
@@ -82,6 +85,7 @@ AppModule = __decorate([
             beginning_info_page_component_1.BeginningInfoPageComponent,
             name_page_component_1.NamePageComponent,
             attributes_page_component_1.AttributesPageComponent,
+            location_page_component_1.LocationPageComponent,
             // Routing components
             app_routing_module_1.routedComponents
         ],

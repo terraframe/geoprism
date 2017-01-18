@@ -95,18 +95,16 @@
       </div>      
       <div class="inline-text fade-ngIf" *ngIf="field.type == 'CATEGORY' && field.root == ''">
         <label><gdb:localize key="dataUploader.categoryLabel"/></label>
-        <input [(ngModel)]="field.categoryLabel" [name]="i + '-categoryLabel'" required type="text" />
+        <input [(ngModel)]="field.categoryLabel" #categoryLabel="ngModel" [name]="i + '-categoryLabel'" required type="text" asyncValidator [validator]="this" config="category" />
       </div>      
       
       <div class="inline-error-message pull-right">
         <p *ngIf="label.invalid">
           <gdb:localize key="dataUploader.unique"/>
         </p>    
-<!-- 
-        <p *ngIf="form[i + '-categoryLabel'].$error.unique">
+        <p *ngIf="categoryLabel && categoryLabel.invalid">
           <gdb:localize key="dataUploader.uniqueCategory"/>
         </p>    
- -->
       </div>      
     </div>
   </div> 
@@ -122,8 +120,6 @@
 
       </section>        
     </fieldset>   
-    
-    {{test(form)}}     
     
     <paging [form]="form" [page]="page"></paging>
   </div>

@@ -33,7 +33,7 @@ var AsyncValidator = AsyncValidator_1 = (function () {
     }
     AsyncValidator.prototype.validate = function (c) {
         if (c.value != null && c.value.length > 0) {
-            return this.remoteValidator.validate(c.value, this.config);
+            return this.validator.validate(c.value, this.config);
         }
         return null;
     };
@@ -42,7 +42,7 @@ var AsyncValidator = AsyncValidator_1 = (function () {
 __decorate([
     core_1.Input(),
     __metadata("design:type", Object)
-], AsyncValidator.prototype, "remoteValidator", void 0);
+], AsyncValidator.prototype, "validator", void 0);
 __decorate([
     core_1.Input(),
     __metadata("design:type", String)

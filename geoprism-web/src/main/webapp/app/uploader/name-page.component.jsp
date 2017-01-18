@@ -32,7 +32,7 @@
   </div>
   <div class="holder">
     <span class="text">
-      <input [(ngModel)]="sheet.label" name="label" type="text" required asyncValidator [remoteValidator]="this" #label="ngModel" />
+      <input [(ngModel)]="sheet.label" name="label" type="text" required asyncValidator [validator]="this" #label="ngModel" />
     </span>
     <div class="inline-error-message">
       <p *ngIf="!label.valid">

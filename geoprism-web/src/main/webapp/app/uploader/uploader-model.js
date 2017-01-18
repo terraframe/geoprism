@@ -47,6 +47,12 @@ var Field = (function () {
     return Field;
 }());
 exports.Field = Field;
+var LocationAttribute = (function () {
+    function LocationAttribute() {
+    }
+    return LocationAttribute;
+}());
+exports.LocationAttribute = LocationAttribute;
 var Locations = (function () {
     function Locations() {
     }

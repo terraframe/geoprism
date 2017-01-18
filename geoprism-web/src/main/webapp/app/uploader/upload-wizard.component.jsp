@@ -59,8 +59,8 @@
       <beginning-info-page *ngIf="page.name == 'BEGINNING-INFO'" [page]="page" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></beginning-info-page>            
       <name-page *ngIf="page.name == 'INITIAL'" [page]="page"  [sheet]="sheet" [options]="info.options" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
       <attributes-page *ngIf="page.name == 'FIELDS'" [page]="page" [sheet]="sheet" [info]="info" (onFieldChange)="refreshSteps()" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
+      <location-page *ngIf="page.name == 'LOCATION'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
 <!-- 
-              <location-page *ngIf="page.name == 'LOCATION'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
               <coordinate-page *ngIf="page.name == 'COORDINATE'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
               <summary-page *ngIf="page.name == 'SUMMARY'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
               <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'"></geo-validation-page>

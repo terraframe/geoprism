@@ -21,7 +21,9 @@ import { Component, OnInit, Input, Output, EventEmitter, Directive} from '@angul
 import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
 
 import { LocalValidator } from '../core/function-validator.directive';
+import { RemoteValidator } from '../core/async-validator.directive';
 import { UploadInformation, Sheet, Page, Field, Universal} from './uploader-model';
+import { CategoryService } from '../service/category.service';
 
 @Component({
   moduleId: module.id,
@@ -29,7 +31,7 @@ import { UploadInformation, Sheet, Page, Field, Universal} from './uploader-mode
   templateUrl: 'attributes-page.component.jsp',
   styleUrls: []
 })
-export class AttributesPageComponent implements OnInit, LocalValidator {
+export class AttributesPageComponent implements OnInit, LocalValidator, RemoteValidator {
 
   @Input() info: UploadInformation;
   @Input() sheet: Sheet;
@@ -42,7 +44,7 @@ export class AttributesPageComponent implements OnInit, LocalValidator {
   textFields = {};
   universals: Universal[];
 
-  constructor() { }  
+  constructor(private categoryService: CategoryService) { }  
 
   ngOnInit(): void {
     for(let i = 0; i < this.sheet.fields.length; i++) {
@@ -108,8 +110,8 @@ export class AttributesPageComponent implements OnInit, LocalValidator {
     this.onFieldChange.emit(field);
   }
  
-  localValidate(value: string, type: string): {[key : string] : any} {
-    if(type == 'label') {
+  localValidate(value: string, config: string): {[key : string] : any} {
+    if(config == 'label') {
       return this.validateLabel(value);	
     }
     
@@ -134,5 +136,23 @@ export class AttributesPageComponent implements OnInit, LocalValidator {
     }  
         
     return null;
-  }    
+  }
+
+  validate(value:string, config:string): Promise<{[key : string] : any}> {
+    if(config == 'category') {
+      return this.validateCategory(value);	
+    }
+    
+    return null;	  
+  }
+  
+  validateCategory(label: string): Promise<{[key : string] : any}> {
+    return this.categoryService.validate(label, '')
+      .then((response:any) => {
+        return null;
+      })
+     .catch((error:any) => {
+        return {uniqueName: false};
+     });	  	  
+  }  
 }
