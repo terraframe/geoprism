@@ -46,14 +46,18 @@
 		//
 		// Setting up empty layers to be populated later
 		//
-		// TODO: pull all boiler place addVectorLayer setup into the factory so the map widget can simply call render() or setup()
+		// NOTE: We can't move this code into the map factory because it requires the event listeners which reference the scope.
 		//
 		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
-		controller.addVectorLayer(emptyGeoJSON, "multipolygon", $scope.targetStyle, "TARGET", 2);
-		controller.addVectorLayer(emptyGeoJSON, "point", $scope.targetStyle, "TARGET", 2);
-
-		controller.addVectorHoverEvents(hoverCallback, ["point", "multipolygon"]);
-		controller.addVectorClickEvents(featureClickCallback, ["point", "multipolygon"]);
+		
+		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
+    controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2);
+		
+		controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+		controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
+		
+		controller.addVectorHoverEvents(hoverCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
+		controller.addVectorClickEvents(featureClickCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
 		//
 		// end
 		//
@@ -142,7 +146,7 @@
 		    		geomType = feature.geometry.type.toLowerCase();
 				  }
 				  
-				  controller.updateVectorLayer(data, geomType, $scope.targetStyle, "TARGET", 2);
+				  controller.updateVectorLayer(data, "target-" + geomType, $scope.targetStyle, "TARGET", 2);
 			  }
 			  
 			  data.layers.forEach(function(layer){
@@ -163,8 +167,8 @@
 	  	    		feature.properties.isClickable = false;
 	  			  }
 				  
-				  controller.addVectorLayer(data, "point", $scope.contextStyle, "CONTEXT", 1);
-	    		  controller.zoomToLayersExtent(["point"]);
+				  controller.updateVectorLayer(data, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
+    		  controller.zoomToLayersExtent(["context-multipolygon"]);
 			  }
 			  
 			  var targetCallback = function(data) {
@@ -174,12 +178,12 @@
 		    		feature.properties.isClickable = true;
 				  }
 				  
-				  controller.addVectorLayer(data, "point", $scope.targetStyle, "TARGET", 2);
-		    	  controller.zoomToLayersExtent(["point"]);
+				  controller.updateVectorLayer(data, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+	    	  controller.zoomToLayersExtent(["target-multipolygon"]);
 			  }
 			  
 			  
-			  controller.removeVectorData();
+//			  controller.removeVectorData();
 			  
 			  // get context geo data
 			  controller.getMapData(contextCallback, data.layers[0], data.workspace);
