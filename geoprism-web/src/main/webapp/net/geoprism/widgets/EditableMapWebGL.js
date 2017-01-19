@@ -23,7 +23,7 @@
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
 	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.75)", strokeWidth:5, radius:7};
-	 $scope.targetStyle = {fill:"rgba(255, 0, 0, 0.75)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
+	 $scope.targetStyle = {fill:"rgba(161, 202, 241, 0.75)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
 	 $scope.sharedGeoData = {};
 	 
 	 

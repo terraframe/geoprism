@@ -159,8 +159,8 @@
           this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
           this._cache = {};
           
-          this.hoverPolygonStyle = {fill:"yellow", stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
-      	  this.hoverPointStyle = {fill:"yellow", radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
+          this.hoverPolygonStyle = {fill:"white", opacity:0.75, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
+      	  this.hoverPointStyle = {fill:"white", opacity:0.75, radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
       	  this.editFeatureStyle = {fill:"rgba(255, 0, 0, 1)", stroke:"rgba(255, 0, 0, 1)", strokeWidth:3, radius:10 };
       	  
       	  this.LAYERS_LIST = ["target-point", "context-point", "target-multipolygon", "context-multipolygon"];
@@ -241,13 +241,13 @@
           var map = this.getMap();
           var that = this;
           
-			map.on("data.updated", function(data){
-          		// TODO: remove hard coded layer names
-          		if( ! map.isEasing()){
-          			console.log("zoom zoom zoom!")
-          			that.zoomToLayersExtent(that.LAYERS_LIST);
-          		}
-          		
+			    map.on("data.updated", function(data){
+        		// TODO: remove hard coded layer names
+        		if( ! map.isEasing()){
+        			console.log("zoom zoom zoom!")
+        			that.zoomToLayersExtent(that.LAYERS_LIST);
+        		}
+        		
 //          		console.log(e, " - data loaded")
           });
         },
@@ -321,7 +321,8 @@
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
-    			 	            "circle-color": that.getHoverPointStyle().fill
+    			 	            "circle-color": that.getHoverPointStyle().fill,
+    			 	            "circle-opacity": that.getHoverPointStyle().opacity
     			 	        },
     		     	        "filter": ["==", "name", ""]
     		     	     });
@@ -363,7 +364,8 @@
   		     	        "source": layerName,
     			 	        "type": "fill",
     			 	        "paint": {
-    			 	            "fill-color": that.getHoverPointStyle().fill
+    			 	            "fill-color": that.getHoverPolygonStyle().fill,
+    			 	            "fill-opacity": that.getHoverPolygonStyle().opacity
     			 	        },
   		     	        "filter": ["==", "name", ""]
   		     	      });
