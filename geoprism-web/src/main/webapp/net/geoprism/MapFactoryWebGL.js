@@ -334,8 +334,8 @@
       			 	        "paint": {
       			 	            "fill-color": styleObj.fill,
       			 	            "fill-outline-color": "black",
-      			 	            "fill-stroke-width": 5,
-      			 	            "fill-stroke-color": "#000000"
+      			 	            //"fill-stroke-width": 5,
+      			 	            //"fill-stroke-color": "#000000"
       			 	        }
       			 	    });
               	    	
