@@ -162,6 +162,8 @@
           this.hoverPolygonStyle = {fill:"yellow", stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
       	  this.hoverPointStyle = {fill:"yellow", radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
       	  this.editFeatureStyle = {fill:"rgba(255, 0, 0, 1)", stroke:"rgba(255, 0, 0, 1)", strokeWidth:3, radius:10 };
+      	  
+      	  this.LAYERS_LIST = ["target-point", "context-point", "target-multipolygon", "context-multipolygon"];
           
           this.renderMap();
         },
@@ -243,7 +245,7 @@
           		// TODO: remove hard coded layer names
           		if( ! map.isEasing()){
           			console.log("zoom zoom zoom!")
-          			that.zoomToLayersExtent(["point", "multipolygon"]);
+          			that.zoomToLayersExtent(that.LAYERS_LIST);
           		}
           		
 //          		console.log(e, " - data loaded")
@@ -281,21 +283,21 @@
           	    	data: layerAsGeoJSON
           	    });
           	  
-          	    if(layerName === "point"){
+          	    if (layerName.indexOf("point") != -1){
 	          	    // add the main layer
     		     	    map.addLayer({
-    			 	    	"id": layerName,
+      			 	    	"id": layerName,
     			 	        "source": layerName,
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
     			 	            "circle-color": styleObj.fill
     			 	        }
-    			 	    });
+    		     	    });
     		     	    
     		     	    // add labels
     		     	    map.addLayer({
-    			 	    	"id": layerName + "-label",
+      			 	    	"id": layerName + "-label",
     			 	        "source": layerName,
     			 	        "type": "symbol",
     			 	        "paint": {
@@ -310,9 +312,9 @@
     	         	            "text-anchor": "top",
     	         	            "text-size": 12
     	         	        }
-    			 	    });
+      			 	    });
     		     	    
-    		     	    // add the hover layer
+    		     	    // Highlight the feature when they hover over it
     		     	    map.addLayer({
     		     	        "id": layerName + "-hover",
     		     	        "source": layerName,
@@ -324,7 +326,7 @@
     		     	        "filter": ["==", "name", ""]
     		     	     });
           	    }
-          	    else if(layerName === "multipolygon"){
+          	    else if (layerName.indexOf("multipolygon") != -1){
           	    	map.addLayer({
       			 	    	"id": layerName,
       			 	        "source": layerName,
@@ -333,9 +335,9 @@
       			 	            "fill-color": styleObj.fill
       			 	        }
       			 	    });
-                	    	
-                	    	 // add labels
-      		     	    map.addLayer({
+              	    	
+          	   // add labels
+                  map.addLayer({
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
       			 	        "type": "symbol",
@@ -352,16 +354,16 @@
       	         	        }
       			 	    });
       		     	    
-      		     	    // add the hover layer
-      		     	    map.addLayer({
-      		     	        "id": layerName + "-hover",
-      		     	        "source": layerName,
-      			 	        "type": "fill",
-      			 	        "paint": {
-      			 	            "fill-color": that.getHoverPointStyle().fill
-      			 	        },
-      		     	        "filter": ["==", "name", ""]
-      		     	     });
+    		     	    // Highlight the feature when they hover over it
+    		     	    map.addLayer({
+  		     	        "id": layerName + "-hover",
+  		     	        "source": layerName,
+    			 	        "type": "fill",
+    			 	        "paint": {
+    			 	            "fill-color": that.getHoverPointStyle().fill
+    			 	        },
+  		     	        "filter": ["==", "name", ""]
+  		     	      });
           	    }
           	    
           	    if (that._updateVectorLayersAfterLoading != null)
@@ -453,10 +455,10 @@
 		        				
 	    	        				// control for styling of different geometry types
 	    	        				if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
-	    			        	    	map.setFilter("multipolygon-hover", ["==", "id", ""]);
+	    			        	    	map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
 	    		        	    	}
 	    	        				else if(targetFeature.geometry.type.toLowerCase() === "point"){
-	    			        	    	map.setFilter("point-hover", ["==", "id", ""]);
+	    			        	    	map.setFilter("target-point-hover", ["==", "id", ""]);
 	    		        	    	}
 	    	        			}
 	    	         		}
@@ -491,10 +493,10 @@
 	    	            	    		
 		            	    		// control for styling of different geometry types
 	    		        	    	if(targetFeature.geometry.type.toLowerCase() === "multipolygon" || targetFeature.geometry.type.toLowerCase() === "polygon"){
-	    			        	    	map.setFilter("multipolygon-hover", ["==", "id", targetFeature.properties.id]);
+	    			        	    	map.setFilter("target-multipolygon-hover", ["==", "id", targetFeature.properties.id]);
 	    		        	    	}
 	    		        	    	else if(targetFeature.geometry.type.toLowerCase() === "point"){
-	    			        	    	map.setFilter("point-hover", ["==", "id", targetFeature.properties.id]);
+	    			        	    	map.setFilter("target-point-hover", ["==", "id", targetFeature.properties.id]);
 	    		        	    	}
 	    	            	        selectedFeatures.push(targetFeature);
 	    	        			}
@@ -527,7 +529,7 @@
         getVectorLayersByTypeProp : function(type) {
         	var map = this.getMap();
         	var layersArr = [];
-        	var layersList = ["point", "multipolygon"]
+        	var layersList = this.LAYERS_LIST;
         	
         	if(layersList.length > 0){
         		layersList.forEach(function(layerName){
@@ -564,7 +566,7 @@
         getAllVectorLayers : function() {
         	var map = this.getMap();
         	var layersArr = [];
-        	var layersList = ["point", "multipolygon"]
+        	var layersList = this.LAYERS_LIST;
         	
         	if(layersList.length > 0){
         		layersList.forEach(function(layerName){
@@ -734,7 +736,7 @@
         	
         	map.on('click', function(e) {
     		  
-        		var features = map.queryRenderedFeatures(e.point, { layers: ['point', "multipolygon"] });
+        		var features = map.queryRenderedFeatures(e.point, { layers: that.LAYERS_LIST });
         		
         		if(features.length){
         	    	var feature = features[0]; // only take the 1st feature
@@ -757,7 +759,7 @@
         	//TODO: Do we need to wrap this in 'load' event or should we use a different event
         	map.on('load', function () {
 	        	map.on('mousemove', function(e) {
-	        		var features = map.queryRenderedFeatures(e.point, { layers: ["point", "multipolygon"] });
+	        		var features = map.queryRenderedFeatures(e.point, { layers: that.LAYERS_LIST });
 	        	    
 	        	    if(features.length){
 	        	    	var feature = features[0]; // only take the 1st feature
@@ -780,8 +782,10 @@
 	        	    	}
 	        	    	
 	        	    	if(selectedFeatures.length > 0){
-        	    			map.setFilter("multipolygon-hover", ["==", "id", ""]);
-        	    			map.setFilter("point-hover", ["==", "id", ""]);
+        	    			map.setFilter("context-point-hover", ["==", "id", ""]);
+                    map.setFilter("context-multipolygon-hover", ["==", "id", ""]);
+                    map.setFilter("target-point-hover", ["==", "id", ""]);
+                    map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
         	    			selectedFeatures = [];
         	    		}
 	        	    	
@@ -789,11 +793,13 @@
 	        	    	// control for styling of different geometry types
 	        	    	// 'fill' === polygon
 	        	    	if(feature.layer.type === "fill"){
-		        	    	map.setFilter("multipolygon-hover", ["==", "id", feature.properties.id]);
+		        	    	map.setFilter("context-multipolygon-hover", ["==", "id", feature.properties.id]);
+                    map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
 
 	        	    	}
 	        	    	else if(feature.layer.type === "circle"){
-		        	    	map.setFilter("point-hover", ["==", "id", feature.properties.id]);
+	        	    	  map.setFilter("context-point-hover", ["==", "id", feature.properties.id]);
+	                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
 	        	    	}
 	        	    	
 	        	        selectedFeatures.push(feature);
@@ -803,8 +809,10 @@
 	        	    else{
 	        	    	map.getCanvas().style.cursor = originalCursor;
 	        	    	
-	        	    	map.setFilter("point-hover", ["==", "id", ""]);
-	        	    	map.setFilter("multipolygon-hover", ["==", "id", ""]);
+	        	    	map.setFilter("context-point-hover", ["==", "id", ""]);
+	        	    	map.setFilter("context-multipolygon-hover", ["==", "id", ""]);
+	        	    	map.setFilter("target-point-hover", ["==", "id", ""]);
+                  map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
 	        	    	
 	        	    	if(selectedFeatures.length > 0){
 	        	    		hoverCallback(null);
@@ -818,7 +826,8 @@
 	    		});
 	        	
 	            map.on("mouseout", function() {
-	                map.setFilter("point-hover", ["==", "id", ""]);
+	                map.setFilter("context-point-hover", ["==", "id", ""]);
+	                map.setFilter("target-point-hover", ["==", "id", ""]);
 	            });
         	});
         },
