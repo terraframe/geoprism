@@ -332,7 +332,10 @@
       			 	        "source": layerName,
       			 	        "type": "fill",
       			 	        "paint": {
-      			 	            "fill-color": styleObj.fill
+      			 	            "fill-color": styleObj.fill,
+      			 	            "fill-outline-color": "black",
+      			 	            "fill-stroke-width": 5,
+      			 	            "fill-stroke-color": "#000000"
       			 	        }
       			 	    });
               	    	
@@ -451,15 +454,17 @@
 	    	        			var targetFeature = layerSourceData.features[i];
 	    	        			var featureProps = targetFeature.properties;
 	    	        			if((feature.id && feature.id === featureProps.id) || 
-	    	        			  (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+	    	        			  (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoid))){
 		        				
 	    	        				// control for styling of different geometry types
-	    	        				if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
+	    	        				if(targetFeature.geometry){
+	    	        				  if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
 	    			        	    	map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
-	    		        	    	}
-	    	        				else if(targetFeature.geometry.type.toLowerCase() === "point"){
+	    		        	    	  }
+	    	        				  else if(targetFeature.geometry.type.toLowerCase() === "point"){
 	    			        	    	map.setFilter("target-point-hover", ["==", "id", ""]);
-	    		        	    	}
+	    		        	    	  }
+	    	        				}
 	    	        			}
 	    	         		}
 		        		}
@@ -489,15 +494,17 @@
 	    	        			var targetFeature = layerSourceData.features[i];
 	    	        			var featureProps = targetFeature.properties;
 	    	        			if((feature.id && feature.id === featureProps.id) || 
-	    	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
+	    	        			   (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoid))){
 	    	            	    		
 		            	    		// control for styling of different geometry types
-	    		        	    	if(targetFeature.geometry.type.toLowerCase() === "multipolygon" || targetFeature.geometry.type.toLowerCase() === "polygon"){
+	    	        				if(targetFeature.geometry){
+	    		        	    	  if(targetFeature.geometry.type.toLowerCase() === "multipolygon" || targetFeature.geometry.type.toLowerCase() === "polygon"){
 	    			        	    	map.setFilter("target-multipolygon-hover", ["==", "id", targetFeature.properties.id]);
-	    		        	    	}
-	    		        	    	else if(targetFeature.geometry.type.toLowerCase() === "point"){
+	    		        	    	  }
+	    		        	    	  else if(targetFeature.geometry.type.toLowerCase() === "point"){
 	    			        	    	map.setFilter("target-point-hover", ["==", "id", targetFeature.properties.id]);
-	    		        	    	}
+	    		        	    	  }
+	    	        				}
 	    	            	        selectedFeatures.push(targetFeature);
 	    	        			}
 	    	        		}
@@ -770,7 +777,7 @@
 	        	    	
 	                	popup = new mapboxgl.Popup({closeOnClick: true})
 	                    	.setLngLat([e.lngLat.lng, e.lngLat.lat])
-	                    	.setHTML(features[0].properties.displaylabel)
+	                    	.setHTML(feature.properties.displaylabel)
 	                    	.addTo(map);
 	                	
 	                	
@@ -783,9 +790,9 @@
 	        	    	
 	        	    	if(selectedFeatures.length > 0){
         	    			map.setFilter("context-point-hover", ["==", "id", ""]);
-                    map.setFilter("context-multipolygon-hover", ["==", "id", ""]);
-                    map.setFilter("target-point-hover", ["==", "id", ""]);
-                    map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+        	    			map.setFilter("context-multipolygon-hover", ["==", "id", ""]);
+        	    			map.setFilter("target-point-hover", ["==", "id", ""]);
+        	    			map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
         	    			selectedFeatures = [];
         	    		}
 	        	    	

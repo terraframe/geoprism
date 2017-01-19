@@ -45,7 +45,9 @@
     <jwr:style src="/bundles/main.css" useRandomParam="false" />
     <jwr:style src="/bundles/administration.css" useRandomParam="false" />
     <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
-    <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>  
+<%--     <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>   --%>
+    <jwr:style src="/bundles/webgl-map.css" useRandomParam="false"/>  
+    
   
     <!-- Default imports -->
     <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
