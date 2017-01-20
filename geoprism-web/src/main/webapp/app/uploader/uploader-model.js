@@ -59,6 +59,12 @@ var Locations = (function () {
     return Locations;
 }());
 exports.Locations = Locations;
+var CoordinateAttribute = (function () {
+    function CoordinateAttribute() {
+    }
+    return CoordinateAttribute;
+}());
+exports.CoordinateAttribute = CoordinateAttribute;
 var Coordinates = (function () {
     function Coordinates() {
     }

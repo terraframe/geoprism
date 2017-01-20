@@ -87,7 +87,7 @@ var AttributesPageComponent = (function () {
         //    else {
         //      this.form.$setValidity("coordinateText", true);        
         //    } 
-        this.onFieldChange.emit(field);
+        //    this.onFieldChange.emit(field);
     };
     AttributesPageComponent.prototype.localValidate = function (value, config) {
         if (config == 'label') {

@@ -26,7 +26,7 @@
   <div id="uploader-div" class='ng-modal-dialog' ng-style='dialogStyle'>
     <div class='ng-modal-dialog-content'>
       <div role="dialog" class="ng-modal-content modal-content">       
-        <div class="uploader-step-indicator-container" *ngIf="page.name != 'MATCH-INITIAL' && page.name != 'MATCH' && !updateExistingDataset">
+        <div class="uploader-step-indicator-container" *ngIf="page && page.name != 'MATCH-INITIAL' && page.name != 'MATCH' && !updateExistingDataset">
           <ol class="wizard-progress clearfix">
             <li *ngFor="let step of steps; let i = index;" [ngClass]="{'active-step' : page.name === step.page, 'status-li-disabled' : page.name !== step.page}">
               <span *ngIf="step.label == '1'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
@@ -60,8 +60,8 @@
       <name-page *ngIf="page.name == 'INITIAL'" [page]="page"  [sheet]="sheet" [options]="info.options" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
       <attributes-page *ngIf="page.name == 'FIELDS'" [page]="page" [sheet]="sheet" [info]="info" (onFieldChange)="refreshSteps()" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
       <location-page *ngIf="page.name == 'LOCATION'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
+      <coordinate-page *ngIf="page.name == 'COORDINATE'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
 <!-- 
-              <coordinate-page *ngIf="page.name == 'COORDINATE'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
               <summary-page *ngIf="page.name == 'SUMMARY'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
               <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'"></geo-validation-page>
               <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'"></category-validation-page>              

@@ -107,7 +107,7 @@ export class AttributesPageComponent implements OnInit, LocalValidator, RemoteVa
 //      this.form.$setValidity("coordinateText", true);        
 //    } 
     
-    this.onFieldChange.emit(field);
+//    this.onFieldChange.emit(field);
   }
  
   localValidate(value: string, config: string): {[key : string] : any} {

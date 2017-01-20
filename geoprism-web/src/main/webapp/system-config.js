@@ -39,7 +39,8 @@ System.config({
         '@angular/upgrade': 'npm:@angular/upgrade/bundles/upgrade.umd.js',
         // other libraries
         'rxjs': 'npm:rxjs',
-        'ng2-file-upload': 'npm:ng2-file-upload'
+        'ng2-file-upload': 'npm:ng2-file-upload',
+        'lodash': 'npm:lodash'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -47,6 +48,7 @@ System.config({
         'api': { defaultExtension: 'js' },
         'rxjs': { defaultExtension: 'js' },
         'ng2-file-upload': { defaultExtension: 'js' },
+        'lodash': { main: 'index.js', defaultExtension: 'js' }
     }
 });
 //# sourceMappingURL=system-config.js.map

@@ -69,9 +69,19 @@ export class Locations {
   values: { [key:string]:LocationAttribute}; 
 }
 
+export class CoordinateAttribute {
+  label : string;
+  latitude : string;
+  longitude : string;
+  featureLabel : string;
+  location : string;
+  featureId : string;
+  id : string;	
+}
+
 export class Coordinates {
   ids: string[];
-  values: any;
+  values: { [key:string]:CoordinateAttribute};
 }
 
 export class Sheet {
@@ -83,7 +93,7 @@ export class Sheet {
 
   fields : Field[];
   attributes: Locations;
-  coordinates: Coordinates;
+  coordinates: CoordinateAttribute[];
   categories: any;
   matches: any[];
 }

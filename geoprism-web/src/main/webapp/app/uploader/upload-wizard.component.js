@@ -27,6 +27,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var _ = require("lodash");
 var uploader_model_1 = require("./uploader-model");
 var localization_service_1 = require("../service/localization.service");
 var upload_service_1 = require("../service/upload.service");
@@ -85,8 +86,8 @@ var UploadWizardComponent = (function () {
                         field.type = 'LATITUDE';
                     }
                 }
-                for (var j = 0; j < lats.length; j++) {
-                    if (label.includes(lats[j])) {
+                for (var j = 0; j < longs.length; j++) {
+                    if (label.includes(longs[j])) {
                         field.type = 'LONGITUDE';
                     }
                 }
@@ -213,14 +214,14 @@ var UploadWizardComponent = (function () {
         this.pageDirection = "NEXT";
         if (targetPage && sourcePage) {
             this.page.name = targetPage;
-            this.page.snapshot = Object.assign(new uploader_model_1.Sheet(), this.sheet);
+            this.page.snapshot = _.cloneDeep(this.sheet);
             var page = new uploader_model_1.Page(targetPage, this.page);
             page.hasNext = this.hasNextPage(targetPage);
             page.isReady = this.isReady(targetPage);
             this.page = page;
         }
         else {
-            this.page.snapshot = Object.assign(new uploader_model_1.Sheet(), this.sheet);
+            this.page.snapshot = _.cloneDeep(this.sheet);
             // Linear logic
             if (this.page.name == 'MATCH-INITIAL') {
                 var page = new uploader_model_1.Page('MATCH', this.page);

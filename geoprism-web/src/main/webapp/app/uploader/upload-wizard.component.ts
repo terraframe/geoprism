@@ -21,6 +21,8 @@ import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
 
 import { Subscription }   from 'rxjs/Subscription';
 
+import * as _ from 'lodash';
+
 import { Dataset } from '../model/dataset';
 import { UploadInformation, Step, Sheet, Snapshot, Page } from './uploader-model';
 
@@ -29,7 +31,6 @@ import { LocalizationService } from '../service/localization.service';
 
 import { UploadService } from '../service/upload.service';
 import { NavigationService } from './navigation.service';
-
 
 @Component({
   moduleId: module.id,
@@ -116,8 +117,8 @@ export class UploadWizardComponent implements OnDestroy {
           }
         }
         
-        for(let j = 0; j < lats.length; j++) {
-          if(label.includes(lats[j]) ){
+        for(let j = 0; j < longs.length; j++) {
+          if(label.includes(longs[j]) ){
             field.type = 'LONGITUDE'; 
           }
         }
@@ -262,7 +263,7 @@ export class UploadWizardComponent implements OnDestroy {
     if(targetPage && sourcePage){
       this.page.name = targetPage
       
-      this.page.snapshot = Object.assign(new Sheet(), this.sheet) as Sheet;
+      this.page.snapshot = _.cloneDeep(this.sheet) as Sheet;
       
       let page = new Page(targetPage, this.page);
       page.hasNext = this.hasNextPage(targetPage);
@@ -271,7 +272,7 @@ export class UploadWizardComponent implements OnDestroy {
       this.page = page;
     }
     else{
-      this.page.snapshot = Object.assign(new Sheet(), this.sheet) as Sheet;
+      this.page.snapshot = _.cloneDeep(this.sheet) as Sheet;
     	
         // Linear logic
       if(this.page.name == 'MATCH-INITIAL') {
