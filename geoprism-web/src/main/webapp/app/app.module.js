@@ -54,6 +54,7 @@ var name_page_component_1 = require("./uploader/name-page.component");
 var attributes_page_component_1 = require("./uploader/attributes-page.component");
 var location_page_component_1 = require("./uploader/location-page.component");
 var coordinate_page_component_1 = require("./uploader/coordinate-page.component");
+var summary_page_component_1 = require("./uploader/summary-page.component");
 var upload_service_1 = require("./service/upload.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
@@ -88,6 +89,7 @@ AppModule = __decorate([
             attributes_page_component_1.AttributesPageComponent,
             location_page_component_1.LocationPageComponent,
             coordinate_page_component_1.CoordinatePageComponent,
+            summary_page_component_1.SummaryPageComponent,
             // Routing components
             app_routing_module_1.routedComponents
         ],

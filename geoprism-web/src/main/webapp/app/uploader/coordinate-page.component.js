@@ -39,9 +39,6 @@ var CoordinatePageComponent = (function () {
         this.labels = {};
     }
     CoordinatePageComponent.prototype.ngOnInit = function () {
-        if (this.sheet.coordinates == null) {
-            this.sheet.coordinates = [];
-        }
         var countries = this.info.options.countries;
         for (var i = 0; i < countries.length; i++) {
             var country = countries[i];

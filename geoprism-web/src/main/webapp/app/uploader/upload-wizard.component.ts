@@ -24,7 +24,7 @@ import { Subscription }   from 'rxjs/Subscription';
 import * as _ from 'lodash';
 
 import { Dataset } from '../model/dataset';
-import { UploadInformation, Step, Sheet, Snapshot, Page } from './uploader-model';
+import { UploadInformation, Step, Sheet, Snapshot, Page, Locations } from './uploader-model';
 
 import { EventService } from '../service/core.service';
 import { LocalizationService } from '../service/localization.service';
@@ -78,6 +78,16 @@ export class UploadWizardComponent implements OnDestroy {
   initialize(info: string): void {
     this.info = JSON.parse(info) as UploadInformation;
     this.sheet = this.info.information.sheets[0];
+    	  
+	if(this.sheet.attributes == null) {
+	  this.sheet.attributes = new Locations();
+	  this.sheet.attributes.ids = [];
+	  this.sheet.attributes.values = {};
+	}
+    
+	if(this.sheet.coordinates == null) {
+	  this.sheet.coordinates = [];
+	}    
     
     if(this.sheet.matches.length > 0) {
       this.page = new Page('MATCH-INITIAL', null);

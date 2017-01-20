@@ -42,11 +42,6 @@ var LocationPageComponent = (function () {
         this.attribute = this.createNewAttribute();
     }
     LocationPageComponent.prototype.ngOnInit = function () {
-        if (this.sheet.attributes == null) {
-            this.sheet.attributes = new uploader_model_1.Locations();
-            this.sheet.attributes.ids = [];
-            this.sheet.attributes.values = {};
-        }
         // Initialize the universal options
         var countries = this.info.options.countries;
         for (var i = 0; i < countries.length; i++) {

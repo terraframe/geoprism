@@ -57,6 +57,14 @@ var UploadWizardComponent = (function () {
     UploadWizardComponent.prototype.initialize = function (info) {
         this.info = JSON.parse(info);
         this.sheet = this.info.information.sheets[0];
+        if (this.sheet.attributes == null) {
+            this.sheet.attributes = new uploader_model_1.Locations();
+            this.sheet.attributes.ids = [];
+            this.sheet.attributes.values = {};
+        }
+        if (this.sheet.coordinates == null) {
+            this.sheet.coordinates = [];
+        }
         if (this.sheet.matches.length > 0) {
             this.page = new uploader_model_1.Page('MATCH-INITIAL', null);
         }

@@ -52,6 +52,7 @@ import { NamePageComponent } from './uploader/name-page.component';
 import { AttributesPageComponent } from './uploader/attributes-page.component';
 import { LocationPageComponent } from './uploader/location-page.component';
 import { CoordinatePageComponent } from './uploader/coordinate-page.component';
+import { SummaryPageComponent } from './uploader/summary-page.component';
 import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
@@ -84,6 +85,7 @@ import { EventHttpService } from './service/event-http.service';
     AttributesPageComponent,
     LocationPageComponent,
     CoordinatePageComponent,
+    SummaryPageComponent,
     
     // Routing components
     routedComponents

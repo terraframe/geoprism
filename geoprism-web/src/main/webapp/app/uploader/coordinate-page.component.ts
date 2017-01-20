@@ -54,10 +54,6 @@ export class CoordinatePageComponent implements OnInit, LocalValidator {
   }  
 
   ngOnInit(): void {
-	if(this.sheet.coordinates == null) {
-	  this.sheet.coordinates = [];
-	}    
-    
     let countries = this.info.options.countries;
       
     for(let i = 0; i < countries.length; i++) {

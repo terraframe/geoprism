@@ -56,12 +56,6 @@ export class LocationPageComponent implements OnInit, LocalValidator {
 
   ngOnInit(): void {
 	  
-	if(this.sheet.attributes == null) {
-	  this.sheet.attributes = new Locations();
-	  this.sheet.attributes.ids = [];
-	  this.sheet.attributes.values = {};
-	}
-	  
     // Initialize the universal options
     let countries = this.info.options.countries;
             

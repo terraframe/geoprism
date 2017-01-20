@@ -61,8 +61,8 @@
       <attributes-page *ngIf="page.name == 'FIELDS'" [page]="page" [sheet]="sheet" [info]="info" (onFieldChange)="refreshSteps()" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
       <location-page *ngIf="page.name == 'LOCATION'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
       <coordinate-page *ngIf="page.name == 'COORDINATE'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
+      <summary-page *ngIf="page.name == 'SUMMARY'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
 <!-- 
-              <summary-page *ngIf="page.name == 'SUMMARY'" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
               <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'"></geo-validation-page>
               <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'"></category-validation-page>              
  -->        
