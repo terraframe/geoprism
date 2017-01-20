@@ -25,7 +25,7 @@ import 'rxjs/add/operator/toPromise';
 import { EventService, BasicService } from './core.service';
 import { EventHttpService } from './event-http.service';
 
-import { Sheet, Workbook } from '../uploader/uploader-model';
+import { Sheet, Workbook, DatasetResponse } from '../uploader/uploader-model';
 
 declare var acp: any;
 
@@ -64,4 +64,21 @@ export class UploadService extends BasicService {
       .toPromise() 
       .catch(this.handleError);
   }
+  
+  importData(workbook: Workbook): Promise<DatasetResponse> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });    
+    
+    let data = JSON.stringify({configuration : workbook });
+    
+    return this.ehttp
+      .post(acp + '/uploader/importData', data, {headers: headers})
+      .toPromise() 
+      .then((response: any) => {
+        return response.json() as DatasetResponse;
+      })      
+      .catch(this.handleError);
+  }
+  
 }

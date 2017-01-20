@@ -17,6 +17,8 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
+import { Dataset } from '../model/dataset';
+
 export class Universal {
   value: string;
   label: string; 
@@ -131,4 +133,9 @@ export class Page {
     this.hasNext = true;
     this.isReady = false;
   }
+}
+
+export class DatasetResponse {
+  success: boolean;
+  datasets: Dataset[];
 }

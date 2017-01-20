@@ -87,8 +87,30 @@ var DatasetsComponent = (function () {
     DatasetsComponent.prototype.fileOver = function (e) {
         this.dropActive = e;
     };
-    DatasetsComponent.prototype.onSuccess = function (event) {
-        console.log('Updating dataset');
+    DatasetsComponent.prototype.onSuccess = function (data) {
+        if (data.datasets != null) {
+            this.addDatasets(data.datasets);
+        }
+    };
+    DatasetsComponent.prototype.getIndex = function (dataset) {
+        for (var i = 0; i < this.datasets.length; i++) {
+            if (this.datasets[i].id == dataset.id) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    DatasetsComponent.prototype.addDatasets = function (datasets) {
+        for (var i = 0; i < datasets.length; i++) {
+            var dataset = datasets[i];
+            var index = this.getIndex(dataset);
+            if (index == -1) {
+                this.datasets.push(dataset);
+            }
+            else {
+                this.datasets[index] = dataset;
+            }
+        }
     };
     return DatasetsComponent;
 }());

@@ -85,7 +85,7 @@
           <div class="box">
             <select class="select-area" [name]="i + '-featureLabel'" [(ngModel)]="coordinate.featureLabel" required>
               <option value=""></option>
-              <option *ngFor="let opt of featureLabels" [value]="opt.value">{{opt.label}}</option>              
+              <option *ngFor="let opt of featureLabels" [value]="opt.label">{{opt.label}}</option>              
             </select>
           </div> 
         </div>

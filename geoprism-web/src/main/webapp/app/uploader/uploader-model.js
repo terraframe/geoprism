@@ -116,4 +116,10 @@ var Page = (function () {
     return Page;
 }());
 exports.Page = Page;
+var DatasetResponse = (function () {
+    function DatasetResponse() {
+    }
+    return DatasetResponse;
+}());
+exports.DatasetResponse = DatasetResponse;
 //# sourceMappingURL=uploader-model.js.map

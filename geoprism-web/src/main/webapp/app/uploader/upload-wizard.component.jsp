@@ -23,7 +23,10 @@
 
 <div class='ng-modal' *ngIf="info">
   <div id="uploader-overlay" class='ng-modal-overlay'></div>
-  <div id="uploader-div" class='ng-modal-dialog' ng-style='dialogStyle'>
+  <div id="uploader-div" class='ng-modal-dialog' [style]='dialogStyle'>
+  
+    <error-message ></error-message>
+  
     <div class='ng-modal-dialog-content'>
       <div role="dialog" class="ng-modal-content modal-content">       
         <div class="uploader-step-indicator-container" *ngIf="page && page.name != 'MATCH-INITIAL' && page.name != 'MATCH' && !updateExistingDataset">

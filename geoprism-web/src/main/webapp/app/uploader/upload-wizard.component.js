@@ -49,6 +49,9 @@ var UploadWizardComponent = (function () {
             else if (direction === 'cancel') {
                 _this.cancel();
             }
+            else if (direction === 'ready') {
+                _this.persist();
+            }
         });
     }
     UploadWizardComponent.prototype.ngOnDestroy = function () {
@@ -378,6 +381,19 @@ var UploadWizardComponent = (function () {
         this.page = null;
         this.pageDirection = null;
         this.currentStep = null;
+    };
+    UploadWizardComponent.prototype.persist = function () {
+        var _this = this;
+        this.info.information.sheets[0] = _.cloneDeep(this.sheet);
+        this.uploadService.importData(this.info.information)
+            .then(function (result) {
+            if (result.success) {
+                _this.clear();
+                _this.onSuccess.emit({ datasets: result.datasets, finished: true });
+            }
+            else {
+            }
+        });
     };
     UploadWizardComponent.prototype.isReady = function (name) {
         // TODO   return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));

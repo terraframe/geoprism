@@ -67,6 +67,19 @@ var UploadService = (function (_super) {
             .toPromise()
             .catch(this.handleError);
     };
+    UploadService.prototype.importData = function (workbook) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ configuration: workbook });
+        return this.ehttp
+            .post(acp + '/uploader/importData', data, { headers: headers })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
     return UploadService;
 }(core_service_1.BasicService));
 UploadService = __decorate([

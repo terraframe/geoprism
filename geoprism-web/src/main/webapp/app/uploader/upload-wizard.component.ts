@@ -40,7 +40,7 @@ import { NavigationService } from './navigation.service';
 })
 export class UploadWizardComponent implements OnDestroy {
 
-  @Output() onSuccess = new EventEmitter<Dataset>();
+  @Output() onSuccess = new EventEmitter<any>();
   
   steps : Step[];
   
@@ -67,6 +67,9 @@ export class UploadWizardComponent implements OnDestroy {
         }         
         else if(direction === 'cancel') {
           this.cancel();
+        } 
+        else if(direction === 'ready') {
+          this.persist();
         } 
     });      
   }
@@ -460,6 +463,49 @@ export class UploadWizardComponent implements OnDestroy {
     this.pageDirection = null;
     this.currentStep = null;
   }
+  
+    
+  persist(): void {
+    this.info.information.sheets[0] = _.cloneDeep(this.sheet) as Sheet;
+	  
+    this.uploadService.importData(this.info.information)
+      .then(result => {
+        if(result.success) {          
+          this.clear();
+          
+          this.onSuccess.emit({datasets:result.datasets, finished : true});          
+        }
+        else {          
+            
+//          if(this.hasLocationField() && this.hasCoordinateField()) {
+//            this.currentStep = 5;
+//          }
+//          else if(this.hasLocationField() || this.hasCoordinateField()) {
+//            this.currentStep = 4;
+//          }
+//          else{
+//            this.currentStep = 3;
+//          }
+//
+//            
+//          if( !result.problems.locations || result.problems.locations.length > 0) {
+//            this.page.current = 'GEO-VALIDATION';
+//          }
+//          else {
+//            this.page.current = 'CATEGORY-VALIDATION';
+//          }
+//            
+//          this.page.prev = null;          
+//          this.info.information.sheets = result.sheets;
+//          this.sheet = this.info.information.sheets[0];
+//          this.problems = result.problems;
+//          
+//          this.$emit('datasetChange', {datasets:result.datasets, finished : false});
+        }         
+      });    
+	  
+  }
+  
   
   
   isReady(name: string) : boolean {

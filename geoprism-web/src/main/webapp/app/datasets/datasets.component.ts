@@ -30,7 +30,7 @@ import { DatasetService } from '../service/dataset.service';
 
 import { UploadWizardComponent } from '../uploader/upload-wizard.component';
 
-declare var acp: string;
+declare let acp: string;
 
 @Component({
   moduleId: module.id,
@@ -104,7 +104,34 @@ export class DatasetsComponent implements OnInit {
     this.dropActive = e;
   }
   
-  onSuccess(event: any): void {
-    console.log('Updating dataset');
+  onSuccess(data: any): void {
+    if(data.datasets != null) {
+      this.addDatasets(data.datasets);
+    }
+  }
+  
+  getIndex(dataset: Dataset) {
+    for(var i = 0; i < this.datasets.length; i++) {
+      if(this.datasets[i].id == dataset.id) {
+        return i;
+      }
+    }
+      
+    return -1;
+  }
+  
+  addDatasets(datasets:Dataset[]) {
+    for(let i = 0; i < datasets.length; i++) {
+      let dataset = datasets[i];
+      
+      let index = this.getIndex(dataset)
+        
+      if(index == -1) {
+        this.datasets.push(dataset);        
+      }
+      else {
+        this.datasets[index] = dataset;
+      }
+    }
   }
 }
