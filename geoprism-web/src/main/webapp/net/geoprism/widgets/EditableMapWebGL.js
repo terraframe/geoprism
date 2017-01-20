@@ -93,6 +93,10 @@
 		 webGLMapService.addVectorHoverEvents(hoverCallback, layersArr);
 	 }
 	 
+	 controller.addNewPointControl = function(feature, saveCallback) {
+     mapService.addNewPointControl(feature, saveCallback);
+   }
+	 
 	 controller.zoomToLayersExtent = function(layersArr) {
 		 webGLMapService.zoomToLayersExtent(layersArr);
 	 }

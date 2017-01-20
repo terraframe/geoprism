@@ -250,7 +250,17 @@
         		
 //          		console.log(e, " - data loaded")
           });
+			    
+			    map.on('load', function () {
+			      var Draw = new MapboxDraw({
+              controls: {
+                point: true, line_string: false, polygon: false, trash: true, combine_features: false, uncombine_features: false
+              }
+            });
+            map.addControl(Draw);
+			    });
         },
+        
         
         
         // TODO: convert to webgl
