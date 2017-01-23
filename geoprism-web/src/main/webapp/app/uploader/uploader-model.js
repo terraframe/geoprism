@@ -77,6 +77,16 @@ var Sheet = (function () {
     return Sheet;
 }());
 exports.Sheet = Sheet;
+var LocationExclusion = (function () {
+    function LocationExclusion(id, universal, locationLabel, parentId) {
+        this.id = id;
+        this.universal = universal;
+        this.locationLabel = locationLabel;
+        this.parentId = parentId;
+    }
+    return LocationExclusion;
+}());
+exports.LocationExclusion = LocationExclusion;
 var Workbook = (function () {
     function Workbook() {
     }
@@ -116,10 +126,52 @@ var Page = (function () {
     return Page;
 }());
 exports.Page = Page;
+var LocationContext = (function () {
+    function LocationContext() {
+    }
+    return LocationContext;
+}());
+exports.LocationContext = LocationContext;
+var LocationProblem = (function () {
+    function LocationProblem() {
+    }
+    return LocationProblem;
+}());
+exports.LocationProblem = LocationProblem;
+var CategoryProblem = (function () {
+    function CategoryProblem() {
+    }
+    return CategoryProblem;
+}());
+exports.CategoryProblem = CategoryProblem;
+var Problems = (function () {
+    function Problems() {
+    }
+    return Problems;
+}());
+exports.Problems = Problems;
 var DatasetResponse = (function () {
     function DatasetResponse() {
     }
     return DatasetResponse;
 }());
 exports.DatasetResponse = DatasetResponse;
+var Label = (function () {
+    function Label() {
+    }
+    return Label;
+}());
+exports.Label = Label;
+var GeoSynonym = (function () {
+    function GeoSynonym() {
+    }
+    return GeoSynonym;
+}());
+exports.GeoSynonym = GeoSynonym;
+var Entity = (function () {
+    function Entity() {
+    }
+    return Entity;
+}());
+exports.Entity = Entity;
 //# sourceMappingURL=uploader-model.js.map

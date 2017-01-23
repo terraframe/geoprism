@@ -17,34 +17,35 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input} from '@angular/core';
 
-import { UploadInformation, Step, Sheet, Page } from './uploader-model';
-
-import { UploadService } from '../service/upload.service';
-
+import { Page, Problems, Workbook} from './uploader-model';
 
 @Component({
   moduleId: module.id,
-  selector: 'match-page',
-  templateUrl: 'match-page.component.jsp',
+  selector: 'geo-validation-page',
+  templateUrl: 'geo-validation-page.component.jsp',
   styleUrls: []
 })
-export class MatchPageComponent {
-	
-  @Input() sheet: Sheet;
-  @Output() onSelect = new EventEmitter<Sheet>();
+export class GeoValidationPageComponent {
 
-  constructor(private service: UploadService) { }
+  @Input() workbook: Workbook;
+  @Input() page: Page;
+  @Input() problems: Problems;
   
-  select(match:any, overwrite:boolean) : void {
-   
-    this.service.getSavedConfiguration(match.id, this.sheet.name)
-      .then(response => {
-    	let sheet = response.datasets;
-        sheet.replaceExisting = overwrite;          
-    	  
-    	this.onSelect.emit(sheet);    	
-      });
-  }
+  constructor() {
+  }  
+
+  hasProblems(): boolean {
+    if(this.problems.locations != null) {      
+      for(let i = 0; i < this.problems.locations.length; i++) {
+        
+        if(!this.problems.locations[i].resolved) {
+          return true;
+        }
+      }
+    }
+      
+    return false;
+  }    
 }

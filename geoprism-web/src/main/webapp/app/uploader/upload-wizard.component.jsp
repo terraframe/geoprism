@@ -57,16 +57,16 @@
         <h1 class="ui-dialog-title" *ngIf="page.name == 'CATEGORY-VALIDATION'"><gdb:localize key="dataUploader.titleCategoryValidation"/></h1>
       </div>
       
-      <match-initial-page *ngIf="page.name == 'MATCH-INITIAL'"(onNextPage)="onNextPage($event)" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-initial-page> 
-      <match-page *ngIf="page.name == 'MATCH'" [sheet]="sheet" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-page>  
+      <match-initial-page *ngIf="page.name == 'MATCH-INITIAL'" (onNextPage)="onNextPage($event)" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-initial-page> 
+      <match-page *ngIf="page.name == 'MATCH'" [sheet]="sheet" (onSelect)="onSelectSheet($event)" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-page>  
       <beginning-info-page *ngIf="page.name == 'BEGINNING-INFO'" [page]="page" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></beginning-info-page>            
       <name-page *ngIf="page.name == 'INITIAL'" [page]="page"  [sheet]="sheet" [options]="info.options" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></name-page>
       <attributes-page *ngIf="page.name == 'FIELDS'" [page]="page" [sheet]="sheet" [info]="info" (onFieldChange)="refreshSteps()" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></attributes-page>
       <location-page *ngIf="page.name == 'LOCATION'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
       <coordinate-page *ngIf="page.name == 'COORDINATE'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
       <summary-page *ngIf="page.name == 'SUMMARY'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
+      <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information"></geo-validation-page>
 <!-- 
-              <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'"></geo-validation-page>
               <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'"></category-validation-page>              
  -->        
       

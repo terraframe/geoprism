@@ -24,6 +24,7 @@ import { LocalValidator } from '../core/function-validator.directive';
 import { RemoteValidator } from '../core/async-validator.directive';
 import { UploadInformation, Sheet, Page, Field, Universal, Locations, LocationAttribute} from './uploader-model';
 import { CategoryService } from '../service/category.service';
+import { IdService } from '../service/core.service';
 
 class LocationField {
   constructor(public field: Field, public universal: Universal) {}
@@ -50,7 +51,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
   attribute: LocationAttribute;
   unassignedFields: Field[];
 
-  constructor() {
+  constructor(private idService: IdService) {
     this.attribute = this.createNewAttribute();
   }  
 
@@ -324,7 +325,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
       
     if(this.attribute) {      
       if(this.attribute.id === '') {
-        this.attribute.id = this.generateId();
+        this.attribute.id = this.idService.generateId();
         
         this.sheet.attributes.ids.push(this.attribute.id);
         this.sheet.attributes.values[this.attribute.id] = new LocationAttribute();              
@@ -580,14 +581,6 @@ export class LocationPageComponent implements OnInit, LocalValidator {
   }
   
   
-  generateId(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
-  }    
-    
- 
   localValidate(value: string, config: string): {[key : string] : any} {
     if(config == 'label') {
       return this.validateLabel(value);  

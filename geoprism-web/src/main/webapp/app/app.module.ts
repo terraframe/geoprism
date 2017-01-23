@@ -28,6 +28,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
+//import { AutoCompleteModule } from './autocomplete/auto-complete.module';
 
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
@@ -35,7 +36,10 @@ import { AsyncValidator } from './core/async-validator.directive';
 import { FunctionValidator } from './core/function-validator.directive';
 import { KeysPipe } from './core/keys.pipe';
 
-import { EventService } from './service/core.service';
+import { AutoCompleteDirective } from './autocomplete/auto-complete.directive';
+import { AutoCompleteComponent } from './autocomplete/auto-complete.component';
+
+import { EventService, IdService} from './service/core.service';
 import { LocalizationService } from './service/localization.service';
 
 import { DatasetService } from './service/dataset.service';
@@ -53,6 +57,8 @@ import { AttributesPageComponent } from './uploader/attributes-page.component';
 import { LocationPageComponent } from './uploader/location-page.component';
 import { CoordinatePageComponent } from './uploader/coordinate-page.component';
 import { SummaryPageComponent } from './uploader/summary-page.component';
+import { GeoValidationPageComponent } from './uploader/geo-validation-page.component';
+import { GeoValidationProblemComponent } from './uploader/geo-validation-problem.component';
 import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
@@ -64,7 +70,7 @@ import { EventHttpService } from './service/event-http.service';
     FormsModule,
     AppRoutingModule,
     HttpModule,
-    FileUploadModule    
+    FileUploadModule,
   ],
   declarations: [
 	// Global components
@@ -74,6 +80,8 @@ import { EventHttpService } from './service/event-http.service';
     AsyncValidator,
     FunctionValidator,
     KeysPipe,
+    AutoCompleteDirective,
+    AutoCompleteComponent,
     
     // Upload Wizard components
     UploadWizardComponent,
@@ -86,12 +94,15 @@ import { EventHttpService } from './service/event-http.service';
     LocationPageComponent,
     CoordinatePageComponent,
     SummaryPageComponent,
+    GeoValidationPageComponent,
+    GeoValidationProblemComponent,
     
     // Routing components
     routedComponents
   ],
   providers: [
 	LocalizationService,
+	IdService,
     DatasetService,
     CategoryService,
     UploadService,
@@ -105,6 +116,7 @@ import { EventHttpService } from './service/event-http.service';
       deps: [XHRBackend, RequestOptions, EventService]
     }   
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AutoCompleteComponent]
 })
 export class AppModule { }

@@ -68,6 +68,9 @@ var UploadWizardComponent = (function () {
         if (this.sheet.coordinates == null) {
             this.sheet.coordinates = [];
         }
+        if (this.info.information.locationExclusions == null) {
+            this.info.information.locationExclusions = [];
+        }
         if (this.sheet.matches.length > 0) {
             this.page = new uploader_model_1.Page('MATCH-INITIAL', null);
         }
@@ -392,6 +395,32 @@ var UploadWizardComponent = (function () {
                 _this.onSuccess.emit({ datasets: result.datasets, finished: true });
             }
             else {
+                //          if(this.hasLocationField() && this.hasCoordinateField()) {
+                //            this.currentStep = 5;
+                //          }
+                //          else if(this.hasLocationField() || this.hasCoordinateField()) {
+                //            this.currentStep = 4;
+                //          }
+                //          else{
+                //            this.currentStep = 3;
+                //          }
+                if (!result.problems.locations || result.problems.locations.length > 0) {
+                    var hasNext = (result.problems.categories != null || result.problems.categories.length > 0);
+                    var page = new uploader_model_1.Page('GEO-VALIDATION', null);
+                    page.hasNext = hasNext;
+                    page.isReady = !hasNext;
+                    page.layout = 'wide-holder';
+                    _this.page = page;
+                }
+                else {
+                    var page = new uploader_model_1.Page('CATEGORY-VALIDATION', null);
+                    page.hasNext = false;
+                    page.isReady = true;
+                    page.layout = 'wide-holder';
+                    _this.page = page;
+                }
+                _this.problems = result.problems;
+                _this.onSuccess.emit({ datasets: result.datasets, finished: false });
             }
         });
     };
@@ -408,6 +437,15 @@ var UploadWizardComponent = (function () {
     };
     UploadWizardComponent.prototype.onNextPage = function (data) {
         this.next(data.targetPage, data.sourcePage);
+    };
+    UploadWizardComponent.prototype.onSelectSheet = function (sheet) {
+        this.page.snapshot = _.cloneDeep(this.sheet);
+        // Go to summary page
+        var page = new uploader_model_1.Page('SUMMARY', this.page);
+        page.hasNext = this.hasNextPage('SUMMARY');
+        page.isReady = this.isReady('SUMMARY');
+        this.page = page;
+        this.sheet = sheet;
     };
     return UploadWizardComponent;
 }());

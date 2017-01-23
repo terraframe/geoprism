@@ -347,7 +347,7 @@ public class TargetBuilder
     return definition;
   }
 
-  private Universal createGeoNodeGeometry(String sheetName, List<GeoNode> nodes, GeoEntity country, Universal lowest, TargetDefinition definition, MdBusinessDAO mdBusiness, JSONObject cField)
+  private Universal createGeoNodeGeometry(String sheetName, List<GeoNode> nodes, GeoEntity country, Universal lowest, TargetDefinition definition, MdBusinessDAO mdBusiness, JSONObject cField) throws JSONException
   {
     String universalId = cField.getString("universal");
 

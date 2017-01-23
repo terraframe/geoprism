@@ -34,11 +34,14 @@ require("./rxjs-extensions");
 var app_component_1 = require("./app.component");
 var app_routing_module_1 = require("./app-routing.module");
 var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
+//import { AutoCompleteModule } from './autocomplete/auto-complete.module';
 var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
 var async_validator_directive_1 = require("./core/async-validator.directive");
 var function_validator_directive_1 = require("./core/function-validator.directive");
 var keys_pipe_1 = require("./core/keys.pipe");
+var auto_complete_directive_1 = require("./autocomplete/auto-complete.directive");
+var auto_complete_component_1 = require("./autocomplete/auto-complete.component");
 var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
@@ -55,6 +58,8 @@ var attributes_page_component_1 = require("./uploader/attributes-page.component"
 var location_page_component_1 = require("./uploader/location-page.component");
 var coordinate_page_component_1 = require("./uploader/coordinate-page.component");
 var summary_page_component_1 = require("./uploader/summary-page.component");
+var geo_validation_page_component_1 = require("./uploader/geo-validation-page.component");
+var geo_validation_problem_component_1 = require("./uploader/geo-validation-problem.component");
 var upload_service_1 = require("./service/upload.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
@@ -69,7 +74,7 @@ AppModule = __decorate([
             forms_1.FormsModule,
             app_routing_module_1.AppRoutingModule,
             http_1.HttpModule,
-            ng2_file_upload_1.FileUploadModule
+            ng2_file_upload_1.FileUploadModule,
         ],
         declarations: [
             // Global components
@@ -79,6 +84,8 @@ AppModule = __decorate([
             async_validator_directive_1.AsyncValidator,
             function_validator_directive_1.FunctionValidator,
             keys_pipe_1.KeysPipe,
+            auto_complete_directive_1.AutoCompleteDirective,
+            auto_complete_component_1.AutoCompleteComponent,
             // Upload Wizard components
             upload_wizard_component_1.UploadWizardComponent,
             paging_component_1.PagingComponent,
@@ -90,11 +97,14 @@ AppModule = __decorate([
             location_page_component_1.LocationPageComponent,
             coordinate_page_component_1.CoordinatePageComponent,
             summary_page_component_1.SummaryPageComponent,
+            geo_validation_page_component_1.GeoValidationPageComponent,
+            geo_validation_problem_component_1.GeoValidationProblemComponent,
             // Routing components
             app_routing_module_1.routedComponents
         ],
         providers: [
             localization_service_1.LocalizationService,
+            core_service_1.IdService,
             dataset_service_1.DatasetService,
             category_service_1.CategoryService,
             upload_service_1.UploadService,
@@ -108,7 +118,8 @@ AppModule = __decorate([
                 deps: [http_1.XHRBackend, http_1.RequestOptions, core_service_1.EventService]
             }
         ],
-        bootstrap: [app_component_1.AppComponent]
+        bootstrap: [app_component_1.AppComponent],
+        entryComponents: [auto_complete_component_1.AutoCompleteComponent]
     }),
     __metadata("design:paramtypes", [])
 ], AppModule);

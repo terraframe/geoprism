@@ -1,0 +1,42 @@
+  @keyframes slideDown {
+    0% {
+      transform:  translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  .auto-complete auto-complete {
+    background-color: transparent;
+  }
+  .auto-complete auto-complete input {
+    outline: none;
+    border: 0;
+    padding: 2px; 
+    box-sizing: border-box;
+    background-clip: content-box;
+  }
+  .auto-complete auto-complete ul {
+    background-color: #fff;
+    margin: 0;
+    width : 100%;
+    overflow-y: auto;
+    list-style-type: none;
+    padding: 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    animation: slideDown 0.1s;
+  }
+  .auto-complete auto-complete ul li {
+    padding: 2px 5px;
+    border-bottom: 1px solid #eee;
+  }
+  .auto-complete auto-complete ul li.selected {
+    background-color: #ccc;
+  }
+  .auto-complete auto-complete ul li:last-child {
+    border-bottom: none;
+  }
+  .auto-complete auto-complete ul li:hover {
+    background-color: #ccc;
+  }

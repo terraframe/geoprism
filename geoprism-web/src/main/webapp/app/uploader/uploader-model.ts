@@ -78,7 +78,7 @@ export class CoordinateAttribute {
   featureLabel : string;
   location : string;
   featureId : string;
-  id : string;	
+  id : string;  
 }
 
 export class Coordinates {
@@ -100,10 +100,15 @@ export class Sheet {
   matches: any[];
 }
 
+export class LocationExclusion {
+  constructor(public id: string, public universal: string, public locationLabel: string, public parentId: string) {}
+}
+
 export class Workbook {
   filename: string;
   directory: string;
   sheets: Sheet[];
+  locationExclusions: LocationExclusion[];
 }
 
 export class UploadInformation {
@@ -135,7 +140,58 @@ export class Page {
   }
 }
 
+export class LocationContext {
+  label: string;
+  universal: string;
+}
+
+export class LocationProblem {
+  type: string;
+  label: string;
+  parentId: string;
+  universalId: string;
+  universalLabel: string;
+  context: LocationContext[];
+  resolved: boolean;
+  synonym: string;
+  action: any;
+}
+
+export class CategoryProblem {
+  type: string;
+  label: string;
+  parentId: string;
+  universalId: string;
+  universalLabel: string;
+  context: LocationContext[];
+  resolved: boolean;
+  synonym: string;
+  action: any;
+}
+
+export class Problems {
+  locations  : LocationProblem[];
+  categories  : CategoryProblem[];
+}
+
 export class DatasetResponse {
   success: boolean;
   datasets: Dataset[];
+  problems: Problems;
 }
+
+export class Label {
+  label: string;
+}
+
+export class GeoSynonym {
+  synonymId: string;
+  label: string;
+  ancestors: Label[];
+}
+
+export class Entity {
+  entityId: string;
+}
+
+

@@ -43,31 +43,44 @@ export class EventService {
   }
   
   public onError(error:any) : void {
-	let rError = error.json() as RunwayException
-	
+let rError = error.json() as RunwayException
+
     for (const listener of this.listeners) {
       listener.onError(rError);
-    }	  
+    }  
   }
 }
 
 @Injectable()
 export class BasicService {
   service: EventService;
-	
+
   constructor(service: EventService) {
     this.service = service;
   }
 
   protected handleError(error: any): Promise<any> {
-	/*
-	 * Must add the null check on this because the this reference gets messed up when
-	 * this code is executed from ng2 zone.js
-	 */ 	  
+/*
+ * Must add the null check on this because the this reference gets messed up when
+ * this code is executed from ng2 zone.js
+ */   
     if(this != null) {
-      this.service.onError(error);     	
+      this.service.onError(error);     
     }
-    	  
+      
     return Promise.reject(error);
   }
+}
+
+@Injectable()
+export class IdService {
+
+  constructor() {}
+  
+  generateId(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
+  }    
 }

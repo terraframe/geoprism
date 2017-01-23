@@ -80,6 +80,67 @@ var UploadService = (function (_super) {
         })
             .catch(this.handleError);
     };
+    UploadService.prototype.getGeoEntitySuggestions = function (parentId, universalId, text, limit) {
+        var params = new http_1.URLSearchParams();
+        params.set('parentId', parentId);
+        params.set('universalId', universalId);
+        params.set('text', text);
+        params.set('limit', limit);
+        return this.http
+            .get(acp + '/uploader/getGeoEntitySuggestions', { search: params })
+            .map(function (resp) { return resp.json(); });
+        //      .toPromise()
+        //      .then((response: any) => {
+        //        return response.json() as Pair[];
+        //      });
+        //      .catch(this.handleError);    
+    };
+    UploadService.prototype.createGeoEntitySynonym = function (entityId, label) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ entityId: entityId, label: label });
+        return this.ehttp
+            .post(acp + '/uploader/createGeoEntitySynonym', data, { headers: headers })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    UploadService.prototype.createGeoEntity = function (parentId, universalId, label) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ parentId: parentId, universalId: universalId, label: label });
+        return this.ehttp
+            .post(acp + '/uploader/createGeoEntity', data, { headers: headers })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    UploadService.prototype.deleteGeoEntity = function (entityId) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ entityId: entityId });
+        return this.ehttp
+            .post(acp + '/uploader/deleteGeoEntity', data, { headers: headers })
+            .toPromise()
+            .catch(this.handleError);
+    };
+    UploadService.prototype.deleteGeoEntitySynonym = function (synonymId) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ synonymId: synonymId });
+        return this.ehttp
+            .post(acp + '/uploader/deleteGeoEntitySynonym', data, { headers: headers })
+            .toPromise()
+            .catch(this.handleError);
+    };
     return UploadService;
 }(core_service_1.BasicService));
 UploadService = __decorate([

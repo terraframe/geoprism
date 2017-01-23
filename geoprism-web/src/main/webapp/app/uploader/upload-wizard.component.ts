@@ -24,7 +24,7 @@ import { Subscription }   from 'rxjs/Subscription';
 import * as _ from 'lodash';
 
 import { Dataset } from '../model/dataset';
-import { UploadInformation, Step, Sheet, Snapshot, Page, Locations } from './uploader-model';
+import { UploadInformation, Step, Sheet, Snapshot, Page, Locations, Problems } from './uploader-model';
 
 import { EventService } from '../service/core.service';
 import { LocalizationService } from '../service/localization.service';
@@ -47,6 +47,7 @@ export class UploadWizardComponent implements OnDestroy {
   info: UploadInformation;
   sheet: Sheet;
   page: Page;
+  problems: Problems;
   
   pageDirection: string;
   currentStep: number;
@@ -91,6 +92,10 @@ export class UploadWizardComponent implements OnDestroy {
 	if(this.sheet.coordinates == null) {
 	  this.sheet.coordinates = [];
 	}    
+	
+    if(this.info.information.locationExclusions == null){
+      this.info.information.locationExclusions = [];    	
+    }
     
     if(this.sheet.matches.length > 0) {
       this.page = new Page('MATCH-INITIAL', null);
@@ -380,7 +385,7 @@ export class UploadWizardComponent implements OnDestroy {
         let page = new Page('CATEGORY-VALIDATION', this.page);
         page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
         page.isReady = this.isReady('CATEGORY-VALIDATION');
-      
+
         this.page = page;
         
         this.incrementStep(this.page.name);
@@ -486,21 +491,30 @@ export class UploadWizardComponent implements OnDestroy {
 //          else{
 //            this.currentStep = 3;
 //          }
-//
-//            
-//          if( !result.problems.locations || result.problems.locations.length > 0) {
-//            this.page.current = 'GEO-VALIDATION';
-//          }
-//          else {
-//            this.page.current = 'CATEGORY-VALIDATION';
-//          }
-//            
-//          this.page.prev = null;          
-//          this.info.information.sheets = result.sheets;
-//          this.sheet = this.info.information.sheets[0];
-//          this.problems = result.problems;
-//          
-//          this.$emit('datasetChange', {datasets:result.datasets, finished : false});
+
+            
+          if( !result.problems.locations || result.problems.locations.length > 0) {
+        	let hasNext = (result.problems.categories != null || result.problems.categories.length > 0);
+        	
+            let page = new Page('GEO-VALIDATION', null);
+            page.hasNext = hasNext; 
+            page.isReady = !hasNext; 
+            page.layout = 'wide-holder';
+
+            this.page = page;
+          }
+          else {
+            let page = new Page('CATEGORY-VALIDATION', null);
+            page.hasNext = false;
+            page.isReady = true;
+            page.layout = 'wide-holder';
+
+            this.page = page;        	  
+          }
+             
+          this.problems = result.problems;
+          
+          this.onSuccess.emit({datasets:result.datasets, finished : false});          
         }         
       });    
 	  
@@ -525,5 +539,18 @@ export class UploadWizardComponent implements OnDestroy {
   
   onNextPage(data: any) : void {
     this.next(data.targetPage, data.sourcePage);
+  }
+  
+  onSelectSheet(sheet: Sheet): void {
+
+    this.page.snapshot = _.cloneDeep(this.sheet) as Sheet;
+	  
+    // Go to summary page
+    let page = new Page('SUMMARY', this.page);
+    page.hasNext = this.hasNextPage('SUMMARY');
+    page.isReady = this.isReady('SUMMARY');
+      
+    this.page = page;          
+    this.sheet = sheet;
   }
 }
