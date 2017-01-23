@@ -18,6 +18,7 @@
  */
 package net.geoprism.ontology;
 
+import java.io.StringWriter;
 import java.sql.Savepoint;
 import java.util.Collection;
 import java.util.Collections;
@@ -768,13 +769,16 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   public static String publishLayers(String id, String universalId, String existingLayerNames)
   {
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
-    JSONArray layers = publisher.publish();
-    
-//  StringWriter writer = new StringWriter();      
-//  publisher.writeGeojson(writer);
-//  response.put("geometries", new JSONObject(writer.toString()));
 
-    return layers.toString();
+    JSONObject response = new JSONObject();
+    response.put("layers", publisher.publish());
+
+    StringWriter writer = new StringWriter();
+
+    publisher.writeGeojson(writer);
+    response.put("geometries", new JSONArray(writer.toString()));
+
+    return response.toString();
   }
 
   @Transaction
