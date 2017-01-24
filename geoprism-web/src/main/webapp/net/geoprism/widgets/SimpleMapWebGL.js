@@ -138,17 +138,20 @@
 			  var data = $scope.sharedGeoData;
 			  
 			  var geomType;
-			  for(var i=0; i<data.features.features.length; i++){
-	    		var feature = data.features.features[i];
-	    		feature.properties.isHoverable = true;
-	    		feature.properties.isClickable = true;
-	    		geomType = feature.geometry.type.toLowerCase();
+			  for(var l=0; l<data.features.length; l++){
+				  var layer = data.features[l];
+				  for(var i=0; i<layer.features.length; i++){
+		    		var feature = layer.features[i];
+		    		feature.properties.isHoverable = true;
+		    		feature.properties.isClickable = true;
+		    		geomType = feature.geometry.type.toLowerCase();
+				  }
+				  
+				  if(!geomType){
+					  geomType = "multipolygon";
+				  }
+				  controller.updateVectorLayer(layer, "target-" + geomType, $scope.targetStyle, "TARGET", 2);
 			  }
-			  
-			  if(!geomType){
-				  geomType = "multipolygon";
-			  }
-			  controller.updateVectorLayer(data.features, "target-" + geomType, $scope.targetStyle, "TARGET", 2);
 		  }
 	 }
 	 

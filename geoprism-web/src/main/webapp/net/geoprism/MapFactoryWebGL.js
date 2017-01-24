@@ -255,12 +255,12 @@
           });
 			    
 			    map.on('load', function () {
-			      that._editingControl = new MapboxDraw({
-	            controls: {
-	              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
-	            }
-	          });
-	          map.addControl(that._editingControl);
+//			      that._editingControl = new MapboxDraw({
+//	            controls: {
+//	              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
+//	            }
+//	          });
+//	          map.addControl(that._editingControl);
 			    });
         },
         
