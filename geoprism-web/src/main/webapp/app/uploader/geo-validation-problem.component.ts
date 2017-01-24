@@ -38,13 +38,15 @@ export class GeoValidationProblemComponent implements OnInit {
   @Output() onResolve = new EventEmitter();
   
   show: boolean;
+  hasSynonym: boolean;
   
   constructor(private uploadService: UploadService, private idService: IdService) {
   }   
   
   ngOnInit(): void {
     this.problem.synonym = null;
-    this.show = null;	  
+    this.show = false;	  
+    this.hasSynonym = false;	      
   }
 
   
@@ -53,47 +55,25 @@ export class GeoValidationProblemComponent implements OnInit {
 
     return this.uploadService.getGeoEntitySuggestions(this.problem.parentId, this.problem.universalId, keyword, limit);
   }
-    
-//  getGeoEntitySuggestions(request: any, response: any): void {
-//    let limit = '20';
-//
-//    this.uploadService.getGeoEntitySuggestions(this.problem.parentId, this.problem.universalId, request.term, limit)
-//      .then((query: any) => {
-//          let resultSet = query.resultSet;
-//            
-//          let results: any[] = [];
-//            
-//          resultSet.forEach((result: any) => {
-//            let label = result.getValue('displayLabel');
-//            let id = result.getValue('id');
-//            
-//            results.push({'label':label, 'value':label, 'id':id});            
-//          });
-//            
-//          response( results );      
-//      });
-//  }
-    
-    
-  setSynonym(event: any) {
-    console.log(event);	  
-//    this.problem.synonym = event.value;
-      
-//    this.problemForm.$setValidity("synonym-length",  (this.problem.synonym != null));      
+        
+  setSynonym(item: {text: string, data: any}) {	
+    this.problem.synonym = item.data;
+    this.hasSynonym = (this.problem.synonym != null);        	  
   }
     
   createSynonym(): void {
-	  
-    this.uploadService.createGeoEntitySynonym(this.problem.synonym, this.problem.label)
-      .then(response => {
-        this.problem.resolved = true;
-        this.problem.action = {
-          name : 'SYNONYM',
-          synonymId : response.synonymId,
-          label : response.label,
-          ancestors : response.ancestors            
-        };
-      });
+    if(this.hasSynonym){    	
+      this.uploadService.createGeoEntitySynonym(this.problem.synonym, this.problem.label)
+        .then(response => {
+          this.problem.resolved = true;
+          this.problem.action = {
+            name : 'SYNONYM',
+            synonymId : response.synonymId,
+            label : response.label,
+            ancestors : response.ancestors            
+          };
+        });
+    }      
   }
     
   createEntity(): void {
@@ -152,7 +132,7 @@ export class GeoValidationProblemComponent implements OnInit {
             this.problem.synonym = null;
             this.problem.action = null;
             
-//          this.problemForm.$setValidity("synonym-length",  (this.problem.synonym != null));        	
+            this.hasSynonym = (this.problem.synonym != null);        	  
           });
       }
       else if(action.name == 'IGNOREATLOCATION'){
@@ -161,14 +141,14 @@ export class GeoValidationProblemComponent implements OnInit {
         
         this.removeLocationExclusion(action.id);
       }      
-      else if(action.name == 'ENTITY')  {    	
+      else if(action.name == 'SYNONYM')  {    	
         this.uploadService.deleteGeoEntitySynonym(action.synonymId)
           .then(response => {
           this.problem.resolved = false;
           this.problem.synonym = null;
           this.problem.action = null;
           
-//          this.problemForm.$setValidity("synonym-length",  (this.problem.synonym != null));          
+          this.hasSynonym = (this.problem.synonym != null);        	  
         });
       }
         

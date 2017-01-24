@@ -20,32 +20,8 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<div class="auto-complete">
-  <!-- keyword input -->
-  <input #autoCompleteInput class="keyword"
-         placeholder="{{placeholder}}"
-         (focus)="showDropdownList()"
-         (blur)="hideDropdownList()"
-         (keydown)="inputElKeyHandler($event)"
-         (input)="reloadListInDelay()"
-         [(ngModel)]="keyword" />
-         
-  <!-- dropdown that user can select -->
-  <ul *ngIf="dropdownVisible"
-      [style.bottom]="inputEl.style.height"
-      [style.position]="closeToBottom ? 'absolute': ''">
-      
-    <li *ngIf="isLoading" class="loading"><gdb:localize key="autocomplete.loading"/></li>
-    
-    <li *ngIf="minCharsEntered && !isLoading && !filteredList.length"
-         (mousedown)="selectOne('')"
-         class="blank-item"><gdb:localize key="autocomplete.noMatchFound"/></li>
-        
-    <li class="item"
-        *ngFor="let item of filteredList; let i=index"
-        (mousedown)="selectOne(item)"
-        [ngClass]="{selected: i === itemIndex}">
-      <span>{{data[this.displayPropertyName]}}</span>        
-    </li>
-  </ul>
-</div>
+<ul *ngIf="list.length > 0" class="ui-front ui-menu ui-widget ui-widget-content ui-corner-all search-results" style="margin-left: 0px;">
+  <li *ngFor="let item of list" class="ui-menu-item" role="presentation">
+    <a class="ui-corner-all" tabindex="-1" (click)="onClick(item)">{{item.text}}</a>
+  </li>
+</ul>

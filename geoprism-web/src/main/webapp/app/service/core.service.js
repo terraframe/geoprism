@@ -71,4 +71,20 @@ BasicService = __decorate([
     __metadata("design:paramtypes", [EventService])
 ], BasicService);
 exports.BasicService = BasicService;
+var IdService = (function () {
+    function IdService() {
+    }
+    IdService.prototype.generateId = function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+    return IdService;
+}());
+IdService = __decorate([
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [])
+], IdService);
+exports.IdService = IdService;
 //# sourceMappingURL=core.service.js.map

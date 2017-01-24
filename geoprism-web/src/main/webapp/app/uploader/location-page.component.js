@@ -28,6 +28,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var uploader_model_1 = require("./uploader-model");
+var core_service_1 = require("../service/core.service");
 var LocationField = (function () {
     function LocationField(field, universal) {
         this.field = field;
@@ -36,7 +37,8 @@ var LocationField = (function () {
     return LocationField;
 }());
 var LocationPageComponent = (function () {
-    function LocationPageComponent() {
+    function LocationPageComponent(idService) {
+        this.idService = idService;
         this.onFieldChange = new core_1.EventEmitter();
         this.locationFields = {};
         this.attribute = this.createNewAttribute();
@@ -250,7 +252,7 @@ var LocationPageComponent = (function () {
     LocationPageComponent.prototype.newAttribute = function () {
         if (this.attribute) {
             if (this.attribute.id === '') {
-                this.attribute.id = this.generateId();
+                this.attribute.id = this.idService.generateId();
                 this.sheet.attributes.ids.push(this.attribute.id);
                 this.sheet.attributes.values[this.attribute.id] = new uploader_model_1.LocationAttribute();
             }
@@ -460,12 +462,6 @@ var LocationPageComponent = (function () {
         }
         this.refreshUnassignedFields(selectedFieldsArr);
     };
-    LocationPageComponent.prototype.generateId = function () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    };
     LocationPageComponent.prototype.localValidate = function (value, config) {
         if (config == 'label') {
             return this.validateLabel(value);
@@ -522,7 +518,7 @@ LocationPageComponent = __decorate([
         templateUrl: 'location-page.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [core_service_1.IdService])
 ], LocationPageComponent);
 exports.LocationPageComponent = LocationPageComponent;
 //# sourceMappingURL=location-page.component.js.map

@@ -28,39 +28,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var uploader_model_1 = require("./uploader-model");
-var upload_service_1 = require("../service/upload.service");
-var MatchPageComponent = (function () {
-    function MatchPageComponent(service) {
-        this.service = service;
-        this.onSelect = new core_1.EventEmitter();
+var GeoValidationPageComponent = (function () {
+    function GeoValidationPageComponent() {
     }
-    MatchPageComponent.prototype.select = function (match, overwrite) {
-        var _this = this;
-        this.service.getSavedConfiguration(match.id, this.sheet.name)
-            .then(function (response) {
-            var sheet = response.datasets;
-            sheet.replaceExisting = overwrite;
-            _this.onSelect.emit(sheet);
-        });
+    GeoValidationPageComponent.prototype.hasProblems = function () {
+        if (this.problems.locations != null) {
+            for (var i = 0; i < this.problems.locations.length; i++) {
+                if (!this.problems.locations[i].resolved) {
+                    return true;
+                }
+            }
+        }
+        return false;
     };
-    return MatchPageComponent;
+    return GeoValidationPageComponent;
 }());
 __decorate([
     core_1.Input(),
-    __metadata("design:type", uploader_model_1.Sheet)
-], MatchPageComponent.prototype, "sheet", void 0);
+    __metadata("design:type", uploader_model_1.Workbook)
+], GeoValidationPageComponent.prototype, "workbook", void 0);
 __decorate([
-    core_1.Output(),
-    __metadata("design:type", Object)
-], MatchPageComponent.prototype, "onSelect", void 0);
-MatchPageComponent = __decorate([
+    core_1.Input(),
+    __metadata("design:type", uploader_model_1.Page)
+], GeoValidationPageComponent.prototype, "page", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", uploader_model_1.Problems)
+], GeoValidationPageComponent.prototype, "problems", void 0);
+GeoValidationPageComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'match-page',
-        templateUrl: 'match-page.component.jsp',
+        selector: 'geo-validation-page',
+        templateUrl: 'geo-validation-page.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [upload_service_1.UploadService])
-], MatchPageComponent);
-exports.MatchPageComponent = MatchPageComponent;
-//# sourceMappingURL=match-page.component.js.map
+    __metadata("design:paramtypes", [])
+], GeoValidationPageComponent);
+exports.GeoValidationPageComponent = GeoValidationPageComponent;
+//# sourceMappingURL=geo-validation-page.component.js.map

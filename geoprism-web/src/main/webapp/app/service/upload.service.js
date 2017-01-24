@@ -88,12 +88,11 @@ var UploadService = (function (_super) {
         params.set('limit', limit);
         return this.http
             .get(acp + '/uploader/getGeoEntitySuggestions', { search: params })
-            .map(function (resp) { return resp.json(); });
-        //      .toPromise()
-        //      .then((response: any) => {
-        //        return response.json() as Pair[];
-        //      });
-        //      .catch(this.handleError);    
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
     };
     UploadService.prototype.createGeoEntitySynonym = function (entityId, label) {
         var headers = new http_1.Headers({

@@ -83,7 +83,7 @@ export class UploadService extends BasicService {
       .catch(this.handleError);
   }
   
-  getGeoEntitySuggestions(parentId: string, universalId: string, text: string, limit: string): Observable<Pair[]>{
+  getGeoEntitySuggestions(parentId: string, universalId: string, text: string, limit: string): Promise<Array<{ text: string, data: any }>> {
     
 	let params: URLSearchParams = new URLSearchParams();
     params.set('parentId', parentId);
@@ -93,12 +93,11 @@ export class UploadService extends BasicService {
 	  
     return this.http
       .get(acp + '/uploader/getGeoEntitySuggestions', {search: params})
-      .map(resp => resp.json() as Pair[]);      
-//      .toPromise()
-//      .then((response: any) => {
-//        return response.json() as Pair[];
-//      });
-//      .catch(this.handleError);    
+      .toPromise()
+      .then((response: any) => {
+        return response.json() as Array<{ text: string, data: any }>;
+      })
+      .catch(this.handleError);    
   }
 
   createGeoEntitySynonym(entityId: string, label: string): Promise<GeoSynonym> {

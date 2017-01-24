@@ -31,10 +31,10 @@
       <div class="inline-value error-message">{{problem.label}} ({{problem.universalLabel}})</div>
       <div *ngIf="!problem.resolved">      
         <div class="inline-combo">
-          <input class="synonym" [name]="index + '-name'" type="text" placeholder="<gdb:localize key="dataUploader.synonymSearchPlaceholder"/>" required auto-complete [source]="source" [min-chars]="2" />
+          <input class="synonym" [name]="index + '-name'" type="text" placeholder="<gdb:localize key="dataUploader.synonymSearchPlaceholder"/>" required autocomplete="off" auto-complete [source]="source" (onDropdownSelect)="setSynonym($event)" />
         </div>
         <div class="inline-actions">
-            <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" (class)="{disabled: problemForm.invalid}" (click)="problemForm.invalid || createSynonym()" title="<gdb:localize key="dataUploader.createSynonymFromLocationTooltip"/>" ></i>
+          <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" [ngClass]="{disabled: !hasSynonym}" (click)="createSynonym()" title="<gdb:localize key="dataUploader.createSynonymFromLocationTooltip"/>" ></i>
           <i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" (click)="createEntity()" title="<gdb:localize key="dataUploader.createNewLocationTooltip"/>" ></i>
           <span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreAtLocationTooltip"/>" (click)="ignoreDataAtLocation()">
             <i class="fa fa-square fa-stack-2x"></i>
@@ -50,7 +50,7 @@
           <a (click)="toggle()">
             <i class="fa fa-caret-right" aria-hidden="true"></i>
             <i class="fa fa-caret-down" style="display:none;" aria-hidden="true"></i>
-            <gdb:localize key="dataUploader.resolvedSynonym"/> [{{action.label}}]
+            <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
           </a>
   
           <span *ngIf="show">
