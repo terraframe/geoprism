@@ -26,21 +26,38 @@
 	 $scope.targetStyle = {fill:"rgba(161, 202, 241, 0.75)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
 	 $scope.sharedGeoData = {};
 	 
+	 var selectedFeature = null;
 	 
 	 controller.init = function() {
 		 
 		var hoverCallback = function(featureId){
-	        $scope.$emit('hoverChange', {
-	              id : featureId
-	        });
-	        $scope.$apply();
+      $scope.$emit('hoverChange', {
+        id : featureId
+      });
+      $scope.$apply();
 		}
 		
 		var featureClickCallback = function(feature, map){
-			$scope.$emit('locationFocus', {
-	              id : feature.properties.id
-	        });
-	        $scope.$apply();
+		  var isDoubleClick = false;
+		  
+		  // is it already selected?
+      if (selectedFeature != null && selectedFeature.properties.id == feature.properties.id)
+      {
+        controller.unselectFeature(feature);
+        isDoubleClick = true;
+        selectedFeature = null;
+      }
+      else
+      {
+        controller.selectFeature(feature);
+        selectedFeature = feature;
+      }
+      
+      $scope.$emit('locationFocus', {
+        id : feature.properties.id,
+        isDoubleClick : isDoubleClick
+      });
+      $scope.$apply();
 		}
 		
 		//
@@ -93,6 +110,10 @@
 		 webGLMapService.addVectorHoverEvents(hoverCallback, layersArr);
 	 }
 	 
+	 controller.addNewPointControl = function(feature, saveCallback) {
+     mapService.addNewPointControl(feature, saveCallback);
+   }
+	 
 	 controller.zoomToLayersExtent = function(layersArr) {
 		 webGLMapService.zoomToLayersExtent(layersArr);
 	 }
@@ -100,6 +121,14 @@
 	 controller.zoomToExtentOfFeatures = function(featureGeoIds) {
 		 webGLMapService.zoomToExtentOfFeatures(featureGeoIds);
 	 }
+	 
+	 controller.selectFeature = function(feature) {
+     webGLMapService.selectFeature(feature);
+   }
+	 
+	 controller.unselectFeature = function(feature) {
+     webGLMapService.unselectFeature(feature);
+   }
 	 
 	 controller.focusOnFeature = function(feature) {
 		 webGLMapService.focusOnFeature(feature);
@@ -117,6 +146,10 @@
 		 webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
 	 }
 	 
+	 controller.startEditingFeature = function(entityId)
+	 {
+	   webGLMapService.startEditingFeature(entityId);
+	 }
 	  
 	 controller.refreshBaseLayer = function() {
 	      if($scope.baseLayers.length > 0) {
@@ -216,6 +249,9 @@
     	  controller.zoomToExtentOfFeatures(data.geoIds)
       });
       
+      $scope.$on('editLocation', function(event, data){
+        controller.startEditingFeature(data.id);
+      });
       
       // Recieve shared data from parent controller based on user selection of target location
       $scope.$on('sharedGeoData', function(event, data) {

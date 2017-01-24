@@ -118,6 +118,10 @@
     	service.map.removeAllVectorLayers();
     }
     
+    service.startEditingFeature = function(entityId) {
+      service.map.startEditingFeature(entityId);
+    }
+    
     service.enableEdits = function(saveCallback) {
     	service.map.enableEdits(saveCallback);
     }
@@ -151,6 +155,14 @@
     
     service.closeEditSession = function(saveCallback){
     	service.map.closeEditSession(saveCallback);
+    }
+    
+    service.selectFeature = function(feature) {
+      service.map.selectFeature(feature);
+    }
+    
+    service.unselectFeature = function(feature) {
+      service.map.unselectFeature(feature);
     }
     
     service.focusOnFeature = function(feature) {
