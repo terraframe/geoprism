@@ -159,6 +159,12 @@
       locationService.edit(connection, entity.id);
     }
     
+    controller.editGeometry = function(entity) {
+      $scope.$emit('editLocation', {
+        id : entity.id
+      });
+    }
+    
     controller.remove = function(entity) {
       var title = localizationService.localize("location.management", "removeOptionTitle", "Delete location");
 
@@ -226,6 +232,20 @@
     	$scope.$broadcast('listHoverOff', entity);
     }
     
+    controller.scrollTo = function(entityId) {
+      
+    },
+    
+    $scope.$on('locationFocus', function(event, data){
+      if (data.isDoubleClick)
+      {
+        controller.open(data.id);
+      }
+      else
+      {
+        controller.scrollTo(data.id);
+      }
+    });
     
     $scope.$on('hoverChange', function(event, data){
       $scope.hoverId = data.id;

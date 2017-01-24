@@ -159,8 +159,11 @@
           this._config = {zoomAnimation: true, zoomControl: true, attributionControl: true};
           this._cache = {};
           
-          this.hoverPolygonStyle = {fill:"white", opacity:0.75, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
-      	  this.hoverPointStyle = {fill:"white", opacity:0.75, radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
+          this.selectPolygonStyle = {fill:"rgba(0, 48, 143, 1)", opacity:0.5 }
+          
+          this.hoverPolygonStyle = {fill:"white", opacity:0.35, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
+      	  this.hoverPointStyle = {fill:"white", opacity:0.35, radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
+          
       	  this.editFeatureStyle = {fill:"rgba(255, 0, 0, 1)", stroke:"rgba(255, 0, 0, 1)", strokeWidth:3, radius:10 };
       	  
       	  this.LAYERS_LIST = ["target-point", "context-point", "target-multipolygon", "context-multipolygon"];
@@ -250,15 +253,6 @@
         		
 //          		console.log(e, " - data loaded")
           });
-			    
-			    map.on('load', function () {
-			      var Draw = new MapboxDraw({
-              controls: {
-                point: true, line_string: false, polygon: false, trash: true, combine_features: false, uncombine_features: false
-              }
-            });
-            map.addControl(Draw);
-			    });
         },
         
         
@@ -324,7 +318,7 @@
     	         	        }
       			 	    });
     		     	    
-    		     	    // Highlight the feature when they hover over it
+    		     	    // This layer is displayed when they hover over the feature
     		     	    map.addLayer({
     		     	        "id": layerName + "-hover",
     		     	        "source": layerName,
@@ -334,7 +328,7 @@
     			 	            "circle-color": that.getHoverPointStyle().fill,
     			 	            "circle-opacity": that.getHoverPointStyle().opacity
     			 	        },
-    		     	        "filter": ["==", "name", ""]
+    		     	        "filter": ["==", "name", ""] // hide all features in the layer
     		     	     });
           	    }
           	    else if (layerName.indexOf("multipolygon") != -1){
@@ -350,7 +344,7 @@
       			 	        }
       			 	    });
               	    	
-          	   // add labels
+          	      // add labels
                   map.addLayer({
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
@@ -367,8 +361,8 @@
       	         	            "text-size": 12
       	         	        }
       			 	    });
-      		     	    
-    		     	    // Highlight the feature when they hover over it
+      		     	  
+    		     	    // This layer is displayed when they hover over the feature
     		     	    map.addLayer({
   		     	        "id": layerName + "-hover",
   		     	        "source": layerName,
@@ -377,8 +371,20 @@
     			 	            "fill-color": that.getHoverPolygonStyle().fill,
     			 	            "fill-opacity": that.getHoverPolygonStyle().opacity
     			 	        },
-  		     	        "filter": ["==", "name", ""]
+  		     	        "filter": ["==", "name", ""] // hide all features in the layer
   		     	      });
+    		     	   
+    		     	   // This layer is displayed when they click on the feature
+    		     	   map.addLayer({
+                   "id": layerName + "-select",
+                   "source": layerName,
+                   "type": "fill",
+                   "paint": {
+                       "fill-color": that.selectPolygonStyle.fill,
+                       "fill-opacity": that.selectPolygonStyle.opacity
+                   },
+                   "filter": ["==", "name", ""] // hide all features in the layer
+                 });
           	    }
           	    
           	    if (that._updateVectorLayersAfterLoading != null)
@@ -443,7 +449,9 @@
         	return false;
         },
         
-        
+        /**
+         * For hover events
+         */
         focusOffFeature : function(feature) {
         	var map = this.getMap();
         	if( ! map.isEasing()){
@@ -485,7 +493,9 @@
         	}
         },
         
-        
+        /**
+         * For hover events
+         */
         focusOnFeature : function(feature) {
         	var map = this.getMap();
         	if( ! map.isEasing()){ 
@@ -544,6 +554,40 @@
         	}
         },
         
+        selectFeature : function(feature) {
+          var map = this.getMap();
+          
+          if(feature.layer.type === "fill"){
+            map.setFilter(feature.layer.source + "-select", ["==", "id", feature.properties.id]);
+          }
+        },
+        
+        unselectFeature : function(feature) {
+          var map = this.getMap();
+          
+          if(feature.layer.type === "fill"){
+            map.setFilter(feature.layer.source + "-select", ["==", "id", ""]);
+          }
+        },
+        
+        startEditingFeature : function(featureId) {
+          var map = this.getMap();
+          
+          this._editingControl = new MapboxDraw({
+            controls: {
+              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
+            }
+          });
+          map.addControl(Draw);
+          
+          
+        },
+        
+        stopEditing : function() {
+          var map = this.getMap();
+          
+          map.removeControl(this._editingControl);
+        },
         
         getVectorLayersByTypeProp : function(type) {
         	var map = this.getMap();
