@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -184,30 +186,44 @@ public class LocationLayerPublisher extends LayerPublisher
     try
     {
       JSONWriter jw = new JSONWriter(writer);
-      jw.object();
-
-      jw.key("type");
-      jw.value("FeatureCollection");
-      jw.key("features");
       jw.array();
 
-      LayerType layerType = this.getChildLayerType(descendants);
-      ValueQuery query = this.getChildQuery(entity, layerType);
+      LayerType entityLayerType = this.getEntityLayerType(descendants);
+      ValueQuery entityQuery = this.getEntityQuery(entity, entityLayerType);
 
-      long count = this.writeFeatures(jw, query);
+      this.writeGeojson(jw, entityQuery);
+
+      LayerType childLayerType = this.getChildLayerType(descendants);
+      ValueQuery childQuery = this.getChildQuery(entity, childLayerType);
+
+      this.writeGeojson(jw, childQuery);
 
       jw.endArray();
-
-      jw.key("totalFeatures");
-      jw.value(count);
-
-      this.writeCRS(jw);
-
-      jw.endObject();
     }
     catch (JSONException | IOException e)
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  private void writeGeojson(JSONWriter jw, ValueQuery query) throws IOException
+  {
+    jw.object();
+
+    jw.key("type");
+    jw.value("FeatureCollection");
+    jw.key("features");
+    jw.array();
+
+    long count = this.writeFeatures(jw, query);
+
+    jw.endArray();
+
+    jw.key("totalFeatures");
+    jw.value(count);
+
+    this.writeCRS(jw);
+
+    jw.endObject();
   }
 }
