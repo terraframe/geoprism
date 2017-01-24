@@ -75,8 +75,8 @@
 		controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
 		controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
 		
-		controller.addVectorHoverEvents(hoverCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
-		controller.addVectorClickEvents(featureClickCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
+		controller.addVectorHoverEvents(hoverCallback, ["target-point", "target-multipolygon"]);
+		controller.addVectorClickEvents(featureClickCallback, ["target-point", "target-multipolygon"]);
 		//
 		// end
 		//

@@ -843,74 +843,67 @@
         	//TODO: Do we need to wrap this in 'load' event or should we use a different event
         	map.on('load', function () {
 	        	map.on('mousemove', function(e) {
-	        		var features = map.queryRenderedFeatures(e.point, { layers: that.LAYERS_LIST });
+	        		var features = map.queryRenderedFeatures(e.point, { layers: layersArr });
 	        	    
-	        	    if(features.length){
-	        	    	var feature = features[0]; // only take the 1st feature
-	        	    	
-	        	    	if(popup){
-	        	    		popup.remove();
-	        	    	}
-	        	    	
-	                	popup = new mapboxgl.Popup({closeOnClick: true})
-	                    	.setLngLat([e.lngLat.lng, e.lngLat.lat])
-	                    	.setHTML(feature.properties.displaylabel)
-	                    	.addTo(map);
-	                	
-	                	
-	        	    	if(feature.properties.isClickable){
-	        	    		map.getCanvas().style.cursor = 'pointer';
-	        	    	}
-	        	    	else{
-	        	    		map.getCanvas().style.cursor = originalCursor;
-	        	    	}
-	        	    	
-	        	    	if(selectedFeatures.length > 0){
-        	    			map.setFilter("context-point-hover", ["==", "id", ""]);
-        	    			map.setFilter("context-multipolygon-hover", ["==", "id", ""]);
-        	    			map.setFilter("target-point-hover", ["==", "id", ""]);
-        	    			map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
-        	    			selectedFeatures = [];
-        	    		}
-	        	    	
-	        	    	
-	        	    	// control for styling of different geometry types
-	        	    	// 'fill' === polygon
-	        	    	if(feature.layer.type === "fill"){
-		        	    	map.setFilter("context-multipolygon-hover", ["==", "id", feature.properties.id]);
-                    map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
+        	    if(features.length){
+        	    	var feature = features[0]; // only take the 1st feature
+        	    	
+        	    	if(popup){
+        	    		popup.remove();
+        	    	}
+        	    	
+              	popup = new mapboxgl.Popup({closeOnClick: true})
+                  	.setLngLat([e.lngLat.lng, e.lngLat.lat])
+                  	.setHTML(feature.properties.displaylabel)
+                  	.addTo(map);
+                	
+                	
+        	    	if(feature.properties.isClickable){
+        	    		map.getCanvas().style.cursor = 'pointer';
+        	    	}
+        	    	else{
+        	    		map.getCanvas().style.cursor = originalCursor;
+        	    	}
+        	    	
+        	    	if(selectedFeatures.length > 0){
+      	    			map.setFilter("target-point-hover", ["==", "id", ""]);
+      	    			map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+      	    			selectedFeatures = [];
+      	    		}
+        	    	
+        	    	
+        	    	// control for styling of different geometry types
+        	    	// 'fill' === polygon
+        	    	if(feature.layer.type === "fill"){
+                  map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
 
-	        	    	}
-	        	    	else if(feature.layer.type === "circle"){
-	        	    	  map.setFilter("context-point-hover", ["==", "id", feature.properties.id]);
-	                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
-	        	    	}
-	        	    	
-	        	        selectedFeatures.push(feature);
-	        	        
-	        	        hoverCallback(feature.properties.id);
-	        	    }
-	        	    else{
-	        	    	map.getCanvas().style.cursor = originalCursor;
-	        	    	
-	        	    	map.setFilter("context-point-hover", ["==", "id", ""]);
-	        	    	map.setFilter("context-multipolygon-hover", ["==", "id", ""]);
-	        	    	map.setFilter("target-point-hover", ["==", "id", ""]);
-                  map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
-	        	    	
-	        	    	if(selectedFeatures.length > 0){
-	        	    		hoverCallback(null);
-	        	    		selectedFeatures = [];
-	        	    	}
-	        	    	
-	        	    	if(popup){
-	        	    		popup.remove();
-	        	    	}
-	        	    }
+        	    	}
+        	    	else if(feature.layer.type === "circle"){
+                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
+        	    	}
+        	    	
+        	        selectedFeatures.push(feature);
+        	        
+        	        hoverCallback(feature.properties.id);
+        	    }
+        	    else{
+        	    	map.getCanvas().style.cursor = originalCursor;
+        	    	
+        	    	map.setFilter("target-point-hover", ["==", "id", ""]);
+                map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+        	    	
+        	    	if(selectedFeatures.length > 0){
+        	    		hoverCallback(null);
+        	    		selectedFeatures = [];
+        	    	}
+        	    	
+        	    	if(popup){
+        	    		popup.remove();
+        	    	}
+        	    }
 	    		});
 	        	
 	            map.on("mouseout", function() {
-	                map.setFilter("context-point-hover", ["==", "id", ""]);
 	                map.setFilter("target-point-hover", ["==", "id", ""]);
 	            });
         	});

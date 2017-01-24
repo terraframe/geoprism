@@ -102,12 +102,12 @@
     	service.map.zoomToLayersExtent(layersArr);
     }
     
-    service.addVectorHoverEvents = function(hoverCallback) {
-    	service.map.addVectorHoverEvents(hoverCallback);
+    service.addVectorHoverEvents = function(hoverCallback, layersArr) {
+    	service.map.addVectorHoverEvents(hoverCallback, layersArr);
     }
     
-    service.addVectorClickEvents = function(featureClickCallback) {
-    	service.map.addVectorClickEvents(featureClickCallback);
+    service.addVectorClickEvents = function(featureClickCallback, layersArr) {
+    	service.map.addVectorClickEvents(featureClickCallback, layersArr);
     }
     
     service.addNewPointControl = function(feature, saveCallback) {
