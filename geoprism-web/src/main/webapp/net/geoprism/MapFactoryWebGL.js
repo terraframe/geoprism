@@ -319,7 +319,7 @@
     		                    "text-halo-width": 2
     			 	        },
     			 	        "layout": {
-    	         	            "text-field": "{displaylabel}",
+    	         	            "text-field": "{displayLabel}",
     	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
     	         	            "text-offset": [0, 0.6],
     	         	            "text-anchor": "top",
@@ -364,7 +364,7 @@
       		                    "text-halo-width": 2
       			 	        },
       			 	        "layout": {
-      	         	            "text-field": "{displaylabel}",
+      	         	            "text-field": "{displayLabel}",
       	         	            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
       	         	            "text-anchor": "center",
       	         	            "text-size": 12
@@ -854,7 +854,7 @@
         	    	
               	popup = new mapboxgl.Popup({closeOnClick: true})
                   	.setLngLat([e.lngLat.lng, e.lngLat.lat])
-                  	.setHTML(feature.properties.displaylabel)
+                  	.setHTML(feature.properties.displayLabel)
                   	.addTo(map);
                 	
                 	
