@@ -153,8 +153,8 @@
             });
     }
     
-    service.closeEditSession = function(saveCallback){
-    	service.map.closeEditSession(saveCallback);
+    service.stopEditing = function(){
+    	service.map.stopEditing();
     }
     
     service.selectFeature = function(feature) {

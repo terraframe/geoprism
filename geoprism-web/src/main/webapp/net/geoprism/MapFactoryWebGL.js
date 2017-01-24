@@ -253,6 +253,15 @@
         		
 //          		console.log(e, " - data loaded")
           });
+			    
+			    map.on('load', function () {
+			      that._editingControl = new MapboxDraw({
+	            controls: {
+	              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
+	            }
+	          });
+	          map.addControl(that._editingControl);
+			    });
         },
         
         
@@ -565,20 +574,19 @@
         unselectFeature : function(feature) {
           var map = this.getMap();
           
-          if(feature.layer.type === "fill"){
+          if (feature == null)
+          {
+            map.setFilter("target-multipolygon-select", ["==", "id", ""]);
+          }
+          else if(feature.layer.type === "fill"){
             map.setFilter(feature.layer.source + "-select", ["==", "id", ""]);
           }
         },
         
         startEditingFeature : function(featureId) {
-          var map = this.getMap();
+          this.unselectFeature(null);
           
-          this._editingControl = new MapboxDraw({
-            controls: {
-              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
-            }
-          });
-          map.addControl(this._editingControl);
+          var map = this.getMap();
           
           var features = map.querySourceFeatures("target-multipolygon", {
             filter: ['==', 'id', featureId]
@@ -598,7 +606,8 @@
         stopEditing : function() {
           var map = this.getMap();
           
-          map.removeControl(this._editingControl);
+          this._editingControl.deleteAll();
+          map.setFilter("target-multipolygon", ["!=", "id", ""]);
         },
         
         getVectorLayersByTypeProp : function(type) {
