@@ -110,7 +110,7 @@ var CategoryDetailComponent = (function () {
         var message = this.localizationService.localize("category.management", "removeCategoryConfirm");
         message = message.replace('{0}', this.category.label);
         if (confirm(message)) {
-            this.categoryService.remove(descendant)
+            this.categoryService.remove(descendant.id)
                 .then(function (response) {
                 _this.category.descendants = _this.category.descendants.filter(function (h) { return h !== descendant; });
             });

@@ -95,12 +95,12 @@ var CategoryService = (function (_super) {
             .toPromise()
             .catch(this.handleError);
     };
-    CategoryService.prototype.remove = function (category) {
+    CategoryService.prototype.remove = function (id) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
         return this.ehttp
-            .post(acp + '/category/remove', JSON.stringify({ id: category.id }), { headers: headers })
+            .post(acp + '/category/remove', JSON.stringify({ id: id }), { headers: headers })
             .toPromise()
             .catch(this.handleError);
     };

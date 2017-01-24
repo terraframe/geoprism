@@ -316,6 +316,7 @@ var UploadWizardComponent = (function () {
                 var page = new uploader_model_1.Page('CATEGORY-VALIDATION', this.page);
                 page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
                 page.isReady = this.isReady('CATEGORY-VALIDATION');
+                page.layout = 'wide-holder';
                 this.page = page;
                 this.incrementStep(this.page.name);
             }
@@ -395,20 +396,19 @@ var UploadWizardComponent = (function () {
                 _this.onSuccess.emit({ datasets: result.datasets, finished: true });
             }
             else {
-                //          if(this.hasLocationField() && this.hasCoordinateField()) {
-                //            this.currentStep = 5;
-                //          }
-                //          else if(this.hasLocationField() || this.hasCoordinateField()) {
-                //            this.currentStep = 4;
-                //          }
-                //          else{
-                //            this.currentStep = 3;
-                //          }
+                if (_this.hasLocationField() && _this.hasCoordinateField()) {
+                    _this.currentStep = 5;
+                }
+                else if (_this.hasLocationField() || _this.hasCoordinateField()) {
+                    _this.currentStep = 4;
+                }
+                else {
+                    _this.currentStep = 3;
+                }
                 if (!result.problems.locations || result.problems.locations.length > 0) {
-                    var hasNext = (result.problems.categories != null || result.problems.categories.length > 0);
                     var page = new uploader_model_1.Page('GEO-VALIDATION', null);
-                    page.hasNext = hasNext;
-                    page.isReady = !hasNext;
+                    page.hasNext = _this.hasNextPage('CATEGORY-VALIDATION');
+                    page.isReady = _this.isReady('CATEGORY-VALIDATION');
                     page.layout = 'wide-holder';
                     _this.page = page;
                 }
@@ -425,14 +425,12 @@ var UploadWizardComponent = (function () {
         });
     };
     UploadWizardComponent.prototype.isReady = function (name) {
-        // TODO   return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
-        return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION');
+        return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
     };
     UploadWizardComponent.prototype.hasNextPage = function (name) {
-        //
-        //    if(name == 'GEO-VALIDATION') {
-        //      return (this.problems.categories !== null && this.problems.categories.length > 0);
-        //    }
+        if (name == 'GEO-VALIDATION') {
+            return (this.problems.categories !== null && this.problems.categories.length > 0);
+        }
         return (name !== 'MATCH-INITIAL' && name !== 'SUMMARY' && name !== 'MATCH' && name !== 'CATEGORY-VALIDATION');
     };
     UploadWizardComponent.prototype.onNextPage = function (data) {
@@ -446,6 +444,10 @@ var UploadWizardComponent = (function () {
         page.isReady = this.isReady('SUMMARY');
         this.page = page;
         this.sheet = sheet;
+    };
+    UploadWizardComponent.prototype.showStep = function () {
+        var names = ['MATCH-INITIAL', 'MATCH', 'GEO-VALIDATION', 'CATEGORY-VALIDATION'];
+        return this.page && (names.indexOf(this.page.name) === -1);
     };
     return UploadWizardComponent;
 }());

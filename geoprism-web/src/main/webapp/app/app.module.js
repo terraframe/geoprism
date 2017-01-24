@@ -60,6 +60,8 @@ var coordinate_page_component_1 = require("./uploader/coordinate-page.component"
 var summary_page_component_1 = require("./uploader/summary-page.component");
 var geo_validation_page_component_1 = require("./uploader/geo-validation-page.component");
 var geo_validation_problem_component_1 = require("./uploader/geo-validation-problem.component");
+var category_validation_page_component_1 = require("./uploader/category-validation-page.component");
+var category_validation_problem_component_1 = require("./uploader/category-validation-problem.component");
 var upload_service_1 = require("./service/upload.service");
 var event_http_service_1 = require("./service/event-http.service");
 var AppModule = (function () {
@@ -99,6 +101,8 @@ AppModule = __decorate([
             summary_page_component_1.SummaryPageComponent,
             geo_validation_page_component_1.GeoValidationPageComponent,
             geo_validation_problem_component_1.GeoValidationProblemComponent,
+            category_validation_page_component_1.CategoryValidationPageComponent,
+            category_validation_problem_component_1.CategoryValidationProblemComponent,
             // Routing components
             app_routing_module_1.routedComponents
         ],

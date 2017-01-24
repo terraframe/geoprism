@@ -97,13 +97,13 @@ export class CategoryService extends BasicService {
     .catch(this.handleError);
   }
   
-  remove(category: BasicCategory): Promise<Response> {
+  remove(id: string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
     
     return this.ehttp
-      .post(acp + '/category/remove', JSON.stringify({id:category.id}), { headers: headers })
+      .post(acp + '/category/remove', JSON.stringify({id:id}), { headers: headers })
       .toPromise()
       .catch(this.handleError);
   }

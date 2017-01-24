@@ -168,6 +168,12 @@ var GeoSynonym = (function () {
     return GeoSynonym;
 }());
 exports.GeoSynonym = GeoSynonym;
+var ClassifierSynonym = (function () {
+    function ClassifierSynonym() {
+    }
+    return ClassifierSynonym;
+}());
+exports.ClassifierSynonym = ClassifierSynonym;
 var Entity = (function () {
     function Entity() {
     }

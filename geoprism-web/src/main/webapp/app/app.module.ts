@@ -59,6 +59,8 @@ import { CoordinatePageComponent } from './uploader/coordinate-page.component';
 import { SummaryPageComponent } from './uploader/summary-page.component';
 import { GeoValidationPageComponent } from './uploader/geo-validation-page.component';
 import { GeoValidationProblemComponent } from './uploader/geo-validation-problem.component';
+import { CategoryValidationPageComponent } from './uploader/category-validation-page.component';
+import { CategoryValidationProblemComponent } from './uploader/category-validation-problem.component';
 import { UploadService } from './service/upload.service';
 
 import { EventHttpService } from './service/event-http.service';
@@ -96,6 +98,8 @@ import { EventHttpService } from './service/event-http.service';
     SummaryPageComponent,
     GeoValidationPageComponent,
     GeoValidationProblemComponent,
+    CategoryValidationPageComponent,
+    CategoryValidationProblemComponent,
     
     // Routing components
     routedComponents

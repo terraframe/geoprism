@@ -28,104 +28,92 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var uploader_model_1 = require("./uploader-model");
+var category_service_1 = require("../service/category.service");
 var upload_service_1 = require("../service/upload.service");
 var core_service_1 = require("../service/core.service");
-var GeoValidationProblemComponent = (function () {
-    function GeoValidationProblemComponent(uploadService, idService) {
+var CategoryValidationProblemComponent = (function () {
+    function CategoryValidationProblemComponent(uploadService, categoryService, idService) {
         var _this = this;
         this.uploadService = uploadService;
+        this.categoryService = categoryService;
         this.idService = idService;
         this.onProblemChange = new core_1.EventEmitter();
-        this.source = function (keyword) {
+        this.source = function (text) {
             var limit = '20';
-            return _this.uploadService.getGeoEntitySuggestions(_this.problem.parentId, _this.problem.universalId, keyword, limit);
+            return _this.uploadService.getClassifierSuggestions(_this.problem.mdAttributeId, text, limit);
         };
     }
-    GeoValidationProblemComponent.prototype.ngOnInit = function () {
+    CategoryValidationProblemComponent.prototype.ngOnInit = function () {
         this.problem.synonym = null;
         this.show = false;
         this.hasSynonym = false;
     };
-    GeoValidationProblemComponent.prototype.setSynonym = function (item) {
-        this.problem.synonym = item.data;
-        this.hasSynonym = (this.problem.synonym != null);
+    CategoryValidationProblemComponent.prototype.setSynonym = function () {
+        this.hasSynonym = (this.problem.synonym != null && this.problem.synonym.length > 0);
     };
-    GeoValidationProblemComponent.prototype.createSynonym = function () {
+    CategoryValidationProblemComponent.prototype.createSynonym = function () {
         var _this = this;
         if (this.hasSynonym) {
-            this.uploadService.createGeoEntitySynonym(this.problem.synonym, this.problem.label)
+            this.uploadService.createClassifierSynonym(this.problem.synonym, this.problem.label)
                 .then(function (response) {
                 _this.problem.resolved = true;
                 _this.problem.action = {
                     name: 'SYNONYM',
                     synonymId: response.synonymId,
-                    label: response.label,
-                    ancestors: response.ancestors
+                    label: response.label
                 };
                 _this.onProblemChange.emit(_this.problem);
             });
         }
     };
-    GeoValidationProblemComponent.prototype.createEntity = function () {
+    CategoryValidationProblemComponent.prototype.createOption = function () {
         var _this = this;
-        this.uploadService.createGeoEntity(this.problem.parentId, this.problem.universalId, this.problem.label)
+        this.categoryService.create(this.problem.label, this.problem.categoryId)
             .then(function (response) {
             _this.problem.resolved = true;
             _this.problem.action = {
-                name: 'ENTITY',
-                entityId: response.entityId
+                name: 'OPTION',
+                optionId: response.id
             };
             _this.onProblemChange.emit(_this.problem);
         });
     };
-    GeoValidationProblemComponent.prototype.removeLocationExclusion = function (exclusionId) {
-        if (this.workbook.locationExclusions) {
-            this.workbook.locationExclusions = this.workbook.locationExclusions.filter(function (h) { return h.id !== exclusionId; });
-        }
-    };
-    GeoValidationProblemComponent.prototype.ignoreDataAtLocation = function () {
-        var locationLabel = this.problem.label;
-        var universal = this.problem.universalId;
-        var id = this.idService.generateId();
+    CategoryValidationProblemComponent.prototype.ignoreValue = function () {
         this.problem.resolved = true;
         this.problem.action = {
-            name: 'IGNOREATLOCATION',
-            label: locationLabel,
-            id: id
+            name: 'IGNORE'
         };
-        var exclusion = new uploader_model_1.LocationExclusion(id, universal, locationLabel, this.problem.parentId);
-        if (this.workbook.locationExclusions) {
-            this.workbook.locationExclusions.push(exclusion);
+        var mdAttributeId = this.problem.mdAttributeId;
+        if (!this.workbook.categoryExclusion) {
+            this.workbook.categoryExclusion = {};
         }
-        else {
-            this.workbook.locationExclusions = [exclusion];
+        if (!this.workbook.categoryExclusion[mdAttributeId]) {
+            this.workbook.categoryExclusion[mdAttributeId] = [];
         }
+        this.workbook.categoryExclusion[mdAttributeId].push(this.problem.label);
         this.onProblemChange.emit(this.problem);
     };
-    GeoValidationProblemComponent.prototype.undoAction = function () {
+    CategoryValidationProblemComponent.prototype.removeExclusion = function () {
+        var mdAttributeId = this.problem.mdAttributeId;
+        var label = this.problem.label;
+        if (this.workbook.categoryExclusion && this.workbook.categoryExclusion[mdAttributeId]) {
+            this.workbook.categoryExclusion[mdAttributeId] = this.workbook.categoryExclusion[mdAttributeId].filter(function (h) { return h !== label; });
+        }
+        if (this.workbook.categoryExclusion[mdAttributeId].length === 0) {
+            delete this.workbook.categoryExclusion[mdAttributeId];
+        }
+    };
+    CategoryValidationProblemComponent.prototype.undoAction = function () {
         var _this = this;
-        var locationLabel = this.problem.label;
-        var universal = this.problem.universalId;
         if (this.problem.resolved) {
             var action = this.problem.action;
-            if (action.name == 'ENTITY') {
-                this.uploadService.deleteGeoEntity(action.entityId)
-                    .then(function (response) {
-                    _this.problem.resolved = false;
-                    _this.problem.synonym = null;
-                    _this.problem.action = null;
-                    _this.hasSynonym = (_this.problem.synonym != null);
-                    _this.onProblemChange.emit(_this.problem);
-                });
-            }
-            else if (action.name == 'IGNOREATLOCATION') {
+            if (action.name == 'IGNORE') {
                 this.problem.resolved = false;
-                this.problem.action = null;
-                this.removeLocationExclusion(action.id);
+                this.removeExclusion();
                 this.onProblemChange.emit(this.problem);
             }
             else if (action.name == 'SYNONYM') {
-                this.uploadService.deleteGeoEntitySynonym(action.synonymId)
+                this.uploadService.deleteClassifierSynonym(action.synonymId)
                     .then(function (response) {
                     _this.problem.resolved = false;
                     _this.problem.synonym = null;
@@ -134,37 +122,48 @@ var GeoValidationProblemComponent = (function () {
                     _this.onProblemChange.emit(_this.problem);
                 });
             }
+            else if (action.name == 'OPTION') {
+                this.categoryService.remove(action.optionId)
+                    .then(function (response) {
+                    _this.problem.resolved = false;
+                    _this.problem.optionId = null;
+                    _this.problem.action = null;
+                    _this.hasSynonym = (_this.problem.synonym != null);
+                    _this.onProblemChange.emit(_this.problem);
+                });
+            }
         }
     };
-    GeoValidationProblemComponent.prototype.toggle = function () {
-        this.show = !this.show;
-    };
-    return GeoValidationProblemComponent;
+    return CategoryValidationProblemComponent;
 }());
 __decorate([
     core_1.Input(),
-    __metadata("design:type", uploader_model_1.LocationProblem)
-], GeoValidationProblemComponent.prototype, "problem", void 0);
+    __metadata("design:type", uploader_model_1.CategoryProblem)
+], CategoryValidationProblemComponent.prototype, "problem", void 0);
 __decorate([
     core_1.Input(),
     __metadata("design:type", Number)
-], GeoValidationProblemComponent.prototype, "index", void 0);
+], CategoryValidationProblemComponent.prototype, "index", void 0);
 __decorate([
     core_1.Input(),
     __metadata("design:type", uploader_model_1.Workbook)
-], GeoValidationProblemComponent.prototype, "workbook", void 0);
+], CategoryValidationProblemComponent.prototype, "workbook", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Array)
+], CategoryValidationProblemComponent.prototype, "options", void 0);
 __decorate([
     core_1.Output(),
     __metadata("design:type", Object)
-], GeoValidationProblemComponent.prototype, "onProblemChange", void 0);
-GeoValidationProblemComponent = __decorate([
+], CategoryValidationProblemComponent.prototype, "onProblemChange", void 0);
+CategoryValidationProblemComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'geo-validation-problem',
-        templateUrl: 'geo-validation-problem.component.jsp',
+        selector: 'category-validation-problem',
+        templateUrl: 'category-validation-problem.component.jsp',
         styleUrls: []
     }),
-    __metadata("design:paramtypes", [upload_service_1.UploadService, core_service_1.IdService])
-], GeoValidationProblemComponent);
-exports.GeoValidationProblemComponent = GeoValidationProblemComponent;
-//# sourceMappingURL=geo-validation-problem.component.js.map
+    __metadata("design:paramtypes", [upload_service_1.UploadService, category_service_1.CategoryService, core_service_1.IdService])
+], CategoryValidationProblemComponent);
+exports.CategoryValidationProblemComponent = CategoryValidationProblemComponent;
+//# sourceMappingURL=category-validation-problem.component.js.map

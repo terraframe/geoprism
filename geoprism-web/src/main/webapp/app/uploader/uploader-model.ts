@@ -18,6 +18,7 @@
 ///
 
 import { Dataset } from '../model/dataset';
+import { Pair } from '../model/pair';
 
 export class Universal {
   value: string;
@@ -109,6 +110,7 @@ export class Workbook {
   directory: string;
   sheets: Sheet[];
   locationExclusions: LocationExclusion[];
+  categoryExclusion: { [key:string]:string[]};
 }
 
 export class UploadInformation {
@@ -158,12 +160,10 @@ export class LocationProblem {
 }
 
 export class CategoryProblem {
-  type: string;
   label: string;
-  parentId: string;
-  universalId: string;
-  universalLabel: string;
-  context: LocationContext[];
+  mdAttributeId: string;
+  categoryId: string;
+  optionId: string;
   resolved: boolean;
   synonym: string;
   action: any;
@@ -172,6 +172,7 @@ export class CategoryProblem {
 export class Problems {
   locations  : LocationProblem[];
   categories  : CategoryProblem[];
+  options: { [key:string]:Pair[]};
 }
 
 export class DatasetResponse {
@@ -188,6 +189,11 @@ export class GeoSynonym {
   synonymId: string;
   label: string;
   ancestors: Label[];
+}
+
+export class ClassifierSynonym {
+  synonymId: string;
+  label: string;
 }
 
 export class Entity {

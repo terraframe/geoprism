@@ -140,6 +140,42 @@ var UploadService = (function (_super) {
             .toPromise()
             .catch(this.handleError);
     };
+    UploadService.prototype.getClassifierSuggestions = function (mdAttributeId, text, limit) {
+        var params = new http_1.URLSearchParams();
+        params.set('mdAttributeId', mdAttributeId);
+        params.set('text', text);
+        params.set('limit', limit);
+        return this.http
+            .get(acp + '/uploader/getClassifierSuggestions', { search: params })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    UploadService.prototype.createClassifierSynonym = function (classifierId, label) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ classifierId: classifierId, label: label });
+        return this.ehttp
+            .post(acp + '/uploader/createClassifierSynonym', data, { headers: headers })
+            .toPromise()
+            .then(function (response) {
+            return response.json();
+        })
+            .catch(this.handleError);
+    };
+    UploadService.prototype.deleteClassifierSynonym = function (synonymId) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        var data = JSON.stringify({ synonymId: synonymId });
+        return this.ehttp
+            .post(acp + '/uploader/deleteClassifierSynonym', data, { headers: headers })
+            .toPromise()
+            .catch(this.handleError);
+    };
     return UploadService;
 }(core_service_1.BasicService));
 UploadService = __decorate([

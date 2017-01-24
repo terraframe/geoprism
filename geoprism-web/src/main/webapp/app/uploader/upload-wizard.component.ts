@@ -385,6 +385,7 @@ export class UploadWizardComponent implements OnDestroy {
         let page = new Page('CATEGORY-VALIDATION', this.page);
         page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
         page.isReady = this.isReady('CATEGORY-VALIDATION');
+        page.layout = 'wide-holder';
 
         this.page = page;
         
@@ -482,23 +483,22 @@ export class UploadWizardComponent implements OnDestroy {
         }
         else {          
             
-//          if(this.hasLocationField() && this.hasCoordinateField()) {
-//            this.currentStep = 5;
-//          }
-//          else if(this.hasLocationField() || this.hasCoordinateField()) {
-//            this.currentStep = 4;
-//          }
-//          else{
-//            this.currentStep = 3;
-//          }
+          if(this.hasLocationField() && this.hasCoordinateField()) {
+            this.currentStep = 5;
+          }
+          else if(this.hasLocationField() || this.hasCoordinateField()) {
+            this.currentStep = 4;
+          }
+          else{
+            this.currentStep = 3;
+          }
 
             
           if( !result.problems.locations || result.problems.locations.length > 0) {
-        	let hasNext = (result.problems.categories != null || result.problems.categories.length > 0);
         	
             let page = new Page('GEO-VALIDATION', null);
-            page.hasNext = hasNext; 
-            page.isReady = !hasNext; 
+            page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
+            page.isReady = this.isReady('CATEGORY-VALIDATION');
             page.layout = 'wide-holder';
 
             this.page = page;
@@ -520,19 +520,14 @@ export class UploadWizardComponent implements OnDestroy {
 	  
   }
   
-  
-  
-  isReady(name: string) : boolean {
-      
-// TODO   return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
-    return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION');
+  isReady(name: string) : boolean {      
+    return (name === 'SUMMARY' || name === 'CATEGORY-VALIDATION' || (name === 'GEO-VALIDATION' && this.problems.categories !== null && this.problems.categories.length === 0));
   }
       
   hasNextPage(name: string): boolean {
-    //
-//    if(name == 'GEO-VALIDATION') {
-//      return (this.problems.categories !== null && this.problems.categories.length > 0);
-//    }
+    if(name == 'GEO-VALIDATION') {
+      return (this.problems.categories !== null && this.problems.categories.length > 0);
+    }
       
     return (name !== 'MATCH-INITIAL' && name !== 'SUMMARY' && name !== 'MATCH' && name !== 'CATEGORY-VALIDATION');
   }  
@@ -549,8 +544,15 @@ export class UploadWizardComponent implements OnDestroy {
     let page = new Page('SUMMARY', this.page);
     page.hasNext = this.hasNextPage('SUMMARY');
     page.isReady = this.isReady('SUMMARY');
-      
+    
     this.page = page;          
     this.sheet = sheet;
+  }
+  
+  showStep(): boolean {
+	
+    let names = ['MATCH-INITIAL', 'MATCH', 'GEO-VALIDATION', 'CATEGORY-VALIDATION'];
+	
+    return this.page && (names.indexOf(this.page.name) === -1);
   }
 }

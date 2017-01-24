@@ -114,7 +114,7 @@ export class CategoryDetailComponent implements OnInit {
     message = message.replace('{0}', this.category.label);
 
     if(confirm(message)) {
-      this.categoryService.remove(descendant)
+      this.categoryService.remove(descendant.id)
        .then((response:any) => {
          this.category.descendants = this.category.descendants.filter(h => h !== descendant);        
        });

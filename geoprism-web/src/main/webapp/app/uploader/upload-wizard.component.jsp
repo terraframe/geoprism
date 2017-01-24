@@ -29,7 +29,7 @@
   
     <div class='ng-modal-dialog-content'>
       <div role="dialog" class="ng-modal-content modal-content">       
-        <div class="uploader-step-indicator-container" *ngIf="page && page.name != 'MATCH-INITIAL' && page.name != 'MATCH' && !updateExistingDataset">
+        <div class="uploader-step-indicator-container" *ngIf="showStep()">
           <ol class="wizard-progress clearfix">
             <li *ngFor="let step of steps; let i = index;" [ngClass]="{'active-step' : page.name === step.page, 'status-li-disabled' : page.name !== step.page}">
               <span *ngIf="step.label == '1'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
@@ -66,57 +66,7 @@
       <coordinate-page *ngIf="page.name == 'COORDINATE'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
       <summary-page *ngIf="page.name == 'SUMMARY'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
       <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information"></geo-validation-page>
-<!-- 
-              <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'"></category-validation-page>              
- -->        
-      
-<!-- 
-      <form #form="ngForm" name="form" class="modal-form" (ngSubmit)="form.valid && !busy && onSubmit()">
-        <div>
-          <fieldset>
-            <section class="form-container">
-            </section>            
-          </fieldset>
-          
-          <div class="row-holder" >
-            <div class="label-holder"></div>          
-            <div [ngClass]="{'holder' : (page.name != 'GEO-VALIDATION' && page.name != 'CATEGORY-VALIDATION' && page.name != 'FIELDS'), 'wide-holder' : (page.name == 'GEO-VALIDATION' || page.name == 'CATEGORY-VALIDATION' || page.name == 'FIELDS')}">
-              <div class="button-holder">
-                <input
-                  type="button"
-                  value="<gdb:localize key="dashboard.Cancel"/>"
-                  class="btn btn-default" 
-                  (click)="cancel()"
-                  [disabled]="busy"                  
-                />
-                <input
-                  *ngIf="page.snapshots.length > 0"           
-                  type="button"
-                  value="<gdb:localize key="dataUploader.previous"/>"
-                  class="btn btn-primary" 
-                  (click)="prev()"
-                  [disabled]="busy"
-                /> 
-                <input
-                  *ngIf="hasNextPage()"      
-                  type="button"
-                  value="<gdb:localize key="dataUploader.next"/>"
-                  class="btn btn-primary" 
-                  (click)="next()"
-                  [disabled]="!form.valid"
-                />
-                <input 
-                  *ngIf="isReady()"
-                  type="submit"
-                  value="<gdb:localize key="dataUploader.import"/>"
-                  class="btn btn-primary" 
-                  [disabled]="!form.valid" />     
-              </div>
-            </div>
-          </div>          
-        </div>
-      </form>
- -->            
+      <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information"></category-validation-page>      
     </div>
     </div>
   </div>  
