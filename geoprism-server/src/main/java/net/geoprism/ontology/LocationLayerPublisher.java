@@ -169,12 +169,12 @@ public class LocationLayerPublisher extends LayerPublisher
 
   private LayerType getChildLayerType(List<Term> descendants)
   {
-    return descendants.size() <= 1 ? LayerType.POINT : LayerType.POLYGON;
+    return LayerType.POLYGON;
   }
 
   private LayerType getEntityLayerType(List<Term> descendants)
   {
-    return descendants.size() == 0 ? LayerType.POINT : LayerType.POLYGON;
+    return LayerType.POLYGON;
   }
 
   public void writeGeojson(Writer writer)

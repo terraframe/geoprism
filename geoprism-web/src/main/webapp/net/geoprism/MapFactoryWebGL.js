@@ -255,12 +255,12 @@
           });
 			    
 			    map.on('load', function () {
-			      that._editingControl = new MapboxDraw({
-	            controls: {
-	              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
-	            }
-	          });
-	          map.addControl(that._editingControl);
+//			      that._editingControl = new MapboxDraw({
+//	            controls: {
+//	              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
+//	            }
+//	          });
+//	          map.addControl(that._editingControl);
 			    });
         },
         
@@ -421,30 +421,30 @@
         	var map = this.getMap();
         	var that = this;
         	
-        	if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
-      	  {
-        	  if (this._updateVectorLayersAfterLoading == null)
+            if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
       	    {
+        	  if (this._updateVectorLayersAfterLoading == null)
+      	      {
         	    this._updateVectorLayersAfterLoading = [];
-      	    }
+      	      }
         	  
         	  this._updateVectorLayersAfterLoading.push(function(){
-              that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
-            });
+                that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
+              });
         	  
         	  return;
-      	  }
+      	    }
         	
         	var layer = map.getLayer(layerName);
 			
-    			if (layer) {
-          	var layerSourceName = layer.source;
-          	map.getSource(layerSourceName).setData(layerAsGeoJSON);
-    			}
+    		if (layer) {
+          	  var layerSourceName = layer.source;
+          	  map.getSource(layerSourceName).setData(layerAsGeoJSON);
+    		}
 			
-    			map.once('data', function () {
-    				map.fire("data.updated", true);
-    			});
+    		map.once('data', function () {
+    		  map.fire("data.updated", true);
+    		});
         },
         
         

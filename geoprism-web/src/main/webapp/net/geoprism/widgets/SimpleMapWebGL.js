@@ -136,22 +136,22 @@
 	 controller.refreshInteractiveLayers = function(triggeringEvent) {
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
 			  var data = $scope.sharedGeoData;
-			
-			  var targetCallback = function(data) {
-				  var geomType;
-				  for(var i=0; i<data.features.length; i++){
-		    		var feature = data.features[i];
+			  
+			  var geomType;
+			  for(var l=0; l<data.features.length; l++){
+				  var layer = data.features[l];
+				  for(var i=0; i<layer.features.length; i++){
+		    		var feature = layer.features[i];
 		    		feature.properties.isHoverable = true;
 		    		feature.properties.isClickable = true;
 		    		geomType = feature.geometry.type.toLowerCase();
 				  }
 				  
-				  controller.updateVectorLayer(data, "target-" + geomType, $scope.targetStyle, "TARGET", 2);
+				  if(!geomType){
+					  geomType = "multipolygon";
+				  }
+				  controller.updateVectorLayer(layer, "target-" + geomType, $scope.targetStyle, "TARGET", 2);
 			  }
-			  
-			  data.layers.forEach(function(layer){
-				  controller.getMapData(targetCallback, layer, layer.workspace);
-			  });
 		  }
 	 }
 	 
@@ -159,6 +159,8 @@
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
 			  var data = $scope.sharedGeoData;
+			  
+			  console.log("refresh the layers: ", sharedGeoData)
 			
 			  var contextCallback = function(data) {
 				  for(var i=0; i<data.features.length; i++){

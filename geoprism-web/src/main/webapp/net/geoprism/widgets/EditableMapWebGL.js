@@ -199,37 +199,56 @@
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
 			  var data = $scope.sharedGeoData;
-			
-			  var contextCallback = function(data) {
-				  for(var i=0; i<data.features.length; i++){
-	  	    		var feature = data.features[i];
-	  	    		feature.properties.isHoverable = false;
-	  	    		feature.properties.isClickable = false;
-	  			  }
-				  
-				  controller.updateVectorLayer(data, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
-    		  controller.zoomToLayersExtent(["context-multipolygon"]);
-			  }
 			  
-			  var targetCallback = function(data) {
-				  for(var i=0; i<data.features.length; i++){
-		    		var feature = data.features[i];
-		    		feature.properties.isHoverable = true;
-		    		feature.properties.isClickable = true;
+			  for(var i=0; i<data.geometries.length; i++){
+				  var layer = data.geometries[i];
+				  
+				  for(var l=0; l<layer.features.length; l++){
+					  var feature = layer.features[l];
+		  	    	  feature.properties.isHoverable = false;
+		  	    	  feature.properties.isClickable = false;
 				  }
 				  
-				  controller.updateVectorLayer(data, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
-	    	  controller.zoomToLayersExtent(["target-multipolygon"]);
+				  if(i === 0){
+					  controller.updateVectorLayer(layer, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
+					  controller.zoomToLayersExtent(["context-multipolygon"]);
+				  }
+				  else if(i === 1){
+					  controller.updateVectorLayer(layer, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+					  controller.zoomToLayersExtent(["target-multipolygon"]);
+				  }
 			  }
+			
+//			  var contextCallback = function(data) {
+//				  for(var i=0; i<data.features.length; i++){
+//	  	    		var feature = data.features[i];
+//	  	    		feature.properties.isHoverable = false;
+//	  	    		feature.properties.isClickable = false;
+//	  			  }
+//				  
+//				  controller.updateVectorLayer(data, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
+//				  controller.zoomToLayersExtent(["context-multipolygon"]);
+//			  }
+//			  
+//			  var targetCallback = function(data) {
+//				  for(var i=0; i<data.features.length; i++){
+//		    		var feature = data.features[i];
+//		    		feature.properties.isHoverable = true;
+//		    		feature.properties.isClickable = true;
+//				  }
+//				  
+//				  controller.updateVectorLayer(data, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+//				  controller.zoomToLayersExtent(["target-multipolygon"]);
+//			  }
 			  
 			  
 //			  controller.removeVectorData();
 			  
 			  // get context geo data
-			  controller.getMapData(contextCallback, data.layers[0], data.workspace);
+//			  controller.getMapData(contextCallback, data.layers[0], data.workspace);
 			  
 			  // get target geo data
-			  controller.getMapData(targetCallback, data.layers[1], data.workspace);
+//			  controller.getMapData(targetCallback, data.layers[1], data.workspace);
 		  }
 	 }
 	 
