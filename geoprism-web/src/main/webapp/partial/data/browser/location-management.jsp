@@ -67,7 +67,7 @@
       <div><label><gdb:localize key="location.management.sublocations"/></label></div>
       <div>
         <div class="list-group">
-          <a href ng-repeat="child in children" class="list-group-item" ng-class="{'hover' : hoverId === child.id}" ng-click="ctrl.select(child, $event)" ng-mouseover="ctrl.listItemHover(child, $event)" ng-mouseleave="ctrl.listItemHoverOff(child, $event)">
+          <a href ng-repeat="child in children" id="{{child.geoId}}{{child.id}}" class="list-group-item" ng-class="{'hover' : hoverId === child.id}" ng-click="ctrl.select(child, $event)" ng-mouseover="ctrl.listItemHover(child, $event)" ng-mouseleave="ctrl.listItemHoverOff(child, $event)">
             {{child.displayLabel}} : {{child.geoId}}
             <div class="pull-right">
               <span class="inner-action fa fa-globe ico-edit-geometry" ng-click="ctrl.editGeometry(child)"></span>

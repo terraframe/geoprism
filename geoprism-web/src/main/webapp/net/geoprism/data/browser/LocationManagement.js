@@ -160,7 +160,7 @@
     }
     
     controller.editGeometry = function(entity) {
-      $scope.$emit('editLocation', {
+      $scope.$broadcast('editLocation', {
         id : entity.id
       });
     }
@@ -233,12 +233,40 @@
     }
     
     controller.scrollTo = function(entityId) {
+      var child = null;
+      for(var i = 0; i < $scope.children.length; i++) {
+        if($scope.children[i].id == entityId) {
+          child = $scope.children[i];
+        };
+      }
       
+      controller.highlight(child);
+      widgetService.animate("#location-explorer", {scrollTop: this._selected.offset().top}, "slow");
+    },
+    
+    controller.highlight = function(child)
+    {
+      if (this._selected != null)
+      {
+        this._selected.css("background-color", "");
+      }
+      
+      if (child == null)
+      {
+        this._selected = null;
+      }
+      else
+      {
+        this._selected = $("#" + child.geoId + child.id);
+        
+        this._selected.css('background-color', 'rgb(160, 160, 255)');
+      }
     },
     
     $scope.$on('locationFocus', function(event, data){
       if (data.isDoubleClick)
       {
+        controller.highlight(null);
         controller.open(data.id);
       }
       else

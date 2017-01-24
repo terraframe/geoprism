@@ -578,9 +578,21 @@
               point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
             }
           });
-          map.addControl(Draw);
+          map.addControl(this._editingControl);
           
+          var features = map.querySourceFeatures("target-multipolygon", {
+            filter: ['==', 'id', featureId]
+          });
           
+          for (var i = 0; i < features.length; ++i)
+          {
+            this._editingControl.add(features[i]);
+          }
+          
+          map.setFilter("target-multipolygon", ["!=", "id", featureId]);
+          
+//          this._editingControl.changeMode("draw_polygon");
+//          console.log(this._editingControl.getMode())
         },
         
         stopEditing : function() {
