@@ -40,6 +40,8 @@
 		var featureClickCallback = function(feature, map){
 		  var isDoubleClick = false;
 		  
+		  controller.stopEditing();
+		  
 		  // is it already selected?
       if (selectedFeature != null && selectedFeature.properties.id == feature.properties.id)
       {
@@ -150,6 +152,11 @@
 	 {
 	   webGLMapService.startEditingFeature(entityId);
 	 }
+	 
+	 controller.stopEditing = function()
+	 {
+	   webGLMapService.stopEditing();
+	 }
 	  
 	 controller.refreshBaseLayer = function() {
 	      if($scope.baseLayers.length > 0) {
@@ -250,6 +257,7 @@
       });
       
       $scope.$on('editLocation', function(event, data){
+        controller.unselectFeature(null);
         controller.startEditingFeature(data.id);
       });
       
