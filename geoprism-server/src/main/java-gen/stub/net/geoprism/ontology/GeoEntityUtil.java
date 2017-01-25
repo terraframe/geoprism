@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -39,6 +37,7 @@ import net.geoprism.data.importer.SeedKeyGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONWriter;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -770,15 +769,17 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   {
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
 
-    JSONObject response = new JSONObject();
-    response.put("layers", publisher.publish());
-
     StringWriter writer = new StringWriter();
 
-    publisher.writeGeojson(writer);
-    response.put("geometries", new JSONArray(writer.toString()));
+    JSONWriter jw = new JSONWriter(writer);
+    jw.object();
+    
+    jw.key("geometries");
+    publisher.writeGeojson(jw);
+    
+    jw.endObject();
 
-    return response.toString();
+    return writer.toString();
   }
 
   @Transaction
