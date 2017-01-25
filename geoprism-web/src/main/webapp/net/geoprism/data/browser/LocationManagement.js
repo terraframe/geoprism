@@ -51,6 +51,10 @@
     
     controller.select = function(entity, event) {
       if(!$(event.target).hasClass('inner-action')) {
+        $scope.$broadcast('cancelEditLocation', {
+          id : entity.id
+        });
+        
         var connection = {
           elementId : '#innerFrameHtml',      
           onSuccess : function(data) {
@@ -61,6 +65,27 @@
         };    
         
         locationService.select(connection, entity.id, "", $scope.layers);        
+      }
+    }
+    
+    controller.open = function(entityId) {
+      if(entityId && entityId.length > 0) {
+        $scope.$broadcast('cancelEditLocation', {
+          id : entity.id
+        });
+        
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(data) {
+            $scope.previous = data.ancestors;
+                  
+            controller.load(data);
+          }      
+        };      
+               
+        $scope.children = [];
+        $scope.previous = [];
+        locationService.open(connection, entityId, $scope.layers);
       }
     }
     
@@ -122,25 +147,6 @@
         var text = request.term;
         
         locationService.getGeoEntitySuggestions(connection, text, limit);
-      }
-    }
-    
-    controller.open = function(entityId) {
-    	
-      if(entityId && entityId.length > 0) {
-    	  
-        var connection = {
-          elementId : '#innerFrameHtml',
-          onSuccess : function(data) {
-            $scope.previous = data.ancestors;
-                  
-            controller.load(data);
-          }      
-        };      
-               
-        $scope.children = [];
-        $scope.previous = [];
-        locationService.open(connection, entityId, $scope.layers);
       }
     }
     
@@ -246,22 +252,29 @@
     
     controller.highlight = function(child)
     {
-      if (this._selected != null)
-      {
-        this._selected.css("background-color", "");
-      }
+      this.unhighlight();
       
-      if (child == null)
-      {
-        this._selected = null;
-      }
-      else
+      if (child != null)
       {
         this._selected = $("#" + child.geoId + child.id);
         
         this._selected.css('background-color', 'rgb(160, 160, 255)');
       }
     },
+    
+    controller.unhighlight = function()
+    {
+      if (this._selected != null)
+      {
+        this._selected.css("background-color", "");
+      }
+      
+      this._selected = null;
+    },
+    
+    $scope.$on('locationUnhighlight', function(event, data){
+      controller.unhighlight();
+    });
     
     $scope.$on('locationFocus', function(event, data){
       if (data.isDoubleClick)
