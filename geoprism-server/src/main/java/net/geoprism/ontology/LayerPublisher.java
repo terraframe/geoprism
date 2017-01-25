@@ -164,7 +164,7 @@ public abstract class LayerPublisher
 
     AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
 
-    GeometryJSON gjson = new GeometryJSON();
+    GeometryJSON gjson = new GeometryJSON(8);
     gjson.write(attributeIF.getGeometry(), geomWriter);
 
     return new JSONObject(geomWriter.toString());
