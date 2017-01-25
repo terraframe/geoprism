@@ -20,6 +20,10 @@ var AutoCompleteComponent = (function () {
     AutoCompleteComponent.prototype.onClick = function (item) {
         this.onDropdownSelect.emit(item);
     };
+    AutoCompleteComponent.prototype.onMouseEnter = function () {
+    };
+    AutoCompleteComponent.prototype.onMouseLeave = function () {
+    };
     return AutoCompleteComponent;
 }());
 __decorate([

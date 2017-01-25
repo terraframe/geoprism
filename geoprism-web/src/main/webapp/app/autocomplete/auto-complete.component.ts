@@ -11,12 +11,20 @@ export class AutoCompleteComponent {
   // Emit a selected event when an item in the list is selected
   @Output() public onDropdownSelect = new EventEmitter<{text: string, data: any}>();
 
-  public list: any;
+  public list: {text: string, data: any}[];
 
   /**
    * Listen for a click event on the list
    */
-  public onClick(item: {text: string, data: any}) {
+  public onClick(item: {text: string, data: any}): void {
     this.onDropdownSelect.emit(item);
+  }
+  
+  public onMouseEnter(): void {
+  	  
+  }
+  
+  public onMouseLeave(): void {
+	  
   }
 }

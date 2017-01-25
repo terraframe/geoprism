@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
 <ul *ngIf="list.length > 0" class="ui-front ui-menu ui-widget ui-widget-content ui-corner-all search-results" style="margin-left: 0px;">
-  <li *ngFor="let item of list" class="ui-menu-item" role="presentation">
-    <a class="ui-corner-all" tabindex="-1" (click)="onClick(item)">{{item.text}}</a>
+  <li *ngFor="let item of list" class="ui-menu-item" role="presentation" style="margin-left: 0px;">
+    <a class="ui-corner-all" tabindex="-1" (mouseenter)="onMouseEnter(item)" (mouseleave)="onMouseLeave(item)" (click)="onClick(item)">{{item.text}}</a>
   </li>
 </ul>
