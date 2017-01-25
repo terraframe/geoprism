@@ -90,6 +90,10 @@
     	this.clearOverlays(); // the popup doesn't shift appropriately to the new position so clear it
     }
     
+    service.getWebGlMap = function() {
+      return service.map.getMap();
+    }
+    
     service.addVectorLayer = function(layer, layerName, styleObj, type, stackingIndex) {
     	service.map.addVectorLayer(layer, layerName, styleObj, type, stackingIndex);
     }
@@ -116,10 +120,6 @@
     
     service.removeAllVectorLayers = function() {
     	service.map.removeAllVectorLayers();
-    }
-    
-    service.startEditingFeature = function(entityId) {
-      service.map.startEditingFeature(entityId);
     }
     
     service.enableEdits = function(saveCallback) {
@@ -151,10 +151,6 @@
                 callback(response);
               }
             });
-    }
-    
-    service.stopEditing = function(){
-    	service.map.stopEditing();
     }
     
     service.selectFeature = function(feature) {

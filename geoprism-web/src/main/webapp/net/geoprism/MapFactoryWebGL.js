@@ -254,17 +254,15 @@
 //          		console.log(e, " - data loaded")
           });
 			    
-			    map.on('load', function () {
+//			    map.on('load', function () {
 //			      that._editingControl = new MapboxDraw({
 //	            controls: {
 //	              point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
 //	            }
 //	          });
 //	          map.addControl(that._editingControl);
-			    });
+//			    });
         },
-        
-        
         
         // TODO: convert to webgl
         getAllVectorLayers : function() {
@@ -581,33 +579,6 @@
           else if(feature.layer.type === "fill"){
             map.setFilter(feature.layer.source + "-select", ["==", "id", ""]);
           }
-        },
-        
-        startEditingFeature : function(featureId) {
-          this.unselectFeature(null);
-          
-          var map = this.getMap();
-          
-          var features = map.querySourceFeatures("target-multipolygon", {
-            filter: ['==', 'id', featureId]
-          });
-          
-          for (var i = 0; i < features.length; ++i)
-          {
-            this._editingControl.add(features[i]);
-          }
-          
-          map.setFilter("target-multipolygon", ["!=", "id", featureId]);
-          
-//          this._editingControl.changeMode("draw_polygon");
-//          console.log(this._editingControl.getMode())
-        },
-        
-        stopEditing : function() {
-          var map = this.getMap();
-          
-          this._editingControl.deleteAll();
-          map.setFilter("target-multipolygon", ["!=", "id", ""]);
         },
         
         getVectorLayersByTypeProp : function(type) {

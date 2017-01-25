@@ -80,8 +80,20 @@
 		//
 		// end
 		//
+		
+		// Enable editing controls
+		var map = controller.getWebGLMap();
+    controller._editingControl = new MapboxDraw({
+      controls: {
+        point: false, line_string: true, polygon: true, trash: true, combine_features: true, uncombine_features: true
+      }
+    });
+    map.addControl(controller._editingControl);
 	 }
 	 
+	 controller.getWebGLMap = function() {
+	   return webGLMapService.getWebGlMap();
+	 }
 	 
 	 controller.baseLayerPanelMouseOut = function() {
 		 $scope.showBaseLayerPanel = false;
@@ -148,16 +160,32 @@
 		 webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
 	 }
 	 
-	 controller.startEditingFeature = function(entityId)
+	 controller.startEditingFeature = function(featureId)
 	 {
-	   webGLMapService.startEditingFeature(entityId);
+	   this.unselectFeature(null);
+     
+     var map = controller.getWebGLMap();
+     
+     var features = map.querySourceFeatures("target-multipolygon", {
+       filter: ['==', 'id', featureId]
+     });
+     
+     for (var i = 0; i < features.length; ++i)
+     {
+       this._editingControl.add(features[i]);
+     }
+     
+     map.setFilter("target-multipolygon", ["!=", "id", featureId]);
 	 }
 	 
 	 controller.stopEditing = function()
 	 {
-	   webGLMapService.stopEditing();
+	   var map = controller.getWebGLMap();
+     
+     this._editingControl.deleteAll();
+     map.setFilter("target-multipolygon", ["!=", "id", ""]);
 	 }
-	  
+	 
 	 controller.refreshBaseLayer = function() {
 	      if($scope.baseLayers.length > 0) {
 	        for(var i = 0; i < $scope.baseLayers.length; i++) {
@@ -205,8 +233,8 @@
 				  
 				  for(var l=0; l<layer.features.length; l++){
 					  var feature = layer.features[l];
-		  	    	  feature.properties.isHoverable = false;
-		  	    	  feature.properties.isClickable = false;
+		  	    	  feature.properties.isHoverable = i === 0 ? false : true;
+		  	    	  feature.properties.isClickable = i === 0 ? false : true;
 				  }
 				  
 				  if(i === 0){
