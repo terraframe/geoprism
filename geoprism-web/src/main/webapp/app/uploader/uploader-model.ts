@@ -93,6 +93,7 @@ export class Sheet {
   name: string;
   country: string;
   replaceExisting: boolean;
+  exists: boolean;
 
   fields : Field[];
   attributes: Locations;

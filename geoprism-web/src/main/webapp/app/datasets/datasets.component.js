@@ -44,10 +44,13 @@ var DatasetsComponent = (function () {
     DatasetsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.getDatasets();
-        this.uploader = new ng2_file_upload_1.FileUploader({ url: acp + '/uploader/getAttributeInformation' });
-        this.uploader.onAfterAddingFile = function (fileItem) {
-            _this.uploader.uploadItem(fileItem);
+        var options = {
+            autoUpload: true,
+            queueLimit: 1,
+            removeAfterUpload: true,
+            url: acp + '/uploader/getAttributeInformation'
         };
+        this.uploader = new ng2_file_upload_1.FileUploader(options);
         this.uploader.onBeforeUploadItem = function (fileItem) {
             _this.eventService.start();
         };
@@ -60,6 +63,12 @@ var DatasetsComponent = (function () {
         this.uploader.onErrorItem = function (item, response, status, headers) {
             _this.eventService.onError(response);
         };
+    };
+    DatasetsComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.uploader.onAfterAddingFile = (function (item) {
+            _this.uploadElRef.nativeElement.value = '';
+        });
     };
     DatasetsComponent.prototype.getDatasets = function () {
         var _this = this;
@@ -118,6 +127,10 @@ __decorate([
     core_1.ViewChild(upload_wizard_component_1.UploadWizardComponent),
     __metadata("design:type", upload_wizard_component_1.UploadWizardComponent)
 ], DatasetsComponent.prototype, "wizard", void 0);
+__decorate([
+    core_1.ViewChild('uploadEl'),
+    __metadata("design:type", core_1.ElementRef)
+], DatasetsComponent.prototype, "uploadElRef", void 0);
 DatasetsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,

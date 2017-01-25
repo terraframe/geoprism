@@ -48,7 +48,6 @@ export class GeoValidationProblemComponent implements OnInit {
     this.show = false;	  
     this.hasSynonym = false;	      
   }
-
   
   source = (keyword: string) => {
     let limit = '20';

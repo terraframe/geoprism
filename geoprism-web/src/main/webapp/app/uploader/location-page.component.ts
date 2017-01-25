@@ -42,8 +42,6 @@ export class LocationPageComponent implements OnInit, LocalValidator {
   @Input() sheet: Sheet;
   @Input() page: Page;
   
-  @Output() onFieldChange = new EventEmitter();
-  
   locationFields: { [key:string]:Field[]; } = {};
   universals: Universal[];
   

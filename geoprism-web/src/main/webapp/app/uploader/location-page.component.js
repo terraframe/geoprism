@@ -39,7 +39,6 @@ var LocationField = (function () {
 var LocationPageComponent = (function () {
     function LocationPageComponent(idService) {
         this.idService = idService;
-        this.onFieldChange = new core_1.EventEmitter();
         this.locationFields = {};
         this.attribute = this.createNewAttribute();
     }
@@ -507,10 +506,6 @@ __decorate([
     core_1.Input(),
     __metadata("design:type", uploader_model_1.Page)
 ], LocationPageComponent.prototype, "page", void 0);
-__decorate([
-    core_1.Output(),
-    __metadata("design:type", Object)
-], LocationPageComponent.prototype, "onFieldChange", void 0);
 LocationPageComponent = __decorate([
     core_1.Component({
         moduleId: module.id,

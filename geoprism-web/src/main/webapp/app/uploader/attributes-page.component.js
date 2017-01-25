@@ -36,6 +36,9 @@ var AttributesPageComponent = (function () {
         this.longitudeFields = {};
         this.latitudeFields = {};
         this.textFields = {};
+        this.loaded = false;
+        this.coordinateMismatch = false;
+        this.coordinateText = false;
     }
     AttributesPageComponent.prototype.ngOnInit = function () {
         for (var i = 0; i < this.sheet.fields.length; i++) {
@@ -59,6 +62,9 @@ var AttributesPageComponent = (function () {
             }
         }
     };
+    AttributesPageComponent.prototype.ngAfterViewChecked = function () {
+        this.loaded = true;
+    };
     AttributesPageComponent.prototype.accept = function (field) {
         if (field.type === "LATITUDE") {
             this.latitudeFields[field.name] = field;
@@ -78,16 +84,16 @@ var AttributesPageComponent = (function () {
         else {
             delete this.textFields[field.name];
         }
-        //    let matched = (Object.keys(this.latitudeFields).length == Object.keys(this.longitudeFields).length);
-        //    this.form.$setValidity("coordinate", matched);
-        //      
-        //    if(Object.keys(this.latitudeFields).length > 0 || Object.keys(this.longitudeFields).length > 0) {
-        //      this.form.$setValidity("coordinateText", (Object.keys(this.textFields).length > 0));        
-        //    }
-        //    else {
-        //      this.form.$setValidity("coordinateText", true);        
-        //    } 
-        //    this.onFieldChange.emit(field);
+        this.coordinateMismatch = (Object.keys(this.latitudeFields).length != Object.keys(this.longitudeFields).length);
+        if (Object.keys(this.latitudeFields).length > 0 || Object.keys(this.longitudeFields).length > 0) {
+            this.coordinateText = (Object.keys(this.textFields).length == 0);
+        }
+        else {
+            this.coordinateText = false;
+        }
+        if (this.loaded) {
+            this.onFieldChange.emit(field);
+        }
     };
     AttributesPageComponent.prototype.localValidate = function (value, config) {
         if (config == 'label') {

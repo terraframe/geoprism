@@ -43,6 +43,7 @@ export class MatchPageComponent {
       .then(response => {
     	let sheet = response.datasets;
         sheet.replaceExisting = overwrite;          
+        sheet.exists = true;          
     	  
     	this.onSelect.emit(sheet);    	
       });

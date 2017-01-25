@@ -17,10 +17,10 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload/ng2-file-upload';
+import { FileSelectDirective, FileDropDirective, FileUploader, FileUploaderOptions } from 'ng2-file-upload/ng2-file-upload';
 
 import { Dataset } from '../model/dataset';
 
@@ -46,6 +46,9 @@ export class DatasetsComponent implements OnInit {
 
   @ViewChild(UploadWizardComponent)
   private wizard: UploadWizardComponent;
+  
+  @ViewChild('uploadEl') 
+  private uploadElRef: ElementRef;
 
   constructor(
     private router: Router,
@@ -56,10 +59,14 @@ export class DatasetsComponent implements OnInit {
   ngOnInit(): void {
     this.getDatasets();
     
-    this.uploader = new FileUploader({url: acp + '/uploader/getAttributeInformation'});
-    this.uploader.onAfterAddingFile = (fileItem: any) => {
-      this.uploader.uploadItem(fileItem);
+    let options:FileUploaderOptions =  {
+      autoUpload: true,
+      queueLimit: 1,
+      removeAfterUpload: true,
+      url: acp + '/uploader/getAttributeInformation'      
     };    
+    
+    this.uploader = new FileUploader(options);
     this.uploader.onBeforeUploadItem = (fileItem: any) => {
       this.eventService.start();
     };    
@@ -73,6 +80,12 @@ export class DatasetsComponent implements OnInit {
       this.eventService.onError(response);	
     }
   }
+  
+  ngAfterViewInit() {
+    this.uploader.onAfterAddingFile = (item => {
+      this.uploadElRef.nativeElement.value = ''
+    });
+  }  
   
   getDatasets() : void {
     this.datasetService

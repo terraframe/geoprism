@@ -119,13 +119,6 @@
      </div>  <!-- end location-selector-container -->
     </div>  <!-- end holder -->
   </div>
-
-  <div class="label-holder"></div>
-  <div class="holder">
-    <div class="error-message">
-      <p *ngIf="form.invalid"><gdb:localize key="dataUploader.unassignedCoordinateFields"/></p>
-    </div>          
-  </div>    
 </div>
 
 

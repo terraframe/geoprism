@@ -32,6 +32,7 @@ import { NavigationService } from './navigation.service';
 export class PagingComponent {
   @Input() form: FormGroup;
   @Input() page: Page;
+  @Input() global: boolean = true;
   
   constructor(private service: NavigationService) { } 
   

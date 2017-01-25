@@ -405,10 +405,11 @@ var UploadWizardComponent = (function () {
                 else {
                     _this.currentStep = 3;
                 }
+                _this.problems = result.problems;
                 if (!result.problems.locations || result.problems.locations.length > 0) {
                     var page = new uploader_model_1.Page('GEO-VALIDATION', null);
-                    page.hasNext = _this.hasNextPage('CATEGORY-VALIDATION');
-                    page.isReady = _this.isReady('CATEGORY-VALIDATION');
+                    page.hasNext = _this.hasNextPage('GEO-VALIDATION');
+                    page.isReady = _this.isReady('GEO-VALIDATION');
                     page.layout = 'wide-holder';
                     _this.page = page;
                 }
@@ -419,7 +420,6 @@ var UploadWizardComponent = (function () {
                     page.layout = 'wide-holder';
                     _this.page = page;
                 }
-                _this.problems = result.problems;
                 _this.onSuccess.emit({ datasets: result.datasets, finished: false });
             }
         });
@@ -446,8 +446,8 @@ var UploadWizardComponent = (function () {
         this.sheet = sheet;
     };
     UploadWizardComponent.prototype.showStep = function () {
-        var names = ['MATCH-INITIAL', 'MATCH', 'GEO-VALIDATION', 'CATEGORY-VALIDATION'];
-        return this.page && (names.indexOf(this.page.name) === -1);
+        var names = ['MATCH-INITIAL', 'MATCH'];
+        return this.page && (names.indexOf(this.page.name) === -1) && !this.sheet.exists;
     };
     return UploadWizardComponent;
 }());

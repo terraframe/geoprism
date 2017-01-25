@@ -41,7 +41,7 @@
       </div>
       <div class="inline-box" *ngIf="field.columnType == 'TEXT'">
         <label><gdb:localize key="dataUploader.type"/></label>
-        <select class="select-area" [(ngModel)]="field.type" [ngClass]="{selectInputDisabled : field.type == 'IGNORE'}" [name]="i + '-type'" required (blur)="accept(field)">
+        <select class="select-area" [(ngModel)]="field.type" [ngClass]="{selectInputDisabled : field.type == 'IGNORE'}" [name]="i + '-type'" required (change)="accept(field)">
           <option value="LOCATION"><gdb:localize key="dataUploader.location"/></option>
           <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
           <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
@@ -50,7 +50,7 @@
       </div>
       <div class="inline-box" *ngIf="field.columnType == 'NUMBER'">
         <label><gdb:localize key="dataUploader.type"/></label>
-        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (blur)="accept(field)">
+        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
           <option value="LONG"><gdb:localize key="dataUploader.long"/></option>
           <option value="DOUBLE"><gdb:localize key="dataUploader.double"/></option>
           <option value="LATITUDE"><gdb:localize key="dataUploader.latitude"/></option>
@@ -61,21 +61,21 @@
       </div>      
       <div class="inline-box" *ngIf="field.columnType == 'DATE'">
         <label><gdb:localize key="dataUploader.type"/></label>
-        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (blur)="accept(field)">
+        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
           <option value="DATE"><gdb:localize key="dataUploader.date"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
         </select>      
       </div>      
       <div class="inline-box" *ngIf="field.columnType == 'BOOLEAN'">
         <label><gdb:localize key="dataUploader.type"/></label>
-        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (blur)="accept(field)">
+        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
           <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
         </select>      
       </div>      
       <div class="inline-box" *ngIf="field.columnType == ''">
         <label><gdb:localize key="dataUploader.type"/></label>
-        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (blur)="accept(field)">
+        <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
           <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
         </select>      
       </div>      
@@ -108,19 +108,17 @@
       </div>      
     </div>
   </div> 
-<!--  
   <div class="wide-holder">
     <div class="error-message">
-      <p *ngIf="form.$error.coordinate"><gdb:localize key="dataUploader.coordinateMismatch"/></p>
-      <p *ngIf="form.$error.coordinateText"><gdb:localize key="dataUploader.coordinateNoLabel"/></p>
+      <p *ngIf="coordinateMismatch"><gdb:localize key="dataUploader.coordinateMismatch"/></p>
+      <p *ngIf="coordinateText"><gdb:localize key="dataUploader.coordinateNoLabel"/></p>
     </div>          
   </div>    
- -->
 </div>
 
       </section>        
     </fieldset>   
     
-    <paging [form]="form" [page]="page"></paging>
+    <paging [form]="form" [page]="page" [global]="!(coordinateMismatch || coordinateText)"></paging>
   </div>
 </form>

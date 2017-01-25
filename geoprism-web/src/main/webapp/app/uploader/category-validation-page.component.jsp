@@ -61,14 +61,7 @@
   </div>
   <div class="wide-holder">
     <div class="error-message">
-<!-- 
-      <p ng-show="form.$error.size"><gdb:localize key="dataUploader.existingProblems"/></p>
- -->    
-    </div>          
-    <div>
-<!-- 
-      <p ng-show="!form.$error.size"><gdb:localize key="dataUploader.noCategoryProblem"/></p>
- -->    
+      <p *ngIf="hasProblems()"><gdb:localize key="dataUploader.existingProblems"/></p>
     </div>          
   </div>  
 </div>
@@ -77,7 +70,7 @@
       </section>        
     </fieldset>   
     
-    <paging [form]="form" [page]="page"></paging>
+    <paging [form]="form" [page]="page" [global]="!hasProblems()"></paging>
   </div>
 </form>
 

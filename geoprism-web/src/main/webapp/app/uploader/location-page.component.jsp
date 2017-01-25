@@ -106,17 +106,14 @@
   <div class="label-holder"></div>
   <div class="holder">
     <div class="error-message">
-<!-- 
-      <p *ngIf="form.$error.size"><gdb:localize key="dataUploader.unassignedLocationFields"/></p>
- -->    
+      <p *ngIf="(unassignedFields.length > 0 || attribute != null)"><gdb:localize key="dataUploader.unassignedLocationFields"/></p>
     </div>          
   </div>  
 </div>
 
-
       </section>        
     </fieldset>   
     
-    <paging [form]="form" [page]="page"></paging>
+    <paging [form]="form" [page]="page" [global]="(unassignedFields.length == 0 && attribute == null)"></paging>
   </div>
 </form>

@@ -56,7 +56,7 @@
           <span *ngIf="show">
             <ul>
               <gdb:localize key="dataUploader.locatedWithin"/>
-              <li *ngFor="let ancestor of action.ancestors">{{ancestor.label}}</li>
+              <li *ngFor="let ancestor of problem.action.ancestors">{{ancestor.label}}</li>
             </ul>
           </span>
         </div> 

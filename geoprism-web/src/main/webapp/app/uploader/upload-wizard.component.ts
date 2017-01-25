@@ -72,7 +72,7 @@ export class UploadWizardComponent implements OnDestroy {
         else if(direction === 'ready') {
           this.persist();
         } 
-    });      
+    });
   }
   
   ngOnDestroy(): void {
@@ -492,13 +492,14 @@ export class UploadWizardComponent implements OnDestroy {
           else{
             this.currentStep = 3;
           }
-
             
+          this.problems = result.problems;
+          
           if( !result.problems.locations || result.problems.locations.length > 0) {
         	
             let page = new Page('GEO-VALIDATION', null);
-            page.hasNext = this.hasNextPage('CATEGORY-VALIDATION');
-            page.isReady = this.isReady('CATEGORY-VALIDATION');
+            page.hasNext = this.hasNextPage('GEO-VALIDATION');
+            page.isReady = this.isReady('GEO-VALIDATION');
             page.layout = 'wide-holder';
 
             this.page = page;
@@ -511,9 +512,7 @@ export class UploadWizardComponent implements OnDestroy {
 
             this.page = page;        	  
           }
-             
-          this.problems = result.problems;
-          
+                       
           this.onSuccess.emit({datasets:result.datasets, finished : false});          
         }         
       });    
@@ -551,8 +550,8 @@ export class UploadWizardComponent implements OnDestroy {
   
   showStep(): boolean {
 	
-    let names = ['MATCH-INITIAL', 'MATCH', 'GEO-VALIDATION', 'CATEGORY-VALIDATION'];
+    let names = ['MATCH-INITIAL', 'MATCH'];
 	
-    return this.page && (names.indexOf(this.page.name) === -1);
+    return this.page && (names.indexOf(this.page.name) === -1) && !this.sheet.exists;
   }
 }

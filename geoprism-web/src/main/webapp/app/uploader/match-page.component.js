@@ -40,6 +40,7 @@ var MatchPageComponent = (function () {
             .then(function (response) {
             var sheet = response.datasets;
             sheet.replaceExisting = overwrite;
+            sheet.exists = true;
             _this.onSelect.emit(sheet);
         });
     };

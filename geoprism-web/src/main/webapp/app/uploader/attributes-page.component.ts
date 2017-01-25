@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, OnInit, Input, Output, EventEmitter, Directive} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewChecked} from '@angular/core';
 import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
 
 import { LocalValidator } from '../core/function-validator.directive';
@@ -31,7 +31,7 @@ import { CategoryService } from '../service/category.service';
   templateUrl: 'attributes-page.component.jsp',
   styleUrls: []
 })
-export class AttributesPageComponent implements OnInit, LocalValidator, RemoteValidator {
+export class AttributesPageComponent implements OnInit, AfterViewChecked, LocalValidator, RemoteValidator {
 
   @Input() info: UploadInformation;
   @Input() sheet: Sheet;
@@ -43,8 +43,16 @@ export class AttributesPageComponent implements OnInit, LocalValidator, RemoteVa
   latitudeFields = {};
   textFields = {};
   universals: Universal[];
+  loaded: boolean;
+  
+  coordinateMismatch: boolean;
+  coordinateText: boolean;
 
-  constructor(private categoryService: CategoryService) { }  
+  constructor(private categoryService: CategoryService) {
+    this.loaded = false;
+    this.coordinateMismatch = false;
+    this.coordinateText = false;
+  }  
 
   ngOnInit(): void {
     for(let i = 0; i < this.sheet.fields.length; i++) {
@@ -75,6 +83,10 @@ export class AttributesPageComponent implements OnInit, LocalValidator, RemoteVa
     }
   }
   
+  public ngAfterViewChecked(): void {
+    this.loaded = true;	  
+  }    
+  
   accept(field: Field): void {
     if(field.type === "LATITUDE") {
       this.latitudeFields[field.name] = field;
@@ -97,17 +109,18 @@ export class AttributesPageComponent implements OnInit, LocalValidator, RemoteVa
       delete this.textFields[field.name];
     }
       
-//    let matched = (Object.keys(this.latitudeFields).length == Object.keys(this.longitudeFields).length);
-//    this.form.$setValidity("coordinate", matched);
-//      
-//    if(Object.keys(this.latitudeFields).length > 0 || Object.keys(this.longitudeFields).length > 0) {
-//      this.form.$setValidity("coordinateText", (Object.keys(this.textFields).length > 0));        
-//    }
-//    else {
-//      this.form.$setValidity("coordinateText", true);        
-//    } 
+    this.coordinateMismatch = (Object.keys(this.latitudeFields).length != Object.keys(this.longitudeFields).length);
     
-//    this.onFieldChange.emit(field);
+    if(Object.keys(this.latitudeFields).length > 0 || Object.keys(this.longitudeFields).length > 0) {
+      this.coordinateText = (Object.keys(this.textFields).length == 0);        
+    }
+    else {
+      this.coordinateText = false;        
+    } 
+    
+    if(this.loaded) {
+      this.onFieldChange.emit(field);
+    }
   }
  
   localValidate(value: string, config: string): {[key : string] : any} {

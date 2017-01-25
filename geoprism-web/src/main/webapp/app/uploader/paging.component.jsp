@@ -46,7 +46,7 @@
         value="<gdb:localize key="dataUploader.next"/>"
         class="btn btn-primary" 
         (click)="next()"
-        [disabled]="!form.valid"
+        [disabled]="!form.valid || !global"
       />
       <input 
         *ngIf="page.isReady"
@@ -54,7 +54,7 @@
         value="<gdb:localize key="dataUploader.import"/>"
         class="btn btn-primary" 
         (click)="ready()"        
-        [disabled]="!form.valid" />      
+        [disabled]="!form.valid || !global" />      
     </div>
   </div>
 </div>      

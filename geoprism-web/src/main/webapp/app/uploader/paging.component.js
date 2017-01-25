@@ -33,6 +33,7 @@ var navigation_service_1 = require("./navigation.service");
 var PagingComponent = (function () {
     function PagingComponent(service) {
         this.service = service;
+        this.global = true;
     }
     PagingComponent.prototype.next = function () {
         this.service.navigate('next');
@@ -56,6 +57,10 @@ __decorate([
     core_1.Input(),
     __metadata("design:type", uploader_model_1.Page)
 ], PagingComponent.prototype, "page", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Boolean)
+], PagingComponent.prototype, "global", void 0);
 PagingComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
