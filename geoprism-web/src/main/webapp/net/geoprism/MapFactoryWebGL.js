@@ -472,8 +472,9 @@
 	    	        			var targetFeature = layerSourceData.features[i];
 	    	        			var featureProps = targetFeature.properties;
 	    	        			if((feature.id && feature.id === featureProps.id) || 
-	    	        			  (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoid))){
-		        				
+	    	        			  (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoId)) ||
+	    	        			  (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
+	    	        			{
 	    	        				// control for styling of different geometry types
 	    	        				if(targetFeature.geometry){
 	    	        				  if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
@@ -513,8 +514,11 @@
 	    	         		for(var i=0; i<layerSourceData.features.length; i++){
 	    	        			var targetFeature = layerSourceData.features[i];
 	    	        			var featureProps = targetFeature.properties;
+	    	        			
 	    	        			if((feature.id && feature.id === featureProps.id) || 
-	    	        			   (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoid))){
+	    	        			   (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoId)) ||
+	    	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
+	    	        			{
 	    	            	    		
 		            	    		// control for styling of different geometry types
 	    	        				if(targetFeature.geometry){
@@ -528,25 +532,7 @@
 	    	            	        selectedFeatures.push(targetFeature);
 	    	        			}
 	    	        		}
-	    	        	}
-	        			
-	//	        		var features = targetLayer.getSource().getFeatures();
-	//	        		for(var i=0; i<features.length; i++){
-	//	        			var targetFeature = features[i];
-	//	        			var featureProps = targetFeature.getProperties();
-	//	        			if((feature.id && feature.id === featureProps.id) || 
-	//	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoid))){
-	//	        				
-	//	            	    	// control for styling of different geometry types
-	//	            	    	if(targetFeature.getGeometry() instanceof ol.geom.MultiPolygon || targetFeature.getGeometry() instanceof ol.geom.Polygon){
-	//	            	    		targetFeature.setStyle(that.getHoverPolygonStyle());
-	//	            	    	}
-	//	            	    	else if(targetFeature.getGeometry() instanceof ol.geom.MultiPoint || targetFeature.getGeometry() instanceof ol.geom.Point){
-	//	            	    		targetFeature.setStyle(that.getHoverPointStyle());
-	//	            	    	}
-	//	            	        selectedFeatures.push(targetFeature);
-	//	        			}
-	//	        		}
+	    	        	}	        			
 	        		});
 	        	}
         	}

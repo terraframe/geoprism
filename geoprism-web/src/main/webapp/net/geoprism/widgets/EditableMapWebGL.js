@@ -229,8 +229,76 @@
       var features = map.querySourceFeatures("target-multipolygon", {
         filter : filter
       });
-      for (var i = 0; i < features.length; ++i) {
-        this._editingControl.add(features[i]);
+      
+      // Theoretically queryRenderedFeatures should give us a better response where polygons aren't fragmented
+      // but it doesn't as of this version.
+      //var features = map.queryRenderedFeatures({layers : ["target-multipolygon"], filter : filter});
+      
+      
+      // Function to union features that may have fragmented polygons in the features array
+      var unionFeatures = function(features, target, index){
+  	   	var unionedFeature;
+      	
+      	for(var f=0; f<features.length; f++){
+      		var nextFt = features[f];
+      		var nextFtId = nextFt.properties.geoId;
+      		if(f > index && target.properties.geoId === nextFtId){
+      			if(unionedFeature){
+      				unionedFeature = turf.union(unionedFeature, nextFt);
+      			}
+      			else{
+      				unionedFeature = turf.union(ft, nextFt);
+      			}
+      		}
+      	}
+      	
+      	return unionedFeature;
+      }
+      
+      
+      var containsFeature = function(unionedFeatures, featureId){
+    	  for(var i=0; i<unionedFeatures.length; i++){
+    		  var ft = unionedFeatures[i];
+    		  if(ft.properties.geoId === featureId){
+    			  return true;
+    		  }
+    	  };
+    	  
+    	  return false;
+      }
+      
+      
+      //
+      // Polygons returned from map.querySourceFeatures() are fragmented.  After talking with a mapbox
+      // employee the fix (i.e. hack) was to union all geometries that are fragmented.. This bit of scrappy 
+      // code does that although I'm hoping this will be replaced by better mapboxgl responses in future versions.
+      //
+      var unionedFeatures = [];
+      for(var i=0; i<features.length; i++){
+    	var ft = features[i];
+    	var ftId = ft.properties.geoId;
+    	
+    	if(!containsFeature(unionedFeatures, ftId)){
+    		var unionedFeature = unionFeatures(features, ft, i);
+    		if(unionedFeature){
+    			unionedFeatures.push(unionedFeature);
+    		}
+    		else{
+    			unionedFeatures.push(ft)
+    		}
+    	}
+    	else{
+    		console.log("already")
+    	}
+    	
+      };
+      //
+      // end of polygon fragmentation fix
+      //
+      
+      
+      for (var i = 0; i < unionedFeatures.length; ++i) {
+        this._editingControl.add(unionedFeatures[i]);
       }
       
       // Show/hide relevant/irrelevant target features
