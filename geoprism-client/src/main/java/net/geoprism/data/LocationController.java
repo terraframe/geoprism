@@ -145,6 +145,14 @@ public class LocationController implements Reloadable
       return new RestBodyResponse(object);
     }
   }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF applyGeometries(ClientRequestIF request, @RequestParamter(name = "featureCollection") String featureCollection)
+  {
+    GeoEntityUtilDTO.applyGeometries(request, featureCollection);
+    
+    return new RestBodyResponse("");
+  }
 
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException

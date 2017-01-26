@@ -74,6 +74,18 @@
       
       runwayService.execute(req, connection);      
     }
+    
+    service.applyGeometries = function(connection, featureCollection) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/applyGeometries',
+        data : {
+          featureCollection : featureCollection
+        }
+      }
+      
+      runwayService.execute(req, connection);
+    }
       
     service.edit = function(connection, entityId) {
       var req = {
