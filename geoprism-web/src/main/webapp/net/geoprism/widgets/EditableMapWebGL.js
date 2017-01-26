@@ -217,10 +217,6 @@
       
       this.unselectFeature(null);
       
-      // enable editing controls
-      controller._geoprismEditingControl.startEditing();
-      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
-
       // Add features to editing control
       var filter = [ "!=", "id", "" ];
       if (featureIds != null)
@@ -231,76 +227,88 @@
         filter : filter
       });
       
-      // Theoretically queryRenderedFeatures should give us a better response where polygons aren't fragmented
-      // but it doesn't as of this version.
-      //var features = map.queryRenderedFeatures({layers : ["target-multipolygon"], filter : filter});
-      
-      
-      // Function to union features that may have fragmented polygons in the features array
-      var unionFeatures = function(features, target, index){
-  	   	var unionedFeature;
+      try
+      {
+        // Theoretically queryRenderedFeatures should give us a better response where polygons aren't fragmented
+        // but it doesn't as of this version.
+        //var features = map.queryRenderedFeatures({layers : ["target-multipolygon"], filter : filter});
+        
+        
+        // Function to union features that may have fragmented polygons in the features array
+        var unionFeatures = function(features, target, index){
+    	   	var unionedFeature;
+        	
+        	for(var f=0; f<features.length; f++){
+        		var nextFt = features[f];
+        		var nextFtId = nextFt.properties.geoId;
+        		if(f > index && target.properties.geoId === nextFtId){
+        			if(unionedFeature){
+        				unionedFeature = turf.union(unionedFeature, nextFt);
+        			}
+        			else{
+        				unionedFeature = turf.union(ft, nextFt);
+        			}
+        		}
+        	}
+        	
+        	return unionedFeature;
+        }
+        
+        
+        var containsFeature = function(unionedFeatures, featureId){
+      	  for(var i=0; i<unionedFeatures.length; i++){
+      		  var ft = unionedFeatures[i];
+      		  if(ft.properties.geoId === featureId){
+      			  return true;
+      		  }
+      	  };
+      	  
+      	  return false;
+        }
+        
+        
+        //
+        // Polygons returned from map.querySourceFeatures() are fragmented.  After talking with a mapbox
+        // employee the fix (i.e. hack) was to union all geometries that are fragmented.. This bit of scrappy 
+        // code does that although I'm hoping this will be replaced by better mapboxgl responses in future versions.
+        //
+        var unionedFeatures = [];
+        for(var i=0; i<features.length; i++){
+      	var ft = features[i];
+      	var ftId = ft.properties.geoId;
       	
-      	for(var f=0; f<features.length; f++){
-      		var nextFt = features[f];
-      		var nextFtId = nextFt.properties.geoId;
-      		if(f > index && target.properties.geoId === nextFtId){
-      			if(unionedFeature){
-      				unionedFeature = turf.union(unionedFeature, nextFt);
-      			}
-      			else{
-      				unionedFeature = turf.union(ft, nextFt);
-      			}
+      	if(!containsFeature(unionedFeatures, ftId)){
+      		var unionedFeature = unionFeatures(features, ft, i);
+      		if(unionedFeature){
+      			unionedFeatures.push(unionedFeature);
+      		}
+      		else{
+      			unionedFeatures.push(ft)
       		}
       	}
+      	else{
+      		console.log("already")
+      	}
       	
-      	return unionedFeature;
+        };
+        //
+        // end of polygon fragmentation fix
+        //
+        
+        
+        for (var i = 0; i < unionedFeatures.length; ++i) {
+          this._editingControl.add(unionedFeatures[i]);
+        }
+      }
+      catch(e)
+      {
+        // TODO : proper error handling
+        throw e;
       }
       
-      
-      var containsFeature = function(unionedFeatures, featureId){
-    	  for(var i=0; i<unionedFeatures.length; i++){
-    		  var ft = unionedFeatures[i];
-    		  if(ft.properties.geoId === featureId){
-    			  return true;
-    		  }
-    	  };
-    	  
-    	  return false;
-      }
-      
-      
-      //
-      // Polygons returned from map.querySourceFeatures() are fragmented.  After talking with a mapbox
-      // employee the fix (i.e. hack) was to union all geometries that are fragmented.. This bit of scrappy 
-      // code does that although I'm hoping this will be replaced by better mapboxgl responses in future versions.
-      //
-      var unionedFeatures = [];
-      for(var i=0; i<features.length; i++){
-    	var ft = features[i];
-    	var ftId = ft.properties.geoId;
-    	
-    	if(!containsFeature(unionedFeatures, ftId)){
-    		var unionedFeature = unionFeatures(features, ft, i);
-    		if(unionedFeature){
-    			unionedFeatures.push(unionedFeature);
-    		}
-    		else{
-    			unionedFeatures.push(ft)
-    		}
-    	}
-    	else{
-    		console.log("already")
-    	}
-    	
-      };
-      //
-      // end of polygon fragmentation fix
-      //
-      
-      
-      for (var i = 0; i < unionedFeatures.length; ++i) {
-        this._editingControl.add(unionedFeatures[i]);
-      }
+      // enable editing controls
+      controller._geoprismEditingControl.startEditing();
+      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
       
       // Show/hide relevant/irrelevant target features
       if (featureIds != null)
@@ -334,28 +342,29 @@
       
       var map = controller.getWebGLMap();
       
-      controller._geoprismEditingControl.stopEditing();
-      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
-      
-      map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
       var featureCollection = this._editingControl.getAll();
       
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(data) {
-          // Intentionally empty
-        }      
+          controller._isEditing = false;
+          
+          controller._geoprismEditingControl.stopEditing();
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+          
+          map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
+          
+          // TODO: It might be better to update the rendered polygons purely clientside, but that would require converting from whatever
+          //   format the draw plugin exports into something that the mapbox gl plugin knows how to handle. This may be easy? I don't know.
+          //   At least this way if the editing persists in some weird way its immediately obvious to the user, even if its slower.
+          controller._editingControl.deleteAll();
+          $scope.$emit('locationReloadCurrent');
+        },
+        onFailure : function(error) {
+          // TODO : Proper error handling
+        }
       };
       locationService.applyGeometries(connection, featureCollection);
-      
-      this._editingControl.deleteAll();
-      
-      controller._isEditing = false;
-      
-      // TODO: It might be better to update the rendered polygons purely clientside, but that would require converting from whatever
-      //   format the draw plugin exports into something that the mapbox gl plugin knows how to handle. This may be easy? I don't know.
-      //   At least this way if the editing persists in some weird way its immediately obvious to the user, even if its slower.
-      $scope.$emit('locationReloadCurrent');
     }
 
     controller.refreshBaseLayer = function() {
