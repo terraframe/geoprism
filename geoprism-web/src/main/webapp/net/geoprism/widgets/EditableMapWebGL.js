@@ -49,26 +49,26 @@
       }
 
       var featureClickCallback = function(feature, map) {
-        var isDoubleClick = false;
-        
-        if (controller._isEditing) { return; }
-
-        // is it already selected?
-        if (controller._selectedFeature != null
-            && controller._selectedFeature.properties.id == feature.properties.id) {
-          controller.unselectFeature(feature);
-          isDoubleClick = true;
-          controller._selectedFeature = null;
-        } else {
-          controller.selectFeature(feature);
-          controller._selectedFeature = feature;
-        }
-
-        $scope.$emit('locationFocus', {
-          id : feature.properties.id,
-          isDoubleClick : isDoubleClick
-        });
-        $scope.$apply();
+//        var isDoubleClick = false;
+//        
+//        if (controller._isEditing) { return; }
+//
+//        // is it already selected?
+//        if (controller._selectedFeature != null
+//            && controller._selectedFeature.properties.id == feature.properties.id) {
+//          controller.unselectFeature(feature);
+//          isDoubleClick = true;
+//          controller._selectedFeature = null;
+//        } else {
+//          controller.selectFeature(feature);
+//          controller._selectedFeature = feature;
+//        }
+//
+//        $scope.$emit('locationFocus', {
+//          id : feature.properties.id,
+//          isDoubleClick : isDoubleClick
+//        });
+//        $scope.$apply();
       }
 
       //
