@@ -71,7 +71,7 @@
     controller.open = function(entityId) {
       if(entityId && entityId.length > 0) {
         $scope.$broadcast('cancelEditLocation', {
-          id : entity.id
+          id : entityId
         });
         
         var connection = {
@@ -288,8 +288,9 @@
       }
     });
     
-    $scope.$on('locationReloadAll', function(event){
-      controller.init();
+    $scope.$on('locationReloadCurrent', function(event){
+//      controller.init();
+      controller.open($scope.previous[$scope.previous.length-1].id);
     });
     
     $scope.$on('hoverChange', function(event, data){
