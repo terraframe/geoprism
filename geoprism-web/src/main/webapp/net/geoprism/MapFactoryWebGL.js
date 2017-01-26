@@ -244,15 +244,17 @@
           var map = this.getMap();
           var that = this;
           
-			    map.on("data.updated", function(data){
-        		// TODO: remove hard coded layer names
-        		if( ! map.isEasing()){
-        			console.log("zoom zoom zoom!")
-        			that.zoomToLayersExtent(that.LAYERS_LIST);
-        		}
-        		
-//          		console.log(e, " - data loaded")
+		  map.on("data.updated", function(data){
+    		// TODO: remove hard coded layer names
+    		if( ! map.isEasing()){
+    			console.log("zoom zoom zoom!")
+    			that.zoomToLayersExtent(that.LAYERS_LIST);
+    		}
           });
+		  
+		  // add scale bar
+		  map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left'}));
+		  map.addControl(new mapboxgl.NavigationControl());
         },
         
         // TODO: convert to webgl
@@ -330,6 +332,22 @@
     		     	     });
           	    }
           	    else if (layerName.indexOf("multipolygon") != -1){
+          	    	
+//          	    	var polygons3DStyle = {
+//  			 	    	"id": layerName,
+//  			 	        "source": layerName,
+//  			 	        "type": "fill-extrusion",
+//  			 	        "paint": {
+//  			 	        	'fill-extrusion-color': styleObj.fill,
+//  			 	        	'fill-extrusion-height': {
+//  			 	        	 'type': 'identity',
+//  			 	        	 'property': 'height'
+//  			 	        	},
+//  			 	        	'fill-extrusion-base': 0,
+//  			 	        	'fill-extrusion-opacity': .8
+//  			 	        }
+//  			 	    }
+          	    	
           	    	map.addLayer({
       			 	    	"id": layerName,
       			 	        "source": layerName,
@@ -342,8 +360,8 @@
       			 	        }
       			 	    });
               	    	
-          	      // add labels
-                  map.addLayer({
+          	        // add labels
+                    map.addLayer({
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
       			 	        "type": "symbol",
@@ -823,11 +841,11 @@
         	    	// control for styling of different geometry types
         	    	// 'fill' === polygon
         	    	if(feature.layer.type === "fill"){
-                  map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
+        	    		map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
 
         	    	}
         	    	else if(feature.layer.type === "circle"){
-                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
+        	    		map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
         	    	}
         	    	
         	        selectedFeatures.push(feature);
@@ -838,7 +856,7 @@
         	    	map.getCanvas().style.cursor = originalCursor;
         	    	
         	    	map.setFilter("target-point-hover", ["==", "id", ""]);
-                map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+                    map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
         	    	
         	    	if(selectedFeatures.length > 0){
         	    		hoverCallback(null);
