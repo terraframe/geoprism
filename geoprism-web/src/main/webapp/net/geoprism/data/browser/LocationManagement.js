@@ -286,8 +286,9 @@
       }
     });
     
-    $scope.$on('locationReloadAll', function(event){
-      controller.init();
+    $scope.$on('locationReloadCurrent', function(event){
+//      controller.init();
+      controller.open($scope.previous[$scope.previous.length-1].id);
     });
     
     $scope.$on('hoverChange', function(event, data){

@@ -50,11 +50,11 @@
 		//
 		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
 		
-		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
-    controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2);
+		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2, false);
+		controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2, false);
     
-    controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
-    controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
+		controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2, true);
+	    controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2, false);
 
 		controller.addVectorHoverEvents(hoverCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
 		controller.addVectorClickEvents(featureClickCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
@@ -109,8 +109,8 @@
 		 webGLMapService.focusOffFeature(feature);
 	 }
 	  
-	 controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
-		 webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
+	 controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex, is3d) {
+		 webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex, is3d);
 	 }
 	 
 	 controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {

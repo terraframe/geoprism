@@ -244,15 +244,17 @@
           var map = this.getMap();
           var that = this;
           
-			    map.on("data.updated", function(data){
-        		// TODO: remove hard coded layer names
-        		if( ! map.isEasing()){
-        			console.log("zoom zoom zoom!")
-        			that.zoomToLayersExtent(that.LAYERS_LIST);
-        		}
-        		
-//          		console.log(e, " - data loaded")
+		  map.on("data.updated", function(data){
+    		// TODO: remove hard coded layer names
+    		if( ! map.isEasing()){
+    			console.log("zoom zoom zoom!")
+    			that.zoomToLayersExtent(that.LAYERS_LIST);
+    		}
           });
+		  
+		  // add scale bar
+		  map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left'}));
+		  map.addControl(new mapboxgl.NavigationControl());
         },
         
         // TODO: convert to webgl
@@ -272,7 +274,7 @@
         },
         
         
-        addVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex) {
+        addVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, is3d) {
         	var map = this.getMap();
         	var that = this;
         	
@@ -285,7 +287,7 @@
           	    	data: layerAsGeoJSON
           	    });
           	  
-          	    if (layerName.indexOf("point") != -1){
+          	    if (layerName.indexOf("point") !== -1){
 	          	    // add the main layer
     		     	    map.addLayer({
       			 	    	"id": layerName,
@@ -329,21 +331,48 @@
     		     	        "filter": ["==", "name", ""] // hide all features in the layer
     		     	     });
           	    }
-          	    else if (layerName.indexOf("multipolygon") != -1){
-          	    	map.addLayer({
+          	    else if (layerName.indexOf("multipolygon") !== -1){
+          	    	
+          	    	if(is3d){
+          	    	
+	          	    	var polygons3DStyle = {
+	  			 	    	"id": layerName,
+	  			 	        "source": layerName,
+	  			 	        "type": "fill-extrusion",
+	  			 	        "paint": {
+	  			 	        	'fill-extrusion-color': styleObj.fill,
+	  			 	        	'fill-extrusion-height': 200,
+//	  			 	        	'fill-extrusion-height': {
+//	  			 	        	 'type': 'identity',
+//	  			 	        	 'property': 'height'
+//	  			 	        	},
+	  			 	        	'fill-extrusion-base': 0,
+	  			 	        	'fill-extrusion-opacity': .8
+	  			 	        }
+	  			 	    }
+	          	    	
+	          	    	map.addLayer(polygons3DStyle);
+          	    	}
+          	    	else{
+          	    		var polygonSimpleStyle = {
       			 	    	"id": layerName,
       			 	        "source": layerName,
       			 	        "type": "fill",
       			 	        "paint": {
       			 	            "fill-color": styleObj.fill,
-      			 	            "fill-outline-color": "black",
+      			 	            "fill-outline-color": "black"
       			 	            //"fill-stroke-width": 5,
       			 	            //"fill-stroke-color": "#000000"
       			 	        }
-      			 	    });
+      			 	    }
+          	    		
+          	    		map.addLayer(polygonSimpleStyle);
+          	    	}
+          	    	
+          	    	
               	    	
-          	      // add labels
-                  map.addLayer({
+          	        // add labels
+                    map.addLayer({
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
       			 	        "type": "symbol",
@@ -823,11 +852,11 @@
         	    	// control for styling of different geometry types
         	    	// 'fill' === polygon
         	    	if(feature.layer.type === "fill"){
-                  map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
+        	    		map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
 
         	    	}
         	    	else if(feature.layer.type === "circle"){
-                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
+        	    		map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
         	    	}
         	    	
         	        selectedFeatures.push(feature);
@@ -838,7 +867,7 @@
         	    	map.getCanvas().style.cursor = originalCursor;
         	    	
         	    	map.setFilter("target-point-hover", ["==", "id", ""]);
-                map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+                    map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
         	    	
         	    	if(selectedFeatures.length > 0){
         	    		hoverCallback(null);

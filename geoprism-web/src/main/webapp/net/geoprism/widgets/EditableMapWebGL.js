@@ -37,7 +37,7 @@
     };
     $scope.sharedGeoData = {};
 
-    var selectedFeature = null;
+    controller._selectedFeature = null;
 
     controller.init = function() {
 
@@ -54,14 +54,14 @@
         if (controller._isEditing) { return; }
 
         // is it already selected?
-        if (selectedFeature != null
-            && selectedFeature.properties.id == feature.properties.id) {
+        if (controller._selectedFeature != null
+            && controller._selectedFeature.properties.id == feature.properties.id) {
           controller.unselectFeature(feature);
           isDoubleClick = true;
-          selectedFeature = null;
+          controller._selectedFeature = null;
         } else {
           controller.selectFeature(feature);
-          selectedFeature = feature;
+          controller._selectedFeature = feature;
         }
 
         $scope.$emit('locationFocus', {
@@ -184,6 +184,7 @@
     }
 
     controller.unselectFeature = function(feature) {
+      controller._selectedFeature = null;
       $scope.$emit('locationUnhighlight');
       
       webGLMapService.unselectFeature(feature);
@@ -197,16 +198,12 @@
       webGLMapService.focusOffFeature(feature);
     }
 
-    controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj,
-        type, stackingIndex) {
-      webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type,
-          stackingIndex);
+    controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
+      webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
     }
 
-    controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj,
-        type, stackingIndex) {
-      webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj,
-          type, stackingIndex);
+    controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
+      webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
     }
 
     controller.startEditingFeatures = function(featureIds) {
@@ -287,10 +284,6 @@
     			unionedFeatures.push(ft)
     		}
     	}
-    	else{
-    		console.log("already")
-    	}
-    	
       };
       //
       // end of polygon fragmentation fix
@@ -354,7 +347,7 @@
       // TODO: It might be better to update the rendered polygons purely clientside, but that would require converting from whatever
       //   format the draw plugin exports into something that the mapbox gl plugin knows how to handle. This may be easy? I don't know.
       //   At least this way if the editing persists in some weird way its immediately obvious to the user, even if its slower.
-      $scope.$emit('locationReloadAll');
+      $scope.$emit('locationReloadCurrent');
     }
 
     controller.refreshBaseLayer = function() {
@@ -381,6 +374,7 @@
             var feature = data.features[i];
             feature.properties.isHoverable = true;
             feature.properties.isClickable = true;
+//            feature.properties.height = Math.round(Math.random() * 1000);
             geomType = feature.geometry.type.toLowerCase();
           }
 
@@ -405,15 +399,14 @@
             var feature = layer.features[l];
             feature.properties.isHoverable = i === 0 ? false : true;
             feature.properties.isClickable = i === 0 ? false : true;
+//            feature.properties.height = Math.round(Math.random() * 1000);
           }
 
           if (i === 0) {
-            controller.updateVectorLayer(layer, "context-multipolygon",
-                $scope.contextStyle, "CONTEXT", 1);
+            controller.updateVectorLayer(layer, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
             controller.zoomToLayersExtent([ "context-multipolygon" ]);
           } else if (i === 1) {
-            controller.updateVectorLayer(layer, "target-multipolygon",
-                $scope.targetStyle, "TARGET", 2);
+            controller.updateVectorLayer(layer, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
             controller.zoomToLayersExtent([ "target-multipolygon" ]);
           }
         }
@@ -551,7 +544,7 @@
         this._bEdit = $(document.createElement("button"));
         this._bEdit.addClass('fa fa-pencil-square-o');
         this._bEdit.css("color", "black");
-        this._bEdit.css("font-size", "14px");
+        this._bEdit.css("font-size", "18px");
         this._bEdit.click(function() {
           that._controller.startEditingFeatures(null);
         });
@@ -561,7 +554,7 @@
         this._bSave.addClass('fa fa-floppy-o');
         this._bSave.css("color", "black");
         this._bSave.css("display", "none");
-        this._bSave.css("font-size", "14px");
+        this._bSave.css("font-size", "16px");
         this._bSave.click(function() {
           that._controller.saveEditing();
         });
@@ -571,7 +564,7 @@
         this._bCancel.addClass('fa fa-ban');
         this._bCancel.css("color", "black");
         this._bCancel.css("display", "none");
-        this._bCancel.css("font-size", "14px");
+        this._bCancel.css("font-size", "16px");
         this._bCancel.click(function() {
           that._controller.cancelEditing();
         });
