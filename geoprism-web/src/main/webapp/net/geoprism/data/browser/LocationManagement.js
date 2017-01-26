@@ -71,7 +71,7 @@
     controller.open = function(entityId) {
       if(entityId && entityId.length > 0) {
         $scope.$broadcast('cancelEditLocation', {
-          id : entity.id
+          id : entityId
         });
         
         var connection = {

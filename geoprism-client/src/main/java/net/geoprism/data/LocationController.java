@@ -41,6 +41,7 @@ import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.ExcludeConfiguration;
+import net.geoprism.JSONStringImpl;
 import net.geoprism.ListSerializable;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
@@ -77,9 +78,7 @@ public class LocationController implements Reloadable
       universalId = universals.get(0).getId();
     }
 
-    String layers = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
-
-    JSONObject object = new JSONObject(layers);
+    String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
 
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getId(), universalId, 200);
 
@@ -89,7 +88,7 @@ public class LocationController implements Reloadable
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());
-    response.set("geometries", object.get("geometries"));
+    response.set("geometries", new JSONStringImpl(geometries));
     // response.set("layers", object.get("layers"));
 
     return response;
