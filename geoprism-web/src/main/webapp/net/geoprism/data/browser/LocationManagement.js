@@ -288,6 +288,10 @@
       }
     });
     
+    $scope.$on('locationReloadAll', function(event){
+      controller.init();
+    });
+    
     $scope.$on('hoverChange', function(event, data){
       $scope.hoverId = data.id;
     });

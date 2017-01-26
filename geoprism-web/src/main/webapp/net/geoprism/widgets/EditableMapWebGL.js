@@ -350,6 +350,11 @@
       this._editingControl.deleteAll();
       
       controller._isEditing = false;
+      
+      // TODO: It might be better to update the rendered polygons purely clientside, but that would require converting from whatever
+      //   format the draw plugin exports into something that the mapbox gl plugin knows how to handle. This may be easy? I don't know.
+      //   At least this way if the editing persists in some weird way its immediately obvious to the user, even if its slower.
+      $scope.$emit('locationReloadAll');
     }
 
     controller.refreshBaseLayer = function() {
