@@ -117,8 +117,6 @@
         }
       };
       
-      console.log(JSON.stringify($scope.universal));
-
       locationService.select(connection, $scope.entity.id, $scope.universal.value, $scope.layers);      
     }
     
