@@ -21,12 +21,6 @@ package net.geoprism.data;
 import java.util.Arrays;
 import java.util.List;
 
-import net.geoprism.ExcludeConfiguration;
-import net.geoprism.ListSerializable;
-import net.geoprism.gis.geoserver.GeoserverProperties;
-import net.geoprism.ontology.GeoEntityUtilDTO;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +41,11 @@ import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.ExcludeConfiguration;
+import net.geoprism.ListSerializable;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.ontology.GeoEntityUtilDTO;
 
 @Controller(url = "location")
 public class LocationController implements Reloadable
@@ -87,7 +86,7 @@ public class LocationController implements Reloadable
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());
-    response.set("layers", object.get("layers"));
+//    response.set("layers", object.get("layers"));
     response.set("geometries", object.get("geometries"));
 
     return response;

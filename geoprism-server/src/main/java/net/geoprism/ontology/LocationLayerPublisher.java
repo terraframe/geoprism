@@ -3,23 +3,20 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -177,7 +174,7 @@ public class LocationLayerPublisher extends LayerPublisher
     return LayerType.POLYGON;
   }
 
-  public void writeGeojson(Writer writer)
+  public void writeGeojson(JSONWriter writer)
   {
     GeoEntity entity = GeoEntity.get(this.id);
     Universal universal = entity.getUniversal();
@@ -185,20 +182,19 @@ public class LocationLayerPublisher extends LayerPublisher
 
     try
     {
-      JSONWriter jw = new JSONWriter(writer);
-      jw.array();
+      writer.array();
 
       LayerType entityLayerType = this.getEntityLayerType(descendants);
       ValueQuery entityQuery = this.getEntityQuery(entity, entityLayerType);
 
-      this.writeGeojson(jw, entityQuery);
+      this.writeGeojson(writer, entityQuery);
 
       LayerType childLayerType = this.getChildLayerType(descendants);
       ValueQuery childQuery = this.getChildQuery(entity, childLayerType);
 
-      this.writeGeojson(jw, childQuery);
+      this.writeGeojson(writer, childQuery);
 
-      jw.endArray();
+      writer.endArray();
     }
     catch (JSONException | IOException e)
     {
@@ -206,24 +202,24 @@ public class LocationLayerPublisher extends LayerPublisher
     }
   }
 
-  private void writeGeojson(JSONWriter jw, ValueQuery query) throws IOException
+  private void writeGeojson(JSONWriter writer, ValueQuery query) throws IOException
   {
-    jw.object();
+    writer.object();
 
-    jw.key("type");
-    jw.value("FeatureCollection");
-    jw.key("features");
-    jw.array();
+    writer.key("type");
+    writer.value("FeatureCollection");
+    writer.key("features");
+    writer.array();
 
-    long count = this.writeFeatures(jw, query);
+    long count = this.writeFeatures(writer, query);
 
-    jw.endArray();
+    writer.endArray();
 
-    jw.key("totalFeatures");
-    jw.value(count);
+    writer.key("totalFeatures");
+    writer.value(count);
 
-    this.writeCRS(jw);
+    this.writeCRS(writer);
 
-    jw.endObject();
+    writer.endObject();
   }
 }
