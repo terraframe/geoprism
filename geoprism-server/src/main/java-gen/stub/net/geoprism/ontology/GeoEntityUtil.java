@@ -861,12 +861,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     StringWriter writer = new StringWriter();
 
     JSONWriter jw = new JSONWriter(writer);
-    jw.object();
+//    jw.object();
     
-    jw.key("geometries");
+//    jw.key("geometries");
     publisher.writeGeojson(jw);
     
-    jw.endObject();
+//    jw.endObject();
 
     return writer.toString();
   }
