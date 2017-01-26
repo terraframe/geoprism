@@ -198,23 +198,18 @@
       webGLMapService.focusOffFeature(feature);
     }
 
-    controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj,
-        type, stackingIndex) {
-      webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type,
-          stackingIndex);
+    controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
+      webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
     }
 
-    controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj,
-        type, stackingIndex) {
-      webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj,
-          type, stackingIndex);
+    controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
+      webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
     }
 
     controller.startEditingFeatures = function(featureIds) {
       var map = controller.getWebGLMap();
       
       controller.cancelEditing();
-      
       this.unselectFeature(null);
       
       // Add features to editing control
@@ -256,14 +251,14 @@
         
         
         var containsFeature = function(unionedFeatures, featureId){
-      	  for(var i=0; i<unionedFeatures.length; i++){
-      		  var ft = unionedFeatures[i];
-      		  if(ft.properties.geoId === featureId){
-      			  return true;
-      		  }
-      	  };
-      	  
-      	  return false;
+          for(var i=0; i<unionedFeatures.length; i++){
+            var ft = unionedFeatures[i];
+            if(ft.properties.geoId === featureId){
+              return true;
+            }
+          };
+          
+          return false;
         }
         
         
@@ -274,22 +269,18 @@
         //
         var unionedFeatures = [];
         for(var i=0; i<features.length; i++){
-      	var ft = features[i];
-      	var ftId = ft.properties.geoId;
-      	
-      	if(!containsFeature(unionedFeatures, ftId)){
-      		var unionedFeature = unionFeatures(features, ft, i);
-      		if(unionedFeature){
-      			unionedFeatures.push(unionedFeature);
-      		}
-      		else{
-      			unionedFeatures.push(ft)
-      		}
-      	}
-      	else{
-      		console.log("already")
-      	}
-      	
+        var ft = features[i];
+        var ftId = ft.properties.geoId;
+        
+        if(!containsFeature(unionedFeatures, ftId)){
+          var unionedFeature = unionFeatures(features, ft, i);
+          if(unionedFeature){
+            unionedFeatures.push(unionedFeature);
+          }
+          else{
+            unionedFeatures.push(ft)
+          }
+        }
         };
         //
         // end of polygon fragmentation fix
@@ -306,7 +297,7 @@
         throw e;
       }
       
-      // enable editing controls
+      // After all the hard stuff has been done, now we can enable editing controls
       controller._geoprismEditingControl.startEditing();
       $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
       
@@ -391,6 +382,7 @@
             var feature = data.features[i];
             feature.properties.isHoverable = true;
             feature.properties.isClickable = true;
+//            feature.properties.height = Math.round(Math.random() * 1000);
             geomType = feature.geometry.type.toLowerCase();
           }
 
@@ -415,15 +407,14 @@
             var feature = layer.features[l];
             feature.properties.isHoverable = i === 0 ? false : true;
             feature.properties.isClickable = i === 0 ? false : true;
+//            feature.properties.height = Math.round(Math.random() * 1000);
           }
 
           if (i === 0) {
-            controller.updateVectorLayer(layer, "context-multipolygon",
-                $scope.contextStyle, "CONTEXT", 1);
+            controller.updateVectorLayer(layer, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
             controller.zoomToLayersExtent([ "context-multipolygon" ]);
           } else if (i === 1) {
-            controller.updateVectorLayer(layer, "target-multipolygon",
-                $scope.targetStyle, "TARGET", 2);
+            controller.updateVectorLayer(layer, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
             controller.zoomToLayersExtent([ "target-multipolygon" ]);
           }
         }

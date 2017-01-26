@@ -94,8 +94,8 @@
       return service.map.getMap();
     }
     
-    service.addVectorLayer = function(layer, layerName, styleObj, type, stackingIndex) {
-    	service.map.addVectorLayer(layer, layerName, styleObj, type, stackingIndex);
+    service.addVectorLayer = function(layer, layerName, styleObj, type, stackingIndex, is3d) {
+    	service.map.addVectorLayer(layer, layerName, styleObj, type, stackingIndex, is3d);
     }
     
     service.updateVectorLayer = function(layer, layerName, styleObj, type, stackingIndex) {

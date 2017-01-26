@@ -18,7 +18,6 @@ package net.geoprism.ontology;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
@@ -36,6 +35,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
+import net.geoprism.JSONStringImpl;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.geoserver.GeoserverLayerIF;
@@ -46,11 +46,14 @@ public abstract class LayerPublisher
     POINT, POLYGON
   }
 
-  private String layers;
+  private String       layers;
+
+  private GeometryJSON gjson;
 
   public LayerPublisher(String layers)
   {
     this.layers = layers;
+    this.gjson = new GeometryJSON(8);
   }
 
   protected void removeGeoserverLayers() throws JSONException
@@ -156,19 +159,18 @@ public abstract class LayerPublisher
     return properties;
   }
 
-  protected JSONObject getGeometry(ValueObject object) throws IOException, JSONException
+  protected void writeGeometry(ValueObject object, JSONWriter writer) throws IOException, JSONException
   {
     StringWriter geomWriter = new StringWriter();
 
     AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
 
-    GeometryJSON gjson = new GeometryJSON(8);
-    gjson.write(attributeIF.getGeometry(), geomWriter);
+    this.gjson.write(attributeIF.getGeometry(), geomWriter);
 
-    return new JSONObject(geomWriter.toString());
+    writer.value(new JSONStringImpl(geomWriter.toString()));
   }
 
-  protected long writeFeatures(JSONWriter jw, ValueQuery query) throws IOException
+  protected long writeFeatures(JSONWriter writer, ValueQuery query) throws IOException
   {
     long count = 0;
 
@@ -185,15 +187,21 @@ public abstract class LayerPublisher
 
         JSONObject properties = this.getProperties(object);
 
-        JSONObject geometry = this.getGeometry(object);
+        writer.object();
 
-        JSONObject feature = new JSONObject();
-        feature.put("type", "Feature");
-        feature.put("geometry", geometry);
-        feature.put("properties", properties);
-        feature.put("id", object.getValue(GeoEntity.ID));
+        writer.key("type");
+        writer.value("Feature");
 
-        jw.value(feature);
+        writer.key("properties");
+        writer.value(properties);
+
+        writer.key("id");
+        writer.value(object.getValue(GeoEntity.ID));
+
+        writer.key("geometry");
+        this.writeGeometry(object, writer);
+
+        writer.endObject();
       }
     }
     finally
@@ -208,11 +216,6 @@ public abstract class LayerPublisher
   {
     jw.key("crs");
     jw.value(new JSONObject("{\"type\":\"name\",\"properties\":{\"name\":\"urn:ogc:def:crs:EPSG::4326\"}}"));
-  }
-
-  public void writeGeojson(Writer writer)
-  {
-    this.writeGeojson(new JSONWriter(writer));
   }
 
   public abstract void writeGeojson(JSONWriter writer);
