@@ -18,21 +18,16 @@ package net.geoprism.ontology;
 
 import java.io.StringWriter;
 import java.sql.Savepoint;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import net.geoprism.ConfigurationIF;
-import net.geoprism.ConfigurationService;
-import net.geoprism.KeyGeneratorIF;
-import net.geoprism.TermSynonymRelationship;
-import net.geoprism.data.DatabaseUtil;
-import net.geoprism.data.importer.SeedKeyGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +44,7 @@ import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
@@ -67,6 +63,17 @@ import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
+import net.geoprism.KeyGeneratorIF;
+import net.geoprism.TermSynonymRelationship;
+import net.geoprism.data.DatabaseUtil;
+import net.geoprism.data.GeometrySerializationUtil;
+import net.geoprism.data.importer.SeedKeyGenerator;
 
 public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -80,6 +87,88 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     super();
   }
 
+  /**
+   * MdMethod
+   * 
+   * Accepts a JSON FeatureCollection from the client. This JSON is directly produced by the Mapbox GL Draw plugin.
+   */
+  @Transaction
+  public static void applyGeometries(java.lang.String featureCollection)
+  {
+    GeometryFactory geometryFactory = new GeometryFactory();
+    GeometryHelper geometryHelper = new GeometryHelper();
+    GeometrySerializationUtil serializer = new GeometrySerializationUtil(geometryFactory);
+    
+    HashMap<String, List<Polygon>> multiPolyMap = new HashMap<String, List<Polygon>>();
+    
+    try {
+      JSONObject json = new JSONObject(featureCollection);
+      
+      JSONArray features = json.getJSONArray("features");
+      
+      for (int i = 0; i < features.length(); ++i)
+      {
+        JSONObject feature = features.getJSONObject(i);
+        
+        String type = feature.getString("type").toLowerCase();
+        
+        if (type.equals("feature"))
+        {
+          JSONObject geometry = feature.getJSONObject("geometry");
+          String featureType = geometry.getString("type").toLowerCase();
+          
+          JSONObject properties = feature.getJSONObject("properties");
+          String geoEntId = properties.getString("id");
+          JSONArray coordinates = geometry.getJSONArray("coordinates");
+          
+          if (!multiPolyMap.containsKey(geoEntId))
+          {
+            multiPolyMap.put(geoEntId, new ArrayList<Polygon>());
+          }
+          List<Polygon> polygons = multiPolyMap.get(geoEntId);
+          
+          if (featureType.equals("polygon"))
+          {
+            coordinates = coordinates.getJSONArray(0);
+            
+            Polygon polygon = serializer.jsonToPolygon(coordinates);
+            polygons.add(polygon);
+          }
+          else if (featureType.equals("multipolygon"))
+          {
+            for (int p = 0; p < coordinates.length(); ++p)
+            {
+              JSONArray jsonP = coordinates.getJSONArray(p).getJSONArray(0);
+              
+              Polygon polygon = serializer.jsonToPolygon(jsonP);
+              polygons.add(polygon);
+            }
+          }
+          else
+          {
+            throw new UnsupportedOperationException();
+          }
+        }
+      }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    
+    Set<String> ids = multiPolyMap.keySet();
+    for (String id : ids)
+    {
+      List<Polygon> listPoly = multiPolyMap.get(id);
+      
+      MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
+      
+      GeoEntity geo = GeoEntity.lock(id);
+      geo.setGeoPoint(geometryHelper.getGeoPoint(multiPoly));
+      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multiPoly));
+      geo.setWkt(multiPoly.toText());
+      geo.apply();
+    }
+  }
+  
   /**
    * Merges the source geo entity into the destination geo entity and creates a new synonym with the name of the source
    * geo entity.
