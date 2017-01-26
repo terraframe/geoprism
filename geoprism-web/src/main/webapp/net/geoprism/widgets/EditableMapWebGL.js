@@ -53,8 +53,6 @@
         
         if (controller._isEditing) { return; }
 
-        controller.stopEditing();
-
         // is it already selected?
         if (selectedFeature != null
             && selectedFeature.properties.id == feature.properties.id) {
@@ -214,6 +212,8 @@
     controller.startEditingFeatures = function(featureIds) {
       var map = controller.getWebGLMap();
       
+      controller.cancelEditing();
+      
       this.unselectFeature(null);
       
       // enable editing controls
@@ -246,7 +246,7 @@
       controller._isEditing = true;
     }
 
-    controller.stopEditing = function() {
+    controller.cancelEditing = function() {
       if (!controller._isEditing) { return; }
       
       var map = controller.getWebGLMap();
@@ -254,8 +254,32 @@
       controller._geoprismEditingControl.stopEditing();
       $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 
-      this._editingControl.deleteAll();
       map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
+      this._editingControl.deleteAll();
+      
+      controller._isEditing = false;
+    }
+    
+    controller.saveEditing = function() {
+      if (!controller._isEditing) { return; }
+      
+      var map = controller.getWebGLMap();
+      
+      controller._geoprismEditingControl.stopEditing();
+      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+      
+      map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
+      var featureCollection = this._editingControl.getAll();
+      
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(data) {
+          // Intentionally empty
+        }      
+      };
+      locationService.applyGeometries(connection, featureCollection);
+      
+      this._editingControl.deleteAll();
       
       controller._isEditing = false;
     }
@@ -383,7 +407,7 @@
     });
     
     $scope.$on('cancelEditLocation', function(event, data) {
-      controller.stopEditing();
+      controller.cancelEditing();
     });
 
     // Recieve shared data from parent controller based on user selection of
@@ -445,7 +469,9 @@
       },
       
       onAdd : function(map) {
+        var that = this;
         this._map = map;
+        
         this._container = $(document.createElement('div'));
         this._container.addClass('mapboxgl-ctrl-group mapboxgl-ctrl');
 
@@ -453,6 +479,9 @@
         this._bEdit.addClass('fa fa-pencil-square-o');
         this._bEdit.css("color", "black");
         this._bEdit.css("font-size", "14px");
+        this._bEdit.click(function() {
+          that._controller.startEditingFeatures(null);
+        });
         this._container.append(this._bEdit);
         
         this._bSave = $(document.createElement("button"));
@@ -460,17 +489,21 @@
         this._bSave.css("color", "black");
         this._bSave.css("display", "none");
         this._bSave.css("font-size", "14px");
-        this._container.append(this._bSave);
-
-        var that = this;
-        this._bEdit.click(function() {
-          that._controller.startEditingFeatures(null);
-        });
-        
         this._bSave.click(function() {
-          that._controller.stopEditing();
+          that._controller.saveEditing();
         });
-
+        this._container.append(this._bSave);
+        
+        this._bCancel = $(document.createElement("button"));
+        this._bCancel.addClass('fa fa-ban');
+        this._bCancel.css("color", "black");
+        this._bCancel.css("display", "none");
+        this._bCancel.css("font-size", "14px");
+        this._bCancel.click(function() {
+          that._controller.cancelEditing();
+        });
+        this._container.append(this._bCancel);
+        
         return this._container[0];
       },
       
@@ -482,11 +515,13 @@
       startEditing: function() {
         this._bEdit.css("display", "none");
         this._bSave.css("display", "block");
+        this._bCancel.css("display", "block");
       },
       
       stopEditing : function() {
         this._bEdit.css("display", "block");
         this._bSave.css("display", "none");
+        this._bCancel.css("display", "none");
       }
     }
   });

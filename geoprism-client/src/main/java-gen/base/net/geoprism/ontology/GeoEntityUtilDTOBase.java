@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -318518985)
+@com.runwaysdk.business.ClassSignature(hash = -1096544226)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
-  private static final long serialVersionUID = -318518985;
+  private static final long serialVersionUID = -1096544226;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -35,6 +17,14 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
   }
   
   public static java.lang.String ID = "id";
+  public static final void applyGeometries(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String featureCollection)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{featureCollection};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "applyGeometries", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final void deleteEntityProblem(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String problemId)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
