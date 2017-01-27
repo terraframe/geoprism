@@ -244,46 +244,12 @@
         };
       }
       
-      controller.highlight(child);
       widgetService.animate("#location-explorer", {scrollTop: this._selected.offset().top}, "slow");
     },
     
-    controller.highlight = function(child)
-    {
-      this.unhighlight();
-      
-      if (child != null)
-      {
-        this._selected = $("#" + child.geoId + child.id);
-        
-        this._selected.css('background-color', 'rgb(160, 160, 255)');
-      }
-    },
-    
-    controller.unhighlight = function()
-    {
-      if (this._selected != null)
-      {
-        this._selected.css("background-color", "");
-      }
-      
-      this._selected = null;
-    },
-    
-    $scope.$on('locationUnhighlight', function(event, data){
-      controller.unhighlight();
-    });
     
     $scope.$on('locationFocus', function(event, data){
-      if (data.isDoubleClick)
-      {
-        controller.highlight(null);
         controller.open(data.id);
-      }
-      else
-      {
-        controller.scrollTo(data.id);
-      }
     });
     
     $scope.$on('locationReloadCurrent', function(event){

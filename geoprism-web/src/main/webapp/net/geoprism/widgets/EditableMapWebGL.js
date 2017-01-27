@@ -17,8 +17,7 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function() {
-  function EditableMapWebGLController($scope, $rootScope, localizationService,
-      webGLMapService, locationService, $sce, $compile) {
+  function EditableMapWebGLController($scope, $rootScope, localizationService, webGLMapService, locationService, $sce, $compile) {
     var controller = this;
 
     $scope.renderBase = true;
@@ -37,7 +36,6 @@
     };
     $scope.sharedGeoData = {};
 
-    controller._selectedFeature = null;
 
     controller.init = function() {
 
@@ -49,26 +47,10 @@
       }
 
       var featureClickCallback = function(feature, map) {
-//        var isDoubleClick = false;
-//        
-//        if (controller._isEditing) { return; }
-//
-//        // is it already selected?
-//        if (controller._selectedFeature != null
-//            && controller._selectedFeature.properties.id == feature.properties.id) {
-//          controller.unselectFeature(feature);
-//          isDoubleClick = true;
-//          controller._selectedFeature = null;
-//        } else {
-//          controller.selectFeature(feature);
-//          controller._selectedFeature = feature;
-//        }
-//
-//        $scope.$emit('locationFocus', {
-//          id : feature.properties.id,
-//          isDoubleClick : isDoubleClick
-//        });
-//        $scope.$apply();
+        $scope.$emit('locationFocus', {
+          id : feature.properties.id
+        });
+        $scope.$apply();
       }
 
       //
@@ -89,20 +71,14 @@
         }
       };
 
-      controller.addVectorLayer(emptyGeoJSON, "context-multipolygon",
-          $scope.contextStyle, "CONTEXT", 2);
-      controller.addVectorLayer(emptyGeoJSON, "context-point",
-          $scope.contextStyle, "CONTEXT", 2);
+      controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
+      controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2);
 
-      controller.addVectorLayer(emptyGeoJSON, "target-multipolygon",
-          $scope.targetStyle, "TARGET", 2);
-      controller.addVectorLayer(emptyGeoJSON, "target-point",
-          $scope.targetStyle, "TARGET", 2);
+      controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+      controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
 
-      controller.addVectorHoverEvents(hoverCallback, [ "target-point",
-          "target-multipolygon" ]);
-      controller.addVectorClickEvents(featureClickCallback, [ "target-point",
-          "target-multipolygon" ]);
+      controller.addVectorHoverEvents(hoverCallback, [ "target-point", "target-multipolygon" ]);
+      controller.addVectorClickEvents(featureClickCallback, [ "target-point", "target-multipolygon" ]);
       //
       // end
       //
@@ -184,9 +160,6 @@
     }
 
     controller.unselectFeature = function(feature) {
-      controller._selectedFeature = null;
-      $scope.$emit('locationUnhighlight');
-      
       webGLMapService.unselectFeature(feature);
     }
 
@@ -400,8 +373,8 @@
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData;
 
-        for (var i = 0; i < data.geometries.geometries.length; i++) {
-          var layer = data.geometries.geometries[i];
+        for (var i = 0; i < data.geometries.length; i++) {
+          var layer = data.geometries[i];
 
           for (var l = 0; l < layer.features.length; l++) {
             var feature = layer.features[l];
@@ -600,9 +573,7 @@
     }
   });
 
-  angular.module("editable-map-webgl", [ "styled-inputs",
-      "localization-service", "webgl-map-service", "location-service" ]);
-  angular.module("editable-map-webgl").controller('editableMapWebglController',
-      EditableMapWebGLController).directive('editableMapWebgl',
-      EditableMapWebGL)
+  angular.module("editable-map-webgl", [ "styled-inputs", "localization-service", "webgl-map-service", "location-service" ]);
+  angular.module("editable-map-webgl").controller('editableMapWebglController', EditableMapWebGLController)
+  	.directive('editableMapWebgl', EditableMapWebGL)
 })();
