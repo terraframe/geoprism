@@ -341,7 +341,7 @@
 	  			 	        "type": "fill-extrusion",
 	  			 	        "paint": {
 	  			 	        	'fill-extrusion-color': styleObj.fill,
-	  			 	        	'fill-extrusion-height': 200,
+	  			 	        	'fill-extrusion-height': 100,
 //	  			 	        	'fill-extrusion-height': {
 //	  			 	        	 'type': 'identity',
 //	  			 	        	 'property': 'height'

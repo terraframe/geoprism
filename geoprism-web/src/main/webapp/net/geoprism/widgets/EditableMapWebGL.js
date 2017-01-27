@@ -355,7 +355,9 @@
             var feature = data.features[i];
             feature.properties.isHoverable = true;
             feature.properties.isClickable = true;
-//            feature.properties.height = Math.round(Math.random() * 1000);
+            // TODO: Remove this test code
+            feature.properties.height = Math.round(Math.random() * 1000);
+            
             geomType = feature.geometry.type.toLowerCase();
           }
 
@@ -380,7 +382,8 @@
             var feature = layer.features[l];
             feature.properties.isHoverable = i === 0 ? false : true;
             feature.properties.isClickable = i === 0 ? false : true;
-//            feature.properties.height = Math.round(Math.random() * 1000);
+            // TODO: Remove this test code
+            feature.properties.height = Math.round(Math.random() * 1000);
           }
 
           if (i === 0) {
