@@ -392,8 +392,8 @@
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData;
 
-        for (var i = 0; i < data.geometries.length; i++) {
-          var layer = data.geometries[i];
+        for (var i = 0; i < data.geometries.geometries.length; i++) {
+          var layer = data.geometries.geometries[i];
 
           for (var l = 0; l < layer.features.length; l++) {
             var feature = layer.features[l];

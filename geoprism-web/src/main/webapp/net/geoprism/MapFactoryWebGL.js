@@ -253,8 +253,8 @@
           });
 		  
 		  // add scale bar
-		  map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left'}));
-		  map.addControl(new mapboxgl.NavigationControl());
+		  map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left', unit: 'imperial'}));
+		  //map.addControl(new mapboxgl.NavigationControl(), 'top-left');
         },
         
         // TODO: convert to webgl
