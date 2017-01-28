@@ -144,6 +144,15 @@
 		    		var feature = layer.features[i];
 		    		feature.properties.isHoverable = true;
 		    		feature.properties.isClickable = true;
+		    		
+		    		// TODO: Remove this temp demo code
+	  	    		if(feature.properties.displayLabel.startsWith("ES")){
+	  	    			feature.properties.height = 0;
+	  	    		}
+	  	    		else{
+	  	    			feature.properties.height = Math.round(Math.random() * 100);
+	  	    		}
+	  	    		
 		    		geomType = feature.geometry.type.toLowerCase();
 				  }
 				  
@@ -160,13 +169,19 @@
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
 			  var data = $scope.sharedGeoData;
 			  
-			  console.log("refresh the layers: ", sharedGeoData)
-			
 			  var contextCallback = function(data) {
 				  for(var i=0; i<data.features.length; i++){
 	  	    		var feature = data.features[i];
 	  	    		feature.properties.isHoverable = false;
 	  	    		feature.properties.isClickable = false;
+	  	    		
+	  	    		// TODO: Remove this temp demo code
+	  	    		if(feature.properties.displayLabel.startsWith("ES")){
+	  	    			feature.properties.height = 0;
+	  	    		}
+	  	    		else{
+	  	    			feature.properties.height = Math.round(Math.random() * 100);
+	  	    		}
 	  			  }
 				  
 				  controller.updateVectorLayer(data, "context-point", $scope.contextStyle, "CONTEXT", 1);

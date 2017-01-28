@@ -247,7 +247,6 @@
 		  map.on("data.updated", function(data){
     		// TODO: remove hard coded layer names
     		if( ! map.isEasing()){
-    			console.log("zoom zoom zoom!")
     			that.zoomToLayersExtent(that.LAYERS_LIST);
     		}
           });
@@ -341,11 +340,11 @@
 	  			 	        "type": "fill-extrusion",
 	  			 	        "paint": {
 	  			 	        	'fill-extrusion-color': styleObj.fill,
-	  			 	        	'fill-extrusion-height': 100,
-//	  			 	        	'fill-extrusion-height': {
-//	  			 	        	 'type': 'identity',
-//	  			 	        	 'property': 'height'
-//	  			 	        	},
+//	  			 	        	'fill-extrusion-height': 100,
+	  			 	        	'fill-extrusion-height': {
+	  			 	        	 'type': 'identity',
+	  			 	        	 'property': 'height'
+	  			 	        	},
 	  			 	        	'fill-extrusion-base': 0,
 	  			 	        	'fill-extrusion-opacity': .8
 	  			 	        }
@@ -414,14 +413,14 @@
                  });
           	    }
           	    
-          	    if (that._updateVectorLayersAfterLoading != null)
-          	    {
-          	      for (var i = 0; i < that._updateVectorLayersAfterLoading.length; ++i)
-          	      {
-          	        that._updateVectorLayersAfterLoading[i]();
-          	      }
-          	    }
-          	    that._areLayersLoaded = true;
+//          	    if (that._updateVectorLayersAfterLoading != null)
+//          	    {
+//          	      for (var i = 0; i < that._updateVectorLayersAfterLoading.length; ++i)
+//          	      {
+//          	        that._updateVectorLayersAfterLoading[i]();
+//          	      }
+//          	    }
+//          	    that._areLayersLoaded = true;
             });
             
             
@@ -439,19 +438,19 @@
         	var map = this.getMap();
         	var that = this;
         	
-            if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
-      	    {
-        	  if (this._updateVectorLayersAfterLoading == null)
-      	      {
-        	    this._updateVectorLayersAfterLoading = [];
-      	      }
-        	  
-        	  this._updateVectorLayersAfterLoading.push(function(){
-                that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
-              });
-        	  
-        	  return;
-      	    }
+//            if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
+//      	    {
+//        	  if (this._updateVectorLayersAfterLoading == null)
+//      	      {
+//        	    this._updateVectorLayersAfterLoading = [];
+//      	      }
+//        	  
+//        	  this._updateVectorLayersAfterLoading.push(function(){
+//                that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
+//              });
+//        	  
+//        	  return;
+//      	    }
         	
         	var layer = map.getLayer(layerName);
 			
@@ -602,16 +601,6 @@
         		});
         	}
         	
-        	
-//        	var layers = this.getAllVectorLayers();
-//        	for(var i=0; i<layers.length; i++){
-//        		var layer = layers[i];
-//      			var layerProps = layer.getProperties()
-//      			if(layerProps.hasOwnProperty("type") && layerProps.type === type){
-//      				layersArr.push(layer);
-//      			}
-//        	}
-        	
         	return layersArr;
         },
         
@@ -759,35 +748,6 @@
 	        		}
         		}
         	}
-        	
-//        	for(var i=0; i<layers.length; i++){
-//        		var layer = layers[i];
-//    			var features = layer.getSource().getFeatures();
-//    			features.forEach(function(feature){
-//    				if(that.arrayContainsString(featureGeoIds, feature.getProperties().geoid)){
-//    					var featureExt = feature.getGeometry().getExtent();
-//    					if(fullExt){
-//            				if(featureExt[0] < fullExt[0]){
-//            					fullExt[0] = featureExt[0];
-//            				}
-//            				if(featureExt[1] < fullExt[1]){
-//            					fullExt[1] = featureExt[1];
-//            				}
-//            				if(featureExt[2] > fullExt[2]){
-//            					fullExt[2] = featureExt[2];
-//            				}
-//            				if(featureExt[3] > fullExt[3]){
-//            					fullExt[3] = featureExt[3];
-//            				}
-//            			}
-//            			else{
-//            				fullExt = featureExt;
-//            			}
-//    				}
-//    			});
-//        	}
-//        	
-//        	this.zoomToExtent(fullExt);
         },
         
         
