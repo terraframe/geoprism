@@ -16,6 +16,7 @@
  */
 package net.geoprism.ontology;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.Savepoint;
 import java.util.ArrayList;
@@ -859,16 +860,25 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, existingLayerNames);
 
     StringWriter writer = new StringWriter();
-
     JSONWriter jw = new JSONWriter(writer);
-//    jw.object();
+    String geoJson = null;
     
-//    jw.key("geometries");
+    try
+    {
     publisher.writeGeojson(jw);
     
-//    jw.endObject();
+    geoJson = writer.toString();
+    }
+    finally
+    {
+    	try {
+			writer.close();
+		} catch (IOException e) {
+			throw new ProgrammingErrorException("Could not close IO stream.", e);
+		}
+    }
 
-    return writer.toString();
+    return geoJson;
   }
 
   @Transaction
