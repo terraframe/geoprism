@@ -294,7 +294,9 @@
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
-    			 	            "circle-color": styleObj.fill
+    			 	            "circle-color": styleObj.fill,
+    			 	            "circle-stroke-width": styleObj.strokeWidth,
+    			 	            "circle-stroke-color": styleObj.strokeColor
     			 	        }
     		     	    });
     		     	    
@@ -345,7 +347,11 @@
 	  			 	        	 'type': 'identity',
 	  			 	        	 'property': 'height'
 	  			 	        	},
-	  			 	        	'fill-extrusion-base': 0,
+	  			 	        	'fill-extrusion-base': {
+		  			 	        	 'type': 'identity',
+		  			 	        	 'property': 'base'
+		  			 	        },
+//	  			 	        	'fill-extrusion-base': 0,
 	  			 	        	'fill-extrusion-opacity': .8
 	  			 	        }
 	  			 	    }
@@ -451,17 +457,43 @@
 //        	  
 //        	  return;
 //      	    }
-        	
-        	var layer = map.getLayer(layerName);
-			
-    		if (layer) {
-          	  var layerSourceName = layer.source;
-          	  map.getSource(layerSourceName).setData(layerAsGeoJSON);
-    		}
-			
-    		map.once('data', function () {
-    		  map.fire("data.updated", true);
-    		});
+//        	map.on('load', function () {
+	        	var targetLayer = map.getLayer(layerName);
+	        	
+	    		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
+	
+	        	if(targetLayer && targetLayer.id === "target-multipolygon"){
+	        		
+	        		var otherSourceName = "target-point";
+	        		var otherSource = map.getSource(otherSourceName);
+	        		if(otherSource && otherSource._data){
+	        			otherSource.setData(emptyGeoJSON)
+	        		}
+	        		
+	        		var layerSourceName = targetLayer.source;
+	        		map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	        	}
+	        	else if(targetLayer && targetLayer.id === "target-point"){
+	        		
+	        		var otherSourceName = "target-multipolygon";
+	        		var otherSource = map.getSource(otherSourceName);
+	        		if(otherSource && otherSource._data){
+	        			otherSource.setData(emptyGeoJSON)
+	        		}
+	        		
+	        		var layerSourceName = targetLayer.source;
+	        		map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	        	}
+				
+	//    		if (targetLayer) {
+	//          	  var layerSourceName = targetLayer.source;
+	//          	  map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	//    		}
+				
+	    		map.once('data', function () {
+	    		  map.fire("data.updated", true);
+	    		});
+//        	});
         },
         
         
@@ -760,7 +792,24 @@
         		var features = map.queryRenderedFeatures(e.point, { layers: that.LAYERS_LIST });
         		
         		if(features.length){
-        	    	var feature = features[0]; // only take the 1st feature
+        			var feature;
+        			//
+        			// Handling overlapping features (mainly extruded polygons)
+        			//
+        			if(features.length > 1){
+        				features.forEach(function(ft){
+        					if(ft.properties.height > 0){
+        						feature = ft; // smaller features like buildings are more likely to be extruded
+        					}
+        				})
+        				
+        				if(!feature){
+        					feature = features[0];
+        				}
+        			}
+        			else{
+        				feature = features[0]; // only take the 1st feature
+        			}
         	    	
         	    	if(feature.properties.isClickable){
         	    		featureClickCallback(feature, map);

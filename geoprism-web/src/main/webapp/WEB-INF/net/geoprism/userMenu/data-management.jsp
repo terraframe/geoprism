@@ -46,7 +46,7 @@
     <jwr:style src="/bundles/administration.css" useRandomParam="false" />
     <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
 <%--     <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>   --%>
-    <jwr:style src="/bundles/webgl-map.css" useRandomParam="false"/>  
+    <jwr:style src="/bundles/webgl-map-current.css" useRandomParam="false"/>  
     
   
     <!-- Default imports -->
@@ -62,7 +62,7 @@
     <jwr:script src="/bundles/management.js" useRandomParam="false"/>
 
     <%-- <script src="${pageContext.request.contextPath}/net/geoprism/MapConfig.json"></script>  --%>
-    <jwr:script src="/bundles/webgl-map.js" useRandomParam="false"/>
+    <jwr:script src="/bundles/webgl-map-current.js" useRandomParam="false"/>
     
     <script type="text/javascript">${js}</script>
     
