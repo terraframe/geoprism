@@ -39,7 +39,24 @@ var AutoCompleteDirective = (function () {
      */
     AutoCompleteDirective.prototype.onKey = function (event) {
         var _this = this;
-        if (!this.refreshTimer) {
+        // Arrow down code
+        if (event.keyCode === 40) {
+            event.preventDefault();
+            if (this.listCmp) {
+                (this.listCmp.instance).down();
+            }
+        }
+        else if (event.keyCode === 38) {
+            if (this.listCmp) {
+                (this.listCmp.instance).up();
+            }
+        }
+        else if (event.keyCode === 13) {
+            if (this.listCmp) {
+                (this.listCmp.instance).enter();
+            }
+        }
+        else if (!this.refreshTimer) {
             this.refreshTimer = setTimeout(function () {
                 if (!_this.searchInProgress) {
                     _this.doSearch();
@@ -110,7 +127,7 @@ var AutoCompleteDirective = (function () {
      */
     AutoCompleteDirective.prototype.updateList = function (list) {
         if (this.listCmp) {
-            (this.listCmp.instance).list = list;
+            (this.listCmp.instance).setOptions(list);
         }
     };
     /**

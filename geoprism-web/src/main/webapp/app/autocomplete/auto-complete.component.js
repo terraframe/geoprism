@@ -9,6 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var Item = (function () {
+    function Item(item) {
+        this.text = item.text;
+        this.data = item.data;
+        this.selected = false;
+    }
+    return Item;
+}());
 var AutoCompleteComponent = (function () {
     function AutoCompleteComponent() {
         // Emit a selected event when an item in the list is selected
@@ -20,9 +28,50 @@ var AutoCompleteComponent = (function () {
     AutoCompleteComponent.prototype.onClick = function (item) {
         this.onDropdownSelect.emit(item);
     };
-    AutoCompleteComponent.prototype.onMouseEnter = function () {
+    AutoCompleteComponent.prototype.onMouseEnter = function (item, index) {
+        item.selected = true;
+        this.index = index;
     };
-    AutoCompleteComponent.prototype.onMouseLeave = function () {
+    AutoCompleteComponent.prototype.onMouseLeave = function (item, index) {
+        item.selected = false;
+        this.index = -1;
+    };
+    AutoCompleteComponent.prototype.up = function () {
+        if (this.index === -1) {
+            this.index = (this.list.length - 1);
+        }
+        else {
+            this.list[this.index].selected = false;
+            this.index--;
+        }
+        if (this.index < 0) {
+            this.index = (this.list.length - 1);
+        }
+        this.list[this.index].selected = true;
+    };
+    AutoCompleteComponent.prototype.down = function () {
+        if (this.index === -1) {
+            this.index = 0;
+        }
+        else {
+            this.list[this.index].selected = false;
+            this.index++;
+        }
+        if (this.index === this.list.length) {
+            this.index = 0;
+        }
+        this.list[this.index].selected = true;
+    };
+    AutoCompleteComponent.prototype.enter = function () {
+        this.onDropdownSelect.emit(this.list[this.index]);
+    };
+    AutoCompleteComponent.prototype.setOptions = function (items) {
+        var _this = this;
+        this.list = [];
+        this.index = -1;
+        items.forEach(function (item) {
+            _this.list.push(new Item(item));
+        });
     };
     return AutoCompleteComponent;
 }());

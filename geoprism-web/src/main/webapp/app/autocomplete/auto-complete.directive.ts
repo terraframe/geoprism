@@ -33,7 +33,7 @@ export class AutoCompleteDirective implements OnInit {
     private el: ElementRef) { }
   
   public ngOnInit() {
-	  
+    
     // When an item is selected remove the list
     this.onDropdownSelect.subscribe(() => {
       this.removeList();
@@ -45,7 +45,27 @@ export class AutoCompleteDirective implements OnInit {
    * the event starts a timer to prevent concurrent requests
    */
   public onKey(event: any) {
-    if (!this.refreshTimer) {
+  // Arrow down code
+    if(event.keyCode === 40) {
+      event.preventDefault();
+    
+      if (this.listCmp) {
+        (<AutoCompleteComponent>(this.listCmp.instance)).down();
+      }
+    }
+    // Arrow up keycode
+    else if(event.keyCode === 38) {
+      if (this.listCmp) {
+        (<AutoCompleteComponent>(this.listCmp.instance)).up();
+      }    
+    }
+    // Enter keycode
+    else if(event.keyCode === 13) {
+      if (this.listCmp) {
+        (<AutoCompleteComponent>(this.listCmp.instance)).enter();
+      }
+    }  
+    else if (!this.refreshTimer) {
       this.refreshTimer = setTimeout(() => {
         if (!this.searchInProgress) {
           this.doSearch();
@@ -68,7 +88,7 @@ export class AutoCompleteDirective implements OnInit {
    * Call the search function and handle the results
    */
   private doSearch() {
-	  
+    
     this.refreshTimer = undefined;
     
     // if we have a search function and a valid search term call the search
@@ -88,12 +108,12 @@ export class AutoCompleteDirective implements OnInit {
         }
       })
       .catch(err => {
-    	  
+        
         this.removeList();
       });
     }
     else if(this.term === "") {
-      this.onDropdownSelect.emit({ text: '', data: null });    	
+      this.onDropdownSelect.emit({ text: '', data: null });      
     }
   }
 
@@ -103,19 +123,19 @@ export class AutoCompleteDirective implements OnInit {
    */
   private displayList(list: Array<{ text: string, data: any }>) {
     if (!this.listCmp) {
-    	
+      
       let factory = this.resolver.resolveComponentFactory(AutoCompleteComponent);
 
-      this.listCmp = this.viewContainerRef.createComponent(factory);    	
+      this.listCmp = this.viewContainerRef.createComponent(factory);      
       
       this.updateList(list);
         
       // Emit the selectd event when the component fires its selected event
-      (<AutoCompleteComponent>(this.listCmp.instance)).onDropdownSelect.subscribe((selectedItem: {text: string, data: any}) => {    	  
-    	this.el.nativeElement.value = selectedItem.text;
-    	
+      (<AutoCompleteComponent>(this.listCmp.instance)).onDropdownSelect.subscribe((selectedItem: {text: string, data: any}) => {        
+      this.el.nativeElement.value = selectedItem.text;
+      
         this.onDropdownSelect.emit(selectedItem);
-      });    	
+      });      
     } else {
       this.updateList(list);
     }
@@ -126,7 +146,7 @@ export class AutoCompleteDirective implements OnInit {
    */
   private updateList(list: Array<{ text: string, data: any }>) {
     if (this.listCmp) {
-      (<AutoCompleteComponent>(this.listCmp.instance)).list = list;
+      (<AutoCompleteComponent>(this.listCmp.instance)).setOptions(list);
     }
   }
 
