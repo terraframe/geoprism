@@ -23,7 +23,7 @@
 	 $scope.renderBase = true;
 	 $scope.baseLayers = [];
 	 $scope.contextStyle = {fill:"rgba(0, 0, 0, 0.25)", strokeColor:"rgba(0, 0, 0, 0.75)", strokeWidth:5, radius:7};
-	 $scope.targetStyle = {fill:"rgba(161, 202, 241, 0.80)", strokeColor:"rgba(255, 0, 0, 0.75)", strokeWidth:3, radius:7};
+	 $scope.targetStyle = {fill:"rgba(161, 202, 241, 0.80)", strokeColor:"rgba(102, 102, 102, 0.80)", strokeWidth:2, radius:7};
 	 $scope.sharedGeoData = {};
 	 
 	 
@@ -148,9 +148,13 @@
 		    		// TODO: Remove this temp demo code
 	  	    		if(feature.properties.displayLabel.startsWith("ES")){
 	  	    			feature.properties.height = 0;
+	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "boundary";
 	  	    		}
 	  	    		else{
-	  	    			feature.properties.height = Math.round(Math.random() * 100);
+	  	    			feature.properties.height = Math.round(Math.random() * 50);
+	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "building";
 	  	    		}
 	  	    		
 		    		geomType = feature.geometry.type.toLowerCase();
@@ -178,9 +182,13 @@
 	  	    		// TODO: Remove this temp demo code
 	  	    		if(feature.properties.displayLabel.startsWith("ES")){
 	  	    			feature.properties.height = 0;
+	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "boundary";
 	  	    		}
 	  	    		else{
-	  	    			feature.properties.height = Math.round(Math.random() * 100);
+	  	    			feature.properties.height = Math.round(Math.random() * 50);
+	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "building";
 	  	    		}
 	  			  }
 				  
@@ -230,7 +238,7 @@
       });
       
       $scope.$on('listItemClick', function(event, data){
-    	  controller.zoomToExtentOfFeatures(data.geoIds)
+    	  controller.zoomToExtentOfFeatures(data.entities)
       });
       
       

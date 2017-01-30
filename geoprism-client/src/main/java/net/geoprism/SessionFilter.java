@@ -205,6 +205,8 @@ public class SessionFilter implements Filter, Reloadable
     extensions.add(".gif");
     extensions.add(".svg");
     extensions.add(".pdf");
+    extensions.add(".otf");
+    extensions.add(".mp4");
 
     // Login/Logout requests for mojax/mojo extensions.
     extensions.add(SessionController.LOGIN_ACTION);
