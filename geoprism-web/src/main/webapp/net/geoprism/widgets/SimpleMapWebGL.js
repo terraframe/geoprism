@@ -238,7 +238,7 @@
       });
       
       $scope.$on('listItemClick', function(event, data){
-    	  controller.zoomToExtentOfFeatures(data.geoIds)
+    	  controller.zoomToExtentOfFeatures(data.entities)
       });
       
       

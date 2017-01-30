@@ -161,8 +161,8 @@
           
           this.selectPolygonStyle = {fill:"rgba(0, 48, 143, 1)", opacity:0.5 }
           
-          this.hoverPolygonStyle = {fill:"white", opacity:0.35, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
-      	  this.hoverPointStyle = {fill:"white", opacity:0.35, radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
+          this.hoverPolygonStyle = {fill:"rgba(163, 19, 19, .9)", opacity:0.35, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 }
+      	  this.hoverPointStyle = {fill:"rgba(163, 19, 19, .9)", opacity:0.50, radius:10, stroke:"rgba(255, 255, 0, 0.75)", strokeWidth:3 };
           
       	  this.editFeatureStyle = {fill:"rgba(255, 0, 0, 1)", stroke:"rgba(255, 0, 0, 1)", strokeWidth:3, radius:10 };
       	  
@@ -360,11 +360,32 @@
 		  			 	        },
 //		  			 	        'fill-extrusion-height': 100,
 //	  			 	        	'fill-extrusion-base': 0,
-	  			 	        	'fill-extrusion-opacity': .8
+	  			 	        	'fill-extrusion-opacity': .9
 	  			 	        }
 	  			 	    }
 	          	    	
+	          	    	
 	          	    	map.addLayer(polygons3DStyle);
+	          	    	
+	          	    	// This layer is displayed when they hover over the feature
+    		     	    map.addLayer({
+    		     	    	"id": layerName + "-hover",
+    		     	    	"source": layerName,
+    			 	        "type": "fill-extrusion",
+    			 	        "paint": {
+    			 	        	"fill-extrusion-color": that.getHoverPolygonStyle().fill,
+    			 	        	'fill-extrusion-height': {
+   	  			 	        	 'type': 'identity',
+   	  			 	        	 'property': 'height'
+   	  			 	        	},
+   	  			 	        	'fill-extrusion-base': {
+   		  			 	        	 'type': 'identity',
+   		  			 	        	 'property': 'base'
+   		  			 	        },
+    			 	        },
+    			 	       'fill-extrusion-opacity': .5,
+    			 	        "filter": ["==", "name", ""] // hide all features in the layer
+  		     	      	});
           	    	}
           	    	else{
           	    		var polygonSimpleStyle = {
@@ -380,6 +401,18 @@
       			 	    }
           	    		
           	    		map.addLayer(polygonSimpleStyle);
+          	    		
+          	    	// This layer is displayed when they hover over the feature
+    		     	    map.addLayer({
+    		     	    	"id": layerName + "-hover",
+    		     	    	"source": layerName,
+    			 	        "type": "fill",
+    			 	        "paint": {
+    			 	        	"fill-color": that.getHoverPolygonStyle().fill,
+    			 	        	"fill-opacity": that.getHoverPolygonStyle().opacity
+    			 	        },
+    			 	        "filter": ["==", "name", ""] // hide all features in the layer
+  		     	      	});
           	    	}
           	    	
           	    	
@@ -402,29 +435,17 @@
       	         	        }
       			 	    });
       		     	  
-    		     	    // This layer is displayed when they hover over the feature
-    		     	    map.addLayer({
-  		     	        "id": layerName + "-hover",
-  		     	        "source": layerName,
-    			 	        "type": "fill",
-    			 	        "paint": {
-    			 	            "fill-color": that.getHoverPolygonStyle().fill,
-    			 	            "fill-opacity": that.getHoverPolygonStyle().opacity
-    			 	        },
-  		     	        "filter": ["==", "name", ""] // hide all features in the layer
-  		     	      });
-    		     	   
-    		     	   // This layer is displayed when they click on the feature
-    		     	   map.addLayer({
-                   "id": layerName + "-select",
-                   "source": layerName,
-                   "type": "fill",
-                   "paint": {
-                       "fill-color": that.selectPolygonStyle.fill,
-                       "fill-opacity": that.selectPolygonStyle.opacity
-                   },
-                   "filter": ["==", "name", ""] // hide all features in the layer
-                 });
+//    		     	    // This layer is displayed when they hover over the feature
+//    		     	    map.addLayer({
+//    		     	    	"id": layerName + "-hover",
+//    		     	    	"source": layerName,
+//    			 	        "type": "fill",
+//    			 	        "paint": {
+//    			 	        	"fill-color": that.getHoverPolygonStyle().fill,
+//    			 	        	"fill-opacity": that.getHoverPolygonStyle().opacity
+//    			 	        },
+//    			 	        "filter": ["==", "name", ""] // hide all features in the layer
+//  		     	      	});
           	    }
           	    
 //          	    if (that._updateVectorLayersAfterLoading != null)
@@ -479,7 +500,28 @@
 	        		}
 	        		
 	        		var layerSourceName = targetLayer.source;
-	        		map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	        		
+	        		//
+	        		// TODO: Remove this complete hack.  It was needed because the map renders only 1 feature on initial search.
+	        		//
+	        		var numFeaturesToAdd = layerAsGeoJSON.features.length;
+	        		var attempts = 2;
+	        		var i = 1;
+	        		while(i<=attempts){
+	        			
+	        			map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	        			
+	        			var numFeaturesAdded = map.getSource(layerSourceName)._data.features.length;
+	        			if(i === attempts){
+	        				setTimeout(function(){
+	        					map.getSource(layerSourceName).setData(layerAsGeoJSON);
+	        				}, 4000);
+	        				
+	        				break;
+	        			}
+	        			
+	        			i++;
+	        		} 
 	        	}
 	        	else if(targetLayer && targetLayer.id === "target-point"){
 	        		
@@ -540,7 +582,7 @@
 	    	        			var targetFeature = layerSourceData.features[i];
 	    	        			var featureProps = targetFeature.properties;
 	    	        			if((feature.id && feature.id === featureProps.id) || 
-	    	        			  (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoId)) ||
+	    	        			  (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
 	    	        			  (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
 	    	        			{
 	    	        				// control for styling of different geometry types
@@ -584,7 +626,7 @@
 	    	        			var featureProps = targetFeature.properties;
 	    	        			
 	    	        			if((feature.id && feature.id === featureProps.id) || 
-	    	        			   (feature.geoId && feature.geoId.length > 0 && that.arrayContainsString(feature.geoId, featureProps.geoId)) ||
+	    	        			   (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
 	    	        			   (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
 	    	        			{
 	    	            	    		
@@ -734,14 +776,17 @@
         },
         
         
-        zoomToExtentOfFeatures : function(featureGeoIds) {
+        zoomToExtentOfFeatures : function(entities) {
         	var map = this.getMap();
         	var that = this;
         	var layersArr = this.getAllVectorLayers();
         	var fullExt = null;
         	
-        	
         	var bounds = new mapboxgl.LngLatBounds();
+        	var featureGeoIds = [];
+        	entities.forEach(function(ent){
+        		featureGeoIds.push(ent.geoId);
+        	})
         	
         	if(layersArr.length > 0){
         		layersArr.forEach(function(layer){
@@ -754,7 +799,7 @@
 	    	        	
 	    	        	if(layerSourceData.features.length > 0){
 	    	        		layerSourceData.features.forEach(function(f){
-	    	        			if(that.arrayContainsString(featureGeoIds, f.properties.geoid)){
+	    	        			if(that.arrayContainsString(featureGeoIds, f.properties.geoId)){
 	    	        				var bbox = turf.extent(f);
 	    	    	        		bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
 	    	        			}
@@ -779,7 +824,7 @@
         						  }
         						};
         				
-        				var buffered = turf.buffer(pt, 10, "miles");
+        				var buffered = turf.buffer(pt, .5, "miles");
         				var bufferedBounds = turf.extent(buffered);
         				map.fitBounds(bufferedBounds, {padding:0});
 	        		}
@@ -870,7 +915,10 @@
         	    	// 'fill' === polygon
         	    	if(feature.layer.type === "fill"){
         	    		map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
-
+        	    	}
+        	    	else if(feature.layer.type === "fill-extrusion"){
+        	    		// currently disabled because extruded features over flat features gets covered by highlight
+        	    		//map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
         	    	}
         	    	else if(feature.layer.type === "circle"){
         	    		map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
