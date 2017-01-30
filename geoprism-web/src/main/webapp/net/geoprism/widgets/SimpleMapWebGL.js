@@ -149,10 +149,12 @@
 	  	    		if(feature.properties.displayLabel.startsWith("ES")){
 	  	    			feature.properties.height = 0;
 	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "boundary";
 	  	    		}
 	  	    		else{
 	  	    			feature.properties.height = Math.round(Math.random() * 50);
 	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "building";
 	  	    		}
 	  	    		
 		    		geomType = feature.geometry.type.toLowerCase();
@@ -181,10 +183,12 @@
 	  	    		if(feature.properties.displayLabel.startsWith("ES")){
 	  	    			feature.properties.height = 0;
 	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "boundary";
 	  	    		}
 	  	    		else{
 	  	    			feature.properties.height = Math.round(Math.random() * 50);
 	  	    			feature.properties.base = 0;
+	  	    			feature.properties.featureType = "building";
 	  	    		}
 	  			  }
 				  

@@ -341,8 +341,15 @@
 	  			 	        "source": layerName,
 	  			 	        "type": "fill-extrusion",
 	  			 	        "paint": {
-	  			 	        	'fill-extrusion-color': styleObj.fill,
-//	  			 	        	'fill-extrusion-height': 100,
+//	  			 	        	'fill-extrusion-color': styleObj.fill,
+	  			 	        	'fill-extrusion-color': {
+			  			 	        "property": "featureType",
+			  			 	        "type": "categorical",
+			  			 	        "stops": [
+			  			 	            ["boundary", "#7c7871"],
+			  			 	            ["building", "#3b475b"],
+			  			 	        ]
+	  			 	        	},
 	  			 	        	'fill-extrusion-height': {
 	  			 	        	 'type': 'identity',
 	  			 	        	 'property': 'height'
@@ -351,6 +358,7 @@
 		  			 	        	 'type': 'identity',
 		  			 	        	 'property': 'base'
 		  			 	        },
+//		  			 	        'fill-extrusion-height': 100,
 //	  			 	        	'fill-extrusion-base': 0,
 	  			 	        	'fill-extrusion-opacity': .8
 	  			 	        }
