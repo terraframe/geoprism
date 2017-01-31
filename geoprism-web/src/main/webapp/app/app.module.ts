@@ -39,6 +39,9 @@ import { KeysPipe } from './core/keys.pipe';
 import { AutoCompleteDirective } from './autocomplete/auto-complete.directive';
 import { AutoCompleteComponent } from './autocomplete/auto-complete.component';
 
+import { ConfirmModalDirective } from './confirm/confirm-modal.directive';
+import { ConfirmModalComponent } from './confirm/confirm-modal.component';
+
 import { EventService, IdService} from './service/core.service';
 import { LocalizationService } from './service/localization.service';
 
@@ -82,8 +85,12 @@ import { EventHttpService } from './service/event-http.service';
     AsyncValidator,
     FunctionValidator,
     KeysPipe,
+    
     AutoCompleteDirective,
     AutoCompleteComponent,
+    
+    ConfirmModalDirective,
+    ConfirmModalComponent,
     
     // Upload Wizard components
     UploadWizardComponent,
@@ -121,6 +128,6 @@ import { EventHttpService } from './service/event-http.service';
     }   
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AutoCompleteComponent]
+  entryComponents: [AutoCompleteComponent, ConfirmModalComponent]
 })
 export class AppModule { }

@@ -42,6 +42,8 @@ var function_validator_directive_1 = require("./core/function-validator.directiv
 var keys_pipe_1 = require("./core/keys.pipe");
 var auto_complete_directive_1 = require("./autocomplete/auto-complete.directive");
 var auto_complete_component_1 = require("./autocomplete/auto-complete.component");
+var confirm_modal_directive_1 = require("./confirm/confirm-modal.directive");
+var confirm_modal_component_1 = require("./confirm/confirm-modal.component");
 var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
@@ -88,6 +90,8 @@ AppModule = __decorate([
             keys_pipe_1.KeysPipe,
             auto_complete_directive_1.AutoCompleteDirective,
             auto_complete_component_1.AutoCompleteComponent,
+            confirm_modal_directive_1.ConfirmModalDirective,
+            confirm_modal_component_1.ConfirmModalComponent,
             // Upload Wizard components
             upload_wizard_component_1.UploadWizardComponent,
             paging_component_1.PagingComponent,
@@ -123,7 +127,7 @@ AppModule = __decorate([
             }
         ],
         bootstrap: [app_component_1.AppComponent],
-        entryComponents: [auto_complete_component_1.AutoCompleteComponent]
+        entryComponents: [auto_complete_component_1.AutoCompleteComponent, confirm_modal_component_1.ConfirmModalComponent]
     }),
     __metadata("design:paramtypes", [])
 ], AppModule);

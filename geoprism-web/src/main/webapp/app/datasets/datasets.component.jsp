@@ -43,7 +43,10 @@
 	      <tr *ngFor="let dataset of datasets" class="fade-ngRepeat-item">
 	        <td class="button-column">
 	          <a class="fa fa-pencil ico-edit" (click)="edit(dataset, $event)" title="<gdb:localize key="dataset.editTooltip"/>"></a>                             
-	          <a class="fa fa-trash-o ico-remove" (click)="remove(dataset, $event)" title="<gdb:localize key="dataset.removeTooltip"/>"></a>           
+	          <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="dataset.removeTooltip"/>"
+	             confirm-modal 
+	             message="<gdb:localize key="dataset.removeContent"/>"
+	             (onConfirm)="remove(dataset, $event)"></a>           
 	        </td>
 	        <td class="label-column"> {{ dataset.label }} </td>
 	        <td class="description-column"> {{dataset.description}} </td>

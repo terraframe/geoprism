@@ -14,7 +14,7 @@ class Item {
 
 @Component({
   moduleId: module.id,  
-  selector: "auto-complete",
+  selector: "auto-complete-component",
   templateUrl: 'auto-complete.component.jsp',
   styleUrls: ['auto-complete.component.css'],
 })

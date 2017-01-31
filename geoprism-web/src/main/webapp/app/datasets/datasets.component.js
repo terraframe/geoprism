@@ -79,16 +79,17 @@ var DatasetsComponent = (function () {
         });
     };
     DatasetsComponent.prototype.remove = function (dataset, event) {
+        //    let message = this.localizationService.localize("dataset", "removeContent");
+        //    message = message.replace('{0}', dataset.label);
+        //
+        //    if(confirm(message)) {
         var _this = this;
-        var message = this.localizationService.localize("dataset", "removeContent");
-        message = message.replace('{0}', dataset.label);
-        if (confirm(message)) {
-            this.datasetService
-                .remove(dataset)
-                .then(function (response) {
-                _this.datasets = _this.datasets.filter(function (h) { return h !== dataset; });
-            });
-        }
+        this.datasetService
+            .remove(dataset)
+            .then(function (response) {
+            _this.datasets = _this.datasets.filter(function (h) { return h !== dataset; });
+        });
+        //    }
     };
     DatasetsComponent.prototype.edit = function (dataset, event) {
         this.router.navigate(['/dataset', dataset.id]);
