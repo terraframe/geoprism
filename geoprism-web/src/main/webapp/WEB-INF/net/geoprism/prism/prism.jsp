@@ -26,17 +26,14 @@
 <head>
   <base href="<%=request.getContextPath()%>/prism/management">
   
-  <title>Prism Management</title>
+  <title><gdb:localize key="prism.management.title"/></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <!-- CSS imports -->
   <jwr:style src="/bundles/main.css" useRandomParam="false" />
   <jwr:style src="/bundles/administration.css" useRandomParam="false" />
-  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
-  <jwr:style src="/bundles/dynamic-map.css" useRandomParam="false"/>  
   
-  <!-- Default imports -->
-  
+  <!-- Default imports -->  
   <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
   <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
     
@@ -55,7 +52,31 @@
 </head>
 
 <body>
-  <my-app>Loading...</my-app>
+  <my-app>
+  
+    <!-- TEMP CONTENT WHILE THE PAGE IS LOADING -->
+
+    <div id="innerFrameHtml">
+      <header>
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png" /></a>
+              <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management"><gdb:localize key="data.management.title"/></a>
+            </div>
+
+          </div>
+        </nav>
+      </header>
+        
+      <div id="main" class="new-admin-design-main">
+        <div class="text-center">
+          <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+          <div><gdb:localize key="prism.loading"/></div>
+        </div>
+      </div>
+    </div>  
+  </my-app>
 </body>
 
 </html>

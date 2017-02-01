@@ -50,6 +50,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
   unassignedFields: Field[];
 
   constructor(private idService: IdService) {
+	this.unassignedFields = [];
     this.attribute = this.createNewAttribute();
   }  
 
@@ -137,7 +138,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
     return [];
   } 
         
-  /**
+  /** 
    * Gets the next location moving from low to high in the universal hierarchy. 
    * Valid returns include another field at the same universal level or a higher universal level.
    * 
@@ -362,29 +363,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
       this.attribute = null;
     }
   }
-//    
-//    //TODO: remove this if not needed
-////    this.handleExcludedFields = function() {
-////      let attributeFieldsToDelete = [];
-////      for (let key in this.attribute.fields) {
-////        if (this.attribute.fields.hasOwnProperty(key)) {
-////          let attributeFieldLabel = this.attribute.fields[key];
-////          if(attributeFieldLabel === "EXCLUDE"){
-////            attributeFieldsToDelete.push(key);
-////          }
-////        }
-////      }
-////      
-////      for(let i=0; i<attributeFieldsToDelete.length; i++){
-////        let field = attributeFieldsToDelete[i];
-////        
-////        if(field){
-////          delete this.attribute.fields[field];
-////        }
-////      }
-////    }
-//    
-//    
+  
   /**
    * Try to auto build the location field if there is only one field option per universal
    * 
@@ -455,6 +434,9 @@ export class LocationPageComponent implements OnInit, LocalValidator {
               
         break;
       }
+    }
+    else if (lowestLevelUnassignedLocationFields.length == 0){
+      this.attribute = null;    	
     }
   }
     

@@ -40,6 +40,7 @@ var LocationPageComponent = (function () {
     function LocationPageComponent(idService) {
         this.idService = idService;
         this.locationFields = {};
+        this.unassignedFields = [];
         this.attribute = this.createNewAttribute();
     }
     LocationPageComponent.prototype.ngOnInit = function () {
@@ -282,29 +283,6 @@ var LocationPageComponent = (function () {
             this.attribute = null;
         }
     };
-    //    
-    //    //TODO: remove this if not needed
-    ////    this.handleExcludedFields = function() {
-    ////      let attributeFieldsToDelete = [];
-    ////      for (let key in this.attribute.fields) {
-    ////        if (this.attribute.fields.hasOwnProperty(key)) {
-    ////          let attributeFieldLabel = this.attribute.fields[key];
-    ////          if(attributeFieldLabel === "EXCLUDE"){
-    ////            attributeFieldsToDelete.push(key);
-    ////          }
-    ////        }
-    ////      }
-    ////      
-    ////      for(let i=0; i<attributeFieldsToDelete.length; i++){
-    ////        let field = attributeFieldsToDelete[i];
-    ////        
-    ////        if(field){
-    ////          delete this.attribute.fields[field];
-    ////        }
-    ////      }
-    ////    }
-    //    
-    //    
     /**
      * Try to auto build the location field if there is only one field option per universal
      *
@@ -361,6 +339,9 @@ var LocationPageComponent = (function () {
                 this.refreshUnassignedFields([field.name]);
                 break;
             }
+        }
+        else if (lowestLevelUnassignedLocationFields.length == 0) {
+            this.attribute = null;
         }
     };
     /**
