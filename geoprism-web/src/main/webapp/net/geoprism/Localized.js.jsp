@@ -45,7 +45,7 @@ Globalize.load(<%=configuration%>);
 
 Globalize.locale('<%=locale%>');
 
-if(jQuery) {
+if('undefined' !== typeof jQuery) {
 jQuery(function(){
 
   /*

@@ -31,12 +31,14 @@
             <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png" /></a>
             <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management"><gdb:localize key="data.management.title"/></a>
           </div>
-
+          
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Data_Management"/><span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a routerLink="/datasets" routerLinkActive="active"><gdb:localize key="Data_Sets"/></a></li>
+            <li dropdown>
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                <gdb:localize key="Data_Management"/><span class="caret"></span>
+              </a>            
+              <ul dropdownMenu class="dropdown-menu">
+                <li role="menuitem"><a class="dropdown-item" routerLink="/datasets" routerLinkActive="active"><gdb:localize key="Data_Sets"/></a></li>
               </ul>
             </li>
           </ul>

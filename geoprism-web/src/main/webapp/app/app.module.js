@@ -31,10 +31,10 @@ var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
 require("./rxjs-extensions");
+var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
+var ng2_bootstrap_1 = require("ng2-bootstrap");
 var app_component_1 = require("./app.component");
 var app_routing_module_1 = require("./app-routing.module");
-var ng2_file_upload_1 = require("ng2-file-upload/ng2-file-upload");
-//import { AutoCompleteModule } from './autocomplete/auto-complete.module';
 var loading_bar_component_1 = require("./core/loading-bar.component");
 var error_message_component_1 = require("./core/error-message.component");
 var async_validator_directive_1 = require("./core/async-validator.directive");
@@ -79,6 +79,7 @@ AppModule = __decorate([
             app_routing_module_1.AppRoutingModule,
             http_1.HttpModule,
             ng2_file_upload_1.FileUploadModule,
+            ng2_bootstrap_1.DropdownModule.forRoot(),
         ],
         declarations: [
             // Global components

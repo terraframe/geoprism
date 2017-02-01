@@ -24,11 +24,11 @@ import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 
 import './rxjs-extensions';
 
+import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
+import { DropdownModule } from 'ng2-bootstrap'
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
-
-import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
-//import { AutoCompleteModule } from './autocomplete/auto-complete.module';
 
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
@@ -76,6 +76,7 @@ import { EventHttpService } from './service/event-http.service';
     AppRoutingModule,
     HttpModule,
     FileUploadModule,
+    DropdownModule.forRoot(),
   ],
   declarations: [
 	// Global components

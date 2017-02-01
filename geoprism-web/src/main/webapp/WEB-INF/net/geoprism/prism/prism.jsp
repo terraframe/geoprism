@@ -35,7 +35,7 @@
   
   <!-- Default imports -->  
   <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
-  <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
+  <jwr:script src="/bundles/ng2-main.js" useRandomParam="false"/> 
     
   <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>  
   
