@@ -107,14 +107,15 @@ var CategoryDetailComponent = (function () {
     };
     CategoryDetailComponent.prototype.remove = function (descendant) {
         var _this = this;
-        var message = this.localizationService.localize("category.management", "removeCategoryConfirm");
-        message = message.replace('{0}', this.category.label);
-        if (confirm(message)) {
-            this.categoryService.remove(descendant.id)
-                .then(function (response) {
-                _this.category.descendants = _this.category.descendants.filter(function (h) { return h !== descendant; });
-            });
-        }
+        //    let message = this.localizationService.localize("category.management", "removeCategoryConfirm");
+        //    message = message.replace('{0}', this.category.label);
+        //
+        //    if(confirm(message)) {
+        this.categoryService.remove(descendant.id)
+            .then(function (response) {
+            _this.category.descendants = _this.category.descendants.filter(function (h) { return h !== descendant; });
+        });
+        //    }
     };
     CategoryDetailComponent.prototype.edit = function (descendant) {
         this.router.navigate(['/category-option', this.category.id, descendant.id]);

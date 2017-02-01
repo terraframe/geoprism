@@ -110,15 +110,15 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   remove(descendant: BasicCategory) {
-    let message = this.localizationService.localize("category.management", "removeCategoryConfirm");
-    message = message.replace('{0}', this.category.label);
-
-    if(confirm(message)) {
+//    let message = this.localizationService.localize("category.management", "removeCategoryConfirm");
+//    message = message.replace('{0}', this.category.label);
+//
+//    if(confirm(message)) {
       this.categoryService.remove(descendant.id)
        .then((response:any) => {
          this.category.descendants = this.category.descendants.filter(h => h !== descendant);        
        });
-    }
+//    }
   }
   
   

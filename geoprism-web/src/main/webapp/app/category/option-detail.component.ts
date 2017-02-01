@@ -108,14 +108,14 @@ export class OptionDetailComponent implements OnInit {
   
   restore(synonym: Synonym): void {
 	  
-	let message = this.localizationService.localize("category.management", "restoreConfirm");
-    message = message.replace('{0}', this.category.label);
-
-    if(confirm(message)) {
+//	let message = this.localizationService.localize("category.management", "restoreConfirm");
+//    message = message.replace('{0}', this.category.label);
+//
+//    if(confirm(message)) {
       this.action.restore.push(synonym.id);
         	
       this.category.synonyms = this.category.synonyms.filter(h => h !== synonym);            	        	
-    }	  
+//    }	  
   } 
   
 }

@@ -134,12 +134,14 @@ export class Page {
 
   hasNext: boolean;
   isReady: boolean;
+  confirm: boolean;
   layout: string;
 
   constructor(public name: string, public prev: Page) {
     this.layout = 'holder';
     this.hasNext = true;
     this.isReady = false;
+    this.confirm = false;
   }
 }
 

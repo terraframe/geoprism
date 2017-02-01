@@ -37,9 +37,11 @@
         type="button"
         value="<gdb:localize key="dataUploader.previous"/>"
         class="btn btn-primary" 
-        (click)="prev()"
         [disabled]="busy"
-      /> 
+        confirm-modal 
+        message="<gdb:localize key="dataUploader.prevDialogContent"/>"
+        (onConfirm)="prev()"
+        [enabled]="page.confirm" />        
       <input
         *ngIf="page.hasNext"      
         type="button"

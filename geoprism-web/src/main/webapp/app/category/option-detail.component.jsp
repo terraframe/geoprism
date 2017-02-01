@@ -49,7 +49,10 @@
                 <tbody>
                   <tr *ngFor="let synonym of category.synonyms" class="fade-ngRepeat-item">
                     <td class="button-column">
-                      <a class="fa fa-undo ico-edit" (click)="restore(synonym)" title="<gdb:localize key="category.management.restoreTooltip"/>"></a>
+                      <a class="fa fa-undo ico-edit" title="<gdb:localize key="category.management.restoreTooltip"/>"
+                         confirm-modal 
+                         message="<gdb:localize key="category.management.restoreConfirm"/>"
+                         (onConfirm)="restore(synonym)"></a>                      
                     </td>
                     <td class="label-column">
                       {{synonym.label}}

@@ -58,7 +58,10 @@
                     <tr *ngFor="let descendant of category.descendants" class="fade-ngRepeat-item">
                       <td class="button-column">
                         <a class="fa fa-pencil ico-edit" (click)="edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
-                        <a class="fa fa-trash-o ico-remove" (click)="remove(descendant)" title="<gdb:localize key="category.management.removeTooltip"/>"></a>                               
+                        <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="category.management.removeTooltip"/>"
+                           confirm-modal 
+                           message="<gdb:localize key="category.management.removeOptionConfirm"/>"
+                           (onConfirm)="remove(descendant)"></a>                                   
                       </td>
                       <td class="label-column">{{descendant.label}}</td>
                     </tr>

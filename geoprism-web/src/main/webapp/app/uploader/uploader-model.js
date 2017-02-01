@@ -122,6 +122,7 @@ var Page = (function () {
         this.layout = 'holder';
         this.hasNext = true;
         this.isReady = false;
+        this.confirm = false;
     }
     return Page;
 }());

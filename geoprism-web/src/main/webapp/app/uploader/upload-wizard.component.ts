@@ -311,6 +311,7 @@ export class UploadWizardComponent implements OnDestroy {
         let page = new Page('INITIAL', this.page);
         page.hasNext = this.hasNextPage('INITIAL');
         page.isReady = this.isReady('INITIAL');
+        page.confirm = true;
       
         this.page = page;
         
@@ -321,6 +322,7 @@ export class UploadWizardComponent implements OnDestroy {
         page.hasNext = this.hasNextPage('FIELDS');
         page.isReady = this.isReady('FIELDS');
         page.layout = 'wide-holder';
+        page.confirm = true;
       
         this.page = page;
       }
@@ -330,6 +332,7 @@ export class UploadWizardComponent implements OnDestroy {
           let page = new Page('LOCATION', this.page);
           page.hasNext = this.hasNextPage('LOCATION');
           page.isReady = this.isReady('LOCATION');
+          page.confirm = true;
       
           this.page = page;
         }
@@ -338,7 +341,8 @@ export class UploadWizardComponent implements OnDestroy {
           let page = new Page('COORDINATE', this.page);
           page.hasNext = this.hasNextPage('COORDINATE');
           page.isReady = this.isReady('COORDINATE');
-      
+          page.confirm = true;
+
           this.page = page;          
         }
         else {
@@ -358,6 +362,7 @@ export class UploadWizardComponent implements OnDestroy {
           let page = new Page('COORDINATE', this.page);
           page.hasNext = this.hasNextPage('COORDINATE');
           page.isReady = this.isReady('COORDINATE');
+          page.confirm = true;
       
           this.page = page;          
         }
@@ -394,18 +399,9 @@ export class UploadWizardComponent implements OnDestroy {
     }
   }
   
-  prev(): void{  
+  prev(): void {
     this.pageDirection = "PREVIOUS";
-    
-    if(this.page.name === 'MATCH' || this.page.name === "SUMMARY" || this.page.name === "BEGINNING-INFO" || this.page.name === "CATEGORY-VALIDATION") {
-      this.handlePrev();        
-    }
-    else if(confirm(this.localizationService.localize("dataUploader", "prevDialogContent"))) {
-      this.handlePrev();
-    }
-  }  
-  
-  handlePrev(): void {
+	  
     if(this.page.prev != null) { 
       this.page = this.page.prev;
       this.sheet = this.page.snapshot;

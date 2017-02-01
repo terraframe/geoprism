@@ -99,12 +99,13 @@ var OptionDetailComponent = (function () {
         this.location.back();
     };
     OptionDetailComponent.prototype.restore = function (synonym) {
-        var message = this.localizationService.localize("category.management", "restoreConfirm");
-        message = message.replace('{0}', this.category.label);
-        if (confirm(message)) {
-            this.action.restore.push(synonym.id);
-            this.category.synonyms = this.category.synonyms.filter(function (h) { return h !== synonym; });
-        }
+        //	let message = this.localizationService.localize("category.management", "restoreConfirm");
+        //    message = message.replace('{0}', this.category.label);
+        //
+        //    if(confirm(message)) {
+        this.action.restore.push(synonym.id);
+        this.category.synonyms = this.category.synonyms.filter(function (h) { return h !== synonym; });
+        //    }	  
     };
     return OptionDetailComponent;
 }());

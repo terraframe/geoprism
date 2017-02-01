@@ -253,6 +253,7 @@ var UploadWizardComponent = (function () {
                 var page = new uploader_model_1.Page('INITIAL', this.page);
                 page.hasNext = this.hasNextPage('INITIAL');
                 page.isReady = this.isReady('INITIAL');
+                page.confirm = true;
                 this.page = page;
                 this.incrementStep(this.page.name);
             }
@@ -261,6 +262,7 @@ var UploadWizardComponent = (function () {
                 page.hasNext = this.hasNextPage('FIELDS');
                 page.isReady = this.isReady('FIELDS');
                 page.layout = 'wide-holder';
+                page.confirm = true;
                 this.page = page;
             }
             else if (this.page.name === 'FIELDS') {
@@ -269,6 +271,7 @@ var UploadWizardComponent = (function () {
                     var page = new uploader_model_1.Page('LOCATION', this.page);
                     page.hasNext = this.hasNextPage('LOCATION');
                     page.isReady = this.isReady('LOCATION');
+                    page.confirm = true;
                     this.page = page;
                 }
                 else if (this.hasCoordinateField()) {
@@ -276,6 +279,7 @@ var UploadWizardComponent = (function () {
                     var page = new uploader_model_1.Page('COORDINATE', this.page);
                     page.hasNext = this.hasNextPage('COORDINATE');
                     page.isReady = this.isReady('COORDINATE');
+                    page.confirm = true;
                     this.page = page;
                 }
                 else {
@@ -293,6 +297,7 @@ var UploadWizardComponent = (function () {
                     var page = new uploader_model_1.Page('COORDINATE', this.page);
                     page.hasNext = this.hasNextPage('COORDINATE');
                     page.isReady = this.isReady('COORDINATE');
+                    page.confirm = true;
                     this.page = page;
                 }
                 else {
@@ -324,14 +329,6 @@ var UploadWizardComponent = (function () {
     };
     UploadWizardComponent.prototype.prev = function () {
         this.pageDirection = "PREVIOUS";
-        if (this.page.name === 'MATCH' || this.page.name === "SUMMARY" || this.page.name === "BEGINNING-INFO" || this.page.name === "CATEGORY-VALIDATION") {
-            this.handlePrev();
-        }
-        else if (confirm(this.localizationService.localize("dataUploader", "prevDialogContent"))) {
-            this.handlePrev();
-        }
-    };
-    UploadWizardComponent.prototype.handlePrev = function () {
         if (this.page.prev != null) {
             this.page = this.page.prev;
             this.sheet = this.page.snapshot;

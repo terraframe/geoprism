@@ -7,7 +7,7 @@ import { ConfirmModalComponent } from "./confirm-modal.component";
 })
 export class ConfirmModalDirective implements OnInit {
 
-  @Input() enable: boolean = true;
+  @Input() enabled: boolean = true;
   @Input() message: string = "Are you sure?";
     
   @Output() onConfirm = new EventEmitter();
@@ -18,12 +18,9 @@ export class ConfirmModalDirective implements OnInit {
     private resolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,
     private el: ElementRef) {
-	  
-    console.log('Constructing'); 
   }
   
   public ngOnInit() {
-    console.log('On init');	  
   }  
   /** 
    * On key event is triggered when a key is released on the host component
@@ -31,22 +28,27 @@ export class ConfirmModalDirective implements OnInit {
    */
   @HostListener('click')
   public onClick(): void {
-    if (!this.component) {    	
-      let factory = this.resolver.resolveComponentFactory(ConfirmModalComponent);
+    if(this.enabled){
+      if (!this.component) {    	
+        let factory = this.resolver.resolveComponentFactory(ConfirmModalComponent);
 
-      this.component = this.viewContainerRef.createComponent(factory);      
+        this.component = this.viewContainerRef.createComponent(factory);      
       
-      (<ConfirmModalComponent>(this.component.instance)).setMessage(this.message);
+        (<ConfirmModalComponent>(this.component.instance)).setMessage(this.message);
         
-      (<ConfirmModalComponent>(this.component.instance)).onConfirm.subscribe(() => {
-        this.onDestroy();
+        (<ConfirmModalComponent>(this.component.instance)).onConfirm.subscribe(() => {
+          this.onDestroy();
         
-        this.onConfirm.emit();        
-      });
+          this.onConfirm.emit();        
+        });
       
-      (<ConfirmModalComponent>(this.component.instance)).onCancel.subscribe(() => {
-        this.onDestroy();
-      });
+        (<ConfirmModalComponent>(this.component.instance)).onCancel.subscribe(() => {
+          this.onDestroy();
+        });
+      }    	
+    }
+    else {
+      this.onConfirm.emit();    	
     }
   }
 

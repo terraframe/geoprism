@@ -15,14 +15,12 @@ var ConfirmModalDirective = (function () {
         this.resolver = resolver;
         this.viewContainerRef = viewContainerRef;
         this.el = el;
-        this.enable = true;
+        this.enabled = true;
         this.message = "Are you sure?";
         this.onConfirm = new core_1.EventEmitter();
         this.component = undefined;
-        console.log('Constructing');
     }
     ConfirmModalDirective.prototype.ngOnInit = function () {
-        console.log('On init');
     };
     /**
      * On key event is triggered when a key is released on the host component
@@ -30,17 +28,22 @@ var ConfirmModalDirective = (function () {
      */
     ConfirmModalDirective.prototype.onClick = function () {
         var _this = this;
-        if (!this.component) {
-            var factory = this.resolver.resolveComponentFactory(confirm_modal_component_1.ConfirmModalComponent);
-            this.component = this.viewContainerRef.createComponent(factory);
-            (this.component.instance).setMessage(this.message);
-            (this.component.instance).onConfirm.subscribe(function () {
-                _this.onDestroy();
-                _this.onConfirm.emit();
-            });
-            (this.component.instance).onCancel.subscribe(function () {
-                _this.onDestroy();
-            });
+        if (this.enabled) {
+            if (!this.component) {
+                var factory = this.resolver.resolveComponentFactory(confirm_modal_component_1.ConfirmModalComponent);
+                this.component = this.viewContainerRef.createComponent(factory);
+                (this.component.instance).setMessage(this.message);
+                (this.component.instance).onConfirm.subscribe(function () {
+                    _this.onDestroy();
+                    _this.onConfirm.emit();
+                });
+                (this.component.instance).onCancel.subscribe(function () {
+                    _this.onDestroy();
+                });
+            }
+        }
+        else {
+            this.onConfirm.emit();
         }
     };
     /**
@@ -57,7 +60,7 @@ var ConfirmModalDirective = (function () {
 __decorate([
     core_1.Input(),
     __metadata("design:type", Boolean)
-], ConfirmModalDirective.prototype, "enable", void 0);
+], ConfirmModalDirective.prototype, "enabled", void 0);
 __decorate([
     core_1.Input(),
     __metadata("design:type", String)
