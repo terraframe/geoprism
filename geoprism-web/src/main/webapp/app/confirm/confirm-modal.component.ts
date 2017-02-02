@@ -1,4 +1,6 @@
-import { Component, ElementRef, Input, Output, OnInit, ViewEncapsulation, EventEmitter, ViewChild} from "@angular/core";
+import { Component, OnInit} from "@angular/core";
+
+import { ConfirmService, IListener, IAction } from "./confirm-modal.service";
 
 @Component({
   moduleId: module.id,  
@@ -6,22 +8,50 @@ import { Component, ElementRef, Input, Output, OnInit, ViewEncapsulation, EventE
   templateUrl: 'confirm-modal.component.jsp',
   styleUrls: ['confirm-modal.component.css'],
 })
-export class ConfirmModalComponent {
-
-  @Output() public onConfirm = new EventEmitter<void>();
-  @Output() public onCancel = new EventEmitter<void>();
-
-  message: String;
+export class ConfirmModalComponent implements OnInit, IListener  {
+	
+  private action: IAction;
+  private message: string;
+  private active: boolean = false;
+	
+  constructor(private service: ConfirmService) { }  
   
-  public setMessage(message: string): void {
-    this.message = message;
+  ngOnInit(): void {
+    this.service.registerListener(this);
+  }
+  
+  ngOnDestroy(): void {
+    this.service.deregisterListener(this);
+  }
+  
+  public open(action: IAction): void {
+    if(this.action == null) {
+      this.action = action;
+
+      this.message = action.getMessage();
+      this.active = true;
+    }
   }
   
   public confirm(): void {
-    this.onConfirm.emit();
+    if(this.action != null) {
+      this.action.confirm();
+      
+      this.action = undefined;      
+    }
+    
+    this.active = false;
+    this.message = undefined;
   }
   
   public cancel(): void {
-    this.onCancel.emit();
+    if(this.action != null) {
+      this.action.cancel();
+      
+      this.action = undefined;      
+    }
+    
+    this.active = false;
+    this.message = undefined;
   }
 }

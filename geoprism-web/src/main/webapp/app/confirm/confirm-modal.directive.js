@@ -9,51 +9,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var confirm_modal_component_1 = require("./confirm-modal.component");
+var confirm_modal_service_1 = require("./confirm-modal.service");
 var ConfirmModalDirective = (function () {
-    function ConfirmModalDirective(resolver, viewContainerRef, el) {
-        this.resolver = resolver;
-        this.viewContainerRef = viewContainerRef;
-        this.el = el;
+    function ConfirmModalDirective(service) {
+        this.service = service;
         this.enabled = true;
         this.message = "Are you sure?";
         this.onConfirm = new core_1.EventEmitter();
-        this.component = undefined;
     }
-    ConfirmModalDirective.prototype.ngOnInit = function () {
-    };
     /**
      * On key event is triggered when a key is released on the host component
      * the event starts a timer to prevent concurrent requests
      */
     ConfirmModalDirective.prototype.onClick = function () {
-        var _this = this;
         if (this.enabled) {
-            if (!this.component) {
-                var factory = this.resolver.resolveComponentFactory(confirm_modal_component_1.ConfirmModalComponent);
-                this.component = this.viewContainerRef.createComponent(factory);
-                (this.component.instance).setMessage(this.message);
-                (this.component.instance).onConfirm.subscribe(function () {
-                    _this.onDestroy();
-                    _this.onConfirm.emit();
-                });
-                (this.component.instance).onCancel.subscribe(function () {
-                    _this.onDestroy();
-                });
-            }
+            this.service.open(this);
         }
         else {
             this.onConfirm.emit();
         }
     };
-    /**
-     * remove the list component
-     */
-    ConfirmModalDirective.prototype.onDestroy = function () {
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
+    ConfirmModalDirective.prototype.getMessage = function () {
+        return this.message;
+    };
+    ConfirmModalDirective.prototype.confirm = function () {
+        this.onConfirm.emit();
+    };
+    ConfirmModalDirective.prototype.cancel = function () {
     };
     return ConfirmModalDirective;
 }());
@@ -77,11 +59,9 @@ __decorate([
 ], ConfirmModalDirective.prototype, "onClick", null);
 ConfirmModalDirective = __decorate([
     core_1.Directive({
-        selector: "[confirm-modal], [confirm-modal]"
+        selector: "[confirm-modal]"
     }),
-    __metadata("design:paramtypes", [core_1.ComponentFactoryResolver,
-        core_1.ViewContainerRef,
-        core_1.ElementRef])
+    __metadata("design:paramtypes", [confirm_modal_service_1.ConfirmService])
 ], ConfirmModalDirective);
 exports.ConfirmModalDirective = ConfirmModalDirective;
 //# sourceMappingURL=confirm-modal.directive.js.map

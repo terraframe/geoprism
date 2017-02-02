@@ -1,27 +1,20 @@
-import {Directive, Input, Output, EventEmitter, ComponentRef, ViewContainerRef, ElementRef, ComponentFactoryResolver, OnInit, HostListener} from "@angular/core";
+import {Directive, Input, Output, EventEmitter, HostListener} from "@angular/core";
 
-import { ConfirmModalComponent } from "./confirm-modal.component";
+import { ConfirmService, IAction } from "./confirm-modal.service";
 
 @Directive({
-  selector: "[confirm-modal], [confirm-modal]"
+  selector: "[confirm-modal]"
 })
-export class ConfirmModalDirective implements OnInit {
+export class ConfirmModalDirective implements IAction {
 
   @Input() enabled: boolean = true;
   @Input() message: string = "Are you sure?";
     
   @Output() onConfirm = new EventEmitter();
-  
-  private component: ComponentRef<ConfirmModalComponent> = undefined;
 
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private viewContainerRef: ViewContainerRef,
-    private el: ElementRef) {
+  constructor(private service: ConfirmService) {
   }
   
-  public ngOnInit() {
-  }  
   /** 
    * On key event is triggered when a key is released on the host component
    * the event starts a timer to prevent concurrent requests
@@ -29,36 +22,22 @@ export class ConfirmModalDirective implements OnInit {
   @HostListener('click')
   public onClick(): void {
     if(this.enabled){
-      if (!this.component) {    	
-        let factory = this.resolver.resolveComponentFactory(ConfirmModalComponent);
-
-        this.component = this.viewContainerRef.createComponent(factory);      
-      
-        (<ConfirmModalComponent>(this.component.instance)).setMessage(this.message);
-        
-        (<ConfirmModalComponent>(this.component.instance)).onConfirm.subscribe(() => {
-          this.onDestroy();
-        
-          this.onConfirm.emit();        
-        });
-      
-        (<ConfirmModalComponent>(this.component.instance)).onCancel.subscribe(() => {
-          this.onDestroy();
-        });
-      }    	
+      this.service.open(this);
     }
     else {
       this.onConfirm.emit();    	
     }
   }
-
-  /**
-   * remove the list component
-   */
-  private onDestroy() {
-    if (this.component) {
-      this.component.destroy();
-      this.component = undefined;
-    }
+  
+  getMessage(): string {
+    return this.message;
+  }
+  
+  confirm(): void {
+    this.onConfirm.emit();    	
+  }
+  
+  cancel(): void {
+	  
   }
 }

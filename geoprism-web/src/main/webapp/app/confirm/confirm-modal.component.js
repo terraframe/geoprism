@@ -9,30 +9,43 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var confirm_modal_service_1 = require("./confirm-modal.service");
 var ConfirmModalComponent = (function () {
-    function ConfirmModalComponent() {
-        this.onConfirm = new core_1.EventEmitter();
-        this.onCancel = new core_1.EventEmitter();
+    function ConfirmModalComponent(service) {
+        this.service = service;
+        this.active = false;
     }
-    ConfirmModalComponent.prototype.setMessage = function (message) {
-        this.message = message;
+    ConfirmModalComponent.prototype.ngOnInit = function () {
+        this.service.registerListener(this);
+    };
+    ConfirmModalComponent.prototype.ngOnDestroy = function () {
+        this.service.deregisterListener(this);
+    };
+    ConfirmModalComponent.prototype.open = function (action) {
+        if (this.action == null) {
+            this.action = action;
+            this.message = action.getMessage();
+            this.active = true;
+        }
     };
     ConfirmModalComponent.prototype.confirm = function () {
-        this.onConfirm.emit();
+        if (this.action != null) {
+            this.action.confirm();
+            this.action = undefined;
+        }
+        this.active = false;
+        this.message = undefined;
     };
     ConfirmModalComponent.prototype.cancel = function () {
-        this.onCancel.emit();
+        if (this.action != null) {
+            this.action.cancel();
+            this.action = undefined;
+        }
+        this.active = false;
+        this.message = undefined;
     };
     return ConfirmModalComponent;
 }());
-__decorate([
-    core_1.Output(),
-    __metadata("design:type", Object)
-], ConfirmModalComponent.prototype, "onConfirm", void 0);
-__decorate([
-    core_1.Output(),
-    __metadata("design:type", Object)
-], ConfirmModalComponent.prototype, "onCancel", void 0);
 ConfirmModalComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
@@ -40,7 +53,7 @@ ConfirmModalComponent = __decorate([
         templateUrl: 'confirm-modal.component.jsp',
         styleUrls: ['confirm-modal.component.css'],
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [confirm_modal_service_1.ConfirmService])
 ], ConfirmModalComponent);
 exports.ConfirmModalComponent = ConfirmModalComponent;
 //# sourceMappingURL=confirm-modal.component.js.map

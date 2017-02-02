@@ -44,6 +44,7 @@ var auto_complete_directive_1 = require("./autocomplete/auto-complete.directive"
 var auto_complete_component_1 = require("./autocomplete/auto-complete.component");
 var confirm_modal_directive_1 = require("./confirm/confirm-modal.directive");
 var confirm_modal_component_1 = require("./confirm/confirm-modal.component");
+var confirm_modal_service_1 = require("./confirm/confirm-modal.service");
 var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
@@ -118,6 +119,7 @@ AppModule = __decorate([
             category_service_1.CategoryService,
             upload_service_1.UploadService,
             navigation_service_1.NavigationService,
+            confirm_modal_service_1.ConfirmService,
             core_service_1.EventService,
             {
                 provide: event_http_service_1.EventHttpService,
@@ -128,7 +130,7 @@ AppModule = __decorate([
             }
         ],
         bootstrap: [app_component_1.AppComponent],
-        entryComponents: [auto_complete_component_1.AutoCompleteComponent, confirm_modal_component_1.ConfirmModalComponent]
+        entryComponents: [auto_complete_component_1.AutoCompleteComponent]
     }),
     __metadata("design:paramtypes", [])
 ], AppModule);

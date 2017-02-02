@@ -51,4 +51,6 @@
     <div id="main" class="new-admin-design-main">
       <router-outlet></router-outlet>
     </div>
+    
+    <confirm-modal></confirm-modal>
 </div>

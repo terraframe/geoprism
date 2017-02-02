@@ -43,7 +43,7 @@ export class EventService {
   }
   
   public onError(error:any) : void {
-let rError = error.json() as RunwayException
+    let rError = error.json() as RunwayException
 
     for (const listener of this.listeners) {
       listener.onError(rError);

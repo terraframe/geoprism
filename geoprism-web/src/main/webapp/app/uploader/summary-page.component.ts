@@ -20,7 +20,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, Directive} from '@angular/core';
 import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
 
-import { UploadInformation, Sheet, Page, Field, Universal} from './uploader-model';
+import { UploadInformation, Sheet, Page, Field, Universal, CoordinateAttribute} from './uploader-model';
 
 @Component({
   moduleId: module.id,
@@ -115,11 +115,13 @@ export class SummaryPageComponent implements OnInit {
       }
     }
     
-    if(this.sheet.coordinates != null && typeof this.sheet.coordinates === 'object' && this.sheet.coordinates.ids != null) {
-      let coordinates = [];
+    let c = this.sheet.coordinates as any; 
+    
+    if(c != null && typeof c === 'object' && c.ids != null) {
+      let coordinates = new Array<CoordinateAttribute>();
       
-      this.sheet.coordinates.ids.forEach(id => {
-        coordinates.push(this.sheet.coordinates.values[id]);	  
+      c.ids.forEach((id:string) => {
+        coordinates.push(c.values[id]);	  
       });
       
       this.sheet.coordinates = coordinates;

@@ -20,7 +20,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<div style="position: fixed; bottom: 50%; width: 100%; left: 0px;">
+<div *ngIf="active" style="position: absolute; bottom: 50%; width: 100%; left: 0px;">
   <div class="confirm-overlay ui-widget-overlay ui-front"></div>
   <div class="confirm-modal ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-resizable com-runwaysdk-ui-factory-jquery-Dialog com-runwaysdk-ui-factory-runway-Widget ui-dialog-buttons" tabindex="-1" role="dialog">
     <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
@@ -32,10 +32,10 @@
     
     <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
       <div class="ui-dialog-buttonset">
-        <button type="button" (click)="confirm($event)" class="btn btn-primary btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
+        <button type="button" (click)="confirm($event)" class="btn btn-primary btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" style="padding: 4px 18px;">
           <span class="ui-button-text"><gdb:localize key="dashboard.Ok"/></span>
         </button>
-        <button type="button" (click)="cancel($event)" class="btn btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
+        <button type="button" (click)="cancel($event)" class="btn btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" style="padding: 4px 18px;">
           <span class="ui-button-text"><gdb:localize key="dashboard.Cancel"/></span>
         </button>
       </div>

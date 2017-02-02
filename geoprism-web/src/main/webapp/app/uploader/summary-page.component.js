@@ -38,7 +38,6 @@ var SummaryPageComponent = (function () {
         this.universalMap = {};
     }
     SummaryPageComponent.prototype.ngOnInit = function () {
-        var _this = this;
         // Initialize the universal options
         if (this.info.options != null) {
             var countries = this.info.options.countries;
@@ -84,10 +83,11 @@ var SummaryPageComponent = (function () {
                 }
             }
         }
-        if (this.sheet.coordinates != null && typeof this.sheet.coordinates === 'object' && this.sheet.coordinates.ids != null) {
-            var coordinates_1 = [];
-            this.sheet.coordinates.ids.forEach(function (id) {
-                coordinates_1.push(_this.sheet.coordinates.values[id]);
+        var c = this.sheet.coordinates;
+        if (c != null && typeof c === 'object' && c.ids != null) {
+            var coordinates_1 = new Array();
+            c.ids.forEach(function (id) {
+                coordinates_1.push(c.values[id]);
             });
             this.sheet.coordinates = coordinates_1;
         }

@@ -41,6 +41,7 @@ import { AutoCompleteComponent } from './autocomplete/auto-complete.component';
 
 import { ConfirmModalDirective } from './confirm/confirm-modal.directive';
 import { ConfirmModalComponent } from './confirm/confirm-modal.component';
+import { ConfirmService } from './confirm/confirm-modal.service';
 
 import { EventService, IdService} from './service/core.service';
 import { LocalizationService } from './service/localization.service';
@@ -119,6 +120,7 @@ import { EventHttpService } from './service/event-http.service';
     CategoryService,
     UploadService,
     NavigationService,
+    ConfirmService,
     EventService,
     { 
       provide : EventHttpService,
@@ -129,6 +131,6 @@ import { EventHttpService } from './service/event-http.service';
     }   
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AutoCompleteComponent, ConfirmModalComponent]
+  entryComponents: [AutoCompleteComponent]
 })
 export class AppModule { }
