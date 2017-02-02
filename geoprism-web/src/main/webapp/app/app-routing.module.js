@@ -31,6 +31,7 @@ var common_1 = require("@angular/common");
 var router_1 = require("@angular/router");
 var datasets_component_1 = require("./datasets/datasets.component");
 var dataset_detail_component_1 = require("./datasets/dataset-detail.component");
+var categories_component_1 = require("./category/categories.component");
 var category_detail_component_1 = require("./category/category-detail.component");
 var option_detail_component_1 = require("./category/option-detail.component");
 var routes = [
@@ -49,6 +50,10 @@ var routes = [
         resolve: {
             dataset: dataset_detail_component_1.DatasetResolver
         }
+    },
+    {
+        path: 'categories',
+        component: categories_component_1.CategoriesComponent
     },
     {
         path: 'category/:id',
@@ -79,5 +84,5 @@ AppRoutingModule = __decorate([
     __metadata("design:paramtypes", [])
 ], AppRoutingModule);
 exports.AppRoutingModule = AppRoutingModule;
-exports.routedComponents = [datasets_component_1.DatasetsComponent, dataset_detail_component_1.DatasetDetailComponent, category_detail_component_1.CategoryDetailComponent, option_detail_component_1.OptionDetailComponent];
+exports.routedComponents = [datasets_component_1.DatasetsComponent, dataset_detail_component_1.DatasetDetailComponent, categories_component_1.CategoriesComponent, category_detail_component_1.CategoryDetailComponent, option_detail_component_1.OptionDetailComponent];
 //# sourceMappingURL=app-routing.module.js.map

@@ -51,7 +51,7 @@ var CategoryService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.edit = function (parentId, id) {
         var headers = new http_1.Headers({
@@ -63,7 +63,7 @@ var CategoryService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.get = function (id) {
         var headers = new http_1.Headers({
@@ -75,7 +75,7 @@ var CategoryService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.unlock = function (category) {
         var headers = new http_1.Headers({
@@ -84,7 +84,7 @@ var CategoryService = (function (_super) {
         return this.ehttp
             .post(acp + '/category/unlock', JSON.stringify({ id: category.id }), { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.apply = function (config) {
         var headers = new http_1.Headers({
@@ -93,7 +93,7 @@ var CategoryService = (function (_super) {
         return this.ehttp
             .post(acp + '/category/apply', JSON.stringify({ config: config }), { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.remove = function (id) {
         var headers = new http_1.Headers({
@@ -102,7 +102,7 @@ var CategoryService = (function (_super) {
         return this.ehttp
             .post(acp + '/category/remove', JSON.stringify({ id: id }), { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.validate = function (name, id) {
         var params = new http_1.URLSearchParams();
@@ -111,20 +111,20 @@ var CategoryService = (function (_super) {
         return this.http
             .get(acp + '/category/validate', { search: params })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
-    CategoryService.prototype.create = function (label, parentId) {
+    CategoryService.prototype.create = function (label, parentId, validate) {
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
-        var option = { label: label, parentId: parentId, validate: false };
+        var option = { label: label, parentId: parentId, validate: validate };
         return this.ehttp
             .post(acp + '/category/create', JSON.stringify({ option: option }), { headers: headers })
             .toPromise()
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     CategoryService.prototype.update = function (category) {
         var headers = new http_1.Headers({
@@ -136,7 +136,7 @@ var CategoryService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     return CategoryService;
 }(core_service_1.BasicService));

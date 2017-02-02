@@ -50,7 +50,7 @@ export class UploadService extends BasicService {
       .then((response: any) => {
         return response.json();
       })           
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
     
   cancelImport(workbook: Workbook): Promise<Response> {
@@ -64,7 +64,7 @@ export class UploadService extends BasicService {
     return this.ehttp
       .post(acp + '/uploader/cancelImport', data, {headers: headers})
       .toPromise() 
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
   
   importData(workbook: Workbook): Promise<DatasetResponse> {
@@ -80,7 +80,7 @@ export class UploadService extends BasicService {
       .then((response: any) => {
         return response.json() as DatasetResponse;
       })      
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
   
   getGeoEntitySuggestions(parentId: string, universalId: string, text: string, limit: string): Promise<Array<{ text: string, data: any }>> {
@@ -97,7 +97,7 @@ export class UploadService extends BasicService {
       .then((response: any) => {
         return response.json() as Array<{ text: string, data: any }>;
       })
-      .catch(this.handleError);    
+      .catch(this.handleError.bind(this));    
   }
 
   createGeoEntitySynonym(entityId: string, label: string): Promise<GeoSynonym> {
@@ -113,7 +113,7 @@ export class UploadService extends BasicService {
       .then((response: any) => {
         return response.json() as GeoSynonym;
       })      
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
   
   createGeoEntity(parentId: string, universalId: string, label: string): Promise<Entity> {
@@ -129,7 +129,7 @@ export class UploadService extends BasicService {
       .then((response: any) => {
         return response.json() as Entity;
       })      
-      .catch(this.handleError);    
+      .catch(this.handleError.bind(this));    
   }
   
   deleteGeoEntity(entityId: string): Promise<Response> {
@@ -142,7 +142,7 @@ export class UploadService extends BasicService {
     return this.ehttp
     .post(acp + '/uploader/deleteGeoEntity', data, {headers: headers})
     .toPromise() 
-    .catch(this.handleError);    
+    .catch(this.handleError.bind(this));    
   }
   
   deleteGeoEntitySynonym(synonymId: string): Promise<Response> {
@@ -155,7 +155,7 @@ export class UploadService extends BasicService {
     return this.ehttp
     .post(acp + '/uploader/deleteGeoEntitySynonym', data, {headers: headers})
     .toPromise() 
-    .catch(this.handleError);    
+    .catch(this.handleError.bind(this));    
   }
     
   getClassifierSuggestions(mdAttributeId: string, text: string, limit: string): Promise<Array<{ text: string, data: any }>> {
@@ -171,7 +171,7 @@ export class UploadService extends BasicService {
       .then((response: any) => {
         return response.json() as Array<{ text: string, data: any }>;
       })
-      .catch(this.handleError);    
+      .catch(this.handleError.bind(this));    
   }
   
   createClassifierSynonym(classifierId: string, label: string): Promise<ClassifierSynonym> {
@@ -187,7 +187,7 @@ export class UploadService extends BasicService {
     .then((response: any) => {
       return response.json() as ClassifierSynonym;
     })      
-    .catch(this.handleError);
+    .catch(this.handleError.bind(this));
   }
   
   deleteClassifierSynonym(synonymId: string): Promise<Response> {
@@ -200,7 +200,7 @@ export class UploadService extends BasicService {
     return this.ehttp
     .post(acp + '/uploader/deleteClassifierSynonym', data, {headers: headers})
     .toPromise() 
-    .catch(this.handleError);    
+    .catch(this.handleError.bind(this));    
   }
   
   

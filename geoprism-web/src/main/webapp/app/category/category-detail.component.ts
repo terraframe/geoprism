@@ -95,7 +95,7 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   create() : void {
-    this.categoryService.create(this.instance.label, this.category.id)
+    this.categoryService.create(this.instance.label, this.category.id, false)
       .then((category:BasicCategory) => {
         this.category.descendants.push(category);
         

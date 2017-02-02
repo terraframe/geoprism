@@ -76,7 +76,7 @@ import { EventHttpService } from './service/event-http.service';
     AppRoutingModule,
     HttpModule,
     FileUploadModule,
-    DropdownModule.forRoot(),
+    DropdownModule.forRoot()
   ],
   declarations: [
 	// Global components

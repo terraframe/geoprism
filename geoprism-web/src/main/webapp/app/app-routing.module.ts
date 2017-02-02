@@ -24,6 +24,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { DatasetsComponent } from './datasets/datasets.component';
 import { DatasetDetailComponent, DatasetResolver} from './datasets/dataset-detail.component';
+
+import { CategoriesComponent } from './category/categories.component';
 import { CategoryDetailComponent, CategoryResolver} from './category/category-detail.component';
 import { OptionDetailComponent, OptionResolver} from './category/option-detail.component';
 
@@ -45,6 +47,10 @@ const routes: Routes = [
     resolve: {
       dataset: DatasetResolver
     }    
+  },
+  {
+	  path: 'categories',
+	  component: CategoriesComponent
   },
   {
     path: 'category/:id',
@@ -69,4 +75,4 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoryDetailComponent, OptionDetailComponent];
+export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent];

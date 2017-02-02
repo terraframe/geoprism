@@ -51,7 +51,7 @@ var DatasetService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     DatasetService.prototype.edit = function (id) {
         var headers = new http_1.Headers({
@@ -63,7 +63,7 @@ var DatasetService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     DatasetService.prototype.unlock = function (dataset) {
         var headers = new http_1.Headers({
@@ -72,7 +72,7 @@ var DatasetService = (function (_super) {
         return this.ehttp
             .post(acp + '/prism/unlock-dataset', JSON.stringify({ id: dataset.id }), { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     DatasetService.prototype.apply = function (dataset) {
         var headers = new http_1.Headers({
@@ -84,7 +84,7 @@ var DatasetService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     DatasetService.prototype.remove = function (dataset) {
         var headers = new http_1.Headers({
@@ -93,7 +93,7 @@ var DatasetService = (function (_super) {
         return this.ehttp
             .post(acp + '/prism/remove', JSON.stringify({ id: dataset.id }), { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     DatasetService.prototype.validateDatasetName = function (name, id) {
         var params = new http_1.URLSearchParams();
@@ -102,7 +102,7 @@ var DatasetService = (function (_super) {
         return this.http
             .get(acp + '/uploader/validateDatasetName', { search: params })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     return DatasetService;
 }(core_service_1.BasicService));

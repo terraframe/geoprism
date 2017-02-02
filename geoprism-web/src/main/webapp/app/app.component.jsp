@@ -39,6 +39,7 @@
               </a>            
               <ul dropdownMenu class="dropdown-menu">
                 <li role="menuitem"><a class="dropdown-item" routerLink="/datasets" routerLinkActive="active"><gdb:localize key="Data_Sets"/></a></li>
+                <li role="menuitem"><a class="dropdown-item" routerLink="/categories" routerLinkActive="active"><i></i><gdb:localize key="Categories"/></a></li>
               </ul>
             </li>
           </ul>

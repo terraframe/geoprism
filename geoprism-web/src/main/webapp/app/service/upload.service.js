@@ -55,7 +55,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.cancelImport = function (workbook) {
         var headers = new http_1.Headers({
@@ -65,7 +65,7 @@ var UploadService = (function (_super) {
         return this.ehttp
             .post(acp + '/uploader/cancelImport', data, { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.importData = function (workbook) {
         var headers = new http_1.Headers({
@@ -78,7 +78,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.getGeoEntitySuggestions = function (parentId, universalId, text, limit) {
         var params = new http_1.URLSearchParams();
@@ -92,7 +92,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.createGeoEntitySynonym = function (entityId, label) {
         var headers = new http_1.Headers({
@@ -105,7 +105,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.createGeoEntity = function (parentId, universalId, label) {
         var headers = new http_1.Headers({
@@ -118,7 +118,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.deleteGeoEntity = function (entityId) {
         var headers = new http_1.Headers({
@@ -128,7 +128,7 @@ var UploadService = (function (_super) {
         return this.ehttp
             .post(acp + '/uploader/deleteGeoEntity', data, { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.deleteGeoEntitySynonym = function (synonymId) {
         var headers = new http_1.Headers({
@@ -138,7 +138,7 @@ var UploadService = (function (_super) {
         return this.ehttp
             .post(acp + '/uploader/deleteGeoEntitySynonym', data, { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.getClassifierSuggestions = function (mdAttributeId, text, limit) {
         var params = new http_1.URLSearchParams();
@@ -151,7 +151,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.createClassifierSynonym = function (classifierId, label) {
         var headers = new http_1.Headers({
@@ -164,7 +164,7 @@ var UploadService = (function (_super) {
             .then(function (response) {
             return response.json();
         })
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     UploadService.prototype.deleteClassifierSynonym = function (synonymId) {
         var headers = new http_1.Headers({
@@ -174,7 +174,7 @@ var UploadService = (function (_super) {
         return this.ehttp
             .post(acp + '/uploader/deleteClassifierSynonym', data, { headers: headers })
             .toPromise()
-            .catch(this.handleError);
+            .catch(this.handleError.bind(this));
     };
     return UploadService;
 }(core_service_1.BasicService));

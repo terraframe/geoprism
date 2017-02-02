@@ -41,7 +41,7 @@ export class DatasetService extends BasicService {
       .then(response => {
         return response.json() as Dataset[];
       })
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
   
   edit(id : string): Promise<Dataset> {
@@ -56,7 +56,7 @@ export class DatasetService extends BasicService {
       .then((response: any) => {
         return response.json() as Dataset;
       })
-      .catch(this.handleError);      
+      .catch(this.handleError.bind(this));      
   }
   
   unlock(dataset: Dataset): Promise<Response> {
@@ -67,7 +67,7 @@ export class DatasetService extends BasicService {
     return this.ehttp
       .post(acp + '/prism/unlock-dataset', JSON.stringify({id:dataset.id}), {headers: headers})
       .toPromise()
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
   
   apply(dataset: Dataset): Promise<Dataset> {
@@ -81,7 +81,7 @@ export class DatasetService extends BasicService {
     .then((response: any) => {
       return response.json() as Dataset;
     })          
-    .catch(this.handleError);
+    .catch(this.handleError.bind(this));
   }
   
   remove(dataset: Dataset): Promise<Response> {
@@ -92,7 +92,7 @@ export class DatasetService extends BasicService {
     return this.ehttp
       .post(acp + '/prism/remove', JSON.stringify({id:dataset.id}), {headers: headers})
       .toPromise()
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
   
       
@@ -104,6 +104,6 @@ export class DatasetService extends BasicService {
     return this.http
       .get(acp + '/uploader/validateDatasetName', {search: params})
       .toPromise()
-      .catch(this.handleError);      
+      .catch(this.handleError.bind(this));      
   }  
 }

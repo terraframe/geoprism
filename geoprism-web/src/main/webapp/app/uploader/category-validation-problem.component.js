@@ -68,7 +68,7 @@ var CategoryValidationProblemComponent = (function () {
     };
     CategoryValidationProblemComponent.prototype.createOption = function () {
         var _this = this;
-        this.categoryService.create(this.problem.label, this.problem.categoryId)
+        this.categoryService.create(this.problem.label, this.problem.categoryId, false)
             .then(function (response) {
             _this.problem.resolved = true;
             _this.problem.action = {

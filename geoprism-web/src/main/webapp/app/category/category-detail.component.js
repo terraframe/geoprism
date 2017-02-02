@@ -94,7 +94,7 @@ var CategoryDetailComponent = (function () {
     };
     CategoryDetailComponent.prototype.create = function () {
         var _this = this;
-        this.categoryService.create(this.instance.label, this.category.id)
+        this.categoryService.create(this.instance.label, this.category.id, false)
             .then(function (category) {
             _this.category.descendants.push(category);
             _this.instance.active = false;

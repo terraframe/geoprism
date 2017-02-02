@@ -79,7 +79,7 @@ AppModule = __decorate([
             app_routing_module_1.AppRoutingModule,
             http_1.HttpModule,
             ng2_file_upload_1.FileUploadModule,
-            ng2_bootstrap_1.DropdownModule.forRoot(),
+            ng2_bootstrap_1.DropdownModule.forRoot()
         ],
         declarations: [
             // Global components

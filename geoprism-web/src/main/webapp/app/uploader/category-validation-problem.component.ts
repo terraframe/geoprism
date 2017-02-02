@@ -80,7 +80,7 @@ export class CategoryValidationProblemComponent implements OnInit {
   }
   
   createOption(): void {
-    this.categoryService.create(this.problem.label, this.problem.categoryId)
+    this.categoryService.create(this.problem.label, this.problem.categoryId, false)
       .then(response => {
         this.problem.resolved = true;
         this.problem.action = {

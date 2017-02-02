@@ -60,10 +60,11 @@ export class BasicService {
   }
 
   protected handleError(error: any): Promise<any> {
-/*
- * Must add the null check on this because the this reference gets messed up when
- * this code is executed from ng2 zone.js
- */   
+   /*
+    * Must add the null check on this because the this reference gets messed up when
+    * this code is executed from ng2 zone.js
+    */
+	  
     if(this != null) {
       this.service.onError(error);     
     }
