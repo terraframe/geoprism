@@ -45,7 +45,16 @@ public class CategoryController
   {
     String classifiers = ClassifierDTO.getCategoryClassifiersAsJSON(request);
 
-    return new RestBodyResponse(new JSONArray(classifiers));
+    JSONArray array = new JSONArray(classifiers);
+
+    for (int i = 0; i < array.length(); i++)
+    {
+      JSONObject object = array.getJSONObject(i);
+      object.put("id", object.getString("value"));
+      object.remove("value");
+    }
+
+    return new RestBodyResponse(array);
   }
 
   @Endpoint(url = "get", method = ServletMethod.GET, error = ErrorSerialization.JSON)
@@ -122,13 +131,13 @@ public class CategoryController
   @Endpoint(url = "apply", method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF applyOption(ClientRequestIF request, @RequestParamter(name = "config") String config) throws JSONException
   {
-//    JSONObject object = new JSONObject(config);
-//    String categoryId = object.getString("categoryId");
+    // JSONObject object = new JSONObject(config);
+    // String categoryId = object.getString("categoryId");
 
     ClassifierDTO.applyOption(request, config);
 
-//    return this.getCategory(request, categoryId);
-    return new RestBodyResponse("");    
+    // return this.getCategory(request, categoryId);
+    return new RestBodyResponse("");
   }
 
   @Endpoint(url = "unlock", method = ServletMethod.POST, error = ErrorSerialization.JSON)
