@@ -110,14 +110,13 @@ export class CategoryService extends BasicService {
   
   validate(name: string, id:string): Promise<Response> {
     
-  let params: URLSearchParams = new URLSearchParams();
+    let params: URLSearchParams = new URLSearchParams();
     params.set('name', name);
     params.set('id', id);    
     
     return this.http
       .get(acp + '/category/validate', {search: params})
-      .toPromise()
-      .catch(this.handleError.bind(this));
+      .toPromise();
   }
   
     

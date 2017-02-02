@@ -110,8 +110,7 @@ var CategoryService = (function (_super) {
         params.set('id', id);
         return this.http
             .get(acp + '/category/validate', { search: params })
-            .toPromise()
-            .catch(this.handleError.bind(this));
+            .toPromise();
     };
     CategoryService.prototype.create = function (label, parentId, validate) {
         var headers = new http_1.Headers({

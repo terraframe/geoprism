@@ -200,7 +200,7 @@
             </thead>
             <tbody> 
             
-          <!-- COORDINATE LOCATION FIELDS -->
+              <!-- COORDINATE LOCATION FIELDS -->
               <tr *ngFor="let coordinate of sheet.coordinates">
                   <td>{{coordinate.label}}</td>
                   <td> 

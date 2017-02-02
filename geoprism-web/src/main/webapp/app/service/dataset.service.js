@@ -101,8 +101,7 @@ var DatasetService = (function (_super) {
         params.set('id', id);
         return this.http
             .get(acp + '/uploader/validateDatasetName', { search: params })
-            .toPromise()
-            .catch(this.handleError.bind(this));
+            .toPromise();
     };
     return DatasetService;
 }(core_service_1.BasicService));

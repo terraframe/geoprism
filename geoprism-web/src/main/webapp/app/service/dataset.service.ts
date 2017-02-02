@@ -103,7 +103,6 @@ export class DatasetService extends BasicService {
 	  
     return this.http
       .get(acp + '/uploader/validateDatasetName', {search: params})
-      .toPromise()
-      .catch(this.handleError.bind(this));      
+      .toPromise();
   }  
 }

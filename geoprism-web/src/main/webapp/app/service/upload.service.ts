@@ -85,7 +85,7 @@ export class UploadService extends BasicService {
   
   getGeoEntitySuggestions(parentId: string, universalId: string, text: string, limit: string): Promise<Array<{ text: string, data: any }>> {
     
-  let params: URLSearchParams = new URLSearchParams();
+    let params: URLSearchParams = new URLSearchParams();
     params.set('parentId', parentId);
     params.set('universalId', universalId);    
     params.set('text', text);    

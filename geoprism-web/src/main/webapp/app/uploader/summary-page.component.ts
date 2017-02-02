@@ -114,6 +114,16 @@ export class SummaryPageComponent implements OnInit {
         }
       }
     }
+    
+    if(this.sheet.coordinates != null && typeof this.sheet.coordinates === 'object' && this.sheet.coordinates.ids != null) {
+      let coordinates = [];
+      
+      this.sheet.coordinates.ids.forEach(id => {
+        coordinates.push(this.sheet.coordinates.values[id]);	  
+      });
+      
+      this.sheet.coordinates = coordinates;
+    }
   }
     
   hasFieldType(type: string): boolean {
