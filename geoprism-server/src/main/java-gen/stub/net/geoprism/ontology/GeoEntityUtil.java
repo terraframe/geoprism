@@ -16,8 +16,13 @@
  */
 package net.geoprism.ontology;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,6 +75,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
+import net.geoprism.DefaultConfiguration;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
 import net.geoprism.data.DatabaseUtil;
@@ -99,39 +105,40 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     GeometryFactory geometryFactory = new GeometryFactory();
     GeometryHelper geometryHelper = new GeometryHelper();
     GeometrySerializationUtil serializer = new GeometrySerializationUtil(geometryFactory);
-    
+
     HashMap<String, List<Polygon>> multiPolyMap = new HashMap<String, List<Polygon>>();
-    
-    try {
+
+    try
+    {
       JSONObject json = new JSONObject(featureCollection);
-      
+
       JSONArray features = json.getJSONArray("features");
-      
+
       for (int i = 0; i < features.length(); ++i)
       {
         JSONObject feature = features.getJSONObject(i);
-        
+
         String type = feature.getString("type").toLowerCase();
-        
+
         if (type.equals("feature"))
         {
           JSONObject geometry = feature.getJSONObject("geometry");
           String featureType = geometry.getString("type").toLowerCase();
-          
+
           JSONObject properties = feature.getJSONObject("properties");
           String geoEntId = properties.getString("id");
           JSONArray coordinates = geometry.getJSONArray("coordinates");
-          
+
           if (!multiPolyMap.containsKey(geoEntId))
           {
             multiPolyMap.put(geoEntId, new ArrayList<Polygon>());
           }
           List<Polygon> polygons = multiPolyMap.get(geoEntId);
-          
+
           if (featureType.equals("polygon"))
           {
             coordinates = coordinates.getJSONArray(0);
-            
+
             Polygon polygon = serializer.jsonToPolygon(coordinates);
             polygons.add(polygon);
           }
@@ -140,7 +147,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
             for (int p = 0; p < coordinates.length(); ++p)
             {
               JSONArray jsonP = coordinates.getJSONArray(p).getJSONArray(0);
-              
+
               Polygon polygon = serializer.jsonToPolygon(jsonP);
               polygons.add(polygon);
             }
@@ -151,17 +158,19 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
           }
         }
       }
-    } catch (JSONException e) {
+    }
+    catch (JSONException e)
+    {
       e.printStackTrace();
     }
-    
+
     Set<String> ids = multiPolyMap.keySet();
     for (String id : ids)
     {
       List<Polygon> listPoly = multiPolyMap.get(id);
-      
+
       MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
-      
+
       GeoEntity geo = GeoEntity.lock(id);
       geo.setGeoPoint(geometryHelper.getGeoPoint(multiPoly));
       geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multiPoly));
@@ -169,7 +178,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       geo.apply();
     }
   }
-  
+
   /**
    * Merges the source geo entity into the destination geo entity and creates a new synonym with the name of the source
    * geo entity.
@@ -861,24 +870,25 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
-    String geoJson = null;
-    
+
     try
     {
-    publisher.writeGeojson(jw);
-    
-    geoJson = writer.toString();
+      publisher.writeGeojson(jw);
+
+      return writer.toString();
     }
     finally
     {
-    	try {
-			writer.close();
-		} catch (IOException e) {
-			throw new ProgrammingErrorException("Could not close IO stream.", e);
-		}
+      try
+      {
+        writer.close();
+      }
+      catch (IOException e)
+      {
+        throw new ProgrammingErrorException("Could not close IO stream.", e);
+      }
     }
 
-    return geoJson;
   }
 
   @Transaction
@@ -900,6 +910,31 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       }
     }
     catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  public static InputStream getData(String config)
+  {
+    try
+    {
+      JSONObject object = new JSONObject(config);
+      String type = object.getString("type");
+
+      List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+      for (ConfigurationIF configuration : configurations)
+      {
+        if (configuration.hasLocationData(type))
+        {
+          return configuration.getLocationData(type, object);
+        }
+      }
+
+      throw new ProgrammingErrorException("Unsupported type [" + type + "]");
+    }
+    catch (Exception e)
     {
       throw new ProgrammingErrorException(e);
     }

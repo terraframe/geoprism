@@ -16,6 +16,7 @@
  */
 package net.geoprism.data;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
+import com.runwaysdk.mvc.InputStreamResponse;
 import com.runwaysdk.mvc.ParseType;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
@@ -41,7 +43,6 @@ import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.ExcludeConfiguration;
-import net.geoprism.JSONStringImpl;
 import net.geoprism.ListSerializable;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
@@ -78,7 +79,7 @@ public class LocationController implements Reloadable
       universalId = universals.get(0).getId();
     }
 
-    String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
+//    String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
 
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getId(), universalId, 200);
 
@@ -88,7 +89,7 @@ public class LocationController implements Reloadable
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());
-    response.set("geometries", new JSONStringImpl(geometries));
+//    response.set("geometries", new JSONStringImpl(geometries));
     // response.set("layers", object.get("layers"));
 
     return response;
@@ -144,12 +145,12 @@ public class LocationController implements Reloadable
       return new RestBodyResponse(object);
     }
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF applyGeometries(ClientRequestIF request, @RequestParamter(name = "featureCollection") String featureCollection)
   {
-    GeoEntityUtilDTO.applyGeometries(request, featureCollection);
-    
+//    GeoEntityUtilDTO.applyGeometries(request, featureCollection);
+
     return new RestBodyResponse("");
   }
 
@@ -178,5 +179,13 @@ public class LocationController implements Reloadable
     GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
     return new RestBodyResponse("");
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF data(ClientRequestIF request, @RequestParamter(name = "config") String config) throws JSONException
+  {
+    InputStream istream = GeoEntityUtilDTO.getData(request, config);
+    
+    return new InputStreamResponse(istream, "application/json");
   }
 }

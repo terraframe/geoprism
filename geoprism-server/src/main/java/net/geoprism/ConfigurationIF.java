@@ -18,8 +18,11 @@
  */
 package net.geoprism;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Set;
+
+import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.generation.loader.Reloadable;
@@ -72,4 +75,22 @@ public interface ConfigurationIF extends Reloadable
   public boolean hasAccess(String functionality);
 
   public GeoEntity getDefaultGeoEntity();
+
+  /**
+   * Returns if the configuration supports the location query
+   * 
+   * @param type
+   * @return
+   */
+  public boolean hasLocationData(String type);
+
+  /**
+   * Returns if the location data corresponding to the query type
+   * 
+   * @param type
+   * @param object 
+   * 
+   * @return
+   */
+  public InputStream getLocationData(String type, JSONObject object);
 }

@@ -3,36 +3,44 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.geoprism.data.etl.TargetBuilder;
-
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONWriter;
 
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+
+import net.geoprism.data.etl.TargetBuilder;
+import net.geoprism.ontology.LocationLayerPublisher;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -148,5 +156,43 @@ public class DefaultConfiguration implements ConfigurationIF
   public GeoEntity getDefaultGeoEntity()
   {
     return null;
+  }
+
+  @Override
+  public boolean hasLocationData(String type)
+  {
+    return type.equals("LOCATION_MANAGEMENT");
+  }
+
+  @Override
+  public InputStream getLocationData(String type, JSONObject object)
+  {
+    try
+    {
+      if (type.equals("LOCATION_MANAGEMENT"))
+      {
+        String id = object.getString("id");
+        String universalId = object.getString("universalId");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        JSONWriter writer = new JSONWriter(new OutputStreamWriter(baos, "UTF-8"));
+
+        LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, "");
+
+        publisher.writeGeojson(writer);
+
+        return new ByteArrayInputStream(baos.toByteArray());
+      }
+
+      throw new ProgrammingErrorException("Unsupported type [" + type + "]");
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+    catch (UnsupportedEncodingException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 }
