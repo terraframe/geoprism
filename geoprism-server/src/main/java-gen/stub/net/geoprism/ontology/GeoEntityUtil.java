@@ -16,13 +16,9 @@
  */
 package net.geoprism.ontology;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,7 +71,6 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
-import net.geoprism.DefaultConfiguration;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
 import net.geoprism.data.DatabaseUtil;

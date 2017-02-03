@@ -172,7 +172,7 @@ public class DefaultConfiguration implements ConfigurationIF
       if (type.equals("LOCATION_MANAGEMENT"))
       {
         String id = object.getString("id");
-        String universalId = object.getString("universalId");
+        String universalId = object.has("universalId") ? object.getString("universalId") : null;
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JSONWriter writer = new JSONWriter(new OutputStreamWriter(baos, "UTF-8"));
