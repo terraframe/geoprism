@@ -21,14 +21,15 @@
   function LocationService(runwayService) {
     var service = {};
     
-    service.select = function(connection, id, universalId, existingLayers) {
+    service.select = function(connection, id, universalId, existingLayers, config) {
       var req = {
         method: 'POST',
-        url: com.runwaysdk.__applicationContextPath + '/location/select',
+        url: com.runwaysdk.__applicationContextPath + '/location/data',
         data : {
           id : id,
           universalId : universalId,
-          existingLayers : existingLayers
+          existingLayers : existingLayers,
+          config : config
         }
       }      
       

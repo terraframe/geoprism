@@ -33,7 +33,7 @@
       $scope.children = [];
       $scope.previous = [];
       
-      locationService.select(connection, "", "", "");
+      locationService.select(connection, "", "", "", {id:"", type:"LOCATION_MANAGEMENT"} );
     }
     
     controller.load = function(data) {
@@ -64,7 +64,7 @@
           }
         };    
         
-        locationService.select(connection, entity.id, "", $scope.layers);        
+        locationService.select(connection, entity.id, "", $scope.layers, JSON.stringify({id:entity.id, type:"LOCATION_MANAGEMENT"}) );        
       }
     }
     

@@ -17,6 +17,7 @@
 package net.geoprism.ontology;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import org.json.JSONWriter;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.gis.dataaccess.AttributeGeometryIF;
+import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableChar;
@@ -35,7 +39,9 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.vividsolutions.jts.geom.Geometry;
 
+import net.geoprism.JSONStringImpl;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.gis.geoserver.GeoserverFacade;
 import net.geoprism.gis.geoserver.GeoserverLayer;
@@ -222,4 +228,35 @@ public class LocationLayerPublisher extends LayerPublisher
 
     writer.endObject();
   }
+  
+//  public void writeVectorTile(ValueQuery query)
+//  {
+//	OIterator<ValueObject> iterator = query.getIterator();
+//
+//	long count = 0;
+//    try
+//    {
+//
+//      while (iterator.hasNext())
+//      {
+//        count++;
+//
+//        ValueObject object = iterator.next();
+//        StringWriter geomWriter = new StringWriter();
+//
+//        AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
+//        
+//        Geometry geom = attributeIF.getGeometry();
+//        // TODO: finish this method
+//
+////        this.gjson.write(attributeIF.getGeometry(), geomWriter);
+////
+////        writer.value(new JSONStringImpl(geomWriter.toString()));
+//      }
+//    }
+//    finally
+//    {
+//      iterator.close();
+//    }
+//  }
 }
