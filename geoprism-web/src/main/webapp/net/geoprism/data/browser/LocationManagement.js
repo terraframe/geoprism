@@ -33,7 +33,7 @@
       $scope.children = [];
       $scope.previous = [];
       
-      locationService.select(connection, "", "", "", {id:"", type:"LOCATION_MANAGEMENT"} );
+      locationService.select(connection, "", "", "" );
     }
     
     controller.load = function(data) {
@@ -46,7 +46,7 @@
         options : data.universals
       };
       
-      $scope.$broadcast('sharedGeoData', data);
+      $scope.$broadcast('sharedGeoData', {id: data.entity.id, universalId: data.universal, type:"LOCATION_MANAGEMENT"});
     }
     
     controller.select = function(entity, event) {
@@ -64,7 +64,7 @@
           }
         };    
         
-        locationService.select(connection, entity.id, "", $scope.layers, JSON.stringify({id:entity.id, type:"LOCATION_MANAGEMENT"}) );        
+        locationService.select(connection, entity.id, "", $scope.layers );        
       }
     }
     
@@ -113,7 +113,7 @@
           $scope.children = data.children.resultSet;
           $scope.layers = data.layers;
             
-          $scope.$broadcast('sharedGeoData', data);          
+//          $scope.$broadcast('sharedGeoData', data);          
         }
       };
       
@@ -202,7 +202,7 @@
             $scope.children.splice(index, 1);
           }          
           
-          $scope.$broadcast('sharedGeoData', {});          
+//          $scope.$broadcast('sharedGeoData', {});          
         }
       };
       

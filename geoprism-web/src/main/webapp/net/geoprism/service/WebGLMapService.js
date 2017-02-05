@@ -162,11 +162,11 @@
     }
     
     service.focusOnFeature = function(feature) {
-    	service.map.focusOnFeature(feature);
+//    	service.map.focusOnFeature(feature);
     }
     
     service.focusOffFeature = function(feature) {
-    	service.map.focusOffFeature(feature);
+//    	service.map.focusOffFeature(feature);
     }
     
     service.zoomToExtentOfFeatures = function(featureGeoIds) {

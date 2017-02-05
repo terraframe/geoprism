@@ -18,6 +18,7 @@ package net.geoprism;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -171,26 +172,71 @@ public class DefaultConfiguration implements ConfigurationIF
     {
       if (type.equals("LOCATION_MANAGEMENT"))
       {
-        String id = object.getString("id");
+        String id = object.has("id") ? object.getString("id") : null;
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        JSONWriter writer = new JSONWriter(new OutputStreamWriter(baos, "UTF-8"));
+        if (id != null)
+        {
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          OutputStreamWriter ow = new OutputStreamWriter(baos, "UTF-8");
 
-        LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, "");
+          try
+          {
+            JSONWriter writer = new JSONWriter(ow);
 
-        publisher.writeGeojson(writer);
+            LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, "");
 
-        return new ByteArrayInputStream(baos.toByteArray());
+            publisher.writeGeojson(writer);
+
+            ow.flush();
+          }
+          finally
+          {
+            ow.close();
+          }
+
+          return new ByteArrayInputStream(baos.toByteArray());
+        }
+        else
+        {
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          OutputStreamWriter ow = new OutputStreamWriter(baos, "UTF-8");
+
+          try
+          {
+            JSONWriter writer = new JSONWriter(ow);
+
+            writer.object();
+
+            writer.key("type");
+            writer.value("FeatureCollection");
+            writer.key("features");
+            writer.array();
+
+            writer.endArray();
+
+            writer.key("totalFeatures");
+            writer.value(0);
+
+            writer.key("crs");
+            writer.value(new JSONObject("{\"type\":\"name\",\"properties\":{\"name\":\"urn:ogc:def:crs:EPSG::4326\"}}"));
+
+            writer.endObject();
+
+            ow.flush();
+          }
+          finally
+          {
+            ow.close();
+          }
+
+          return new ByteArrayInputStream(baos.toByteArray());
+        }
       }
 
       throw new ProgrammingErrorException("Unsupported type [" + type + "]");
     }
-    catch (JSONException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
-    catch (UnsupportedEncodingException e)
+    catch (JSONException | IOException e)
     {
       throw new ProgrammingErrorException(e);
     }

@@ -273,7 +273,7 @@
         },
         
         
-        addVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, is3d) {
+        addVectorLayer : function(config, layerName, styleObj, type, stackingIndex, is3d) {
         	var map = this.getMap();
         	var that = this;
         	
@@ -283,7 +283,7 @@
             	// add the source which stores the data
           	    map.addSource(layerName, { 
           	    	type: 'geojson', 
-          	    	data: layerAsGeoJSON
+          	    	data: com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))
           	    });
           	  
           	    if (layerName.indexOf("point") !== -1){
@@ -469,10 +469,27 @@
         },
         
         
-        updateVectorLayer : function(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, skipMapLoadedCheck) {
+        updateVectorLayer : function(config, layerName, styleObj, type, stackingIndex, skipMapLoadedCheck) {
         	var map = this.getMap();
         	var that = this;
+
+        	var source = map.getSource(layerName);
         	
+        	if(source) {
+              map.removeSource(layerName);
+              map.addSource(layerName, { 
+                type: 'geojson', 
+                data: com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))
+              });
+        	}
+//            map.on('load', function () {
+//              map.removeSource(layerName);
+//              map.addSource(layerName, { 
+//                type: 'geojson', 
+//                data: com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))
+//              });
+//            });        	  
+          
 //            if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
 //      	    {
 //        	  if (this._updateVectorLayersAfterLoading == null)
@@ -487,62 +504,62 @@
 //        	  return;
 //      	    }
 //        	map.on('load', function () {
-	        	var targetLayer = map.getLayer(layerName);
-	        	
-	    		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
-	
-	        	if(targetLayer && targetLayer.id === "target-multipolygon"){
-	        		
-	        		var otherSourceName = "target-point";
-	        		var otherSource = map.getSource(otherSourceName);
-	        		if(otherSource && otherSource._data){
-	        			otherSource.setData(emptyGeoJSON)
-	        		}
-	        		
-	        		var layerSourceName = targetLayer.source;
-	        		
-	        		//
-	        		// TODO: Remove this complete hack.  It was needed because the map renders only 1 feature on initial search.
-	        		//
-	        		var numFeaturesToAdd = layerAsGeoJSON.features.length;
-	        		var attempts = 2;
-	        		var i = 1;
-	        		while(i<=attempts){
-	        			
-	        			map.getSource(layerSourceName).setData(layerAsGeoJSON);
-	        			
-	        			var numFeaturesAdded = map.getSource(layerSourceName)._data.features.length;
-	        			if(i === attempts){
-	        				setTimeout(function(){
-	        					map.getSource(layerSourceName).setData(layerAsGeoJSON);
-	        				}, 4000);
-	        				
-	        				break;
-	        			}
-	        			
-	        			i++;
-	        		} 
-	        	}
-	        	else if(targetLayer && targetLayer.id === "target-point"){
-	        		
-	        		var otherSourceName = "target-multipolygon";
-	        		var otherSource = map.getSource(otherSourceName);
-	        		if(otherSource && otherSource._data){
-	        			otherSource.setData(emptyGeoJSON)
-	        		}
-	        		
-	        		var layerSourceName = targetLayer.source;
-	        		map.getSource(layerSourceName).setData(layerAsGeoJSON);
-	        	}
-				
-	//    		if (targetLayer) {
-	//          	  var layerSourceName = targetLayer.source;
-	//          	  map.getSource(layerSourceName).setData(layerAsGeoJSON);
-	//    		}
-				
-	    		map.once('data', function () {
-	    		  map.fire("data.updated", true);
-	    		});
+//	        	var targetLayer = map.getLayer(layerName);
+//	        	
+//	    		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
+//	
+//	        	if(targetLayer && targetLayer.id === "target-multipolygon"){
+//	        		
+//	        		var otherSourceName = "target-point";
+//	        		var otherSource = map.getSource(otherSourceName);
+//	        		if(otherSource && otherSource._data){
+//	        			otherSource.setData(emptyGeoJSON)
+//	        		}
+//	        		
+//	        		var layerSourceName = targetLayer.source;
+//	        		
+//	        		//
+//	        		// TODO: Remove this complete hack.  It was needed because the map renders only 1 feature on initial search.
+//	        		//
+////	        		var numFeaturesToAdd = layerAsGeoJSON.features.length;
+////	        		var attempts = 2;
+////	        		var i = 1;
+////	        		while(i<=attempts){
+////	        			
+////	        			map.getSource(layerSourceName).setData(layerAsGeoJSON);
+////	        			
+////	        			var numFeaturesAdded = map.getSource(layerSourceName)._data.features.length;
+////	        			if(i === attempts){
+////	        				setTimeout(function(){
+////	        					map.getSource(layerSourceName).setData(layerAsGeoJSON);
+////	        				}, 4000);
+////	        				
+////	        				break;
+////	        			}
+////	        			
+////	        			i++;
+////	        		} 
+//	        	}
+//	        	else if(targetLayer && targetLayer.id === "target-point"){
+//	        		
+//	        		var otherSourceName = "target-multipolygon";
+//	        		var otherSource = map.getSource(otherSourceName);
+//	        		if(otherSource && otherSource._data){
+//	        			otherSource.setData(emptyGeoJSON)
+//	        		}
+//	        		
+//	        		var layerSourceName = targetLayer.source;
+//	        		map.getSource(layerSourceName).setData(layerAsGeoJSON);
+//	        	}
+//				
+//	//    		if (targetLayer) {
+//	//          	  var layerSourceName = targetLayer.source;
+//	//          	  map.getSource(layerSourceName).setData(layerAsGeoJSON);
+//	//    		}
+//				
+//	    		map.once('data', function () {
+//	    		  map.fire("data.updated", true);
+//	    		});
 //        	});
         },
         
