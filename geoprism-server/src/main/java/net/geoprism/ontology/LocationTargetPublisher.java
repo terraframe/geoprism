@@ -163,7 +163,7 @@ public class LocationTargetPublisher extends LayerPublisher
     writer.endObject();
   }
 
-  public byte[] writeVectorTiles(String layerName)
+  public byte[] writeVectorTiles(String layerName, int x, int y, int zoom)
   {
     GeoEntity entity = GeoEntity.get(this.id);
     Universal universal = entity.getUniversal();
@@ -174,7 +174,7 @@ public class LocationTargetPublisher extends LayerPublisher
       LayerType entityLayerType = this.getLayerType(descendants);
       ValueQuery entityQuery = this.getQuery(entity, entityLayerType);
 
-      return this.writeVectorTiles(layerName, entityQuery);
+      return this.writeVectorTiles(layerName, x, y, zoom, entityQuery);
     }
     catch (JSONException | IOException e)
     {

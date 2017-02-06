@@ -185,17 +185,21 @@ public class DefaultConfiguration implements ConfigurationIF
         String id = object.getString("id");
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
 
+        int x = object.getInt("x");
+        int y = object.getInt("y");
+        int zoom = object.getInt("z");
+
         if (type.equals(LM_CONTEXT))
         {
           LocationContextPublisher publisher = new LocationContextPublisher(id, "");
-          byte[] bytes = publisher.writeVectorTiles("layer");
+          byte[] bytes = publisher.writeVectorTiles("layer", x, y, zoom);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM_TARGET))
         {
           LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
-          byte[] bytes = publisher.writeVectorTiles("layer");
+          byte[] bytes = publisher.writeVectorTiles("layer", x, y, zoom);
 
           return new ByteArrayInputStream(bytes);
         }

@@ -233,7 +233,7 @@ public abstract class LayerPublisher
 
   public abstract void writeGeojson(JSONWriter writer);
 
-  protected byte[] writeVectorTiles(String layerName, ValueQuery query) throws IOException
+  protected byte[] writeVectorTiles(String layerName, int x, int y, int zoom, ValueQuery query) throws IOException
   {
     OIterator<ValueObject> iterator = query.getIterator();
 
@@ -254,24 +254,24 @@ public abstract class LayerPublisher
 
         geometries.add(geometry);
 
-        if (tileEnvelope == null)
-        {
-          tileEnvelope = geometry.getEnvelopeInternal();
-        }
-        else
-        {
-          tileEnvelope.expandToInclude(geometry.getEnvelopeInternal());
-        }
+        // if (tileEnvelope == null)
+        // {
+        // tileEnvelope = geometry.getEnvelopeInternal();
+        // }
+        // else
+        // {
+        // tileEnvelope.expandToInclude(geometry.getEnvelopeInternal());
+        // }
       }
 
       if (tileEnvelope == null)
       {
-        tileEnvelope = new Envelope(0d, 100d, 0d, 100d); // TODO: Your tile extent here
+        tileEnvelope = this.getTileBounds(x, y, zoom);
       }
 
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
-      MvtLayerParams layerParams = new MvtLayerParams(); // Default extent
+      MvtLayerParams layerParams = new MvtLayerParams();
 
       TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
 
@@ -303,5 +303,22 @@ public abstract class LayerPublisher
     {
       iterator.close();
     }
+  }
+
+  public Envelope getTileBounds(int x, int y, int zoom)
+  {
+    return new Envelope(this.getLong(x, zoom), this.getLong(x + 1, zoom),  this.getLat(y, zoom), this.getLat(y + 1, zoom));
+  }
+
+  public double getLong(int x, int zoom)
+  {
+    return ( x / Math.pow(2, zoom) * 360 - 180 );
+  }
+
+  public double getLat(int y, int zoom)
+  {
+    double n = Math.PI - 2 * Math.PI * y / Math.pow(2, zoom);
+//    return ( 180 / Math.PI * Math.atan(0.5 * ( Math.exp(n) - Math.exp(-n) )) );
+    return Math.toDegrees(Math.atan(Math.sinh(n)));
   }
 }
