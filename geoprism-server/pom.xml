@@ -1,23 +1,6 @@
-<!--
-
-    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
-
-    This file is part of Runway SDK(tm).
-
-    Runway SDK(tm) is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    Runway SDK(tm) is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
-
--->
+<!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is part of Runway SDK(tm). Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, 
+  or (at your option) any later version. Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received 
+  a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>. -->
 <!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is part of Runway SDK(tm). Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, 
   or (at your option) any later version. Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received 
   a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>. -->
@@ -117,7 +100,7 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-geojson</artifactId>
       <version>${geotools.version}</version>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
@@ -140,6 +123,12 @@
       <groupId>org.apache.oltu.oauth2</groupId>
       <artifactId>org.apache.oltu.oauth2.client</artifactId>
       <version>1.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.wdtinc</groupId>
+      <artifactId>mapbox-vector-tile</artifactId>
+      <version>1.1.1</version>
     </dependency>
   </dependencies>
 
@@ -472,7 +461,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <!-- We only need this for when you're running rebuild-database, import-schema, any sort of database maven tool from a geoprism extension project (module). -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -626,17 +615,17 @@
                   </action>
                 </pluginExecution>
                 <pluginExecution>
-                	<pluginExecutionFilter>
-                		<groupId>org.codehaus.mojo</groupId>
-                		<artifactId>exec-maven-plugin</artifactId>
-                		<versionRange>[1.4.0,)</versionRange>
-                		<goals>
-                			<goal>java</goal>
-                		</goals>
-                	</pluginExecutionFilter>
-                	<action>
-                		<ignore></ignore>
-                	</action>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <versionRange>[1.4.0,)</versionRange>
+                    <goals>
+                      <goal>java</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>

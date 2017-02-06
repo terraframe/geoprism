@@ -140,4 +140,23 @@ public class LocationContextPublisher extends LayerPublisher
     writer.endObject();
   }
 
+  public byte[] writeVectorTiles(String layerName)
+  {
+    GeoEntity entity = GeoEntity.get(this.id);
+    Universal universal = entity.getUniversal();
+    List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+    try
+    {
+      LayerType entityLayerType = this.getEntityLayerType(descendants);
+      ValueQuery entityQuery = this.getEntityQuery(entity, entityLayerType);
+
+      return this.writeVectorTiles(layerName, entityQuery);
+    }
+    catch (JSONException | IOException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
 }
