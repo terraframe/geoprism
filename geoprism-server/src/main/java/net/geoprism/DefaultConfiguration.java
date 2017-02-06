@@ -21,8 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +41,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 import net.geoprism.data.etl.TargetBuilder;
-import net.geoprism.ontology.LocationLayerPublisher;
+import net.geoprism.ontology.LocationContextPublisher;
+import net.geoprism.ontology.LocationTargetPublisher;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -50,6 +51,19 @@ public class DefaultConfiguration implements ConfigurationIF
   public static final String DASHBOARD_BUILDER = "geoprism.admin.DashboardBuilder";
 
   public static final String DECISION_MAKER    = "geoprism.DecisionMaker";
+
+  public static final String LM_TARGET         = "LM_TARGET";
+
+  public static final String LM_CONTEXT        = "LM_CONTEXT";
+
+  private Set<String>        types;
+
+  public DefaultConfiguration()
+  {
+    this.types = new HashSet<String>();
+    this.types.add(LM_TARGET);
+    this.types.add(LM_CONTEXT);
+  }
 
   @Override
   public Collection<String> getDatabrowserPackages()
@@ -162,7 +176,7 @@ public class DefaultConfiguration implements ConfigurationIF
   @Override
   public boolean hasLocationData(String type)
   {
-    return type.equals("LOCATION_MANAGEMENT");
+    return this.types.contains(type);
   }
 
   @Override
@@ -170,7 +184,7 @@ public class DefaultConfiguration implements ConfigurationIF
   {
     try
     {
-      if (type.equals("LOCATION_MANAGEMENT"))
+      if (this.hasLocationData(type))
       {
         String id = object.has("id") ? object.getString("id") : null;
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
@@ -184,9 +198,16 @@ public class DefaultConfiguration implements ConfigurationIF
           {
             JSONWriter writer = new JSONWriter(ow);
 
-            LocationLayerPublisher publisher = new LocationLayerPublisher(id, universalId, "");
-
-            publisher.writeGeojson(writer);
+            if (type.equals(LM_CONTEXT))
+            {
+              LocationContextPublisher publisher = new LocationContextPublisher(id, "");
+              publisher.writeGeojson(writer);
+            }
+            else if (type.equals(LM_TARGET))
+            {
+              LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
+              publisher.writeGeojson(writer);
+            }
 
             ow.flush();
           }
