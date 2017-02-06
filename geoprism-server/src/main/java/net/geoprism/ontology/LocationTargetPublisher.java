@@ -65,15 +65,15 @@ public class LocationTargetPublisher extends LayerPublisher
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
     List<GeoserverLayerIF> layers = new LinkedList<GeoserverLayerIF>();
-    layers.add(this.publishChildLayer(entity, descendants));
+    layers.add(this.publishLayer(entity, descendants));
 
     return layers;
   }
 
-  private GeoserverLayerIF publishChildLayer(GeoEntity entity, List<Term> descendants)
+  private GeoserverLayerIF publishLayer(GeoEntity entity, List<Term> descendants)
   {
-    LayerType layerType = this.getChildLayerType(descendants);
-    String sql = this.getChildQuery(entity, layerType).getSQL();
+    LayerType layerType = this.getLayerType(descendants);
+    String sql = this.getQuery(entity, layerType).getSQL();
     String viewName = SessionPredicate.generateId();
 
     DatabaseUtil.createView(viewName, sql);
@@ -86,7 +86,7 @@ public class LocationTargetPublisher extends LayerPublisher
     return layer;
   }
 
-  private ValueQuery getChildQuery(GeoEntity entity, LayerType type)
+  private ValueQuery getQuery(GeoEntity entity, LayerType type)
   {
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
     LocatedInQuery liQuery = new LocatedInQuery(vQuery);
@@ -118,7 +118,7 @@ public class LocationTargetPublisher extends LayerPublisher
     return vQuery;
   }
 
-  private LayerType getChildLayerType(List<Term> descendants)
+  private LayerType getLayerType(List<Term> descendants)
   {
     return LayerType.POLYGON;
   }
@@ -131,8 +131,8 @@ public class LocationTargetPublisher extends LayerPublisher
 
     try
     {
-      LayerType childLayerType = this.getChildLayerType(descendants);
-      ValueQuery childQuery = this.getChildQuery(entity, childLayerType);
+      LayerType childLayerType = this.getLayerType(descendants);
+      ValueQuery childQuery = this.getQuery(entity, childLayerType);
 
       this.writeGeojson(writer, childQuery);
     }
@@ -163,34 +163,22 @@ public class LocationTargetPublisher extends LayerPublisher
     writer.endObject();
   }
 
-  // public void writeVectorTile(ValueQuery query)
-  // {
-  // OIterator<ValueObject> iterator = query.getIterator();
-  //
-  // long count = 0;
-  // try
-  // {
-  //
-  // while (iterator.hasNext())
-  // {
-  // count++;
-  //
-  // ValueObject object = iterator.next();
-  // StringWriter geomWriter = new StringWriter();
-  //
-  // AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
-  //
-  // Geometry geom = attributeIF.getGeometry();
-  // // TODO: finish this method
-  //
-  //// this.gjson.write(attributeIF.getGeometry(), geomWriter);
-  ////
-  //// writer.value(new JSONStringImpl(geomWriter.toString()));
-  // }
-  // }
-  // finally
-  // {
-  // iterator.close();
-  // }
-  // }
+  public byte[] writeVectorTiles(String layerName)
+  {
+    GeoEntity entity = GeoEntity.get(this.id);
+    Universal universal = entity.getUniversal();
+    List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
+
+    try
+    {
+      LayerType entityLayerType = this.getLayerType(descendants);
+      ValueQuery entityQuery = this.getQuery(entity, entityLayerType);
+
+      return this.writeVectorTiles(layerName, entityQuery);
+    }
+    catch (JSONException | IOException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
 }

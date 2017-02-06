@@ -17,10 +17,7 @@
 package net.geoprism;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,7 +27,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONWriter;
 
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
@@ -186,78 +182,28 @@ public class DefaultConfiguration implements ConfigurationIF
     {
       if (this.hasLocationData(type))
       {
-        String id = object.has("id") ? object.getString("id") : null;
+        String id = object.getString("id");
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
 
-        if (id != null)
+        if (type.equals(LM_CONTEXT))
         {
-          ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          OutputStreamWriter ow = new OutputStreamWriter(baos, "UTF-8");
+          LocationContextPublisher publisher = new LocationContextPublisher(id, "");
+          byte[] bytes = publisher.writeVectorTiles("layer");
 
-          try
-          {
-            JSONWriter writer = new JSONWriter(ow);
-
-            if (type.equals(LM_CONTEXT))
-            {
-              LocationContextPublisher publisher = new LocationContextPublisher(id, "");
-              publisher.writeGeojson(writer);
-            }
-            else if (type.equals(LM_TARGET))
-            {
-              LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
-              publisher.writeGeojson(writer);
-            }
-
-            ow.flush();
-          }
-          finally
-          {
-            ow.close();
-          }
-
-          return new ByteArrayInputStream(baos.toByteArray());
+          return new ByteArrayInputStream(bytes);
         }
-        else
+        else if (type.equals(LM_TARGET))
         {
-          ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          OutputStreamWriter ow = new OutputStreamWriter(baos, "UTF-8");
+          LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
+          byte[] bytes = publisher.writeVectorTiles("layer");
 
-          try
-          {
-            JSONWriter writer = new JSONWriter(ow);
-
-            writer.object();
-
-            writer.key("type");
-            writer.value("FeatureCollection");
-            writer.key("features");
-            writer.array();
-
-            writer.endArray();
-
-            writer.key("totalFeatures");
-            writer.value(0);
-
-            writer.key("crs");
-            writer.value(new JSONObject("{\"type\":\"name\",\"properties\":{\"name\":\"urn:ogc:def:crs:EPSG::4326\"}}"));
-
-            writer.endObject();
-
-            ow.flush();
-          }
-          finally
-          {
-            ow.close();
-          }
-
-          return new ByteArrayInputStream(baos.toByteArray());
+          return new ByteArrayInputStream(bytes);
         }
       }
 
       throw new ProgrammingErrorException("Unsupported type [" + type + "]");
     }
-    catch (JSONException | IOException e)
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }

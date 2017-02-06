@@ -186,6 +186,6 @@ public class LocationController implements Reloadable
   {
     InputStream istream = GeoEntityUtilDTO.getData(request, config);
     
-    return new InputStreamResponse(istream, "application/json");
+    return new InputStreamResponse(istream, "application/x-protobuf");
   }
 }

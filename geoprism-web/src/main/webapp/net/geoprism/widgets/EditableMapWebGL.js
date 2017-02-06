@@ -71,10 +71,10 @@
         }
       };
 
-      controller.addVectorLayer({type:"LM_CONTEXT"}, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
+//      controller.addVectorLayer({type:"LM_CONTEXT"}, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
 //      controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2);
 //
-      controller.addVectorLayer({type:"LM_TARGET"}, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+//      controller.addVectorLayer({type:"LM_TARGET"}, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
 //      controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
 
 //      controller.addVectorHoverEvents(hoverCallback, [ "target-point", "target-multipolygon" ]);

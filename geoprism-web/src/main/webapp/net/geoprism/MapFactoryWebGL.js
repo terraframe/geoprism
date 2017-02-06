@@ -280,10 +280,10 @@
         	
             map.on('load', function () {
             	
-            	// add the source which stores the data
+            	// add a null source which stores the data
           	    map.addSource(layerName, { 
-          	    	type: 'geojson', 
-          	    	data: com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))
+          	      type: 'vector',
+                  tiles: ['https://localhost:8443' + com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))]
           	    });
           	  
           	    if (layerName.indexOf("point") !== -1){
@@ -291,6 +291,7 @@
     		     	    map.addLayer({
       			 	    	"id": layerName,
     			 	        "source": layerName,
+    			 	        "source-layer": "layer",    			 	        
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
@@ -304,6 +305,7 @@
     		     	    map.addLayer({
       			 	    	"id": layerName + "-label",
     			 	        "source": layerName,
+    			 	        "source-layer": "layer",
     			 	        "type": "symbol",
     			 	        "paint": {
     			 	            "text-color": "black",
@@ -323,6 +325,7 @@
     		     	    map.addLayer({
     		     	        "id": layerName + "-hover",
     		     	        "source": layerName,
+    			 	        "source-layer": "layer",    		     	        
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
@@ -339,6 +342,7 @@
 	          	    	var polygons3DStyle = {
 	  			 	    	"id": layerName,
 	  			 	        "source": layerName,
+    			 	        "source-layer": "layer",	  			 	        
 	  			 	        "type": "fill-extrusion",
 	  			 	        "paint": {
 //	  			 	        	'fill-extrusion-color': styleObj.fill,
@@ -371,6 +375,7 @@
     		     	    map.addLayer({
     		     	    	"id": layerName + "-hover",
     		     	    	"source": layerName,
+    			 	        "source-layer": "layer",    		     	    	
     			 	        "type": "fill-extrusion",
     			 	        "paint": {
     			 	        	"fill-extrusion-color": that.getHoverPolygonStyle().fill,
@@ -391,6 +396,7 @@
           	    		var polygonSimpleStyle = {
       			 	    	"id": layerName,
       			 	        "source": layerName,
+    			 	        "source-layer": "layer",      			 	        
       			 	        "type": "fill",
       			 	        "paint": {
       			 	            "fill-color": styleObj.fill,
@@ -406,6 +412,7 @@
     		     	    map.addLayer({
     		     	    	"id": layerName + "-hover",
     		     	    	"source": layerName,
+    			 	        "source-layer": "layer",    		     	    	
     			 	        "type": "fill",
     			 	        "paint": {
     			 	        	"fill-color": that.getHoverPolygonStyle().fill,
@@ -421,6 +428,7 @@
                     map.addLayer({
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
+    			 	        "source-layer": "layer",      			 	        
       			 	        "type": "symbol",
       			 	        "paint": {
       			 	            "text-color": "black",
@@ -478,9 +486,12 @@
         	if(source) {
               map.removeSource(layerName);
               map.addSource(layerName, { 
-                type: 'geojson', 
-                data: com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))
+                type: 'vector', 
+                tiles: ['https://localhost:8443' + com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))]
               });
+        	}
+        	else {
+              this.addVectorLayer(config, layerName, styleObj, type, stackingIndex);
         	}
 //            map.on('load', function () {
 //              map.removeSource(layerName);

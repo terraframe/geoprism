@@ -18,6 +18,7 @@ package net.geoprism.ontology;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
@@ -34,6 +35,18 @@ import com.runwaysdk.gis.dataaccess.AttributeGeometryIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.wdtinc.mapbox_vector_tile.VectorTile;
+import com.wdtinc.mapbox_vector_tile.VectorTile.Tile;
+import com.wdtinc.mapbox_vector_tile.adapt.jts.IGeometryFilter;
+import com.wdtinc.mapbox_vector_tile.adapt.jts.JtsAdapter;
+import com.wdtinc.mapbox_vector_tile.adapt.jts.TileGeomResult;
+import com.wdtinc.mapbox_vector_tile.adapt.jts.UserDataIgnoreConverter;
+import com.wdtinc.mapbox_vector_tile.build.MvtLayerBuild;
+import com.wdtinc.mapbox_vector_tile.build.MvtLayerParams;
+import com.wdtinc.mapbox_vector_tile.build.MvtLayerProps;
 
 import net.geoprism.JSONStringImpl;
 import net.geoprism.data.DatabaseUtil;
@@ -219,4 +232,76 @@ public abstract class LayerPublisher
   }
 
   public abstract void writeGeojson(JSONWriter writer);
+
+  protected byte[] writeVectorTiles(String layerName, ValueQuery query) throws IOException
+  {
+    OIterator<ValueObject> iterator = query.getIterator();
+
+    try
+    {
+      List<Geometry> geometries = new LinkedList<Geometry>();
+
+      Envelope tileEnvelope = null;
+
+      while (iterator.hasNext())
+      {
+        ValueObject object = iterator.next();
+
+        AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
+
+        Geometry geometry = attributeIF.getGeometry();
+        // geometry.setUserData(userData);
+
+        geometries.add(geometry);
+
+        if (tileEnvelope == null)
+        {
+          tileEnvelope = geometry.getEnvelopeInternal();
+        }
+        else
+        {
+          tileEnvelope.expandToInclude(geometry.getEnvelopeInternal());
+        }
+      }
+
+      if (tileEnvelope == null)
+      {
+        tileEnvelope = new Envelope(0d, 100d, 0d, 100d); // TODO: Your tile extent here
+      }
+
+      GeometryFactory geomFactory = new GeometryFactory();
+      IGeometryFilter acceptAllGeomFilter = geometry -> true;
+      MvtLayerParams layerParams = new MvtLayerParams(); // Default extent
+
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
+
+      final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
+
+      // Create MVT layer
+      final MvtLayerProps layerProps = new MvtLayerProps();
+      final UserDataIgnoreConverter ignoreUserData = new UserDataIgnoreConverter();
+
+      // MVT tile geometry to MVT features
+      final List<VectorTile.Tile.Feature> features = JtsAdapter.toFeatures(tileGeom.mvtGeoms, layerProps, ignoreUserData);
+
+      final VectorTile.Tile.Layer.Builder layerBuilder = MvtLayerBuild.newLayerBuilder(layerName, layerParams);
+      layerBuilder.addAllFeatures(features);
+      MvtLayerBuild.writeProps(layerBuilder, layerProps);
+
+      // Build MVT layer
+      final VectorTile.Tile.Layer layer = layerBuilder.build();
+
+      // Add built layer to MVT
+      tileBuilder.addLayers(layer);
+
+      /// Build MVT
+      Tile mvt = tileBuilder.build();
+
+      return mvt.toByteArray();
+    }
+    finally
+    {
+      iterator.close();
+    }
+  }
 }
