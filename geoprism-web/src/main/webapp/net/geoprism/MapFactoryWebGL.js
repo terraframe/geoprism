@@ -448,14 +448,6 @@
 //  		     	      	});
           	    }
           	    
-//          	    if (that._updateVectorLayersAfterLoading != null)
-//          	    {
-//          	      for (var i = 0; i < that._updateVectorLayersAfterLoading.length; ++i)
-//          	      {
-//          	        that._updateVectorLayersAfterLoading[i]();
-//          	      }
-//          	    }
-//          	    that._areLayersLoaded = true;
             });
             
             
@@ -490,19 +482,6 @@
 //              });
 //            });        	  
           
-//            if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
-//      	    {
-//        	  if (this._updateVectorLayersAfterLoading == null)
-//      	      {
-//        	    this._updateVectorLayersAfterLoading = [];
-//      	      }
-//        	  
-//        	  this._updateVectorLayersAfterLoading.push(function(){
-//                that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
-//              });
-//        	  
-//        	  return;
-//      	    }
 //        	map.on('load', function () {
 //	        	var targetLayer = map.getLayer(layerName);
 //	        	
