@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.geotools.geojson.geom.GeometryJSON;
 import org.json.JSONArray;
@@ -41,9 +43,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.wdtinc.mapbox_vector_tile.VectorTile;
 import com.wdtinc.mapbox_vector_tile.VectorTile.Tile;
 import com.wdtinc.mapbox_vector_tile.adapt.jts.IGeometryFilter;
+import com.wdtinc.mapbox_vector_tile.adapt.jts.IUserDataConverter;
 import com.wdtinc.mapbox_vector_tile.adapt.jts.JtsAdapter;
 import com.wdtinc.mapbox_vector_tile.adapt.jts.TileGeomResult;
-import com.wdtinc.mapbox_vector_tile.adapt.jts.UserDataIgnoreConverter;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerBuild;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerParams;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerProps;
@@ -233,6 +235,25 @@ public abstract class LayerPublisher
 
   public abstract void writeGeojson(JSONWriter writer);
 
+  protected Map<String, String> getUserData(ValueObject object)
+  {
+    AttributeIF[] attributes = object.getAttributeArrayIF();
+
+    Map<String, String> data = new TreeMap<String, String>();
+
+    for (AttributeIF attribute : attributes)
+    {
+      String name = attribute.getName();
+
+      if (!name.equals(GeoserverFacade.GEOM_COLUMN))
+      {
+        data.put(name, attribute.getValue());
+      }
+    }
+
+    return data;
+  }
+
   protected byte[] writeVectorTiles(String layerName, int x, int y, int zoom, ValueQuery query) throws IOException
   {
     OIterator<ValueObject> iterator = query.getIterator();
@@ -241,8 +262,6 @@ public abstract class LayerPublisher
     {
       List<Geometry> geometries = new LinkedList<Geometry>();
 
-      Envelope tileEnvelope = null;
-
       while (iterator.hasNext())
       {
         ValueObject object = iterator.next();
@@ -250,28 +269,17 @@ public abstract class LayerPublisher
         AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
 
         Geometry geometry = attributeIF.getGeometry();
-        // geometry.setUserData(userData);
+        geometry.setUserData(this.getUserData(object));
 
         geometries.add(geometry);
-
-        // if (tileEnvelope == null)
-        // {
-        // tileEnvelope = geometry.getEnvelopeInternal();
-        // }
-        // else
-        // {
-        // tileEnvelope.expandToInclude(geometry.getEnvelopeInternal());
-        // }
       }
 
-      if (tileEnvelope == null)
-      {
-        tileEnvelope = this.getTileBounds(x, y, zoom);
-      }
+      Envelope tileEnvelope = this.getTileBounds(x, y, zoom);
 
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
-      MvtLayerParams layerParams = new MvtLayerParams();
+      
+      MvtLayerParams layerParams = new MvtLayerParams();      
 
       TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
 
@@ -279,13 +287,14 @@ public abstract class LayerPublisher
 
       // Create MVT layer
       final MvtLayerProps layerProps = new MvtLayerProps();
-      final UserDataIgnoreConverter ignoreUserData = new UserDataIgnoreConverter();
+      final IUserDataConverter ignoreUserData = new UserDataConverter();
 
       // MVT tile geometry to MVT features
       final List<VectorTile.Tile.Feature> features = JtsAdapter.toFeatures(tileGeom.mvtGeoms, layerProps, ignoreUserData);
 
       final VectorTile.Tile.Layer.Builder layerBuilder = MvtLayerBuild.newLayerBuilder(layerName, layerParams);
       layerBuilder.addAllFeatures(features);
+
       MvtLayerBuild.writeProps(layerBuilder, layerProps);
 
       // Build MVT layer
@@ -307,7 +316,7 @@ public abstract class LayerPublisher
 
   public Envelope getTileBounds(int x, int y, int zoom)
   {
-    return new Envelope(this.getLong(x, zoom), this.getLong(x + 1, zoom),  this.getLat(y, zoom), this.getLat(y + 1, zoom));
+    return new Envelope(this.getLong(x, zoom), this.getLong(x + 1, zoom), this.getLat(y, zoom), this.getLat(y + 1, zoom));
   }
 
   public double getLong(int x, int zoom)
@@ -318,7 +327,7 @@ public abstract class LayerPublisher
   public double getLat(int y, int zoom)
   {
     double n = Math.PI - 2 * Math.PI * y / Math.pow(2, zoom);
-//    return ( 180 / Math.PI * Math.atan(0.5 * ( Math.exp(n) - Math.exp(-n) )) );
+    // return ( 180 / Math.PI * Math.atan(0.5 * ( Math.exp(n) - Math.exp(-n) )) );
     return Math.toDegrees(Math.atan(Math.sinh(n)));
   }
 }
