@@ -71,10 +71,10 @@
         }
       };
 
-//      controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
+      controller.addVectorLayer({type:"LM_CONTEXT"}, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
 //      controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2);
 //
-      controller.addVectorLayer({type:"LOCATION_MANAGEMENT"}, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
+      controller.addVectorLayer({type:"LM_TARGET"}, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
 //      controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
 
       controller.addVectorHoverEvents(hoverCallback, [ "target-point", "target-multipolygon" ]);
@@ -347,9 +347,13 @@
 
     controller.refreshInteractiveLayers = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var data = $scope.sharedGeoData;
-        
-        controller.updateVectorLayer(data.config, "target-" + geomType, $scope.targetStyle, "TARGET", 2);
+        var layers = $scope.sharedGeoData;
+
+        for (var i = 0; i < layers.length; i++) {
+          var layer = layers[i];
+          
+          controller.updateVectorLayer(layer.config, layer.name, $scope.targetStyle, "TARGET", 2);
+        }
         
 
 //        var targetCallback = function(data) {
@@ -364,19 +368,23 @@
 //          controller.updateVectorLayer(data, "target-" + geomType,
 //              $scope.targetStyle, "TARGET", 2);
 //        }
-
-        data.layers.forEach(function(layer) {
-          controller.getMapData(targetCallback, layer, layer.workspace);
-        });
+//
+//        data.layers.forEach(function(layer) {
+//          controller.getMapData(targetCallback, layer, layer.workspace);
+//        });
       }
     }
 
     controller.refreshWithContextLayer = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var data = $scope.sharedGeoData;
-        
-        controller.updateVectorLayer(data, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
-        controller.zoomToLayersExtent([ "target-multipolygon" ]);
+        var layers = $scope.sharedGeoData;
+
+        for (var i = 0; i < layers.length; i++) {
+          var layer = layers[i];
+          
+          controller.updateVectorLayer(layer.config, layer.name, $scope.targetStyle, "TARGET", 2);
+        }
+//        controller.zoomToLayersExtent([ "target-multipolygon" ]);
 
 //        for (var i = 0; i < data.geometries.length; i++) {
 //          var layer = data.geometries[i];

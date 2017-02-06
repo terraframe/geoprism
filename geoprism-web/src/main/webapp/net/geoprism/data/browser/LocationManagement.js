@@ -46,7 +46,12 @@
         options : data.universals
       };
       
-      $scope.$broadcast('sharedGeoData', {id: data.entity.id, universalId: data.universal, type:"LOCATION_MANAGEMENT"});
+      var layers = [
+        {name:'context-multipolygon', config: {id: data.entity.id, type:"LM_CONTEXT"}},
+        {name:'target-multipolygon', config: {id: data.entity.id, universalId: data.universal, type:"LM_TARGET"}}
+      ];
+      
+      $scope.$broadcast('sharedGeoData', layers);
     }
     
     controller.select = function(entity, event) {
@@ -124,7 +129,7 @@
       var limit = 20;
       
       if(request.term && request.term.length > 0) {
-    	  
+        
         var connection = {
           onSuccess : function(data){
             var resultSet = data.resultSet;
@@ -229,11 +234,11 @@
     
     
     controller.listItemHover = function(entity, event){
-    	$scope.$broadcast('listHoverOver', entity);
+      $scope.$broadcast('listHoverOver', entity);
     }
     
     controller.listItemHoverOff = function(entity, event){
-    	$scope.$broadcast('listHoverOff', entity);
+      $scope.$broadcast('listHoverOff', entity);
     }
     
     controller.scrollTo = function(entityId) {

@@ -42,13 +42,13 @@ import net.geoprism.gis.geoserver.GeoserverLayer;
 import net.geoprism.gis.geoserver.GeoserverLayerIF;
 import net.geoprism.gis.geoserver.SessionPredicate;
 
-public class LocationLayerPublisher extends LayerPublisher
+public class LocationTargetPublisher extends LayerPublisher
 {
   private String id;
 
   private String universalId;
 
-  public LocationLayerPublisher(String id, String universalId, String layers)
+  public LocationTargetPublisher(String id, String universalId, String layers)
   {
     super(layers);
 
@@ -65,7 +65,6 @@ public class LocationLayerPublisher extends LayerPublisher
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
     List<GeoserverLayerIF> layers = new LinkedList<GeoserverLayerIF>();
-    layers.add(this.publishEntityLayer(entity, descendants));
     layers.add(this.publishChildLayer(entity, descendants));
 
     return layers;
@@ -85,51 +84,6 @@ public class LocationLayerPublisher extends LayerPublisher
     layer.setLayerType(layerType);
 
     return layer;
-  }
-
-  private GeoserverLayerIF publishEntityLayer(GeoEntity entity, List<Term> descendants)
-  {
-    LayerType layerType = this.getEntityLayerType(descendants);
-    String sql = this.getEntityQuery(entity, layerType).getSQL();
-    String viewName = SessionPredicate.generateId();
-
-    DatabaseUtil.createView(viewName, sql);
-
-    GeoserverLayer layer = new GeoserverLayer();
-    layer.setLayerName(viewName);
-    layer.setStyleName(this.getStyle(layerType));
-    layer.setLayerType(layerType);
-
-    return layer;
-  }
-
-  private ValueQuery getEntityQuery(GeoEntity entity, LayerType type)
-  {
-    QueryFactory factory = new QueryFactory();
-    ValueQuery query = new ValueQuery(factory);
-
-    GeoEntityQuery geQ1 = new GeoEntityQuery(query);
-
-    // Id column
-    SelectableChar id = geQ1.getId(GeoEntity.ID);
-    id.setColumnAlias(GeoEntity.ID);
-
-    // geoentity label
-    SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
-    label.setColumnAlias(GeoEntity.DISPLAYLABEL);
-
-    // geo id (for uniqueness)
-    Selectable geoId = geQ1.getGeoId(GeoEntity.GEOID);
-    geoId.setColumnAlias(GeoEntity.GEOID);
-
-    Selectable geom = ( type.equals(LayerType.POINT) ? geQ1.get(GeoEntity.GEOPOINT) : geQ1.get(GeoEntity.GEOMULTIPOLYGON) );
-    geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
-    geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
-
-    query.SELECT(id, label, geoId, geom);
-    query.WHERE(geQ1.getId().EQ(entity.getId()));
-
-    return query;
   }
 
   private ValueQuery getChildQuery(GeoEntity entity, LayerType type)
@@ -169,11 +123,6 @@ public class LocationLayerPublisher extends LayerPublisher
     return LayerType.POLYGON;
   }
 
-  private LayerType getEntityLayerType(List<Term> descendants)
-  {
-    return LayerType.POLYGON;
-  }
-
   public void writeGeojson(JSONWriter writer)
   {
     GeoEntity entity = GeoEntity.get(this.id);
@@ -182,19 +131,10 @@ public class LocationLayerPublisher extends LayerPublisher
 
     try
     {
-//      writer.array();
-//
-//      LayerType entityLayerType = this.getEntityLayerType(descendants);
-//      ValueQuery entityQuery = this.getEntityQuery(entity, entityLayerType);
-//
-//      this.writeGeojson(writer, entityQuery);
-
       LayerType childLayerType = this.getChildLayerType(descendants);
       ValueQuery childQuery = this.getChildQuery(entity, childLayerType);
 
       this.writeGeojson(writer, childQuery);
-
-//      writer.endArray();
     }
     catch (JSONException | IOException e)
     {
@@ -222,35 +162,35 @@ public class LocationLayerPublisher extends LayerPublisher
 
     writer.endObject();
   }
-  
-//  public void writeVectorTile(ValueQuery query)
-//  {
-//	OIterator<ValueObject> iterator = query.getIterator();
-//
-//	long count = 0;
-//    try
-//    {
-//
-//      while (iterator.hasNext())
-//      {
-//        count++;
-//
-//        ValueObject object = iterator.next();
-//        StringWriter geomWriter = new StringWriter();
-//
-//        AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
-//        
-//        Geometry geom = attributeIF.getGeometry();
-//        // TODO: finish this method
-//
-////        this.gjson.write(attributeIF.getGeometry(), geomWriter);
-////
-////        writer.value(new JSONStringImpl(geomWriter.toString()));
-//      }
-//    }
-//    finally
-//    {
-//      iterator.close();
-//    }
-//  }
+
+  // public void writeVectorTile(ValueQuery query)
+  // {
+  // OIterator<ValueObject> iterator = query.getIterator();
+  //
+  // long count = 0;
+  // try
+  // {
+  //
+  // while (iterator.hasNext())
+  // {
+  // count++;
+  //
+  // ValueObject object = iterator.next();
+  // StringWriter geomWriter = new StringWriter();
+  //
+  // AttributeGeometryIF attributeIF = (AttributeGeometryIF) object.getAttributeIF(GeoserverFacade.GEOM_COLUMN);
+  //
+  // Geometry geom = attributeIF.getGeometry();
+  // // TODO: finish this method
+  //
+  //// this.gjson.write(attributeIF.getGeometry(), geomWriter);
+  ////
+  //// writer.value(new JSONStringImpl(geomWriter.toString()));
+  // }
+  // }
+  // finally
+  // {
+  // iterator.close();
+  // }
+  // }
 }
