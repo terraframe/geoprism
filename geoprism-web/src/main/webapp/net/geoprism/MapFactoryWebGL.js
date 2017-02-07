@@ -292,7 +292,6 @@
       			 	    	"id": layerName,
     			 	        "source": layerName,
     			 	        "source-layer": "layer",    			 	        
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
@@ -307,7 +306,6 @@
       			 	    	"id": layerName + "-label",
     			 	        "source": layerName,
     			 	        "source-layer": "layer",
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],
     			 	        "type": "symbol",
     			 	        "paint": {
     			 	            "text-color": "black",
@@ -328,7 +326,6 @@
     		     	        "id": layerName + "-hover",
     		     	        "source": layerName,
     			 	        "source-layer": "layer",    		     	        
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
@@ -346,7 +343,6 @@
 	  			 	    	"id": layerName,
 	  			 	        "source": layerName,
     			 	        "source-layer": "layer",	  	
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
 	  			 	        "type": "fill-extrusion",
 	  			 	        "paint": {
 //	  			 	        	'fill-extrusion-color': styleObj.fill,
@@ -380,7 +376,6 @@
     		     	    	"id": layerName + "-hover",
     		     	    	"source": layerName,
     			 	        "source-layer": "layer", 
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
     			 	        "type": "fill-extrusion",
     			 	        "paint": {
     			 	        	"fill-extrusion-color": that.getHoverPolygonStyle().fill,
@@ -402,7 +397,6 @@
       			 	    	"id": layerName,
       			 	        "source": layerName,
     			 	        "source-layer": "layer",
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
       			 	        "type": "fill",
       			 	        "paint": {
       			 	            "fill-color": styleObj.fill,
@@ -419,7 +413,6 @@
     		     	    	"id": layerName + "-hover",
     		     	    	"source": layerName,
     			 	        "source-layer": "layer",
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
     			 	        "type": "fill",
     			 	        "paint": {
     			 	        	"fill-color": that.getHoverPolygonStyle().fill,
@@ -436,7 +429,6 @@
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
     			 	        "source-layer": "layer",
-    			 	        "bounds": [ -180, -85.05112877980659, 180, 85.0511287798066 ],    			 	        
       			 	        "type": "symbol",
       			 	        "paint": {
       			 	            "text-color": "black",
