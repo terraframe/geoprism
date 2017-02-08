@@ -275,6 +275,9 @@ public abstract class LayerPublisher
       }
 
       Envelope tileEnvelope = this.getTileBounds(x, y, zoom);
+      System.out.println(tileEnvelope.toString());
+      System.out.println(Integer.toString(x).concat(" - ").concat(Integer.toString(y)));
+      System.out.println(Integer.toString(zoom));
 
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
@@ -326,8 +329,10 @@ public abstract class LayerPublisher
 
   public double getLat(int y, int zoom)
   {
+	double r2d = 180 / Math.PI;
     double n = Math.PI - 2 * Math.PI * y / Math.pow(2, zoom);
     // return ( 180 / Math.PI * Math.atan(0.5 * ( Math.exp(n) - Math.exp(-n) )) );
-    return Math.toDegrees(Math.atan(Math.sinh(n)));
+//    return Math.toDegrees(Math.atan(Math.sinh(n)));
+    return r2d * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
   }
 }
