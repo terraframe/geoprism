@@ -115,9 +115,9 @@ public class TargetBuilder
     {
       JSONArray cSheets = configuration.getJSONArray("sheets");
 
-      for (int i = 0; i < cSheets.length(); i++)
+//      for (int i = 0; i < cSheets.length(); i++)
       {
-        JSONObject sheet = cSheets.getJSONObject(i);
+        JSONObject sheet = cSheets.getJSONObject(0);
 
         if (sheet.has("existing"))
         {
