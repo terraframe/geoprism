@@ -17,6 +17,8 @@
 package net.geoprism.ontology;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import org.json.JSONWriter;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableChar;
@@ -118,6 +121,23 @@ public class LocationTargetPublisher extends LayerPublisher
     return vQuery;
   }
 
+  private ResultSet getResultSet(String entityId, LayerType type)
+  {
+    StringBuilder sql = new StringBuilder();
+    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ge.geo_multi_polygon AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("FROM geo_entity AS ge\n");
+    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
+    sql.append("JOIN located_in AS li ON li.child_id = ge.id\n");
+    sql.append("WHERE li.parent_id = '" + entityId + "'\n");
+
+    if (this.universalId != null && this.universalId.length() > 0)
+    {
+      sql.append("AND ge.universal = '" + this.universalId + "'\n");
+    }
+
+    return Database.query(sql.toString());
+  }
+
   private LayerType getLayerType(List<Term> descendants)
   {
     return LayerType.POLYGON;
@@ -165,18 +185,20 @@ public class LocationTargetPublisher extends LayerPublisher
 
   public byte[] writeVectorTiles(String layerName, int x, int y, int zoom)
   {
-    GeoEntity entity = GeoEntity.get(this.id);
-    Universal universal = entity.getUniversal();
-    List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
-
     try
     {
-      LayerType entityLayerType = this.getLayerType(descendants);
-      ValueQuery entityQuery = this.getQuery(entity, entityLayerType);
+      ResultSet resultSet = this.getResultSet(this.id, LayerType.POLYGON);
 
-      return this.writeVectorTiles(layerName, x, y, zoom, entityQuery);
+      try
+      {
+        return this.writeVectorTiles(layerName, x, y, zoom, resultSet);
+      }
+      finally
+      {
+        resultSet.close();
+      }
     }
-    catch (JSONException | IOException e)
+    catch (JSONException | IOException | SQLException e)
     {
       throw new ProgrammingErrorException(e);
     }

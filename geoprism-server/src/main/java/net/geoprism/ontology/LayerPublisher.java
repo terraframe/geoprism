@@ -18,6 +18,8 @@ package net.geoprism.ontology;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
+import org.postgis.jts.JtsGeometry;
 
 import com.runwaysdk.dataaccess.AttributeIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -278,8 +281,8 @@ public abstract class LayerPublisher
 
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
-      
-      MvtLayerParams layerParams = new MvtLayerParams();      
+
+      MvtLayerParams layerParams = new MvtLayerParams();
 
       TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
 
@@ -311,6 +314,65 @@ public abstract class LayerPublisher
     finally
     {
       iterator.close();
+    }
+  }
+
+  protected byte[] writeVectorTiles(String layerName, int x, int y, int zoom, ResultSet resultSet) throws IOException
+  {
+    try
+    {
+      List<Geometry> geometries = new LinkedList<Geometry>();
+
+      while (resultSet.next())
+      {
+        Map<String, String> data = new TreeMap<String, String>();
+        data.put(GeoEntity.ID, resultSet.getString("id"));
+        data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
+        data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
+
+        Geometry geometry = ( (JtsGeometry) resultSet.getObject(GeoserverFacade.GEOM_COLUMN) ).getGeometry();
+        geometry.setUserData(data);
+
+        geometries.add(geometry);
+      }
+
+      Envelope tileEnvelope = this.getTileBounds(x, y, zoom);
+
+      GeometryFactory geomFactory = new GeometryFactory();
+      IGeometryFilter acceptAllGeomFilter = geometry -> true;
+
+      MvtLayerParams layerParams = new MvtLayerParams();
+
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
+
+      final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
+
+      // Create MVT layer
+      final MvtLayerProps layerProps = new MvtLayerProps();
+      final IUserDataConverter ignoreUserData = new UserDataConverter();
+
+      // MVT tile geometry to MVT features
+      final List<VectorTile.Tile.Feature> features = JtsAdapter.toFeatures(tileGeom.mvtGeoms, layerProps, ignoreUserData);
+
+      final VectorTile.Tile.Layer.Builder layerBuilder = MvtLayerBuild.newLayerBuilder(layerName, layerParams);
+      layerBuilder.addAllFeatures(features);
+
+      MvtLayerBuild.writeProps(layerBuilder, layerProps);
+
+      // Build MVT layer
+      final VectorTile.Tile.Layer layer = layerBuilder.build();
+
+      // Add built layer to MVT
+      tileBuilder.addLayers(layer);
+
+      /// Build MVT
+      Tile mvt = tileBuilder.build();
+
+      return mvt.toByteArray();
+    }
+    catch (SQLException e)
+    {
+      throw new ProgrammingErrorException(e);
     }
   }
 
