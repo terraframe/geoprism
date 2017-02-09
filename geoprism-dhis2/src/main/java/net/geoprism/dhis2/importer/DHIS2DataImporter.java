@@ -116,11 +116,35 @@ public class DHIS2DataImporter
   @Transaction
   private void importAllInTransaction()
   {
+    deleteAll();
+    
     dhis2.initialize();
     importOrgUnitLevels();
     importOrgUnits();
     buildAllpaths();
   }
+  
+ // TODO: Create or Update is a lot harder than just deleting everything
+ private void deleteAll()
+ {
+   Database.executeStatement("truncate geo_entity;");
+   Database.executeStatement("truncate geo_entity_problem;");
+   Database.executeStatement("truncate universal;");
+   Database.executeStatement("truncate located_in;");
+   Database.executeStatement("truncate allowed_in;");
+   
+   Universal rootUni = new Universal();
+   rootUni.getDisplayLabel().setValue("ROOT");
+   rootUni.setUniversalId("ROOT");
+   rootUni.getDescription().setValue("ROOT");
+   rootUni.apply();
+   
+   GeoEntity root = new GeoEntity();
+   root.getDisplayLabel().setValue("ROOT");
+   root.setGeoId("ROOT");
+   root.setUniversal(rootUni);
+   root.apply();
+ }
   
   public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
   {
