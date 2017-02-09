@@ -241,6 +241,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
           Universal universal = it.next();
 
           Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
+          children.remove(universal);
           // children.add(0, universal);
 
           JSONArray options = new JSONArray();
