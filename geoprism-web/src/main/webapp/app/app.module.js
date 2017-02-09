@@ -49,6 +49,7 @@ var core_service_1 = require("./service/core.service");
 var localization_service_1 = require("./service/localization.service");
 var dataset_service_1 = require("./service/dataset.service");
 var category_service_1 = require("./service/category.service");
+var icon_service_1 = require("./service/icon.service");
 // Upload wizard imports
 var navigation_service_1 = require("./uploader/navigation.service");
 var upload_wizard_component_1 = require("./uploader/upload-wizard.component");
@@ -117,6 +118,7 @@ AppModule = __decorate([
             core_service_1.IdService,
             dataset_service_1.DatasetService,
             category_service_1.CategoryService,
+            icon_service_1.IconService,
             upload_service_1.UploadService,
             navigation_service_1.NavigationService,
             confirm_modal_service_1.ConfirmService,

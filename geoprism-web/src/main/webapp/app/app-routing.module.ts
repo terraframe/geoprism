@@ -22,6 +22,9 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { Routes, RouterModule, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
+import { IconsComponent } from './icon/icons.component';
+import { IconDetailComponent, IconResolver} from './icon/icon-detail.component';
+
 import { DatasetsComponent } from './datasets/datasets.component';
 import { DatasetDetailComponent, DatasetResolver} from './datasets/dataset-detail.component';
 
@@ -65,14 +68,26 @@ const routes: Routes = [
     resolve: {
       category: OptionResolver
     }    
-  },  
+  },
+  {
+    path: 'icons',
+    component: IconsComponent
+  },
+  {
+    path: 'icon/:id',
+    component: IconDetailComponent,
+    resolve: {
+      icon: IconResolver
+    }    
+  },
+  
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver, OptionResolver]
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver, OptionResolver, IconResolver]
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent];
+export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent];

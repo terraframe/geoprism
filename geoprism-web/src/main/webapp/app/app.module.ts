@@ -48,6 +48,7 @@ import { LocalizationService } from './service/localization.service';
 
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
+import { IconService } from './service/icon.service';
 
 // Upload wizard imports
 import { NavigationService } from './uploader/navigation.service';
@@ -118,6 +119,7 @@ import { EventHttpService } from './service/event-http.service';
 	IdService,
     DatasetService,
     CategoryService,
+    IconService,
     UploadService,
     NavigationService,
     ConfirmService,

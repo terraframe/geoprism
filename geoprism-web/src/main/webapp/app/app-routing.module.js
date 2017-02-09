@@ -29,6 +29,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var router_1 = require("@angular/router");
+var icons_component_1 = require("./icon/icons.component");
+var icon_detail_component_1 = require("./icon/icon-detail.component");
 var datasets_component_1 = require("./datasets/datasets.component");
 var dataset_detail_component_1 = require("./datasets/dataset-detail.component");
 var categories_component_1 = require("./category/categories.component");
@@ -69,6 +71,17 @@ var routes = [
             category: option_detail_component_1.OptionResolver
         }
     },
+    {
+        path: 'icons',
+        component: icons_component_1.IconsComponent
+    },
+    {
+        path: 'icon/:id',
+        component: icon_detail_component_1.IconDetailComponent,
+        resolve: {
+            icon: icon_detail_component_1.IconResolver
+        }
+    },
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -79,10 +92,10 @@ AppRoutingModule = __decorate([
     core_1.NgModule({
         imports: [router_1.RouterModule.forRoot(routes)],
         exports: [router_1.RouterModule],
-        providers: [{ provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }, dataset_detail_component_1.DatasetResolver, category_detail_component_1.CategoryResolver, option_detail_component_1.OptionResolver]
+        providers: [{ provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }, dataset_detail_component_1.DatasetResolver, category_detail_component_1.CategoryResolver, option_detail_component_1.OptionResolver, icon_detail_component_1.IconResolver]
     }),
     __metadata("design:paramtypes", [])
 ], AppRoutingModule);
 exports.AppRoutingModule = AppRoutingModule;
-exports.routedComponents = [datasets_component_1.DatasetsComponent, dataset_detail_component_1.DatasetDetailComponent, categories_component_1.CategoriesComponent, category_detail_component_1.CategoryDetailComponent, option_detail_component_1.OptionDetailComponent];
+exports.routedComponents = [datasets_component_1.DatasetsComponent, dataset_detail_component_1.DatasetDetailComponent, categories_component_1.CategoriesComponent, category_detail_component_1.CategoryDetailComponent, option_detail_component_1.OptionDetailComponent, icons_component_1.IconsComponent, icon_detail_component_1.IconDetailComponent];
 //# sourceMappingURL=app-routing.module.js.map
