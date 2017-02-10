@@ -49,6 +49,7 @@ import com.wdtinc.mapbox_vector_tile.adapt.jts.IGeometryFilter;
 import com.wdtinc.mapbox_vector_tile.adapt.jts.IUserDataConverter;
 import com.wdtinc.mapbox_vector_tile.adapt.jts.JtsAdapter;
 import com.wdtinc.mapbox_vector_tile.adapt.jts.TileGeomResult;
+import com.wdtinc.mapbox_vector_tile.adapt.jts.UserDataIgnoreConverter;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerBuild;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerParams;
 import com.wdtinc.mapbox_vector_tile.build.MvtLayerProps;
@@ -257,7 +258,7 @@ public abstract class LayerPublisher
     return data;
   }
 
-  protected byte[] writeVectorTiles(String layerName, int x, int y, int zoom, ValueQuery query) throws IOException
+  protected byte[] writeVectorTiles(String layerName, Envelope envelope, ValueQuery query) throws IOException
   {
     OIterator<ValueObject> iterator = query.getIterator();
 
@@ -277,14 +278,12 @@ public abstract class LayerPublisher
         geometries.add(geometry);
       }
 
-      Envelope tileEnvelope = this.getTileBounds(x, y, zoom);
-
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
 
       MvtLayerParams layerParams = new MvtLayerParams();
 
-      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter);
 
       final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
 
@@ -317,7 +316,20 @@ public abstract class LayerPublisher
     }
   }
 
-  protected byte[] writeVectorTiles(String layerName, int x, int y, int zoom, ResultSet resultSet) throws IOException
+  protected byte[] writeVectorTiles(String layerName, Envelope envelope, ResultSet resultSet) throws IOException
+  {
+    // Add built layer to MVT
+    final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
+
+    builder.addLayers(this.writeVectorLayer(layerName, envelope, resultSet));
+
+    /// Build MVT
+    Tile mvt = builder.build();
+
+    return mvt.toByteArray();
+  }
+
+  public VectorTile.Tile.Layer writeVectorLayer(String layerName, Envelope envelope, ResultSet resultSet) throws IOException
   {
     try
     {
@@ -336,16 +348,12 @@ public abstract class LayerPublisher
         geometries.add(geometry);
       }
 
-      Envelope tileEnvelope = this.getTileBounds(x, y, zoom);
-
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
 
       MvtLayerParams layerParams = new MvtLayerParams();
 
-      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, tileEnvelope, geomFactory, layerParams, acceptAllGeomFilter);
-
-      final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter);
 
       // Create MVT layer
       final MvtLayerProps layerProps = new MvtLayerProps();
@@ -360,36 +368,12 @@ public abstract class LayerPublisher
       MvtLayerBuild.writeProps(layerBuilder, layerProps);
 
       // Build MVT layer
-      final VectorTile.Tile.Layer layer = layerBuilder.build();
-
-      // Add built layer to MVT
-      tileBuilder.addLayers(layer);
-
-      /// Build MVT
-      Tile mvt = tileBuilder.build();
-
-      return mvt.toByteArray();
+      return layerBuilder.build();
     }
     catch (SQLException e)
     {
       throw new ProgrammingErrorException(e);
     }
-  }
 
-  public Envelope getTileBounds(int x, int y, int zoom)
-  {
-    return new Envelope(this.getLong(x, zoom), this.getLong(x + 1, zoom), this.getLat(y, zoom), this.getLat(y + 1, zoom));
-  }
-
-  public double getLong(int x, int zoom)
-  {
-    return ( x / Math.pow(2, zoom) * 360 - 180 );
-  }
-
-  public double getLat(int y, int zoom)
-  {
-    double n = Math.PI - 2 * Math.PI * y / Math.pow(2, zoom);
-    // return ( 180 / Math.PI * Math.atan(0.5 * ( Math.exp(n) - Math.exp(-n) )) );
-    return Math.toDegrees(Math.atan(Math.sinh(n)));
   }
 }

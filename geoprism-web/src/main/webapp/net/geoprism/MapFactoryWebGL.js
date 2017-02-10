@@ -272,6 +272,81 @@
         	return allVectorLayers;
         },
         
+        addVectorLayers : function(source, layers) {
+        	var map = this.getMap();
+        	var that = this;
+        	
+        	
+            map.on('load', function () {
+            	
+              // add a null source which stores the data
+              map.addSource(source.name, { 
+                type: 'vector',
+                tiles: ['https://localhost:8443' + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
+              });
+
+              for(var i = 0; i < layers.length; i++) {
+            	var layer = layers[i];
+                  
+                var polygonSimpleStyle = {
+                  "id": layerName,
+                  "source": source.name,
+                  "source-layer": layer.sourceLayer,
+                  "type": "fill",
+                  "paint": {
+                    "fill-color": styleObj.fill,
+                    "fill-outline-color": "black"
+                    //"fill-stroke-width": 5,
+                    //"fill-stroke-color": "#000000"
+                    }
+                 }
+                    
+                 map.addLayer(polygonSimpleStyle);
+                    
+                 // This layer is displayed when they hover over the feature
+                 map.addLayer({
+                   "id": layerName + "-hover",
+                   "source": source.name,
+                   "source-layer": layer.sourceLayer,
+                   "type": "fill",
+                   "paint": {
+                     "fill-color": that.getHoverPolygonStyle().fill,
+                     "fill-opacity": that.getHoverPolygonStyle().opacity
+                   },
+                   "filter": ["==", "name", ""] // hide all features in the layer
+                 });
+                  
+                  
+                      
+                // add labels
+                map.addLayer({
+                  "id": layerName + "-label",
+                  "source": source.name,
+                  "source-layer": layer.sourceLayer,
+                  "type": "symbol",
+                  "paint": {
+                    "text-color": "black",
+                    "text-halo-color": "#fff",
+                    "text-halo-width": 2
+                  },
+                  "layout": {
+                    "text-field": "{displayLabel}",
+                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                    "text-anchor": "center",
+                    "text-size": 12
+                  }
+                });
+              }
+            });
+            
+            
+            // Won't do anything unless layers are populate with data containing features
+            map.on("source.load", function(e){
+            	if(e.source.id === layerName){
+            		that.zoomToLayersExtent([layerName])
+            	}
+            });
+        },        
         
         addVectorLayer : function(config, layerName, styleObj, type, stackingIndex, is3d) {
         	var map = this.getMap();
@@ -291,7 +366,7 @@
     		     	    map.addLayer({
       			 	    	"id": layerName,
     			 	        "source": layerName,
-    			 	        "source-layer": "layer",    			 	        
+    			 	        "source-layer": "target",    			 	        
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
@@ -305,7 +380,7 @@
     		     	    map.addLayer({
       			 	    	"id": layerName + "-label",
     			 	        "source": layerName,
-    			 	        "source-layer": "layer",
+    			 	        "source-layer": "target",
     			 	        "type": "symbol",
     			 	        "paint": {
     			 	            "text-color": "black",
@@ -325,7 +400,7 @@
     		     	    map.addLayer({
     		     	        "id": layerName + "-hover",
     		     	        "source": layerName,
-    			 	        "source-layer": "layer",    		     	        
+    			 	        "source-layer": "target",    		     	        
     			 	        "type": "circle",
     			 	        "paint": {
     			 	            "circle-radius": styleObj.radius,
@@ -342,7 +417,7 @@
 	          	    	var polygons3DStyle = {
 	  			 	    	"id": layerName,
 	  			 	        "source": layerName,
-    			 	        "source-layer": "layer",	  	
+    			 	        "source-layer": "target",	  	
 	  			 	        "type": "fill-extrusion",
 	  			 	        "paint": {
 //	  			 	        	'fill-extrusion-color': styleObj.fill,
@@ -375,7 +450,7 @@
     		     	    map.addLayer({
     		     	    	"id": layerName + "-hover",
     		     	    	"source": layerName,
-    			 	        "source-layer": "layer", 
+    			 	        "source-layer": "target", 
     			 	        "type": "fill-extrusion",
     			 	        "paint": {
     			 	        	"fill-extrusion-color": that.getHoverPolygonStyle().fill,
@@ -396,7 +471,7 @@
           	    		var polygonSimpleStyle = {
       			 	    	"id": layerName,
       			 	        "source": layerName,
-    			 	        "source-layer": "layer",
+    			 	        "source-layer": "target",
       			 	        "type": "fill",
       			 	        "paint": {
       			 	            "fill-color": styleObj.fill,
@@ -412,7 +487,7 @@
     		     	    map.addLayer({
     		     	    	"id": layerName + "-hover",
     		     	    	"source": layerName,
-    			 	        "source-layer": "layer",
+    			 	        "source-layer": "target",
     			 	        "type": "fill",
     			 	        "paint": {
     			 	        	"fill-color": that.getHoverPolygonStyle().fill,
@@ -428,7 +503,7 @@
                     map.addLayer({
       			 	    	"id": layerName + "-label",
       			 	        "source": layerName,
-    			 	        "source-layer": "layer",
+    			 	        "source-layer": "target",
       			 	        "type": "symbol",
       			 	        "paint": {
       			 	            "text-color": "black",

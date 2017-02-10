@@ -47,8 +47,8 @@
       };
       
       var layers = [
-        {name:'context-multipolygon', config: {id: data.entity.id, type:"LM_CONTEXT"}},
-        {name:'target-multipolygon', config: {id: data.entity.id, universalId: data.universal, type:"LM_TARGET"}}
+//        {name:'context-multipolygon', config: {id: data.entity.id, type:"LM_CONTEXT"}},
+        {name:'target-multipolygon', config: {id: data.entity.id, universalId: data.universal, type:"LM"}}
       ];
       
       $scope.$broadcast('sharedGeoData', layers);

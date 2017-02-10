@@ -35,10 +35,13 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.vividsolutions.jts.geom.Envelope;
 
 import net.geoprism.data.etl.TargetBuilder;
+import net.geoprism.ontology.CompositePublisher;
 import net.geoprism.ontology.LocationContextPublisher;
 import net.geoprism.ontology.LocationTargetPublisher;
+import net.geoprism.ontology.PublisherUtil;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -52,6 +55,8 @@ public class DefaultConfiguration implements ConfigurationIF
 
   public static final String LM_CONTEXT        = "LM_CONTEXT";
 
+  public static final String LM                = "LM";
+
   private Set<String>        types;
 
   public DefaultConfiguration()
@@ -59,6 +64,7 @@ public class DefaultConfiguration implements ConfigurationIF
     this.types = new HashSet<String>();
     this.types.add(LM_TARGET);
     this.types.add(LM_CONTEXT);
+    this.types.add(LM);
   }
 
   @Override
@@ -189,17 +195,26 @@ public class DefaultConfiguration implements ConfigurationIF
         int y = object.getInt("y");
         int zoom = object.getInt("z");
 
+        Envelope enevlope = PublisherUtil.getTileBounds(x, y, zoom);
+
         if (type.equals(LM_CONTEXT))
         {
           LocationContextPublisher publisher = new LocationContextPublisher(id, "");
-          byte[] bytes = publisher.writeVectorTiles("layer", x, y, zoom);
+          byte[] bytes = publisher.writeVectorTiles(enevlope);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM_TARGET))
         {
           LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
-          byte[] bytes = publisher.writeVectorTiles("layer", x, y, zoom);
+          byte[] bytes = publisher.writeVectorTiles(enevlope);
+
+          return new ByteArrayInputStream(bytes);
+        }
+        else if (type.equals(LM))
+        {
+          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(id, universalId, ""), new LocationContextPublisher(id, ""));
+          byte[] bytes = publisher.writeVectorTiles(enevlope);
 
           return new ByteArrayInputStream(bytes);
         }
