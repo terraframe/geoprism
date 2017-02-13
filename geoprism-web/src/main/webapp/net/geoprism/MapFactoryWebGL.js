@@ -973,7 +973,14 @@
           mapboxgl.accessToken = 'pk.eyJ1IjoianVzdGlubGV3aXMiLCJhIjoiY2l0YnlpdWRkMDlkNjJ5bzZuMTR3MHZ3YyJ9.Ad0fQd8onRSYR9QZP6VyUw';
           var map = new mapboxgl.Map({
               container: 'mapDivId',
+//              minZoom: 2,
+//              maxBounds: [[-180,-90],[180,90]],
               style: 'mapbox://styles/mapbox/satellite-v8'
+          });
+          
+          map.on("zoomend", function(e){
+        	  console.log(map.getZoom())
+        	  console.log(JSON.stringify(map.getBounds()))
           });
           
         	
