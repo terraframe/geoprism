@@ -2,6 +2,8 @@ package net.geoprism.ontology;
 
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -12,6 +14,22 @@ import com.vividsolutions.jts.geom.Envelope;
 
 public class PublisherUtil
 {
+  public static Envelope getTileBounds(JSONObject object)
+  {
+    try
+    {
+      int x = object.getInt("x");
+      int y = object.getInt("y");
+      int zoom = object.getInt("z");
+
+      return PublisherUtil.getTileBounds(x, y, zoom);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
   public static Envelope getTileBounds(int x, int y, int zoom)
   {
     try
