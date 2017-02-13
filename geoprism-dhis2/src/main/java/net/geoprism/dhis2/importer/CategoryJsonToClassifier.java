@@ -23,6 +23,7 @@ public class CategoryJsonToClassifier
     this.classy.getDisplayLabel().setValue(json.getString("name"));
     this.classy.setClassifierId(json.getString("id"));
     this.classy.setClassifierPackage(json.getString("id"));
+    this.classy.setCategory(true);
     this.classy.apply();
     
     Classifier parent = Classifier.getRoot();

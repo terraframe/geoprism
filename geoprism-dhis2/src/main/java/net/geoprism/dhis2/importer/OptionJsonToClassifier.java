@@ -19,6 +19,7 @@ public class OptionJsonToClassifier
     classy.getDisplayLabel().setValue(json.getString("name"));
     classy.setClassifierId(json.getString("id"));
     classy.setClassifierPackage(json.getString("id"));
+    classy.setCategory(false);
     classy.apply();
   }
 }
