@@ -125,40 +125,40 @@ public class DHIS2DataImporter
     buildAllpaths();
     
     importCategories();
-    importOptions();
-    importOptionRelationships();
+    importCategoryOptions();
+    importCategoryOptionRelationships();
   }
   
- // TODO: Create or Update is a lot harder than just deleting everything
- private void deleteAll()
- {
-   Database.executeStatement("truncate geo_entity;");
-   Database.executeStatement("truncate geo_entity_problem;");
-   Database.executeStatement("truncate universal;");
-   Database.executeStatement("truncate located_in;");
-   Database.executeStatement("truncate allowed_in;");
-   Database.executeStatement("truncate classifier;");
-   Database.executeStatement("truncate classifier_is_a_relationship;");
+  // TODO: Create or Update is a lot harder than just deleting everything
+  private void deleteAll()
+  {
+    Database.executeStatement("truncate geo_entity;");
+    Database.executeStatement("truncate geo_entity_problem;");
+    Database.executeStatement("truncate universal;");
+    Database.executeStatement("truncate located_in;");
+    Database.executeStatement("truncate allowed_in;");
+    Database.executeStatement("truncate classifier;");
+    Database.executeStatement("truncate classifier_is_a_relationship;");
    
-   Universal rootUni = new Universal();
-   rootUni.getDisplayLabel().setValue("ROOT");
-   rootUni.setUniversalId("ROOT");
-   rootUni.getDescription().setValue("ROOT");
-   rootUni.apply();
+    Universal rootUni = new Universal();
+    rootUni.getDisplayLabel().setValue("ROOT");
+    rootUni.setUniversalId("ROOT");
+    rootUni.getDescription().setValue("ROOT");
+    rootUni.apply();
    
-   GeoEntity root = new GeoEntity();
-   root.getDisplayLabel().setValue("ROOT");
-   root.setGeoId("ROOT");
-   root.setUniversal(rootUni);
-   root.apply();
+    GeoEntity root = new GeoEntity();
+    root.getDisplayLabel().setValue("ROOT");
+    root.setGeoId("ROOT");
+    root.setUniversal(rootUni);
+    root.apply();
    
-   BusinessDAO rootC = BusinessDAO.newInstance("net.geoprism.ontology.Classifier");
-   rootC.setStructValue(Classifier.DISPLAYLABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "ROOT");
-   rootC.setValue(Classifier.CLASSIFIERID, "ROOT");
-   rootC.setValue(Classifier.CLASSIFIERPACKAGE, "ROOT");
-   rootC.setValue(Classifier.KEYNAME, Term.ROOT_KEY);
-   rootC.apply();
- }
+    BusinessDAO rootC = BusinessDAO.newInstance("net.geoprism.ontology.Classifier");
+    rootC.setStructValue(Classifier.DISPLAYLABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "ROOT");
+    rootC.setValue(Classifier.CLASSIFIERID, "ROOT");
+    rootC.setValue(Classifier.CLASSIFIERPACKAGE, "ROOT");
+    rootC.setValue(Classifier.KEYNAME, Term.ROOT_KEY);
+    rootC.apply();
+  }
   
   public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
   {
@@ -258,16 +258,16 @@ public class DHIS2DataImporter
     }
   }
   
-  private void importOptions()
+  private void importCategoryOptions()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
-        new NameValuePair("options", "true")
+        new NameValuePair("categoryOptions", "true")
     });
     
     // Create Classifiers from Options
-    JSONArray units = response.getJSONArray("options");
+    JSONArray units = response.getJSONArray("categoryOptions");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);
@@ -276,8 +276,8 @@ public class DHIS2DataImporter
       converter.apply();
     }
   }
-  
-  private void importOptionRelationships()
+  // com.runwaysdk.dataaccess.cache.DataNotFoundException: An item of type [net.geoprism.ontology.Classifier] with the key [TNYQzTHdoxL.TNYQzTHdoxL] does not exist.
+  private void importCategoryOptionRelationships()
   {
  // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
