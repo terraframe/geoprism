@@ -62,7 +62,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 {
   private static final long   serialVersionUID = 1158111601;
 
-  private static final String KEY_CONCATENATOR = ".";
+  public static final String KEY_CONCATENATOR = ".";
 
   public Classifier()
   {

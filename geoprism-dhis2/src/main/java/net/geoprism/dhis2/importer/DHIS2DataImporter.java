@@ -19,7 +19,6 @@
 package net.geoprism.dhis2.importer;
 
 import java.io.File;
-import java.sql.Savepoint;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -31,8 +30,10 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.configuration.ConfigurationManager;
-import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.constants.MdAttributeLocalInfo;
+import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.geometry.GeometryHelper;
@@ -43,10 +44,10 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import net.geoprism.account.OauthServer;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.dhis2.DHIS2BasicConnector;
-import net.geoprism.dhis2.DHIS2ConflictException;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
@@ -116,11 +117,48 @@ public class DHIS2DataImporter
   @Transaction
   private void importAllInTransaction()
   {
+    deleteAll();
+    
     dhis2.initialize();
     importOrgUnitLevels();
     importOrgUnits();
     buildAllpaths();
+    
+    importCategories();
+    importOptions();
+    importOptionRelationships();
   }
+  
+ // TODO: Create or Update is a lot harder than just deleting everything
+ private void deleteAll()
+ {
+   Database.executeStatement("truncate geo_entity;");
+   Database.executeStatement("truncate geo_entity_problem;");
+   Database.executeStatement("truncate universal;");
+   Database.executeStatement("truncate located_in;");
+   Database.executeStatement("truncate allowed_in;");
+   Database.executeStatement("truncate classifier;");
+   Database.executeStatement("truncate classifier_is_a_relationship;");
+   
+   Universal rootUni = new Universal();
+   rootUni.getDisplayLabel().setValue("ROOT");
+   rootUni.setUniversalId("ROOT");
+   rootUni.getDescription().setValue("ROOT");
+   rootUni.apply();
+   
+   GeoEntity root = new GeoEntity();
+   root.getDisplayLabel().setValue("ROOT");
+   root.setGeoId("ROOT");
+   root.setUniversal(rootUni);
+   root.apply();
+   
+   BusinessDAO rootC = BusinessDAO.newInstance("net.geoprism.ontology.Classifier");
+   rootC.setStructValue(Classifier.DISPLAYLABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "ROOT");
+   rootC.setValue(Classifier.CLASSIFIERID, "ROOT");
+   rootC.setValue(Classifier.CLASSIFIERPACKAGE, "ROOT");
+   rootC.setValue(Classifier.KEYNAME, Term.ROOT_KEY);
+   rootC.apply();
+ }
   
   public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
   {
@@ -131,12 +169,12 @@ public class DHIS2DataImporter
   {
     Universal.getStrategy().reinitialize(AllowedIn.CLASS);
     GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
-//    Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
+    Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
   }
   
   private void importOrgUnitLevels()
   {
-    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnitLevels=true"
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnitLevels=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnitLevels", "true")
@@ -164,7 +202,7 @@ public class DHIS2DataImporter
   
   private void importOrgUnits()
   {
-    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true"
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnits=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
@@ -198,6 +236,63 @@ public class DHIS2DataImporter
       OrgUnitJsonToGeoEntity converter = converters[i];
       
       converter.swapGeoId();
+    }
+  }
+  
+  private void importCategories()
+  {
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("categories", "true")
+    });
+    
+    // Create Classifiers from Categories
+    JSONArray units = response.getJSONArray("categories");
+    for (int i = 0; i < units.length(); ++i)
+    {
+      JSONObject unit = units.getJSONObject(i);
+      
+      CategoryJsonToClassifier converter = new CategoryJsonToClassifier(unit);
+      converter.apply();
+    }
+  }
+  
+  private void importOptions()
+  {
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("options", "true")
+    });
+    
+    // Create Classifiers from Options
+    JSONArray units = response.getJSONArray("options");
+    for (int i = 0; i < units.length(); ++i)
+    {
+      JSONObject unit = units.getJSONObject(i);
+      
+      OptionJsonToClassifier converter = new OptionJsonToClassifier(unit);
+      converter.apply();
+    }
+  }
+  
+  private void importOptionRelationships()
+  {
+ // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("categories", "true")
+    });
+    
+    // Create Classifiers from Categories
+    JSONArray units = response.getJSONArray("categories");
+    for (int i = 0; i < units.length(); ++i)
+    {
+      JSONObject unit = units.getJSONObject(i);
+      
+      CategoryJsonToClassifier converter = new CategoryJsonToClassifier(unit);
+      converter.applyCategoryRelationships();
     }
   }
 }
