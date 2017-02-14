@@ -41,7 +41,7 @@
                 <li role="menuitem"><a class="dropdown-item" routerLink="/datasets" routerLinkActive="active"><gdb:localize key="Data_Sets"/></a></li>
                 <li role="menuitem"><a class="dropdown-item" routerLink="/icons" routerLinkActive="active"><i></i><gdb:localize key="Icons"/></a></li>
                 <li role="menuitem"><a class="dropdown-item" routerLink="/categories" routerLinkActive="active"><i></i><gdb:localize key="Categories"/></a></li>
-                
+                <li role="menuitem"><a class="dropdown-item" href="${pageContext.request.contextPath}/management#locations"><i></i><gdb:localize key="location.management.title"/></a></li>                
               </ul>
             </li>
           </ul>
