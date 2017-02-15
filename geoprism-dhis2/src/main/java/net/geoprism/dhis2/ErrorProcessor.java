@@ -63,16 +63,19 @@ public class ErrorProcessor
     {
       JSONObject summary = summaries.getJSONObject(i);
       
-      JSONArray conflicts = summary.getJSONArray("conflicts");
-      
-      for (int j = 0; j < conflicts.length(); ++j)
+      if (summary.has("conflicts"))
       {
-        JSONObject conflict = conflicts.getJSONObject(j);
-        String value = conflict.getString("value");
+        JSONArray conflicts = summary.getJSONArray("conflicts");
         
-        if (value.contains("No org unit"))
+        for (int j = 0; j < conflicts.length(); ++j)
         {
-//          throw new RuntimeException("No org unit found on TEI. [" + response + "].");
+          JSONObject conflict = conflicts.getJSONObject(j);
+          String value = conflict.getString("value");
+          
+          if (value.contains("No org unit"))
+          {
+            throw new RuntimeException("No org unit found on TEI. [" + response + "].");
+          }
         }
       }
     }

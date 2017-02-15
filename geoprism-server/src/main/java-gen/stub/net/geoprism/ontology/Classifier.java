@@ -182,12 +182,10 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   /**
-   * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
-   * that are children of the given attribute root nodes including the root nodes.
+   * Returns the root <code>Classifier</code> which is referenced by the given MdAttributeTerm.
    * 
-   * @param sfTermToMatch
-   * @param mdAttributeTermDAO
-   * @return the <code>Classifier</code> object with a label or synonym that matches the given term.
+   * @param mdAttributeTermDAOIF
+   * @return the <code>Classifier</code> object
    */
   public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {

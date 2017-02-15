@@ -17,6 +17,13 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ====
 
+Corner Cases:
+1) If you create a new category list in our app it won't populate over into DHIS2
+2) Attribute already exists? (all attribute imports fail, transactional)
+
+
+
+
 Notes for DHIS2 devs:
 
 1) Metadata exporter does not respect query/filter criteria:
