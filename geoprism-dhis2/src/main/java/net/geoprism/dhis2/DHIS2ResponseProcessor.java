@@ -23,9 +23,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ErrorProcessor
+public class DHIS2ResponseProcessor
 {
-  private static Logger logger = LoggerFactory.getLogger(ErrorProcessor.class);
+  private static Logger logger = LoggerFactory.getLogger(DHIS2ResponseProcessor.class);
   
   public static void validateImportSummaryResponse(JSONObject response)
   {
@@ -62,6 +62,12 @@ public class ErrorProcessor
     for (int i = 0; i < summaries.length(); ++i)
     {
       JSONObject summary = summaries.getJSONObject(i);
+      
+      String status = summary.getString("status");
+      if (!status.equals("SUCCESS"))
+      {
+        throw new RuntimeException("Failure detected in response. [" + response + "]");
+      }
       
       if (summary.has("conflicts"))
       {

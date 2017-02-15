@@ -25,10 +25,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityBase;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.metadata.MdAttributeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeBoolean;
@@ -215,6 +218,10 @@ public class MdBusinessToTrackerJson
     program.put("incidentDateLabel", "Incident date");
     program.put("enrollmentDateLabel", "Enrollment date");
     program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
+    
+    JSONArray units = new JSONArray();
+    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("id", ((GeoEntity) term).getGeoId())));
+    program.put("organisationUnits", units);
     
     JSONArray attrs = new JSONArray();
     if (attributeIds != null)

@@ -17,6 +17,12 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ====
 
+TODO:
+1) Assign program to org units
+2) Why can't I see the data in tracker?
+3) Synonyms??
+
+
 Corner Cases:
 1) If you create a new category list in our app it won't populate over into DHIS2
 2) Attribute already exists? (all attribute imports fail, transactional)

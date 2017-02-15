@@ -44,7 +44,7 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
 
 import net.geoprism.dhis2.DHIS2BasicConnector;
-import net.geoprism.dhis2.ErrorProcessor;
+import net.geoprism.dhis2.DHIS2ResponseProcessor;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
 
@@ -191,7 +191,7 @@ public class MdBusinessExporter
       jsonMetadata.put("trackedEntityInstances", trackedEntityInstances);
       
       JSONObject response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
-      ErrorProcessor.validateImportSummaryResponse(response);
+      DHIS2ResponseProcessor.validateImportSummaryResponse(response);
       
       page = page + 1;
     }
@@ -206,7 +206,7 @@ public class MdBusinessExporter
     jsonMetadata.put("trackedEntities", trackedEntities);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response);
     
     getTrackedEntityId();
   }
@@ -257,7 +257,7 @@ public class MdBusinessExporter
       jsonMetadata.put("trackedEntityAttributes", teas2);
       
       JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-      ErrorProcessor.validateTypeReportResponse(response);
+      DHIS2ResponseProcessor.validateTypeReportResponse(response);
     }
     
     getTrackedEntityAttributeIds();
@@ -325,7 +325,7 @@ public class MdBusinessExporter
     jsonMetadata.put("programTrackedEntityAttributes", converter.getProgramTrackedEntityAttributes(programId, trackedEntityAttributeIds));
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response);
     
     getProgramTrackedEntityAttributeIds();
   }
@@ -426,7 +426,7 @@ public class MdBusinessExporter
     jsonMetadata.put("programs", programs);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response);
     
     getProgramId();
   }
