@@ -886,7 +886,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
         Classifier.validateCategoryName(label, null);
       }
 
-      if (object.has("parentId"))
+      if (object.has("parentId") && object.getString("parentId").length() > 0)
       {
         String parentId = object.getString("parentId");
 
