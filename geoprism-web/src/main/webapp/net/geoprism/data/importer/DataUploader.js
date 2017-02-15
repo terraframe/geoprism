@@ -553,11 +553,15 @@
   }
   
   
-  function BeginningInfoPageController($scope) {
+  function BeginningInfoPageController($scope, datasetService) {
     var controller = this;
     
+    controller.length = function() {
+      var config = datasetService.getDatasetConfiguration();
+      return config.sheets.length;
+    }
   }
-  
+ 
   
   function BeginningInfoPage() {
     return {

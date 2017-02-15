@@ -62,7 +62,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 {
   private static final long   serialVersionUID = 1158111601;
 
-  private static final String KEY_CONCATENATOR = ".";
+  public static final String KEY_CONCATENATOR = ".";
 
   public Classifier()
   {
@@ -886,7 +886,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
         Classifier.validateCategoryName(label, null);
       }
 
-      if (object.has("parentId"))
+      if (object.has("parentId") && object.getString("parentId").length() > 0)
       {
         String parentId = object.getString("parentId");
 
