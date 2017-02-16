@@ -28,10 +28,11 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.wdtinc</groupId>
-      <artifactId>mapbox-vector-tile</artifactId>
-      <version>1.1.1</version>
-    </dependency>
+ <groupId>com.wdtinc</groupId>
+ <artifactId>mapbox-vector-tile</artifactId>
+ <version>1.1.1</version>
+ <classifier>tf3</classifier>
+</dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
@@ -125,11 +126,11 @@
       <version>1.0.2</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.wdtinc</groupId>
-      <artifactId>mapbox-vector-tile</artifactId>
-      <version>1.1.1</version>
-    </dependency>
+<!--     <dependency> -->
+<!--       <groupId>com.wdtinc</groupId> -->
+<!--       <artifactId>mapbox-vector-tile</artifactId> -->
+<!--       <version>1.1.1</version> -->
+<!--     </dependency> -->
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->
