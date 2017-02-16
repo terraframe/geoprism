@@ -22,14 +22,17 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.mapping.GeoserverFacade;
+import com.vividsolutions.jts.geom.Envelope;
+import com.wdtinc.mapbox_vector_tile.VectorTile;
+import com.wdtinc.mapbox_vector_tile.VectorTile.Tile;
+import com.wdtinc.mapbox_vector_tile.VectorTile.Tile.Layer;
 
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.gis.geoserver.GeoserverLayer;
 import net.geoprism.gis.geoserver.GeoserverLayerIF;
 import net.geoprism.gis.geoserver.SessionPredicate;
-import net.geoprism.ontology.LayerPublisher.LayerType;
 
-public class LocationContextPublisher extends LayerPublisher
+public class LocationContextPublisher extends LayerPublisher implements VectorLayerPublisherIF
 {
   private String id;
 
@@ -143,11 +146,17 @@ public class LocationContextPublisher extends LayerPublisher
 
     writer.endObject();
   }
-  
+
+  @Override
+  public String getLayerName()
+  {
+    return "context";
+  }
+
   private ResultSet getResultSet(String entityId, LayerType type)
   {
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ge.geo_multi_polygon AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
     sql.append("WHERE ge.id = '" + entityId + "'\n");
@@ -155,7 +164,8 @@ public class LocationContextPublisher extends LayerPublisher
     return Database.query(sql.toString());
   }
 
-  public byte[] writeVectorTiles(String layerName, int x, int y, int zoom)
+  @Override
+  public Layer writeVectorLayer(Envelope envelope)
   {
     try
     {
@@ -163,7 +173,9 @@ public class LocationContextPublisher extends LayerPublisher
 
       try
       {
-        return this.writeVectorTiles(layerName, x, y, zoom, resultSet);
+        String layerName = this.getLayerName();
+
+        return this.writeVectorLayer(layerName, envelope, resultSet);
       }
       finally
       {
@@ -175,6 +187,18 @@ public class LocationContextPublisher extends LayerPublisher
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
+  public byte[] writeVectorTiles(Envelope envelope)
+  {
+    // Add built layer to MVT
+    final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
+
+    builder.addLayers(this.writeVectorLayer(envelope));
+
+    /// Build MVT
+    Tile mvt = builder.build();
+
+    return mvt.toByteArray();
+  }
 
 }

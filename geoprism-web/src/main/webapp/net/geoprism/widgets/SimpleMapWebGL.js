@@ -64,14 +64,14 @@
 		//
 		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
 		
-		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2, false);
-		controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2, false);
-    
-		controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2, true);
-	    controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2, false);
-
-		controller.addVectorHoverEvents(hoverCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
-		controller.addVectorClickEvents(featureClickCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
+//		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2, false);
+//		controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2, false);
+//    
+//		controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2, true);
+//	    controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2, false);
+//
+//		controller.addVectorHoverEvents(hoverCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
+//		controller.addVectorClickEvents(featureClickCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
 		//
 		// end
 		//
@@ -184,52 +184,60 @@
 	 
 	 
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
-		  if(!isEmptyJSONObject($scope.sharedGeoData)){
-			  var data = $scope.sharedGeoData;
-			  
-			  var contextCallback = function(data) {
-				  for(var i=0; i<data.features.length; i++){
-	  	    		var feature = data.features[i];
-	  	    		feature.properties.isHoverable = false;
-	  	    		feature.properties.isClickable = false;
-	  	    		
-	  	    		// TODO: Remove this temp demo code
-	  	    		if(feature.properties.displayLabel.startsWith("ES")){
-	  	    			feature.properties.height = 0;
-	  	    			feature.properties.base = 0;
-	  	    			feature.properties.featureType = "boundary";
-	  	    		}
-	  	    		else{
-	  	    			feature.properties.height = Math.round(Math.random() * 50);
-	  	    			feature.properties.base = 0;
-	  	    			feature.properties.featureType = "building";
-	  	    		}
-	  			  }
-				  
-				  controller.updateVectorLayer(data, "context-point", $scope.contextStyle, "CONTEXT", 1);
-	    		controller.zoomToLayersExtent(["context-point"]);
-			  }
-			  
-			  var targetCallback = function(data) {
-				  for(var i=0; i<data.features.length; i++){
-		    		var feature = data.features[i];
-		    		feature.properties.isHoverable = true;
-		    		feature.properties.isClickable = true;
-				  }
-				  
-				  controller.updateVectorLayer(data, "target-point", $scope.targetStyle, "TARGET", 2);
-		    	controller.zoomToLayersExtent(["target-point"]);
-			  }
-			  
-			  
-			  //controller.removeVectorData();
-			  
-			  // get context geo data
-			  controller.getMapData(contextCallback, data.layers[0], data.workspace);
-			  
-			  // get target geo data
-			  controller.getMapData(targetCallback, data.layers[1], data.workspace);
-		  }
+        var layers = $scope.sharedGeoData;
+
+        for (var i = 0; i < layers.length; i++) {
+          var layer = layers[i];
+          
+          controller.updateVectorLayer(layer.config, layer.name, $scope.targetStyle, "TARGET", 2);
+        }
+     
+//		  if(!isEmptyJSONObject($scope.sharedGeoData)){
+//			  var data = $scope.sharedGeoData;
+//			  
+//			  var contextCallback = function(data) {
+//				  for(var i=0; i<data.features.length; i++){
+//	  	    		var feature = data.features[i];
+//	  	    		feature.properties.isHoverable = false;
+//	  	    		feature.properties.isClickable = false;
+//	  	    		
+//	  	    		// TODO: Remove this temp demo code
+//	  	    		if(feature.properties.displayLabel.startsWith("ES")){
+//	  	    			feature.properties.height = 0;
+//	  	    			feature.properties.base = 0;
+//	  	    			feature.properties.featureType = "boundary";
+//	  	    		}
+//	  	    		else{
+//	  	    			feature.properties.height = Math.round(Math.random() * 50);
+//	  	    			feature.properties.base = 0;
+//	  	    			feature.properties.featureType = "building";
+//	  	    		}
+//	  			  }
+//				  
+//				  controller.updateVectorLayer(data, "context-point", $scope.contextStyle, "CONTEXT", 1);
+//	    		controller.zoomToLayersExtent(["context-point"]);
+//			  }
+//			  
+//			  var targetCallback = function(data) {
+//				  for(var i=0; i<data.features.length; i++){
+//		    		var feature = data.features[i];
+//		    		feature.properties.isHoverable = true;
+//		    		feature.properties.isClickable = true;
+//				  }
+//				  
+//				  controller.updateVectorLayer(data, "target-point", $scope.targetStyle, "TARGET", 2);
+//		    	controller.zoomToLayersExtent(["target-point"]);
+//			  }
+//			  
+//			  
+//			  //controller.removeVectorData();
+//			  
+//			  // get context geo data
+//			  controller.getMapData(contextCallback, data.layers[0], data.workspace);
+//			  
+//			  // get target geo data
+//			  controller.getMapData(targetCallback, data.layers[1], data.workspace);
+//		  }
 	 }
 	 
       function isEmptyJSONObject(obj) {

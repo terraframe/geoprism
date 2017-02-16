@@ -38,6 +38,10 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.vividsolutions.jts.geom.Envelope;
+import com.wdtinc.mapbox_vector_tile.VectorTile;
+import com.wdtinc.mapbox_vector_tile.VectorTile.Tile;
+import com.wdtinc.mapbox_vector_tile.VectorTile.Tile.Layer;
 
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.gis.geoserver.GeoserverFacade;
@@ -45,7 +49,7 @@ import net.geoprism.gis.geoserver.GeoserverLayer;
 import net.geoprism.gis.geoserver.GeoserverLayerIF;
 import net.geoprism.gis.geoserver.SessionPredicate;
 
-public class LocationTargetPublisher extends LayerPublisher
+public class LocationTargetPublisher extends LayerPublisher implements VectorLayerPublisherIF
 {
   private String id;
 
@@ -121,23 +125,6 @@ public class LocationTargetPublisher extends LayerPublisher
     return vQuery;
   }
 
-  private ResultSet getResultSet(String entityId, LayerType type)
-  {
-    StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ge.geo_multi_polygon AS " + GeoserverFacade.GEOM_COLUMN + "\n");
-    sql.append("FROM geo_entity AS ge\n");
-    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
-    sql.append("JOIN located_in AS li ON li.child_id = ge.id\n");
-    sql.append("WHERE li.parent_id = '" + entityId + "'\n");
-
-    if (this.universalId != null && this.universalId.length() > 0)
-    {
-      sql.append("AND ge.universal = '" + this.universalId + "'\n");
-    }
-
-    return Database.query(sql.toString());
-  }
-
   private LayerType getLayerType(List<Term> descendants)
   {
     return LayerType.POLYGON;
@@ -183,7 +170,31 @@ public class LocationTargetPublisher extends LayerPublisher
     writer.endObject();
   }
 
-  public byte[] writeVectorTiles(String layerName, int x, int y, int zoom)
+  private ResultSet getResultSet(String entityId, LayerType type)
+  {
+    StringBuilder sql = new StringBuilder();
+    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("FROM geo_entity AS ge\n");
+    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
+    sql.append("JOIN located_in AS li ON li.child_id = ge.id\n");
+    sql.append("WHERE li.parent_id = '" + entityId + "'\n");
+
+    if (this.universalId != null && this.universalId.length() > 0)
+    {
+      sql.append("AND ge.universal = '" + this.universalId + "'\n");
+    }
+
+    return Database.query(sql.toString());
+  }
+
+  @Override
+  public String getLayerName()
+  {
+    return "target";
+  }
+
+  @Override
+  public Layer writeVectorLayer(Envelope envelope)
   {
     try
     {
@@ -191,7 +202,9 @@ public class LocationTargetPublisher extends LayerPublisher
 
       try
       {
-        return this.writeVectorTiles(layerName, x, y, zoom, resultSet);
+        String layerName = this.getLayerName();
+
+        return this.writeVectorLayer(layerName, envelope, resultSet);
       }
       finally
       {
@@ -202,5 +215,18 @@ public class LocationTargetPublisher extends LayerPublisher
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  public byte[] writeVectorTiles(Envelope envelope)
+  {
+    // Add built layer to MVT
+    final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
+
+    builder.addLayers(this.writeVectorLayer(envelope));
+
+    /// Build MVT
+    Tile mvt = builder.build();
+
+    return mvt.toByteArray();
   }
 }
