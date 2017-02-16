@@ -100,6 +100,7 @@ public class MdBusinessToTrackerJson
         JSONObject jsonAttr = new JSONObject();
         jsonAttr.put("name", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("shortName", mdAttr.getDisplayLabel().getValue());
+        jsonAttr.put("aggregationType", "NONE");
         
         // Find the corresponding DHIS2 attribute type from our Runway MdAttribute types
         String valueType = null;

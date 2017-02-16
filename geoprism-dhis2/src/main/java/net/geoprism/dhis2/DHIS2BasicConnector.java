@@ -47,6 +47,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.account.ExternalProfile;
 import net.geoprism.account.OauthServer;
+import net.geoprism.dhis2.response.DHIS2ConflictException;
 
 public class DHIS2BasicConnector
 {

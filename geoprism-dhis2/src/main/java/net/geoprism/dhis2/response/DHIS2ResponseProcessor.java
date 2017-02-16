@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2;
+package net.geoprism.dhis2.response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,7 +57,7 @@ public class DHIS2ResponseProcessor
     
     if (!response.has("responseType") || !response.getString("responseType").equals("ImportSummaries"))
     {
-      throw new RuntimeException("Unexpected response [" + response + "]");
+      throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
     }
     
     JSONArray summaries = response.getJSONArray("importSummaries");
@@ -66,7 +69,7 @@ public class DHIS2ResponseProcessor
       String status = summary.getString("status");
       if (!status.equals("SUCCESS"))
       {
-        throw new RuntimeException("Failure detected in response. [" + response + "]");
+        throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
       }
       
       if (summary.has("conflicts"))
@@ -84,10 +87,17 @@ public class DHIS2ResponseProcessor
           }
         }
       }
+      
+      if (summary.has("enrollments"))
+      {
+        JSONObject enrollments = summary.getJSONObject("enrollments");
+        
+        validateImportSummaryResponse(enrollments);
+      }
     }
   }
   
-  public static void validateTypeReportResponse(JSONObject response)
+  public static void validateTypeReportResponse(JSONObject response, boolean errorOnAlreadyExists)
   {
 //  {
 //  "status": "ERROR",
@@ -126,8 +136,10 @@ public class DHIS2ResponseProcessor
 //}
     if (!response.has("status"))
     {
-      throw new RuntimeException("Unexpected response [" + response + "]");
+      throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
     }
+    
+    List<String> failMsgs = new ArrayList<String>();
     
     if (response.getString("status").equals("ERROR"))
     {
@@ -153,15 +165,27 @@ public class DHIS2ResponseProcessor
             
             if (errorReport.getString("errorCode").equals("E5003"))
             {
-              logger.error("Entity [" + klass + "] already exists.");
+              if (errorOnAlreadyExists)
+              {
+                failMsgs.add(errorReport.getString("message"));
+              }
+              else
+              {
+                logger.error(errorReport.getString("message"));
+              }
             }
             else
             {
-              throw new RuntimeException("Unexpected response [" + response + "]");
+              throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
             }
           }
         }
       }
+    }
+    
+    if (errorOnAlreadyExists && failMsgs.size() > 0)
+    {
+      throw new DHIS2DuplicateDataException(failMsgs);
     }
   }
 }

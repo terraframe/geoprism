@@ -21,11 +21,16 @@ package net.geoprism.dhis2.exporter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -44,7 +49,9 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
 
 import net.geoprism.dhis2.DHIS2BasicConnector;
-import net.geoprism.dhis2.DHIS2ResponseProcessor;
+import net.geoprism.dhis2.response.DHIS2DuplicateDataException;
+import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
+import net.geoprism.dhis2.response.DHIS2UnexpectedResponseException;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
 
@@ -86,7 +93,6 @@ public class MdBusinessExporter
     createTrackedEntityAttributes();
     createProgramTrackedEntityAttributes();
     createProgram();
-//    assignProgramToOrgUnits();
     createAndEnrollTrackedEntityInstances();
   }
   
@@ -206,7 +212,7 @@ public class MdBusinessExporter
     jsonMetadata.put("trackedEntities", trackedEntities);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
     
     getTrackedEntityId();
   }
@@ -242,22 +248,47 @@ public class MdBusinessExporter
   
   protected void createTrackedEntityAttributes()
   {
+    JSONObject jsonMetadata = new JSONObject();
+    
     JSONArray trackedEntityAttributes = converter.getTrackedEntityAttributes();
     
-    // We are doing this in a loop because it causes the import to be non atomic (transactional).
-    // For this demo we want to do a "best effort" kind of import because error handling may/may not be all that good.
-    // For a real product it may make sense to make everything transactional and produce good error feedback.
-    for (int i = 0; i < trackedEntityAttributes.length(); ++i)
+    jsonMetadata.put("trackedEntityAttributes", trackedEntityAttributes);
+    
+    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    
+    try
     {
-      JSONObject jsonMetadata = new JSONObject();
+      DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
+    }
+    catch (DHIS2DuplicateDataException e)
+    {
+      List<String> msgs = e.getErrorMessages();
       
-      JSONArray teas2 = new JSONArray();
-      teas2.put(trackedEntityAttributes.get(i));
+      Set<String> attrNames = new HashSet<String>();
+      for (String msg : msgs)
+      {
+        // Property `name`Â with value `Gender` on object Gender [XWImNYPqAIz] (TrackedEntityAttribute)Â already exists on object cejWyOfXge6.
+        Pattern p = Pattern.compile("Property `(.*)`.*with value `(.*)` on object .*");
+        Matcher m = p.matcher(msg);
+        
+        if (m.find())
+        {
+          String attrName = m.group(2);
+          
+          if (attrName != null)
+          {
+            attrNames.add(attrName);
+          }
+        }
+        else
+        {
+          // If we get some weird message back that doesn't match our regex
+          throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
+        }
+      }
       
-      jsonMetadata.put("trackedEntityAttributes", teas2);
-      
-      JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-      DHIS2ResponseProcessor.validateTypeReportResponse(response);
+      String msg = "Attributes [" + StringUtils.join(attrNames, ", ") + "] already exist in DHIS2 as a TrackedEntityAttribute. Delete your Geoprism dataset and reimport your spreadsheet with a different attribute name (or delete the attributes in DHIS2).";
+      throw new DHIS2DuplicateDataException(msg);
     }
     
     getTrackedEntityAttributeIds();
@@ -325,7 +356,7 @@ public class MdBusinessExporter
     jsonMetadata.put("programTrackedEntityAttributes", converter.getProgramTrackedEntityAttributes(programId, trackedEntityAttributeIds));
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
     
     getProgramTrackedEntityAttributeIds();
   }
@@ -426,7 +457,7 @@ public class MdBusinessExporter
     jsonMetadata.put("programs", programs);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
     
     getProgramId();
   }
