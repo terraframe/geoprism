@@ -138,21 +138,24 @@ public class MdBusinessExporter
               
               if (mdAttr instanceof MdAttributeReference)
               {
-                MdBusiness reference = ((MdAttributeReference) mdAttr).getMdBusiness();
-                
-                if (reference.definesType().equals(GeoEntity.CLASS))
+                String refId = biz.getValue(attrName);
+                if (!refId.equals(""))
                 {
-                  String geoEntityId = biz.getValue(attrName);
-                  orgUnit = GeoEntity.get(geoEntityId);
-                }
-                else if (reference.definesType().equals(Classifier.CLASS))
-                {
-                  Classifier classy = Classifier.get(biz.getValue(attrName));
-                  jAttribute.put("value", classy.getDisplayLabel().getValue());
-                }
-                else if (reference.definesType().equals(ClassifierSynonym.CLASS))
-                {
-                  System.out.println("TODO : We just hit a ClassifierSynonym reference in tei.");
+                  MdBusiness reference = ((MdAttributeReference) mdAttr).getMdBusiness();
+                  
+                  if (reference.definesType().equals(GeoEntity.CLASS))
+                  {
+                    orgUnit = GeoEntity.get(refId);
+                  }
+                  else if (reference.definesType().equals(Classifier.CLASS))
+                  {
+                    Classifier classy = Classifier.get(refId);
+                    jAttribute.put("value", classy.getDisplayLabel().getValue());
+                  }
+                  else if (reference.definesType().equals(ClassifierSynonym.CLASS))
+                  {
+//                    System.out.println("TODO : We just hit a ClassifierSynonym reference in tei.");
+                  }
                 }
               }
               else if (trackedEntityAttributeIds.containsKey(mdAttr.getId()))

@@ -156,7 +156,7 @@ public class MdBusinessToTrackerJson
           }
           else if (reference.definesType().equals(ClassifierSynonym.CLASS))
           {
-            System.out.println("TODO : We just hit a ClassifierSynonym reference in metadata.");
+//            System.out.println("TODO : We just hit a ClassifierSynonym reference in metadata.");
           }
         }
         else if (mdAttr instanceof MdAttributeGeometry)
