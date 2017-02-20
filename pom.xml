@@ -194,7 +194,7 @@
             <exclude>**/custom-fonts/**</exclude>
             <exclude>**/node_modules/**</exclude>
             <exclude>**/typings/**</exclude>
-            <exclude>**/webapp/app/*.js</exclude>
+            <exclude>**/webapp/app/**</exclude>
 
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
             <exclude>**/webapp/3rd-party/**</exclude>
