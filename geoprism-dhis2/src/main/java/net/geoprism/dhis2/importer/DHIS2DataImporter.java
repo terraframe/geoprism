@@ -124,9 +124,9 @@ public class DHIS2DataImporter
     importOrgUnits();
     buildAllpaths();
     
-    importCategories();
-    importCategoryOptions();
-    importCategoryOptionRelationships();
+    importOptionSets();
+    importOptions();
+    importOptionSetRelationships();
   }
   
   // TODO: Create or Update is a lot harder than just deleting everything
@@ -229,45 +229,49 @@ public class DHIS2DataImporter
       converter.applyLocatedIn();
     }
     
+    
+    
+    // TODO : The geoId contains the DHIS2 id, and not the actual geoid. We do this because it has to be referenced when we export and there's no other place to save the DHIS2 id.
+    
     // The OrgUnit parent reference is done by a DIHS2 id. In order to find the parent, we first set the GeoId to the DHIS2 internal id. Now we're swapping out those DHIS2 internal ids with geoids.
     // This could also be solved with a hashmap from   {DHIS2 id -> geoId}  to help us find the parent, but in the interest of saving memory I decided to loop through it again and hammer the processor instead.
-    for (int i = 0; i < converters.length; ++i)
-    {
-      OrgUnitJsonToGeoEntity converter = converters[i];
-      
-      converter.swapGeoId();
-    }
+//    for (int i = 0; i < converters.length; ++i)
+//    {
+//      OrgUnitJsonToGeoEntity converter = converters[i];
+//      
+//      converter.swapGeoId();
+//    }
   }
   
-  private void importCategories()
+  private void importOptionSets()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
-        new NameValuePair("categories", "true")
+        new NameValuePair("optionSets", "true")
     });
     
-    // Create Classifiers from Categories
-    JSONArray units = response.getJSONArray("categories");
+    // Create Classifiers from OptionSets
+    JSONArray units = response.getJSONArray("optionSets");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);
       
-      CategoryJsonToClassifier converter = new CategoryJsonToClassifier(unit);
+      OptionSetJsonToClassifier converter = new OptionSetJsonToClassifier(unit);
       converter.apply();
     }
   }
   
-  private void importCategoryOptions()
+  private void importOptions()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
-        new NameValuePair("categoryOptions", "true")
+        new NameValuePair("options", "true")
     });
     
     // Create Classifiers from Options
-    JSONArray units = response.getJSONArray("categoryOptions");
+    JSONArray units = response.getJSONArray("options");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);
@@ -276,22 +280,22 @@ public class DHIS2DataImporter
       converter.apply();
     }
   }
-  // com.runwaysdk.dataaccess.cache.DataNotFoundException: An item of type [net.geoprism.ontology.Classifier] with the key [TNYQzTHdoxL.TNYQzTHdoxL] does not exist.
-  private void importCategoryOptionRelationships()
+  
+  private void importOptionSetRelationships()
   {
  // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
-        new NameValuePair("categories", "true")
+        new NameValuePair("optionSets", "true")
     });
     
-    // Create Classifiers from Categories
-    JSONArray units = response.getJSONArray("categories");
+    // Create Relationships
+    JSONArray units = response.getJSONArray("optionSets");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);
       
-      CategoryJsonToClassifier converter = new CategoryJsonToClassifier(unit);
+      OptionSetJsonToClassifier converter = new OptionSetJsonToClassifier(unit);
       converter.applyCategoryRelationships();
     }
   }
