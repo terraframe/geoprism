@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 
 import { RunwayException } from '../model/runway-exception';
 
@@ -43,7 +44,14 @@ export class EventService {
   }
   
   public onError(error:any) : void {
-    let rError = error.json() as RunwayException
+    let rError = null;
+	
+	if(error instanceof Response) {
+      rError = error.json() as RunwayException;
+	}
+	else {
+      rError = JSON.parse(error) as RunwayException;
+	}
 
     for (const listener of this.listeners) {
       listener.onError(rError);
