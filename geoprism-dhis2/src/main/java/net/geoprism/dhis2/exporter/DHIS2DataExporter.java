@@ -26,6 +26,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringUtils;
 
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.session.Request;
@@ -47,6 +48,7 @@ public class DHIS2DataExporter
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
+    options.addOption(Option.builder("dataset").hasArg().argName("dataset").longOpt("dataset").desc("The name of the dataset to export.").required().build());
     
     try {
       CommandLine line = parser.parse( options, args );
@@ -55,6 +57,7 @@ public class DHIS2DataExporter
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
       String appcfgPath = line.getOptionValue("appcfgPath");
+      String dataset = StringUtils.capitalize(line.getOptionValue("dataset").toLowerCase());
       
       if (url == null)
       {
@@ -66,7 +69,8 @@ public class DHIS2DataExporter
         resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      new DHIS2DataExporter(url, username, password).exportToTrackerInRequest(TargetBuilder.PACKAGE_NAME + ".LaborForceByState2015");
+      
+      new DHIS2DataExporter(url, username, password).exportToTrackerInRequest(TargetBuilder.PACKAGE_NAME + "." + dataset);
     }
     catch (ParseException e)
     {

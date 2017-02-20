@@ -25,9 +25,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityBase;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.metadata.MdAttributeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeBoolean;
@@ -39,9 +43,11 @@ import com.runwaysdk.system.metadata.MdAttributeFloat;
 import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeLong;
 import com.runwaysdk.system.metadata.MdAttributeReference;
-import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdBusiness;
+
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
 
 /**
  * Responsible for exporting an MdBusiness directly to DHIS2 Tracker
@@ -94,15 +100,22 @@ public class MdBusinessToTrackerJson
         JSONObject jsonAttr = new JSONObject();
         jsonAttr.put("name", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("shortName", mdAttr.getDisplayLabel().getValue());
+        jsonAttr.put("aggregationType", "NONE");
         
         // Find the corresponding DHIS2 attribute type from our Runway MdAttribute types
-        String valueType = "TEXT";
+        String valueType = null;
+        
         if (mdAttr instanceof MdAttributeDate)
         {
           valueType = "DATE";
         }
         else if (mdAttr instanceof MdAttributeCharacter)
         {
+          if (mdAttr.getAttributeName().endsWith("FeatureId"))
+          {
+            continue;
+          }
+          
           valueType = "TEXT";
         }
         else if (mdAttr instanceof MdAttributeText)
@@ -121,26 +134,42 @@ public class MdBusinessToTrackerJson
         {
           valueType = "NUMBER";
         }
-        else if (mdAttr instanceof MdAttributeTerm)
-        {
-  //        throw new UnsupportedOperationException();
-        }
         else if (mdAttr instanceof MdAttributeReference)
         {
           MdBusiness reference = ((MdAttributeReference) mdAttr).getMdBusiness();
           
           if (reference.definesType().equals(GeoEntity.CLASS))
           {
-            valueType = "ORGANISATION_UNIT";
+//            valueType = "ORGANISATION_UNIT";
+            // We are skipping this one because the orgUnit is not set as an attribute, it has its own separate requirements
+          }
+          else if (reference.definesType().equals(Classifier.CLASS))
+          {
+            valueType = "TEXT";
+            
+            JSONObject optionSet = new JSONObject();
+            
+            Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getId()));
+            optionSet.put("id", root.getClassifierId());
+            
+            jsonAttr.put("optionSet", optionSet);
+          }
+          else if (reference.definesType().equals(ClassifierSynonym.CLASS))
+          {
+//            System.out.println("TODO : We just hit a ClassifierSynonym reference in metadata.");
           }
         }
         else if (mdAttr instanceof MdAttributeGeometry)
         {
           valueType = "COORDINATE";
+          continue; // TODO ?
         }
-        jsonAttr.put("valueType", valueType);
         
-        jsonAttrs.put(jsonAttr);
+        if (valueType != null)
+        {
+          jsonAttr.put("valueType", valueType);
+          jsonAttrs.put(jsonAttr);
+        }
       }
     }
     
@@ -155,7 +184,8 @@ public class MdBusinessToTrackerJson
     for (MdAttribute mdAttr : mdAttrs)
     {
       if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
-          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
+          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) && 
+          trackedEntityAttributeIds.containsKey(mdAttr.getId())
         )
       {
         JSONObject jsonAttr = new JSONObject();
@@ -189,6 +219,10 @@ public class MdBusinessToTrackerJson
     program.put("incidentDateLabel", "Incident date");
     program.put("enrollmentDateLabel", "Enrollment date");
     program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
+    
+    JSONArray units = new JSONArray();
+    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("id", ((GeoEntity) term).getGeoId())));
+    program.put("organisationUnits", units);
     
     JSONArray attrs = new JSONArray();
     if (attributeIds != null)

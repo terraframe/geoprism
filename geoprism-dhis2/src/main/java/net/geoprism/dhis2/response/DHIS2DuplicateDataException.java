@@ -16,28 +16,37 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2.importer;
+package net.geoprism.dhis2.response;
+
+import java.util.List;
 
 import org.json.JSONObject;
 
-import net.geoprism.ontology.Classifier;
-
-public class OptionJsonToClassifier
+public class DHIS2DuplicateDataException extends RuntimeException
 {
-  private JSONObject json;
+  private static final long serialVersionUID = -5902095640582124900L;
   
-  public OptionJsonToClassifier(JSONObject json)
+  JSONObject errorReport;
+  
+  List<String> msgs;
+  
+  public DHIS2DuplicateDataException(List<String> msgs)
   {
-    this.json = json;
+    this.msgs = msgs;
   }
   
-  public void apply()
+  public DHIS2DuplicateDataException(JSONObject errorReport)
   {
-    Classifier classy = new Classifier();
-    classy.getDisplayLabel().setValue(json.getString("name"));
-    classy.setClassifierId(json.getString("id"));
-    classy.setClassifierPackage(json.getString("id"));
-    classy.setCategory(false);
-    classy.apply();
+    this.errorReport = errorReport;
+  }
+  
+  public DHIS2DuplicateDataException(String message)
+  {
+    super(message);
+  }
+  
+  public List<String> getErrorMessages()
+  {
+    return this.msgs;
   }
 }

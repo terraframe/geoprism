@@ -490,6 +490,8 @@ export class UploadWizardComponent implements OnDestroy {
           }
             
           this.problems = result.problems;
+          this.info.information.sheets = result.sheets;
+          this.sheet = result.sheets[0];          
           
           if( !result.problems.locations || result.problems.locations.length > 0) {
         	
@@ -508,7 +510,7 @@ export class UploadWizardComponent implements OnDestroy {
 
             this.page = page;        	  
           }
-                       
+                                 
           this.onSuccess.emit({datasets:result.datasets, finished : false});          
         }         
       });    

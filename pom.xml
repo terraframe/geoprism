@@ -192,6 +192,10 @@
             <exclude>**/.keyStore</exclude>
             <exclude>**/*.yml</exclude>
             <exclude>**/custom-fonts/**</exclude>
+            <exclude>**/node_modules/**</exclude>
+            <exclude>**/typings/**</exclude>
+            <exclude>**/webapp/app/**</exclude>
+            <exclude>**/webapp/system-config.js</exclude>
 
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
             <exclude>**/webapp/3rd-party/**</exclude>
