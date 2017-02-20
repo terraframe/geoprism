@@ -31,7 +31,7 @@ exports.BasicCategory = BasicCategory;
 var Category = (function (_super) {
     __extends(Category, _super);
     function Category() {
-        return _super.apply(this, arguments) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return Category;
 }(BasicCategory));

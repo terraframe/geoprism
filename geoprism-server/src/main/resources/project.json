@@ -1,9 +1,3 @@
 {
-  "countries":[
-    {
-      "key":"sierra-leone",
-      "version":"1.0",
-      "format":"xml"
-    }
-  ]
+  "countries":[]
 }

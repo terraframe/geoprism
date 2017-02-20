@@ -85,8 +85,7 @@ AutoCompleteComponent = __decorate([
         selector: "auto-complete-component",
         templateUrl: 'auto-complete.component.jsp',
         styleUrls: ['auto-complete.component.css'],
-    }),
-    __metadata("design:paramtypes", [])
+    })
 ], AutoCompleteComponent);
 exports.AutoCompleteComponent = AutoCompleteComponent;
 //# sourceMappingURL=auto-complete.component.js.map
