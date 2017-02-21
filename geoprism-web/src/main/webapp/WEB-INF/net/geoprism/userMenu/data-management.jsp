@@ -77,19 +77,11 @@
         <div class="container">
           <div class="navbar-header">
             <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a>
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/management"><gdb:localize key="data.management.title"/></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management"><gdb:localize key="data.management.title"/></a>
 <%-- 			<h3 class="navbar-brand"><gdb:localize key="data.management.title"/></h3> --%>
           </div>
 
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Data_Management"/><span class="caret"></span></a>
-            	<ul class="dropdown-menu">
-            		<li><a href="#dataset"><i></i><gdb:localize key="Data_Sets"/></a></li>
-            		<li><a href="#icon"><i></i><gdb:localize key="Icons"/></a></li>
-            		<li><a href="#category"><i></i><gdb:localize key="Categories"/></a></li>
-            	</ul>
-            </li>
             <li class="dropdown">
             	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Location_Configurations"/><span class="caret"></span></a>
             	<ul class="dropdown-menu">

@@ -44,7 +44,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     management.setId("management");
     management.setLabel(LocalizationFacadeDTO.getFromBundles(request, "geoprismLanding.dataManagement"));
     management.setSrc("net/geoprism/images/dm_icon.svg");
-    management.setUrl("management");
+    management.setUrl("prism/management");
     management.addRole(RoleConstants.ADIM_ROLE);
     management.addRole(RoleConstants.BUILDER_ROLE);
 

@@ -66,6 +66,7 @@ import net.geoprism.report.ReportItemViewDTO;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.mvc.ViewTemplateResponse;
 import com.runwaysdk.system.RolesDTO;
 import com.runwaysdk.system.gis.geo.AllowedInDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityController;
@@ -110,6 +111,14 @@ public class JavascriptUtil implements Reloadable
     req.setAttribute("js", javascript);
   }
 
+  private static void loadJavascript(ClientRequestIF request, ViewTemplateResponse response, Set<String> set)
+  {
+    String[] types = set.toArray(new String[set.size()]);
+    String javascript = JavascriptUtil.getJavascript(request, types);
+    
+    response.set("js", javascript);
+  }
+  
   public static void loadGeoEntityBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -131,6 +140,27 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadGeoEntityBundle(ClientRequestIF request, ViewTemplateResponse response)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(GeoEntityDTO.CLASS);
+    types.add(LocatedInDTO.CLASS);
+    types.add(GeoEntityDisplayLabelDTO.CLASS);
+    types.add(GeoEntityController.CLASS);
+    types.add(UniversalDTO.CLASS);
+    types.add(UniversalDisplayLabelDTO.CLASS);
+    types.add(TermUtilDTO.CLASS);
+    types.add(GeoEntityViewDTO.CLASS);
+    types.add(SynonymDTO.CLASS);
+    types.add(SynonymDisplayLabelDTO.CLASS);
+    types.add(GeoEntityExportMenuDTO.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
+    types.add(GeoEntityProblemViewDTO.CLASS);
+    types.add(GeoEntityProblemDTO.CLASS);
+    
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+  
   public static void loadSchedulerBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -145,6 +175,20 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadSchedulerBundle(ClientRequestIF request, ViewTemplateResponse response)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(ExecutableJobDTO.CLASS);
+    types.add(ExecutableJobDescriptionDTO.CLASS);
+    types.add(QualifiedTypeJobDTO.CLASS);
+    types.add(JobHistoryDTO.CLASS);
+    types.add(JobSnapshotDTO.CLASS);
+    types.add(JobHistoryViewDTO.CLASS);
+    types.add(JobHistoryHistoryInformationController.CLASS);
+    
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+  
   public static void loadUserBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -161,6 +205,22 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadUserBundle(ClientRequestIF request, ViewTemplateResponse response)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(RolesDTO.CLASS);
+    types.add(RoleViewDTO.CLASS);
+    types.add(GeoprismUserDTO.CLASS);
+    types.add(ExternalProfileDTO.CLASS);
+    types.add(DashboardDTO.CLASS);
+    types.add(DashboardDisplayLabelDTO.CLASS);
+    types.add(DashboardController.CLASS);
+//    types.add(DataUploaderController.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
+    
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+  
   public static void loadDatabrowserBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -172,6 +232,17 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadDatabrowserBundle(ClientRequestIF request, ViewTemplateResponse response)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DataBrowserUtilDTO.CLASS);
+    types.add(MetadataTypeDTO.CLASS);
+    types.add(PairViewDTO.CLASS);
+    types.add(ReportItemDTO.CLASS);
+    
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+  
   public static void loadSystemBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -197,6 +268,20 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadUniversalBundle(ClientRequestIF request, ViewTemplateResponse response)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(UniversalDTO.CLASS);
+    types.add(AllowedInDTO.CLASS);
+    types.add(UniversalDisplayLabelDTO.CLASS);
+    types.add(GeoEntityDTO.CLASS);
+    types.add(IsARelationshipDTO.CLASS);
+    types.add(TermUtilDTO.CLASS);
+    types.add(UniversalExportMenuDTO.CLASS);
+    
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+  
   public static void loadOntologyBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = JavascriptUtil.getOntologyTypes();
@@ -204,6 +289,13 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadOntologyBundle(ClientRequestIF request, ViewTemplateResponse response)
+  {
+    Set<String> types = JavascriptUtil.getOntologyTypes();
+    
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+  
   private static Set<String> getOntologyTypes()
   {
     Set<String> types = new HashSet<String>();
@@ -292,6 +384,16 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
+  public static void loadDatasets(ClientRequestIF request, ViewTemplateResponse req)
+  {
+    Set<String> types = new HashSet<String>();
+    types.add(DataSetController.CLASS);
+    types.add(GeoEntityUtilDTO.CLASS);
+//    types.add(DataUploaderController.CLASS);
+    
+    JavascriptUtil.loadJavascript(request, req, types);
+  }
+  
   public static void loadIcons(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
