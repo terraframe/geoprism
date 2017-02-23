@@ -23,7 +23,7 @@
 
 <div class='ng-modal' *ngIf="info">
   <div id="uploader-overlay" class='ng-modal-overlay'></div>
-  <div id="uploader-div" class='ng-modal-dialog' [style]='dialogStyle'>
+  <div id="uploader-div" class='ng-modal-dialog'>
   
     <error-message ></error-message>
   

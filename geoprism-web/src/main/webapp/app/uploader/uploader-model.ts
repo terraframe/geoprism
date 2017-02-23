@@ -80,6 +80,7 @@ export class CoordinateAttribute {
   location : string;
   featureId : string;
   id : string;  
+  universal: string;
 }
 
 export class Coordinates {
@@ -91,6 +92,8 @@ export class Sheet {
   value: string;
   label: string;
   name: string;
+  description: string;
+  source: string;
   country: string;
   replaceExisting: boolean;
   exists: boolean;
