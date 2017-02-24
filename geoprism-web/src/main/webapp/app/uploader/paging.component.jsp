@@ -27,7 +27,7 @@
     <div class="button-holder">
       <input
         type="button"
-        value="<gdb:localize key="dashboard.Cancel"/>"
+        [value]="'dashboard.Cancel' | localize"
         class="btn btn-default" 
         (click)="cancel()"
         [disabled]="busy"              
@@ -35,17 +35,17 @@
       <input
         *ngIf="page.prev != null"            
         type="button"
-        value="<gdb:localize key="dataUploader.previous"/>"
+        [value]="'dataUploader.previous' | localize"
         class="btn btn-primary" 
         [disabled]="busy"
         confirm-modal 
-        message="<gdb:localize key="dataUploader.prevDialogContent"/>"
+        [message]="'dataUploader.prevDialogContent' | localize"
         (onConfirm)="prev()"
         [enabled]="page.confirm" />        
       <input
         *ngIf="page.hasNext"      
         type="button"
-        value="<gdb:localize key="dataUploader.next"/>"
+        [value]="'dataUploader.next' | localize"
         class="btn btn-primary" 
         (click)="next()"
         [disabled]="!form.valid || !global"
@@ -53,7 +53,7 @@
       <input 
         *ngIf="page.isReady"
         type="button"
-        value="<gdb:localize key="dataUploader.import"/>"
+        [value]="'dataUploader.import' | localize"
         class="btn btn-primary" 
         (click)="ready()"        
         [disabled]="!form.valid || !global" />      

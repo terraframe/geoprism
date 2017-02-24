@@ -28,20 +28,20 @@
       <nav class="navbar navbar-default">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png" /></a>
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management"><gdb:localize key="data.management.title"/></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" [title]="'userMenu.menuTooltip' | localize"><img src="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png" /></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management"><localize key="data.management.title"></localize></a>
           </div>
           
           <ul class="nav navbar-nav navbar-right">
             <li dropdown>
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
-                <gdb:localize key="Data_Management"/><span class="caret"></span>
+                <localize key="Data_Management"></localize><span class="caret"></span>
               </a>            
               <ul dropdownMenu class="dropdown-menu">
-                <li role="menuitem"><a class="dropdown-item" routerLink="/datasets" routerLinkActive="active"><gdb:localize key="Data_Sets"/></a></li>
-                <li role="menuitem"><a class="dropdown-item" routerLink="/icons" routerLinkActive="active"><i></i><gdb:localize key="Icons"/></a></li>
-                <li role="menuitem"><a class="dropdown-item" routerLink="/categories" routerLinkActive="active"><i></i><gdb:localize key="Categories"/></a></li>
-                <li role="menuitem"><a class="dropdown-item" href="${pageContext.request.contextPath}/management#locations"><i></i><gdb:localize key="location.management.title"/></a></li>                
+                <li role="menuitem"><a class="dropdown-item" routerLink="/datasets" routerLinkActive="active"><localize key="Data_Sets"></localize></a></li>
+                <li role="menuitem"><a class="dropdown-item" routerLink="/icons" routerLinkActive="active"><i></i><localize key="Icons"></localize></a></li>
+                <li role="menuitem"><a class="dropdown-item" routerLink="/categories" routerLinkActive="active"><i></i><localize key="Categories"></localize></a></li>
+                <li role="menuitem"><a class="dropdown-item" href="${pageContext.request.contextPath}/management#locations"><i></i><localize key="location.management.title"></localize></a></li>                
               </ul>
             </li>
           </ul>

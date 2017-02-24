@@ -30,11 +30,13 @@ import { DropdownModule } from 'ng2-bootstrap'
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
+import { LocalizeComponent } from './core/localize.component';
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { ErrorMessageComponent } from './core/error-message.component';
 import { AsyncValidator } from './core/async-validator.directive';
 import { FunctionValidator } from './core/function-validator.directive';
 import { KeysPipe } from './core/keys.pipe';
+import { LocalizePipe } from './core/localize.pipe';
 
 import { AutoCompleteDirective } from './autocomplete/auto-complete.directive';
 import { AutoCompleteComponent } from './autocomplete/auto-complete.component';
@@ -83,11 +85,13 @@ import { EventHttpService } from './service/event-http.service';
   declarations: [
 	// Global components
     AppComponent,
+    LocalizeComponent,
     LoadingBarComponent,
     ErrorMessageComponent,
     AsyncValidator,
     FunctionValidator,
     KeysPipe,
+    LocalizePipe,
     
     AutoCompleteDirective,
     AutoCompleteComponent,

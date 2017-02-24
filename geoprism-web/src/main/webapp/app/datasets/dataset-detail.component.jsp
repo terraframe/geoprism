@@ -27,25 +27,25 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1><gdb:localize key="dataset.editTooltip"/></h1>
+          <h1><localize key="dataset.editTooltip"></localize></h1>
         </div>      
         <fieldset>            
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="dataset.label"/></label>
+              <label><localize key="dataset.label"></localize></label>
             </div>          
             <div class="holder" >
               <span class="text">
                 <input type="text" [ngClass]="{ 'ng-invalid' : !validName }" [(ngModel)]="dataset.label" name="label" required (blur)="validateName($event.target.value)">
               </span>
               <div *ngIf="!validName" class="inline-error-message">
-                <gdb:localize key="dataUploader.unique"/>
+                <localize key="dataUploader.unique"></localize>
               </div>              
             </div>
           </div>
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="dataset.source"/></label>
+              <label><localize key="dataset.source"></localize></label>
             </div>          
             <div class="holder" >
               <span class="text">                  
@@ -55,7 +55,7 @@
           </div>
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="dataset.description"/></label>
+              <label><localize key="dataset.description"></localize></label>
             </div>          
             <div class="holder" >
               <span class="text">                  
@@ -65,7 +65,7 @@
           </div>
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="dataset.attributes"/></label>
+              <label><localize key="dataset.attributes"></localize></label>
             </div>          
             <div class="holder" >
               <table class="list-table table table-bordered table-striped">
@@ -77,7 +77,7 @@
                           <input type="text" name="{{attribute.label}}" [(ngModel)]="attribute.label" required>
                         </dd>
                         <dd *ngIf="attribute.type == 'Category'">
-                          <gdb:localize key="dataset.category"/> <a (click)="open(attribute.root, $event)" title="<gdb:localize key="category.management.editThisCategoryTooltip"/>">{{attribute.root.label}}</a>
+                          <localize key="dataset.category"></localize> <a (click)="open(attribute.root, $event)" [title]="'category.management.editThisCategoryTooltip' | localize">{{attribute.root.label}}</a>
                         </dd>
                       </dl>
                     </td>
@@ -91,8 +91,8 @@
             </div>                    
             <div class="holder">
               <div class="button-holder">
-                <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" (click)="cancel()" />              
-                <input type="submit" value="<gdb:localize key="dataset.submit"/>" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
+                <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
+                <input type="submit" [value]="'dataset.submit' | localize" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
               </div>
             </div>
           </div>

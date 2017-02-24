@@ -45,7 +45,7 @@ export class LocalizationService {
             
       if(typeof number === 'string') {
         if(number.length > 0 && Number(number)) {
-          number = Number(value);        	  
+          number = Number(value);            
         }
         else {
           return "";
@@ -65,5 +65,19 @@ export class LocalizationService {
     
   public get(key: string): string {
     return com.runwaysdk.Localize.get(key);
+  }
+  
+  public decode(key: string): string {
+    let index = key.lastIndexOf('.');
+    
+    if(index !== -1) {
+      
+      let temp = [key.slice(0, index), key.slice(index + 1)]
+    
+      return this.localize(temp[0], temp[1]);
+    }
+    else {
+      return this.get(key);
+    }
   }
 }

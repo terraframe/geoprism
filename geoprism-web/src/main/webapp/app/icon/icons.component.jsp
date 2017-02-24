@@ -28,7 +28,7 @@
   
   <div>
     <span>
-      <h2> <gdb:localize key="category.icon.title"/> </h2>
+      <h2> <localize key="category.icon.title"></localize> </h2>
     </span>
   </div>
   
@@ -37,18 +37,18 @@
       <thead>
         <tr>
           <th></th>
-          <th class="label-column"><gdb:localize key='category.icon.label'/></th>
-          <th class="label-column"><gdb:localize key='category.icon.preview'/></th>
+          <th class="label-column"><localize key='category.icon.label'></localize></th>
+          <th class="label-column"><localize key='category.icon.preview'></localize></th>
         </tr>
       </thead>    
       <tbody>
         <tr *ngFor="let icon of icons" class="fade-ngRepeat-item">
           <td class="button-column">
             <span>
-              <a class="fa fa-pencil ico-edit" (click)="edit(icon)" title="<gdb:localize key="category.icon.editTooltip"/>"></a>                     
-              <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="category.icon.removeTooltip"/>"
+              <a class="fa fa-pencil ico-edit" (click)="edit(icon)" [title]="'category.icon.editTooltip' | localize"></a>                     
+              <a class="fa fa-trash-o ico-remove" [title]="'category.icon.removeTooltip' | localize"
                confirm-modal 
-               message="<gdb:localize key="category.icon.removeContent"/>"
+               [message]="'category.icon.removeContent' | localize"
                (onConfirm)="remove(icon)"></a>
             </span>
           </td>
@@ -59,7 +59,7 @@
         </tr>      
         <tr>
           <td class="button-column">
-            <a class="fa fa-plus" (click)="add()" title="<gdb:localize key="category.icon.addTooltip"/>"></a>
+            <a class="fa fa-plus" (click)="add()" [title]="'category.icon.addTooltip' | localize"></a>
           </td>                 
           <td colspan="2">
           </td>                 
@@ -68,8 +68,8 @@
     </table>
   </div>
   
-  <div *ngIf="icons === null"><gdb:localize key='dataset.loadingData'/></div>
+  <div *ngIf="icons === null"><localize key='dataset.loadingData'></localize></div>
   <div *ngIf="icons != null && icons.length === 0">
-    <p><gdb:localize key='category.icon.emtpy'/></p>
+    <p><localize key='category.icon.emtpy'></localize></p>
   </div>  
 </div>

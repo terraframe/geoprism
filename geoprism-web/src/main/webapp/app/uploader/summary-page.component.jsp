@@ -33,19 +33,19 @@
   </div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.summary.heading.paragraph"/></p>
+      <p><localize key="dataUploader.summary.heading.paragraph"></localize></p>
     </div>
   </div>
   <div *ngIf="texts.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryTextLabel"/></strong>
+      <strong><localize key="dataUploader.summaryTextLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">
          <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
               </tr>
             </thead>
             <tbody>
@@ -60,14 +60,14 @@
 
   <div *ngIf="categories.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryCategoryLabel"/></strong>
+      <strong><localize key="dataUploader.summaryCategoryLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">         
            <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
               </tr>
             </thead>
             <tbody>
@@ -82,23 +82,23 @@
   
   <div *ngIf="numbers.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryNumberLabel"/></strong>
+      <strong><localize key="dataUploader.summaryNumberLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">    
            <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.type.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
+                <th><localize key="dataUploader.summary.tableHeading.type.label"></localize></th>
               </tr>
             </thead>
             <tbody> 
               <tr *ngFor="let field of numbers">
                 <td>{{field.label}}</td>
                 <td [ngSwitch]="field.type">
-                    <div *ngSwitchCase="'LONG'"><gdb:localize key="dataUploader.long"/></div>
-                    <div *ngSwitchCase="'DOUBLE'"><gdb:localize key="dataUploader.double"/></div>
+                    <div *ngSwitchCase="'LONG'"><localize key="dataUploader.long"></localize></div>
+                    <div *ngSwitchCase="'DOUBLE'"><localize key="dataUploader.double"></localize></div>
                   </td>          
               </tr>
             </tbody>
@@ -109,14 +109,14 @@
    
   <div *ngIf="booleans.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryBooleanLabel"/></strong>
+      <strong><localize key="dataUploader.summaryBooleanLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">   
            <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
               </tr>
             </thead>
             <tbody> 
@@ -131,14 +131,14 @@
 
   <div *ngIf="dates.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryDateLabel"/></strong>
+      <strong><localize key="dataUploader.summaryDateLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">            
            <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
               </tr>
             </thead>
             <tbody>
@@ -153,15 +153,15 @@
    
   <div *ngIf="hasFieldType('LOCATION')">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryTextLocationLabel"/></strong>
+      <strong><localize key="dataUploader.summaryTextLocationLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">         
            <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.textLocRefFields.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
+                <th><localize key="dataUploader.summary.tableHeading.textLocRefFields.label"></localize></th>
               </tr>
             </thead>
             <tbody> 
@@ -187,15 +187,15 @@
     
   <div *ngIf="hasFieldType('LATITUDE') && hasFieldType('LONGITUDE')">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.summaryCoordinateLabel"/></strong>
+      <strong><localize key="dataUploader.summaryCoordinateLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">        
            <table class="table table-bordered" style="font-size:inherit;"> 
             <thead> 
               <tr>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-                <th><gdb:localize key="dataUploader.summary.tableHeading.coordLocRefFields.label"/></th>
+                <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
+                <th><localize key="dataUploader.summary.tableHeading.coordLocRefFields.label"></localize></th>
               </tr>
             </thead>
             <tbody> 
@@ -207,17 +207,17 @@
                     <table class="table table-bordered location-summary-sub-table"> 
                     <thead> 
                       <tr>
-                        <th><gdb:localize key="dataUploader.summary.tableHeading.label"/></th>
-                        <th><gdb:localize key="dataUploader.summary.tableHeading.refField.label"/></th>
+                        <th><localize key="dataUploader.summary.tableHeading.label"></localize></th>
+                        <th><localize key="dataUploader.summary.tableHeading.refField.label"></localize></th>
                       </tr>
                     </thead>
                       <tbody>
-                        <tr><td><gdb:localize key="dataUploader.latitude"/></td><td>{{coordinate.latitude}}</td></tr>
-                        <tr><td><gdb:localize key="dataUploader.longitude"/></td><td>{{coordinate.longitude}}</td></tr>
-                        <tr><td><gdb:localize key="dataUploader.featureLabel"/></td><td>{{coordinate.featureLabel}}</td></tr>
-                        <tr *ngIf="coordinate.location != 'DERIVE'"><td><gdb:localize key="dataUploader.locationAttribute"/></td><td>{{coordinate.location}}</td></tr>
-                        <tr *ngIf="coordinate.location == 'DERIVE'"><td><gdb:localize key="dataUploader.locationAttribute"/></td><td><gdb:localize key="dataUploader.deriveLocation"/></td></tr>
-                        <tr *ngIf="coordinate.location == 'DERIVE'"><td><gdb:localize key="dataUploader.associatedUniversal"/></td><td>{{labels[coordinate.universal]}}</td></tr>
+                        <tr><td><localize key="dataUploader.latitude"></localize></td><td>{{coordinate.latitude}}</td></tr>
+                        <tr><td><localize key="dataUploader.longitude"></localize></td><td>{{coordinate.longitude}}</td></tr>
+                        <tr><td><localize key="dataUploader.featureLabel"></localize></td><td>{{coordinate.featureLabel}}</td></tr>
+                        <tr *ngIf="coordinate.location != 'DERIVE'"><td><localize key="dataUploader.locationAttribute"></localize></td><td>{{coordinate.location}}</td></tr>
+                        <tr *ngIf="coordinate.location == 'DERIVE'"><td><localize key="dataUploader.locationAttribute"></localize></td><td><localize key="dataUploader.deriveLocation"></localize></td></tr>
+                        <tr *ngIf="coordinate.location == 'DERIVE'"><td><localize key="dataUploader.associatedUniversal"></localize></td><td>{{labels[coordinate.universal]}}</td></tr>
                       </tbody>
                     </table>
                 </td>      

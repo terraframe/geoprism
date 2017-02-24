@@ -29,89 +29,89 @@
 <div>
   <div class="wide-holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.attributeConfiguration.heading.paragraph"/></p>
+      <p><localize key="dataUploader.attributeConfiguration.heading.paragraph"></localize></p>
     </div>
   </div>
   
   <div class="wide-holder">
     <div class="row-holder" *ngFor="let field of sheet.fields; let i = index;">
       <div class="inline-text">
-        <label><gdb:localize key="dataUploader.label"/></label>
+        <label><localize key="dataUploader.label"></localize></label>
         <input [(ngModel)]="field.label" #label="ngModel" [name]="i + '-name'" [ngClass]="{textInputDisabled : field.type == 'IGNORE'}" required type="text" funcValidator [validator]="this" config="label" />
       </div>
       <div class="inline-box" *ngIf="field.columnType == 'TEXT'">
-        <label><gdb:localize key="dataUploader.type"/></label>
+        <label><localize key="dataUploader.type"></localize></label>
         <select class="select-area" [(ngModel)]="field.type" [ngClass]="{selectInputDisabled : field.type == 'IGNORE'}" [name]="i + '-type'" required (change)="accept(field)">
-          <option value="LOCATION"><gdb:localize key="dataUploader.location"/></option>
-          <option value="CATEGORY"><gdb:localize key="dataUploader.category"/></option>
-          <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
+          <option value="LOCATION"><localize key="dataUploader.location"></localize></option>
+          <option value="CATEGORY"><localize key="dataUploader.category"></localize></option>
+          <option value="TEXT"><localize key="dataUploader.text"></localize></option>
+          <option value="IGNORE"><localize key="dataUploader.ignore"></localize></option>
         </select>      
       </div>
       <div class="inline-box" *ngIf="field.columnType == 'NUMBER'">
-        <label><gdb:localize key="dataUploader.type"/></label>
+        <label><localize key="dataUploader.type"></localize></label>
         <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
-          <option value="LONG"><gdb:localize key="dataUploader.long"/></option>
-          <option value="DOUBLE"><gdb:localize key="dataUploader.double"/></option>
-          <option value="LATITUDE"><gdb:localize key="dataUploader.latitude"/></option>
-          <option value="LONGITUDE"><gdb:localize key="dataUploader.longitude"/></option>
-          <option value="TEXT"><gdb:localize key="dataUploader.text"/></option>     
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
+          <option value="LONG"><localize key="dataUploader.long"></localize></option>
+          <option value="DOUBLE"><localize key="dataUploader.double"></localize></option>
+          <option value="LATITUDE"><localize key="dataUploader.latitude"></localize></option>
+          <option value="LONGITUDE"><localize key="dataUploader.longitude"></localize></option>
+          <option value="TEXT"><localize key="dataUploader.text"></localize></option>     
+          <option value="IGNORE"><localize key="dataUploader.ignore"></localize></option>
         </select>      
       </div>      
       <div class="inline-box" *ngIf="field.columnType == 'DATE'">
-        <label><gdb:localize key="dataUploader.type"/></label>
+        <label><localize key="dataUploader.type"></localize></label>
         <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
-          <option value="DATE"><gdb:localize key="dataUploader.date"/></option>
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
+          <option value="DATE"><localize key="dataUploader.date"></localize></option>
+          <option value="IGNORE"><localize key="dataUploader.ignore"></localize></option>
         </select>      
       </div>      
       <div class="inline-box" *ngIf="field.columnType == 'BOOLEAN'">
-        <label><gdb:localize key="dataUploader.type"/></label>
+        <label><localize key="dataUploader.type"></localize></label>
         <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
-          <option value="BOOLEAN"><gdb:localize key="dataUploader.boolean"/></option>
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
+          <option value="BOOLEAN"><localize key="dataUploader.boolean"></localize></option>
+          <option value="IGNORE"><localize key="dataUploader.ignore"></localize></option>
         </select>      
       </div>      
       <div class="inline-box" *ngIf="field.columnType == ''">
-        <label><gdb:localize key="dataUploader.type"/></label>
+        <label><localize key="dataUploader.type"></localize></label>
         <select class="select-area" [(ngModel)]="field.type" [name]="i + '-type'" required (change)="accept(field)">
-          <option value="IGNORE"><gdb:localize key="dataUploader.ignore"/></option>
+          <option value="IGNORE"><localize key="dataUploader.ignore"></localize></option>
         </select>      
       </div>      
       <div class="inline-box fade-ngIf" *ngIf="field.type == 'LOCATION'">
-        <label><gdb:localize key="dataUploader.locationType"/></label>
+        <label><localize key="dataUploader.locationType"></localize></label>
         <select class="select-area" [(ngModel)]="field.universal" [name]="i + '-universal'" required>
           <option value=""></option>
           <option *ngFor="let opt of universals" [value]="opt.value">{{opt.label}}</option>
         </select>
       </div>      
       <div class="inline-box fade-ngIf" *ngIf="field.type == 'CATEGORY'">
-        <label><gdb:localize key="dataUploader.domainRoot"/></label>
+        <label><localize key="dataUploader.domainRoot"></localize></label>
         <select class="select-area" [(ngModel)]="field.root" [name]="i + '-root'">
-          <option value=""><gdb:localize key="dataUploader.new"/></option>          
+          <option value=""><localize key="dataUploader.new"></localize></option>          
           <option *ngFor="let opt of info.classifiers" [value]="opt.value">{{opt.label}}</option>          
         </select>
       </div>      
       <div class="inline-text fade-ngIf" *ngIf="field.type == 'CATEGORY' && field.root == ''">
-        <label><gdb:localize key="dataUploader.categoryLabel"/></label>
+        <label><localize key="dataUploader.categoryLabel"></localize></label>
         <input [(ngModel)]="field.categoryLabel" #categoryLabel="ngModel" [name]="i + '-categoryLabel'" required type="text" asyncValidator [validator]="this" config="category" />
       </div>      
       
       <div class="inline-error-message pull-right">
         <p *ngIf="label.invalid">
-          <gdb:localize key="dataUploader.unique"/>
+          <localize key="dataUploader.unique"></localize>
         </p>    
         <p *ngIf="categoryLabel && categoryLabel.invalid">
-          <gdb:localize key="dataUploader.uniqueCategory"/>
+          <localize key="dataUploader.uniqueCategory"></localize>
         </p>    
       </div>      
     </div>
   </div> 
   <div class="wide-holder">
     <div class="error-message">
-      <p *ngIf="coordinateMismatch"><gdb:localize key="dataUploader.coordinateMismatch"/></p>
-      <p *ngIf="coordinateText"><gdb:localize key="dataUploader.coordinateNoLabel"/></p>
+      <p *ngIf="coordinateMismatch"><localize key="dataUploader.coordinateMismatch"></localize></p>
+      <p *ngIf="coordinateText"><localize key="dataUploader.coordinateNoLabel"></localize></p>
     </div>          
   </div>    
 </div>

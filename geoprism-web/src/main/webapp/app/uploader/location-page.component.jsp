@@ -12,13 +12,13 @@
   <div class="label-holder"></div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.textLocationConfiguration.heading.paragraph"/></p>
+      <p><localize key="dataUploader.textLocationConfiguration.heading.paragraph"></localize></p>
     </div>
   </div>
 
   <div *ngIf="unassignedFields.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.unassignedLocationFields"/></strong>
+      <strong><localize key="dataUploader.unassignedLocationFields"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">
@@ -31,20 +31,19 @@
     
   <form *ngIf="attribute != null" #attributeForm="ngForm">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.locationCreatorWidgetLabel"/></strong>
+      <strong><localize key="dataUploader.locationCreatorWidgetLabel"></localize></strong>
     </div>    
     <div class="holder">
       <div class="location-selector-container">
         <div class="row-holder">
-          <h4 class="location-select-container-heading-text"><gdb:localize key="dataUploader.locationContainerHeadingToolTip"/> {{attribute.label}}</h4>
-<%--          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locationContainerHeadingHelpInfoToolTip"/>"></i>       --%>
+          <h4 class="location-select-container-heading-text"><localize key="dataUploader.locationContainerHeadingToolTip"></localize> {{attribute.label}}</h4>
         </div>
           <span class="text">
           <input [(ngModel)]="attribute.label" #label="ngModel" name="label" required type="text" funcValidator [validator]="this" config="label" />
         </span>
         <div class="error-message">
           <p *ngIf="label.invalid">
-            <gdb:localize key="dataUploader.unique"/>
+            <localize key="dataUploader.unique"></localize>
           </p>    
         </div>
         <div class="row-holder">
@@ -52,22 +51,22 @@
         </div>        
         <div class="row-holder" *ngFor="let universal of universalOptions; let i = index;">
           <div class="label-help-ico-container">
-            <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.fieldHelp01ToolTip"/> {{universal.label}} <gdb:localize key="dataUploader.fieldHelp02ToolTip"/> {{attribute.label}} <gdb:localize key="dataUploader.fieldHelp03ToolTip"/>"></i>      
-            <p class="select-label">{{universal.label}} <gdb:localize key="dataUploader.selectLabelToolTip"/></p>
+            <i class="fa fa-question-circle help-info-ico"></i>      
+            <p class="select-label">{{universal.label}} <localize key="dataUploader.selectLabelToolTip"></localize></p>
           </div>
           <div class="location-selector-box-right">
             <div class="box">
               <select class="select-area" [(ngModel)]="attribute.fields[universal.value]" (change)="change(attribute.fields)" [name]="i + '-universal'" required>
                 <option value=""></option>          
                 <option *ngFor="let field of locationFields[universal.value]" [value]="field.label">{{field.label}}</option>   
-                <option value="EXCLUDE"><gdb:localize key="dataUploader.exclude"/></option>
+                <option value="EXCLUDE"><localize key="dataUploader.exclude"></localize></option>
               </select>
             </div>
           </div>
         </div>
           <div class="row-holder">
           <div class="button-holder">
-              <input type="button" value="+" class="btn btn-primary set-location-btn pull-right" (click)="newAttribute()" [disabled]="attributeForm.invalid" title="<gdb:localize key="dataUploader.createBtnToolTip"/>" />
+              <input type="button" value="+" class="btn btn-primary set-location-btn pull-right" (click)="newAttribute()" [disabled]="attributeForm.invalid" [title]="'dataUploader.createBtnToolTip' | localize" />
           </div>
           </div>  
       </div>  
@@ -76,7 +75,7 @@
   
   <div *ngIf="sheet.attributes.ids.length > 0">
     <div class="label-holder">
-      <strong><gdb:localize key="dataUploader.attributes"/></strong>
+      <strong><localize key="dataUploader.attributes"></localize></strong>
     </div>
     <div class="holder">
       <div class="row-holder">
@@ -85,8 +84,8 @@
           <div *ngIf="!key.value.editing" class="location-selector-container scale-fade">
             <h3 class="location-field-info-card-title">{{key.value.label}}</h3>
             <div class="cell" style="float: right;">            
-              <i class="fa fa-pencil ico-edit" (click)="edit(key.value)" title="<gdb:localize key="dataUploader.editToolTip"/>"></i>
-              <i class="fa fa-trash-o ico-remove" (click)="remove(key.value)" title="<gdb:localize key="dataUploader.deleteToolTip"/>"></i>
+              <i class="fa fa-pencil ico-edit" (click)="edit(key.value)" [title]="'dataUploader.editToolTip' | localize"></i>
+              <i class="fa fa-trash-o ico-remove" (click)="remove(key.value)" [title]="'dataUploader.deleteToolTip' | localize"></i>
             </div>
             <div class="row-holder"></div>
             <ul class="location-field-list-display">
@@ -106,7 +105,7 @@
   <div class="label-holder"></div>
   <div class="holder">
     <div class="error-message">
-      <p *ngIf="(unassignedFields.length > 0 || attribute != null)"><gdb:localize key="dataUploader.unassignedLocationFields"/></p>
+      <p *ngIf="(unassignedFields.length > 0 || attribute != null)"><localize key="dataUploader.unassignedLocationFields"></localize></p>
     </div>          
   </div>  
 </div>

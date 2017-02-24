@@ -27,12 +27,12 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1><gdb:localize key="category.management.optionTitle"/></h1>
+          <h1><localize key="category.management.optionTitle"></localize></h1>
         </div>
         <fieldset>
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="category.management.option.label"/></label>
+              <label><localize key="category.management.option.label"></localize></label>
             </div>    
             <div class="holder" >
               <span class="text">
@@ -42,16 +42,16 @@
           </div>
           <div class="row-holder" *ngIf="category.synonyms.length > 0">
             <div class="label-holder">
-              <label><gdb:localize key="category.management.synonyms"/></label>
+              <label><localize key="category.management.synonyms"></localize></label>
             </div>    
             <div class="holder" >
               <table class="list-table table table-bordered table-striped">
                 <tbody>
                   <tr *ngFor="let synonym of category.synonyms" class="fade-ngRepeat-item">
                     <td class="button-column">
-                      <a class="fa fa-undo ico-edit" title="<gdb:localize key="category.management.restoreTooltip"/>"
+                      <a class="fa fa-undo ico-edit" [title]="'category.management.restoreTooltip' | localize"
                          confirm-modal 
-                         message="<gdb:localize key="category.management.restoreConfirm"/>"
+                         [message]="'category.management.restoreConfirm' | localize"
                          (onConfirm)="restore(synonym)"></a>                      
                     </td>
                     <td class="label-column">
@@ -67,7 +67,7 @@
             </div>
             <div class="holder" >
               <div class="box">
-                <label><gdb:localize key="category.management.createSynonym"/></label>
+                <label><localize key="category.management.createSynonym"></localize></label>
                 <div class="select-box">
                   <select class="method-select" [(ngModel)]="action.synonym" name="synonym">
                     <option value=""></option>
@@ -82,8 +82,8 @@
             </div>  
             <div class="holder">
               <div class="button-holder">
-                <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" (click)="cancel()" />              
-                <input type="submit" value="<gdb:localize key="dataset.submit"/>" class="btn btn-primary" [disabled]="!form.valid" />
+                <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
+                <input type="submit" [value]="'dataset.submit' | localize" class="btn btn-primary" [disabled]="!form.valid" />
               </div>
             </div>
           </div>

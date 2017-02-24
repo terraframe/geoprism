@@ -31,27 +31,27 @@
   </div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.titleUploadToExistingOrNewSubtitle"/></p>
+      <p><localize key="dataUploader.titleUploadToExistingOrNewSubtitle"></localize></p>
     </div>
   </div>
   
   <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.createNewLocationOrUpdateExistingLabel"/></strong>
+    <strong><localize key="dataUploader.createNewLocationOrUpdateExistingLabel"></localize></strong>
   </div>
   <div class="holder">
       <div class="large-icon-stack-wrapper">
-        <i class="fa-stack fa-3x" (click)="next('MATCH', 'MATCH-INITIAL')" title="<gdb:localize key="dataUploader.updateExistingDatasetButtonTooltip"/>">
+        <i class="fa-stack fa-3x" (click)="next('MATCH', 'MATCH-INITIAL')" [title]="'dataUploader.updateExistingDatasetButtonTooltip' | localize">
       <i class="fa fa-table fa-stack-2x"></i>
         <i class="fa-stack-3x fa-stack-text file-text fa fa-pencil-square"></i>
         </i>
-        <h4><gdb:localize key="dataUploader.updateExistingDatasetButtonLabel"/></h4>
+        <h4><localize key="dataUploader.updateExistingDatasetButtonLabel"></localize></h4>
       </div>
       <div class="large-icon-stack-wrapper">
-        <i class="fa-stack fa-3x" (click)="next('BEGINNING-INFO', 'MATCH-INITIAL')" title="<gdb:localize key="dataUploader.createNewDatasetButtonTooltip"/>">
+        <i class="fa-stack fa-3x" (click)="next('BEGINNING-INFO', 'MATCH-INITIAL')" [title]="'dataUploader.createNewDatasetButtonTooltip' | localize">
       <i class="fa fa-table fa-stack-2x"></i>
         <i class="fa-stack-3x fa-stack-text file-text fa fa-plus-square"></i>
         </i>
-        <h4><gdb:localize key="dataUploader.createNewDatasetButtonLabel"/></h4>
+        <h4><localize key="dataUploader.createNewDatasetButtonLabel"></localize></h4>
       </div>
   </div> 
 </div>

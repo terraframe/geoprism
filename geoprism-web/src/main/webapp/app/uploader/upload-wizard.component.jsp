@@ -32,29 +32,29 @@
         <div class="uploader-step-indicator-container" *ngIf="showStep()">
           <ol class="wizard-progress clearfix">
             <li *ngFor="let step of steps; let i = index;" [ngClass]="{'active-step' : page.name === step.page, 'status-li-disabled' : page.name !== step.page}">
-              <span *ngIf="step.label == '1'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep1"/></span>
-              <span *ngIf="step.label == '2'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep2"/></span>
-              <span *ngIf="step.label == '3'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep3"/></span>
-              <span *ngIf="step.label == '4'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep4"/></span>
-              <span *ngIf="step.label == '5'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep5"/></span>
-              <span *ngIf="step.label == '6'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep6"/></span>
-              <span *ngIf="step.label == '7'" class="step-name fade-ngIf"><gdb:localize key="dataUploader.uploadStepsLabelStep7"/></span>
+              <span *ngIf="step.label == '1'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep1"></localize></span>
+              <span *ngIf="step.label == '2'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep2"></localize></span>
+              <span *ngIf="step.label == '3'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep3"></localize></span>
+              <span *ngIf="step.label == '4'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep4"></localize></span>
+              <span *ngIf="step.label == '5'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep5"></localize></span>
+              <span *ngIf="step.label == '6'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep6"></localize></span>
+              <span *ngIf="step.label == '7'" class="step-name fade-ngIf"><localize key="dataUploader.uploadStepsLabelStep7"></localize></span>
               <span class="visuallyhidden">Step </span><span class="step-num">{{i + 1}}</span>
             </li>
           </ol>
         </div>      
     
       <div class="heading">
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'MATCH-INITIAL'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'MATCH'"><gdb:localize key="dataUploader.titleUploadToExistingOrNew"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'BEGINNING-INFO'"><gdb:localize key="dataUploader.uploadBeginningMessageTitle"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'INITIAL'"><gdb:localize key="dataUploader.titleNameCountry"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'FIELDS'"><gdb:localize key="dataUploader.titleAttributeConfiguration"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'LOCATION'"><gdb:localize key="dataUploader.titleTextLocationConfiguration"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'COORDINATE'"><gdb:localize key="dataUploader.titleCoordinateLocationConfiguration"/></h1>
-        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'SUMMARY'"><gdb:localize key="dataUploader.titleSummary"/></h1>
-        <h1 class="ui-dialog-title" *ngIf="page.name == 'GEO-VALIDATION'"><gdb:localize key="dataUploader.titleLocationValidation"/></h1>
-        <h1 class="ui-dialog-title" *ngIf="page.name == 'CATEGORY-VALIDATION'"><gdb:localize key="dataUploader.titleCategoryValidation"/></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'MATCH-INITIAL'"><localize key="dataUploader.titleUploadToExistingOrNew"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'MATCH'"><localize key="dataUploader.titleUploadToExistingOrNew"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'BEGINNING-INFO'"><localize key="dataUploader.uploadBeginningMessageTitle"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'INITIAL'"><localize key="dataUploader.titleNameCountry"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'FIELDS'"><localize key="dataUploader.titleAttributeConfiguration"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'LOCATION'"><localize key="dataUploader.titleTextLocationConfiguration"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'COORDINATE'"><localize key="dataUploader.titleCoordinateLocationConfiguration"></localize></h1>
+        <h1 class="ui-dialog-title" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}" *ngIf="page.name == 'SUMMARY'"><localize key="dataUploader.titleSummary"></localize></h1>
+        <h1 class="ui-dialog-title" *ngIf="page.name == 'GEO-VALIDATION'"><localize key="dataUploader.titleLocationValidation"></localize></h1>
+        <h1 class="ui-dialog-title" *ngIf="page.name == 'CATEGORY-VALIDATION'"><localize key="dataUploader.titleCategoryValidation"></localize></h1>
       </div>
       
       <match-initial-page *ngIf="page.name == 'MATCH-INITIAL'" (onNextPage)="onNextPage($event)" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></match-initial-page> 

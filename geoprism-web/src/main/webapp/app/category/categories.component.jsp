@@ -25,24 +25,24 @@
 
   <error-message ></error-message>  
 
-  <h2> <gdb:localize key="category.management.title"/> </h2>
+  <h2> <localize key="category.management.title"></localize> </h2>
   
   <div class="list-table-wrapper">
     <table id="manage-categories-table" class="list-table table table-bordered table-striped">        
       <tbody>
         <tr *ngFor="let category of categories" class="fade-ngRepeat-item">
           <td class="button-column">
-            <a class="fa fa-tasks ico-edit" (click)="edit(category)" title="<gdb:localize key="category.management.editTooltip"/>"></a>                             
-            <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="category.management.removeTooltip"/>"
+            <a class="fa fa-tasks ico-edit" (click)="edit(category)" [title]="'category.management.editTooltip' | localize"></a>                             
+            <a class="fa fa-trash-o ico-remove" [title]="'category.management.removeTooltip' | localize"
               confirm-modal 
-              message="<gdb:localize key="category.management.removeCategoryConfirm"/>"
+              [message]="'category.management.removeCategoryConfirm' | localize"
               (onConfirm)="remove(category)"></a>                                   
           </td>
           <td class="label-column"> {{category.label}} </td>
         </tr>
         <tr>
           <td class="button-column">
-            <a class="fa fa-plus" *ngIf="!instance.active" (click)="newInstance()" title="<gdb:localize key="category.management.createCategoryOptionTooltip"/>"></a>
+            <a class="fa fa-plus" *ngIf="!instance.active" (click)="newInstance()" [title]="'category.management.createCategoryOptionTooltip' | localize"></a>
           </td>                 
           <td class="submit-form" *ngIf="instance.active">
             <form #form="ngForm" novalidate (ngSubmit)="form.valid && create()">

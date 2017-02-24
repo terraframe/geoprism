@@ -28,7 +28,7 @@
 
 <div>
   <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.label"/></strong>
+    <strong><localize key="dataUploader.label"></localize></strong>
   </div>
   <div class="holder">
     <span class="text">
@@ -36,12 +36,12 @@
     </span>
     <div class="inline-error-message">
       <p *ngIf="!label.valid">
-        <gdb:localize key="dataUploader.unique"/>
+        <localize key="dataUploader.unique"></localize>
       </p>    
     </div>      
   </div> 
   <div class="label-holder">
-    <label><gdb:localize key="dataset.source"/></label>
+    <label><localize key="dataset.source"></localize></label>
   </div>          
   <div class="holder" >
     <span class="text">
@@ -49,7 +49,7 @@
     </span>
   </div>
   <div class="label-holder">
-    <label><gdb:localize key="dataset.description"/></label>
+    <label><localize key="dataset.description"></localize></label>
   </div>          
   <div class="holder" >
     <span class="text">
@@ -57,7 +57,7 @@
     </span>
   </div>
   <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.country"/></strong>
+    <strong><localize key="dataUploader.country"></localize></strong>
   </div>
   <div class="holder">
     <div class="row-holder">

@@ -29,69 +29,69 @@
 
 <div>
   <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.uploadBeginningMessageRequirements"/></strong>
+    <strong><localize key="dataUploader.uploadBeginningMessageRequirements"></localize></strong>
   </div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.uploadBeginningRequirementsMessage"/></p>
+      <p><localize key="dataUploader.uploadBeginningRequirementsMessage"></localize></p>
       <ol>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement1"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement2"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement3"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement4"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement5"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement6"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement7"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement8"/></li>
-        <li><gdb:localize key="dataUploader.uploadBeginningRequirement9"/></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement1"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement2"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement3"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement4"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement5"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement6"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement7"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement8"></localize></li>
+        <li><localize key="dataUploader.uploadBeginningRequirement9"></localize></li>
     </ol>
     </div>  
   </div>
   
   <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.uploadBeginningExampleLabel"/></strong>
+    <strong><localize key="dataUploader.uploadBeginningExampleLabel"></localize></strong>
   </div>
   <div class="holder">
     <div class="row-holder">
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader1"/></th>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader2"/></th>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader3"/></th>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader4"/></th>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader5"/></th>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader6"/></th>
-            <th><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader7"/></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader1"></localize></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader2"></localize></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader3"></localize></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader4"></localize></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader5"></localize></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader6"></localize></th>
+            <th><localize key="dataUploader.uploadBeginningSpreadsheetExampleHeader7"></localize></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_1"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_2"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_3"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_4"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_5"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_6"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_7"/></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_1"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_2"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_3"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_4"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_5"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_6"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent1_7"></localize></td>
           </tr>
           <tr>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_1"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_2"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_3"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_4"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_5"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_6"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_7"/></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_1"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_2"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_3"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_4"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_5"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_6"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent2_7"></localize></td>
           </tr>
           <tr>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_1"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_2"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_3"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_4"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_5"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_6"/></td>
-            <td><gdb:localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_7"/></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_1"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_2"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_3"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_4"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_5"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_6"></localize></td>
+            <td><localize key="dataUploader.uploadBeginningSpreadsheetExampleContent3_7"></localize></td>
           </tr>
         </tbody>
       </table>

@@ -33,9 +33,9 @@
           </select>
         </div>
         <div class="inline-actions">
-          <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" (ngClass)="{disabled: !hasSynonym}" (click)="createSynonym()" title="<gdb:localize key="dataUploader.createSynonymCategoryTooltip"/>" ></i>
-          <i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" (click)="createOption()" title="<gdb:localize key="dataUploader.createNewOptionTooltip"/>" ></i>          
-          <span class="fa-stack fa-lg" title="<gdb:localize key="dataUploader.ignoreCategoryTooltip"/>" (click)="ignoreValue()">
+          <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" (ngClass)="{disabled: !hasSynonym}" (click)="createSynonym()" [title]="'dataUploader.createSynonymCategoryTooltip' | localize" ></i>
+          <i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" (click)="createOption()" [title]="'dataUploader.createNewOptionTooltip' | localize" ></i>          
+          <span class="fa-stack fa-lg" [title]="'dataUploader.ignoreCategoryTooltip' | localize" (click)="ignoreValue()">
             <i class="fa fa-square fa-stack-2x"></i>
             <i class="fa fa-times fa-stack-1x"></i>
           </span>
@@ -43,16 +43,16 @@
       </div>
       <div *ngIf="problem.resolved">
         <div class="inline-combo" *ngIf="problem.action.name == 'OPTION'">
-          <gdb:localize key="dataUploader.resolvedCategoryOption"/>
+          <localize key="dataUploader.resolvedCategoryOption"></localize>
         </div>            
         <div class="inline-combo" *ngIf="problem.action.name == 'SYNONYM'">
-          <gdb:localize key="dataUploader.resolvedSynonym"/> [{{problem.action.label}}]
+          <localize key="dataUploader.resolvedSynonym"></localize> [{{problem.action.label}}]
         </div> 
         <div class="inline-combo" *ngIf="problem.action.name == 'IGNORE'">
-          <gdb:localize key="dataUploader.resolvedIgnoreCategory"/> [{{problem.label}}]
+          <localize key="dataUploader.resolvedIgnoreCategory"></localize> [{{problem.label}}]
         </div> 
         <div class="inline-actions">    
-          <i class="fa fa-undo" (click)="undoAction()" title="<gdb:localize key="dataUploader.undoFixedCategoryTooltip"/>" ></i> 
+          <i class="fa fa-undo" (click)="undoAction()" [title]="'dataUploader.undoFixedCategoryTooltip' | localize" ></i> 
         </div>
       </div>
     </form>

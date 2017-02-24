@@ -20,15 +20,4 @@
 --%>
 <%@ taglib uri="/WEB-INF/tlds/geoprism.tld" prefix="gdb"%>
 
-<div *ngIf="error" class="error-container">
-  <div class="label-holder">
-    <strong><localize key='dashboard.errorsLabel'></localize></strong>
-  </div>
-  <div class="holder">
-    <div>
-      <p class="error-message" *ngIf="error.localizedMessage">{{error.localizedMessage}}</p>
-      <p class="error-message" *ngIf="!error.localizedMessage"><localize key='error.generic'></localize></p>
-    </div>
-  </div>
-</div>
-  
+{{text}}

@@ -32,29 +32,29 @@
   </div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.coordinateLocation.heading.paragraph"/></p>
+      <p><localize key="dataUploader.coordinateLocation.heading.paragraph"></localize></p>
     </div>
   </div>
   
   <div *ngFor="let coordinate of sheet.coordinates; let i = index;">
     <div class="label-holder">
-      <strong *ngIf="i == 0"><gdb:localize key="dataUploader.coordinateCreatorWidgetLabel"/></strong>
+      <strong *ngIf="i == 0"><localize key="dataUploader.coordinateCreatorWidgetLabel"></localize></strong>
     </div>
     <div class="holder">
       <div class="location-selector-container">
         <span class="text">
-          <input [(ngModel)]="coordinate.label" #label="ngModel" [name]="i + '-label'" required type="text" funcValidator [validator]="this" config="label" placeholder="<gdb:localize key="dataUploader.latFieldLabelPlaceholder"/>" />
+          <input [(ngModel)]="coordinate.label" #label="ngModel" [name]="i + '-label'" required type="text" funcValidator [validator]="this" config="label" [placeholder]="'dataUploader.latFieldLabelPlaceholder' | localize" />
         </span>
         <div class="error-message">
           <p *ngIf="label.invalid">
-            <gdb:localize key="dataUploader.unique"/>
+            <localize key="dataUploader.unique"></localize>
           </p>    
         </div>   
                 
         <div class="row-holder">
           <div class="label-help-ico-container">
-            <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.latFieldHelpToolTip"/>"></i>
-            <p class="select-label"><gdb:localize key="dataUploader.latitude"/></p>
+            <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.latFieldHelpToolTip' | localize"></i>
+            <p class="select-label"><localize key="dataUploader.latitude"></localize></p>
           </div>
           <div class="inline-text" style="padding-right: 26px">
             <input [(ngModel)]="coordinate.latitude" [name]="i + '-latitude'" required type="text" />
@@ -63,8 +63,8 @@
   
         <div class="row-holder">
           <div class="label-help-ico-container">
-              <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.longFieldHelpToolTip"/>"></i>
-            <p class="select-label"><gdb:localize key="dataUploader.longitude"/></p>
+              <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.longFieldHelpToolTip' | localize"></i>
+            <p class="select-label"><localize key="dataUploader.longitude"></localize></p>
           </div>
           <div class="box" *ngIf="longitudes.length != 1">
             <select class="select-area" [name]="i + '-longitude'" [(ngModel)]="coordinate.longitude" required>
@@ -79,8 +79,8 @@
   
         <div class="row-holder">
           <div class="label-help-ico-container">
-              <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.featureLabelFieldHelpToolTip"/>"></i> 
-            <p class="select-label"><gdb:localize key="dataUploader.featureLabel"/></p>
+              <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.featureLabelFieldHelpToolTip' | localize"></i> 
+            <p class="select-label"><localize key="dataUploader.featureLabel"></localize></p>
           </div>
           <div class="box">
             <select class="select-area" [name]="i + '-featureLabel'" [(ngModel)]="coordinate.featureLabel" required>
@@ -92,13 +92,13 @@
         
         <div class="row-holder">
           <div class="label-help-ico-container">
-              <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.locAttrFieldHelpToolTip"/>"></i> 
-            <p class="select-label"><gdb:localize key="dataUploader.locationAttribute"/></p>
+              <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.locAttrFieldHelpToolTip' | localize"></i> 
+            <p class="select-label"><localize key="dataUploader.locationAttribute"></localize></p>
           </div>
           <div class="box">
             <select class="select-area" [(ngModel)]="coordinate.location" [name]="i + '-location'" (change)="coordinate.universal = ''" required>
               <option value=""></option>          
-              <option value="DERIVE"><gdb:localize key="dataUploader.deriveLocation"/></option>
+              <option value="DERIVE"><localize key="dataUploader.deriveLocation"></localize></option>
               <option *ngFor="let location of locations" [value]="location.label">{{location.label}}</option>          
             </select>          
           </div> 
@@ -106,8 +106,8 @@
         
         <div class="row-holder fade-ngShow" *ngIf="coordinate.location == 'DERIVE'">
           <div class="label-help-ico-container">
-            <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.assocUniversalieldHelpToolTip"/>"></i>
-            <p class="select-label"><gdb:localize key="dataUploader.associatedUniversal"/></p>
+            <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.assocUniversalieldHelpToolTip' | localize"></i>
+            <p class="select-label"><localize key="dataUploader.associatedUniversal"></localize></p>
           </div>
           <div class="box">
             <select class="select-area" [(ngModel)]="coordinate.universal" [name]="i + '-universal'" [required]="coordinate.location == 'DERIVE'">

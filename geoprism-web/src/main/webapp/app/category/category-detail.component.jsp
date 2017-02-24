@@ -28,12 +28,12 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1><gdb:localize key="category.management.editTooltip"/></h1>
+          <h1><localize key="category.management.editTooltip"></localize></h1>
         </div>
         <fieldset>
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="category.management.label"/></label>
+              <label><localize key="category.management.label"></localize></label>
             </div>    
             <div class="holder" >
               <span class="text">
@@ -41,7 +41,7 @@
               </span>
               <div *ngIf="!validName" class="inline-error-message">
                 <p>
-                  <gdb:localize key="dataUploader.unique"/>
+                  <localize key="dataUploader.unique"></localize>
                 </p>
               </div>         
             </div>
@@ -49,7 +49,7 @@
           
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="category.management.descendants"/></label>
+              <label><localize key="category.management.descendants"></localize></label>
             </div>    
             <div class="holder" >
               <div class="list-table-wrapper">
@@ -57,17 +57,17 @@
                   <tbody>
                     <tr *ngFor="let descendant of category.descendants" class="fade-ngRepeat-item">
                       <td class="button-column">
-                        <a class="fa fa-pencil ico-edit" (click)="edit(descendant)" title="<gdb:localize key="category.management.editTooltip"/>"></a>
-                        <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="category.management.removeTooltip"/>"
+                        <a class="fa fa-pencil ico-edit" (click)="edit(descendant)" [title]="'category.management.editTooltip' | localize"></a>
+                        <a class="fa fa-trash-o ico-remove" [title]="'category.management.removeTooltip' | localize"
                            confirm-modal 
-                           message="<gdb:localize key="category.management.removeOptionConfirm"/>"
+                           [message]="'category.management.removeOptionConfirm' | localize"
                            (onConfirm)="remove(descendant)"></a>                                   
                       </td>
                       <td class="label-column">{{descendant.label}}</td>
                     </tr>
                     <tr>
                       <td class="button-column">
-                        <a class="fa fa-plus" *ngIf="!instance.active" (click)="newInstance()" title="<gdb:localize key="category.management.createCategoryOptionTooltip"/>"></a>
+                        <a class="fa fa-plus" *ngIf="!instance.active" (click)="newInstance()" [title]="'category.management.createCategoryOptionTooltip' | localize"></a>
                       </td>
                       <td class="submit-form" *ngIf="instance.active">
                         <form #childForm="ngForm" novalidate (ngSubmit)="childForm.valid && create()">
@@ -86,7 +86,7 @@
             </div>  
             <div class="holder">
               <div class="button-holder">
-                <input type="submit" value="<gdb:localize key="category.management.done"/>" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
+                <input type="submit" [value]="'category.management.done' | localize" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
               </div>
             </div>
           </div>

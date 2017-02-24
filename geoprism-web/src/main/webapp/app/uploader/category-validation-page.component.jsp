@@ -30,27 +30,27 @@
   <div class="wide-holder">
     <div class="row-holder">    
       <div class="inline-value">
-        <label><gdb:localize key="dataUploader.categoryAttribute"/></label>   
+        <label><localize key="dataUploader.categoryAttribute"></localize></label>   
         <div class="label-help-ico-container">
-          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.categoryAttributeHelpToolTip"/>"></i>
+          <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.categoryAttributeHelpToolTip' | localize"></i>
         </div>   
       </div>    
       <div class="inline-value">
-        <label><gdb:localize key="dataUploader.unknownCategory"/></label>
+        <label><localize key="dataUploader.unknownCategory"></localize></label>
         <div class="label-help-ico-container">
-          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.unknownCategoryHelpToolTip"/>"></i>
+          <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.unknownCategoryHelpToolTip' | localize"></i>
       </div>   
       </div>
       <div class="inline-combo">
-        <label><gdb:localize key="dataUploader.synonymn"/></label>
+        <label><localize key="dataUploader.synonymn"></localize></label>
         <div class="label-help-ico-container">
-          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.categorySynonymSearchHelpToolTip"/>"></i>
+          <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.categorySynonymSearchHelpToolTip' | localize"></i>
       </div> 
       </div>
       <div class="inline-actions">
-        <label><gdb:localize key="dataUploader.actions"/></label>
+        <label><localize key="dataUploader.actions"></localize></label>
         <div class="label-help-ico-container">
-          <i class="fa fa-question-circle help-info-ico" title="<gdb:localize key="dataUploader.categoryProblemActionsHelpToolTip"/>"></i>
+          <i class="fa fa-question-circle help-info-ico" [title]="'dataUploader.categoryProblemActionsHelpToolTip' | localize"></i>
       </div> 
       </div>
     </div>  
@@ -61,7 +61,7 @@
   </div>
   <div class="wide-holder">
     <div class="error-message">
-      <p *ngIf="hasProblems()"><gdb:localize key="dataUploader.existingProblems"/></p>
+      <p *ngIf="hasProblems()"><localize key="dataUploader.existingProblems"></localize></p>
     </div>          
   </div>  
 </div>

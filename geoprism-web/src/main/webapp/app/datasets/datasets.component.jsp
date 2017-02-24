@@ -25,27 +25,27 @@
 
   <error-message ></error-message>
 
-  <h2> <gdb:localize key="dataset.title"/> </h2>
+  <h2> <localize key="dataset.title"></localize> </h2>
   
   <div *ngIf="datasets === null">
-    <gdb:localize key='dataset.loadingData'/>
+    <localize key='dataset.loadingData'></localize>
   </div>
   <div class="list-table-wrapper">
 	  <table id="manage-datasets-table" class="list-table table table-bordered table-striped">        
 	    <thead>
 	      <tr>
 	        <th></th>
-	        <th class="label-column"><gdb:localize key='dataset.label'/></th>
-	        <th class="label-column"><gdb:localize key='dataset.description'/></th>
+	        <th class="label-column"><localize key='dataset.label'></localize></th>
+	        <th class="label-column"><localize key='dataset.description'></localize></th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	      <tr *ngFor="let dataset of datasets" class="fade-ngRepeat-item">
 	        <td class="button-column">
-	          <a class="fa fa-pencil ico-edit" (click)="edit(dataset, $event)" title="<gdb:localize key="dataset.editTooltip"/>"></a>                             
-	          <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="dataset.removeTooltip"/>"
+	          <a class="fa fa-pencil ico-edit" (click)="edit(dataset, $event)" [title]="'dataset.editTooltip' | localize"></a>                             
+	          <a class="fa fa-trash-o ico-remove" [title]="'dataset.removeTooltip' | localize"
 	             confirm-modal 
-	             message="<gdb:localize key="dataset.removeContent"/>"
+	             [message]="'dataset.removeContent' | localize"
 	             (onConfirm)="remove(dataset, $event)"></a>           
 	        </td>
 	        <td class="label-column"> {{ dataset.label }} </td>
@@ -59,7 +59,7 @@
     <div class="drop-box">
       <div class="inner-drop-box">
         <i class="fa fa-cloud-upload">
-          <p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
+          <p class="upload-text"><localize key="dashboardbuilder.uploadDataSet"></localize></p>
         </i>
       </div>
     </div>

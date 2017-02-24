@@ -31,12 +31,12 @@
   </div>
   <div class="holder">
     <div class="row-holder">
-      <p><gdb:localize key="dataUploader.titleUploadToExistingOrNewSubtitle"/></p>
+      <p><localize key="dataUploader.titleUploadToExistingOrNewSubtitle"></localize></p>
     </div>
   </div>
   
   <div class="label-holder">
-    <strong><gdb:localize key="dataUploader.existingDataset"/></strong>
+    <strong><localize key="dataUploader.existingDataset"></localize></strong>
   </div>
   <div class="holder">
     <ul id="match-datasets-list" class="list-group">   
@@ -44,10 +44,10 @@
           {{match.label}}            
       
           <div class="medium-icon-wrapper">
-          <i class="fa fa-plus-square" (click)="select(match, false)" title="<gdb:localize key="dataUploader.selectDataset"/>"></i>
+          <i class="fa fa-plus-square" (click)="select(match, false)" [title]="'dataUploader.selectDataset' | localize"></i>
         </div>
         <div class="medium-icon-wrapper">
-          <i class="fa fa-minus-square" (click)="select(match, true)" title="<gdb:localize key="dataUploader.replaceDataset"/>"></i>
+          <i class="fa fa-minus-square" (click)="select(match, true)" [title]="'dataUploader.replaceDataset' | localize"></i>
         </div>
       </li>
     </ul>

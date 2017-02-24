@@ -27,13 +27,13 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="heading">
-          <h1 *ngIf="icon.id != null"><gdb:localize key="category.icon.editHeader"/></h1>
-          <h1 *ngIf="icon.id == null"><gdb:localize key="category.icon.addHeader"/></h1>
+          <h1 *ngIf="icon.id != null"><localize key="category.icon.editHeader"></localize></h1>
+          <h1 *ngIf="icon.id == null"><localize key="category.icon.addHeader"></localize></h1>
         </div>      
         <fieldset>
           <div class="row-holder">
             <div class="label-holder">
-              <label><gdb:localize key="category.icon.label"/></label>
+              <label><localize key="category.icon.label"></localize></label>
             </div>          
             <div class="holder" >
               <span class="text">
@@ -52,7 +52,7 @@
                   <div class="drop-box">
                     <div class="inner-drop-box">
                       <i class="fa fa-cloud-upload">
-                        <p class="upload-text"><gdb:localize key="dashboardbuilder.uploadDataSet"/></p>
+                        <p class="upload-text"><localize key="dashboardbuilder.uploadDataSet"></localize></p>
                       </i>
                     </div>
                   </div>
@@ -60,7 +60,7 @@
                 </div>
                 
                 <div *ngIf="file || icon.filePath">
-                  <a style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" (click)="clear()" title="<gdb:localize key="category.icon.removeFile"/>"></a>           
+                  <a style="font-size:25px;vertical-align:middle;" class="fa fa-trash-o ico-remove" (click)="clear()" [title]="'category.icon.removeFile' | localize"></a>           
                       
                   <!-- For display only when editing an icon-->
                   <img *ngIf="!file" style="width:42px;height:42px;margin-left:10px;" [src]="'${pageContext.request.contextPath}/iconimage/getCategoryIconImage?id=' + icon.id" class="thumb">
@@ -77,8 +77,8 @@
             </div>                    
             <div class="holder">
               <div class="button-holder">
-                <input type="button" value="<gdb:localize key="dataset.cancel"/>" class="btn btn-default" (click)="cancel()" />              
-                <input type="submit" value="<gdb:localize key="category.icon.ok"/>" class="btn btn-primary" (disabled)="form.invalid" />                
+                <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
+                <input type="submit" [value]="'category.icon.ok' | localize" class="btn btn-primary" (disabled)="form.invalid" />                
               </div>
             </div>
           </div>
