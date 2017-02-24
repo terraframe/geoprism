@@ -23,7 +23,7 @@ import { Page } from './uploader-model';
 @Component({
   moduleId: module.id,
   selector: 'beginning-info-page',
-  templateUrl: 'beginning-info-page.component.jsp',
+  templateUrl: 'beginning-info-page.component.html',
   styleUrls: []
 })
 export class BeginningInfoPageComponent {

@@ -24,7 +24,7 @@ import { Page, Problems, Workbook} from './uploader-model';
 @Component({
   moduleId: module.id,
   selector: 'category-validation-page',
-  templateUrl: 'category-validation-page.component.jsp',
+  templateUrl: 'category-validation-page.component.html',
   styleUrls: []
 })
 export class CategoryValidationPageComponent {

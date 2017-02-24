@@ -5,7 +5,7 @@ import { EventService, IEventListener } from '../service/core.service';
 @Component({
   moduleId: module.id,
   selector: 'error-message',
-  templateUrl: 'error-message.component.jsp',
+  templateUrl: 'error-message.component.html',
   styleUrls: ['error-message.component.css']
 })
 export class ErrorMessageComponent implements OnInit, IEventListener {

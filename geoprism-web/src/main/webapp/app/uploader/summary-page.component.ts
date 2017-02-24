@@ -25,7 +25,7 @@ import { UploadInformation, Sheet, Page, Field, Universal, CoordinateAttribute} 
 @Component({
   moduleId: module.id,
   selector: 'summary-page',
-  templateUrl: 'summary-page.component.jsp',
+  templateUrl: 'summary-page.component.html',
   styleUrls: []
 })
 export class SummaryPageComponent implements OnInit {

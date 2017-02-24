@@ -27,7 +27,7 @@ import { LocalizationService } from '../service/localization.service';
 @Component({
   moduleId: module.id,
   selector: 'coordinate-page',
-  templateUrl: 'coordinate-page.component.jsp',
+  templateUrl: 'coordinate-page.component.html',
   styleUrls: []
 })
 export class CoordinatePageComponent implements OnInit, LocalValidator {

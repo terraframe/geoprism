@@ -53,10 +53,12 @@ export class IconResolver implements Resolve<Icon> {
   }
 }
 
+declare var acp: any;
+
 @Component({
   moduleId: module.id,
   selector: 'icon-detail',
-  templateUrl: 'icon-detail.component.jsp',
+  templateUrl: 'icon-detail.component.html',
   styleUrls: []
 })
 export class IconDetailComponent implements OnInit {
@@ -69,13 +71,16 @@ export class IconDetailComponent implements OnInit {
   private uploadElRef: ElementRef;  
   
   private file: any;
+  private context: string;
 
   constructor(
     private router: Router,      
     private route: ActivatedRoute,
     private location: Location,
     private iconService: IconService,
-    private eventService: EventService) {}
+    private eventService: EventService) {
+    this.context = acp as string;	  
+  }
 
   ngOnInit(): void {
     this.icon = this.route.snapshot.data['icon'];

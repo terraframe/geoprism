@@ -35,7 +35,7 @@ import { NavigationService } from './navigation.service';
 @Component({
   moduleId: module.id,
   selector: 'upload-wizard',
-  templateUrl: 'upload-wizard.component.jsp',
+  templateUrl: 'upload-wizard.component.html',
   styleUrls: []
 })
 export class UploadWizardComponent implements OnDestroy {

@@ -26,7 +26,7 @@ import { IdService } from '../service/core.service';
 @Component({
   moduleId: module.id,
   selector: 'geo-validation-problem',
-  templateUrl: 'geo-validation-problem.component.jsp',
+  templateUrl: 'geo-validation-problem.component.html',
   styleUrls: []
 })
 export class GeoValidationProblemComponent implements OnInit {

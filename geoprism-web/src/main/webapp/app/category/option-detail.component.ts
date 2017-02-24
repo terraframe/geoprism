@@ -58,7 +58,7 @@ class Action {
 @Component({
   moduleId: module.id,
   selector: 'option-detail',
-  templateUrl: 'option-detail.component.jsp',
+  templateUrl: 'option-detail.component.html',
   styleUrls: []
 })
 export class OptionDetailComponent implements OnInit {

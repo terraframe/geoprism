@@ -46,7 +46,7 @@ export class DatasetResolver implements Resolve<Dataset> {
 @Component({
   moduleId: module.id,
   selector: 'dataset-detail',
-  templateUrl: 'dataset-detail.component.jsp',
+  templateUrl: 'dataset-detail.component.html',
   styleUrls: []
 })
 export class DatasetDetailComponent implements OnInit {

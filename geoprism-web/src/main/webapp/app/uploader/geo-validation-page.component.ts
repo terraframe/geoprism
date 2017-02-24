@@ -24,7 +24,7 @@ import { Page, Problems, Workbook} from './uploader-model';
 @Component({
   moduleId: module.id,
   selector: 'geo-validation-page',
-  templateUrl: 'geo-validation-page.component.jsp',
+  templateUrl: 'geo-validation-page.component.html',
   styleUrls: []
 })
 export class GeoValidationPageComponent {

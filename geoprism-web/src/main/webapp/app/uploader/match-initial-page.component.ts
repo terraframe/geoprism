@@ -22,7 +22,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 @Component({
   moduleId: module.id,
   selector: 'match-initial-page',
-  templateUrl: 'match-initial-page.component.jsp',
+  templateUrl: 'match-initial-page.component.html',
   styleUrls: []
 })
 export class MatchInitialPageComponent {

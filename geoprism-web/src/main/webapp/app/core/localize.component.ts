@@ -5,7 +5,7 @@ import { LocalizationService } from '../service/localization.service';
 @Component({
   moduleId: module.id,
   selector: 'localize',
-  templateUrl: 'localize.component.jsp',
+  templateUrl: 'localize.component.html',
   styleUrls: []
 })
 export class LocalizeComponent implements OnInit {

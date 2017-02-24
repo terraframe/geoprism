@@ -35,7 +35,7 @@ declare let acp: string;
 @Component({
   moduleId: module.id,
   selector: 'datasets',
-  templateUrl: 'datasets.component.jsp',
+  templateUrl: 'datasets.component.html',
   styleUrls: ['datasets.component.css']
 })
 export class DatasetsComponent implements OnInit {

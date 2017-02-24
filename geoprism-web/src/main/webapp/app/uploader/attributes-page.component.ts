@@ -28,7 +28,7 @@ import { CategoryService } from '../service/category.service';
 @Component({
   moduleId: module.id,
   selector: 'attributes-page',
-  templateUrl: 'attributes-page.component.jsp',
+  templateUrl: 'attributes-page.component.html',
   styleUrls: []
 })
 export class AttributesPageComponent implements OnInit, AfterViewChecked, LocalValidator, RemoteValidator {

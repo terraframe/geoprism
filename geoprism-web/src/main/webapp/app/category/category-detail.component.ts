@@ -51,7 +51,7 @@ class Instance {
 @Component({
   moduleId: module.id,
   selector: 'category-detail',
-  templateUrl: 'category-detail.component.jsp',
+  templateUrl: 'category-detail.component.html',
   styleUrls: []
 })
 export class CategoryDetailComponent implements OnInit {

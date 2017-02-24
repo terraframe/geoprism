@@ -33,7 +33,7 @@ class LocationField {
 @Component({
   moduleId: module.id,
   selector: 'location-page',
-  templateUrl: 'location-page.component.jsp',
+  templateUrl: 'location-page.component.html',
   styleUrls: []
 })
 export class LocationPageComponent implements OnInit, LocalValidator {

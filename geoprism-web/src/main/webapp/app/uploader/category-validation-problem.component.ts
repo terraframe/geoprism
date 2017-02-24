@@ -29,7 +29,7 @@ import { IdService } from '../service/core.service';
 @Component({
   moduleId: module.id,
   selector: 'category-validation-problem',
-  templateUrl: 'category-validation-problem.component.jsp',
+  templateUrl: 'category-validation-problem.component.html',
   styleUrls: []
 })
 export class CategoryValidationProblemComponent implements OnInit {

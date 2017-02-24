@@ -26,7 +26,7 @@ import { NavigationService } from './navigation.service';
 @Component({
   moduleId: module.id,
   selector: 'paging',
-  templateUrl: 'paging.component.jsp',
+  templateUrl: 'paging.component.html',
   styleUrls: []
 })
 export class PagingComponent {

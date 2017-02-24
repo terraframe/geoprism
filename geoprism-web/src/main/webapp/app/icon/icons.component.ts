@@ -28,15 +28,18 @@ declare let acp: string;
 @Component({
   moduleId: module.id,
   selector: 'icons',
-  templateUrl: 'icons.component.jsp',
+  templateUrl: 'icons.component.html',
   styleUrls: []
 })
 export class IconsComponent implements OnInit {
   public icons: Icon[];
+  context: string;
 
   constructor(
     private router: Router,
-    private iconService: IconService) { }
+    private iconService: IconService) {
+    this.context = acp as string;	  
+  }
 
   ngOnInit(): void {
     this.getIcons();    

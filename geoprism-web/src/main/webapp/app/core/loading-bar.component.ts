@@ -5,7 +5,7 @@ import { EventService, IEventListener } from '../service/core.service';
 @Component({
   moduleId: module.id,
   selector: 'loading-bar',
-  templateUrl: 'loading-bar.component.jsp',
+  templateUrl: 'loading-bar.component.html',
   styleUrls: []
 })
 export class LoadingBarComponent implements OnInit, IEventListener {

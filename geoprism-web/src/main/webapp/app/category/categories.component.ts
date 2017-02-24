@@ -33,7 +33,7 @@ class Instance {
 @Component({
   moduleId: module.id,
   selector: 'categories',
-  templateUrl: 'categories.component.jsp',
+  templateUrl: 'categories.component.html',
   styleUrls: []
 })
 export class CategoriesComponent implements OnInit {

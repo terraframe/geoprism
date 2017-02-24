@@ -27,7 +27,7 @@ import { DatasetService } from '../service/dataset.service';
 @Component({
   moduleId: module.id,
   selector: 'name-page',
-  templateUrl: 'name-page.component.jsp',
+  templateUrl: 'name-page.component.html',
   styleUrls: []
 })
 export class NamePageComponent implements RemoteValidator {

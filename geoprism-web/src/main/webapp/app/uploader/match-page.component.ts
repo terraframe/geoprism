@@ -27,7 +27,7 @@ import { UploadService } from '../service/upload.service';
 @Component({
   moduleId: module.id,
   selector: 'match-page',
-  templateUrl: 'match-page.component.jsp',
+  templateUrl: 'match-page.component.html',
   styleUrls: []
 })
 export class MatchPageComponent {

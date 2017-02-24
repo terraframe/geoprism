@@ -5,7 +5,7 @@ import { ConfirmService, IListener, IAction } from "./confirm-modal.service";
 @Component({
   moduleId: module.id,  
   selector: "confirm-modal",
-  templateUrl: 'confirm-modal.component.jsp',
+  templateUrl: 'confirm-modal.component.html',
   styleUrls: ['confirm-modal.component.css'],
 })
 export class ConfirmModalComponent implements OnInit, IListener  {
