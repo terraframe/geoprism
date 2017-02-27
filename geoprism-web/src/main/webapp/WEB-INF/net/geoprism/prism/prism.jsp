@@ -34,8 +34,6 @@
   <jwr:style src="/bundles/administration.css" useRandomParam="false" />
   <jwr:style src="/bundles/prism.css" useRandomParam="false"/>
   
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dist/app.css">  
-
   <!-- Default imports -->  
   <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
   <jwr:script src="/bundles/ng2-main.js" useRandomParam="false"/> 
@@ -48,8 +46,8 @@
   </script>
   
   <!-- IE required polyfills, in this exact order -->
-  <script type="text/javascript" src="${pageContext.request.contextPath}/dist/polyfills.js"></script>  
-  <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor.js"></script>  
+  <script type="text/javascript" src="http://localhost:8080/dist/polyfills.js"></script>  
+  <script type="text/javascript" src="http://localhost:8080/dist/vendor.js"></script>  
 
 </head>
 
@@ -79,7 +77,7 @@
       </div>
     </div>  
   </my-app>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/dist/app.js"></script>  
+  <script type="text/javascript" src="http://localhost:8080/dist/app.js"></script>  
   
   
 </body>

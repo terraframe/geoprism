@@ -2,8 +2,8 @@
   "name": "geoprism",
   "version": "0.1.0",
   "scripts": {
-    "tsc": "tsc",
-    "tsc:w": "tsc -w",
+    "start": "webpack-dev-server --inline --progress --port 8080",  
+    "test": "karma start",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile"
   },
   "dependencies": {
