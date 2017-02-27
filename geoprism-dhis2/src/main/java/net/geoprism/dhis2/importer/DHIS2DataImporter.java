@@ -45,7 +45,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.dhis2.DHIS2BasicConnector;
+import net.geoprism.dhis2.DHIS2HTTPConnector;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 
@@ -57,7 +57,7 @@ import net.geoprism.ontology.ClassifierIsARelationship;
  */
 public class DHIS2DataImporter
 {
-  private DHIS2BasicConnector dhis2;
+  private DHIS2HTTPConnector dhis2;
   
   private GeometryFactory     geometryFactory;
 
@@ -105,7 +105,9 @@ public class DHIS2DataImporter
     this.geometryFactory = new GeometryFactory();
     this.geometryHelper = new GeometryHelper();
     
-    dhis2 = new DHIS2BasicConnector(url, username, password);
+    dhis2 = new DHIS2HTTPConnector();
+    dhis2.setServerUrl(url);
+    dhis2.setCredentials(username, password);
   }
 
   @Request
@@ -119,7 +121,6 @@ public class DHIS2DataImporter
   {
     deleteAll();
     
-    dhis2.initialize();
     importOrgUnitLevels();
     importOrgUnits();
     buildAllpaths();

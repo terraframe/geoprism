@@ -46,7 +46,8 @@
 	          <a class="fa fa-trash-o ico-remove" title="<gdb:localize key="dataset.removeTooltip"/>"
 	             confirm-modal 
 	             message="<gdb:localize key="dataset.removeContent"/>"
-	             (onConfirm)="remove(dataset, $event)"></a>           
+	             (onConfirm)="remove(dataset, $event)"></a>
+            <a class="fa fa-sign-out ico-export" (click)="xport(dataset, $event)" title="<gdb:localize key="dataset.exportTooltip"/>"></a>
 	        </td>
 	        <td class="label-column"> {{ dataset.label }} </td>
 	        <td class="description-column"> {{dataset.description}} </td>

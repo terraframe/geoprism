@@ -1,0 +1,26 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateAttributeException" label="DHIS2 Duplicate Attribute Exception" message="Attributes [{dhis2Attrs}] already exist in DHIS2 as a TrackedEntityAttribute. Delete your Geoprism dataset and reimport your spreadsheet with a different attribute name (or delete the attributes in DHIS2).">
+        <attributes>
+          <char name="dhis2Attrs" label="DHIS2 Duplicate Attributes" required="true" size="350"/>
+        </attributes>
+      </mdException>
+      <mdException name="net.geoprism.dhis2.response.OAuthLoginRequiredException" label="OAuth Login Required Exception" message="You must log in via OAuth to use this feature. Log out, click the 'Log in with DHIS2' button in the top left, and try your operation again.">
+      </mdException>
+    </create>
+    <update>
+      <mdBusiness name="net.geoprism.MappableClass">
+        <create>
+          <mdMethod name="xport" label="xport" returnType="void" static="false"></mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.MappableClass.xport" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.dhis2.response.DHIS2DuplicateAttributeException" type="com.runwaysdk.system.metadata.MdException"/>
+    </delete>
+  </undoIt>
+</version>

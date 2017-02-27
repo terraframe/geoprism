@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1691617178)
+@com.runwaysdk.business.ClassSignature(hash = 1480924545)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -43,7 +25,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = -1691617178;
+  private static final long serialVersionUID = 1480924545;
   
   public MappableClassBase()
   {
@@ -530,6 +512,18 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public void xport()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void xport(java.lang.String id)
+  {
+    MappableClass _instance = MappableClass.get(id);
+    _instance.xport();
   }
   
   public static MappableClass lock(java.lang.String id)
