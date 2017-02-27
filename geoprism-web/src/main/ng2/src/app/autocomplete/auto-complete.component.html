@@ -1,0 +1,5 @@
+<ul *ngIf="list.length > 0" class="ui-front ui-menu ui-widget ui-widget-content ui-corner-all search-results" style="margin-left: 0px;">
+  <li *ngFor="let item of list; let i = index" class="ui-menu-item" role="presentation" style="margin-left: 0px;">
+    <a class="ui-corner-all" [ngClass]="{'search-hover' : item.selected}" tabindex="-1" (mouseenter)="onMouseEnter(item, i)" (mouseleave)="onMouseLeave(item, i)" (click)="onClick(item)">{{item.text}}</a>
+  </li>
+</ul>
