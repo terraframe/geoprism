@@ -32,23 +32,25 @@
   <!-- CSS imports -->
   <jwr:style src="/bundles/main.css" useRandomParam="false" />
   <jwr:style src="/bundles/administration.css" useRandomParam="false" />
+  <jwr:style src="/bundles/prism.css" useRandomParam="false"/>
   
+  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dist/app.css">  
+
   <!-- Default imports -->  
   <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
   <jwr:script src="/bundles/ng2-main.js" useRandomParam="false"/> 
     
   <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>  
   
-  <!-- IE required polyfills, in this exact order -->
-  <jwr:script src="/bundles/prism.js" useRandomParam="false"/>
-
-  <script>
-    window.acp = "<%=request.getContextPath()%>";
   
-    System.import(acp + '/system-config.js').then(function () {
-        System.import('main');
-      }).catch(console.error.bind(console));
+  <script>
+    window.acp = "<%=request.getContextPath()%>";  
   </script>
+  
+  <!-- IE required polyfills, in this exact order -->
+  <script type="text/javascript" src="${pageContext.request.contextPath}/dist/polyfills.js"></script>  
+  <script type="text/javascript" src="${pageContext.request.contextPath}/dist/vendor.js"></script>  
+
 </head>
 
 <body>
@@ -77,6 +79,9 @@
       </div>
     </div>  
   </my-app>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/dist/app.js"></script>  
+  
+  
 </body>
 
 </html>

@@ -353,7 +353,7 @@
             <id>exec-npm-install</id>
             <phase>generate-sources</phase>
             <configuration>
-              <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
               <executable>npm</executable>
               <arguments>
                 <argument>install</argument>
@@ -367,7 +367,7 @@
             <id>exec-typings-install</id>
             <phase>generate-sources</phase>
             <configuration>
-              <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
               <executable>typings</executable>
               <arguments>
                 <argument>install</argument>
@@ -382,11 +382,11 @@
             <id>exec-npm-run-tsc</id>
             <phase>generate-sources</phase>
             <configuration>
-              <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
               <executable>npm</executable>
               <arguments>
                 <argument>run</argument>
-                <argument>tsc</argument>
+                <argument>build</argument>
               </arguments>
             </configuration>
             <goals>
