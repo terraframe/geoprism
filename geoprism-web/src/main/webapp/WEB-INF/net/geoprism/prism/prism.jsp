@@ -46,8 +46,8 @@
   </script>
   
   <!-- IE required polyfills, in this exact order -->
-  <script type="text/javascript" src="http://localhost:8080/dist/polyfills.js"></script>  
-  <script type="text/javascript" src="http://localhost:8080/dist/vendor.js"></script>  
+  <script type="text/javascript" src="$local.host$/dist/polyfills.js"></script>  
+  <script type="text/javascript" src="$local.host$/dist/vendor.js"></script>  
 
 </head>
 
@@ -77,7 +77,7 @@
       </div>
     </div>  
   </my-app>
-  <script type="text/javascript" src="http://localhost:8080/dist/app.js"></script>  
+  <script type="text/javascript" src="$local.host$/dist/app.js"></script>  
   
   
 </body>
