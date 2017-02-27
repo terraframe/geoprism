@@ -33,10 +33,9 @@ import { UploadWizardComponent } from '../uploader/upload-wizard.component';
 declare let acp: string;
 
 @Component({
-  moduleId: module.id,
   selector: 'datasets',
-  templateUrl: 'datasets.component.jsp',
-  styleUrls: ['datasets.component.css']
+  templateUrl: './datasets.component.html',
+  styleUrls: ['./datasets.component.css']
 })
 export class DatasetsComponent implements OnInit {
   public datasets: Dataset[];
