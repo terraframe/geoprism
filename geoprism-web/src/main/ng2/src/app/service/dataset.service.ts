@@ -105,4 +105,19 @@ export class DatasetService extends BasicService {
       .get(acp + '/uploader/validateDatasetName', {search: params})
       .toPromise();
   }  
+  
+  xport(id : string): Promise<Dataset> {
+    
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });  
+  
+    return this.ehttp
+      .post(acp + '/prism/xport-dataset', JSON.stringify({id:id}), {headers: headers})
+      .toPromise()
+      .then((response: any) => {
+        return response.json() as Dataset;
+      })
+      .catch(this.handleError.bind(this));
+  }
 }

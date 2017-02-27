@@ -23,7 +23,8 @@
 	          <a class="fa fa-trash-o ico-remove" [title]="'dataset.removeTooltip' | localize"
 	             confirm-modal 
 	             [message]="'dataset.removeContent' | localize"
-	             (onConfirm)="remove(dataset, $event)"></a>           
+	             (onConfirm)="remove(dataset, $event)"></a>
+            <a class="fa fa-sign-out ico-export" (click)="xport(dataset, $event)" title="'dataset.exportTooltip' | localize"></a>	             
 	        </td>
 	        <td class="label-column"> {{ dataset.label }} </td>
 	        <td class="description-column"> {{dataset.description}} </td>

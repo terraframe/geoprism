@@ -33,10 +33,10 @@ import { UploadWizardComponent } from '../uploader/upload-wizard.component';
 declare let acp: string;
 
 @Component({
-  
+  moduleId: module.id,
   selector: 'datasets',
-  templateUrl: './datasets.component.html',
-  styleUrls: ['./datasets.component.css']
+  templateUrl: 'datasets.component.jsp',
+  styleUrls: ['datasets.component.css']
 })
 export class DatasetsComponent implements OnInit {
   public datasets: Dataset[];
@@ -111,6 +111,10 @@ export class DatasetsComponent implements OnInit {
   
   edit(dataset: Dataset, event: any) : void {
     this.router.navigate(['/dataset', dataset.id]);
+  }
+  
+  xport(dataset: Dataset, event: any) : void {
+    this.datasetService.xport(dataset.id);
   }
   
   fileOver(e:any):void {
