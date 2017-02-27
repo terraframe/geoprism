@@ -68,6 +68,14 @@ public class PrismController implements Reloadable
 
     return new RestBodyResponse(new JSONObject(mappableClass.getAsJSON()));
   }
+  
+  @Endpoint(url = "xport-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF xport(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    MappableClassDTO.xport(request, id);
+
+    return new RestResponse();
+  }
 
   @Endpoint(url = "unlock-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF cancel(ClientRequestIF request, @RequestParamter(name = "id") String id)
