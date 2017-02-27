@@ -22,21 +22,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
 import java.util.TreeSet;
-
-import net.geoprism.dashboard.AttributeWrapper;
-import net.geoprism.dashboard.AttributeWrapperQuery;
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.DashboardAttributes;
-import net.geoprism.dashboard.DashboardMetadata;
-import net.geoprism.dashboard.MetadataWrapper;
-import net.geoprism.dashboard.MetadataWrapperQuery;
-import net.geoprism.data.DatabaseUtil;
-import net.geoprism.data.etl.TargetBinding;
-import net.geoprism.ontology.Classifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +50,8 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generation.loader.DelegatingClassLoader;
+import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -69,6 +63,18 @@ import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdClass;
+
+import net.geoprism.dashboard.AttributeWrapper;
+import net.geoprism.dashboard.AttributeWrapperQuery;
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardAttributes;
+import net.geoprism.dashboard.DashboardMetadata;
+import net.geoprism.dashboard.MetadataWrapper;
+import net.geoprism.dashboard.MetadataWrapperQuery;
+import net.geoprism.data.DatabaseUtil;
+import net.geoprism.data.GeoprismDatasetExporterIF;
+import net.geoprism.data.etl.TargetBinding;
+import net.geoprism.ontology.Classifier;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -106,6 +112,35 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     return super.buildKey();
+  }
+  
+  /**
+   * MdMethod
+   * 
+   * Exports the dataset to all available exporters. (currently only DHIS2, if the DHIS2 exporter plugin is included)
+   */
+  @Override
+  public void xport()
+  {
+    MdClass mdClass = this.getWrappedMdClass();
+    
+    ServiceLoader<GeoprismDatasetExporterIF> loader = ServiceLoader.load(GeoprismDatasetExporterIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+
+    try
+    {
+      Iterator<GeoprismDatasetExporterIF> it = loader.iterator();
+
+      while (it.hasNext())
+      {
+        GeoprismDatasetExporterIF exporter = it.next();
+        
+        exporter.xport(mdClass);
+      }
+    }
+    catch (ServiceConfigurationError serviceError)
+    {
+      throw new ProgrammingErrorException(serviceError);
+    }
   }
 
   @Override

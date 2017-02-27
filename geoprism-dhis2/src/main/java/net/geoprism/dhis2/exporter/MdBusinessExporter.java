@@ -47,8 +47,10 @@ import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
+import com.runwaysdk.system.metadata.MdClass;
 
-import net.geoprism.dhis2.DHIS2BasicConnector;
+import net.geoprism.dhis2.DHIS2HTTPConnector;
+import net.geoprism.dhis2.response.DHIS2DuplicateAttributeException;
 import net.geoprism.dhis2.response.DHIS2DuplicateDataException;
 import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
 import net.geoprism.dhis2.response.DHIS2UnexpectedResponseException;
@@ -68,7 +70,7 @@ public class MdBusinessExporter
   
   protected MdBusinessToTrackerJson converter;
   
-  protected DHIS2BasicConnector dhis2;
+  protected DHIS2HTTPConnector dhis2;
   
   private String trackedEntityId;
   
@@ -80,11 +82,16 @@ public class MdBusinessExporter
   
   private final int pageSize = 1000;
   
-  public MdBusinessExporter(MdBusiness mdbiz, DHIS2BasicConnector dhis2)
+  public MdBusinessExporter(MdBusiness mdbiz, DHIS2HTTPConnector dhis2)
   {
     this.mdbiz = mdbiz;
     this.converter = new MdBusinessToTrackerJson(mdbiz);
     this.dhis2 = dhis2;
+  }
+  
+  public void xport(MdClass mdClass)
+  {
+    
   }
   
   public void exportToTracker()
@@ -290,8 +297,9 @@ public class MdBusinessExporter
         }
       }
       
-      String msg = "Attributes [" + StringUtils.join(attrNames, ", ") + "] already exist in DHIS2 as a TrackedEntityAttribute. Delete your Geoprism dataset and reimport your spreadsheet with a different attribute name (or delete the attributes in DHIS2).";
-      throw new DHIS2DuplicateDataException(msg);
+      DHIS2DuplicateAttributeException ex = new DHIS2DuplicateAttributeException();
+      ex.setDhis2Attrs(StringUtils.join(attrNames, ", "));
+      throw ex;
     }
     
     getTrackedEntityAttributeIds();

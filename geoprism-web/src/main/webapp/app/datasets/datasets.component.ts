@@ -113,6 +113,10 @@ export class DatasetsComponent implements OnInit {
     this.router.navigate(['/dataset', dataset.id]);
   }
   
+  xport(dataset: Dataset, event: any) : void {
+    this.datasetService.xport(dataset.id);
+  }
+  
   fileOver(e:any):void {
     this.dropActive = e;
   }
