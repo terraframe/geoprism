@@ -98,17 +98,11 @@ export class DatasetsComponent implements OnInit {
   };
   
   remove(dataset: Dataset, event: any) : void {
-//    let message = this.localizationService.localize("dataset", "removeContent");
-//    message = message.replace('{0}', dataset.label);
-//
-//    if(confirm(message)) {
-    
-      this.datasetService
-        .remove(dataset)
-        .then(response => {
-          this.datasets = this.datasets.filter(h => h !== dataset);    
-        });
-//    }
+    this.datasetService
+      .remove(dataset)
+      .then(response => {
+        this.datasets = this.datasets.filter(h => h.id !== dataset.id);    
+      });
   }
   
   edit(dataset: Dataset, event: any) : void {
