@@ -4,13 +4,15 @@ import { EventService, IEventListener } from '../service/core.service';
 
 @Component({
   
-  selector: 'error-message',
-  templateUrl: './error-message.component.html',
-  styleUrls: ['./error-message.component.css']
+  selector: 'message',
+  templateUrl: './message.component.html',
+  styleUrls: ['./message.component.css']
 })
-export class ErrorMessageComponent implements OnInit, IEventListener {
+export class MessageComponent implements OnInit, IEventListener {
 	
   private error: any = null;
+  
+  private message: string = "";
 
   constructor(private service: EventService) { }
 
@@ -32,5 +34,9 @@ export class ErrorMessageComponent implements OnInit, IEventListener {
   
   onError(error: any): void {
     this.error = error;
+  }
+  
+  onMessage(msg: string): void {
+    this.message = msg;
   }
 }

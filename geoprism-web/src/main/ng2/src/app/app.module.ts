@@ -32,7 +32,7 @@ import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { LocalizeComponent } from './core/localize.component';
 import { LoadingBarComponent } from './core/loading-bar.component';
-import { ErrorMessageComponent } from './core/error-message.component';
+import { MessageComponent } from './core/message.component';
 import { AsyncValidator } from './core/async-validator.directive';
 import { FunctionValidator } from './core/function-validator.directive';
 import { KeysPipe } from './core/keys.pipe';
@@ -87,7 +87,7 @@ import { EventHttpService } from './service/event-http.service';
     AppComponent,
     LocalizeComponent,
     LoadingBarComponent,
-    ErrorMessageComponent,
+    MessageComponent,
     AsyncValidator,
     FunctionValidator,
     KeysPipe,

@@ -32,4 +32,8 @@ export class LoadingBarComponent implements OnInit, IEventListener {
   onError(error:any): void {
     console.log('error');
   }
+  
+  onMessage(message:string): void {
+    console.log('message : ' + message);
+  }
 }

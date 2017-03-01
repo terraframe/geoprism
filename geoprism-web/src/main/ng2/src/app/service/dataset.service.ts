@@ -25,7 +25,7 @@ import 'rxjs/add/operator/toPromise';
 import { EventService, BasicService } from './core.service';
 import { EventHttpService } from './event-http.service';
 
-import { Dataset } from '../model/dataset';
+import { Dataset, DatasetCollection } from '../model/dataset';
 
 declare var acp: any;
 
@@ -34,12 +34,12 @@ export class DatasetService extends BasicService {
 
   constructor(service: EventService, private ehttp: EventHttpService, private http: Http) { super(service); }
 
-  getDatasets(): Promise<Dataset[]> {
+  getDatasets(): Promise<DatasetCollection> {
     return this.ehttp
       .get(acp + '/prism/datasets')
       .toPromise()
       .then(response => {
-        return response.json() as Dataset[];
+        return response.json() as DatasetCollection;
       })
       .catch(this.handleError.bind(this));
   }
@@ -106,17 +106,17 @@ export class DatasetService extends BasicService {
       .toPromise();
   }  
   
-  xport(id : string): Promise<Dataset> {
+  xport(id : string): void {
     
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
   
-    return this.ehttp
+    this.ehttp
       .post(acp + '/prism/xport-dataset', JSON.stringify({id:id}), {headers: headers})
       .toPromise()
       .then((response: any) => {
-        return response.json() as Dataset;
+        this.handleMessage('Export success.');
       })
       .catch(this.handleError.bind(this));
   }

@@ -39,6 +39,8 @@ declare let acp: string;
 })
 export class DatasetsComponent implements OnInit {
   public datasets: Dataset[];
+  
+  public canExport: boolean;
 
   public uploader:FileUploader;
   public dropActive:boolean = false;
@@ -78,21 +80,22 @@ export class DatasetsComponent implements OnInit {
     this.uploader.onErrorItem = (item: any, response: string, status: number, headers: any) => {
       this.eventService.onError(response);	
     }
-  }
+  };
   
   ngAfterViewInit() {
     this.uploader.onAfterAddingFile = (item => {
-      this.uploadElRef.nativeElement.value = ''
+      this.uploadElRef.nativeElement.value = '';
     });
   }  
   
   getDatasets() : void {
     this.datasetService
       .getDatasets()
-      .then(datasets => {
-        this.datasets = datasets        
+      .then(datasetCollection => {
+        this.datasets = datasetCollection.datasets;
+        this.canExport = datasetCollection.canExport;
       })
-  }
+  };
   
   remove(dataset: Dataset, event: any) : void {
 //    let message = this.localizationService.localize("dataset", "removeContent");

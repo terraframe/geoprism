@@ -28,3 +28,8 @@ export class Dataset {
   source: string;
   attributes : DatasetAttribute[];
 }
+
+export class DatasetCollection {
+  canExport: boolean;
+  datasets: Dataset[];
+}

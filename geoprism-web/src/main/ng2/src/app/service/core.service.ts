@@ -7,12 +7,13 @@ export interface IEventListener {
   start(): void;
   complete(): void;
   onError(error:RunwayException): void;
+  onMessage(message:string): void;
 }
 
 @Injectable()
 export class EventService {
   private listeners: IEventListener[] = [];
-
+  
   public constructor() {}
   
   public registerListener(listener: IEventListener): void {
@@ -41,6 +42,12 @@ export class EventService {
     for (const listener of this.listeners) {
       listener.complete();
     }
+  }
+  
+  public onMessage(msg:string): void {
+    for (const listener of this.listeners) {
+      listener.onMessage(msg);
+    }  
   }
   
   public onError(error:any): void {
@@ -78,6 +85,17 @@ export class BasicService {
     }
       
     return Promise.reject(error);
+  }
+  
+  protected handleMessage(msg: string): void {
+   /*
+    * Must add the null check on this because the this reference gets messed up when
+    * this code is executed from ng2 zone.js
+    */
+    
+    if(this != null) {
+      this.service.onMessage(msg);     
+    }
   }
 }
 
