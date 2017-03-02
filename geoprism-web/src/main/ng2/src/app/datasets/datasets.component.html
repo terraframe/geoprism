@@ -1,0 +1,48 @@
+<div id="app-container" class="container">
+
+  <message ></message>
+
+  <h2> <localize key="dataset.title"></localize> </h2>
+  
+  <div *ngIf="datasets === null">
+    <localize key='dataset.loadingData'></localize>
+  </div>
+  <div class="list-table-wrapper">
+	  <table id="manage-datasets-table" class="list-table table table-bordered table-striped">        
+	    <thead>
+	      <tr>
+	        <th></th>
+	        <th class="label-column"><localize key='dataset.label'></localize></th>
+	        <th class="label-column"><localize key='dataset.description'></localize></th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr *ngFor="let dataset of datasets" class="fade-ngRepeat-item">
+	        <td class="button-column">
+	          <a class="fa fa-pencil ico-edit" (click)="edit(dataset, $event)" [title]="'dataset.editTooltip' | localize"></a>                             
+	          <a class="fa fa-trash-o ico-remove" [title]="'dataset.removeTooltip' | localize"
+	             confirm-modal 
+	             [message]="'dataset.removeContent' | localize"
+	             (onConfirm)="remove(dataset, $event)"></a>
+            <a *ngIf="canExport === true" class="fa fa-sign-out ico-export" (click)="xport(dataset, $event)" [title]="'dataset.exportTooltip' | localize"></a>	             
+	        </td>
+	        <td class="label-column"> {{ dataset.label }} </td>
+	        <td class="description-column"> {{dataset.description}} </td>
+	      </tr>
+	    </tbody>    
+	  </table>
+   </div>
+   
+  <div class="drop-box-container" ng2FileDrop [ngClass]="{'drop-active': dropActive}" (fileOver)="fileOver($event)" [uploader]="uploader" (click)=fileInput.click()>
+    <div class="drop-box">
+      <div class="inner-drop-box">
+        <i class="fa fa-cloud-upload">
+          <p class="upload-text"><localize key="dashboardbuilder.uploadDataSet"></localize></p>
+        </i>
+      </div>
+    </div>
+    <input type="file" #uploadEl ng2FileSelect #fileInput [uploader]="uploader" id="uploader-input" style="display:none" />
+  </div>
+  
+  <upload-wizard (onSuccess)="onSuccess($event)"></upload-wizard>
+</div>

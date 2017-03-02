@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import net.geoprism.ontology.ClassifierDTO;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +38,10 @@ import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+
+import net.geoprism.ontology.ClassifierDTO;
+import net.geoprism.ontology.GeoEntityUtilDTO;
 
 @Controller(url = "uploader")
 public class DataUploaderController implements Reloadable
@@ -185,4 +187,24 @@ public class DataUploaderController implements Reloadable
 
     return new RestBodyResponse("");
   }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF getGeoEntitySuggestions(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  {
+    JSONArray response = new JSONArray();
+
+    ValueQueryDTO query = GeoEntityUtilDTO.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
+    List<ValueObjectDTO> results = query.getResultSet();
+
+    for (ValueObjectDTO result : results)
+    {
+      JSONObject object = new JSONObject();
+      object.put("text", result.getValue(GeoEntityDTO.DISPLAYLABEL));
+      object.put("data", result.getValue(GeoEntityDTO.ID));
+
+      response.put(object);
+    }
+
+    return new RestBodyResponse(response);
+  }  
 }

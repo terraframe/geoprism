@@ -18,12 +18,19 @@
  */
 package net.geoprism.dhis2.exporter;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -34,13 +41,21 @@ import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
+import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
+import com.runwaysdk.system.metadata.MdClass;
 
-import net.geoprism.dhis2.DHIS2BasicConnector;
-import net.geoprism.dhis2.ErrorProcessor;
+import net.geoprism.dhis2.DHIS2HTTPConnector;
+import net.geoprism.dhis2.response.DHIS2DuplicateAttributeException;
+import net.geoprism.dhis2.response.DHIS2DuplicateDataException;
+import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
+import net.geoprism.dhis2.response.DHIS2UnexpectedResponseException;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
 
 /**
  * This class is responsible for exporting an MdBusiness to DHIS2.
@@ -55,7 +70,7 @@ public class MdBusinessExporter
   
   protected MdBusinessToTrackerJson converter;
   
-  protected DHIS2BasicConnector dhis2;
+  protected DHIS2HTTPConnector dhis2;
   
   private String trackedEntityId;
   
@@ -67,11 +82,16 @@ public class MdBusinessExporter
   
   private final int pageSize = 1000;
   
-  public MdBusinessExporter(MdBusiness mdbiz, DHIS2BasicConnector dhis2)
+  public MdBusinessExporter(MdBusiness mdbiz, DHIS2HTTPConnector dhis2)
   {
     this.mdbiz = mdbiz;
     this.converter = new MdBusinessToTrackerJson(mdbiz);
     this.dhis2 = dhis2;
+  }
+  
+  public void xport(MdClass mdClass)
+  {
+    
   }
   
   public void exportToTracker()
@@ -80,11 +100,10 @@ public class MdBusinessExporter
     createTrackedEntityAttributes();
     createProgramTrackedEntityAttributes();
     createProgram();
-    createTrackedEntityInstances();
-    // registerTrackedEntityInstances();
+    createAndEnrollTrackedEntityInstances();
   }
   
-  protected void createTrackedEntityInstances()
+  protected void createAndEnrollTrackedEntityInstances()
   {
     List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
     
@@ -111,26 +130,73 @@ public class MdBusinessExporter
           
           trackedEntityInstance.put("trackedEntity", trackedEntityId);
           
+          GeoEntity orgUnit = null;
+          
           JSONArray jAttributes = new JSONArray();
           for (MdAttribute mdAttr : mdAttrs)
           {
             if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
-                !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) &&
-                trackedEntityAttributeIds.containsKey(mdAttr.getId())
+                !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
               )
             {
-              String attrName = mdAttr.getAttributeName();
-              
               JSONObject jAttribute = new JSONObject();
+              String attrName = mdAttr.getAttributeName();
               jAttribute.put("attribute", trackedEntityAttributeIds.get(mdAttr.getId()));
-              jAttribute.put("value", biz.getValue(attrName));
+              
+              if (mdAttr instanceof MdAttributeReference)
+              {
+                String refId = biz.getValue(attrName);
+                if (!refId.equals(""))
+                {
+                  MdBusiness reference = ((MdAttributeReference) mdAttr).getMdBusiness();
+                  
+                  if (reference.definesType().equals(GeoEntity.CLASS))
+                  {
+                    orgUnit = GeoEntity.get(refId);
+                  }
+                  else if (reference.definesType().equals(Classifier.CLASS))
+                  {
+                    Classifier classy = Classifier.get(refId);
+                    jAttribute.put("value", classy.getDisplayLabel().getValue());
+                  }
+                  else if (reference.definesType().equals(ClassifierSynonym.CLASS))
+                  {
+//                    System.out.println("TODO : We just hit a ClassifierSynonym reference in tei.");
+                  }
+                }
+              }
+              else if (trackedEntityAttributeIds.containsKey(mdAttr.getId()))
+              {
+                jAttribute.put("value", biz.getValue(attrName));
+              }
+              
+              if (jAttribute.has("value"))
+              {
+                jAttributes.put(jAttribute);
+              }
             }
           }
-          trackedEntityInstance.put("attributes", jAttributes);
           
-//          trackedEntityInstance.put("orgUnit", value);
-          
-          trackedEntityInstances.put(trackedEntityInstance);
+          if (orgUnit != null)
+          {
+            trackedEntityInstance.put("attributes", jAttributes);
+            
+            JSONArray enrollments = new JSONArray();
+            JSONObject enrollment = new JSONObject();
+            enrollment.put("orgUnit", orgUnit.getGeoId());
+            enrollment.put("program", programId);
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            enrollment.put("incidentDate", date);
+            enrollment.put("enrollmentDate", date);
+            enrollments.put(enrollment);
+            trackedEntityInstance.put("enrollments", enrollments);
+            
+            // TODO : The geoId contains the DHIS2 id, and not the actual geoid. We do this because it has to be referenced when we export and there's no other place to save the DHIS2 id.
+            // If we make this a real product perhaps we need to store a map from runway id to dhis2 id in some table somewhere.
+            trackedEntityInstance.put("orgUnit", orgUnit.getGeoId());
+            
+            trackedEntityInstances.put(trackedEntityInstance);
+          }
         }
       }
       finally
@@ -141,7 +207,7 @@ public class MdBusinessExporter
       jsonMetadata.put("trackedEntityInstances", trackedEntityInstances);
       
       JSONObject response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
-      ErrorProcessor.validateImportSummaryResponse(response);
+      DHIS2ResponseProcessor.validateImportSummaryResponse(response);
       
       page = page + 1;
     }
@@ -156,7 +222,7 @@ public class MdBusinessExporter
     jsonMetadata.put("trackedEntities", trackedEntities);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
     
     getTrackedEntityId();
   }
@@ -194,10 +260,47 @@ public class MdBusinessExporter
   {
     JSONObject jsonMetadata = new JSONObject();
     
-    jsonMetadata.put("trackedEntityAttributes", converter.getTrackedEntityAttributes());
+    JSONArray trackedEntityAttributes = converter.getTrackedEntityAttributes();
+    
+    jsonMetadata.put("trackedEntityAttributes", trackedEntityAttributes);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    
+    try
+    {
+      DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
+    }
+    catch (DHIS2DuplicateDataException e)
+    {
+      List<String> msgs = e.getErrorMessages();
+      
+      Set<String> attrNames = new HashSet<String>();
+      for (String msg : msgs)
+      {
+        // Property `name`Â with value `Gender` on object Gender [XWImNYPqAIz] (TrackedEntityAttribute)Â already exists on object cejWyOfXge6.
+        Pattern p = Pattern.compile("Property `(.*)`.*with value `(.*)` on object .*");
+        Matcher m = p.matcher(msg);
+        
+        if (m.find())
+        {
+          String attrName = m.group(2);
+          
+          if (attrName != null)
+          {
+            attrNames.add(attrName);
+          }
+        }
+        else
+        {
+          // If we get some weird message back that doesn't match our regex
+          throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
+        }
+      }
+      
+      DHIS2DuplicateAttributeException ex = new DHIS2DuplicateAttributeException();
+      ex.setDhis2Attrs(StringUtils.join(attrNames, ", "));
+      throw ex;
+    }
     
     getTrackedEntityAttributeIds();
   }
@@ -238,8 +341,7 @@ public class MdBusinessExporter
         {
           if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
               !ArrayUtils.contains(skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) &&
-              TEA.getString("name").equals(mdAttr.getDisplayLabel().getValue()
-             )
+              TEA.getString("name").equals(mdAttr.getDisplayLabel().getValue())
             )
           {
             trackedEntityAttributeIds.put(mdAttr.getId(), TEA.getString("id"));
@@ -265,7 +367,7 @@ public class MdBusinessExporter
     jsonMetadata.put("programTrackedEntityAttributes", converter.getProgramTrackedEntityAttributes(programId, trackedEntityAttributeIds));
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
     
     getProgramTrackedEntityAttributeIds();
   }
@@ -366,7 +468,7 @@ public class MdBusinessExporter
     jsonMetadata.put("programs", programs);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    ErrorProcessor.validateTypeReportResponse(response);
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
     
     getProgramId();
   }

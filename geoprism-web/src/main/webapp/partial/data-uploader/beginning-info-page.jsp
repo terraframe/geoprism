@@ -22,6 +22,17 @@
 
 
 <div>
+  <div ng-if="ctrl.length() > 1">
+    <div class="label-holder">
+    </div>
+    <div class="holder">  
+      <div class="row-holder">
+        <div class="error-message">
+          <gdb:localize key="dataUploader.sheetWarning"/>
+        </div>      
+      </div>    
+    </div>    
+  </div>
   <div class="label-holder">
     <strong><gdb:localize key="dataUploader.uploadBeginningMessageRequirements"/></strong>
   </div>

@@ -47,18 +47,17 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.account.ExternalProfile;
 import net.geoprism.account.OauthServer;
+import net.geoprism.dhis2.response.DHIS2ConflictException;
 
-public class DHIS2BasicConnector
+public class DHIS2HTTPConnector
 {
-  private Logger logger = LoggerFactory.getLogger(DHIS2BasicConnector.class);
+  private Logger logger = LoggerFactory.getLogger(DHIS2HTTPConnector.class);
   
   private HttpClient client;
   
   private String serverurl;
   
-  private String username;
-  
-  private String password;
+  private String externalUrl;
   
   public static final String CLIENT_ID = "geoprism";
   
@@ -68,11 +67,13 @@ public class DHIS2BasicConnector
   
   private String refreshToken;
   
-  public DHIS2BasicConnector(String serverurl, String username, String password)
+  private String username;
+  
+  private String password;
+  
+  public DHIS2HTTPConnector()
   {
-    this.serverurl = serverurl;
-    this.username = username;
-    this.password = password;
+    this.serverurl = "http://127.0.0.1:8085/";
   }
   
   public String getAccessToken()
@@ -85,18 +86,51 @@ public class DHIS2BasicConnector
     return serverurl;
   }
   
-  public void initialize()
+  public void setServerUrl(String url)
   {
-    createOauthData();
-    logIn();
+    this.serverurl = url;
+  }
+  
+  public void setServerExternalUrl(String url)
+  {
+    this.externalUrl = url;
+  }
+  
+  public void setCredentials(String username, String password)
+  {
+    this.username = username;
+    this.password = password;
+  }
+  
+  synchronized public void initialize()
+  {
+    this.client = new HttpClient();
+    this.accessToken = ExternalProfile.getAccessToken();
+    
+    if (!isInitialized() && username != null && password != null)
+    {
+      createOauthData(username, password);
+      
+      logIn(username, password);
+    }
+    
+    if (!isInitialized())
+    {
+      throw new RuntimeException("Unable to log into DHIS2.");
+    }
+  }
+  
+  public boolean isInitialized()
+  {
+    return client != null && accessToken != null;
   }
   
   @Transaction
-  public void createOauthData()
+  public void createOauthData(String username, String password)
   {
     try
     {
-      createOauthClient();
+      createOauthClient(username, password);
     }
     catch (DHIS2ConflictException e)
     {
@@ -114,11 +148,11 @@ public class DHIS2BasicConnector
       OauthServer oauth = new OauthServer();
       oauth.setKeyName("dhis2-local");
       oauth.getDisplayLabel().setValue("DHIS2");
-      oauth.setAuthorizationLocation("http://127.0.0.1:8085/uaa/oauth/authorize");
-      oauth.setTokenLocation("http://127.0.0.1:8085/uaa/oauth/token");
-      oauth.setProfileLocation("http://127.0.0.1:8085/api/me");
-      oauth.setClientId(DHIS2BasicConnector.CLIENT_ID);
-      oauth.setSecretKey(DHIS2BasicConnector.SECRET);
+      oauth.setAuthorizationLocation(externalUrl + "/uaa/oauth/authorize");
+      oauth.setTokenLocation(externalUrl + "/uaa/oauth/token");
+      oauth.setProfileLocation(externalUrl + "/api/me");
+      oauth.setClientId(DHIS2HTTPConnector.CLIENT_ID);
+      oauth.setSecretKey(DHIS2HTTPConnector.SECRET);
       oauth.setServerType("DHIS2");
       oauth.apply();
     }
@@ -141,17 +175,12 @@ public class DHIS2BasicConnector
    * Uses the DHIS2 REST API to register a new OAuth configuration for Geoprism
    */
   // curl -X POST -H "Content-Type: application/json" -d '{ "name" : "OAuth2 Demo Client", "cid" : "demo", "secret" : "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6", "grantTypes" : [ "password", "refresh_token", "authorization_code" ], "redirectUris" : [ "http://www.example.org" ]}' -u admin:district 
-  private void createOauthClient()
+  private void createOauthClient(String username, String password)
   {
-    if (this.accessToken != null || ExternalProfile.getAccessToken() != null)
-    {
-      return;
-    }
-    
-    this.client = new HttpClient();
+    HttpClient client = new HttpClient();
     
     client.getParams().setAuthenticationPreemptive(true);
-    Credentials defaultcreds = new UsernamePasswordCredentials(this.username, this.password);
+    Credentials defaultcreds = new UsernamePasswordCredentials(username, password);
     client.getState().setCredentials(AuthScope.ANY, defaultcreds);
     
     try
@@ -164,7 +193,7 @@ public class DHIS2BasicConnector
       post.setRequestEntity(new StringRequestEntity(body, null, null));
 
       JSONObject response = new JSONObject();
-      int statusCode = httpRequest(post, response);
+      int statusCode = httpRequest(client, post, response);
 
       if (statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED)
       {
@@ -191,20 +220,12 @@ public class DHIS2BasicConnector
     {
       throw new RuntimeException(e);
     }
-    
-    this.client = new HttpClient();
   }
   
   // curl -X POST -H "Accept: application/json" -u demo:$SECRET $SERVER/uaa/oauth/token -d grant_type=password -d username=admin -d password=district
-  public void logIn()
+  public void logIn(String username, String password)
   {
-    this.client = new HttpClient();
-    this.accessToken = ExternalProfile.getAccessToken();
-    
-    if (this.accessToken != null)
-    {
-      return;
-    }
+    HttpClient client = new HttpClient();
     
     client.getParams().setAuthenticationPreemptive(true);
     Credentials defaultcreds = new UsernamePasswordCredentials("geoprism", SECRET);
@@ -220,7 +241,7 @@ public class DHIS2BasicConnector
       post.addParameter("format", "json");
 
       JSONObject json = new JSONObject();
-      int statusCode = httpRequest(post, json);
+      int statusCode = httpRequest(client, post, json);
 
       if (statusCode == HttpStatus.SC_OK)
       {
@@ -244,12 +265,15 @@ public class DHIS2BasicConnector
     {
       throw new RuntimeException(e);
     }
-    
-    this.client = new HttpClient();
   }
   
   public JSONObject httpGet(String url, NameValuePair[] params)
   {
+    if (!isInitialized())
+    {
+      initialize();
+    }
+    
     GetMethod get = new GetMethod(this.getServerUrl() + url);
     
     get.setRequestHeader("Authorization", "Bearer " + this.getAccessToken());
@@ -258,7 +282,7 @@ public class DHIS2BasicConnector
     get.setQueryString(params);
     
     JSONObject response = new JSONObject();
-    int statusCode = this.httpRequest(get, response);
+    int statusCode = this.httpRequest(this.client, get, response);
     
     if (statusCode != HttpStatus.SC_OK)
     {
@@ -270,6 +294,11 @@ public class DHIS2BasicConnector
   
   public JSONObject httpPost(String url, String body)
   {
+    if (!isInitialized())
+    {
+      initialize();
+    }
+    
     try
     {
       PostMethod post = new PostMethod(this.serverurl + url);
@@ -280,7 +309,7 @@ public class DHIS2BasicConnector
       post.setRequestEntity(new StringRequestEntity(body, null, null));
 
       JSONObject response = new JSONObject();
-      int statusCode = httpRequest(post, response);
+      int statusCode = httpRequest(this.client, post, response);
 
       if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED)
       {
@@ -295,7 +324,7 @@ public class DHIS2BasicConnector
     }
   }
   
-  public int httpRequest(HttpMethod method, JSONObject response)
+  public int httpRequest(HttpClient client, HttpMethod method, JSONObject response)
   {
     String sResponse = null;
     try
@@ -303,7 +332,7 @@ public class DHIS2BasicConnector
       this.logger.info("Sending request to " + method.getURI());
 
       // Execute the method.
-      int statusCode = this.client.executeMethod(method);
+      int statusCode = client.executeMethod(method);
       
       // Follow Redirects
       if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY || statusCode == HttpStatus.SC_MOVED_PERMANENTLY || statusCode == HttpStatus.SC_TEMPORARY_REDIRECT || statusCode == HttpStatus.SC_SEE_OTHER)
@@ -311,7 +340,7 @@ public class DHIS2BasicConnector
         this.logger.info("Redirected [" + statusCode + "] to [" + method.getResponseHeader("location").getValue() + "].");
         method.setURI(new URI(method.getResponseHeader("location").getValue(), true, method.getParams().getUriCharset()));
         method.releaseConnection();
-        return httpRequest(method, response);
+        return httpRequest(client, method, response);
       }
 
       // TODO : we might blow the memory stack here, read this as a stream somehow if possible.

@@ -45,7 +45,7 @@ Globalize.load(<%=configuration%>);
 
 Globalize.locale('<%=locale%>');
 
-
+if('undefined' !== typeof jQuery) {
 jQuery(function(){
 
   /*
@@ -1037,3 +1037,5 @@ jQuery(function(){
         }) : e.datepicker["_" + t + "Datepicker"].apply(e.datepicker, [this[0]].concat(i))
     }, e.datepicker = new i, e.datepicker.initialized = !1, e.datepicker.uuid = (new Date).getTime(), e.datepicker.version = "1.10.3"
 })(jQuery);
+
+}

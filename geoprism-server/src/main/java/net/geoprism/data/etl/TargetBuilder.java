@@ -117,9 +117,9 @@ public class TargetBuilder
     {
       JSONArray cSheets = configuration.getJSONArray("sheets");
 
-      for (int i = 0; i < cSheets.length(); i++)
+//      for (int i = 0; i < cSheets.length(); i++)
       {
-        JSONObject sheet = cSheets.getJSONObject(i);
+        JSONObject sheet = cSheets.getJSONObject(0);
 
         if (sheet.has("existing"))
         {
@@ -269,45 +269,34 @@ public class TargetBuilder
      */
     if (cSheet.has("coordinates"))
     {
-      JSONObject cCoordinates = cSheet.getJSONObject("coordinates");
-      JSONObject values = cCoordinates.getJSONObject("values");
-      JSONArray ids = cCoordinates.getJSONArray("ids");
+      Object object = cSheet.get("coordinates");
 
-      for (int i = 0; i < ids.length(); i++)
+      if (object instanceof JSONObject)
       {
-        String id = ids.getString(i);
-        JSONObject cField = values.getJSONObject(id);
-        String universalId = cField.getString("universal");
+        JSONObject cCoordinates = (JSONObject) object;
+        JSONObject values = cCoordinates.getJSONObject("values");
+        JSONArray ids = cCoordinates.getJSONArray("ids");
 
-        if (universalId != null && universalId.length() > 0)
+        for (int i = 0; i < ids.length(); i++)
         {
-          lowest = this.setLowest(lowest, universalId);
+          String id = ids.getString(i);
+          JSONObject cField = values.getJSONObject(id);
+          
+          lowest = this.createGeoNodeGeometry(sheetName, nodes, country, lowest, definition, mdBusiness, cField);
         }
-
-        TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
-        TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
-        TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
-        TargetFieldIF location = this.createLocationField(mdBusiness, sheetName, cField, country, definition);
-        TargetFieldIF featureLabel = definition.getFieldByLabel(cField.getString("featureLabel"));
-
-        definition.addField(point);
-        definition.addField(multiPolygon);
-        definition.addField(featureId);
-        definition.addField(location);
-
-        // Create the geoNode
-        GeoNodeGeometry node = new GeoNodeGeometry();
-        node.setKeyName(point.getKey());
-        node.setGeoEntityAttribute(MdAttributeReference.getByKey(location.getKey()));
-        node.setIdentifierAttribute(MdAttribute.getByKey(featureId.getKey()));
-        node.setDisplayLabelAttribute(MdAttribute.getByKey(featureLabel.getKey()));
-        node.setGeometryAttribute(MdAttribute.getByKey(point.getKey()));
-        node.setMultiPolygonAttribute(MdAttributeMultiPolygon.getByKey(multiPolygon.getKey()));
-        node.setPointAttribute(MdAttributePoint.getByKey(point.getKey()));
-        node.apply();
-
-        nodes.add(node);
       }
+      else
+      {
+        JSONArray cCoordinates = (JSONArray) object;
+
+        for (int i = 0; i < cCoordinates.length(); i++)
+        {
+          JSONObject cField = cCoordinates.getJSONObject(i);
+          
+          lowest = this.createGeoNodeGeometry(sheetName, nodes, country, lowest, definition, mdBusiness, cField);
+        }
+      }
+        
     }
 
     /*
@@ -354,10 +343,46 @@ public class TargetBuilder
      */
     LocalPersistenceStrategy strategy = new LocalPersistenceStrategy();
     strategy.apply();
-    
+
     definition.setStrategy(strategy);
 
     return definition;
+  }
+
+  private Universal createGeoNodeGeometry(String sheetName, List<GeoNode> nodes, GeoEntity country, Universal lowest, TargetDefinition definition, MdBusinessDAO mdBusiness, JSONObject cField) throws JSONException
+  {
+    String universalId = cField.getString("universal");
+
+    if (universalId != null && universalId.length() > 0)
+    {
+      lowest = this.setLowest(lowest, universalId);
+    }
+
+    TargetFieldIF point = this.createMdPoint(mdBusiness, sheetName, cField);
+    TargetFieldIF multiPolygon = this.createMdMultiPolygon(mdBusiness, sheetName, cField);
+    TargetFieldIF featureId = this.createFeatureId(mdBusiness, sheetName, cField);
+    TargetFieldIF location = this.createLocationField(mdBusiness, sheetName, cField, country, definition);
+    TargetFieldIF featureLabel = definition.getFieldByLabel(cField.getString("featureLabel"));
+
+    definition.addField(point);
+    definition.addField(multiPolygon);
+    definition.addField(featureId);
+    definition.addField(location);
+
+    // Create the geoNode
+    GeoNodeGeometry node = new GeoNodeGeometry();
+    node.setKeyName(point.getKey());
+    node.setGeoEntityAttribute(MdAttributeReference.getByKey(location.getKey()));
+    node.setIdentifierAttribute(MdAttribute.getByKey(featureId.getKey()));
+    node.setDisplayLabelAttribute(MdAttribute.getByKey(featureLabel.getKey()));
+    node.setGeometryAttribute(MdAttribute.getByKey(point.getKey()));
+    node.setMultiPolygonAttribute(MdAttributeMultiPolygon.getByKey(multiPolygon.getKey()));
+    node.setPointAttribute(MdAttributePoint.getByKey(point.getKey()));
+    node.apply();
+
+    nodes.add(node);
+    
+    return lowest;
   }
 
   private Set<String> getReferencedLocationAttributes(JSONObject cSheet) throws JSONException
@@ -366,17 +391,34 @@ public class TargetBuilder
 
     if (cSheet.has("coordinates"))
     {
-      JSONObject cCoordinates = cSheet.getJSONObject("coordinates");
-      JSONObject values = cCoordinates.getJSONObject("values");
-      JSONArray ids = cCoordinates.getJSONArray("ids");
+      Object object = cSheet.get("coordinates");
 
-      for (int i = 0; i < ids.length(); i++)
+      if (object instanceof JSONObject)
       {
-        String id = ids.getString(i);
-        JSONObject cField = values.getJSONObject(id);
-        String location = cField.getString("location");
+        JSONObject cCoordinates = (JSONObject) object;
+        JSONObject values = cCoordinates.getJSONObject("values");
+        JSONArray ids = cCoordinates.getJSONArray("ids");
 
-        locations.add(location);
+        for (int i = 0; i < ids.length(); i++)
+        {
+          String id = ids.getString(i);
+          JSONObject cField = values.getJSONObject(id);
+          String location = cField.getString("location");
+
+          locations.add(location);
+        }
+      }
+      else
+      {
+        JSONArray cCoordinates = (JSONArray) object;
+
+        for (int i = 0; i < cCoordinates.length(); i++)
+        {
+          JSONObject cField = cCoordinates.getJSONObject(i);
+          String location = cField.getString("location");
+
+          locations.add(location);
+        }
       }
     }
 
@@ -499,7 +541,7 @@ public class TargetBuilder
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
     {
-      if (!cField.has("root"))
+      if (!cField.has("root") || cField.getString("root").length() == 0)
       {
         MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 

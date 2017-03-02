@@ -37,6 +37,7 @@
     <db.name>geoprism</db.name>
     <db.user>geoprism</db.user>
     <db.port>5432</db.port>
+    <local.host>$${pageContext.request.contextPath}</local.host>
   </properties>
 
   <dependencies>
@@ -93,6 +94,13 @@
   </dependencies>
 
   <profiles>
+    <profile>
+      <id>ng2-dev</id>
+      <properties>
+        <local.host>http://localhost:8080</local.host>
+      </properties>
+    </profile>
+    
     <profile>
       <id>cargo-run</id>
       <activation>
@@ -239,6 +247,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.4</version>
         <configuration>
+          <warSourceExcludes>**/prism.jsp</warSourceExcludes>
           <packagingExcludes>
             <!-- Source/class project jars must be excluded for reloaded to work -->
             **/*geoprism-common*.jar,
@@ -343,6 +352,76 @@
               <followSymlinks>false</followSymlinks>
             </fileset>
           </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>exec-npm-install</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
+              <executable>npm</executable>
+              <arguments>
+                <argument>install</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>exec-typings-install</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
+              <executable>typings</executable>
+              <arguments>
+                <argument>install</argument>
+                <argument>lodash</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>exec-npm-run-tsc</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
+              <executable>npm</executable>
+              <arguments>
+                <argument>run</argument>
+                <argument>build</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>maven-replacer-plugin</artifactId>
+        <version>1.4.1</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <file>src/main/webapp/WEB-INF/net/geoprism/prism/prism.jsp</file>
+          <outputFile>target/geoprism/WEB-INF/net/geoprism/prism/prism.jsp</outputFile>
+          <regex>false</regex>
+          <token>$local.host$</token>
+          <value>${local.host}</value>
         </configuration>
       </plugin>
     </plugins>

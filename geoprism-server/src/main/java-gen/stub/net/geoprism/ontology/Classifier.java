@@ -62,7 +62,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 {
   private static final long   serialVersionUID = 1158111601;
 
-  private static final String KEY_CONCATENATOR = ".";
+  public static final String KEY_CONCATENATOR = ".";
 
   public Classifier()
   {
@@ -182,12 +182,10 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   /**
-   * Returns the <code>Classifier</code> object with a label or synonym that matches the given term. Searches all nodes
-   * that are children of the given attribute root nodes including the root nodes.
+   * Returns the root <code>Classifier</code> which is referenced by the given MdAttributeTerm.
    * 
-   * @param sfTermToMatch
-   * @param mdAttributeTermDAO
-   * @return the <code>Classifier</code> object with a label or synonym that matches the given term.
+   * @param mdAttributeTermDAOIF
+   * @return the <code>Classifier</code> object
    */
   public static Classifier findClassifierRoot(MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {
@@ -886,7 +884,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
         Classifier.validateCategoryName(label, null);
       }
 
-      if (object.has("parentId"))
+      if (object.has("parentId") && object.getString("parentId").length() > 0)
       {
         String parentId = object.getString("parentId");
 
