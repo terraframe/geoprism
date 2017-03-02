@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateAttributeException" label="DHIS2 Duplicate Attribute Exception" message="Attributes [{dhis2Attrs}] already exist in DHIS2 as a TrackedEntityAttribute. Delete your Geoprism dataset and reimport your spreadsheet with a different attribute name (or delete the attributes in DHIS2).">
+      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateAttributeException" label="DHIS2 Duplicate Attribute Exception" message="Attributes [{dhis2Attrs}] already exist in DHIS2 as a TrackedEntityAttribute. You can: rename your Geoprism attribute(s), or delete your Geoprism dataset and reimport your spreadsheet with a different attribute name, or delete the attribute(s) in DHIS2.">
         <attributes>
           <char name="dhis2Attrs" label="DHIS2 Duplicate Attributes" required="true" size="350"/>
         </attributes>
