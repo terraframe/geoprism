@@ -70,6 +70,7 @@ public class DHIS2DataImporter
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
     options.addOption(Option.builder("url").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
+    options.addOption(Option.builder("externalUrl").hasArg().argName("externalUrl").longOpt("externalUrl").desc("External URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
@@ -78,6 +79,7 @@ public class DHIS2DataImporter
       CommandLine line = parser.parse( options, args );
       
       String url = line.getOptionValue("url");
+      String externalUrl = line.getOptionValue("externalUrl");
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
       String appcfgPath = line.getOptionValue("appcfgPath");
@@ -86,13 +88,17 @@ public class DHIS2DataImporter
       {
         url = "http://127.0.0.1:8085/";
       }
+      if (externalUrl == null)
+      {
+        externalUrl = url;
+      }
       if (appcfgPath != null)
       {
         GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
         resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      new DHIS2DataImporter(url, username, password).importAll();
+      new DHIS2DataImporter(url, externalUrl, username, password).importAll();
     }
     catch (ParseException e)
     {
@@ -100,13 +106,14 @@ public class DHIS2DataImporter
     }
   }
   
-  public DHIS2DataImporter(String url, String username, String password)
+  public DHIS2DataImporter(String url, String externalUrl, String username, String password)
   {
     this.geometryFactory = new GeometryFactory();
     this.geometryHelper = new GeometryHelper();
     
     dhis2 = new DHIS2HTTPConnector();
     dhis2.setServerUrl(url);
+    dhis2.setServerExternalUrl(externalUrl);
     dhis2.setCredentials(username, password);
   }
 

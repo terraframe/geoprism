@@ -57,6 +57,8 @@ public class DHIS2HTTPConnector
   
   private String serverurl;
   
+  private String externalUrl;
+  
   public static final String CLIENT_ID = "geoprism";
   
   public static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6";
@@ -87,6 +89,11 @@ public class DHIS2HTTPConnector
   public void setServerUrl(String url)
   {
     this.serverurl = url;
+  }
+  
+  public void setServerExternalUrl(String url)
+  {
+    this.externalUrl = url;
   }
   
   public void setCredentials(String username, String password)
@@ -141,9 +148,9 @@ public class DHIS2HTTPConnector
       OauthServer oauth = new OauthServer();
       oauth.setKeyName("dhis2-local");
       oauth.getDisplayLabel().setValue("DHIS2");
-      oauth.setAuthorizationLocation("http://127.0.0.1:8085/uaa/oauth/authorize");
-      oauth.setTokenLocation("http://127.0.0.1:8085/uaa/oauth/token");
-      oauth.setProfileLocation("http://127.0.0.1:8085/api/me");
+      oauth.setAuthorizationLocation(externalUrl + "/uaa/oauth/authorize");
+      oauth.setTokenLocation(externalUrl + "/uaa/oauth/token");
+      oauth.setProfileLocation(externalUrl + "/api/me");
       oauth.setClientId(DHIS2HTTPConnector.CLIENT_ID);
       oauth.setSecretKey(DHIS2HTTPConnector.SECRET);
       oauth.setServerType("DHIS2");
