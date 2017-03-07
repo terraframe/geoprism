@@ -22,21 +22,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
-
-import net.geoprism.dashboard.AttributeWrapper;
-import net.geoprism.dashboard.AttributeWrapperQuery;
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.DashboardAttributes;
-import net.geoprism.dashboard.DashboardMetadata;
-import net.geoprism.dashboard.MetadataWrapper;
-import net.geoprism.dashboard.MetadataWrapperQuery;
-import net.geoprism.data.DatabaseUtil;
-import net.geoprism.data.etl.TargetBinding;
-import net.geoprism.ontology.Classifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +59,19 @@ import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdClass;
+
+import net.geoprism.dashboard.AttributeWrapper;
+import net.geoprism.dashboard.AttributeWrapperQuery;
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardAttributes;
+import net.geoprism.dashboard.DashboardMetadata;
+import net.geoprism.dashboard.MetadataWrapper;
+import net.geoprism.dashboard.MetadataWrapperQuery;
+import net.geoprism.data.DatabaseUtil;
+import net.geoprism.data.GeoprismDatasetExporterIF;
+import net.geoprism.data.GeoprismDatasetExporterService;
+import net.geoprism.data.etl.TargetBinding;
+import net.geoprism.ontology.Classifier;
 
 public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -106,6 +109,26 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     return super.buildKey();
+  }
+  
+  /**
+   * MdMethod
+   * 
+   * Exports the dataset to all available exporters. (currently only DHIS2, if the DHIS2 exporter plugin is included)
+   */
+  @Override
+  public void xport()
+  {
+    MdClass mdClass = this.getWrappedMdClass();
+    
+    Iterator<GeoprismDatasetExporterIF> it = GeoprismDatasetExporterService.getAllExporters();
+    
+    while (it.hasNext())
+    {
+      GeoprismDatasetExporterIF exporter = it.next();
+      
+      exporter.xport(mdClass);
+    }
   }
 
   @Override
@@ -739,6 +762,10 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     try
     {
+      JSONObject jObject = new JSONObject();
+      
+      jObject.put("canExport", GeoprismDatasetExporterService.getAllExporters().hasNext());
+      
       JSONArray array = new JSONArray();
 
       MappableClass[] mClasses = MappableClass.getAll();
@@ -747,8 +774,10 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       {
         array.put(mClass.toJSON());
       }
+      
+      jObject.put("datasets", array);
 
-      return array.toString();
+      return jObject.toString();
     }
     catch (JSONException e)
     {
