@@ -272,25 +272,32 @@
           return allVectorLayers;
         },
         
-        _addVectorLayer : function(config, layerName, styleObj, type, stackingIndex, is3d) {
+        _addVectorLayer : function(source, layers) {
           var map = this.getMap();
           var that = this;
           
           var protocol= window.location.protocol;
           var host = window.location.host;
+          
+          // add a null source which stores the data
+          map.addSource(source.name, { 
+            type: 'vector',
+            tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
+          });
+                
+          for(var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
             
-               // add a null source which stores the data
-                map.addSource(layerName, { 
-                  type: 'vector',
-                  tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(config))]
-                });
-              
+            var layerName = layer.name;
+            var styleObj = layer.style;
+            
                 if (layerName.indexOf("point") !== -1){
+                  
                   // add the main layer
                    map.addLayer({
                      "id": layerName,
-                     "source": layerName,
-                     "source-layer": "target",                     
+                     "source": source.name,
+                     "source-layer": layer.layer,                     
                      "type": "circle",
                      "paint": {
                          "circle-radius": styleObj.radius,
@@ -303,8 +310,8 @@
                    // add labels
                    map.addLayer({
                      "id": layerName + "-label",
-                     "source": layerName,
-                     "source-layer": "target",
+                     "source": source.name,
+                     "source-layer": layer.layer,                     
                      "type": "symbol",
                      "paint": {
                          "text-color": "black",
@@ -322,9 +329,9 @@
                    
                    // This layer is displayed when they hover over the feature
                    map.addLayer({
-                       "id": layerName + "-hover",
-                       "source": layerName,
-                     "source-layer": "target",                       
+                     "id": layerName + "-hover",
+                     "source": source.name,
+                     "source-layer": layer.layer,                     
                      "type": "circle",
                      "paint": {
                          "circle-radius": styleObj.radius,
@@ -336,12 +343,12 @@
                 }
                 else if (layerName.indexOf("multipolygon") !== -1){
                   
-                  if(is3d){
+                  if(layer.is3d){
                   
                     var polygons3DStyle = {
-                   "id": layerName,
-                     "source": layerName,
-                     "source-layer": "target",      
+                     "id": layerName,
+                     "source": source.name,
+                     "source-layer": layer.layer,                     
                      "type": "fill-extrusion",
                      "paint": {
 //                       'fill-extrusion-color': styleObj.fill,
@@ -373,8 +380,8 @@
                     // This layer is displayed when they hover over the feature
                    map.addLayer({
                      "id": layerName + "-hover",
-                     "source": layerName,
-                     "source-layer": "target", 
+                     "source": source.name,
+                     "source-layer": layer.layer,                     
                      "type": "fill-extrusion",
                      "paint": {
                        "fill-extrusion-color": that.getHoverPolygonStyle().fill,
@@ -393,11 +400,11 @@
                   }
                   else{
                     var polygonSimpleStyle = {
-                     "id": layerName,
-                       "source": layerName,
-                     "source-layer": "target",
-                       "type": "fill",
-                       "paint": {
+                      "id": layerName,
+                      "source": source.name,
+                      "source-layer": layer.layer,                     
+                      "type": "fill",
+                      "paint": {
                            "fill-color": styleObj.fill,
                            "fill-outline-color": "black"
                            //"fill-stroke-width": 5,
@@ -410,8 +417,8 @@
                   // This layer is displayed when they hover over the feature
                    map.addLayer({
                      "id": layerName + "-hover",
-                     "source": layerName,
-                     "source-layer": "target",
+                     "source": source.name,
+                     "source-layer": layer.layer,                     
                      "type": "fill",
                      "paint": {
                        "fill-color": that.getHoverPolygonStyle().fill,
@@ -425,11 +432,11 @@
                       
                     // add labels
                     map.addLayer({
-                     "id": layerName + "-label",
-                       "source": layerName,
-                     "source-layer": "target",
-                       "type": "symbol",
-                       "paint": {
+                      "id": layerName + "-label",
+                      "source": source.name,
+                      "source-layer": layer.layer,                     
+                      "type": "symbol",
+                      "paint": {
                            "text-color": "black",
                            "text-halo-color": "#fff",
                               "text-halo-width": 2
@@ -463,47 +470,49 @@
 //                  }
 //                }
 //                that._areLayersLoaded = true;
+            
+          }
                 
-            // Won't do anything unless layers are populate with data containing features
-            map.on("source.load", function(e){
-              if(e.source.id === layerName){
-                that.zoomToLayersExtent([layerName])
-              }
-            });                       
+          // Won't do anything unless layers are populate with data containing features
+          map.on("source.load", function(e){
+            if(e.source.id === layerName){
+              that.zoomToLayersExtent([layerName])
+            }
+          });
         },
           
-        addVectorLayer : function(config, layerName, styleObj, type, stackingIndex, is3d) {
+        addVectorLayer : function(source, layers) {
           var map = this.getMap();
           var that = this;
           
           if(map.loaded()) {
-            this._addVectorLayer(config, layerName, styleObj, type, stackingIndex, is3d);        	  
+            this._addVectorLayer(source, layers);            
           }
           else {
             map.on('load', function () {
-              that._addVectorLayer(config, layerName, styleObj, type, stackingIndex, is3d);              
-            });        	  
+              that._addVectorLayer(source, layers);              
+            });            
           }
         },        
         
-        updateVectorLayer : function(config, layerName, styleObj, type, stackingIndex, skipMapLoadedCheck) {
+        updateVectorLayer : function(source, layers) {
           var map = this.getMap();
           var that = this;
 
-          var source = map.getSource(layerName);
+          var mSource = map.getSource(source.name);
           
-          if(source) {
-        	  var protocol= window.location.protocol;
-        	  var host = window.location.host;
-        	  
-              map.removeSource(layerName);
-              map.addSource(layerName, { 
-                type: 'vector', 
-                tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(config))]
-              });
+          if(mSource) {
+            var protocol= window.location.protocol;
+            var host = window.location.host;
+            
+            map.removeSource(source.name);
+            map.addSource(source.name, { 
+              type: 'vector', 
+              tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
+            });
           }
           else {
-              this.addVectorLayer(config, layerName, styleObj, type, stackingIndex);
+            this.addVectorLayer(source, layers);
           }
 //            map.on('load', function () {
 //              map.removeSource(layerName);

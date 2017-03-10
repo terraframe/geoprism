@@ -62,8 +62,8 @@
 		//
 		// NOTE: We can't move this code into the map factory because it requires the event listeners which reference the scope.
 		//
-		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
-		
+//		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
+//		
 //		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2, false);
 //		controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2, false);
 //    
@@ -123,12 +123,8 @@
 		 webGLMapService.focusOffFeature(feature);
 	 }
 	  
-	 controller.addVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex, is3d) {
-		 webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex, is3d);
-	 }
-	 
-	 controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
-		 webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
+	 controller.updateVectorLayer = function(source, layers) {
+		 webGLMapService.updateVectorLayer(source, layers);
 	 }
 	 
 	  
@@ -184,12 +180,25 @@
 	 
 	 
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
+        var source = $scope.sharedGeoData[0];
+          
+        var layers = [{
+          name: "target-multipolygon",
+          style: $scope.targetStyle,
+          layer: "target",
+          type: "TARGET",
+          index: 2,
+          is3d: false            
+        }];
+          
+        controller.updateVectorLayer(source, layers);
+		 
         var layers = $scope.sharedGeoData;
 
         for (var i = 0; i < layers.length; i++) {
           var layer = layers[i];
           
-          controller.updateVectorLayer(layer.config, layer.name, $scope.targetStyle, "TARGET", 2);
+          controller.updateVectorLayer(source, layers);
         }
      
 //		  if(!isEmptyJSONObject($scope.sharedGeoData)){
