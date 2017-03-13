@@ -178,6 +178,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
     sql.append("JOIN located_in AS li ON li.child_id = ge.id\n");
     sql.append("WHERE li.parent_id = '" + entityId + "'\n");
+    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");    
 
     if (this.universalId != null && this.universalId.length() > 0)
     {

@@ -160,6 +160,7 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
     sql.append("WHERE ge.id = '" + entityId + "'\n");
+    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");    
 
     return Database.query(sql.toString());
   }

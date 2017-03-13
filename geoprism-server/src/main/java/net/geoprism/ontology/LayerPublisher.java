@@ -341,10 +341,15 @@ public abstract class LayerPublisher
         data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
 
-        Geometry geometry = ( (JtsGeometry) resultSet.getObject(GeoserverFacade.GEOM_COLUMN) ).getGeometry();
-        geometry.setUserData(data);
+        JtsGeometry geom = (JtsGeometry) resultSet.getObject(GeoserverFacade.GEOM_COLUMN);
 
-        geometries.add(geometry);
+        if (geom != null)
+        {
+          Geometry geometry = geom.getGeometry();
+          geometry.setUserData(data);
+
+          geometries.add(geometry);
+        }
       }
 
       GeometryFactory geomFactory = new GeometryFactory();
