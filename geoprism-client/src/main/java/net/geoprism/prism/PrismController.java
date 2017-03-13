@@ -18,7 +18,6 @@
  */
 package net.geoprism.prism;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,7 +49,7 @@ public class PrismController implements Reloadable
   {
     String datasets = MappableClassDTO.getAllAsJSON(request);
 
-    return new RestBodyResponse(new JSONArray(datasets));
+    return new RestBodyResponse(new JSONObject(datasets));
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
@@ -67,6 +66,14 @@ public class PrismController implements Reloadable
     MappableClassDTO mappableClass = MappableClassDTO.lock(request, id);
 
     return new RestBodyResponse(new JSONObject(mappableClass.getAsJSON()));
+  }
+  
+  @Endpoint(url = "xport-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF xport(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    MappableClassDTO.xport(request, id);
+
+    return new RestResponse();
   }
 
   @Endpoint(url = "unlock-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)

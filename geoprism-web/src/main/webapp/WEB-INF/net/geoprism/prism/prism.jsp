@@ -39,16 +39,15 @@
     
   <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>  
   
-  <!-- IE required polyfills, in this exact order -->
-  <jwr:script src="/bundles/prism.js" useRandomParam="false"/>
-
-  <script>
-    window.acp = "<%=request.getContextPath()%>";
   
-    System.import(acp + '/system-config.js').then(function () {
-        System.import('main');
-      }).catch(console.error.bind(console));
+  <script>
+    window.acp = "<%=request.getContextPath()%>";  
   </script>
+  
+  <!-- IE required polyfills, in this exact order -->
+  <script type="text/javascript" src="$local.host$/dist/polyfills.js"></script>  
+  <script type="text/javascript" src="$local.host$/dist/vendor.js"></script>  
+
 </head>
 
 <body>
@@ -77,6 +76,9 @@
       </div>
     </div>  
   </my-app>
+  <script type="text/javascript" src="$local.host$/dist/app.js"></script>  
+  
+  
 </body>
 
 </html>

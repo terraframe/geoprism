@@ -1,0 +1,33 @@
+<div id="app-container" class="container">
+
+  <message ></message>  
+
+  <h2> <localize key="category.management.title"></localize> </h2>
+  
+  <div class="list-table-wrapper">
+    <table id="manage-categories-table" class="list-table table table-bordered table-striped">        
+      <tbody>
+        <tr *ngFor="let category of categories" class="fade-ngRepeat-item">
+          <td class="button-column">
+            <a class="fa fa-tasks ico-edit" (click)="edit(category)" [title]="'category.management.editTooltip' | localize"></a>                             
+            <a class="fa fa-trash-o ico-remove" [title]="'category.management.removeTooltip' | localize"
+              confirm-modal 
+              [message]="'category.management.removeCategoryConfirm' | localize"
+              (onConfirm)="remove(category)"></a>                                   
+          </td>
+          <td class="label-column"> {{category.label}} </td>
+        </tr>
+        <tr>
+          <td class="button-column">
+            <a class="fa fa-plus" *ngIf="!instance.active" (click)="newInstance()" [title]="'category.management.createCategoryOptionTooltip' | localize"></a>
+          </td>                 
+          <td class="submit-form" *ngIf="instance.active">
+            <form #form="ngForm" novalidate (ngSubmit)="form.valid && create()">
+              <input class="list-table-input" type="text" [(ngModel)]="instance.label" name="descendant-label" (keyup.esc)="cancel()" required />
+            </form>                                
+          </td>                
+        </tr>        
+      </tbody>    
+    </table>
+   </div>  
+</div>

@@ -175,8 +175,8 @@
       webGLMapService.addVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
     }
 
-    controller.updateVectorLayer = function(layerGeoJSON, layerName, styleObj, type, stackingIndex) {
-      webGLMapService.updateVectorLayer(layerGeoJSON, layerName, styleObj, type, stackingIndex);
+    controller.updateVectorLayer = function(source, layers) {
+      webGLMapService.updateVectorLayer(source, layers);
     }
 
     controller.startEditingFeatures = function(featureIds) {
@@ -347,13 +347,25 @@
 
     controller.refreshInteractiveLayers = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var layers = $scope.sharedGeoData;
-
-        for (var i = 0; i < layers.length; i++) {
-          var layer = layers[i];
+        var source = $scope.sharedGeoData[0];
           
-          controller.updateVectorLayer(layer.config, layer.name, $scope.targetStyle, "TARGET", 2);
-        }
+        var layers = [{
+          name: "context-multipolygon",
+          style: $scope.contextStyle,
+          layer: "context",
+          type: "CONTEXT",
+          index: 1,
+          is3d: false          
+        },{
+          name: "target-multipolygon",
+          style: $scope.targetStyle,
+          layer: "target",
+          type: "TARGET",
+          index: 2,
+          is3d: false            
+        }];
+          
+        controller.updateVectorLayer(source, layers);
         
 
 //        var targetCallback = function(data) {
@@ -377,13 +389,25 @@
 
     controller.refreshWithContextLayer = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var layers = $scope.sharedGeoData;
-
-        for (var i = 0; i < layers.length; i++) {
-          var layer = layers[i];
+        var source = $scope.sharedGeoData[0];
           
-          controller.updateVectorLayer(layer.config, layer.name, $scope.targetStyle, "TARGET", 2);
-        }
+        var layers = [{
+          name: "context-multipolygon",
+          style: $scope.contextStyle,
+          layer: "context",
+          type: "CONTEXT",
+          index: 1,
+          is3d: false          
+        },{
+          name: "target-multipolygon",
+          style: $scope.targetStyle,
+          layer: "target",
+          type: "TARGET",
+          index: 2,
+          is3d: false            
+        }];
+          
+        controller.updateVectorLayer(source, layers);
 //        controller.zoomToLayersExtent([ "target-multipolygon" ]);
 
 //        for (var i = 0; i < data.geometries.length; i++) {

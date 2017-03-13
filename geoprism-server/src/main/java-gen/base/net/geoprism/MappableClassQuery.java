@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -261175537)
+@com.runwaysdk.business.ClassSignature(hash = 1784828664)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN

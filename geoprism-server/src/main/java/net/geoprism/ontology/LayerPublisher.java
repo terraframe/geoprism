@@ -376,6 +376,5 @@ public abstract class LayerPublisher
     {
       throw new ProgrammingErrorException(e);
     }
-
   }
 }
