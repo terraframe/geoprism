@@ -149,7 +149,7 @@ public class LocationController implements Reloadable
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF applyGeometries(ClientRequestIF request, @RequestParamter(name = "featureCollection") String featureCollection)
   {
-    // GeoEntityUtilDTO.applyGeometries(request, featureCollection);
+     GeoEntityUtilDTO.applyGeometries(request, featureCollection);
 
     return new RestBodyResponse("");
   }

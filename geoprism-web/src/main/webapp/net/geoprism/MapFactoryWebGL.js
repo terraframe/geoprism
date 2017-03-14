@@ -698,23 +698,23 @@
         },
         
         selectFeature : function(feature) {
-          var map = this.getMap();
-          
-          if(feature.layer.type === "fill"){
-            map.setFilter(feature.layer.source + "-select", ["==", "id", feature.properties.id]);
-          }
+//          var map = this.getMap();
+//          
+//          if(feature.layer.type === "fill"){
+//            map.setFilter(feature.layer.source + "-select", ["==", "id", feature.properties.id]);
+//          }
         },
         
         unselectFeature : function(feature) {
-          var map = this.getMap();
-          
-          if (feature == null)
-          {
-            map.setFilter("target-multipolygon-select", ["==", "id", ""]);
-          }
-          else if(feature.layer.type === "fill"){
-            map.setFilter(feature.layer.source + "-select", ["==", "id", ""]);
-          }
+//          var map = this.getMap();
+//          
+//          if (feature == null)
+//          {
+//            map.setFilter("target-multipolygon-select", ["==", "id", ""]);
+//          }
+//          else if(feature.layer.type === "fill"){
+//            map.setFilter(feature.layer.source + "-select", ["==", "id", ""]);
+//          }
         },
         
         getVectorLayersByTypeProp : function(type) {
