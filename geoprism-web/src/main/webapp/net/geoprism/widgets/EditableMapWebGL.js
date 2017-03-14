@@ -192,7 +192,8 @@
         filter = [ '==', 'id', featureIds ];
       }
       var features = map.querySourceFeatures("target-multipolygon", {
-        filter : filter
+        filter : filter,
+        sourceLayer: "target"
       });
       
       try
