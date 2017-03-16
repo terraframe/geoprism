@@ -178,19 +178,39 @@
     controller.updateVectorLayer = function(source, layers) {
       webGLMapService.updateVectorLayer(source, layers);
     }
+    
+    // The first thing that happens when they click the edit button. We need to get proper geometries (not simplified) and lock all the GeoEntities
+    controller.openEditingSession = function() {
+      if (controller._isEditing) { controller.cancelEditing(); return; }
+      
+      var config = $scope.sharedGeoData[0].config;
+      config.x = 0;
+      config.y = 0;
+      config.z = 0;
+      
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(geom) {
+          controller.startEditingFeatures(geom);
+        },
+        onFailure : function(error) {
+          // TODO : Proper error handling
+        }
+      };
+      locationService.openEditingSession(connection, config);
+    }
 
-    controller.startEditingFeatures = function(featureIds) {
+    controller.startEditingFeatures = function(geometries) {
       var map = controller.getWebGLMap();
       
-      controller.cancelEditing();
       this.unselectFeature(null);
       
       // Add features to editing control
       var filter = [ "!=", "id", "" ];
-      if (featureIds != null)
-      {
-        filter = [ '==', 'id', featureIds ];
-      }
+//      if (featureIds != null)
+//      {
+//        filter = [ '==', 'id', featureIds ];
+//      }
       var features = map.querySourceFeatures("target-multipolygon", {
         filter : filter,
         sourceLayer: "target"
@@ -203,67 +223,72 @@
         //var features = map.queryRenderedFeatures({layers : ["target-multipolygon"], filter : filter});
         
         
-        // Function to union features that may have fragmented polygons in the features array
-        var unionFeatures = function(features, target, index){
-    	   	var unionedFeature;
-        	
-        	for(var f=0; f<features.length; f++){
-        		var nextFt = features[f];
-        		var nextFtId = nextFt.properties.geoId;
-        		if(f > index && target.properties.geoId === nextFtId){
-        			if(unionedFeature){
-        				unionedFeature = turf.union(unionedFeature, nextFt);
-        			}
-        			else{
-        				unionedFeature = turf.union(ft, nextFt);
-        			}
-        		}
-        	}
-        	
-        	return unionedFeature;
-        }
+//        // Function to union features that may have fragmented polygons in the features array
+//        var unionFeatures = function(features, target, index){
+//    	   	var unionedFeature;
+//        	
+//        	for(var f=0; f<features.length; f++){
+//        		var nextFt = features[f];
+//        		var nextFtId = nextFt.properties.geoId;
+//        		if(f > index && target.properties.geoId === nextFtId){
+//        			if(unionedFeature){
+//        				unionedFeature = turf.union(unionedFeature, nextFt);
+//        			}
+//        			else{
+//        				unionedFeature = turf.union(ft, nextFt);
+//        			}
+//        		}
+//        	}
+//        	
+//        	return unionedFeature;
+//        }
+//        
+//        
+//        var containsFeature = function(unionedFeatures, featureId){
+//          for(var i=0; i<unionedFeatures.length; i++){
+//            var ft = unionedFeatures[i];
+//            if(ft.properties.geoId === featureId){
+//              return true;
+//            }
+//          };
+//          
+//          return false;
+//        }
+//        
+//        
+//        //
+//        // Polygons returned from map.querySourceFeatures() are fragmented.  After talking with a mapbox
+//        // employee the fix (i.e. hack) was to union all geometries that are fragmented.. This bit of scrappy 
+//        // code does that although I'm hoping this will be replaced by better mapboxgl responses in future versions.
+//        //
+//        var unionedFeatures = [];
+//        for(var i=0; i<features.length; i++){
+//          var ft = features[i];
+//          var ftId = ft.properties.geoId;
+//          
+//          if(!containsFeature(unionedFeatures, ftId)){
+//            var unionedFeature = unionFeatures(features, ft, i);
+//            if(unionedFeature){
+//              unionedFeatures.push(unionedFeature);
+//            }
+//            else{
+//              unionedFeatures.push(ft)
+//            }
+//          }
+//        };
+//        //
+//        // end of polygon fragmentation fix
+//        //
+//        
+//        
+//        for (var i = 0; i < unionedFeatures.length; ++i) {
+//          this._editingControl.add(unionedFeatures[i]);
+//        }
         
+        // The draw plugin has a bug in it that throws a warning 'crs is deprecated' as an error.
+        geometries.crs = undefined;
         
-        var containsFeature = function(unionedFeatures, featureId){
-          for(var i=0; i<unionedFeatures.length; i++){
-            var ft = unionedFeatures[i];
-            if(ft.properties.geoId === featureId){
-              return true;
-            }
-          };
-          
-          return false;
-        }
-        
-        
-        //
-        // Polygons returned from map.querySourceFeatures() are fragmented.  After talking with a mapbox
-        // employee the fix (i.e. hack) was to union all geometries that are fragmented.. This bit of scrappy 
-        // code does that although I'm hoping this will be replaced by better mapboxgl responses in future versions.
-        //
-        var unionedFeatures = [];
-        for(var i=0; i<features.length; i++){
-        var ft = features[i];
-        var ftId = ft.properties.geoId;
-        
-        if(!containsFeature(unionedFeatures, ftId)){
-          var unionedFeature = unionFeatures(features, ft, i);
-          if(unionedFeature){
-            unionedFeatures.push(unionedFeature);
-          }
-          else{
-            unionedFeatures.push(ft)
-          }
-        }
-        };
-        //
-        // end of polygon fragmentation fix
-        //
-        
-        
-        for (var i = 0; i < unionedFeatures.length; ++i) {
-          this._editingControl.add(unionedFeatures[i]);
-        }
+        this._editingControl.add(geometries);
       }
       catch(e)
       {
@@ -276,14 +301,14 @@
       $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
       
       // Show/hide relevant/irrelevant target features
-      if (featureIds != null)
-      {
-        map.setFilter("target-multipolygon", [ "!=", "id", featureIds ]);
-      }
-      else
-      {
+//      if (featureIds != null)
+//      {
+//        map.setFilter("target-multipolygon", [ "!=", "id", featureIds ]);
+//      }
+//      else
+//      {
         map.setFilter("target-multipolygon", [ "==", "id", "" ]);
-      }
+//      }
       
       controller._isEditing = true;
     }
@@ -291,15 +316,27 @@
     controller.cancelEditing = function() {
       if (!controller._isEditing) { return; }
       
-      var map = controller.getWebGLMap();
+      var config = $scope.sharedGeoData[0].config;
       
-      controller._geoprismEditingControl.stopEditing();
-      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function() {
+          var map = controller.getWebGLMap();
+          
+          controller._geoprismEditingControl.stopEditing();
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 
-      map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
-      this._editingControl.deleteAll();
-      
-      controller._isEditing = false;
+          map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
+          controller._editingControl.deleteAll();
+          
+          controller._isEditing = false;
+        },
+        onFailure : function(error) {
+          // TODO : Proper error handling
+          console.log(error);
+        }
+      };
+      locationService.cancelEditingSession(connection, config);
     }
     
     controller.saveEditing = function() {
@@ -327,6 +364,7 @@
         },
         onFailure : function(error) {
           // TODO : Proper error handling
+          console.log(error);
         }
       };
       locationService.applyGeometries(connection, featureCollection);
@@ -487,7 +525,7 @@
     });
 
     $scope.$on('editLocation', function(event, data) {
-      controller.startEditingFeatures(data.id);
+      controller.openEditingSession(data.id);
     });
     
     $scope.$on('cancelEditLocation', function(event, data) {
@@ -564,7 +602,7 @@
         this._bEdit.css("color", "black");
         this._bEdit.css("font-size", "18px");
         this._bEdit.click(function() {
-          that._controller.startEditingFeatures(null);
+          that._controller.openEditingSession(null);
         });
         this._container.append(this._bEdit);
         
