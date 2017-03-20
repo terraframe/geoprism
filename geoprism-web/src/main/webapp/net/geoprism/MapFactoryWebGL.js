@@ -860,9 +860,7 @@
           var originalCursor = map.getCanvas().style.cursor;
           
           //TODO: Do we need to wrap this in 'load' event or should we use a different event
-          console.log("onLoad");
           map.on('load', function () {
-            console.log("Adding mousemove listener");
             map.on('mousemove', that.throttle(function(e) {
               var features = map.queryRenderedFeatures(e.point, { layers: [ layerz ] });
                 
