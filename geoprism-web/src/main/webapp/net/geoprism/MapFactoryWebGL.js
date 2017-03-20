@@ -166,7 +166,7 @@
           
           this.editFeatureStyle = {fill:"rgba(255, 0, 0, 1)", stroke:"rgba(255, 0, 0, 1)", strokeWidth:3, radius:10 };
           
-          this.LAYERS_LIST = ["target-point", "context-point", "target-multipolygon", "context-multipolygon"];
+          this.LAYERS_LIST = ["target-multipolygon", "context-multipolygon"];
           
           this.renderMap();
         },
@@ -514,85 +514,6 @@
           else {
             this.addVectorLayer(source, layers);
           }
-//            map.on('load', function () {
-//              map.removeSource(layerName);
-//              map.addSource(layerName, { 
-//                type: 'geojson', 
-//                data: com.runwaysdk.__applicationContextPath + '/location/data?config=' + encodeURIComponent(JSON.stringify(config))
-//              });
-//            });            
-          
-//            if (that._areLayersLoaded == null && skipMapLoadedCheck == null && !map.loaded())
-//            {
-//            if (this._updateVectorLayersAfterLoading == null)
-//              {
-//              this._updateVectorLayersAfterLoading = [];
-//              }
-//            
-//            this._updateVectorLayersAfterLoading.push(function(){
-//                that.updateVectorLayer(layerAsGeoJSON, layerName, styleObj, type, stackingIndex, true);
-//              });
-//            
-//            return;
-//            }
-//          map.on('load', function () {
-//            var targetLayer = map.getLayer(layerName);
-//            
-//          var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
-//  
-//            if(targetLayer && targetLayer.id === "target-multipolygon"){
-//              
-//              var otherSourceName = "target-point";
-//              var otherSource = map.getSource(otherSourceName);
-//              if(otherSource && otherSource._data){
-//                otherSource.setData(emptyGeoJSON)
-//              }
-//              
-//              var layerSourceName = targetLayer.source;
-//              
-//              //
-//              // TODO: Remove this complete hack.  It was needed because the map renders only 1 feature on initial search.
-//              //
-////              var numFeaturesToAdd = layerAsGeoJSON.features.length;
-////              var attempts = 2;
-////              var i = 1;
-////              while(i<=attempts){
-////                
-////                map.getSource(layerSourceName).setData(layerAsGeoJSON);
-////                
-////                var numFeaturesAdded = map.getSource(layerSourceName)._data.features.length;
-////                if(i === attempts){
-////                  setTimeout(function(){
-////                    map.getSource(layerSourceName).setData(layerAsGeoJSON);
-////                  }, 4000);
-////                  
-////                  break;
-////                }
-////                
-////                i++;
-////              } 
-//            }
-//            else if(targetLayer && targetLayer.id === "target-point"){
-//              
-//              var otherSourceName = "target-multipolygon";
-//              var otherSource = map.getSource(otherSourceName);
-//              if(otherSource && otherSource._data){
-//                otherSource.setData(emptyGeoJSON)
-//              }
-//              
-//              var layerSourceName = targetLayer.source;
-//              map.getSource(layerSourceName).setData(layerAsGeoJSON);
-//            }
-//        
-//  //        if (targetLayer) {
-//  //              var layerSourceName = targetLayer.source;
-//  //              map.getSource(layerSourceName).setData(layerAsGeoJSON);
-//  //        }
-//        
-//          map.once('data', function () {
-//            map.fire("data.updated", true);
-//          });
-//          });
         },
         
         
@@ -640,7 +561,7 @@
                             map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
                             }
                           else if(targetFeature.geometry.type.toLowerCase() === "point"){
-                            map.setFilter("target-point-hover", ["==", "id", ""]);
+//                            map.setFilter("target-point-hover", ["==", "id", ""]);
                             }
                         }
                       }
@@ -685,7 +606,7 @@
                             map.setFilter("target-multipolygon-hover", ["==", "id", targetFeature.properties.id]);
                             }
                             else if(targetFeature.geometry.type.toLowerCase() === "point"){
-                            map.setFilter("target-point-hover", ["==", "id", targetFeature.properties.id]);
+//                            map.setFilter("target-point-hover", ["==", "id", targetFeature.properties.id]);
                             }
                         }
                               selectedFeatures.push(targetFeature);
@@ -885,13 +806,18 @@
         },
         
         
-        addVectorClickEvents : function(featureClickCallback, layersArr) {
+        addVectorClickEvents : function(featureClickCallback, layerz)
+        {
+          this._clicks = this._clicks || {};
+          if (this._clicks.hasOwnProperty(layerz)) { return; }
+          this._clicks[layerz] = true;
+          
           var map = this.getMap();
           var that = this;
           
           map.on('click', function(e) {
           
-            var features = map.queryRenderedFeatures(e.point, { layers: that.LAYERS_LIST });
+            var features = map.queryRenderedFeatures(e.point, { layers: [layerz] });
             
             if(features.length){
               var feature;
@@ -921,7 +847,12 @@
         },
         
         
-        addVectorHoverEvents : function(hoverCallback, layersArr) {
+        addVectorHoverEvents : function(hoverCallback, layerz)
+        {
+          this._hovers = this._hovers || {};
+          if (this._hovers.hasOwnProperty(layerz)) { return; }
+          this._hovers[layerz] = true;
+          
           var map = this.getMap();
           var that = this;
           var selectedFeatures = [];
@@ -929,9 +860,11 @@
           var originalCursor = map.getCanvas().style.cursor;
           
           //TODO: Do we need to wrap this in 'load' event or should we use a different event
+          console.log("onLoad");
           map.on('load', function () {
-            map.on('mousemove', function(e) {
-              var features = map.queryRenderedFeatures(e.point, { layers: layersArr });
+            console.log("Adding mousemove listener");
+            map.on('mousemove', that.throttle(function(e) {
+              var features = map.queryRenderedFeatures(e.point, { layers: [ layerz ] });
                 
               if(features.length){
                 var feature = features[0]; // only take the 1st feature
@@ -946,6 +879,7 @@
                     .addTo(map);
                   
                   
+                // This code is slow for some reason
                 if(feature.properties.isClickable){
                   map.getCanvas().style.cursor = 'pointer';
                 }
@@ -954,7 +888,7 @@
                 }
                 
                 if(selectedFeatures.length > 0){
-                  map.setFilter("target-point-hover", ["==", "id", ""]);
+//                  map.setFilter("target-point-hover", ["==", "id", ""]);
                   map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
                   selectedFeatures = [];
                 }
@@ -970,7 +904,7 @@
                   //map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
                 }
                 else if(feature.layer.type === "circle"){
-                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
+//                  map.setFilter("target-point-hover", ["==", "id", feature.properties.id]);
                 }
                 
                   selectedFeatures.push(feature);
@@ -980,7 +914,7 @@
               else{
                 map.getCanvas().style.cursor = originalCursor;
                 
-                map.setFilter("target-point-hover", ["==", "id", ""]);
+//                map.setFilter("target-point-hover", ["==", "id", ""]);
                     map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
                 
                 if(selectedFeatures.length > 0){
@@ -992,12 +926,54 @@
                   popup.remove();
                 }
               }
-          });
+          }, 100, that));
             
-              map.on("mouseout", function() {
-                  map.setFilter("target-point-hover", ["==", "id", ""]);
-              });
+//              map.on("mouseout", function() {
+//                  map.setFilter("target-point-hover", ["==", "id", ""]);
+//              });
           });
+        },
+        
+        
+        /**
+         * Taken from: https://github.com/mapbox/mapbox-gl-draw/blob/v0.4.0/src/util.js
+         *   per the advice of: https://github.com/mapbox/mapbox-gl-js/issues/2225
+         * 
+         * Create a version of `fn` that only fires once every `time` millseconds.
+         *
+         * @param {Function} fn the function to be throttled
+         * @param {number} time millseconds required between function calls
+         * @param {*} context the value of `this` with which the function is called
+         * @returns {Function} debounced function
+         * @private
+         */
+
+        throttle : function(fn, time, context) {
+          var lock, args, wrapperFn, later;
+
+          later = function () {
+            // reset lock and call if queued
+            lock = false;
+            if (args) {
+              wrapperFn.apply(context, args);
+              args = false;
+            }
+          };
+
+          wrapperFn = function () {
+            if (lock) {
+              // called too soon, queue to call later
+              args = arguments;
+
+            } else {
+              // call and lock until later
+              fn.apply(context, arguments);
+              setTimeout(later, time);
+              lock = true;
+            }
+          };
+
+          return wrapperFn;
         },
         
         
