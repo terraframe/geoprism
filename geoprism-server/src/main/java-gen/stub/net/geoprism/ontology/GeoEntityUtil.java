@@ -16,6 +16,7 @@
  */
 package net.geoprism.ontology;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -31,10 +32,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -65,6 +73,7 @@ import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
@@ -88,7 +97,102 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     // Test
     super();
   }
+  
+  /**
+   * Helper method, returns all GeoEntities that match the given criteria.
+   * 
+   * @param config
+   * @return 
+   */
+  private static OIterator<? extends GeoEntity> getAllGeoentities(String config)
+  {
+    JSONObject jObj = new JSONObject(config);
+    
+    String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
+    String parentId = jObj.getString("id");
+    
+    QueryFactory qf = new QueryFactory();
+    GeoEntityQuery geq = new GeoEntityQuery(qf);
+    LocatedInQuery liq = new LocatedInQuery(qf);
+    
+    if (universalId != null)
+    {
+      geq.WHERE(geq.getUniversal().EQ(universalId));
+    }
+    
+    liq.WHERE(liq.getParent().EQ(parentId));
+    geq.AND(geq.locatedIn(liq));
+    
+    return geq.getIterator();
+  }
 
+  /**
+   * MdMethod
+   * 
+   * Accepts a JSON configuration object (Similar to getData) and locks all geoentities to be edited.
+   * 
+   * @param config
+   * @return VectorTile data
+   */
+  @Transaction
+  public static java.io.InputStream openEditingSession(java.lang.String config)
+  {
+    OIterator<? extends GeoEntity> lockMes = getAllGeoentities(config);
+    for (GeoEntity lockMe : lockMes)
+    {
+      lockMe.lock();
+    }
+    
+    // Uncomment this if you want to play with vector tiles
+//    return GeoEntityUtil.getData(config);
+    
+    JSONObject jObj = new JSONObject(config);
+    String id = jObj.getString("id");
+    String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
+    
+    LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
+
+    StringWriter writer = new StringWriter();
+    JSONWriter jw = new JSONWriter(writer);
+
+    try
+    {
+      publisher.writeGeojson(jw);
+      byte[] bytes = writer.toString().getBytes();
+
+      return new ByteArrayInputStream(bytes);
+    }
+    finally
+    {
+      try
+      {
+        writer.close();
+      }
+      catch (IOException e)
+      {
+        throw new ProgrammingErrorException("Could not close IO stream.", e);
+      }
+    }
+  }
+  
+  /**
+   * MdMethod
+   * 
+   * Cancels an editing session by unlocking all GeoEntities at a given universal level.
+   * 
+   * @param config
+   * @return VectorTile data
+   */
+  @Transaction
+  public static void cancelEditingSession(java.lang.String config)
+  {
+    OIterator<? extends GeoEntity> unlockMes = getAllGeoentities(config);
+    for (GeoEntity unlockMe : unlockMes)
+    {
+      unlockMe.unlock();
+    }
+  }
+  
   /**
    * MdMethod
    * 
@@ -166,10 +270,25 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
 
+      
+      // Make sure we're in 4326 projection
+      Geometry geom = multiPoly;
+//      try
+//      {
+//        CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:3857", true);
+//        CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326", true);
+//        MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+//        geom = JTS.transform(multiPoly, transform);
+//      }
+//      catch (FactoryException | MismatchedDimensionException | TransformException e)
+//      {
+//        throw new RuntimeException(e);
+//      }
+      
       GeoEntity geo = GeoEntity.lock(id);
-      geo.setGeoPoint(geometryHelper.getGeoPoint(multiPoly));
-      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multiPoly));
-      geo.setWkt(multiPoly.toText());
+      geo.setGeoPoint(geometryHelper.getGeoPoint(geom));
+      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(geom));
+      geo.setWkt(geom.toText());
       geo.apply();
     }
   }

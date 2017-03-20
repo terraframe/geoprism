@@ -75,6 +75,30 @@
       runwayService.execute(req, connection);      
     }
     
+    service.openEditingSession = function(connection, config) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/openEditingSession',
+        data : {
+          config : config
+        }
+      }
+      
+      runwayService.execute(req, connection);
+    }
+    
+    service.cancelEditingSession = function(connection, config) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/cancelEditingSession',
+        data : {
+          config : config
+        }
+      }
+      
+      runwayService.execute(req, connection);
+    }
+    
     service.applyGeometries = function(connection, featureCollection) {
       var req = {
         method: 'POST',

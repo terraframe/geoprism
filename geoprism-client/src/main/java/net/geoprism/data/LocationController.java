@@ -153,6 +153,22 @@ public class LocationController implements Reloadable
 
     return new RestBodyResponse("");
   }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF openEditingSession(ClientRequestIF request, @RequestParamter(name = "config") String config)
+  {
+    InputStream istream = GeoEntityUtilDTO.openEditingSession(request, config.toString());
+
+    return new InputStreamResponse(istream, "application/x-protobuf", null);
+  }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF cancelEditingSession(ClientRequestIF request, @RequestParamter(name = "config") String config)
+  {
+    GeoEntityUtilDTO.cancelEditingSession(request, config.toString());
+
+    return new RestBodyResponse("");
+  }
 
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
