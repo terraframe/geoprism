@@ -539,34 +539,66 @@
             
             
             if(targetLayers.length > 0){
-              targetLayers.forEach(function(targetLayer){
+              targetLayers.forEach(function(targetLayer)
+              {
+                var features = map.querySourceFeatures(targetLayer.source, {
+                  sourceLayer: targetLayer.sourceLayer
+                });
                 
-                var layerSourceName = targetLayer.source;
-                
-                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-//                  var layerSourceData = map.querySourceFeatures(layerSourceName);
-                  var layerSourceData = map.getSource(layerSourceName)._data;
-                  
-                  if(layerSourceData.features.length > 0){
-                     for(var i=0; i<layerSourceData.features.length; i++){
-                      var targetFeature = layerSourceData.features[i];
-                      var featureProps = targetFeature.properties;
-                      if((feature.id && feature.id === featureProps.id) || 
-                        (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
-                        (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
+                if (features !=null & features.length > 0)
+                {
+                  for (var i=0; i < features.length; ++i)
+                  {
+                    var loopFeat = features[i];
+                    var props = loopFeat.properties;
+                    
+                    if ( (feature.id && feature.id === props.id) ||
+                          (feature.geoId && feature.geoId.length > 0 && feature.geoId === props.geoId) ||
+                          (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, props.geoId)))
+                    {
+                      // control for styling of different geometry types
+                      if(loopFeat.geometry)
                       {
-                        // control for styling of different geometry types
-                        if(targetFeature.geometry){
-                          if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
-                            map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
-                            }
-                          else if(targetFeature.geometry.type.toLowerCase() === "point"){
-//                            map.setFilter("target-point-hover", ["==", "id", ""]);
-                            }
+                        if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
+                        {
+                          map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+                        }
+                        else if(loopFeat.geometry.type.toLowerCase() === "point")
+                        {
+//                        map.setFilter("target-point-hover", ["==", "id", ""]);
                         }
                       }
-                     }
+                      selectedFeatures.push(loopFeat);
+                    }
+                  }
                 }
+                
+//                var layerSourceName = targetLayer.source;
+//                
+//                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
+////                  var layerSourceData = map.querySourceFeatures(layerSourceName);
+//                  var layerSourceData = map.getSource(layerSourceName)._data;
+//                  
+//                  if(layerSourceData.features.length > 0){
+//                     for(var i=0; i<layerSourceData.features.length; i++){
+//                      var targetFeature = layerSourceData.features[i];
+//                      var featureProps = targetFeature.properties;
+//                      if((feature.id && feature.id === featureProps.id) || 
+//                        (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
+//                        (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
+//                      {
+//                        // control for styling of different geometry types
+//                        if(targetFeature.geometry){
+//                          if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
+//                            map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+//                            }
+//                          else if(targetFeature.geometry.type.toLowerCase() === "point"){
+////                            map.setFilter("target-point-hover", ["==", "id", ""]);
+//                            }
+//                        }
+//                      }
+//                     }
+//                }
               });
             }
           }
@@ -584,35 +616,37 @@
             if(targetLayers.length > 0){
               targetLayers.forEach(function(targetLayer){
                 
-                var layerSourceName = targetLayer.source;
+                var features = map.querySourceFeatures(targetLayer.source, {
+                  sourceLayer: targetLayer.sourceLayer
+                });
                 
-                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-//                var layerSourceData = map.querySourceFeatures(layerSourceName);
-                var layerSourceData = map.getSource(layerSourceName)._data;
-                  
-                  if(layerSourceData.features.length > 0){
-                     for(var i=0; i<layerSourceData.features.length; i++){
-                      var targetFeature = layerSourceData.features[i];
-                      var featureProps = targetFeature.properties;
-                      
-                      if((feature.id && feature.id === featureProps.id) || 
-                         (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
-                         (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
+                if (features !=null & features.length > 0)
+                {
+                  for (var i=0; i < features.length; ++i)
+                  {
+                    var loopFeat = features[i];
+                    var props = loopFeat.properties;
+                    
+                    if ( (feature.id && feature.id === props.id) ||
+                          (feature.geoId && feature.geoId.length > 0 && feature.geoId === props.geoId) ||
+                          (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, props.geoId)))
+                    {
+                      // control for styling of different geometry types
+                      if(loopFeat.geometry)
                       {
-                              
-                          // control for styling of different geometry types
-                        if(targetFeature.geometry){
-                            if(targetFeature.geometry.type.toLowerCase() === "multipolygon" || targetFeature.geometry.type.toLowerCase() === "polygon"){
-                            map.setFilter("target-multipolygon-hover", ["==", "id", targetFeature.properties.id]);
-                            }
-                            else if(targetFeature.geometry.type.toLowerCase() === "point"){
-//                            map.setFilter("target-point-hover", ["==", "id", targetFeature.properties.id]);
-                            }
+                        if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
+                        {
+                          map.setFilter("target-multipolygon-hover", ["==", "id", loopFeat.properties.id]);
                         }
-                              selectedFeatures.push(targetFeature);
+                        else if(loopFeat.geometry.type.toLowerCase() === "point")
+                        {
+//                        map.setFilter("target-point-hover", ["==", "id", loopFeat.properties.id]);
+                        }
                       }
+                      selectedFeatures.push(loopFeat);
                     }
-                  }                
+                  }
+                }            
               });
             }
           }
@@ -839,7 +873,7 @@
                 feature = features[0]; // only take the 1st feature
               }
                 
-                if(feature.properties.isClickable){
+                if(feature.properties.isClickable || feature.properties.isClickable === "true"){
                   featureClickCallback(feature, map);
                 }
             }
@@ -871,14 +905,14 @@
                   popup.remove();
                 }
                 
+                // TODO: This popup code is slow
                 popup = new mapboxgl.Popup({closeOnClick: true})
                     .setLngLat([e.lngLat.lng, e.lngLat.lat])
                     .setHTML(feature.properties.displayLabel)
                     .addTo(map);
                   
                   
-                // This code is slow for some reason
-                if(feature.properties.isClickable){
+                if(feature.properties.isClickable || feature.properties.isClickable === "true"){
                   map.getCanvas().style.cursor = 'pointer';
                 }
                 else{
@@ -924,7 +958,7 @@
                   popup.remove();
                 }
               }
-          }, 100, that));
+          }, 70, that));
             
 //              map.on("mouseout", function() {
 //                  map.setFilter("target-point-hover", ["==", "id", ""]);

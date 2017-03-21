@@ -174,15 +174,15 @@
       this.unselectFeature(null);
       
       // Add features to editing control
-      var filter = [ "!=", "id", "" ];
+//      var filter = [ "!=", "id", "" ];
 //      if (featureIds != null)
 //      {
 //        filter = [ '==', 'id', featureIds ];
 //      }
-      var features = map.querySourceFeatures("target-multipolygon", {
-        filter : filter,
-        sourceLayer: "target"
-      });
+//      var features = map.querySourceFeatures("target-multipolygon", {
+//        filter : filter,
+//        sourceLayer: "target"
+//      });
       
       try
       {
@@ -354,7 +354,7 @@
 
     controller.refreshInteractiveLayers = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var source = $scope.sharedGeoData[0];
+        var data = $scope.sharedGeoData[0];
           
         var layers = [{
           name: "context-multipolygon",
@@ -372,31 +372,13 @@
           is3d: false            
         }];
           
-        controller.updateVectorLayer(source, layers);
-        
-
-//        var targetCallback = function(data) {
-//          var geomType;
-//          for (var i = 0; i < data.features.length; i++) {
-//            var feature = data.features[i];
-//            feature.properties.isHoverable = true;
-//            feature.properties.isClickable = true;
-//            geomType = feature.geometry.type.toLowerCase();
-//          }
-//
-//          controller.updateVectorLayer(data, "target-" + geomType,
-//              $scope.targetStyle, "TARGET", 2);
-//        }
-//
-//        data.layers.forEach(function(layer) {
-//          controller.getMapData(targetCallback, layer, layer.workspace);
-//        });
+        controller.updateVectorLayer(data, layers);
       }
     }
 
     controller.refreshWithContextLayer = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var source = $scope.sharedGeoData[0];
+        var data = $scope.sharedGeoData[0];
           
         var layers = [{
           name: "context-multipolygon",
@@ -429,7 +411,7 @@
           $scope.$apply();
         }
         
-        controller.updateVectorLayer(source, layers);
+        controller.updateVectorLayer(data, layers);
         
         controller.addVectorHoverEvents(hoverCallback, "target-multipolygon");
         controller.addVectorClickEvents(featureClickCallback, "target-multipolygon");
