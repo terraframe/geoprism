@@ -283,7 +283,7 @@ public abstract class LayerPublisher
 
       MvtLayerParams layerParams = new MvtLayerParams();
 
-      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter, false);
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter);
 
       final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
 
@@ -358,7 +358,7 @@ public abstract class LayerPublisher
 
       MvtLayerParams layerParams = new MvtLayerParams();
 
-      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter, false);
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter);
 
       final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
 
