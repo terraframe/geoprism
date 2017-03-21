@@ -39,49 +39,17 @@
 
     controller.init = function() {
 
-      var hoverCallback = function(featureId) {
-        $scope.$emit('hoverChange', {
-          id : featureId
-        });
-        $scope.$apply();
-      }
-
-      var featureClickCallback = function(feature, map) {
-        $scope.$emit('locationFocus', {
-          id : feature.properties.id
-        });
-        $scope.$apply();
-      }
-
-      //
-      // Setting up empty layers to be populated later
-      //
-      // NOTE: We can't move this code into the map factory because it requires
-      // the event listeners which reference the scope.
-      //
-      var emptyGeoJSON = {
-        "type" : "FeatureCollection",
-        "totalFeatures" : 0,
-        "features" : [],
-        "crs" : {
-          "type" : "name",
-          "properties" : {
-            "name" : "urn:ogc:def:crs:EPSG::4326"
-          }
-        }
-      };
-
-//      controller.addVectorLayer({type:"LM_CONTEXT"}, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2);
-//      controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2);
-//
-//      controller.addVectorLayer({type:"LM_TARGET"}, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
-//      controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2);
-
-//      controller.addVectorHoverEvents(hoverCallback, [ "target-point", "target-multipolygon" ]);
-//      controller.addVectorClickEvents(featureClickCallback, [ "target-point", "target-multipolygon" ]);
-      //
-      // end
-      //
+//      var emptyGeoJSON = {
+//        "type" : "FeatureCollection",
+//        "totalFeatures" : 0,
+//        "features" : [],
+//        "crs" : {
+//          "type" : "name",
+//          "properties" : {
+//            "name" : "urn:ogc:def:crs:EPSG::4326"
+//          }
+//        }
+//      };
 
       // Create editing control
       var map = controller.getWebGLMap();
@@ -206,15 +174,15 @@
       this.unselectFeature(null);
       
       // Add features to editing control
-      var filter = [ "!=", "id", "" ];
+//      var filter = [ "!=", "id", "" ];
 //      if (featureIds != null)
 //      {
 //        filter = [ '==', 'id', featureIds ];
 //      }
-      var features = map.querySourceFeatures("target-multipolygon", {
-        filter : filter,
-        sourceLayer: "target"
-      });
+//      var features = map.querySourceFeatures("target-multipolygon", {
+//        filter : filter,
+//        sourceLayer: "target"
+//      });
       
       try
       {
@@ -386,7 +354,7 @@
 
     controller.refreshInteractiveLayers = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var source = $scope.sharedGeoData[0];
+        var data = $scope.sharedGeoData[0];
           
         var layers = [{
           name: "context-multipolygon",
@@ -404,31 +372,13 @@
           is3d: false            
         }];
           
-        controller.updateVectorLayer(source, layers);
-        
-
-//        var targetCallback = function(data) {
-//          var geomType;
-//          for (var i = 0; i < data.features.length; i++) {
-//            var feature = data.features[i];
-//            feature.properties.isHoverable = true;
-//            feature.properties.isClickable = true;
-//            geomType = feature.geometry.type.toLowerCase();
-//          }
-//
-//          controller.updateVectorLayer(data, "target-" + geomType,
-//              $scope.targetStyle, "TARGET", 2);
-//        }
-//
-//        data.layers.forEach(function(layer) {
-//          controller.getMapData(targetCallback, layer, layer.workspace);
-//        });
+        controller.updateVectorLayer(data, layers);
       }
     }
 
     controller.refreshWithContextLayer = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
-        var source = $scope.sharedGeoData[0];
+        var data = $scope.sharedGeoData[0];
           
         var layers = [{
           name: "context-multipolygon",
@@ -445,61 +395,26 @@
           index: 2,
           is3d: false            
         }];
-          
-        controller.updateVectorLayer(source, layers);
-//        controller.zoomToLayersExtent([ "target-multipolygon" ]);
+        
 
-//        for (var i = 0; i < data.geometries.length; i++) {
-//          var layer = data.geometries[i];
-//
-//          for (var l = 0; l < layer.features.length; l++) {
-//            var feature = layer.features[l];
-//            feature.properties.isHoverable = i === 0 ? false : true;
-//            feature.properties.isClickable = i === 0 ? false : true;
-//          }
-//
-//          if (i === 0) {
-//            controller.updateVectorLayer(layer, "context-multipolygon", $scope.contextStyle, "CONTEXT", 1);
-//            controller.zoomToLayersExtent([ "context-multipolygon" ]);
-//          } else if (i === 1) {
-//            controller.updateVectorLayer(layer, "target-multipolygon", $scope.targetStyle, "TARGET", 2);
-//            controller.zoomToLayersExtent([ "target-multipolygon" ]);
-//          }
-//        }
+        var hoverCallback = function(featureId) {
+          $scope.$emit('hoverChange', {
+            id : featureId
+          });
+          $scope.$apply();
+        }
 
-        // var contextCallback = function(data) {
-        // for(var i=0; i<data.features.length; i++){
-        // var feature = data.features[i];
-        // feature.properties.isHoverable = false;
-        // feature.properties.isClickable = false;
-        // }
-        //				  
-        // controller.updateVectorLayer(data, "context-multipolygon",
-        // $scope.contextStyle, "CONTEXT", 1);
-        // controller.zoomToLayersExtent(["context-multipolygon"]);
-        // }
-        //			  
-        // var targetCallback = function(data) {
-        // for(var i=0; i<data.features.length; i++){
-        // var feature = data.features[i];
-        // feature.properties.isHoverable = true;
-        // feature.properties.isClickable = true;
-        // }
-        //				  
-        // controller.updateVectorLayer(data, "target-multipolygon",
-        // $scope.targetStyle, "TARGET", 2);
-        // controller.zoomToLayersExtent(["target-multipolygon"]);
-        // }
-
-        // controller.removeVectorData();
-
-        // get context geo data
-        // controller.getMapData(contextCallback, data.layers[0],
-        // data.workspace);
-
-        // get target geo data
-        // controller.getMapData(targetCallback, data.layers[1],
-        // data.workspace);
+        var featureClickCallback = function(feature, map) {
+          $scope.$emit('locationFocus', {
+            id : feature.properties.id
+          });
+          $scope.$apply();
+        }
+        
+        controller.updateVectorLayer(data, layers);
+        
+        controller.addVectorHoverEvents(hoverCallback, "target-multipolygon");
+        controller.addVectorClickEvents(featureClickCallback, "target-multipolygon");
       }
     }
 
