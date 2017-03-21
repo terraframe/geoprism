@@ -340,6 +340,7 @@ public abstract class LayerPublisher
         data.put(GeoEntity.ID, resultSet.getString("id"));
         data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
+        data.put("isClickable", "true");
 
         JtsGeometry geom = (JtsGeometry) resultSet.getObject(GeoserverFacade.GEOM_COLUMN);
 
