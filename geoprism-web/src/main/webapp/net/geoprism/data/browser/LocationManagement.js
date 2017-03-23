@@ -214,12 +214,13 @@
       locationService.remove(connection, entity.id, $scope.layers);
     }    
     
-    controller.newInstance = function() {
+    controller.newInstance = function(_wkt) {
       $scope.$emit('locationEdit', {
-        wkt : '',
+        wkt : _wkt || '',
         universal : $scope.universal,
         parent : $scope.entity
       });
+      $scope.$apply();
     }
     
     controller.findIndex = function(entityId) {
@@ -266,6 +267,16 @@
       $scope.hoverId = data.id;
     });
     
+    $scope.$on('locationEditNew', function(event, data){
+      $scope.$emit('locationEdit', {
+        wkt : data.wkt || '',
+        universal : $scope.universal,
+        parent : $scope.entity,
+        afterApply: data.afterApply
+      });
+      $scope.$apply();
+    });
+    
     $rootScope.$on('locationChange', function(event, data) {
       var id = (data.entity.oid !== undefined) ? data.entity.oid : data.entity.id;
       
@@ -295,7 +306,7 @@
         
         locationService.edit(connection, data.entityId);        
       }
-    });    
+    });
     
     controller.apply = function() {
         var connection = {
@@ -320,6 +331,7 @@
   }
   
   function LocationModalController($scope, $rootScope, locationService) {
+    var locationController = controller;
     var controller = this;
         
     controller.init = function() {
@@ -378,6 +390,13 @@
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(entity) {
+          
+          if (controller.afterApply != null)
+          {
+            controller.afterApply();
+            return;
+          }
+          
           controller.clear();
           
           $scope.$emit('locationChange', {
@@ -395,6 +414,7 @@
     }
       
     $rootScope.$on('locationEdit', function(event, data) {
+      controller.afterApply = data.afterApply;
       controller.load(data);
     });      
        
