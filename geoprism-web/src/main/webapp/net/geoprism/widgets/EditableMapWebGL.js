@@ -70,6 +70,9 @@
       map.addControl(controller._geoprismEditingControl);
       
       controller._isEditing = false;
+      
+      controller._updatedGeos = {};
+      map.on("draw.update", controller.onDrawUpdate);
     }
 
     controller.getWebGLMap = function() {
@@ -244,9 +247,7 @@
       {
         geojson = {
           "type": "MultiPolygon",
-          "coordinates": [
-            
-          ]
+          "coordinates": []
         };
         
         for (var i = 0; i < features.length; ++i)
@@ -274,12 +275,46 @@
       });
     }
     
+    controller.onDrawUpdate = function(event) {
+      var feats = event.features;
+      
+      for (var i = 0; i < feats.length; ++i)
+      {
+        var feat = feats[i];
+        
+        controller._updatedGeos[feat.id] = true;
+      }
+    };
+    
     controller.saveEditing = function() {
       if (!controller._isEditing) { return; }
       
       var map = controller.getWebGLMap();
       
       var featureCollection = this._editingControl.getAll();
+      
+      // Filter out features that haven't been updated
+      var updatedFeatureCollection = {type:"FeatureCollection", features:[]};
+      var updatedFeatures = updatedFeatureCollection.features;
+      
+      var feats = featureCollection.features;
+      for (var i = 0; i < feats.length; ++i)
+      {
+        var feat = feats[i];
+        
+        if (controller._updatedGeos.hasOwnProperty(feat.id))
+        {
+          updatedFeatures.push(feat);
+        }
+        else
+        {
+          updatedFeatures.push({
+            id: feat.id,
+            type: "unlock"
+          })
+        }
+      }
+      controller._updatedGeos = {};
       
       var connection = {
         elementId : '#innerFrameHtml',
@@ -301,8 +336,8 @@
           console.log(error);
         }
       };
-      locationService.applyGeometries(connection, featureCollection);
-    }
+      locationService.applyGeometries(connection, updatedFeatureCollection);
+    };
 
     controller.refreshBaseLayer = function() {
       if ($scope.baseLayers.length > 0) {
@@ -343,6 +378,8 @@
     }
 
     controller.refreshWithContextLayer = function(triggeringEvent) {
+      console.log("EditableMapWebGL::refreshWithContextLayer");
+      
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData[0];
           
@@ -438,7 +475,10 @@
 
     // Recieve shared data from parent controller based on user selection of
     // target location
+    console.log("EditableMapWebGL::on sharedGeoData");
     $scope.$on('sharedGeoData', function(event, data) {
+      console.log("EditableMapWebGL::sharedGeoData");
+      
       if (!isEmptyJSONObject(data)) {
 
         $scope.sharedGeoData = data;

@@ -34,9 +34,13 @@
       $scope.previous = [];
       
       locationService.select(connection, "", "", "" );
+      
+      console.log("LocationController.init");
     }
     
     controller.load = function(data) {
+      console.log("LocationController.load");
+      
       $scope.children = data.children.resultSet;
       $scope.layers = data.layers;
       

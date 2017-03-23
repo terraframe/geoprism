@@ -256,6 +256,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
             throw new UnsupportedOperationException();
           }
         }
+        else if (type.equals("unlock"))
+        {
+          GeoEntity.get(feature.getString("id")).unlock();
+        }
       }
     }
     catch (JSONException e)
