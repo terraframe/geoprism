@@ -93,4 +93,11 @@ public interface ConfigurationIF extends Reloadable
    * @return
    */
   public InputStream getLocationData(String type, JSONObject object);
+
+  /**
+   * Extension point for deleting geo entities
+   * 
+   * @param entity
+   */
+  public void onEntityDelete(GeoEntity entity);
 }

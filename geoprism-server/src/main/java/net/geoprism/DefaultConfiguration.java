@@ -223,4 +223,10 @@ public class DefaultConfiguration implements ConfigurationIF
       throw new ProgrammingErrorException(e);
     }
   }
+  
+  @Override
+  public void onEntityDelete(GeoEntity entity)
+  {
+    // Do nothing
+  }
 }

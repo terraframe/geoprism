@@ -47,6 +47,7 @@ import org.opengis.referencing.operation.TransformException;
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -97,32 +98,32 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     // Test
     super();
   }
-  
+
   /**
    * Helper method, returns all GeoEntities that match the given criteria.
    * 
    * @param config
-   * @return 
+   * @return
    */
   private static OIterator<? extends GeoEntity> getAllGeoentities(String config)
   {
     JSONObject jObj = new JSONObject(config);
-    
+
     String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
     String parentId = jObj.getString("id");
-    
+
     QueryFactory qf = new QueryFactory();
     GeoEntityQuery geq = new GeoEntityQuery(qf);
     LocatedInQuery liq = new LocatedInQuery(qf);
-    
+
     if (universalId != null)
     {
       geq.WHERE(geq.getUniversal().EQ(universalId));
     }
-    
+
     liq.WHERE(liq.getParent().EQ(parentId));
     geq.AND(geq.locatedIn(liq));
-    
+
     return geq.getIterator();
   }
 
@@ -142,14 +143,14 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       lockMe.lock();
     }
-    
+
     // Uncomment this if you want to play with vector tiles
-//    return GeoEntityUtil.getData(config);
-    
+    // return GeoEntityUtil.getData(config);
+
     JSONObject jObj = new JSONObject(config);
     String id = jObj.getString("id");
     String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
-    
+
     LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
 
     StringWriter writer = new StringWriter();
@@ -174,7 +175,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       }
     }
   }
-  
+
   /**
    * MdMethod
    * 
@@ -192,7 +193,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       unlockMe.unlock();
     }
   }
-  
+
   /**
    * MdMethod
    * 
@@ -270,21 +271,20 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
 
-      
       // Make sure we're in 4326 projection
       Geometry geom = multiPoly;
-//      try
-//      {
-//        CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:3857", true);
-//        CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326", true);
-//        MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
-//        geom = JTS.transform(multiPoly, transform);
-//      }
-//      catch (FactoryException | MismatchedDimensionException | TransformException e)
-//      {
-//        throw new RuntimeException(e);
-//      }
-      
+      // try
+      // {
+      // CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:3857", true);
+      // CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326", true);
+      // MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+      // geom = JTS.transform(multiPoly, transform);
+      // }
+      // catch (FactoryException | MismatchedDimensionException | TransformException e)
+      // {
+      // throw new RuntimeException(e);
+      // }
+
       GeoEntity geo = GeoEntity.lock(id);
       geo.setGeoPoint(geometryHelper.getGeoPoint(geom));
       geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(geom));
@@ -1052,5 +1052,21 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Transaction
+  @Authenticate
+  public static void deleteGeoEntity(String id)
+  {
+    GeoEntity entity = GeoEntity.get(id);
+
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.onEntityDelete(entity);
+    }
+
+    entity.delete();
   }
 }
