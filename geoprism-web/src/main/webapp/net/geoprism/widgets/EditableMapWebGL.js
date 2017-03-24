@@ -271,10 +271,10 @@
       var _wkt = wellknown.stringify(geojson);
       
       $scope.$emit('locationEditNew', {
-        wkt: _wkt,
-        afterApply: function(){
-          location.reload();
-        }
+        wkt: _wkt
+//        afterApply: function(){
+//          location.reload();
+//        }
       });
     }
     
@@ -412,9 +412,14 @@
       
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData[0];
-        var bboxArr = JSON.parse(data.bbox);
-        var bboxObj = {sw : new mapboxgl.LngLat(bboxArr[0], bboxArr[1]), ne : new mapboxgl.LngLat(bboxArr[2], bboxArr[3])}
         
+        var bboxArr = JSON.parse(data.bbox);
+        
+        var bboxObj = null;
+        if (bboxArr.length > 0)
+        {
+          bboxObj = {sw : new mapboxgl.LngLat(bboxArr[0], bboxArr[1]), ne : new mapboxgl.LngLat(bboxArr[2], bboxArr[3])}
+        }
           
         var layers = [{
           name: "context-multipolygon",
@@ -467,8 +472,11 @@
         controller.addVectorHoverEvents(hoverCallback, "target-multipolygon");
         controller.addVectorClickEvents(featureClickCallback, "target-multipolygon");
         
-//        controller.zoomToExtentOfFeatures(data);
-        controller.zoomToLayersExtent([layers[1]]);
+        if (bboxObj != null)
+        {
+          controller.zoomToLayersExtent([layers[1]]);
+//          controller.zoomToExtentOfFeatures(data);
+        }
       }
     }
 

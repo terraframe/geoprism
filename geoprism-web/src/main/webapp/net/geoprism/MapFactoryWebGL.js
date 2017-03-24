@@ -932,7 +932,7 @@
               
               map.on("sourcedata", function(event){
                   if (event.isSourceLoaded) {
-                      console.log("got it")
+//                      console.log("got it")
 //                      var test = map.querySourceFeatures("target-multipolygon");
 //                      console.log(test)
 //                      setTimeout(function(){
@@ -942,7 +942,7 @@
                         console.log(test)
 //                      }, 10000)
                   }
-                  console.log("event type - ", event.type)
+//                  console.log("event type - ", event.type)
 
 //                  that.zoomToLayersExtent([layerName])
               });
@@ -1016,10 +1016,10 @@
               style: 'mapbox://styles/mapbox/satellite-v8'
           });
           
-          map.on("zoomend", function(e){
-        	  console.log(map.getZoom())
-        	  console.log(JSON.stringify(map.getBounds()))
-          });
+//          map.on("zoomend", function(e){
+//        	  console.log(map.getZoom())
+//        	  console.log(JSON.stringify(map.getBounds()))
+//          });
           
         	
           this.setMap(map);
