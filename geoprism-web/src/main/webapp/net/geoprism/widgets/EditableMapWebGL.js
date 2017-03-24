@@ -504,154 +504,161 @@
     // console.log("watched")
     // }
     // });
+    
+    Mojo.Meta.newClass('net.geoprism.gis.GeoprismEditingControl', {
+      Extends : com.runwaysdk.ui.Component,  
+      IsAbstract : false,
+      Instance : {
+       
+        initialize : function(controller) {
+          this._controller = controller;
+        },
+        
+        onAdd : function(map) {
+          var that = this;
+          this._map = map;
+          
+          this._container = $(document.createElement('div'));
+          this._container.addClass('mapboxgl-ctrl-group mapboxgl-ctrl');
+
+          this._bEdit = $(document.createElement("button"));
+          this._bEdit.addClass('fa fa-pencil-square-o');
+          this._bEdit.css("color", "black");
+          this._bEdit.css("font-size", "18px");
+          this._bEdit.prop('title', localizationService.localize("location.management.editing", "edit"));
+          this._bEdit.click(function() {
+            that._controller.openEditingSession(null);
+          });
+          this._container.append(this._bEdit);
+          
+          this._bNew = $(document.createElement("button"));
+          this._bNew.addClass('fa fa-plus-square-o');
+          this._bNew.css("color", "black");
+          this._bNew.css("font-size", "18px");
+          this._bNew.prop('title', localizationService.localize("location.management.editing", "new"));
+          this._bNew.click(function() {
+            that._controller.startNewGeoSession();
+          });
+          this._container.append(this._bNew);
+          
+          this._bSave = $(document.createElement("button"));
+          this._bSave.addClass('fa fa-floppy-o');
+          this._bSave.css("color", "black");
+          this._bSave.css("display", "none");
+          this._bSave.css("font-size", "16px");
+          this._bSave.prop('title', localizationService.localize("location.management.editing", "save"));
+          this._bSave.click(function() {
+            that.onClickSave();
+          });
+          this._container.append(this._bSave);
+          
+          this._bCancel = $(document.createElement("button"));
+          this._bCancel.addClass('fa fa-ban');
+          this._bCancel.css("color", "black");
+          this._bCancel.css("display", "none");
+          this._bCancel.css("font-size", "16px");
+          this._bCancel.prop('title', localizationService.localize("location.management.editing", "cancel"));
+          this._bCancel.click(function() {
+            that.onClickCancel();
+          });
+          this._container.append(this._bCancel);
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").prop('title', localizationService.localize("location.management.editing", "trash"));
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").prop('title', localizationService.localize("location.management.editing", "polygon"));
+          
+          this.stopEditing();
+          
+          return this._container[0];
+        },
+        
+        onRemove : function() {
+          this._container.parentNode.removeChild(this._container);
+          this._map = undefined;
+        },
+        
+        onClickSave : function() {
+          if (this._isNewGeoSession)
+          {
+            this._controller.saveNewGeoSession();
+          }
+          else if (this._controller._isEditing)
+          {
+            this._controller.saveEditing();
+          }
+        },
+        
+        onClickCancel : function() {
+          if (this._isNewGeoSession)
+          {
+            this._controller.cancelNewGeoSession();
+          }
+          else if (this._controller._isEditing)
+          {
+            this._controller.cancelEditing();
+          }
+        },
+        
+        startNewGeoSession: function() {
+          this._bEdit.css("display", "none");
+          this._bNew.css("display", "none");
+          this._bSave.css("display", "block");
+          this._bCancel.css("display", "block");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").removeAttr("style");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").removeAttr("style");
+          
+          this._isNewGeoSession = true;
+        },
+        
+        stopNewGeoSession: function() {
+          this._bEdit.css("display", "block");
+          this._bNew.css("display", "block");
+          this._bSave.css("display", "none");
+          this._bCancel.css("display", "none");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
+          
+          this._isNewGeoSession = false;
+        },
+        
+        startEditing: function() {
+          this._bEdit.css("display", "none");
+          this._bNew.css("display", "none");
+          this._bSave.css("display", "block");
+          this._bCancel.css("display", "block");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
+        },
+        
+        stopEditing : function() {
+          this._bEdit.css("display", "block");
+          this._bNew.css("display", "block");
+          this._bSave.css("display", "none");
+          this._bCancel.css("display", "none");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
+        }
+      }
+    });
 
     controller.init();
   }
   
-  Mojo.Meta.newClass('net.geoprism.gis.GeoprismEditingControl', {
-    Extends : com.runwaysdk.ui.Component,  
-    IsAbstract : false,
-    Instance : {
-     
-      initialize : function(controller) {
-        this._controller = controller;
-      },
-      
-      onAdd : function(map) {
-        var that = this;
-        this._map = map;
-        
-        this._container = $(document.createElement('div'));
-        this._container.addClass('mapboxgl-ctrl-group mapboxgl-ctrl');
-
-        this._bEdit = $(document.createElement("button"));
-        this._bEdit.addClass('fa fa-pencil-square-o');
-        this._bEdit.css("color", "black");
-        this._bEdit.css("font-size", "18px");
-        this._bEdit.click(function() {
-          that._controller.openEditingSession(null);
-        });
-        this._container.append(this._bEdit);
-        
-        this._bNew = $(document.createElement("button"));
-        this._bNew.addClass('fa fa-plus-square-o');
-        this._bNew.css("color", "black");
-        this._bNew.css("font-size", "18px");
-        this._bNew.click(function() {
-          that._controller.startNewGeoSession();
-        });
-        this._container.append(this._bNew);
-        
-        this._bSave = $(document.createElement("button"));
-        this._bSave.addClass('fa fa-floppy-o');
-        this._bSave.css("color", "black");
-        this._bSave.css("display", "none");
-        this._bSave.css("font-size", "16px");
-        this._bSave.click(function() {
-          that.onClickSave();
-        });
-        this._container.append(this._bSave);
-        
-        this._bCancel = $(document.createElement("button"));
-        this._bCancel.addClass('fa fa-ban');
-        this._bCancel.css("color", "black");
-        this._bCancel.css("display", "none");
-        this._bCancel.css("font-size", "16px");
-        this._bCancel.click(function() {
-          that.onClickCancel();
-        });
-        this._container.append(this._bCancel);
-        
-        this.stopEditing();
-        
-        return this._container[0];
-      },
-      
-      onRemove : function() {
-        this._container.parentNode.removeChild(this._container);
-        this._map = undefined;
-      },
-      
-      onClickSave : function() {
-        if (this._isNewGeoSession)
-        {
-          this._controller.saveNewGeoSession();
-        }
-        else if (this._controller._isEditing)
-        {
-          this._controller.saveEditing();
-        }
-      },
-      
-      onClickCancel : function() {
-        if (this._isNewGeoSession)
-        {
-          this._controller.cancelNewGeoSession();
-        }
-        else if (this._controller._isEditing)
-        {
-          this._controller.cancelEditing();
-        }
-      },
-      
-      startNewGeoSession: function() {
-        this._bEdit.css("display", "none");
-        this._bNew.css("display", "none");
-        this._bSave.css("display", "block");
-        this._bCancel.css("display", "block");
-        
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").removeAttr("style");
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").removeAttr("style");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").removeAttr("style");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").removeAttr("style");
-        
-        this._isNewGeoSession = true;
-      },
-      
-      stopNewGeoSession: function() {
-        this._bEdit.css("display", "block");
-        this._bNew.css("display", "block");
-        this._bSave.css("display", "none");
-        this._bCancel.css("display", "none");
-        
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
-        
-        this._isNewGeoSession = false;
-      },
-      
-      startEditing: function() {
-        this._bEdit.css("display", "none");
-        this._bNew.css("display", "none");
-        this._bSave.css("display", "block");
-        this._bCancel.css("display", "block");
-        
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
-      },
-      
-      stopEditing : function() {
-        this._bEdit.css("display", "block");
-        this._bNew.css("display", "block");
-        this._bSave.css("display", "none");
-        this._bCancel.css("display", "none");
-        
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
-        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
-//        $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
-      }
-    }
-  });
-
   function EditableMapWebGL() {
     return {
       restrict : 'E',
