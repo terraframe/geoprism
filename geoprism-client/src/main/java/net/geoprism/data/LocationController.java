@@ -85,13 +85,14 @@ public class LocationController implements Reloadable
 
     RestResponse response = new RestResponse();
     response.set("children", children);
+    response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getId(), universalId) );
     response.set("universals", new ListSerializable(universals));
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());
     // response.set("geometries", new JSONStringImpl(geometries));
     // response.set("layers", object.get("layers"));
-
+    																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													
     return response;
   }
 

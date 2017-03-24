@@ -279,7 +279,6 @@
           var protocol= window.location.protocol;
           var host = window.location.host;
           
-          // add a null source which stores the data
           map.addSource(source.name, { 
             type: 'vector',
             tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
@@ -448,29 +447,7 @@
                                "text-size": 12
                            }
                    });
-                   
-//                   // This layer is displayed when they hover over the feature
-//                   map.addLayer({
-//                     "id": layerName + "-hover",
-//                     "source": layerName,
-//                     "type": "fill",
-//                     "paint": {
-//                       "fill-color": that.getHoverPolygonStyle().fill,
-//                       "fill-opacity": that.getHoverPolygonStyle().opacity
-//                     },
-//                     "filter": ["==", "name", ""] // hide all features in the layer
-//                     });
                 }
-                
-//                if (that._updateVectorLayersAfterLoading != null)
-//                {
-//                  for (var i = 0; i < that._updateVectorLayersAfterLoading.length; ++i)
-//                  {
-//                    that._updateVectorLayersAfterLoading[i]();
-//                  }
-//                }
-//                that._areLayersLoaded = true;
-            
           }
                 
           // Won't do anything unless layers are populate with data containing features
@@ -510,6 +487,8 @@
               type: 'vector', 
               tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
             });
+            
+
           }
           else {
             this.addVectorLayer(source, layers);
@@ -653,6 +632,7 @@
         },
         
         selectFeature : function(feature) {
+        	//TODO: fix this or remove it
 //          var map = this.getMap();
 //          
 //          if(feature.layer.type === "fill"){
@@ -661,6 +641,7 @@
         },
         
         unselectFeature : function(feature) {
+        	//TODO: fix this or remove it
 //          var map = this.getMap();
 //          
 //          if (feature == null)
@@ -734,22 +715,27 @@
           var bounds = new mapboxgl.LngLatBounds();
           
           if(layersArr.length > 0){
-            layersArr.forEach(function(layerName){
-              var layer = map.getLayer(layerName);
-              
-              if(layer){
-                  var layerSourceName = layer.source;
-                  
-                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-                  var layerSourceData = map.getSource(layerSourceName)._data;
-                  
-                  if(layerSourceData.features.length > 0){
-                    var bbox = turf.extent(layerSourceData);
-                    bounds.extend(
-                        new mapboxgl.LngLatBounds(bbox)
-                    );
-                  }
-              }
+            layersArr.forEach(function(refLayer){
+//              var layer = map.getLayer(refLayer.name);
+//              
+//              if(layer){
+//                  var layerSourceName = layer.source;
+//                  
+//                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
+////                  var layerSourceData = map.getSource(layerSourceName)._data;
+//                  let layerSourceData = map.querySourceFeatures(layerSourceName);
+//                  
+//                  if(layerSourceData.features.length > 0){
+//                    var bbox = turf.extent(layerSourceData);
+//                    bounds.extend(
+//                        new mapboxgl.LngLatBounds(bbox)
+//                    );
+//                  }
+//              }
+            	
+            	bounds.extend(
+                      new mapboxgl.LngLatBounds(refLayer.bbox)
+                  );
             });
             
             // check if bounds is an empty json object
@@ -958,6 +944,24 @@
                   popup.remove();
                 }
               }
+              
+              
+              map.on("sourcedata", function(event){
+                  if (event.isSourceLoaded) {
+                      console.log("got it")
+//                      var test = map.querySourceFeatures("target-multipolygon");
+//                      console.log(test)
+//                      setTimeout(function(){
+//                      	console.log("the target layer - ", event.style.getLayer("target-multipolygon"));
+//                      	console.log("the target features - ", event.style.map.querySourceFeatures("target-multipolygon"));
+                        var test = map.querySourceFeatures(source.name);
+                        console.log(test)
+//                      }, 10000)
+                  }
+                  console.log("event type - ", event.type)
+
+//                  that.zoomToLayersExtent([layerName])
+              });
           }, 70, that));
             
 //              map.on("mouseout", function() {

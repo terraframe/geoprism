@@ -114,11 +114,11 @@
     }
 
     controller.zoomToLayersExtent = function(layersArr) {
-//      webGLMapService.zoomToLayersExtent(layersArr);
+      webGLMapService.zoomToLayersExtent(layersArr);
     }
 
     controller.zoomToExtentOfFeatures = function(featureGeoIds) {
-//      webGLMapService.zoomToExtentOfFeatures(featureGeoIds);
+      webGLMapService.zoomToExtentOfFeatures(featureGeoIds);
     }
 
     controller.selectFeature = function(feature) {
@@ -379,6 +379,9 @@
     controller.refreshWithContextLayer = function(triggeringEvent) {
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData[0];
+        var bboxArr = JSON.parse(data.bbox);
+        var bboxObj = {sw:[bboxArr[0], bboxArr[1]], ne:[bboxArr[2], bboxArr[3]]}
+        
           
         var layers = [{
           name: "context-multipolygon",
@@ -393,7 +396,8 @@
           layer: "target",
           type: "TARGET",
           index: 2,
-          is3d: false            
+          is3d: false,
+          bbox: bboxObj
         }];
         
 
@@ -415,6 +419,9 @@
         
         controller.addVectorHoverEvents(hoverCallback, "target-multipolygon");
         controller.addVectorClickEvents(featureClickCallback, "target-multipolygon");
+        
+//        controller.zoomToExtentOfFeatures(data);
+        controller.zoomToLayersExtent([layers[1]]);
       }
     }
 
@@ -455,6 +462,7 @@
         $scope.sharedGeoData = data;
 
         controller.refreshWithContextLayer('sharedGeoData');
+        
       } else if (!isEmptyJSONObject($scope.sharedGeoData)) {
         controller.refreshWithContextLayer('sharedGeoData');
       }

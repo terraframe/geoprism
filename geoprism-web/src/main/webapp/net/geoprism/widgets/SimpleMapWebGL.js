@@ -199,6 +199,7 @@
           var layer = layers[i];
           
           controller.updateVectorLayer(source, layers);
+          controller.zoomToLayersExtent(["context-point"]);
         }
      
 //		  if(!isEmptyJSONObject($scope.sharedGeoData)){

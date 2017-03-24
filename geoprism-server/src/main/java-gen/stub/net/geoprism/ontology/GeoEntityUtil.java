@@ -20,6 +20,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
@@ -73,6 +77,8 @@ import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -82,6 +88,7 @@ import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
+import net.geoprism.dashboard.Dashboard;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.GeometrySerializationUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
@@ -899,6 +906,142 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       throw new ProgrammingErrorException(e);
     }
   }
+  
+  public static String getChildrenBBOX(String id, String universalId)
+  {
+    GeoEntity entity = GeoEntity.get(id);
+
+    ValueQuery vQuery = new ValueQuery(new QueryFactory());
+    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
+    GeoEntityQuery query = new GeoEntityQuery(vQuery);
+
+    StringBuffer sql = new StringBuffer();
+    sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
+    sql.append(" FROM universal, geo_entity, located_in WHERE geo_entity.universal = universal.id");
+    sql.append(" AND ((located_in.parent_id ='" + entity.getId() + "'");
+    sql.append(" AND geo_entity.id = located_in.child_id)");
+    sql.append(" AND geo_entity.universal = '" + universalId + "');");
+    	
+//    vQuery.SELECT(query.getGeoMultiPolygon());
+//    vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
+//    vQuery.AND(query.locatedIn(liQuery));
+
+//    if (universalId != null)
+//    {
+//      vQuery.AND(query.getUniversal().EQ(universalId));
+//    }
+
+
+//    if (limit != null)
+//    {
+//      vQuery.restrictRows(limit, 1);
+//    }
+    
+//    System.out.println(sql);
+    ResultSet bboxResult = Database.query(sql.toString());
+//    String bboxString = null;
+//	try {
+//		while(bboxResult.next())
+//		{
+//			bboxString = bboxResult.getString(1);
+//		}
+//	} 
+//	catch (SQLException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	finally {
+//		try {
+//			bboxResult.close();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+    
+
+    return formatBBox(bboxResult).toString();
+  }
+  
+  
+  /**
+   * Format the bounding box result set returned from a PostGIS database query
+   * 
+   * @param resultSet
+   * @return
+   */
+  private static JSONArray formatBBox(ResultSet resultSet)
+  {
+    JSONArray bboxArr = new JSONArray();
+
+    try
+    {
+      if (resultSet.next())
+      {
+        String bbox = resultSet.getString("bbox");
+        if (bbox != null)
+        {
+          Pattern p = Pattern.compile("POLYGON\\(\\((.*)\\)\\)");
+          Matcher m = p.matcher(bbox);
+
+          if (m.matches())
+          {
+            String coordinates = m.group(1);
+            List<Coordinate> coords = new LinkedList<Coordinate>();
+
+            for (String c : coordinates.split(","))
+            {
+              String[] xAndY = c.split(" ");
+              double x = Double.valueOf(xAndY[0]);
+              double y = Double.valueOf(xAndY[1]);
+
+              coords.add(new Coordinate(x, y));
+            }
+
+            Envelope e = new Envelope(coords.get(0), coords.get(2));
+
+            try
+            {
+              bboxArr.put(e.getMinX());
+              bboxArr.put(e.getMinY());
+              bboxArr.put(e.getMaxX());
+              bboxArr.put(e.getMaxY());
+            }
+            catch (JSONException ex)
+            {
+              throw new ProgrammingErrorException(ex);
+            }
+          }
+          else
+          {
+            String error = "Could not create a valid bounding box";
+
+            throw new ProgrammingErrorException(error);
+          }
+        }
+      }
+    }
+    catch (SQLException sqlEx1)
+    {
+      Database.throwDatabaseException(sqlEx1);
+    }
+    finally
+    {
+      try
+      {
+        java.sql.Statement statement = resultSet.getStatement();
+        resultSet.close();
+        statement.close();
+      }
+      catch (SQLException sqlEx2)
+      {
+        Database.throwDatabaseException(sqlEx2);
+      }
+    }
+
+    return bboxArr;
+  }
+  
 
   public static ValueQuery getChildren(String id, String universalId, Integer limit)
   {
@@ -928,6 +1071,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       vQuery.restrictRows(limit, 1);
     }
+    
+    System.out.println(vQuery.getSQL().toString());
 
     return vQuery;
   }
