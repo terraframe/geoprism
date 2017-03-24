@@ -716,34 +716,14 @@
           
           if(layersArr.length > 0){
             layersArr.forEach(function(refLayer){
-//              var layer = map.getLayer(refLayer.name);
-//              
-//              if(layer){
-//                  var layerSourceName = layer.source;
-//                  
-//                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-////                  var layerSourceData = map.getSource(layerSourceName)._data;
-//                  let layerSourceData = map.querySourceFeatures(layerSourceName);
-//                  
-//                  if(layerSourceData.features.length > 0){
-//                    var bbox = turf.extent(layerSourceData);
-//                    bounds.extend(
-//                        new mapboxgl.LngLatBounds(bbox)
-//                    );
-//                  }
-//              }
-            	
             	bounds.extend(
-                      new mapboxgl.LngLatBounds(refLayer.bbox)
-                  );
+            		new mapboxgl.LngLatBounds(refLayer.bbox.sw, refLayer.bbox.ne)
+                );
             });
             
             // check if bounds is an empty json object
             if(Object.keys(bounds).length > 0){
               if(bounds.getSouth() === bounds.getNorth() && bounds.getWest() === bounds.getEast()){
-//                map.easeTo({
-//                      center: [ bounds.getEast(), bounds.getNorth() ]
-//                  });
                 
                 var pt = {
                     "type": "Feature",

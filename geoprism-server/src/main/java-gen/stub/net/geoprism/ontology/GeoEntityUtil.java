@@ -926,43 +926,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     sql.append(" AND geo_entity.id = located_in.child_id)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
     	
-//    vQuery.SELECT(query.getGeoMultiPolygon());
-//    vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
-//    vQuery.AND(query.locatedIn(liQuery));
-
-//    if (universalId != null)
-//    {
-//      vQuery.AND(query.getUniversal().EQ(universalId));
-//    }
-
-
-//    if (limit != null)
-//    {
-//      vQuery.restrictRows(limit, 1);
-//    }
-    
-//    System.out.println(sql);
     ResultSet bboxResult = Database.query(sql.toString());
-//    String bboxString = null;
-//	try {
-//		while(bboxResult.next())
-//		{
-//			bboxString = bboxResult.getString(1);
-//		}
-//	} 
-//	catch (SQLException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	finally {
-//		try {
-//			bboxResult.close();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-    
 
     return formatBBox(bboxResult).toString();
   }

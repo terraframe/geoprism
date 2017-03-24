@@ -383,7 +383,7 @@
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData[0];
         var bboxArr = JSON.parse(data.bbox);
-        var bboxObj = {sw:[bboxArr[0], bboxArr[1]], ne:[bboxArr[2], bboxArr[3]]}
+        var bboxObj = {sw : new mapboxgl.LngLat(bboxArr[0], bboxArr[1]), ne : new mapboxgl.LngLat(bboxArr[2], bboxArr[3])}
         
           
         var layers = [{
