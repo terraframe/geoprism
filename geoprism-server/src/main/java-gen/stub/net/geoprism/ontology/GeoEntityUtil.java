@@ -268,6 +268,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
         {
           GeoEntity.get(feature.getString("id")).unlock();
         }
+        else if (type.equals("delete"))
+        {
+          GeoEntity.get(feature.getString("id")).delete();
+        }
       }
     }
     catch (JSONException e)
