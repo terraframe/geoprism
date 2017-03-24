@@ -859,9 +859,10 @@
                 feature = features[0]; // only take the 1st feature
               }
                 
-                if(feature.properties.isClickable || feature.properties.isClickable === "true"){
-                  featureClickCallback(feature, map);
-                }
+              if(feature.properties.isClickable || feature.properties.isClickable === "true"){
+                var shouldDoDefault = featureClickCallback(feature, map);
+                if (shouldDoDefault === false) { return; }
+              }
             }
           }); 
         },
@@ -886,6 +887,9 @@
                 
               if(features.length){
                 var feature = features[0]; // only take the 1st feature
+                
+                var shouldDoDefault = hoverCallback(feature.id);
+                if (shouldDoDefault === false) { return; }
                 
                 if(popup){
                   popup.remove();

@@ -183,6 +183,13 @@
         var source = $scope.sharedGeoData[0];
           
         var layers = [{
+          name: "context-multipolygon",
+          style: $scope.contextStyle,
+          layer: "context",
+          type: "CONTEXT",
+          index: 1,
+          is3d: false                	
+        },{
           name: "target-multipolygon",
           style: $scope.targetStyle,
           layer: "target",

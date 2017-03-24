@@ -190,8 +190,7 @@ public class LocationController implements Reloadable
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
-    GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
-    entity.delete();
+    GeoEntityUtilDTO.deleteGeoEntity(request, entityId);
 
     GeoEntityUtilDTO.refreshViews(request, existingLayers);
 

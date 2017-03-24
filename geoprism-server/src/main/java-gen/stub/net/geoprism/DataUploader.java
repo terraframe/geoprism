@@ -102,8 +102,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   @Authenticate
   public static void deleteGeoEntity(String entityId)
   {
-    GeoEntity entity = GeoEntity.get(entityId);
-    entity.delete();
+    GeoEntityUtil.deleteGeoEntity(entityId);
   }
 
   @Transaction

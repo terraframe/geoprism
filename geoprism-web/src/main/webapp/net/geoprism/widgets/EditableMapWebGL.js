@@ -57,7 +57,7 @@
         controls : {
           point : false,
           line_string : false,
-          polygon : false,
+          polygon : true,
           trash : true,
           combine_features : false,
           uncombine_features : false
@@ -65,15 +65,14 @@
       });
       map.addControl(controller._editingControl);
       
-      // Hide the controls until we enter an editing session
-      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
-
-      
       // Define the GeoprismEditingControl
       controller._geoprismEditingControl = new net.geoprism.gis.GeoprismEditingControl(controller);
       map.addControl(controller._geoprismEditingControl);
       
       controller._isEditing = false;
+      
+      controller._updatedGeos = {};
+      map.on("draw.update", controller.onDrawUpdate);
     }
 
     controller.getWebGLMap = function() {
@@ -147,6 +146,31 @@
       webGLMapService.updateVectorLayer(source, layers);
     }
     
+    controller.startNewGeoSession = function() {
+      if (controller._isEditing) { controller.cancelEditing(); return; }
+      
+      var map = controller.getWebGLMap();
+      
+      this.unselectFeature(null);
+      
+      // After all the hard stuff has been done, now we can enable editing controls
+      controller._geoprismEditingControl.startNewGeoSession();
+ 
+      controller._isEditing = true;
+    }
+    
+    controller.cancelNewGeoSession = function() {
+      if (!controller._isEditing) { return; }
+      
+      var map = controller.getWebGLMap();
+      
+      controller._geoprismEditingControl.stopNewGeoSession();
+
+      controller._editingControl.deleteAll();
+      
+      controller._isEditing = false;
+    }
+    
     // The first thing that happens when they click the edit button. We need to get proper geometries (not simplified) and lock all the GeoEntities
     controller.openEditingSession = function() {
       if (controller._isEditing) { controller.cancelEditing(); return; }
@@ -172,111 +196,16 @@
       var map = controller.getWebGLMap();
       
       this.unselectFeature(null);
+        
+      // The draw plugin has a bug in it that throws a warning 'crs is deprecated' as an error.
+      geometries.crs = undefined;
       
-      // Add features to editing control
-//      var filter = [ "!=", "id", "" ];
-//      if (featureIds != null)
-//      {
-//        filter = [ '==', 'id', featureIds ];
-//      }
-//      var features = map.querySourceFeatures("target-multipolygon", {
-//        filter : filter,
-//        sourceLayer: "target"
-//      });
-      
-      try
-      {
-        // Theoretically queryRenderedFeatures should give us a better response where polygons aren't fragmented
-        // but it doesn't as of this version.
-        //var features = map.queryRenderedFeatures({layers : ["target-multipolygon"], filter : filter});
+      this._editingControl.add(geometries);
         
-        
-//        // Function to union features that may have fragmented polygons in the features array
-//        var unionFeatures = function(features, target, index){
-//    	   	var unionedFeature;
-//        	
-//        	for(var f=0; f<features.length; f++){
-//        		var nextFt = features[f];
-//        		var nextFtId = nextFt.properties.geoId;
-//        		if(f > index && target.properties.geoId === nextFtId){
-//        			if(unionedFeature){
-//        				unionedFeature = turf.union(unionedFeature, nextFt);
-//        			}
-//        			else{
-//        				unionedFeature = turf.union(ft, nextFt);
-//        			}
-//        		}
-//        	}
-//        	
-//        	return unionedFeature;
-//        }
-//        
-//        
-//        var containsFeature = function(unionedFeatures, featureId){
-//          for(var i=0; i<unionedFeatures.length; i++){
-//            var ft = unionedFeatures[i];
-//            if(ft.properties.geoId === featureId){
-//              return true;
-//            }
-//          };
-//          
-//          return false;
-//        }
-//        
-//        
-//        //
-//        // Polygons returned from map.querySourceFeatures() are fragmented.  After talking with a mapbox
-//        // employee the fix (i.e. hack) was to union all geometries that are fragmented.. This bit of scrappy 
-//        // code does that although I'm hoping this will be replaced by better mapboxgl responses in future versions.
-//        //
-//        var unionedFeatures = [];
-//        for(var i=0; i<features.length; i++){
-//          var ft = features[i];
-//          var ftId = ft.properties.geoId;
-//          
-//          if(!containsFeature(unionedFeatures, ftId)){
-//            var unionedFeature = unionFeatures(features, ft, i);
-//            if(unionedFeature){
-//              unionedFeatures.push(unionedFeature);
-//            }
-//            else{
-//              unionedFeatures.push(ft)
-//            }
-//          }
-//        };
-//        //
-//        // end of polygon fragmentation fix
-//        //
-//        
-//        
-//        for (var i = 0; i < unionedFeatures.length; ++i) {
-//          this._editingControl.add(unionedFeatures[i]);
-//        }
-        
-        // The draw plugin has a bug in it that throws a warning 'crs is deprecated' as an error.
-        geometries.crs = undefined;
-        
-        this._editingControl.add(geometries);
-      }
-      catch(e)
-      {
-        // TODO : proper error handling
-        throw e;
-      }
-      
       // After all the hard stuff has been done, now we can enable editing controls
       controller._geoprismEditingControl.startEditing();
-      $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
-      
-      // Show/hide relevant/irrelevant target features
-//      if (featureIds != null)
-//      {
-//        map.setFilter("target-multipolygon", [ "!=", "id", featureIds ]);
-//      }
-//      else
-//      {
-        map.setFilter("target-multipolygon", [ "==", "id", "" ]);
-//      }
+ 
+      map.setFilter("target-multipolygon", [ "==", "id", "" ]);
       
       controller._isEditing = true;
     }
@@ -292,7 +221,6 @@
           var map = controller.getWebGLMap();
           
           controller._geoprismEditingControl.stopEditing();
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 
           map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
           controller._editingControl.deleteAll();
@@ -307,6 +235,57 @@
       locationService.cancelEditingSession(connection, config);
     }
     
+    controller.saveNewGeoSession = function() {
+      if (!controller._isEditing) { return; }
+      
+      var featureCollection = this._editingControl.getAll();
+      
+      // Convert to WKT
+      var geojson = null;
+      var features = featureCollection.features;
+      if (features.length > 1)
+      {
+        geojson = {
+          "type": "MultiPolygon",
+          "coordinates": []
+        };
+        
+        for (var i = 0; i < features.length; ++i)
+        {
+          geojson.coordinates.push(features[i].geometry.coordinates);
+        }
+      }
+      else if (features.length === 1)
+      {
+        geojson = features[0];
+      }
+      else
+      {
+        controller.cancelNewGeoSession();
+        return;
+      }
+      
+      var _wkt = wellknown.stringify(geojson);
+      
+      $scope.$emit('locationEditNew', {
+        wkt: _wkt,
+        afterApply: function(){
+          location.reload();
+        }
+      });
+    }
+    
+    controller.onDrawUpdate = function(event) {
+      var feats = event.features;
+      
+      for (var i = 0; i < feats.length; ++i)
+      {
+        var feat = feats[i];
+        
+        controller._updatedGeos[feat.id] = true;
+      }
+    };
+    
     controller.saveEditing = function() {
       if (!controller._isEditing) { return; }
       
@@ -314,13 +293,35 @@
       
       var featureCollection = this._editingControl.getAll();
       
+      // Filter out features that haven't been updated
+      var updatedFeatureCollection = {type:"FeatureCollection", features:[]};
+      var updatedFeatures = updatedFeatureCollection.features;
+      
+      var feats = featureCollection.features;
+      for (var i = 0; i < feats.length; ++i)
+      {
+        var feat = feats[i];
+        
+        if (controller._updatedGeos.hasOwnProperty(feat.id))
+        {
+          updatedFeatures.push(feat);
+        }
+        else
+        {
+          updatedFeatures.push({
+            id: feat.id,
+            type: "unlock"
+          })
+        }
+      }
+      controller._updatedGeos = {};
+      
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(data) {
           controller._isEditing = false;
           
           controller._geoprismEditingControl.stopEditing();
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
           
           map.setFilter("target-multipolygon", [ "!=", "id", "" ]);
           
@@ -335,8 +336,8 @@
           console.log(error);
         }
       };
-      locationService.applyGeometries(connection, featureCollection);
-    }
+      locationService.applyGeometries(connection, updatedFeatureCollection);
+    };
 
     controller.refreshBaseLayer = function() {
       if ($scope.baseLayers.length > 0) {
@@ -377,6 +378,8 @@
     }
 
     controller.refreshWithContextLayer = function(triggeringEvent) {
+      console.log("EditableMapWebGL::refreshWithContextLayer");
+      
       if (!isEmptyJSONObject($scope.sharedGeoData)) {
         var data = $scope.sharedGeoData[0];
         var bboxArr = JSON.parse(data.bbox);
@@ -402,17 +405,31 @@
         
 
         var hoverCallback = function(featureId) {
-          $scope.$emit('hoverChange', {
-            id : featureId
-          });
-          $scope.$apply();
+          if (!controller._isEditing)
+          {
+            $scope.$emit('hoverChange', {
+              id : featureId
+            });
+            $scope.$apply();
+            
+            return true;
+          }
+          
+          return false;
         }
 
         var featureClickCallback = function(feature, map) {
-          $scope.$emit('locationFocus', {
-            id : feature.properties.id
-          });
-          $scope.$apply();
+          if (!controller._isEditing)
+          {
+            $scope.$emit('locationFocus', {
+              id : feature.properties.id
+            });
+            $scope.$apply();
+            
+            return true;
+          }
+          
+          return false;
         }
         
         controller.updateVectorLayer(data, layers);
@@ -435,15 +452,24 @@
     }
 
     $scope.$on('listHoverOver', function(event, data) {
-      controller.focusOnFeature(data);
+      if (!controller._isEditing)
+      {
+        controller.focusOnFeature(data);
+      }
     });
 
     $scope.$on('listHoverOff', function(event, data) {
-      controller.focusOffFeature(data);
+      if (!controller._isEditing)
+      {
+        controller.focusOffFeature(data);
+      }
     });
 
     $scope.$on('listItemClick', function(event, data) {
-      controller.zoomToExtentOfFeatures(data.geoIds)
+      if (!controller._isEditing)
+      {
+        controller.zoomToExtentOfFeatures(data.geoIds)
+      }
     });
 
     $scope.$on('editLocation', function(event, data) {
@@ -456,7 +482,10 @@
 
     // Recieve shared data from parent controller based on user selection of
     // target location
+    console.log("EditableMapWebGL::on sharedGeoData");
     $scope.$on('sharedGeoData', function(event, data) {
+      console.log("EditableMapWebGL::sharedGeoData");
+      
       if (!isEmptyJSONObject(data)) {
 
         $scope.sharedGeoData = data;
@@ -483,10 +512,161 @@
     // console.log("watched")
     // }
     // });
+    
+    Mojo.Meta.newClass('net.geoprism.gis.GeoprismEditingControl', {
+      Extends : com.runwaysdk.ui.Component,  
+      IsAbstract : false,
+      Instance : {
+       
+        initialize : function(controller) {
+          this._controller = controller;
+        },
+        
+        onAdd : function(map) {
+          var that = this;
+          this._map = map;
+          
+          this._container = $(document.createElement('div'));
+          this._container.addClass('mapboxgl-ctrl-group mapboxgl-ctrl');
+
+          this._bEdit = $(document.createElement("button"));
+          this._bEdit.addClass('fa fa-pencil-square-o');
+          this._bEdit.css("color", "black");
+          this._bEdit.css("font-size", "18px");
+          this._bEdit.prop('title', localizationService.localize("location.management.editing", "edit"));
+          this._bEdit.click(function() {
+            that._controller.openEditingSession(null);
+          });
+          this._container.append(this._bEdit);
+          
+          this._bNew = $(document.createElement("button"));
+          this._bNew.addClass('fa fa-plus-square-o');
+          this._bNew.css("color", "black");
+          this._bNew.css("font-size", "18px");
+          this._bNew.prop('title', localizationService.localize("location.management.editing", "new"));
+          this._bNew.click(function() {
+            that._controller.startNewGeoSession();
+          });
+          this._container.append(this._bNew);
+          
+          this._bSave = $(document.createElement("button"));
+          this._bSave.addClass('fa fa-floppy-o');
+          this._bSave.css("color", "black");
+          this._bSave.css("display", "none");
+          this._bSave.css("font-size", "16px");
+          this._bSave.prop('title', localizationService.localize("location.management.editing", "save"));
+          this._bSave.click(function() {
+            that.onClickSave();
+          });
+          this._container.append(this._bSave);
+          
+          this._bCancel = $(document.createElement("button"));
+          this._bCancel.addClass('fa fa-ban');
+          this._bCancel.css("color", "black");
+          this._bCancel.css("display", "none");
+          this._bCancel.css("font-size", "16px");
+          this._bCancel.prop('title', localizationService.localize("location.management.editing", "cancel"));
+          this._bCancel.click(function() {
+            that.onClickCancel();
+          });
+          this._container.append(this._bCancel);
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").prop('title', localizationService.localize("location.management.editing", "trash"));
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").prop('title', localizationService.localize("location.management.editing", "polygon"));
+          
+          this.stopEditing();
+          
+          return this._container[0];
+        },
+        
+        onRemove : function() {
+          this._container.parentNode.removeChild(this._container);
+          this._map = undefined;
+        },
+        
+        onClickSave : function() {
+          if (this._isNewGeoSession)
+          {
+            this._controller.saveNewGeoSession();
+          }
+          else if (this._controller._isEditing)
+          {
+            this._controller.saveEditing();
+          }
+        },
+        
+        onClickCancel : function() {
+          if (this._isNewGeoSession)
+          {
+            this._controller.cancelNewGeoSession();
+          }
+          else if (this._controller._isEditing)
+          {
+            this._controller.cancelEditing();
+          }
+        },
+        
+        startNewGeoSession: function() {
+          this._bEdit.css("display", "none");
+          this._bNew.css("display", "none");
+          this._bSave.css("display", "block");
+          this._bCancel.css("display", "block");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").removeAttr("style");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").removeAttr("style");
+          
+          this._isNewGeoSession = true;
+        },
+        
+        stopNewGeoSession: function() {
+          this._bEdit.css("display", "block");
+          this._bNew.css("display", "block");
+          this._bSave.css("display", "none");
+          this._bCancel.css("display", "none");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
+          
+          this._isNewGeoSession = false;
+        },
+        
+        startEditing: function() {
+          this._bEdit.css("display", "none");
+          this._bNew.css("display", "none");
+          this._bSave.css("display", "block");
+          this._bCancel.css("display", "block");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
+        },
+        
+        stopEditing : function() {
+          this._bEdit.css("display", "block");
+          this._bNew.css("display", "block");
+          this._bSave.css("display", "none");
+          this._bCancel.css("display", "none");
+          
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
+        }
+      }
+    });
 
     controller.init();
   }
-
+  
   function EditableMapWebGL() {
     return {
       restrict : 'E',
@@ -504,73 +684,6 @@
     }
   }
   
-  Mojo.Meta.newClass('net.geoprism.gis.GeoprismEditingControl', {
-    Extends : com.runwaysdk.ui.Component,  
-    IsAbstract : false,
-    Instance : {
-     
-      initialize : function(controller) {
-        this._controller = controller;
-      },
-      
-      onAdd : function(map) {
-        var that = this;
-        this._map = map;
-        
-        this._container = $(document.createElement('div'));
-        this._container.addClass('mapboxgl-ctrl-group mapboxgl-ctrl');
-
-        this._bEdit = $(document.createElement("button"));
-        this._bEdit.addClass('fa fa-pencil-square-o');
-        this._bEdit.css("color", "black");
-        this._bEdit.css("font-size", "18px");
-        this._bEdit.click(function() {
-          that._controller.openEditingSession(null);
-        });
-        this._container.append(this._bEdit);
-        
-        this._bSave = $(document.createElement("button"));
-        this._bSave.addClass('fa fa-floppy-o');
-        this._bSave.css("color", "black");
-        this._bSave.css("display", "none");
-        this._bSave.css("font-size", "16px");
-        this._bSave.click(function() {
-          that._controller.saveEditing();
-        });
-        this._container.append(this._bSave);
-        
-        this._bCancel = $(document.createElement("button"));
-        this._bCancel.addClass('fa fa-ban');
-        this._bCancel.css("color", "black");
-        this._bCancel.css("display", "none");
-        this._bCancel.css("font-size", "16px");
-        this._bCancel.click(function() {
-          that._controller.cancelEditing();
-        });
-        this._container.append(this._bCancel);
-        
-        return this._container[0];
-      },
-      
-      onRemove : function() {
-        this._container.parentNode.removeChild(this._container);
-        this._map = undefined;
-      },
-      
-      startEditing: function() {
-        this._bEdit.css("display", "none");
-        this._bSave.css("display", "block");
-        this._bCancel.css("display", "block");
-      },
-      
-      stopEditing : function() {
-        this._bEdit.css("display", "block");
-        this._bSave.css("display", "none");
-        this._bCancel.css("display", "none");
-      }
-    }
-  });
-
   angular.module("editable-map-webgl", [ "styled-inputs", "localization-service", "webgl-map-service", "location-service" ]);
   angular.module("editable-map-webgl").controller('editableMapWebglController', EditableMapWebGLController)
   	.directive('editableMapWebgl', EditableMapWebGL)
