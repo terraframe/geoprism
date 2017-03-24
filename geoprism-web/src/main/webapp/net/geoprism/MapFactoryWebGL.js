@@ -244,16 +244,10 @@
           var map = this.getMap();
           var that = this;
           
-      map.on("data.updated", function(data){
-        // TODO: remove hard coded layer names
-        if( ! map.isEasing()){
-          that.zoomToLayersExtent(that.LAYERS_LIST);
-        }
-          });
       
-      // add scale bar
-      map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left', unit: 'imperial'}));
-      //map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+          // add scale bar
+          map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left', unit: 'imperial'}));
+          //map.addControl(new mapboxgl.NavigationControl(), 'top-left');
         },
         
         // TODO: convert to webgl
@@ -449,13 +443,6 @@
                    });
                 }
           }
-                
-          // Won't do anything unless layers are populate with data containing features
-          map.on("source.load", function(e){
-            if(e.source.id === layerName){
-              that.zoomToLayersExtent([layerName])
-            }
-          });
         },
           
         addVectorLayer : function(source, layers) {
@@ -716,9 +703,11 @@
           
           if(layersArr.length > 0){
             layersArr.forEach(function(refLayer){
-            	bounds.extend(
-            		new mapboxgl.LngLatBounds(refLayer.bbox.sw, refLayer.bbox.ne)
-                );
+            	if(refLayer.bbox && refLayer.bbox.sw && refLayer.bbox.ne){
+            		bounds.extend(
+            			new mapboxgl.LngLatBounds(refLayer.bbox.sw, refLayer.bbox.ne)
+            		);
+            	}
             });
             
             // check if bounds is an empty json object
@@ -929,23 +918,6 @@
                 }
               }
               
-              
-              map.on("sourcedata", function(event){
-                  if (event.isSourceLoaded) {
-//                      console.log("got it")
-//                      var test = map.querySourceFeatures("target-multipolygon");
-//                      console.log(test)
-//                      setTimeout(function(){
-//                      	console.log("the target layer - ", event.style.getLayer("target-multipolygon"));
-//                      	console.log("the target features - ", event.style.map.querySourceFeatures("target-multipolygon"));
-                        var test = map.querySourceFeatures(source.name);
-                        console.log(test)
-//                      }, 10000)
-                  }
-//                  console.log("event type - ", event.type)
-
-//                  that.zoomToLayersExtent([layerName])
-              });
           }, 70, that));
             
 //              map.on("mouseout", function() {

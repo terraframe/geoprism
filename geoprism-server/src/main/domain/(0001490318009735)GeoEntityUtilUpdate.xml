@@ -19,6 +19,7 @@
   <undoIt>
     <delete>
     	<object key="net.geoprism.ontology.GeoEntityUtil.getChildrenBBOX" type="com.runwaysdk.system.metadata.MdMethod"/>
+    	<object key="net.geoprism.ontology.GeoEntityUtil.getEntitiesBBOX" type="com.runwaysdk.system.metadata.MdMethod"/>
     </delete>
   </undoIt>
 </version>

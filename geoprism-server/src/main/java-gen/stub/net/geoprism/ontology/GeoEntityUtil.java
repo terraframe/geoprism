@@ -962,6 +962,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     sql.append(" AND ((located_in.parent_id ='" + entity.getId() + "'");
     sql.append(" AND geo_entity.id = located_in.child_id)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
+    
+    System.out.println(sql.toString());
     	
     ResultSet bboxResult = Database.query(sql.toString());
 
@@ -975,7 +977,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
    * @param resultSet
    * @return
    */
-  private static JSONArray formatBBox(ResultSet resultSet)
+  public static JSONArray formatBBox(ResultSet resultSet)
   {
     JSONArray bboxArr = new JSONArray();
 
