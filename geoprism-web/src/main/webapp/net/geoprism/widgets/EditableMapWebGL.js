@@ -73,6 +73,9 @@
       
       controller._updatedGeos = {};
       map.on("draw.update", controller.onDrawUpdate);
+      
+      controller._deletedGeos = {};
+      map.on("draw.delete", controller.onDrawDelete);
     }
 
     controller.getWebGLMap = function() {
@@ -275,6 +278,17 @@
       });
     }
     
+    controller.onDrawDelete = function(event) {
+      var feats = event.features;
+      
+      for (var i = 0; i < feats.length; ++i)
+      {
+        var feat = feats[i];
+        
+        controller._deletedGeos[feat.id] = true;
+      }
+    };
+    
     controller.onDrawUpdate = function(event) {
       var feats = event.features;
       
@@ -302,6 +316,11 @@
       {
         var feat = feats[i];
         
+        if (controller._deletedGeos.hasOwnProperty(feat.id))
+        {
+          delete controller._deletedGeos[feat.id];
+        }
+        
         if (controller._updatedGeos.hasOwnProperty(feat.id))
         {
           updatedFeatures.push(feat);
@@ -315,6 +334,17 @@
         }
       }
       controller._updatedGeos = {};
+      
+      var deletedGeos = Object.keys(controller._deletedGeos);
+      for (var i = 0; i < deletedGeos.length; ++i)
+      {
+        var delGeo = deletedGeos[i];
+        
+        updatedFeatures.push({
+          id: delGeo,
+          type: "delete"
+        });
+      }
       
       var connection = {
         elementId : '#innerFrameHtml',
