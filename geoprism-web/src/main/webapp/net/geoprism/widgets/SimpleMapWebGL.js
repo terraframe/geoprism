@@ -56,25 +56,6 @@
 	        });
 	        $scope.$apply();
 		}
-		
-		//
-		// Setting up empty layers to be populated later
-		//
-		// NOTE: We can't move this code into the map factory because it requires the event listeners which reference the scope.
-		//
-//		var emptyGeoJSON = {"type":"FeatureCollection","totalFeatures":0,"features":[],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}}};
-//		
-//		controller.addVectorLayer(emptyGeoJSON, "context-multipolygon", $scope.contextStyle, "CONTEXT", 2, false);
-//		controller.addVectorLayer(emptyGeoJSON, "context-point", $scope.contextStyle, "CONTEXT", 2, false);
-//    
-//		controller.addVectorLayer(emptyGeoJSON, "target-multipolygon", $scope.targetStyle, "TARGET", 2, true);
-//	    controller.addVectorLayer(emptyGeoJSON, "target-point", $scope.targetStyle, "TARGET", 2, false);
-//
-//		controller.addVectorHoverEvents(hoverCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
-//		controller.addVectorClickEvents(featureClickCallback, ["target-point", "context-point", "target-multipolygon", "context-multipolygon"]);
-		//
-		// end
-		//
 	 }
 	 
 	 
@@ -181,6 +162,11 @@
 	 
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
         var source = $scope.sharedGeoData[0];
+        var bboxObj;
+        if(source && source.bbox){
+        	var bboxArr = JSON.parse(source.bbox);
+        	bboxObj= {sw : new mapboxgl.LngLat(bboxArr[0], bboxArr[1]), ne : new mapboxgl.LngLat(bboxArr[2], bboxArr[3])};
+        }
           
         var layers = [{
           name: "context-multipolygon",
@@ -195,10 +181,12 @@
           layer: "target",
           type: "TARGET",
           index: 2,
-          is3d: false            
+          is3d: false,
+          bbox: bboxObj
         }];
           
-        controller.updateVectorLayer(source, layers);
+        controller.updateVectorLayer(source, layers);  //TODO: why is this getting called twice???
+        controller.zoomToLayersExtent([layers[1]]);
 		 
         var layers = $scope.sharedGeoData;
 
@@ -206,7 +194,7 @@
           var layer = layers[i];
           
           controller.updateVectorLayer(source, layers);
-          controller.zoomToLayersExtent(["context-point"]);
+//          controller.zoomToLayersExtent([layer]);
         }
      
 //		  if(!isEmptyJSONObject($scope.sharedGeoData)){

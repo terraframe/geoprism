@@ -911,6 +911,39 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     }
   }
   
+  public static String getEntitiesBBOX(String[] ids)
+  {
+	  if(ids.length > 0)
+	  {
+		  StringBuffer geoIdsStr = new StringBuffer();
+		  for(int i=0; i<ids.length; i++)
+		  {
+			  String id = ids[i];
+			  
+			  if(i > 0){
+				  geoIdsStr.append(",");
+			  }
+			  geoIdsStr.append("'").append(id).append("'");
+		  }
+		  
+		  
+		  ValueQuery vQuery = new ValueQuery(new QueryFactory());
+		  GeoEntityQuery query = new GeoEntityQuery(vQuery);
+	
+		  StringBuffer sql = new StringBuffer();
+		  sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
+		  sql.append(" FROM geo_entity WHERE geo_entity.id = any (array["+geoIdsStr+"]);");
+		  
+		    	
+		  ResultSet bboxResult = Database.query(sql.toString());
+	
+		  return formatBBox(bboxResult).toString();
+	  }
+	  
+	  return null;
+  }
+  
+  
   public static String getChildrenBBOX(String id, String universalId)
   {
     GeoEntity entity = GeoEntity.get(id);
