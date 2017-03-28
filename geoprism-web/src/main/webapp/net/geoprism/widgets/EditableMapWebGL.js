@@ -475,7 +475,6 @@
         if (bboxObj != null)
         {
           controller.zoomToLayersExtent([layers[1]]);
-//          controller.zoomToExtentOfFeatures(data);
         }
       }
     }
