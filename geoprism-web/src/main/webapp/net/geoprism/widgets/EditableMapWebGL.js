@@ -469,13 +469,12 @@
         
         controller.updateVectorLayer(data, layers);
         
-        controller.addVectorHoverEvents(hoverCallback, "target-multipolygon");
-        controller.addVectorClickEvents(featureClickCallback, "target-multipolygon");
+        controller.addVectorHoverEvents(hoverCallback, ["target-multipolygon"]);
+        controller.addVectorClickEvents(featureClickCallback, ["target-multipolygon"]);
         
         if (bboxObj != null)
         {
           controller.zoomToLayersExtent([layers[1]]);
-//          controller.zoomToExtentOfFeatures(data);
         }
       }
     }

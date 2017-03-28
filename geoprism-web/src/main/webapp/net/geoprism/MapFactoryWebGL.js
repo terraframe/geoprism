@@ -527,7 +527,7 @@
                       {
                         if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
                         {
-                          map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+                          map.setFilter(targetLayer.sourceLayer.toLowerCase() + "-multipolygon-hover", ["==", "id", ""]);
                         }
                         else if(loopFeat.geometry.type.toLowerCase() === "point")
                         {
@@ -539,32 +539,6 @@
                   }
                 }
                 
-//                var layerSourceName = targetLayer.source;
-//                
-//                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-////                  var layerSourceData = map.querySourceFeatures(layerSourceName);
-//                  var layerSourceData = map.getSource(layerSourceName)._data;
-//                  
-//                  if(layerSourceData.features.length > 0){
-//                     for(var i=0; i<layerSourceData.features.length; i++){
-//                      var targetFeature = layerSourceData.features[i];
-//                      var featureProps = targetFeature.properties;
-//                      if((feature.id && feature.id === featureProps.id) || 
-//                        (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
-//                        (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
-//                      {
-//                        // control for styling of different geometry types
-//                        if(targetFeature.geometry){
-//                          if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
-//                            map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
-//                            }
-//                          else if(targetFeature.geometry.type.toLowerCase() === "point"){
-////                            map.setFilter("target-point-hover", ["==", "id", ""]);
-//                            }
-//                        }
-//                      }
-//                     }
-//                }
               });
             }
           }
@@ -593,8 +567,7 @@
                     var loopFeat = features[i];
                     var props = loopFeat.properties;
                     
-                    if ( (feature.id && feature.id === props.id) ||
-                          (feature.geoId && feature.geoId.length > 0 && feature.geoId === props.geoId) ||
+                    if (  (feature.geoId && feature.geoId.length > 0 && feature.geoId === props.geoId) ||
                           (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, props.geoId)))
                     {
                       // control for styling of different geometry types
@@ -602,7 +575,7 @@
                       {
                         if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
                         {
-                          map.setFilter("target-multipolygon-hover", ["==", "id", loopFeat.properties.id]);
+                          map.setFilter(targetLayer.sourceLayer.toLowerCase() + "-multipolygon-hover", ["==", "id", loopFeat.properties.id]);
                         }
                         else if(loopFeat.geometry.type.toLowerCase() === "point")
                         {
@@ -649,6 +622,7 @@
             layersList.forEach(function(layerName){
               var layer = map.getLayer(layerName);
               
+//              if(layer && layer.sourceLayer.toUpperCase() === type.toUpperCase()){
               if(layer){
                 layersArr.push(layer);
               }
@@ -754,10 +728,14 @@
                   var layerSourceName = layer.source;
                   
                   // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-                  var layerSourceData = map.getSource(layerSourceName)._data;
+//                  var layerSourceData = map.getSource(layerSourceName)._data;
+                  var layerSourceData = map.querySourceFeatures(layerSourceName, {
+                      sourceLayer: layer.sourceLayer
+                  });
+
                   
-                  if(layerSourceData.features.length > 0){
-                    layerSourceData.features.forEach(function(f){
+                  if(layerSourceData && layerSourceData.length > 0){
+                    layerSourceData.forEach(function(f){
                       if(that.arrayContainsString(featureGeoIds, f.properties.geoId)){
                         var bbox = turf.extent(f);
                           bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
@@ -770,9 +748,6 @@
             // check if bounds is an empty json object
             if(Object.keys(bounds).length > 0){
               if(bounds.getSouth() === bounds.getNorth() && bounds.getWest() === bounds.getEast()){
-//                map.easeTo({
-//                      center: [ bounds.getEast(), bounds.getNorth() ]
-//                  });
                 
                 var pt = {
                       "type": "Feature",
@@ -788,7 +763,7 @@
                 map.fitBounds(bufferedBounds, {padding:0});
               }
               else{
-                map.fitBounds(bounds, {padding:100});
+                map.fitBounds(bounds, {padding:50});
               }
             }
           }
@@ -806,7 +781,7 @@
           
           map.on('click', function(e) {
           
-            var features = map.queryRenderedFeatures(e.point, { layers: [layerz] });
+            var features = map.queryRenderedFeatures(e.point, { layers: layerz });
             
             if(features.length){
               var feature;
@@ -850,9 +825,9 @@
           var originalCursor = map.getCanvas().style.cursor;
           
           //TODO: Do we need to wrap this in 'load' event or should we use a different event
-          map.on('load', function () {
+//          map.on('load', function () {
             map.on('mousemove', that.throttle(function(e) {
-              var features = map.queryRenderedFeatures(e.point, { layers: [ layerz ] });
+              var features = map.queryRenderedFeatures(e.point, { layers: layerz  });
                 
               if(features.length){
                 var feature = features[0]; // only take the 1st feature
@@ -923,7 +898,8 @@
 //              map.on("mouseout", function() {
 //                  map.setFilter("target-point-hover", ["==", "id", ""]);
 //              });
-          });
+            
+//          });
         },
         
         
