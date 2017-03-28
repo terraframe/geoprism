@@ -271,10 +271,10 @@
       var _wkt = wellknown.stringify(geojson);
       
       $scope.$emit('locationEditNew', {
-        wkt: _wkt
-//        afterApply: function(){
-//          location.reload();
-//        }
+        wkt: _wkt,
+        afterApply: function(){
+          location.reload();
+        }
       });
     }
     
