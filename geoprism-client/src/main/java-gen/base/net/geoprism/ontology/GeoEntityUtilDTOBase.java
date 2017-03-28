@@ -1,10 +1,10 @@
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -207506106)
+@com.runwaysdk.business.ClassSignature(hash = -2105263295)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
-  private static final long serialVersionUID = -207506106;
+  private static final long serialVersionUID = -2105263295;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -79,6 +79,14 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
     Object[] _parameters = new Object[]{config};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getData", _declaredTypes);
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getEntitiesBBOX(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String[] ids)
+  {
+    String[] _declaredTypes = new String[]{"[Ljava.lang.String;"};
+    Object[] _parameters = new Object[]{ids};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getEntitiesBBOX", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.system.gis.geo.GeoEntityDTO getEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)

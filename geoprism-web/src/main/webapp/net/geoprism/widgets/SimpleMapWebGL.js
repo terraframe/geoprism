@@ -29,7 +29,9 @@
 	 
 	 controller.init = function() {
 		 
-		var hoverCallback = function(featureId){
+	 }
+	 
+	controller.hoverCallback = function(featureId){
 			
 			var isMobile = false; //initiate as false
 			// device detection
@@ -50,13 +52,12 @@
 			}
 		}
 		
-		var featureClickCallback = function(feature, map){
+		controller.featureClickCallback = function(feature, map){
 			$scope.$emit('locationFocus', {
 	              id : feature.properties.id
 	        });
 	        $scope.$apply();
 		}
-	 }
 	 
 	 
 	 controller.baseLayerPanelMouseOut = function() {
@@ -162,6 +163,7 @@
 	 
 	 controller.refreshWithContextLayer = function(triggeringEvent) {
         var source = $scope.sharedGeoData[0];
+        
         var bboxObj;
         if(source && source.bbox){
         	var bboxArr = JSON.parse(source.bbox);
@@ -187,62 +189,9 @@
           
         controller.updateVectorLayer(source, layers);  //TODO: why is this getting called twice???
         controller.zoomToLayersExtent([layers[1]]);
-		 
-        var layers = $scope.sharedGeoData;
-
-        for (var i = 0; i < layers.length; i++) {
-          var layer = layers[i];
-          
-          controller.updateVectorLayer(source, layers);
-//          controller.zoomToLayersExtent([layer]);
-        }
-     
-//		  if(!isEmptyJSONObject($scope.sharedGeoData)){
-//			  var data = $scope.sharedGeoData;
-//			  
-//			  var contextCallback = function(data) {
-//				  for(var i=0; i<data.features.length; i++){
-//	  	    		var feature = data.features[i];
-//	  	    		feature.properties.isHoverable = false;
-//	  	    		feature.properties.isClickable = false;
-//	  	    		
-//	  	    		// TODO: Remove this temp demo code
-//	  	    		if(feature.properties.displayLabel.startsWith("ES")){
-//	  	    			feature.properties.height = 0;
-//	  	    			feature.properties.base = 0;
-//	  	    			feature.properties.featureType = "boundary";
-//	  	    		}
-//	  	    		else{
-//	  	    			feature.properties.height = Math.round(Math.random() * 50);
-//	  	    			feature.properties.base = 0;
-//	  	    			feature.properties.featureType = "building";
-//	  	    		}
-//	  			  }
-//				  
-//				  controller.updateVectorLayer(data, "context-point", $scope.contextStyle, "CONTEXT", 1);
-//	    		controller.zoomToLayersExtent(["context-point"]);
-//			  }
-//			  
-//			  var targetCallback = function(data) {
-//				  for(var i=0; i<data.features.length; i++){
-//		    		var feature = data.features[i];
-//		    		feature.properties.isHoverable = true;
-//		    		feature.properties.isClickable = true;
-//				  }
-//				  
-//				  controller.updateVectorLayer(data, "target-point", $scope.targetStyle, "TARGET", 2);
-//		    	controller.zoomToLayersExtent(["target-point"]);
-//			  }
-//			  
-//			  
-//			  //controller.removeVectorData();
-//			  
-//			  // get context geo data
-//			  controller.getMapData(contextCallback, data.layers[0], data.workspace);
-//			  
-//			  // get target geo data
-//			  controller.getMapData(targetCallback, data.layers[1], data.workspace);
-//		  }
+        
+    	controller.addVectorHoverEvents(controller.hoverCallback, ["target-multipolygon", "context-multipolygon"]);
+		controller.addVectorClickEvents(controller.featureClickCallback, ["target-multipolygon", "context-multipolygon"]);
 	 }
 	 
       function isEmptyJSONObject(obj) {

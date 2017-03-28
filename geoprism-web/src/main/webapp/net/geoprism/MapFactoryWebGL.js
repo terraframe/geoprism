@@ -527,7 +527,7 @@
                       {
                         if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
                         {
-                          map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
+                          map.setFilter(targetLayer.sourceLayer.toLowerCase() + "-multipolygon-hover", ["==", "id", ""]);
                         }
                         else if(loopFeat.geometry.type.toLowerCase() === "point")
                         {
@@ -539,32 +539,6 @@
                   }
                 }
                 
-//                var layerSourceName = targetLayer.source;
-//                
-//                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-////                  var layerSourceData = map.querySourceFeatures(layerSourceName);
-//                  var layerSourceData = map.getSource(layerSourceName)._data;
-//                  
-//                  if(layerSourceData.features.length > 0){
-//                     for(var i=0; i<layerSourceData.features.length; i++){
-//                      var targetFeature = layerSourceData.features[i];
-//                      var featureProps = targetFeature.properties;
-//                      if((feature.id && feature.id === featureProps.id) || 
-//                        (feature.geoId && feature.geoId.length > 0 && feature.geoId === featureProps.geoId) ||
-//                        (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, featureProps.geoId)))
-//                      {
-//                        // control for styling of different geometry types
-//                        if(targetFeature.geometry){
-//                          if(targetFeature.geometry.type.toLowerCase() === "multipolygon"){
-//                            map.setFilter("target-multipolygon-hover", ["==", "id", ""]);
-//                            }
-//                          else if(targetFeature.geometry.type.toLowerCase() === "point"){
-////                            map.setFilter("target-point-hover", ["==", "id", ""]);
-//                            }
-//                        }
-//                      }
-//                     }
-//                }
               });
             }
           }
@@ -593,8 +567,7 @@
                     var loopFeat = features[i];
                     var props = loopFeat.properties;
                     
-                    if ( (feature.id && feature.id === props.id) ||
-                          (feature.geoId && feature.geoId.length > 0 && feature.geoId === props.geoId) ||
+                    if (  (feature.geoId && feature.geoId.length > 0 && feature.geoId === props.geoId) ||
                           (feature.geoIds && feature.geoIds.length > 0 && that.arrayContainsString(feature.geoIds, props.geoId)))
                     {
                       // control for styling of different geometry types
@@ -602,7 +575,7 @@
                       {
                         if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
                         {
-                          map.setFilter("target-multipolygon-hover", ["==", "id", loopFeat.properties.id]);
+                          map.setFilter(targetLayer.sourceLayer.toLowerCase() + "-multipolygon-hover", ["==", "id", loopFeat.properties.id]);
                         }
                         else if(loopFeat.geometry.type.toLowerCase() === "point")
                         {
@@ -649,6 +622,7 @@
             layersList.forEach(function(layerName){
               var layer = map.getLayer(layerName);
               
+//              if(layer && layer.sourceLayer.toUpperCase() === type.toUpperCase()){
               if(layer){
                 layersArr.push(layer);
               }
@@ -754,7 +728,9 @@
                   var layerSourceName = layer.source;
                   
                   // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-                  var layerSourceData = map.getSource(layerSourceName)._data;
+//                  var layerSourceData = map.getSource(layerSourceName)._data;
+                  var layerSourceData = map.querySourceFeatures("target-multipolygon", {});
+
                   
                   if(layerSourceData.features.length > 0){
                     layerSourceData.features.forEach(function(f){
@@ -806,7 +782,7 @@
           
           map.on('click', function(e) {
           
-            var features = map.queryRenderedFeatures(e.point, { layers: [layerz] });
+            var features = map.queryRenderedFeatures(e.point, { layers: layerz });
             
             if(features.length){
               var feature;
