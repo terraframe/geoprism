@@ -273,7 +273,13 @@
       $scope.$emit('locationEditNew', {
         wkt: _wkt,
         afterApply: function(){
-          location.reload();
+          controller._isEditing = false;
+          
+          controller._geoprismEditingControl.stopEditing();
+          
+          controller._editingControl.deleteAll();
+          
+          $scope.$emit('locationReloadCurrent');
         }
       });
     }

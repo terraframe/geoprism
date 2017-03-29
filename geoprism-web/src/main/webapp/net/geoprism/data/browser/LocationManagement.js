@@ -263,7 +263,7 @@
     });
     
     $scope.$on('locationReloadCurrent', function(event){
-//      controller.init();
+      $scope.$emit("locationModalClear");
       controller.open($scope.previous[$scope.previous.length-1].id);
     });
     
@@ -421,6 +421,10 @@
       controller.afterApply = data.afterApply;
       controller.load(data);
     });      
+    
+    $rootScope.$on('locationModalClear', function(event, data) {
+      controller.clear();
+    });
        
     controller.init();
   }
