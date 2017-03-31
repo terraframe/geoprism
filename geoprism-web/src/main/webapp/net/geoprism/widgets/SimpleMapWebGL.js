@@ -183,7 +183,9 @@
           layer: "target",
           type: "TARGET",
           index: 2,
-          is3d: false,
+          is3d: true,
+          base: 0,
+          height: 50, //TODO: this needs to be set from the data
           bbox: bboxObj
         }];
           
