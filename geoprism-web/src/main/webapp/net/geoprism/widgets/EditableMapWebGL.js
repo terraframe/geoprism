@@ -275,7 +275,7 @@
         afterApply: function(){
           controller._isEditing = false;
           
-          controller._geoprismEditingControl.stopEditing();
+          controller._geoprismEditingControl.stopNewGeoSession();
           
           controller._editingControl.deleteAll();
           
