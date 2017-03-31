@@ -531,7 +531,9 @@
 
         $scope.sharedGeoData = data;
 
-        controller.refreshWithContextLayer('sharedGeoData');
+//        setTimeout(function(){ 
+        	controller.refreshWithContextLayer('sharedGeoData');
+//        }, 1000)
         
       } else if (!isEmptyJSONObject($scope.sharedGeoData)) {
         controller.refreshWithContextLayer('sharedGeoData');

@@ -361,8 +361,8 @@
                           'type': 'identity',
                           'property': 'base'
                        },
-//                       'fill-extrusion-height': 100,
-//                       'fill-extrusion-base': 0,
+//                       'fill-extrusion-height': layer.height,
+//                       'fill-extrusion-base': layer.base,
                        'fill-extrusion-opacity': .9
                      }
                  }
@@ -432,13 +432,14 @@
                       "paint": {
                            "text-color": "black",
                            "text-halo-color": "#fff",
-                              "text-halo-width": 2
+                           "text-halo-width": 2
                        },
                        "layout": {
                                "text-field": "{displayLabel}",
                                "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                                "text-anchor": "center",
-                               "text-size": 12
+                               "text-size": 12,
+                               "symbol-spacing": 10000
                            }
                    });
                 }
@@ -702,7 +703,17 @@
                 map.fitBounds(bufferedBounds, {padding:0});
               }
               else{
-                map.fitBounds(bounds, {padding:10});
+            	// TODO: map.loaded() ALWAYS returns false.  I'm leaving this check here for future
+            	// versions that hopefully work. 
+            	// the || property is to make up for the map.loaded() failing flag. 
+            	if(map.loaded() || map.getLayer(layersArr[0].name)){
+            		map.fitBounds(bounds, {padding:10});
+            	}
+            	else{
+            		map.on('load', function () {
+            			map.fitBounds(bounds, {padding:10});
+            		})
+            	}
               }
             }
           }
