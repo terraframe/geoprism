@@ -211,7 +211,7 @@
             $scope.children.splice(index, 1);
           }          
           
-//          $scope.$broadcast('sharedGeoData', {});          
+          controller.open($scope.previous[$scope.previous.length-1].id);
         }
       };
       
