@@ -278,8 +278,6 @@
           controller._geoprismEditingControl.stopNewGeoSession();
           
           controller._editingControl.deleteAll();
-          
-          $scope.$emit('locationReloadCurrent');
         }
       });
     }
