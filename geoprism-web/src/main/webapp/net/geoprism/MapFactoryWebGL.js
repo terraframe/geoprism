@@ -703,7 +703,17 @@
                 map.fitBounds(bufferedBounds, {padding:0});
               }
               else{
-                map.fitBounds(bounds, {padding:10});
+            	// TODO: map.loaded() ALWAYS returns false.  I'm leaving this check here for future
+            	// versions that hopefully work. 
+            	// the || property is to make up for the map.loaded() failing flag. 
+            	if(map.loaded() || map.getLayer(layersArr[0].name)){
+            		map.fitBounds(bounds, {padding:10});
+            	}
+            	else{
+            		map.on('load', function () {
+            			map.fitBounds(bounds, {padding:10});
+            		})
+            	}
               }
             }
           }

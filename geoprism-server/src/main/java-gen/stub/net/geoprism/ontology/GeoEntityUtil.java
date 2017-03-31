@@ -963,8 +963,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     sql.append(" AND geo_entity.id = located_in.child_id)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
     
-    System.out.println(sql.toString());
-    	
     ResultSet bboxResult = Database.query(sql.toString());
 
     return formatBBox(bboxResult).toString();
@@ -1079,8 +1077,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       vQuery.restrictRows(limit, 1);
     }
     
-    System.out.println(vQuery.getSQL().toString());
-
     return vQuery;
   }
 
