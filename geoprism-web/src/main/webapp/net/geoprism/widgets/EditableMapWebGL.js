@@ -271,10 +271,16 @@
       var _wkt = wellknown.stringify(geojson);
       
       $scope.$emit('locationEditNew', {
-        wkt: _wkt
-//        afterApply: function(){
-//          location.reload();
-//        }
+        wkt: _wkt,
+        afterApply: function(){
+          controller._isEditing = false;
+          
+          controller._geoprismEditingControl.stopNewGeoSession();
+          
+          controller._editingControl.deleteAll();
+          
+          $scope.$emit('locationReloadCurrent');
+        }
       });
     }
     
