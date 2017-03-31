@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.geotools.geojson.geom.GeometryJSON;
 import org.json.JSONArray;
@@ -341,6 +342,8 @@ public abstract class LayerPublisher
         data.put(GeoEntity.ID, resultSet.getString("id"));
         data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
+        data.put("height", "25"); // TODO: This should be set on the GeoEntity
+        data.put("base", "0"); // TODO: This should be set on the GeoEntity
         data.put("isClickable", "true");
 
         JtsGeometry geom = (JtsGeometry) resultSet.getObject(GeoserverFacade.GEOM_COLUMN);

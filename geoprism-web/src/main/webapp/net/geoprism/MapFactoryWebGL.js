@@ -361,8 +361,8 @@
                           'type': 'identity',
                           'property': 'base'
                        },
-                       'fill-extrusion-height': layer.height,
-                       'fill-extrusion-base': layer.base,
+//                       'fill-extrusion-height': layer.height,
+//                       'fill-extrusion-base': layer.base,
                        'fill-extrusion-opacity': .9
                      }
                  }

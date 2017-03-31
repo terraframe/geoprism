@@ -126,6 +126,7 @@
 	  }
 	 
 	 controller.refreshInteractiveLayers = function(triggeringEvent) {
+		 console.log("SimpleMapWebGL::RefreshInteractiveLayers")
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
 			  var data = $scope.sharedGeoData;
 			  
@@ -184,8 +185,6 @@
           type: "TARGET",
           index: 2,
           is3d: true,
-          base: 0,
-          height: 50, //TODO: this needs to be set from the data
           bbox: bboxObj
         }];
           
