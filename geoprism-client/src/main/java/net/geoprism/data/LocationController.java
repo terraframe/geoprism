@@ -3,30 +3,23 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import net.geoprism.ExcludeConfiguration;
-import net.geoprism.ListSerializable;
-import net.geoprism.gis.geoserver.GeoserverProperties;
-import net.geoprism.ontology.GeoEntityUtilDTO;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +40,12 @@ import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.ExcludeConfiguration;
+import net.geoprism.InputStreamResponse;
+import net.geoprism.ListSerializable;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.ontology.GeoEntityUtilDTO;
 
 @Controller(url = "location")
 public class LocationController implements Reloadable
@@ -75,18 +74,25 @@ public class LocationController implements Reloadable
   {
     List<? extends UniversalDTO> universals = entity.getUniversal().getAllContains();
 
-    String layers = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
+    if ( ( universalId == null || universalId.length() == 0 ) && universals.size() > 0)
+    {
+      universalId = universals.get(0).getId();
+    }
+
+    // String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
 
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getId(), universalId, 200);
 
     RestResponse response = new RestResponse();
     response.set("children", children);
-    response.set("layers", new JSONArray(layers));
+    response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getId(), universalId) );
     response.set("universals", new ListSerializable(universals));
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());
-
+    // response.set("geometries", new JSONStringImpl(geometries));
+    // response.set("layers", object.get("layers"));
+    																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													
     return response;
   }
 
@@ -142,6 +148,30 @@ public class LocationController implements Reloadable
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF applyGeometries(ClientRequestIF request, @RequestParamter(name = "featureCollection") String featureCollection)
+  {
+     GeoEntityUtilDTO.applyGeometries(request, featureCollection);
+
+    return new RestBodyResponse("");
+  }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF openEditingSession(ClientRequestIF request, @RequestParamter(name = "config") String config)
+  {
+    InputStream istream = GeoEntityUtilDTO.openEditingSession(request, config.toString());
+
+    return new InputStreamResponse(istream, "application/x-protobuf", null);
+  }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF cancelEditingSession(ClientRequestIF request, @RequestParamter(name = "config") String config)
+  {
+    GeoEntityUtilDTO.cancelEditingSession(request, config.toString());
+
+    return new RestBodyResponse("");
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityDTO.lock(request, entityId);
@@ -160,11 +190,23 @@ public class LocationController implements Reloadable
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
-    GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
-    entity.delete();
+    GeoEntityUtilDTO.deleteGeoEntity(request, entityId);
 
     GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
     return new RestBodyResponse("");
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF data(ClientRequestIF request, @RequestParamter(name = "x") Integer x, @RequestParamter(name = "y") Integer y, @RequestParamter(name = "z") Integer z, @RequestParamter(name = "config") String config) throws JSONException
+  {
+    JSONObject object = new JSONObject(config);
+    object.put("x", x);
+    object.put("y", y);
+    object.put("z", z);
+
+    InputStream istream = GeoEntityUtilDTO.getData(request, object.toString());
+
+    return new InputStreamResponse(istream, "application/x-protobuf", null);
   }
 }

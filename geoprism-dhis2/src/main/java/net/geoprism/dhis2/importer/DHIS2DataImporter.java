@@ -19,7 +19,6 @@
 package net.geoprism.dhis2.importer;
 
 import java.io.File;
-import java.sql.Savepoint;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -31,8 +30,10 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.configuration.ConfigurationManager;
-import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.constants.MdAttributeLocalInfo;
+import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.geometry.GeometryHelper;
@@ -43,10 +44,10 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import net.geoprism.account.OauthServer;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.dhis2.DHIS2BasicConnector;
-import net.geoprism.dhis2.DHIS2ConflictException;
+import net.geoprism.dhis2.DHIS2HTTPConnector;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 
 /**
  * This class is the main entrypoint for all DHIS2 data importing. Run the main method in this class to kick off a data import.
@@ -56,7 +57,7 @@ import net.geoprism.dhis2.DHIS2ConflictException;
  */
 public class DHIS2DataImporter
 {
-  private DHIS2BasicConnector dhis2;
+  private DHIS2HTTPConnector dhis2;
   
   private GeometryFactory     geometryFactory;
 
@@ -69,6 +70,7 @@ public class DHIS2DataImporter
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
     options.addOption(Option.builder("url").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
+    options.addOption(Option.builder("externalUrl").hasArg().argName("externalUrl").longOpt("externalUrl").desc("External URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
@@ -77,6 +79,7 @@ public class DHIS2DataImporter
       CommandLine line = parser.parse( options, args );
       
       String url = line.getOptionValue("url");
+      String externalUrl = line.getOptionValue("externalUrl");
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
       String appcfgPath = line.getOptionValue("appcfgPath");
@@ -85,13 +88,17 @@ public class DHIS2DataImporter
       {
         url = "http://127.0.0.1:8085/";
       }
+      if (externalUrl == null)
+      {
+        externalUrl = url;
+      }
       if (appcfgPath != null)
       {
         GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
         resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      new DHIS2DataImporter(url, username, password).importAll();
+      new DHIS2DataImporter(url, externalUrl, username, password).importAll();
     }
     catch (ParseException e)
     {
@@ -99,12 +106,15 @@ public class DHIS2DataImporter
     }
   }
   
-  public DHIS2DataImporter(String url, String username, String password)
+  public DHIS2DataImporter(String url, String externalUrl, String username, String password)
   {
     this.geometryFactory = new GeometryFactory();
     this.geometryHelper = new GeometryHelper();
     
-    dhis2 = new DHIS2BasicConnector(url, username, password);
+    dhis2 = new DHIS2HTTPConnector();
+    dhis2.setServerUrl(url);
+    dhis2.setServerExternalUrl(externalUrl);
+    dhis2.setCredentials(username, password);
   }
 
   @Request
@@ -116,10 +126,46 @@ public class DHIS2DataImporter
   @Transaction
   private void importAllInTransaction()
   {
-    dhis2.initialize();
+    deleteAll();
+    
     importOrgUnitLevels();
     importOrgUnits();
     buildAllpaths();
+    
+    importOptionSets();
+    importOptions();
+    importOptionSetRelationships();
+  }
+  
+  // TODO: Create or Update is a lot harder than just deleting everything
+  private void deleteAll()
+  {
+    Database.executeStatement("truncate geo_entity;");
+    Database.executeStatement("truncate geo_entity_problem;");
+    Database.executeStatement("truncate universal;");
+    Database.executeStatement("truncate located_in;");
+    Database.executeStatement("truncate allowed_in;");
+    Database.executeStatement("truncate classifier;");
+    Database.executeStatement("truncate classifier_is_a_relationship;");
+   
+    Universal rootUni = new Universal();
+    rootUni.getDisplayLabel().setValue("ROOT");
+    rootUni.setUniversalId("ROOT");
+    rootUni.getDescription().setValue("ROOT");
+    rootUni.apply();
+   
+    GeoEntity root = new GeoEntity();
+    root.getDisplayLabel().setValue("ROOT");
+    root.setGeoId("ROOT");
+    root.setUniversal(rootUni);
+    root.apply();
+   
+    BusinessDAO rootC = BusinessDAO.newInstance("net.geoprism.ontology.Classifier");
+    rootC.setStructValue(Classifier.DISPLAYLABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "ROOT");
+    rootC.setValue(Classifier.CLASSIFIERID, "ROOT");
+    rootC.setValue(Classifier.CLASSIFIERPACKAGE, "ROOT");
+    rootC.setValue(Classifier.KEYNAME, Term.ROOT_KEY);
+    rootC.apply();
   }
   
   public OrgUnitLevelJsonToUniversal getUniversalByLevel(int level)
@@ -131,12 +177,12 @@ public class DHIS2DataImporter
   {
     Universal.getStrategy().reinitialize(AllowedIn.CLASS);
     GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
-//    Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
+    Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
   }
   
   private void importOrgUnitLevels()
   {
-    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnitLevels=true"
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnitLevels=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnitLevels", "true")
@@ -164,7 +210,7 @@ public class DHIS2DataImporter
   
   private void importOrgUnits()
   {
-    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata?assumeTrue=false&organisationUnits=true"
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnits=true"
     JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
@@ -191,13 +237,74 @@ public class DHIS2DataImporter
       converter.applyLocatedIn();
     }
     
+    
+    
+    // TODO : The geoId contains the DHIS2 id, and not the actual geoid. We do this because it has to be referenced when we export and there's no other place to save the DHIS2 id.
+    
     // The OrgUnit parent reference is done by a DIHS2 id. In order to find the parent, we first set the GeoId to the DHIS2 internal id. Now we're swapping out those DHIS2 internal ids with geoids.
     // This could also be solved with a hashmap from   {DHIS2 id -> geoId}  to help us find the parent, but in the interest of saving memory I decided to loop through it again and hammer the processor instead.
-    for (int i = 0; i < converters.length; ++i)
+//    for (int i = 0; i < converters.length; ++i)
+//    {
+//      OrgUnitJsonToGeoEntity converter = converters[i];
+//      
+//      converter.swapGeoId();
+//    }
+  }
+  
+  private void importOptionSets()
+  {
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("optionSets", "true")
+    });
+    
+    // Create Classifiers from OptionSets
+    JSONArray units = response.getJSONArray("optionSets");
+    for (int i = 0; i < units.length(); ++i)
     {
-      OrgUnitJsonToGeoEntity converter = converters[i];
+      JSONObject unit = units.getJSONObject(i);
       
-      converter.swapGeoId();
+      OptionSetJsonToClassifier converter = new OptionSetJsonToClassifier(unit);
+      converter.apply();
+    }
+  }
+  
+  private void importOptions()
+  {
+    // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("options", "true")
+    });
+    
+    // Create Classifiers from Options
+    JSONArray units = response.getJSONArray("options");
+    for (int i = 0; i < units.length(); ++i)
+    {
+      JSONObject unit = units.getJSONObject(i);
+      
+      OptionJsonToClassifier converter = new OptionJsonToClassifier(unit);
+      converter.apply();
+    }
+  }
+  
+  private void importOptionSetRelationships()
+  {
+ // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
+    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+        new NameValuePair("assumeTrue", "false"),
+        new NameValuePair("optionSets", "true")
+    });
+    
+    // Create Relationships
+    JSONArray units = response.getJSONArray("optionSets");
+    for (int i = 0; i < units.length(); ++i)
+    {
+      JSONObject unit = units.getJSONObject(i);
+      
+      OptionSetJsonToClassifier converter = new OptionSetJsonToClassifier(unit);
+      converter.applyCategoryRelationships();
     }
   }
 }

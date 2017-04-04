@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -1839924553)
+@com.runwaysdk.business.ClassSignature(hash = 1722546625)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +12,7 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -1839924553;
+  private static final long serialVersionUID = 1722546625;
   
   public GeoEntityUtilBase()
   {
@@ -63,7 +45,25 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
     return (GeoEntityUtil) com.runwaysdk.business.Util.get(id);
   }
   
+  public static void applyGeometries(java.lang.String featureCollection)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void cancelEditingSession(java.lang.String config)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static void deleteEntityProblem(java.lang.String problemId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void deleteGeoEntity(java.lang.String id)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -76,6 +76,24 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
   }
   
   public static com.runwaysdk.query.ValueQuery getChildren(java.lang.String id, java.lang.String universalId, java.lang.Integer limit)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getChildrenBBOX(java.lang.String id, java.lang.String universalId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.io.InputStream getData(java.lang.String config)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.lang.String getEntitiesBBOX(java.lang.String[] ids)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
@@ -112,6 +130,12 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util impl
   }
   
   public static java.lang.String[] makeSynonym(java.lang.String sourceId, java.lang.String destinationId)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static java.io.InputStream openEditingSession(java.lang.String config)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

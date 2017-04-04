@@ -59,7 +59,9 @@
       <div><label><gdb:localize key="location.management.filter"/></label></div>
       <div>
         <select ng-model="universal.value" ng-options="opt.id as opt.displayLabel for opt in universal.options" ng-change="ctrl.setUniversal()">
+<!-- 
           <option value=""><gdb:localize key="location.management.all"/></option>
+ -->        
         </select>                
       </div>
     </div>
@@ -67,9 +69,12 @@
       <div><label><gdb:localize key="location.management.sublocations"/></label></div>
       <div>
         <div class="list-group">
-          <a href ng-repeat="child in children" class="list-group-item" ng-class="{'hover' : hoverId === child.id}" ng-click="ctrl.select(child, $event)" ng-mouseover="ctrl.listItemHover(child, $event)" ng-mouseleave="ctrl.listItemHoverOff(child, $event)">
+          <a href ng-repeat="child in children" id="{{child.geoId}}{{child.id}}" class="list-group-item" ng-class="{'hover' : hoverId === child.id}" ng-click="ctrl.select(child, $event)" ng-mouseover="ctrl.listItemHover(child, $event)" ng-mouseleave="ctrl.listItemHoverOff(child, $event)">
             {{child.displayLabel}} : {{child.geoId}}
             <div class="pull-right">
+            <!-- Disabled feature (due to lack of resources): The ability to edit a feature by clicking in the dropdown list
+              <span class="inner-action fa fa-globe ico-edit-geometry" ng-click="ctrl.editGeometry(child)"></span>
+              -->
               <span class="inner-action fa fa-pencil ico-edit" ng-click="ctrl.edit(child)"></span>
               <span class="inner-action fa fa-trash-o ico-remove" ng-click="ctrl.remove(child)"></span>                         
             </div>
@@ -79,7 +84,7 @@
     </div>    
   </div>
   <div class="col-md-9">
-  	<editable-map enable-edits="true" include-context-layer="true" base-map-type="Bing"></editable-map>
+  	<editable-map-webgl enable-edits="true" include-context-layer="true" base-map-type="Bing"></editable-map-webgl>
   </div>
   </div>
   

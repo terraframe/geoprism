@@ -20,9 +20,8 @@ package net.geoprism.dashboard.layer;
 
 import java.io.InputStream;
 
-import net.geoprism.JSONControllerUtil;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
@@ -31,10 +30,14 @@ import com.runwaysdk.controller.ServletMethod;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
+import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.InputStreamResponse;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.mvc.RestResponse;
+
+import net.geoprism.JSONControllerUtil;
 
 @Controller(url = "iconimage")
 public class CategoryIconController implements Reloadable
@@ -66,7 +69,7 @@ public class CategoryIconController implements Reloadable
       return JSONControllerUtil.handleException(t);
     }
   }
-  
+
   @Endpoint(method = ServletMethod.POST)
   public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "file") MultipartFileParameter file, @RequestParamter(name = "label") String label)
   {
@@ -105,7 +108,7 @@ public class CategoryIconController implements Reloadable
     }
   }
 
-  @Endpoint(method = ServletMethod.GET)
+  @Endpoint(method = ServletMethod.POST)
   public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "id") String id)
   {
     try
@@ -120,21 +123,23 @@ public class CategoryIconController implements Reloadable
     }
   }
 
-  public ResponseIF getAll(ClientRequestIF request)
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "id") String id)
   {
-    try
-    {
-      String icons = CategoryIconDTO.getAllAsJSON(request);
+    CategoryIconDTO.unlock(request, id);
 
-      JSONObject object = new JSONObject();
-      object.put("icons", new JSONArray(icons));
+    return new RestResponse();
+  }
 
-      return new RestBodyResponse(object);
-    }
-    catch (Throwable t)
-    {
-      return JSONControllerUtil.handleException(t);
-    }
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF getAll(ClientRequestIF request) throws JSONException
+  {
+    String icons = CategoryIconDTO.getAllAsJSON(request);
+
+    JSONObject object = new JSONObject();
+    object.put("icons", new JSONArray(icons));
+
+    return new RestBodyResponse(object);
   }
 
   @Endpoint(method = ServletMethod.POST)

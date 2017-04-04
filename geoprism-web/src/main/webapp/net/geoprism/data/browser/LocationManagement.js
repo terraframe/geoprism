@@ -33,10 +33,14 @@
       $scope.children = [];
       $scope.previous = [];
       
-      locationService.select(connection, "", "", "");
+      locationService.select(connection, "", "", "" );
+      
+      console.log("LocationController.init");
     }
     
     controller.load = function(data) {
+      console.log("LocationController.load");
+      
       $scope.children = data.children.resultSet;
       $scope.layers = data.layers;
       
@@ -46,11 +50,20 @@
         options : data.universals
       };
       
-      $scope.$broadcast('sharedGeoData', data);
+      var layers = [
+//        {name:'context-multipolygon', config: {id: data.entity.id, type:"LM_CONTEXT"}},
+        {name:'target-multipolygon', config: {id: data.entity.id, universalId: data.universal, type:"LM"}, bbox:data.bbox}
+      ];
+      
+      $scope.$broadcast('sharedGeoData', layers);
     }
     
     controller.select = function(entity, event) {
       if(!$(event.target).hasClass('inner-action')) {
+        $scope.$broadcast('cancelEditLocation', {
+          id : entity.id
+        });
+        
         var connection = {
           elementId : '#innerFrameHtml',      
           onSuccess : function(data) {
@@ -60,7 +73,28 @@
           }
         };    
         
-        locationService.select(connection, entity.id, "", $scope.layers);        
+        locationService.select(connection, entity.id, "", $scope.layers );        
+      }
+    }
+    
+    controller.open = function(entityId) {
+      if(entityId && entityId.length > 0) {
+        $scope.$broadcast('cancelEditLocation', {
+          id : entityId
+        });
+        
+        var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(data) {
+            $scope.previous = data.ancestors;
+                  
+            controller.load(data);
+          }      
+        };      
+               
+        $scope.children = [];
+        $scope.previous = [];
+        locationService.open(connection, entityId, $scope.layers);
       }
     }
     
@@ -88,12 +122,10 @@
           $scope.children = data.children.resultSet;
           $scope.layers = data.layers;
             
-          $scope.$broadcast('sharedGeoData', data);          
+//          $scope.$broadcast('sharedGeoData', data);          
         }
       };
       
-      console.log(JSON.stringify($scope.universal));
-
       locationService.select(connection, $scope.entity.id, $scope.universal.value, $scope.layers);      
     }
     
@@ -101,7 +133,7 @@
       var limit = 20;
       
       if(request.term && request.term.length > 0) {
-    	  
+        
         var connection = {
           onSuccess : function(data){
             var resultSet = data.resultSet;
@@ -125,25 +157,6 @@
       }
     }
     
-    controller.open = function(entityId) {
-    	
-      if(entityId && entityId.length > 0) {
-    	  
-        var connection = {
-          elementId : '#innerFrameHtml',
-          onSuccess : function(data) {
-            $scope.previous = data.ancestors;
-                  
-            controller.load(data);
-          }      
-        };      
-               
-        $scope.children = [];
-        $scope.previous = [];
-        locationService.open(connection, entityId, $scope.layers);
-      }
-    }
-    
     controller.edit = function(entity) {
       var connection = {
         elementId : '#innerFrameHtml',
@@ -157,6 +170,12 @@
       };      
       
       locationService.edit(connection, entity.id);
+    }
+    
+    controller.editGeometry = function(entity) {
+      $scope.$broadcast('editLocation', {
+        id : entity.id
+      });
     }
     
     controller.remove = function(entity) {
@@ -192,19 +211,20 @@
             $scope.children.splice(index, 1);
           }          
           
-          $scope.$broadcast('sharedGeoData', {});          
+          controller.open($scope.previous[$scope.previous.length-1].id);
         }
       };
       
       locationService.remove(connection, entity.id, $scope.layers);
     }    
     
-    controller.newInstance = function() {
+    controller.newInstance = function(_wkt) {
       $scope.$emit('locationEdit', {
-        wkt : '',
+        wkt : _wkt || '',
         universal : $scope.universal,
         parent : $scope.entity
       });
+      $scope.$apply();
     }
     
     controller.findIndex = function(entityId) {
@@ -219,16 +239,45 @@
     
     
     controller.listItemHover = function(entity, event){
-    	$scope.$broadcast('listHoverOver', entity);
+      $scope.$broadcast('listHoverOver', entity);
     }
     
     controller.listItemHoverOff = function(entity, event){
-    	$scope.$broadcast('listHoverOff', entity);
+      $scope.$broadcast('listHoverOff', entity);
     }
     
+    controller.scrollTo = function(entityId) {
+      var child = null;
+      for(var i = 0; i < $scope.children.length; i++) {
+        if($scope.children[i].id == entityId) {
+          child = $scope.children[i];
+        };
+      }
+      
+      widgetService.animate("#location-explorer", {scrollTop: this._selected.offset().top}, "slow");
+    },
+    
+    
+    $scope.$on('locationFocus', function(event, data){
+        controller.open(data.id);
+    });
+    
+    $scope.$on('locationReloadCurrent', function(event){
+      controller.open($scope.previous[$scope.previous.length-1].id);
+    });
     
     $scope.$on('hoverChange', function(event, data){
       $scope.hoverId = data.id;
+    });
+    
+    $scope.$on('locationEditNew', function(event, data){
+      $scope.$emit('locationEdit', {
+        wkt : data.wkt || '',
+        universal : $scope.universal,
+        parent : $scope.entity,
+        afterApply: data.afterApply
+      });
+      $scope.$apply();
     });
     
     $rootScope.$on('locationChange', function(event, data) {
@@ -260,7 +309,7 @@
         
         locationService.edit(connection, data.entityId);        
       }
-    });    
+    });
     
     controller.apply = function() {
         var connection = {
@@ -285,6 +334,7 @@
   }
   
   function LocationModalController($scope, $rootScope, locationService) {
+    var locationController = controller;
     var controller = this;
         
     controller.init = function() {
@@ -343,11 +393,18 @@
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(entity) {
+          
+          if (controller.afterApply != null)
+          {
+            controller.afterApply();
+          }
+          
           controller.clear();
           
-          $scope.$emit('locationChange', {
-            entity : entity  
-          });
+//          $scope.$emit('locationChange', {
+//            entity : entity  
+//          });
+          $scope.$emit('locationReloadCurrent');
         },
         onFailure : function(e){
           $scope.errors.push(e.localizedMessage);
@@ -360,8 +417,9 @@
     }
       
     $rootScope.$on('locationEdit', function(event, data) {
+      controller.afterApply = data.afterApply;
       controller.load(data);
-    });      
+    });
        
     controller.init();
   }
@@ -381,7 +439,7 @@
     }   
   }  
   
-  angular.module("location-management", ["location-service", "styled-inputs", "editable-map", "widget-service", "localization-service"]);
+  angular.module("location-management", ["location-service", "styled-inputs", "editable-map-webgl", "widget-service", "localization-service"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
    .directive('locationModal', LocationModal)

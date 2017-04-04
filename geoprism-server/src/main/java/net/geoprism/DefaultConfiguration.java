@@ -3,36 +3,45 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.geoprism.data.etl.TargetBuilder;
-
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.vividsolutions.jts.geom.Envelope;
+
+import net.geoprism.data.etl.TargetBuilder;
+import net.geoprism.ontology.CompositePublisher;
+import net.geoprism.ontology.LocationContextPublisher;
+import net.geoprism.ontology.LocationTargetPublisher;
+import net.geoprism.ontology.PublisherUtil;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -41,6 +50,22 @@ public class DefaultConfiguration implements ConfigurationIF
   public static final String DASHBOARD_BUILDER = "geoprism.admin.DashboardBuilder";
 
   public static final String DECISION_MAKER    = "geoprism.DecisionMaker";
+
+  public static final String LM_TARGET         = "LM_TARGET";
+
+  public static final String LM_CONTEXT        = "LM_CONTEXT";
+
+  public static final String LM                = "LM";
+
+  private Set<String>        types;
+
+  public DefaultConfiguration()
+  {
+    this.types = new HashSet<String>();
+    this.types.add(LM_TARGET);
+    this.types.add(LM_CONTEXT);
+    this.types.add(LM);
+  }
 
   @Override
   public Collection<String> getDatabrowserPackages()
@@ -148,5 +173,60 @@ public class DefaultConfiguration implements ConfigurationIF
   public GeoEntity getDefaultGeoEntity()
   {
     return null;
+  }
+
+  @Override
+  public boolean hasLocationData(String type)
+  {
+    return this.types.contains(type);
+  }
+
+  @Override
+  public InputStream getLocationData(String type, JSONObject object)
+  {
+    try
+    {
+      if (this.hasLocationData(type))
+      {
+        String id = object.getString("id");
+        String universalId = object.has("universalId") ? object.getString("universalId") : null;
+        
+        Envelope envelope = PublisherUtil.getTileBounds(object);
+
+        if (type.equals(LM_CONTEXT))
+        {
+          LocationContextPublisher publisher = new LocationContextPublisher(id, "");
+          byte[] bytes = publisher.writeVectorTiles(envelope);
+
+          return new ByteArrayInputStream(bytes);
+        }
+        else if (type.equals(LM_TARGET))
+        {
+          LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
+          byte[] bytes = publisher.writeVectorTiles(envelope);
+
+          return new ByteArrayInputStream(bytes);
+        }
+        else if (type.equals(LM))
+        {
+          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(id, universalId, ""), new LocationContextPublisher(id, ""));
+          byte[] bytes = publisher.writeVectorTiles(envelope);
+
+          return new ByteArrayInputStream(bytes);
+        }
+      }
+
+      throw new ProgrammingErrorException("Unsupported type [" + type + "]");
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+  
+  @Override
+  public void onEntityDelete(GeoEntity entity)
+  {
+    // Do nothing
   }
 }

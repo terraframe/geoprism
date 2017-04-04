@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -318518985)
+@com.runwaysdk.business.ClassSignature(hash = -2105263295)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
-  private static final long serialVersionUID = -318518985;
+  private static final long serialVersionUID = -2105263295;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -35,11 +17,35 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
   }
   
   public static java.lang.String ID = "id";
+  public static final void applyGeometries(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String featureCollection)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{featureCollection};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "applyGeometries", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void cancelEditingSession(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String config)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{config};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "cancelEditingSession", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final void deleteEntityProblem(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String problemId)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{problemId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "deleteEntityProblem", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void deleteGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "deleteGeoEntity", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
@@ -57,6 +63,30 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
     Object[] _parameters = new Object[]{id, universalId, limit};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getChildren", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getChildrenBBOX(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String universalId)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{id, universalId};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getChildrenBBOX", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.io.InputStream getData(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String config)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{config};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getData", _declaredTypes);
+    return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getEntitiesBBOX(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String[] ids)
+  {
+    String[] _declaredTypes = new String[]{"[Ljava.lang.String;"};
+    Object[] _parameters = new Object[]{ids};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getEntitiesBBOX", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final com.runwaysdk.system.gis.geo.GeoEntityDTO getEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
@@ -105,6 +135,14 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
     Object[] _parameters = new Object[]{sourceId, destinationId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "makeSynonym", _declaredTypes);
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.io.InputStream openEditingSession(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String config)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{config};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "openEditingSession", _declaredTypes);
+    return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final java.lang.String publishLayers(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String universalId, java.lang.String existingLayerNames)

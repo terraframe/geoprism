@@ -26,19 +26,25 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringUtils;
 
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.metadata.MdBusiness;
+import com.runwaysdk.system.metadata.MdClass;
 
+import net.geoprism.account.ExternalProfile;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
+import net.geoprism.data.GeoprismDatasetExporterIF;
 import net.geoprism.data.etl.TargetBuilder;
-import net.geoprism.dhis2.DHIS2BasicConnector;
+import net.geoprism.dhis2.DHIS2HTTPConnector;
+import net.geoprism.dhis2.response.OAuthLoginRequiredException;
 
-public class DHIS2DataExporter
+public class DHIS2DataExporter implements GeoprismDatasetExporterIF
 {
-  private DHIS2BasicConnector dhis2;
+  private DHIS2HTTPConnector dhis2;
   
+  @Request
   public static void main(String[] args)
   {
     CommandLineParser parser = new DefaultParser();
@@ -47,6 +53,7 @@ public class DHIS2DataExporter
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
+    options.addOption(Option.builder("dataset").hasArg().argName("dataset").longOpt("dataset").desc("The name of the dataset to export.").required().build());
     
     try {
       CommandLine line = parser.parse( options, args );
@@ -55,6 +62,7 @@ public class DHIS2DataExporter
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
       String appcfgPath = line.getOptionValue("appcfgPath");
+      String dataset = StringUtils.capitalize(line.getOptionValue("dataset").toLowerCase());
       
       if (url == null)
       {
@@ -66,7 +74,10 @@ public class DHIS2DataExporter
         resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      new DHIS2DataExporter(url, username, password).exportToTrackerInRequest(TargetBuilder.PACKAGE_NAME + ".LaborForceByState2015");
+      MdBusiness mdBiz = MdBusiness.getMdBusiness(TargetBuilder.PACKAGE_NAME + "." + dataset);
+      
+      DHIS2DataExporter exporter = new DHIS2DataExporter();
+      exporter.exportWithCredentials(mdBiz, url, username, password);
     }
     catch (ParseException e)
     {
@@ -74,27 +85,31 @@ public class DHIS2DataExporter
     }
   }
   
-  public DHIS2DataExporter(String url, String username, String password)
+  // Our constructor must be 0 arguments because it conforms to Java service loader paradigm.
+  public DHIS2DataExporter()
   {
-    dhis2 = new DHIS2BasicConnector(url, username, password);
+    dhis2 = new DHIS2HTTPConnector();
   }
   
-  @Request
-  public void exportToTrackerInRequest(String mdbiz)
+  public void exportWithCredentials(MdClass mdClass, String url, String username, String password)
   {
-    exportToTracker(MdBusiness.getMdBusiness(mdbiz));
+    dhis2.setServerUrl(url);
+    dhis2.setCredentials(username, password);
+    
+    MdBusinessExporter exporter = new MdBusinessExporter((MdBusiness) mdClass, dhis2);
+    exporter.exportToTracker();
   }
   
-  public void exportToTracker(MdBusiness mdbiz)
+  @Override
+  public void xport(MdClass mdClass)
   {
-    dhis2.initialize();
-    exportMetadata(mdbiz);
-    // exportData(mdbiz);
-  }
-  
-  public void exportMetadata(MdBusiness mdbiz)
-  {
-    MdBusinessExporter exporter = new MdBusinessExporter(mdbiz, dhis2);
+    if (ExternalProfile.getAccessToken() == null)
+    {
+      OAuthLoginRequiredException ex = new OAuthLoginRequiredException();
+      throw ex;
+    }
+    
+    MdBusinessExporter exporter = new MdBusinessExporter((MdBusiness) mdClass, dhis2);
     exporter.exportToTracker();
   }
 }

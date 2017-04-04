@@ -1,0 +1,22 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      <mdUtil name="net.geoprism.ontology.GeoEntityUtil">
+        <create>
+          <mdMethod name="openEditingSession" label="Open Editing Session" static="true" returnType="java.io.InputStream">
+            <mdParameter name="config" label="Config" order="0" type="java.lang.String"/>
+          </mdMethod>
+          <mdMethod name="cancelEditingSession" label="Cancel Editing Session" static="true" returnType="void">
+            <mdParameter name="config" label="Config" order="0" type="java.lang.String"/>
+          </mdMethod>
+        </create>
+      </mdUtil>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.ontology.GeoEntityUtil.openEditingSession" type="com.runwaysdk.system.metadata.MdMethod" />
+    </delete>
+  </undoIt>
+</version>

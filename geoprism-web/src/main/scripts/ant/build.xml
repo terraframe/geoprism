@@ -33,7 +33,9 @@
     <echo message="Copying from ${geoprism.webapp.root} to ${basedir}/target/cargo/configurations/${tomcat}/webapps/${projectName}" />
     <copy todir="${basedir}/target/cargo/configurations/${tomcat}/webapps/${projectName}" verbose="false" overwrite="true">
       <fileset dir="${geoprism.webapp.root}" includes="**/*.jsp" />
-      <fileset dir="${geoprism.webapp.root}" includes="**/*.js" />
+      <fileset dir="${geoprism.webapp.root}" includes="**/*.js">
+    	<exclude name="**/node_modules/**" />
+      </fileset>
       <fileset dir="${geoprism.webapp.root}" includes="**/*.css" />
     </copy>
     
