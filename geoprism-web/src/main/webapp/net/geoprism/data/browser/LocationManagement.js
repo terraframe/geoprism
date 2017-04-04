@@ -263,7 +263,6 @@
     });
     
     $scope.$on('locationReloadCurrent', function(event){
-      $scope.$emit("locationModalClear");
       controller.open($scope.previous[$scope.previous.length-1].id);
     });
     
@@ -398,14 +397,14 @@
           if (controller.afterApply != null)
           {
             controller.afterApply();
-            return;
           }
           
           controller.clear();
           
-          $scope.$emit('locationChange', {
-            entity : entity  
-          });
+//          $scope.$emit('locationChange', {
+//            entity : entity  
+//          });
+          $scope.$emit('locationReloadCurrent');
         },
         onFailure : function(e){
           $scope.errors.push(e.localizedMessage);
@@ -420,10 +419,6 @@
     $rootScope.$on('locationEdit', function(event, data) {
       controller.afterApply = data.afterApply;
       controller.load(data);
-    });      
-    
-    $rootScope.$on('locationModalClear', function(event, data) {
-      controller.clear();
     });
        
     controller.init();
