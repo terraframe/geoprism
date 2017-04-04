@@ -342,7 +342,7 @@ public abstract class LayerPublisher
         data.put(GeoEntity.ID, resultSet.getString("id"));
         data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
-        data.put("height", "25"); // TODO: This should be set on the GeoEntity
+        data.put("height", "15"); // TODO: This should be set on the GeoEntity
         data.put("base", "0"); // TODO: This should be set on the GeoEntity
         data.put("isClickable", "true");
 

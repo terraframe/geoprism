@@ -125,6 +125,8 @@
 	      }
 	  }
 	 
+	 // TODO: This has legacy code. verify that IF this is being used it's doing as expected. 
+	 // Otherwise remove it.
 	 controller.refreshInteractiveLayers = function(triggeringEvent) {
 		 console.log("SimpleMapWebGL::RefreshInteractiveLayers")
 		  if(!isEmptyJSONObject($scope.sharedGeoData)){
@@ -188,7 +190,7 @@
           bbox: bboxObj
         }];
           
-        controller.updateVectorLayer(source, layers);  //TODO: why is this getting called twice???
+        controller.updateVectorLayer(source, layers);  
         controller.zoomToLayersExtent([layers[1]]);
         
     	controller.addVectorHoverEvents(controller.hoverCallback, ["target-multipolygon", "context-multipolygon"]);

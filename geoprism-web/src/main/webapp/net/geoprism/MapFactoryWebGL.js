@@ -794,25 +794,8 @@
           
             var features = map.queryRenderedFeatures(e.point, { layers: layerz });
             
-            if(features.length){
-              var feature;
-              //
-              // Handling overlapping features (mainly extruded polygons)
-              //
-              if(features.length > 1){
-                features.forEach(function(ft){
-                  if(ft.properties.height > 0){
-                    feature = ft; // smaller features like buildings are more likely to be extruded
-                  }
-                })
-                
-                if(!feature){
-                  feature = features[0];
-                }
-              }
-              else{
-                feature = features[0]; // only take the 1st feature
-              }
+            if(features.length && features.length > 0){
+              var feature = features[0]; // 1st item = top most feature according to mapbox-gl api
                 
               if(feature.properties.isClickable || feature.properties.isClickable === "true"){
                 var shouldDoDefault = featureClickCallback(feature, map);
