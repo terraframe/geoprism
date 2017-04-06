@@ -147,7 +147,6 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     writer.endObject();
   }
 
-  @Override
   public String getLayerName()
   {
     return "context";
@@ -160,13 +159,13 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
     sql.append("WHERE ge.id = '" + entityId + "'\n");
-    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");    
+    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
 
     return Database.query(sql.toString());
   }
 
   @Override
-  public Layer writeVectorLayer(Envelope envelope)
+  public List<Layer> writeVectorLayers(Envelope envelope)
   {
     try
     {
@@ -176,7 +175,10 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
       {
         String layerName = this.getLayerName();
 
-        return this.writeVectorLayer(layerName, envelope, resultSet);
+        List<Layer> layers = new LinkedList<Layer>();
+        layers.add(this.writeVectorLayer(layerName, envelope, resultSet));
+
+        return layers;
       }
       finally
       {
@@ -194,12 +196,16 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     // Add built layer to MVT
     final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
 
-    builder.addLayers(this.writeVectorLayer(envelope));
+    List<Layer> layers = this.writeVectorLayers(envelope);
+
+    for (Layer layer : layers)
+    {
+      builder.addLayers(layer);
+    }
 
     /// Build MVT
     Tile mvt = builder.build();
 
     return mvt.toByteArray();
   }
-
 }

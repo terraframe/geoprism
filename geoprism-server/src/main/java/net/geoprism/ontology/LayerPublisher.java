@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.geotools.geojson.geom.GeometryJSON;
 import org.json.JSONArray;
@@ -363,8 +362,6 @@ public abstract class LayerPublisher
       MvtLayerParams layerParams = new MvtLayerParams();
 
       TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter);
-
-      final VectorTile.Tile.Builder tileBuilder = VectorTile.Tile.newBuilder();
 
       // Create MVT layer
       final MvtLayerProps layerProps = new MvtLayerProps();
