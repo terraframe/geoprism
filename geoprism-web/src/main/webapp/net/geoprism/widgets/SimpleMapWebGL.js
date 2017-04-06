@@ -188,7 +188,7 @@
           layer: "target",
           type: "TARGET",
           index: 2,
-          is3d: false,
+          is3d: true,
           bbox: bboxObj
         },{
           name: "feature-multipolygon",
