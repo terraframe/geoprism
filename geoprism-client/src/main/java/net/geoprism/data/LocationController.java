@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +39,7 @@ import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
+import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.util.IDGenerator;
 
@@ -171,6 +173,76 @@ public class LocationController implements Reloadable
     return new RestBodyResponse("");
   }
 
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF viewSynonyms(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
+  {
+    GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
+    
+    List<? extends SynonymDTO> synonyms = entity.getAllSynonym();
+    for (SynonymDTO syn : synonyms)
+    {
+      syn.lock();
+    }
+    
+    ListSerializable list = new ListSerializable(synonyms);
+    
+    return new RestBodyResponse(list);
+  }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF applyEditSynonyms(ClientRequestIF request, @RequestParamter(name = "synonyms") String sjsonSynonyms) throws JSONException
+  {
+    JSONObject jobjSynonyms = new JSONObject(sjsonSynonyms);
+    
+    String sParent = jobjSynonyms.getString("parent");
+    
+    JSONArray synonyms = jobjSynonyms.getJSONArray("synonyms");
+    
+    for (int i = 0; i < synonyms.length(); ++i)
+    {
+      JSONObject synonym = synonyms.getJSONObject(i);
+      
+      String id = synonym.getString("id");
+      if (id.length() == 64)
+      {
+        SynonymDTO syn = SynonymDTO.get(request, id);
+        syn.getDisplayLabel().setValue(synonym.getString("displayLabel"));
+        syn.apply();
+      }
+      else
+      {
+        SynonymDTO syn = new SynonymDTO(request);
+        syn.getDisplayLabel().setValue(synonym.getString("displayLabel"));
+        
+        SynonymDTO.create(request, syn, sParent);
+      }
+    }
+    
+    JSONArray deleted = jobjSynonyms.getJSONArray("deleted");
+    
+    for (int i = 0; i < deleted.length(); ++i)
+    {
+      String delId = deleted.getString(i);
+      
+      SynonymDTO.get(request, delId).delete();
+    }
+    
+    return new RestBodyResponse("");
+  }
+  
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF cancelEditSynonyms(ClientRequestIF request, @RequestParamter(name = "synonyms") String synonymsJSONArray) throws JSONException
+  {
+    JSONArray synonyms = new JSONArray(synonymsJSONArray);
+    
+    for (int i = 0; i < synonyms.length(); ++i)
+    {
+      SynonymDTO.get(request, synonyms.getString(i)).unlock();
+    }
+    
+    return new RestBodyResponse("");
+  }
+  
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
   {

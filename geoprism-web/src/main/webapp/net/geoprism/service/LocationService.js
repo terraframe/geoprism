@@ -75,12 +75,36 @@
       runwayService.execute(req, connection);      
     }
     
+    service.applySynonyms = function(connection, data) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/applyEditSynonyms',
+        data : {
+          synonyms : data
+        }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
     service.openEditingSession = function(connection, config) {
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/openEditingSession',
         data : {
           config : config
+        }
+      }
+      
+      runwayService.execute(req, connection);
+    }
+    
+    service.cancelEditSynonyms = function(connection, synonyms) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/cancelEditSynonyms',
+        data : {
+          synonyms : synonyms
         }
       }
       
@@ -115,6 +139,18 @@
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/edit',
+        data : {
+          entityId : entityId
+        }
+      }      
+      
+      runwayService.execute(req, connection);      
+    }
+    
+    service.viewSynonyms = function(connection, entityId) {
+      var req = {
+        method: 'POST',
+        url: com.runwaysdk.__applicationContextPath + '/location/viewSynonyms',
         data : {
           entityId : entityId
         }
