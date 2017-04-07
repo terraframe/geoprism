@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -178,7 +180,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
     sql.append("JOIN located_in AS li ON li.child_id = ge.id\n");
     sql.append("WHERE li.parent_id = '" + entityId + "'\n");
-    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");    
+    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
 
     if (this.universalId != null && this.universalId.length() > 0)
     {
@@ -188,14 +190,13 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     return Database.query(sql.toString());
   }
 
-  @Override
   public String getLayerName()
   {
     return "target";
   }
 
   @Override
-  public Layer writeVectorLayer(Envelope envelope)
+  public List<Layer> writeVectorLayers(Envelope envelope)
   {
     try
     {
@@ -205,7 +206,10 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
       {
         String layerName = this.getLayerName();
 
-        return this.writeVectorLayer(layerName, envelope, resultSet);
+        List<Layer> layers = new LinkedList<Layer>();
+        layers.add(this.writeVectorLayer(layerName, envelope, resultSet));
+
+        return layers;
       }
       finally
       {
@@ -223,7 +227,12 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     // Add built layer to MVT
     final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
 
-    builder.addLayers(this.writeVectorLayer(envelope));
+    List<Layer> layers = this.writeVectorLayers(envelope);
+
+    for (Layer layer : layers)
+    {
+      builder.addLayers(layer);
+    }
 
     /// Build MVT
     Tile mvt = builder.build();
