@@ -337,7 +337,6 @@
           })
         }
       }
-      controller._updatedGeos = {};
       
       var deletedGeos = Object.keys(controller._deletedGeos);
       for (var i = 0; i < deletedGeos.length; ++i)
@@ -354,6 +353,9 @@
         elementId : '#innerFrameHtml',
         onSuccess : function(data) {
           controller._isEditing = false;
+          
+          controller._updatedGeos = {};
+          controller._deletedGeos = {};
           
           controller._geoprismEditingControl.stopEditing();
           
