@@ -90,6 +90,10 @@
     	this.clearOverlays(); // the popup doesn't shift appropriately to the new position so clear it
     }
     
+    service.zoomToExtent = function(bounds) {
+    	service.map.zoomToExtent(bounds);
+    }
+    
     service.getWebGlMap = function() {
       return service.map.getMap();
     }

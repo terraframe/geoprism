@@ -334,6 +334,45 @@
                        "filter": ["==", "name", ""] // hide all features in the layer
                     });
                 }
+                // Handle line layers
+                else if (layerName.indexOf("line") !== -1){
+                	
+                	// add the main layer
+                	map.addLayer({
+                		"id": layerName,
+                		"source": source.name,
+                		"source-layer": layer.layer,                     
+                		"type": "line",
+                		"layout": {
+                	      "line-join": "round",
+                          "line-cap": "round"
+                        },
+                        "paint": {
+                          "line-color": styleObj.fill,
+                          "line-width": styleObj.strokeWidth
+                        }
+                    });
+                	
+                	// add labels
+                	map.addLayer({
+                		"id": layerName + "-label",
+                		"source": source.name,
+                		"source-layer": layer.layer,                     
+                		"type": "symbol",
+                		"paint": {
+                			"text-color": "black",
+                			"text-halo-color": "#fff",
+                			"text-halo-width": 2
+                		},
+                		"layout": {
+                			"text-field": "{displayLabel}",
+                			"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                			"text-offset": [0, 0.6],
+                			"text-anchor": "top",
+                			"text-size": 12
+                		}
+                	});                	
+                }
                 else if (layerName.indexOf("multipolygon") !== -1){
                   
                   if(layer.is3d){

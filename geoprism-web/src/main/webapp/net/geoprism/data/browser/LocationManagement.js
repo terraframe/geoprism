@@ -178,6 +178,22 @@
       });
     }
     
+    controller.viewSynonyms = function(entity) {
+      var connection = {
+          elementId : '#innerFrameHtml',
+          onSuccess : function(synonyms) {
+            $scope.$emit('locationSynonymEdit', {
+              universal : $scope.universal,
+              parent : $scope.entity,
+              entity : entity,
+              synonyms: synonyms
+            });
+          }      
+        };      
+        
+      locationService.viewSynonyms(connection, entity.id);
+    }
+    
     controller.remove = function(entity) {
       var title = localizationService.localize("location.management", "removeOptionTitle", "Delete location");
 
@@ -333,6 +349,123 @@
     controller.init();
   }
   
+  function LocationSynonymModalController($scope, $rootScope, locationService) {
+    var locationController = controller;
+    var controller = this;
+        
+    controller.init = function() {
+      $scope.show = false;
+      controller.deletedSyns = [];
+    }
+    
+    controller.newSynonym = function() {
+      $scope.synonyms.push({
+        displayLabel: "",
+        id: Mojo.Util.generateId(),
+        type: "com.runwaysdk.system.gis.geo.Synonym"
+      });
+    }
+    
+    controller.removeSynonym = function(synonym) {
+      var removeIndex = null;
+      
+      for (var i = 0; i < $scope.synonyms.length; ++i)
+      {
+        if ($scope.synonyms[i].id === synonym.id)
+        {
+          removeIndex = i;
+          break;
+        }
+      }
+      
+      if (removeIndex !== null)
+      {
+        $scope.synonyms.splice(removeIndex, 1);
+        controller.deletedSyns.push(synonym.id);
+      }
+    }
+    
+    controller.load = function(data) {
+      if(data.entity == null) {
+        $scope.entity = {
+          type : 'com.runwaysdk.system.gis.geo.GeoEntity',
+          wkt : data.wkt,
+          universal : data.universal.value
+        };        
+      }
+      else {
+        $scope.entity = data.entity;
+      }
+      
+      $scope.synonyms = data.synonyms;
+      $scope.universals = data.universal.options;
+      $scope.parent = data.parent;
+      $scope.show = true;
+    }
+        
+    controller.clear = function() { 
+      $scope.entity = undefined;
+      $scope.parent = undefined;
+      $scope.show = false;
+      $scope.synonyms = [];
+      controller.deletedSyns = [];
+    }
+    
+    controller.cancel = function() {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(entity) {
+          controller.clear();
+          
+//          $scope.$emit('locationCancel', {});
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.localizedMessage);
+        }                
+      };
+      
+      $scope.errors = [];
+      
+      var synIds = [];
+      for (var i = 0; i < $scope.synonyms.length; ++i)
+      {
+        var id = $scope.synonyms[i].id;
+        
+        if (id.length === 64)
+        {
+          synIds.push(id);
+        }
+      }
+      
+      locationService.cancelEditSynonyms(connection, synIds);                      
+    }
+    
+    controller.apply = function() {
+      var connection = {
+        elementId : '#innerFrameHtml',
+        onSuccess : function(entity) {
+          
+          controller.clear();
+          
+//          $scope.$emit('locationReloadCurrent');
+        },
+        onFailure : function(e){
+          $scope.errors.push(e.localizedMessage);
+        }                
+      };
+      
+      $scope.errors = [];
+      
+      locationService.applySynonyms(connection, { "parent" : $scope.entity.id, "synonyms" : $scope.synonyms, "deleted" : controller.deletedSyns });        
+    }
+      
+    $rootScope.$on('locationSynonymEdit', function(event, data) {
+      controller.load(data);
+    });
+       
+    controller.init();
+  }
+  
   function LocationModalController($scope, $rootScope, locationService) {
     var locationController = controller;
     var controller = this;
@@ -437,10 +570,26 @@
       link: function (scope, element, attrs, ctrl) {
       }
     }   
-  }  
+  }
+  
+  function LocationSynonymModal() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/location-synonym-modal.jsp',
+      scope: {
+        layers : '='
+      },
+      controller : LocationSynonymModalController,
+      controllerAs : 'ctrl',      
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }
+  }
   
   angular.module("location-management", ["location-service", "styled-inputs", "editable-map-webgl", "widget-service", "localization-service"]);
   angular.module("location-management")
    .controller('LocationController', LocationController)
    .directive('locationModal', LocationModal)
+   .directive('locationSynonymModal', LocationSynonymModal)
 })();
