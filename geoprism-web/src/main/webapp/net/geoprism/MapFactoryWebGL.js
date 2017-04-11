@@ -781,6 +781,36 @@
         },
         
         
+        zoomToExtent : function(bounds) {
+        	var map = this.getMap();
+        	
+        	if(typeof bounds === "string"){
+        		bounds = JSON.parse(bounds);
+        	}
+        	
+        	// convert to 3857
+//        	if(bounds.srid === "4326"){
+//        		var swProj = proj4("EPSG:4326", "EPSG:3857", [bounds.sw.lng, bounds.sw.lat]);
+//        		var neProj = proj4("EPSG:4326", "EPSG:3857", [bounds.ne.lng, bounds.ne.lat]);
+//        		var sw = new mapboxgl.LngLat(swProj[0], swProj[1]);
+//        		var ne = new mapboxgl.LngLat(neProj[0], neProj[1]);
+//        	}
+//        	else{
+//        		var sw = new mapboxgl.LngLat(bounds.sw.lng, bounds.sw.lat);
+//        		var ne = new mapboxgl.LngLat(bounds.ne.lng, bounds.ne.lat);
+//        	}
+        	
+        	var sw = new mapboxgl.LngLat(Number(bounds.sw.lng), Number(bounds.sw.lat));
+    		var ne = new mapboxgl.LngLat(Number(bounds.ne.lng), Number(bounds.ne.lat));
+    		
+        	var bbox = new mapboxgl.LngLatBounds(sw, ne);
+        	
+        	map.on('load', function () {
+        		map.fitBounds(bbox, {padding:50, linear:true});
+        	});
+        },
+        
+        
         addVectorClickEvents : function(featureClickCallback, layerz)
         {
           this._clicks = this._clicks || {};

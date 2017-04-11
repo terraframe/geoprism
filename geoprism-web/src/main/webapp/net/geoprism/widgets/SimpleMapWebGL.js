@@ -97,6 +97,10 @@
 		 webGLMapService.zoomToExtentOfFeatures(featureGeoIds);
 	 }
 	 
+	 controller.zoomToExtent = function(bounds) {
+		 webGLMapService.zoomToExtent(bounds);
+	 }
+	 
 	 controller.focusOnFeature = function(feature) {
 		 webGLMapService.focusOnFeature(feature);
 	 }
@@ -247,11 +251,11 @@
       });
       
       
-//      $scope.$watch("activeBaseLayer", function(newVal, oldVal) {
-//    	  if(newVal){
-//    		  console.log("watched")
-//    	  }
-//      });
+      $scope.$on('init', function(event, data) {
+    	  if(data.defaultExtent){
+    		  controller.zoomToExtent(data.defaultExtent);
+    	  }
+      });
 
       
       controller.init();
