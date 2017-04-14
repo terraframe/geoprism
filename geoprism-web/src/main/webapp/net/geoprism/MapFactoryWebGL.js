@@ -681,10 +681,14 @@
           }
         },
         
-        getAllVectorLayers : function() {
+        getAllVectorLayers : function(layers) {
           var map = this.getMap();
           var layersArr = [];
           var layersList = this.LAYERS_LIST;
+          if (layers != null)
+          {
+            layersList = layers;
+          }
           
           if(layersList.length > 0){
             layersList.forEach(function(layerName){
@@ -759,16 +763,24 @@
         },
         
         
-        zoomToExtentOfFeatures : function(entities) {
+        zoomToExtentOfFeatures : function(entities, layers) {
           var map = this.getMap();
           var that = this;
-          var layersArr = this.getAllVectorLayers();
+          var layersArr = this.getAllVectorLayers(layers);
           var fullExt = null;
           
           var bounds = new mapboxgl.LngLatBounds();
           var featureGeoIds = [];
+          var featureIds = [];
           entities.forEach(function(ent){
-            featureGeoIds.push(ent.geoId);
+            if (typeof ent === 'string' || ent instanceof String)
+            {
+              featureIds.push(ent);
+            }
+            else
+            {
+              featureGeoIds.push(ent.geoId);
+            }
           })
           
           if(layersArr.length > 0){
@@ -777,16 +789,13 @@
               if(layer){
                   var layerSourceName = layer.source;
                   
-                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-//                  var layerSourceData = map.getSource(layerSourceName)._data;
                   var layerSourceData = map.querySourceFeatures(layerSourceName, {
                       sourceLayer: layer.sourceLayer
                   });
-
                   
                   if(layerSourceData && layerSourceData.length > 0){
                     layerSourceData.forEach(function(f){
-                      if(that.arrayContainsString(featureGeoIds, f.properties.geoId)){
+                      if(that.arrayContainsString(featureGeoIds, f.properties.geoId) || that.arrayContainsString(featureIds, f.properties.featureId)){
                         var bbox = turf.extent(f);
                           bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
                       }

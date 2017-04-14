@@ -169,8 +169,8 @@
     	service.map.focusOffFeature(feature);
     }
     
-    service.zoomToExtentOfFeatures = function(featureGeoIds) {
-    	service.map.zoomToExtentOfFeatures(featureGeoIds);
+    service.zoomToExtentOfFeatures = function(featureGeoIds, layers) {
+    	service.map.zoomToExtentOfFeatures(featureGeoIds, layers);
     }
     
     service.toggleBaseLayer = function(targetLayer, toggleOffLayer) {

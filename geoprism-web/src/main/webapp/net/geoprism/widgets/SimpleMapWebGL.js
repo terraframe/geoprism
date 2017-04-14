@@ -95,8 +95,8 @@
      webGLMapService.zoomToLayersExtent(layersArr);
    }
    
-   controller.zoomToExtentOfFeatures = function(featureGeoIds) {
-     webGLMapService.zoomToExtentOfFeatures(featureGeoIds);
+   controller.zoomToExtentOfFeatures = function(featureGeoIds, layers) {
+     webGLMapService.zoomToExtentOfFeatures(featureGeoIds, layers);
    }
    
    controller.zoomToExtent = function(bounds) {
@@ -114,6 +114,10 @@
    controller.updateVectorLayer = function(source, layers) {
      webGLMapService.updateVectorLayer(source, layers);
    }
+   
+   $scope.$on('zoomToFeatures', function(event, data) {
+     controller.zoomToExtentOfFeatures(data.featureGeoIds, data.layers);
+   });
    
     
    controller.refreshBaseLayer = function() {
