@@ -116,7 +116,7 @@
    }
    
    $scope.$on('zoomToFeatures', function(event, data) {
-     controller.zoomToExtentOfFeatures(data.featureGeoIds, data.layers);
+	   controller.zoomToExtent(data.bbox);
    });
    
     

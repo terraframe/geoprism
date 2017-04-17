@@ -359,6 +359,7 @@
                 		"source": source.name,
                 		"source-layer": layer.layer,                     
                 		"type": "symbol",
+                		"symbol-placement":"line",
                 		"paint": {
                 			"text-color": "black",
                 			"text-halo-color": "#fff",
@@ -853,9 +854,14 @@
     		
         	var bbox = new mapboxgl.LngLatBounds(sw, ne);
         	
-        	map.on('load', function () {
+        	if(map.loaded()){
         		map.fitBounds(bbox, {padding:50, linear:true});
-        	});
+        	}
+        	else{
+        		map.on('load', function () {
+        			map.fitBounds(bbox, {padding:50, linear:true});
+        		});
+        	}
         },
         
         
