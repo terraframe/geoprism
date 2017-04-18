@@ -63,6 +63,7 @@
 .location-selector-container .cell .fa.fa-pencil.ico-edit,
 .location-selector-container .cell .fa.fa-trash-o.ico-remove,
 .location-field-info-card .cell .fa.fa-pencil.ico-edit,
+.location-field-info-card .cell .fa.fa-link.ico-synonym,
 .location-field-info-card .cell .fa.fa-trash-o.ico-remove{
 	font-size: 20px;
 }

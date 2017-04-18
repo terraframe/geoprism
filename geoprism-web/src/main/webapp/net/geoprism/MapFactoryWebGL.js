@@ -334,6 +334,46 @@
                        "filter": ["==", "name", ""] // hide all features in the layer
                     });
                 }
+                // Handle line layers
+                else if (layerName.indexOf("line") !== -1){
+                	
+                	// add the main layer
+                	map.addLayer({
+                		"id": layerName,
+                		"source": source.name,
+                		"source-layer": layer.layer,                     
+                		"type": "line",
+                		"layout": {
+                	      "line-join": "round",
+                          "line-cap": "round"
+                        },
+                        "paint": {
+                          "line-color": styleObj.fill,
+                          "line-width": styleObj.strokeWidth
+                        }
+                    });
+                	
+                	// add labels
+                	map.addLayer({
+                		"id": layerName + "-label",
+                		"source": source.name,
+                		"source-layer": layer.layer,                     
+                		"type": "symbol",
+                		"symbol-placement":"line",
+                		"paint": {
+                			"text-color": "black",
+                			"text-halo-color": "#fff",
+                			"text-halo-width": 2
+                		},
+                		"layout": {
+                			"text-field": "{displayLabel}",
+                			"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                			"text-offset": [0, 0.6],
+                			"text-anchor": "top",
+                			"text-size": 12
+                		}
+                	});                	
+                }
                 else if (layerName.indexOf("multipolygon") !== -1){
                   
                   if(layer.is3d){
@@ -642,10 +682,14 @@
           }
         },
         
-        getAllVectorLayers : function() {
+        getAllVectorLayers : function(layers) {
           var map = this.getMap();
           var layersArr = [];
           var layersList = this.LAYERS_LIST;
+          if (layers != null)
+          {
+            layersList = layers;
+          }
           
           if(layersList.length > 0){
             layersList.forEach(function(layerName){
@@ -720,16 +764,24 @@
         },
         
         
-        zoomToExtentOfFeatures : function(entities) {
+        zoomToExtentOfFeatures : function(entities, layers) {
           var map = this.getMap();
           var that = this;
-          var layersArr = this.getAllVectorLayers();
+          var layersArr = this.getAllVectorLayers(layers);
           var fullExt = null;
           
           var bounds = new mapboxgl.LngLatBounds();
           var featureGeoIds = [];
+          var featureIds = [];
           entities.forEach(function(ent){
-            featureGeoIds.push(ent.geoId);
+            if (typeof ent === 'string' || ent instanceof String)
+            {
+              featureIds.push(ent);
+            }
+            else
+            {
+              featureGeoIds.push(ent.geoId);
+            }
           })
           
           if(layersArr.length > 0){
@@ -738,16 +790,13 @@
               if(layer){
                   var layerSourceName = layer.source;
                   
-                  // TODO: replace _data with map.querySourceFeatures(layerSourceName);
-//                  var layerSourceData = map.getSource(layerSourceName)._data;
                   var layerSourceData = map.querySourceFeatures(layerSourceName, {
                       sourceLayer: layer.sourceLayer
                   });
-
                   
                   if(layerSourceData && layerSourceData.length > 0){
                     layerSourceData.forEach(function(f){
-                      if(that.arrayContainsString(featureGeoIds, f.properties.geoId)){
+                      if(that.arrayContainsString(featureGeoIds, f.properties.geoId) || that.arrayContainsString(featureIds, f.properties.featureId)){
                         var bbox = turf.extent(f);
                           bounds.extend([bbox[0], bbox[1]], [bbox[2], bbox[3]]);
                       }
@@ -778,6 +827,41 @@
               }
             }
           }
+        },
+        
+        
+        zoomToExtent : function(bounds) {
+        	var map = this.getMap();
+        	
+        	if(typeof bounds === "string"){
+        		bounds = JSON.parse(bounds);
+        	}
+        	
+        	// convert to 3857
+//        	if(bounds.srid === "4326"){
+//        		var swProj = proj4("EPSG:4326", "EPSG:3857", [bounds.sw.lng, bounds.sw.lat]);
+//        		var neProj = proj4("EPSG:4326", "EPSG:3857", [bounds.ne.lng, bounds.ne.lat]);
+//        		var sw = new mapboxgl.LngLat(swProj[0], swProj[1]);
+//        		var ne = new mapboxgl.LngLat(neProj[0], neProj[1]);
+//        	}
+//        	else{
+//        		var sw = new mapboxgl.LngLat(bounds.sw.lng, bounds.sw.lat);
+//        		var ne = new mapboxgl.LngLat(bounds.ne.lng, bounds.ne.lat);
+//        	}
+        	
+        	var sw = new mapboxgl.LngLat(Number(bounds.sw.lng), Number(bounds.sw.lat));
+    		var ne = new mapboxgl.LngLat(Number(bounds.ne.lng), Number(bounds.ne.lat));
+    		
+        	var bbox = new mapboxgl.LngLatBounds(sw, ne);
+        	
+        	if(map.loaded()){
+        		map.fitBounds(bbox, {padding:50, linear:true});
+        	}
+        	else{
+        		map.on('load', function () {
+        			map.fitBounds(bbox, {padding:50, linear:true});
+        		});
+        	}
         },
         
         
