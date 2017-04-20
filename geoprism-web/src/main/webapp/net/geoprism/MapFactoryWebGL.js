@@ -833,7 +833,7 @@
         zoomToExtent : function(bounds) {
         	var map = this.getMap();
         	
-        	if(typeof bounds === "string"){
+        	if(typeof bounds === "string" && net.geoprism.gis.WebGLMap.isJSON(bounds) ){
         		bounds = JSON.parse(bounds);
         	}
         	
@@ -849,18 +849,20 @@
 //        		var ne = new mapboxgl.LngLat(bounds.ne.lng, bounds.ne.lat);
 //        	}
         	
-        	var sw = new mapboxgl.LngLat(Number(bounds.sw.lng), Number(bounds.sw.lat));
-    		var ne = new mapboxgl.LngLat(Number(bounds.ne.lng), Number(bounds.ne.lat));
-    		
-        	var bbox = new mapboxgl.LngLatBounds(sw, ne);
-        	
-        	if(map.loaded()){
-        		map.fitBounds(bbox, {padding:50, linear:true});
-        	}
-        	else{
-        		map.on('load', function () {
-        			map.fitBounds(bbox, {padding:50, linear:true});
-        		});
+        	if(bounds.sw && bounds.ne){
+	        	var sw = new mapboxgl.LngLat(Number(bounds.sw.lng), Number(bounds.sw.lat));
+	    		var ne = new mapboxgl.LngLat(Number(bounds.ne.lng), Number(bounds.ne.lat));
+	    		
+	        	var bbox = new mapboxgl.LngLatBounds(sw, ne);
+	        	
+	        	if(map.loaded()){
+	        		map.fitBounds(bbox, {padding:50, linear:true});
+	        	}
+	        	else{
+	        		map.on('load', function () {
+	        			map.fitBounds(bbox, {padding:50, linear:true});
+	        		});
+	        	}
         	}
         },
         
@@ -1055,6 +1057,18 @@
       },
       Static : {
         // Static methods
+    	  
+    	  isJSON(data) {
+    		  var ret = true;
+    		  try {
+    			  JSON.parse(data);
+    		  } 
+    		  catch(e) {
+    			  ret = false;
+    		  }
+    		  
+    		  return ret;
+    	  }
       }
     });
   
