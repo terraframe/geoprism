@@ -115,7 +115,7 @@
      webGLMapService.updateVectorLayer(source, layers);
    }
    
-   $scope.$on('zoomToFeatures', function(event, data) {
+   $scope.$on('zoomToBbox', function(event, data) {
 	   controller.zoomToExtent(data.bbox);
    });
    
@@ -248,7 +248,8 @@
       });
       
       $scope.$on('listItemClick', function(event, data){
-        controller.zoomToExtentOfFeatures(data.entities)
+//        controller.zoomToExtentOfFeatures(data.entities);
+        controller.zoomToExtent(data.inferredLocationsBbox);
       });
       
       
