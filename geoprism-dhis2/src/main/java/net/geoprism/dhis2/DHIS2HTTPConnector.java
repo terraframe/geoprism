@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.session.Request;
 
 import net.geoprism.account.ExternalProfile;
 import net.geoprism.account.OauthServer;
@@ -51,6 +52,8 @@ import net.geoprism.dhis2.response.DHIS2ConflictException;
 
 public class DHIS2HTTPConnector
 {
+  private String OAUTH_KEY_NAME = "geoprism-dhis2";
+  
   private Logger logger = LoggerFactory.getLogger(DHIS2HTTPConnector.class);
   
   private HttpClient client;
@@ -73,7 +76,7 @@ public class DHIS2HTTPConnector
   
   public DHIS2HTTPConnector()
   {
-    this.serverurl = "http://127.0.0.1:8085/";
+    
   }
   
   public String getAccessToken()
@@ -84,6 +87,19 @@ public class DHIS2HTTPConnector
   public String getServerUrl()
   {
     return serverurl;
+  }
+  
+  public void getUrlsFromOauthCredentialsIfNotExist()
+  {
+    if (this.serverurl == null)
+    {
+      OauthServer oauth = OauthServer.getByKey(OAUTH_KEY_NAME);
+      String profileLoc = oauth.getProfileLocation();
+      
+      // TODO : I think we can combine serverurl and externalurl into the same variable.
+      this.serverurl = profileLoc.substring(0, profileLoc.length() - 7);
+      this.externalUrl = this.serverurl;
+    }
   }
   
   public void setServerUrl(String url)
@@ -146,7 +162,7 @@ public class DHIS2HTTPConnector
     try
     {
       OauthServer oauth = new OauthServer();
-      oauth.setKeyName("dhis2-local");
+      oauth.setKeyName(OAUTH_KEY_NAME);
       oauth.getDisplayLabel().setValue("DHIS2");
       oauth.setAuthorizationLocation(externalUrl + "/uaa/oauth/authorize");
       oauth.setTokenLocation(externalUrl + "/uaa/oauth/token");

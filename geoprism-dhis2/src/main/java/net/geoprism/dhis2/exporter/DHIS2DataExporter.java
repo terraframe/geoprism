@@ -109,6 +109,8 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
       throw ex;
     }
     
+    dhis2.getUrlsFromOauthCredentialsIfNotExist();
+    
     MdBusinessExporter exporter = new MdBusinessExporter((MdBusiness) mdClass, dhis2);
     exporter.exportToTracker();
   }
