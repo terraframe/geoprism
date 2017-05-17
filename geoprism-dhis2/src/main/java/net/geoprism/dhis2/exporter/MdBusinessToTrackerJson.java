@@ -105,6 +105,9 @@ public class MdBusinessToTrackerJson
         // Find the corresponding DHIS2 attribute type from our Runway MdAttribute types
         String valueType = null;
         
+        // Complete list of valid DHIS2 (API version 25) datatypes:
+        // UNIT_INTERVAL, LETTER, BOOLEAN, NUMBER, TEXT, DATE, LONG_TEXT, FILE_RESOURCE, USERNAME, TRACKER_ASSOCIATE, COORDINATE, INTEGER_POSITIVE, DATETIME, EMAIL, TRUE_ONLY, INTEGER, INTEGER_ZERO_OR_POSITIVE, ORGANISATION_UNIT, TIME, INTEGER_NEGATIVE, PERCENTAGE, PHONE_NUMBER
+        
         if (mdAttr instanceof MdAttributeDate)
         {
           valueType = "DATE";
@@ -126,11 +129,19 @@ public class MdBusinessToTrackerJson
         {
           valueType = "BOOLEAN";
         }
-        else if (mdAttr instanceof MdAttributeInteger || mdAttr instanceof MdAttributeLong)
+        else if (mdAttr instanceof MdAttributeInteger)
         {
           valueType = "INTEGER";
         }
-        else if (mdAttr instanceof MdAttributeDouble || mdAttr instanceof MdAttributeFloat)
+        else if (mdAttr instanceof MdAttributeLong)
+        {
+          valueType = "NUMBER";
+        }
+        else if (mdAttr instanceof MdAttributeDouble)
+        {
+          valueType = "NUMBER";
+        }
+        else if (mdAttr instanceof MdAttributeFloat)
         {
           valueType = "NUMBER";
         }
