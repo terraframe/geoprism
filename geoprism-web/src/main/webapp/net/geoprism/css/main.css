@@ -1210,6 +1210,11 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	color:#999;
 	padding:0;
 }
+.modal-form .holder.dataset-attr-holder{
+	overflow-y: auto;
+  max-height: 50vh;
+}
+
 .modal-form .holder{
 	float:left;
 	width:600px;

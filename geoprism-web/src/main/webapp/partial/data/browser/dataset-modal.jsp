@@ -81,7 +81,7 @@
                 <div class="label-holder">
                   <label><gdb:localize key="dataset.attributes"/></label>
                 </div>          
-                <div class="holder" >
+                <div class="holder dataset-attr-holder" >
                   <table class="list-table table table-bordered table-striped">
                     <tbody>
                       <tr ng-repeat="attribute in dataset.attributes" class="fade-ngRepeat-item">
