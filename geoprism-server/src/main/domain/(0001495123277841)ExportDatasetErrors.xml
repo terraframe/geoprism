@@ -1,0 +1,38 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdException name="net.geoprism.dhis2.response.DHIS2EmptyDatasetException" label="DHIS2 Empty Dataset Exception" message="Your dataset does not contain any data. It has not been exported.">
+      </mdException>
+      <mdException name="net.geoprism.dhis2.response.DHIS2AttributeLengthException" label="DHIS2 Attribute Length Exception" message="One of your attributes is too long. DHIS2 has an attribute name length of 50, your attribute is of length [{attrLen}].">
+        <attributes>
+          <char name="attrLen" label="Attribute Length" required="true" size="50"/>
+        </attributes>
+      </mdException>
+      <mdException name="net.geoprism.dhis2.response.DHIS2UnexpectedResponseException" label="DHIS2 Unexpected Response Exception" message="DHIS2 returned an unexpected response [{dhis2Response}].">
+        <attributes>
+          <char name="dhis2Response" label="DHIS2 Response" required="true" size="1000"/>
+        </attributes>
+      </mdException>
+      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateDataException" label="DHIS2 Duplicate Data Exception" message="DHIS2 already contains a [{dhis2Datatype}] with the value [{dhis2Value}].">
+        <attributes>
+          <char name="dhis2Datatype" label="DHIS2 Datatype" required="true" size="500"/>
+          <char name="dhis2Value" label="DHIS2 Value" required="true" size="500"/>
+        </attributes>
+      </mdException>
+    </create>
+    <update>
+      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateAttributeException">
+        <attributes>
+          <char name="dhis2Attrs" size="1000"/>
+        </attributes>
+      </mdException>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.dhis2.response.DHIS2EmptyDatasetException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="net.geoprism.dhis2.response.DHIS2UnexpectedResponseException" type="com.runwaysdk.system.metadata.MdException"/>
+      <object key="net.geoprism.dhis2.response.DHIS2DuplicateDataException" type="com.runwaysdk.system.metadata.MdException"/>
+    </delete>
+  </undoIt>
+</version>

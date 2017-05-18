@@ -21,16 +21,11 @@ package net.geoprism.dhis2.exporter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -50,10 +45,8 @@ import com.runwaysdk.system.metadata.MdBusinessDTO;
 import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.dhis2.DHIS2HTTPConnector;
-import net.geoprism.dhis2.response.DHIS2DuplicateAttributeException;
-import net.geoprism.dhis2.response.DHIS2DuplicateDataException;
+import net.geoprism.dhis2.response.DHIS2EmptyDatasetException;
 import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
-import net.geoprism.dhis2.response.DHIS2UnexpectedResponseException;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
 
@@ -82,6 +75,8 @@ public class MdBusinessExporter
   
   private final int pageSize = 1000;
   
+  private long teiCount;
+  
   public MdBusinessExporter(MdBusiness mdbiz, DHIS2HTTPConnector dhis2)
   {
     this.mdbiz = mdbiz;
@@ -103,6 +98,19 @@ public class MdBusinessExporter
     createAndEnrollTrackedEntityInstances();
   }
   
+  protected void validateExport()
+  {
+    QueryFactory qf = new QueryFactory();
+    BusinessQuery bq = qf.businessQuery(mdbiz.definesType());
+    teiCount = bq.getCount();
+    
+    if (teiCount == 0)
+    {
+      DHIS2EmptyDatasetException ex = new DHIS2EmptyDatasetException();
+      throw ex;
+    }
+  }
+  
   protected void createAndEnrollTrackedEntityInstances()
   {
     List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
@@ -110,10 +118,9 @@ public class MdBusinessExporter
     QueryFactory qf = new QueryFactory();
     BusinessQuery bq = qf.businessQuery(mdbiz.definesType());
     
-    long count = bq.getCount();
     int page = 0;
     
-    while ( (page * pageSize) < count )
+    while ( (page * pageSize) < teiCount )
     {
       JSONObject jsonMetadata = new JSONObject();
       
@@ -266,41 +273,7 @@ public class MdBusinessExporter
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
     
-    try
-    {
-      DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
-    }
-    catch (DHIS2DuplicateDataException e)
-    {
-      List<String> msgs = e.getErrorMessages();
-      
-      Set<String> attrNames = new HashSet<String>();
-      for (String msg : msgs)
-      {
-        // Property `name`Â with value `Gender` on object Gender [XWImNYPqAIz] (TrackedEntityAttribute)Â already exists on object cejWyOfXge6.
-        Pattern p = Pattern.compile("Property `(.*)`.*with value `(.*)` on object .*");
-        Matcher m = p.matcher(msg);
-        
-        if (m.find())
-        {
-          String attrName = m.group(2);
-          
-          if (attrName != null)
-          {
-            attrNames.add(attrName);
-          }
-        }
-        else
-        {
-          // If we get some weird message back that doesn't match our regex
-          throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
-        }
-      }
-      
-      DHIS2DuplicateAttributeException ex = new DHIS2DuplicateAttributeException();
-      ex.setDhis2Attrs(StringUtils.join(attrNames, ", "));
-      throw ex;
-    }
+    DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
     
     getTrackedEntityAttributeIds();
   }

@@ -19,12 +19,19 @@
 package net.geoprism.dhis2.response;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.runwaysdk.dataaccess.attributes.AttributeLengthCharacterException;
 
 public class DHIS2ResponseProcessor
 {
@@ -57,7 +64,9 @@ public class DHIS2ResponseProcessor
     
     if (!response.has("responseType") || !response.getString("responseType").equals("ImportSummaries"))
     {
-      throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
+      DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+      ex.setDhis2Response(response.toString());
+      throw ex;
     }
     
     JSONArray summaries = response.getJSONArray("importSummaries");
@@ -69,7 +78,9 @@ public class DHIS2ResponseProcessor
       String status = summary.getString("status");
       if (!status.equals("SUCCESS"))
       {
-        throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
+        DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+        ex.setDhis2Response(response.toString());
+        throw ex;
       }
       
       if (summary.has("conflicts"))
@@ -136,10 +147,12 @@ public class DHIS2ResponseProcessor
 //}
     if (!response.has("status"))
     {
-      throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
+      DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+      ex.setDhis2Response(response.toString());
+      throw ex;
     }
     
-    List<String> failMsgs = new ArrayList<String>();
+    List<String> attrErrs = new ArrayList<String>();
     
     if (response.getString("status").equals("ERROR"))
     {
@@ -163,29 +176,87 @@ public class DHIS2ResponseProcessor
           {
             JSONObject errorReport = errorReports.getJSONObject(k);
             
-            if (errorReport.getString("errorCode").equals("E5003"))
+            String errorCode = errorReport.getString("errorCode");
+            String message = errorReport.getString("message");
+            String mainKlass = errorReport.getString("mainKlass");
+
+            if (errorCode.equals("E5003")) // Duplicate data ex
             {
-              if (errorOnAlreadyExists)
+              if (mainKlass.equals("org.hisp.dhis.trackedentity.TrackedEntityAttribute"))
               {
-                failMsgs.add(errorReport.getString("message"));
+                attrErrs.add(message);
               }
               else
               {
-                logger.error(errorReport.getString("message"));
+                DHIS2DuplicateDataException ex = new DHIS2DuplicateDataException();
+                ex.setDhis2Datatype(mainKlass);
+                ex.setDhis2Value(message); // TODO : Message probably isn't the best thing to throw into this
+                throw ex;
               }
+            }
+            else if (errorCode.equals("E4001"))
+            {
+              String attrLen;
+              Pattern p = Pattern.compile("but given length was ([0-9]*)\\.");
+              Matcher m = p.matcher(message);
+              if (m.find())
+              {
+                attrLen = m.group(1);
+              }
+              else
+              {
+                // If we get some weird message back that doesn't match our regex
+                DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+                ex.setDhis2Response(response.toString());
+                throw ex;
+              }
+              
+              
+              DHIS2AttributeLengthException ex = new DHIS2AttributeLengthException();
+              ex.setAttrLen(attrLen);
+              throw ex;
             }
             else
             {
-              throw new DHIS2UnexpectedResponseException("Unexpected response [" + response + "]");
+              DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+              ex.setDhis2Response(message.toString());
+              throw ex;
             }
           }
         }
       }
     }
     
-    if (errorOnAlreadyExists && failMsgs.size() > 0)
+    if (attrErrs.size() > 0)
     {
-      throw new DHIS2DuplicateDataException(failMsgs);
+      Set<String> attrNames = new HashSet<String>();
+      for (String msg : attrErrs)
+      {
+        // Property `name`Â with value `Gender` on object Gender [XWImNYPqAIz] (TrackedEntityAttribute)Â already exists on object cejWyOfXge6.
+        Pattern p = Pattern.compile("Property `(.*)`.*with value `(.*)` on object .*");
+        Matcher m = p.matcher(msg);
+        
+        if (m.find())
+        {
+          String attrName = m.group(2);
+          
+          if (attrName != null)
+          {
+            attrNames.add(attrName);
+          }
+        }
+        else
+        {
+          // If we get some weird message back that doesn't match our regex
+          DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+          ex.setDhis2Response(response.toString());
+          throw ex;
+        }
+      }
+      
+      DHIS2DuplicateAttributeException ex = new DHIS2DuplicateAttributeException();
+      ex.setDhis2Attrs(StringUtils.join(attrNames, ", "));
+      throw ex;
     }
   }
 }
