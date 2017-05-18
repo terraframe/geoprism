@@ -79,7 +79,7 @@ public class DHIS2ResponseProcessor
       if (!status.equals("SUCCESS"))
       {
         DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-        ex.setDhis2Response(response.toString());
+        ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
         throw ex;
       }
       
@@ -148,7 +148,7 @@ public class DHIS2ResponseProcessor
     if (!response.has("status"))
     {
       DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-      ex.setDhis2Response(response.toString());
+      ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
       throw ex;
     }
     
@@ -207,7 +207,7 @@ public class DHIS2ResponseProcessor
               {
                 // If we get some weird message back that doesn't match our regex
                 DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-                ex.setDhis2Response(response.toString());
+                ex.setDhis2Response(message);
                 throw ex;
               }
               
@@ -219,7 +219,7 @@ public class DHIS2ResponseProcessor
             else
             {
               DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-              ex.setDhis2Response(message.toString());
+              ex.setDhis2Response(message);
               throw ex;
             }
           }
@@ -249,7 +249,7 @@ public class DHIS2ResponseProcessor
         {
           // If we get some weird message back that doesn't match our regex
           DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-          ex.setDhis2Response(response.toString());
+          ex.setDhis2Response(msg);
           throw ex;
         }
       }
