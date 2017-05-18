@@ -65,7 +65,7 @@ public class DHIS2ResponseProcessor
     if (!response.has("responseType") || !response.getString("responseType").equals("ImportSummaries"))
     {
       DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-      ex.setDhis2Response(response.toString());
+      ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
       throw ex;
     }
     
@@ -94,7 +94,9 @@ public class DHIS2ResponseProcessor
           
           if (value.contains("No org unit"))
           {
-            throw new RuntimeException("No org unit found on TEI. [" + response + "].");
+            DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+            ex.setDhis2Response(value);
+            throw ex;
           }
         }
       }
