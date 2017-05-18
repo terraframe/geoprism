@@ -79,7 +79,7 @@ public class DHIS2ResponseProcessor
       if (!status.equals("SUCCESS"))
       {
         DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-        ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
+        ex.setDhis2Response(summary.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
         throw ex;
       }
       
