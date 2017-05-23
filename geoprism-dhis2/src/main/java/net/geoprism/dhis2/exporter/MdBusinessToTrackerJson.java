@@ -18,6 +18,7 @@
  */
 package net.geoprism.dhis2.exporter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -25,12 +26,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoEntityBase;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.metadata.MdAttributeGeometry;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -46,7 +45,9 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdBusiness;
 
+import net.geoprism.dhis2.importer.OptionSetJsonToClassifier;
 import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierSynonym;
 
 /**
@@ -82,13 +83,17 @@ public class MdBusinessToTrackerJson
   }
   
   /**
-   * Creates the JSON representation of an array of DHIS2 tracked entity attributes by looping over the MdAttributes associated with this MdBusiness.
+   * Creates a DHIS2 metadata export for creating tracked entity attributes based on the mdBusiness. This method will also create classifiers should they be required.
    * 
    * Example format: http://localhost:8085/api/25/metadata.json?trackedEntityAttributes=true
    */
-  public JSONArray getTrackedEntityAttributes()
+  public JSONObject getTrackedEntityAttributes()
   {
+    JSONObject jsonMetadata = new JSONObject();
+    
     JSONArray jsonAttrs = new JSONArray();
+    
+    ArrayList<Classifier> rootsToExport = new ArrayList<Classifier>();
     
     OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
     for (MdAttribute mdAttr : mdAttrs)
@@ -161,8 +166,20 @@ public class MdBusinessToTrackerJson
             JSONObject optionSet = new JSONObject();
             
             Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getId()));
-            optionSet.put("id", root.getClassifierId());
             
+            String pack = root.getClassifierPackage();
+            
+            if (!pack.startsWith(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX))
+            {
+              // If its not prefixed then it doesn't exist already in DHIS2
+              rootsToExport.add(root);
+              optionSet.put("id", root.getId().substring(0, 11));
+            }
+            else
+            {
+              optionSet.put("id", root.getClassifierId());
+            }
+            optionSet.put("valueType", "TEXT");
             jsonAttr.put("optionSet", optionSet);
           }
           else if (reference.definesType().equals(ClassifierSynonym.CLASS))
@@ -184,7 +201,65 @@ public class MdBusinessToTrackerJson
       }
     }
     
-    return jsonAttrs;
+    JSONArray allOptions = new JSONArray();
+    
+    JSONArray optionSets = new JSONArray();
+    // Before we add our attrs to the JSON, lets do the classifiers (because they have to exist first)
+    for (Classifier root : rootsToExport)
+    {
+      JSONObject optionSet = new JSONObject();
+      
+      String rootIdInDHIS2 = root.getId().substring(0, 11);
+      
+      optionSet.put("name", root.getDisplayLabel().getValue());
+      optionSet.put("id", rootIdInDHIS2);
+      optionSet.put("valueType", "TEXT");
+      
+      JSONArray optionSetOptions = new JSONArray();
+      
+      OIterator<? extends Classifier> cit = root.getAllIsAChild();
+      while (cit.hasNext())
+      {
+        Classifier child = cit.next();
+        String childIdInDHIS2 = child.getId().substring(0, 11);
+        
+        JSONObject jChild = new JSONObject();
+        jChild.put("id", childIdInDHIS2);
+        optionSetOptions.put(jChild);
+        
+        
+        JSONObject jOption = new JSONObject();
+        jOption.put("id", childIdInDHIS2);
+        jOption.put("name", child.getDisplayLabel().getValue());
+        
+        JSONObject optionSetRef = new JSONObject();
+        optionSetRef.put("id", rootIdInDHIS2);
+        jOption.put("optionSet", optionSetRef);
+        
+        allOptions.put(jOption);
+        
+        
+        // TODO : This should be managed in a table somewhere, rather than storing the DHIS2 id in the "classifierId" attribute.
+        child.appLock();
+        child.setClassifierId(childIdInDHIS2);
+        child.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + childIdInDHIS2);
+        child.apply();
+      }
+      
+      root.appLock();
+      root.setClassifierId(rootIdInDHIS2);
+      root.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + rootIdInDHIS2);
+      root.apply();
+      
+      optionSets.put(optionSet);
+    }
+    jsonMetadata.put("optionSets", optionSets);
+    
+    jsonMetadata.put("options", allOptions);
+    
+    jsonMetadata.put("trackedEntityAttributes", jsonAttrs);
+    
+    return jsonMetadata;
   }
   
   public JSONArray getProgramTrackedEntityAttributes(String programId, Map<String, String> trackedEntityAttributeIds)

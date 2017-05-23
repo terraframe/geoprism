@@ -30,6 +30,12 @@ public class OptionSetJsonToClassifier
   
   private Classifier classy;
   
+  /**
+   * This is a hack we're doing for the beta release. If a classifier package contains this prefix then we know it exists in DHIS2. Otherwise
+   *   we know it needs to be exported. In the future we'll likely have a table that maps from runway id to DHIS2 id.
+   */
+  public static final String DHIS2_CLASSIFIER_PACKAGE_PREFIX = "DHIS2-";
+  
   public OptionSetJsonToClassifier(JSONObject json)
   {
     this.json = json;
@@ -40,7 +46,7 @@ public class OptionSetJsonToClassifier
     this.classy = new Classifier();
     this.classy.getDisplayLabel().setValue(json.getString("name"));
     this.classy.setClassifierId(json.getString("id"));
-    this.classy.setClassifierPackage(json.getString("id"));
+    this.classy.setClassifierPackage(DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
     this.classy.setCategory(true);
     this.classy.apply();
     
@@ -50,13 +56,13 @@ public class OptionSetJsonToClassifier
   
   public void applyCategoryRelationships()
   {
-    this.classy = Classifier.getByKey(json.getString("id") + Classifier.KEY_CONCATENATOR + json.getString("id"));
+    this.classy = Classifier.getByKey(DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id") + Classifier.KEY_CONCATENATOR + json.getString("id"));
     
     JSONArray options = json.getJSONArray("options");
     for (int i = 0; i < options.length(); ++i)
     {
       JSONObject jsonOption = options.getJSONObject(i);
-      Classifier option = Classifier.getByKey(jsonOption.getString("id") + Classifier.KEY_CONCATENATOR + jsonOption.getString("id"));
+      Classifier option = Classifier.getByKey(DHIS2_CLASSIFIER_PACKAGE_PREFIX + jsonOption.getString("id") + Classifier.KEY_CONCATENATOR + jsonOption.getString("id"));
       
       option.addLink(classy, ClassifierIsARelationship.CLASS);
     }

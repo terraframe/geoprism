@@ -96,8 +96,7 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
     dhis2.setServerUrl(url);
     dhis2.setCredentials(username, password);
     
-    MdBusinessExporter exporter = new MdBusinessExporter((MdBusiness) mdClass, dhis2);
-    exporter.exportToTracker();
+    actuallyDoExport(mdClass);
   }
   
   @Override
@@ -111,6 +110,11 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
     
     dhis2.getUrlsFromOauthCredentialsIfNotExist();
     
+    actuallyDoExport(mdClass);
+  }
+  
+  private void actuallyDoExport(MdClass mdClass)
+  {
     MdBusinessExporter exporter = new MdBusinessExporter((MdBusiness) mdClass, dhis2);
     exporter.exportToTracker();
   }

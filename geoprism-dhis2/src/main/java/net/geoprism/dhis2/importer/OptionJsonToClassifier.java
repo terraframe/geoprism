@@ -36,7 +36,7 @@ public class OptionJsonToClassifier
     Classifier classy = new Classifier();
     classy.getDisplayLabel().setValue(json.getString("name"));
     classy.setClassifierId(json.getString("id"));
-    classy.setClassifierPackage(json.getString("id"));
+    classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
     classy.setCategory(false);
     classy.apply();
   }

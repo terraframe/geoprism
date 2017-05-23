@@ -1,10 +1,10 @@
 package net.geoprism.dhis2.response;
 
-@com.runwaysdk.business.ClassSignature(hash = -1312130296)
+@com.runwaysdk.business.ClassSignature(hash = 1600047307)
 public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dhis2.response.DHIS2DuplicateDataException";
-  private static final long serialVersionUID = -1312130296;
+  private static final long serialVersionUID = 1600047307;
   
   public DHIS2DuplicateDataExceptionDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequestIF)
   {
@@ -51,81 +51,119 @@ public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.b
     return CLASS;
   }
   
-  public static java.lang.String DHIS2DATATYPE = "dhis2Datatype";
-  public static java.lang.String DHIS2VALUE = "dhis2Value";
+  public static java.lang.String DATATYPE = "dataType";
   public static java.lang.String ID = "id";
-  public String getDhis2Datatype()
+  public static java.lang.String PROPERTYNAME = "propertyName";
+  public static java.lang.String PROPERTYVALUE = "propertyValue";
+  public String getDataType()
   {
-    return getValue(DHIS2DATATYPE);
+    return getValue(DATATYPE);
   }
   
-  public void setDhis2Datatype(String value)
+  public void setDataType(String value)
   {
     if(value == null)
     {
-      setValue(DHIS2DATATYPE, "");
+      setValue(DATATYPE, "");
     }
     else
     {
-      setValue(DHIS2DATATYPE, value);
+      setValue(DATATYPE, value);
     }
   }
   
-  public boolean isDhis2DatatypeWritable()
+  public boolean isDataTypeWritable()
   {
-    return isWritable(DHIS2DATATYPE);
+    return isWritable(DATATYPE);
   }
   
-  public boolean isDhis2DatatypeReadable()
+  public boolean isDataTypeReadable()
   {
-    return isReadable(DHIS2DATATYPE);
+    return isReadable(DATATYPE);
   }
   
-  public boolean isDhis2DatatypeModified()
+  public boolean isDataTypeModified()
   {
-    return isModified(DHIS2DATATYPE);
+    return isModified(DATATYPE);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getDhis2DatatypeMd()
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getDataTypeMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(DHIS2DATATYPE).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(DATATYPE).getAttributeMdDTO();
   }
   
-  public String getDhis2Value()
+  public String getPropertyName()
   {
-    return getValue(DHIS2VALUE);
+    return getValue(PROPERTYNAME);
   }
   
-  public void setDhis2Value(String value)
+  public void setPropertyName(String value)
   {
     if(value == null)
     {
-      setValue(DHIS2VALUE, "");
+      setValue(PROPERTYNAME, "");
     }
     else
     {
-      setValue(DHIS2VALUE, value);
+      setValue(PROPERTYNAME, value);
     }
   }
   
-  public boolean isDhis2ValueWritable()
+  public boolean isPropertyNameWritable()
   {
-    return isWritable(DHIS2VALUE);
+    return isWritable(PROPERTYNAME);
   }
   
-  public boolean isDhis2ValueReadable()
+  public boolean isPropertyNameReadable()
   {
-    return isReadable(DHIS2VALUE);
+    return isReadable(PROPERTYNAME);
   }
   
-  public boolean isDhis2ValueModified()
+  public boolean isPropertyNameModified()
   {
-    return isModified(DHIS2VALUE);
+    return isModified(PROPERTYNAME);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getDhis2ValueMd()
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPropertyNameMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(DHIS2VALUE).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(PROPERTYNAME).getAttributeMdDTO();
+  }
+  
+  public String getPropertyValue()
+  {
+    return getValue(PROPERTYVALUE);
+  }
+  
+  public void setPropertyValue(String value)
+  {
+    if(value == null)
+    {
+      setValue(PROPERTYVALUE, "");
+    }
+    else
+    {
+      setValue(PROPERTYVALUE, value);
+    }
+  }
+  
+  public boolean isPropertyValueWritable()
+  {
+    return isWritable(PROPERTYVALUE);
+  }
+  
+  public boolean isPropertyValueReadable()
+  {
+    return isReadable(PROPERTYVALUE);
+  }
+  
+  public boolean isPropertyValueModified()
+  {
+    return isModified(PROPERTYVALUE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPropertyValueMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(PROPERTYVALUE).getAttributeMdDTO();
   }
   
   /**
@@ -136,9 +174,10 @@ public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.b
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{dhis2Datatype}", this.getDhis2Datatype().toString());
-    template = template.replace("{dhis2Value}", this.getDhis2Value().toString());
+    template = template.replace("{dataType}", this.getDataType().toString());
     template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{propertyName}", this.getPropertyName().toString());
+    template = template.replace("{propertyValue}", this.getPropertyValue().toString());
     
     return template;
   }

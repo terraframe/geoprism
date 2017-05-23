@@ -1,6 +1,6 @@
 package net.geoprism.dhis2.response;
 
-@com.runwaysdk.business.ClassSignature(hash = -625837688)
+@com.runwaysdk.business.ClassSignature(hash = -633349557)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,10 +11,11 @@ package net.geoprism.dhis2.response;
 public abstract class DHIS2DuplicateDataExceptionBase extends com.runwaysdk.business.SmartException implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dhis2.response.DHIS2DuplicateDataException";
-  public static java.lang.String DHIS2DATATYPE = "dhis2Datatype";
-  public static java.lang.String DHIS2VALUE = "dhis2Value";
+  public static java.lang.String DATATYPE = "dataType";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = -625837688;
+  public static java.lang.String PROPERTYNAME = "propertyName";
+  public static java.lang.String PROPERTYVALUE = "propertyValue";
+  private static final long serialVersionUID = -633349557;
   
   public DHIS2DuplicateDataExceptionBase()
   {
@@ -36,59 +37,31 @@ public abstract class DHIS2DuplicateDataExceptionBase extends com.runwaysdk.busi
     super(cause);
   }
   
-  public String getDhis2Datatype()
+  public String getDataType()
   {
-    return getValue(DHIS2DATATYPE);
+    return getValue(DATATYPE);
   }
   
-  public void validateDhis2Datatype()
+  public void validateDataType()
   {
-    this.validateAttribute(DHIS2DATATYPE);
+    this.validateAttribute(DATATYPE);
   }
   
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDhis2DatatypeMd()
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDataTypeMd()
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dhis2.response.DHIS2DuplicateDataException.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DHIS2DATATYPE);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DATATYPE);
   }
   
-  public void setDhis2Datatype(String value)
+  public void setDataType(String value)
   {
     if(value == null)
     {
-      setValue(DHIS2DATATYPE, "");
+      setValue(DATATYPE, "");
     }
     else
     {
-      setValue(DHIS2DATATYPE, value);
-    }
-  }
-  
-  public String getDhis2Value()
-  {
-    return getValue(DHIS2VALUE);
-  }
-  
-  public void validateDhis2Value()
-  {
-    this.validateAttribute(DHIS2VALUE);
-  }
-  
-  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getDhis2ValueMd()
-  {
-    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dhis2.response.DHIS2DuplicateDataException.CLASS);
-    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(DHIS2VALUE);
-  }
-  
-  public void setDhis2Value(String value)
-  {
-    if(value == null)
-    {
-      setValue(DHIS2VALUE, "");
-    }
-    else
-    {
-      setValue(DHIS2VALUE, value);
+      setValue(DATATYPE, value);
     }
   }
   
@@ -108,6 +81,62 @@ public abstract class DHIS2DuplicateDataExceptionBase extends com.runwaysdk.busi
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
   }
   
+  public String getPropertyName()
+  {
+    return getValue(PROPERTYNAME);
+  }
+  
+  public void validatePropertyName()
+  {
+    this.validateAttribute(PROPERTYNAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getPropertyNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dhis2.response.DHIS2DuplicateDataException.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(PROPERTYNAME);
+  }
+  
+  public void setPropertyName(String value)
+  {
+    if(value == null)
+    {
+      setValue(PROPERTYNAME, "");
+    }
+    else
+    {
+      setValue(PROPERTYNAME, value);
+    }
+  }
+  
+  public String getPropertyValue()
+  {
+    return getValue(PROPERTYVALUE);
+  }
+  
+  public void validatePropertyValue()
+  {
+    this.validateAttribute(PROPERTYVALUE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getPropertyValueMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dhis2.response.DHIS2DuplicateDataException.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(PROPERTYVALUE);
+  }
+  
+  public void setPropertyValue(String value)
+  {
+    if(value == null)
+    {
+      setValue(PROPERTYVALUE, "");
+    }
+    else
+    {
+      setValue(PROPERTYVALUE, value);
+    }
+  }
+  
   protected String getDeclaredType()
   {
     return CLASS;
@@ -116,9 +145,10 @@ public abstract class DHIS2DuplicateDataExceptionBase extends com.runwaysdk.busi
   public java.lang.String localize(java.util.Locale locale)
   {
     java.lang.String message = super.localize(locale);
-    message = replace(message, "{dhis2Datatype}", this.getDhis2Datatype());
-    message = replace(message, "{dhis2Value}", this.getDhis2Value());
+    message = replace(message, "{dataType}", this.getDataType());
     message = replace(message, "{id}", this.getId());
+    message = replace(message, "{propertyName}", this.getPropertyName());
+    message = replace(message, "{propertyValue}", this.getPropertyValue());
     return message;
   }
   

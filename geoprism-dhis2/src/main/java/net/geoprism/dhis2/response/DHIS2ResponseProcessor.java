@@ -18,6 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +32,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.dataaccess.attributes.AttributeLengthCharacterException;
+import com.runwaysdk.Pair;
 
 public class DHIS2ResponseProcessor
 {
@@ -166,98 +167,120 @@ public class DHIS2ResponseProcessor
         
         String klass = typeReport.getString("klass");
         
-        JSONArray objectReports = typeReport.getJSONArray("objectReports");
-        
-        for (int j = 0; j < objectReports.length(); ++j)
+        if (typeReport.has("objectReports")) // It may not have an objectReport if this particular typeReport completed successfully.
         {
-          JSONObject objectReport = objectReports.getJSONObject(j);
+          JSONArray objectReports = typeReport.getJSONArray("objectReports");
           
-          JSONArray errorReports = objectReport.getJSONArray("errorReports");
-          
-          for (int k = 0; k < errorReports.length(); ++k)
+          for (int j = 0; j < objectReports.length(); ++j)
           {
-            JSONObject errorReport = errorReports.getJSONObject(k);
+            JSONObject objectReport = objectReports.getJSONObject(j);
             
-            String errorCode = errorReport.getString("errorCode");
-            String message = errorReport.getString("message");
-            String mainKlass = errorReport.getString("mainKlass");
-
-            if (errorCode.equals("E5003")) // Duplicate data ex
+            JSONArray errorReports = objectReport.getJSONArray("errorReports");
+            
+            for (int k = 0; k < errorReports.length(); ++k)
             {
-              if (mainKlass.equals("org.hisp.dhis.trackedentity.TrackedEntityAttribute"))
+              JSONObject errorReport = errorReports.getJSONObject(k);
+              
+              String errorCode = errorReport.getString("errorCode");
+              String message = errorReport.getString("message");
+              String mainKlass = errorReport.getString("mainKlass");
+  
+              if (errorCode.equals("E5003")) // Duplicate data ex
               {
-                attrErrs.add(message);
+                if (mainKlass.equals("org.hisp.dhis.trackedentity.TrackedEntityAttribute"))
+                {
+                  attrErrs.add(message);
+                }
+                else
+                {
+                  Pair<String, String> pair = parseDuplicateDataMsg(message);
+                  
+                  DHIS2DuplicateDataException ex = new DHIS2DuplicateDataException();
+                  ex.setDataType(mainKlass);
+                  ex.setPropertyName(pair.getFirst());
+                  ex.setPropertyValue(pair.getSecond());
+                  throw ex;
+                }
               }
-              else
+              else if (errorCode.equals("E4001"))
               {
-                DHIS2DuplicateDataException ex = new DHIS2DuplicateDataException();
-                ex.setDhis2Datatype(mainKlass);
-                ex.setDhis2Value(message); // TODO : Message probably isn't the best thing to throw into this
+                String attrLen;
+                Pattern p = Pattern.compile("but given length was ([0-9]*)\\.");
+                Matcher m = p.matcher(message);
+                if (m.find())
+                {
+                  attrLen = m.group(1);
+                }
+                else
+                {
+                  // If we get some weird message back that doesn't match our regex
+                  DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+                  ex.setDhis2Response(message);
+                  throw ex;
+                }
+                
+                
+                DHIS2AttributeLengthException ex = new DHIS2AttributeLengthException();
+                ex.setAttrLen(attrLen);
                 throw ex;
               }
-            }
-            else if (errorCode.equals("E4001"))
-            {
-              String attrLen;
-              Pattern p = Pattern.compile("but given length was ([0-9]*)\\.");
-              Matcher m = p.matcher(message);
-              if (m.find())
-              {
-                attrLen = m.group(1);
-              }
               else
               {
-                // If we get some weird message back that doesn't match our regex
                 DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
                 ex.setDhis2Response(message);
                 throw ex;
               }
-              
-              
-              DHIS2AttributeLengthException ex = new DHIS2AttributeLengthException();
-              ex.setAttrLen(attrLen);
-              throw ex;
-            }
-            else
-            {
-              DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-              ex.setDhis2Response(message);
-              throw ex;
             }
           }
         }
       }
     }
     
-    if (attrErrs.size() > 0)
+    if (errorOnAlreadyExists && attrErrs.size() > 0)
     {
       Set<String> attrNames = new HashSet<String>();
       for (String msg : attrErrs)
       {
-        // Property `name`Â with value `Gender` on object Gender [XWImNYPqAIz] (TrackedEntityAttribute)Â already exists on object cejWyOfXge6.
-        Pattern p = Pattern.compile("Property `(.*)`.*with value `(.*)` on object .*");
-        Matcher m = p.matcher(msg);
+        Pair<String, String> pair = parseDuplicateDataMsg(msg);
         
-        if (m.find())
+        String attrName = pair.getSecond();
+        
+        if (attrName != null)
         {
-          String attrName = m.group(2);
-          
-          if (attrName != null)
-          {
-            attrNames.add(attrName);
-          }
-        }
-        else
-        {
-          // If we get some weird message back that doesn't match our regex
-          DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-          ex.setDhis2Response(msg);
-          throw ex;
+          attrNames.add(attrName);
         }
       }
       
       DHIS2DuplicateAttributeException ex = new DHIS2DuplicateAttributeException();
       ex.setDhis2Attrs(StringUtils.join(attrNames, ", "));
+      throw ex;
+    }
+  }
+  
+  /**
+   * Parses the DHIS2 duplicate data message and returns a pair where the property name is first and the property value is second.
+   */
+  public static Pair<String, String> parseDuplicateDataMsg(String msg)
+  {
+    // Property `name` with value `AGYW’s surname` on object AGYW’s surname [imcsp063qb8] (OptionSet) already exists on object irje6etwqpy.
+    // A [option set] already exists with name [AGYW’s surname]
+    
+    // This pattern contains non breaking space so just be aware that you can have it not match because sometimes what looks like a space is not actually a space
+    Pattern p = Pattern.compile("Property `(.*?)` with value `(.*?)` on object (.*?) already exists on object (.*?)\\.");
+    Matcher m = p.matcher(msg);
+    
+    if (m.find())
+    {
+      String propertyName = m.group(1);
+      String propertyValue = m.group(2);
+      
+      return new Pair<String, String>(propertyName, propertyValue);
+    }
+    else
+    {
+      // If we get some weird message back that doesn't match our regex
+      DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+      ex.setDhis2Response(msg);
       throw ex;
     }
   }

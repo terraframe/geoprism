@@ -24,6 +24,7 @@ import java.sql.Savepoint;
 import java.util.Iterator;
 
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
@@ -44,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.session.Request;
 
 import net.geoprism.account.ExternalProfile;
 import net.geoprism.account.OauthServer;
@@ -358,9 +358,18 @@ public class DHIS2HTTPConnector
         method.releaseConnection();
         return httpRequest(client, method, response);
       }
-
+      
       // TODO : we might blow the memory stack here, read this as a stream somehow if possible.
-      sResponse = method.getResponseBodyAsString();
+      Header contentTypeHeader = method.getResponseHeader("Content-Type");
+      if (contentTypeHeader == null)
+      {
+        sResponse = new String(method.getResponseBody(), "UTF-8");
+      }
+      else
+      {
+        sResponse = method.getResponseBodyAsString();
+      }
+      
       if (sResponse.length() < 1000)
       {
         this.logger.info("Response string = '" + sResponse + "'.");

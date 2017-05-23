@@ -270,6 +270,7 @@ public class DHIS2DataImporter
     }
   }
   
+  // An optionSet contains a list of options. When we import the OptionSet relationships these will be set as a child to the optionSet.
   private void importOptions()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"

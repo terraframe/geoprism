@@ -13,26 +13,29 @@
           <char name="dhis2Response" label="DHIS2 Response" required="true" size="1000"/>
         </attributes>
       </mdException>
-      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateDataException" label="DHIS2 Duplicate Data Exception" message="DHIS2 already contains a [{dhis2Datatype}] with the value [{dhis2Value}].">
+      <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateDataException" label="DHIS2 Duplicate Data Exception" message="A DHIS2 [{dataType}] already exists with the {propertyName} [{propertyValue}]">
         <attributes>
-          <char name="dhis2Datatype" label="DHIS2 Datatype" required="true" size="500"/>
-          <char name="dhis2Value" label="DHIS2 Value" required="true" size="500"/>
+          <char name="dataType" label="DHIS2 Datatype" required="true" size="500"/>
+          <char name="propertyName" label="DHIS2 property name" required="true" size="500"/>
+          <char name="propertyValue" label="DHIS2 property value" required="true" size="500"/>
         </attributes>
       </mdException>
     </create>
     <update>
       <mdException name="net.geoprism.dhis2.response.DHIS2DuplicateAttributeException">
         <attributes>
-          <char name="dhis2Attrs" size="1000"/>
+          <char name="dhis2Attrs" size="2000"/>
         </attributes>
       </mdException>
     </update>
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.dhis2.response.DHIS2EmptyDatasetException" type="com.runwaysdk.system.metadata.MdException"/>
+      <!-- <object key="net.geoprism.dhis2.response.DHIS2EmptyDatasetException" type="com.runwaysdk.system.metadata.MdException"/>
       <object key="net.geoprism.dhis2.response.DHIS2UnexpectedResponseException" type="com.runwaysdk.system.metadata.MdException"/>
       <object key="net.geoprism.dhis2.response.DHIS2DuplicateDataException" type="com.runwaysdk.system.metadata.MdException"/>
+      -->
+      <object key="net.geoprism.dhis2.response.DHIS2AttributeLengthException" type="com.runwaysdk.system.metadata.MdException"/>
     </delete>
   </undoIt>
 </version>

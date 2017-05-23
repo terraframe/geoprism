@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -52,6 +53,8 @@ import net.geoprism.ontology.ClassifierSynonym;
 
 /**
  * This class is responsible for exporting an MdBusiness to DHIS2.
+ * 
+ * @precondition All of the Classifiers that are referenced by attributes have already been exported.
  * 
  * @author rrowlands
  */
@@ -263,15 +266,12 @@ public class MdBusinessExporter
     }
   }
   
+  @Transaction
   protected void createTrackedEntityAttributes()
   {
-    JSONObject jsonMetadata = new JSONObject();
+    JSONObject metadata = converter.getTrackedEntityAttributes();
     
-    JSONArray trackedEntityAttributes = converter.getTrackedEntityAttributes();
-    
-    jsonMetadata.put("trackedEntityAttributes", trackedEntityAttributes);
-    
-    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    JSONObject response = dhis2.httpPost("api/25/metadata", metadata.toString());
     
     DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
     
