@@ -153,44 +153,49 @@ public class OrgUnitJsonToGeoEntity
   
   private void setGeometry()
   {
-    String featureType = json.getString("featureType");
-    
-    if (featureType == null || featureType.equals("NONE")) { return; }
-    
-    JSONArray coordinates = new JSONArray(json.getString("coordinates")); // DHIS2 woes: Their coordinates are wrapped in quotes (its a string). We want to parse it as JSON.
-    
-    if (featureType.equals("POINT"))
+    if (json.has("featureType") && json.has("coordinates"))
     {
-      Coordinate coord = jsonToCoordinate(coordinates);
-      Point point = geometryFactory.createPoint(coord);
-
-      geo.setGeoPoint(this.geometryHelper.getGeoPoint(point));
-      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(point));
-      geo.setWkt(point.toText());
-    }
-    else if (featureType.equals("POLYGON"))
-    {
-      coordinates = coordinates.getJSONArray(0).getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+      String featureType = json.getString("featureType");
       
-      Polygon polygon = jsonToPolygon(coordinates);
+      if (featureType == null || featureType.equals("NONE") || featureType.equals("")) { return; }
       
-      geo.setGeoPoint(this.geometryHelper.getGeoPoint(polygon));
-      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(polygon));
-      geo.setWkt(polygon.toText());
-    }
-    else if (featureType.equals("MULTI_POLYGON"))
-    {
-      coordinates = coordinates.getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+      JSONArray coordinates = new JSONArray(json.getString("coordinates")); // DHIS2 woes: Their coordinates are wrapped in quotes (its a string). We want to parse it as JSON.
       
-      MultiPolygon multipolygon = jsonToMultiPolygon(coordinates);
+      if (coordinates == null || coordinates.equals("NONE") || coordinates.equals("")) { return; }
       
-      geo.setGeoPoint(this.geometryHelper.getGeoPoint(multipolygon));
-      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multipolygon));
-      geo.setWkt(multipolygon.toText());
-    }
-    else
-    {
-      throw new UnsupportedOperationException("Unexpected featureType [" + featureType + "] on OrgUnit [" + json.toString() + "].");
+      if (featureType.equals("POINT"))
+      {
+        Coordinate coord = jsonToCoordinate(coordinates);
+        Point point = geometryFactory.createPoint(coord);
+  
+        geo.setGeoPoint(this.geometryHelper.getGeoPoint(point));
+        geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(point));
+        geo.setWkt(point.toText());
+      }
+      else if (featureType.equals("POLYGON"))
+      {
+        coordinates = coordinates.getJSONArray(0).getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+        
+        Polygon polygon = jsonToPolygon(coordinates);
+        
+        geo.setGeoPoint(this.geometryHelper.getGeoPoint(polygon));
+        geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(polygon));
+        geo.setWkt(polygon.toText());
+      }
+      else if (featureType.equals("MULTI_POLYGON"))
+      {
+        coordinates = coordinates.getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+        
+        MultiPolygon multipolygon = jsonToMultiPolygon(coordinates);
+        
+        geo.setGeoPoint(this.geometryHelper.getGeoPoint(multipolygon));
+        geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multipolygon));
+        geo.setWkt(multipolygon.toText());
+      }
+      else
+      {
+        throw new UnsupportedOperationException("Unexpected featureType [" + featureType + "] on OrgUnit [" + json.toString() + "].");
+      }
     }
   }
   
