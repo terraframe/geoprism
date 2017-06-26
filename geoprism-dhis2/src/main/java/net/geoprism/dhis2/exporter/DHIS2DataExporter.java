@@ -37,12 +37,13 @@ import net.geoprism.account.ExternalProfile;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.data.GeoprismDatasetExporterIF;
 import net.geoprism.data.etl.TargetBuilder;
-import net.geoprism.dhis2.DHIS2HTTPConnector;
+import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
+import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
 import net.geoprism.dhis2.response.OAuthLoginRequiredException;
 
 public class DHIS2DataExporter implements GeoprismDatasetExporterIF
 {
-  private DHIS2HTTPConnector dhis2;
+  private AbstractDHIS2Connector dhis2;
   
   @Request
   public static void main(String[] args)
@@ -88,7 +89,7 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
   // Our constructor must be 0 arguments because it conforms to Java service loader paradigm.
   public DHIS2DataExporter()
   {
-    dhis2 = new DHIS2HTTPConnector();
+    dhis2 = new DHIS2HTTPCredentialConnector();
   }
   
   public void exportWithCredentials(MdClass mdClass, String url, String username, String password)
@@ -102,13 +103,14 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
   @Override
   public void xport(MdClass mdClass)
   {
-    if (ExternalProfile.getAccessToken() == null)
-    {
-      OAuthLoginRequiredException ex = new OAuthLoginRequiredException();
-      throw ex;
-    }
+    // TODO : Maybe some day we'll re-enable this (when DIHS2 gets their act together)
+//    if (ExternalProfile.getAccessToken() == null)
+//    {
+//      OAuthLoginRequiredException ex = new OAuthLoginRequiredException();
+//      throw ex;
+//    }
     
-    dhis2.getUrlsFromOauthCredentialsIfNotExist();
+    dhis2.readConfigFromDB();
     
     actuallyDoExport(mdClass);
   }

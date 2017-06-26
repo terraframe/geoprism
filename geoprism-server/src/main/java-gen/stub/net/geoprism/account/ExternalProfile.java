@@ -52,7 +52,7 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
 {
   private static final long serialVersionUID = -377482924;
   
-  private static OAuthJSONAccessTokenResponse accessToken;
+  private static OAuthJSONAccessTokenResponse accessToken; // TODO this cant be static
   
   private static OAuthClient oAuthClient;
 

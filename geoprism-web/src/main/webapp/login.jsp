@@ -62,9 +62,11 @@
 					    </p>
 					 </div>				
 				  </form>
+          <!-- TODO : Maybe someday DHIS2 will have working OAuth
 				  <c:forEach items="${servers}" var="server">
 				    <a href="${server.getUrl(pageContext.request)}">Log in with ${server.displayLabel.value}</a>
 				  </c:forEach>
+          -->
 	    	</header>
 	    	
 

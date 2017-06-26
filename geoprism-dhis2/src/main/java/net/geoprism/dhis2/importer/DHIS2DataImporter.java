@@ -27,6 +27,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -45,7 +46,9 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.dhis2.DHIS2HTTPConnector;
+import net.geoprism.dhis2.DHIS2Configuration;
+import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
+import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 
@@ -57,7 +60,7 @@ import net.geoprism.ontology.ClassifierIsARelationship;
  */
 public class DHIS2DataImporter
 {
-  private DHIS2HTTPConnector dhis2;
+  private AbstractDHIS2Connector dhis2;
   
   private GeometryFactory     geometryFactory;
 
@@ -65,32 +68,30 @@ public class DHIS2DataImporter
   
   private OrgUnitLevelJsonToUniversal[] universals;
   
+  private String[] countryOrgUnitExcludes;
+  
   public static void main(String[] args)
   {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
     options.addOption(Option.builder("url").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
-    options.addOption(Option.builder("externalUrl").hasArg().argName("externalUrl").longOpt("externalUrl").desc("External URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
+    options.addOption(Option.builder("countryOrgUnitExcludes").hasArg().argName("countryOrgUnitExcludes").longOpt("countryOrgUnitExcludes").desc("DHIS2 does not support multiple countries. However, some systems are misconfigured and have multiple countries. Our importer does not support this. You must exclude the extraneous countries to get this importer to work. This is a comma separated list of org unit ids to exclude from the import.").optionalArg(true).build());
     
     try {
       CommandLine line = parser.parse( options, args );
       
       String url = line.getOptionValue("url");
-      String externalUrl = line.getOptionValue("externalUrl");
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
       String appcfgPath = line.getOptionValue("appcfgPath");
+      String countryOrgUnitExcludes = line.getOptionValue("countryOrgUnitExcludes");
       
       if (url == null)
       {
         url = "http://127.0.0.1:8085/";
-      }
-      if (externalUrl == null)
-      {
-        externalUrl = url;
       }
       if (appcfgPath != null)
       {
@@ -98,7 +99,7 @@ public class DHIS2DataImporter
         resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      new DHIS2DataImporter(url, externalUrl, username, password).importAll();
+      doImportInRequest(url, username, password, countryOrgUnitExcludes);
     }
     catch (ParseException e)
     {
@@ -106,18 +107,35 @@ public class DHIS2DataImporter
     }
   }
   
-  public DHIS2DataImporter(String url, String externalUrl, String username, String password)
+  // Don't ever put an @Request on a main method or you will regret it I promise you
+  @Request
+  public static void doImportInRequest(String url, String username, String password, String countryOrgUnitExcludes)
+  {
+    DHIS2Configuration config = DHIS2Configuration.getByKey("DEFAULT");
+    config.setPazzword(password);
+    config.setUsername(username);
+    config.setUrl(url);
+    config.appLock();
+    config.apply();
+    
+    new DHIS2DataImporter(url, username, password, countryOrgUnitExcludes).importAll();
+  }
+  
+  public DHIS2DataImporter(String url, String username, String password, String countryOrgUnitExcludes)
   {
     this.geometryFactory = new GeometryFactory();
     this.geometryHelper = new GeometryHelper();
     
-    dhis2 = new DHIS2HTTPConnector();
+    if (countryOrgUnitExcludes != null)
+    {
+      this.countryOrgUnitExcludes = StringUtils.split(countryOrgUnitExcludes, ",");
+    }
+    
+    dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.setServerUrl(url);
-    dhis2.setServerExternalUrl(externalUrl);
     dhis2.setCredentials(username, password);
   }
 
-  @Request
   private void importAll()
   {
     importAllInTransaction();
@@ -223,10 +241,15 @@ public class DHIS2DataImporter
     {
       JSONObject unit = units.getJSONObject(i);
       
-      OrgUnitJsonToGeoEntity converter = new OrgUnitJsonToGeoEntity(this, geometryFactory, geometryHelper, unit);
+      OrgUnitJsonToGeoEntity converter = new OrgUnitJsonToGeoEntity(this, geometryFactory, geometryHelper, unit, this.countryOrgUnitExcludes);
       converter.apply();
       
       converters[i] = converter;
+    }
+    
+    if (OrgUnitJsonToGeoEntity.countryGeos.size() > 1)
+    {
+      throw new RuntimeException("Multiple country geo entities were detected. You need to figure out which ones of these are bogus and add their ids as exclusions.\n" + StringUtils.join(OrgUnitJsonToGeoEntity.countryGeos, "\n"));
     }
     
     // Assign parents

@@ -46,6 +46,7 @@ import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdBusiness;
 
 import net.geoprism.dhis2.importer.OptionSetJsonToClassifier;
+import net.geoprism.dhis2.util.DHIS2IdGenerator;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierSynonym;
@@ -82,6 +83,53 @@ public class MdBusinessToTrackerJson
     return trackedEntity;
   }
   
+  public static String getDHIS2TypeFromMdAttribute(MdAttribute mdAttr)
+  {
+    String valueType = null;
+    
+    // Complete list of valid DHIS2 (API version 25) datatypes:
+    // UNIT_INTERVAL, LETTER, BOOLEAN, NUMBER, TEXT, DATE, LONG_TEXT, FILE_RESOURCE, USERNAME, TRACKER_ASSOCIATE, COORDINATE, INTEGER_POSITIVE, DATETIME, EMAIL, TRUE_ONLY, INTEGER, INTEGER_ZERO_OR_POSITIVE, ORGANISATION_UNIT, TIME, INTEGER_NEGATIVE, PERCENTAGE, PHONE_NUMBER
+    
+    if (mdAttr instanceof MdAttributeDate)
+    {
+      valueType = "DATE";
+    }
+    else if (mdAttr instanceof MdAttributeCharacter)
+    {
+      valueType = "TEXT";
+    }
+    else if (mdAttr instanceof MdAttributeText)
+    {
+      valueType = "LONG_TEXT";
+    }
+    else if (mdAttr instanceof MdAttributeBoolean)
+    {
+      valueType = "BOOLEAN";
+    }
+    else if (mdAttr instanceof MdAttributeInteger)
+    {
+      valueType = "INTEGER";
+    }
+    else if (mdAttr instanceof MdAttributeLong)
+    {
+      valueType = "NUMBER";
+    }
+    else if (mdAttr instanceof MdAttributeDouble)
+    {
+      valueType = "NUMBER";
+    }
+    else if (mdAttr instanceof MdAttributeFloat)
+    {
+      valueType = "NUMBER";
+    }
+    else
+    {
+      valueType = "TEXT";
+    }
+    
+    return valueType;
+  }
+  
   /**
    * Creates a DHIS2 metadata export for creating tracked entity attributes based on the mdBusiness. This method will also create classifiers should they be required.
    * 
@@ -109,9 +157,6 @@ public class MdBusinessToTrackerJson
         
         // Find the corresponding DHIS2 attribute type from our Runway MdAttribute types
         String valueType = null;
-        
-        // Complete list of valid DHIS2 (API version 25) datatypes:
-        // UNIT_INTERVAL, LETTER, BOOLEAN, NUMBER, TEXT, DATE, LONG_TEXT, FILE_RESOURCE, USERNAME, TRACKER_ASSOCIATE, COORDINATE, INTEGER_POSITIVE, DATETIME, EMAIL, TRUE_ONLY, INTEGER, INTEGER_ZERO_OR_POSITIVE, ORGANISATION_UNIT, TIME, INTEGER_NEGATIVE, PERCENTAGE, PHONE_NUMBER
         
         if (mdAttr instanceof MdAttributeDate)
         {
@@ -214,6 +259,7 @@ public class MdBusinessToTrackerJson
       optionSet.put("name", root.getDisplayLabel().getValue());
       optionSet.put("id", rootIdInDHIS2);
       optionSet.put("valueType", "TEXT");
+      optionSet.put("code", DHIS2IdGenerator.generateUid()); // Required for 2.27 but not 2.25
       
       JSONArray optionSetOptions = new JSONArray();
       
@@ -231,6 +277,7 @@ public class MdBusinessToTrackerJson
         JSONObject jOption = new JSONObject();
         jOption.put("id", childIdInDHIS2);
         jOption.put("name", child.getDisplayLabel().getValue());
+        jOption.put("code", childIdInDHIS2); // Required for 2.27 but not 2.25
         
         JSONObject optionSetRef = new JSONObject();
         optionSetRef.put("id", rootIdInDHIS2);
@@ -245,6 +292,7 @@ public class MdBusinessToTrackerJson
         child.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + childIdInDHIS2);
         child.apply();
       }
+      optionSet.put("options", optionSetOptions); // not required for 2.25
       
       root.appLock();
       root.setClassifierId(rootIdInDHIS2);
@@ -262,45 +310,80 @@ public class MdBusinessToTrackerJson
     return jsonMetadata;
   }
   
-  public JSONArray getProgramTrackedEntityAttributes(String programId, Map<String, String> trackedEntityAttributeIds)
-  {
-    JSONArray jsonAttrs = new JSONArray();
-    
-    OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
-    for (MdAttribute mdAttr : mdAttrs)
-    {
-      if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
-          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) && 
-          trackedEntityAttributeIds.containsKey(mdAttr.getId())
-        )
-      {
-        JSONObject jsonAttr = new JSONObject();
-        if (programId != null)
-        {
-          jsonAttr.put("program", new JSONObject().put("id", programId));
-        }
-        jsonAttr.put("trackedEntityAttribute", new JSONObject().put("id", trackedEntityAttributeIds.get(mdAttr.getId())));
-        jsonAttr.put("displayInList", "true");
-        jsonAttr.put("mandatory", "false");
-        jsonAttrs.put(jsonAttr);
-      }
-    }
-    
-    return jsonAttrs;
-  }
+  // This code only works on v2.25
+//  public JSONArray getProgramTrackedEntityAttributes(String programId, Map<String, String> trackedEntityAttributeIds)
+//  {
+//    JSONArray jsonAttrs = new JSONArray();
+//    
+//    OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
+//    for (MdAttribute mdAttr : mdAttrs)
+//    {
+//      if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
+//          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) && 
+//          trackedEntityAttributeIds.containsKey(mdAttr.getId())
+//        )
+//      {
+//        JSONObject jsonAttr = new JSONObject();
+//        if (programId != null)
+//        {
+//          jsonAttr.put("program", new JSONObject().put("id", programId));
+//        }
+//        jsonAttr.put("trackedEntityAttribute", new JSONObject().put("id", trackedEntityAttributeIds.get(mdAttr.getId())));
+//        jsonAttr.put("displayInList", "true");
+//        jsonAttr.put("mandatory", "false");
+//        jsonAttrs.put(jsonAttr);
+//      }
+//    }
+//    
+//    return jsonAttrs;
+//  }
   
   /**
    * Creates the JSON representation of a DHIS2 Program from the MdBusiness.
    * 
    * Example format: http://localhost:8085/api/25/metadata.json?programs=true
    */
-  public JSONObject getProgramJson(String trackedEntityId, String categoryComboId, Collection<String> attributeIds)
+  // 2.25 version
+//  public JSONObject getProgramJson(String trackedEntityId, String categoryComboId, Collection<String> attributeIds)
+//  {
+//    JSONObject program = new JSONObject();
+//    
+//    program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
+//    program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
+//    program.put("programType", "WITH_REGISTRATION");
+//    program.put("trackedEntity", new JSONObject().put("id", mdbiz.getId().substring(0, 11)));
+//    program.put("incidentDateLabel", "Incident date");
+//    program.put("enrollmentDateLabel", "Enrollment date");
+//    program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
+//    
+//    JSONArray units = new JSONArray();
+//    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("id", ((GeoEntity) term).getGeoId())));
+//    program.put("organisationUnits", units);
+//    
+//    JSONArray attrs = new JSONArray();
+//    if (attributeIds != null)
+//    {
+//      for (String id : attributeIds)
+//      {
+//        attrs.put(new JSONObject().put("id", id));
+//      }
+//    }
+//    program.put("programTrackedEntityAttributes", attrs);
+//    
+//    return program;
+//  }
+  
+  // version 2.27
+  public JSONObject getProgramJson(String trackedEntityId, String categoryComboId, Map<String, String> trackedEntityAttributeIds)
   {
     JSONObject program = new JSONObject();
+    
+    String programId = DHIS2IdGenerator.generateUid();
     
     program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("programType", "WITH_REGISTRATION");
+    program.put("id", programId);
     program.put("trackedEntity", new JSONObject().put("id", mdbiz.getId().substring(0, 11)));
     program.put("incidentDateLabel", "Incident date");
     program.put("enrollmentDateLabel", "Enrollment date");
@@ -311,17 +394,32 @@ public class MdBusinessToTrackerJson
     program.put("organisationUnits", units);
     
     JSONArray attrs = new JSONArray();
-    if (attributeIds != null)
+    if (trackedEntityAttributeIds != null)
     {
-      for (String id : attributeIds)
+      OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
+      for (MdAttribute mdAttr : mdAttrs)
       {
-        attrs.put(new JSONObject().put("id", id));
+        if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
+            !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) && 
+            trackedEntityAttributeIds.containsKey(mdAttr.getId())
+          )
+        {
+          JSONObject jattr = new JSONObject();
+          
+          jattr.put("program", new JSONObject().put("id", programId));
+          jattr.put("trackedEntityAttribute", new JSONObject().put("id", trackedEntityAttributeIds.get(mdAttr.getId())));
+          jattr.put("displayInList", "true");
+          jattr.put("mandatory", "false");
+          
+          attrs.put(jattr);
+        }
       }
     }
     program.put("programTrackedEntityAttributes", attrs);
     
     return program;
   }
+  
   
   public JSONObject getPatchProgramJson(Collection<String> attributeIds)
   {

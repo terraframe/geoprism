@@ -16,31 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2;
+package net.geoprism.dhis2.connector;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Savepoint;
-import java.util.Iterator;
 
 import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.database.Database;
@@ -50,31 +41,15 @@ import net.geoprism.account.ExternalProfile;
 import net.geoprism.account.OauthServer;
 import net.geoprism.dhis2.response.DHIS2ConflictException;
 
-public class DHIS2HTTPConnector
+public class DHIS2OAuthConnector extends AbstractDHIS2Connector
 {
   private String OAUTH_KEY_NAME = "geoprism-dhis2";
-  
-  private Logger logger = LoggerFactory.getLogger(DHIS2HTTPConnector.class);
-  
-  private HttpClient client;
-  
-  private String serverurl;
-  
-  private String externalUrl;
-  
-  public static final String CLIENT_ID = "geoprism";
-  
-  public static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6";
   
   private String accessToken;
   
   private String refreshToken;
   
-  private String username;
-  
-  private String password;
-  
-  public DHIS2HTTPConnector()
+  public DHIS2OAuthConnector()
   {
     
   }
@@ -82,11 +57,6 @@ public class DHIS2HTTPConnector
   public String getAccessToken()
   {
     return accessToken;
-  }
-  
-  public String getServerUrl()
-  {
-    return serverurl;
   }
   
   public void getUrlsFromOauthCredentialsIfNotExist()
@@ -98,29 +68,13 @@ public class DHIS2HTTPConnector
       
       // TODO : I think we can combine serverurl and externalurl into the same variable.
       this.serverurl = profileLoc.substring(0, profileLoc.length() - 7);
-      this.externalUrl = this.serverurl;
     }
-  }
-  
-  public void setServerUrl(String url)
-  {
-    this.serverurl = url;
-  }
-  
-  public void setServerExternalUrl(String url)
-  {
-    this.externalUrl = url;
-  }
-  
-  public void setCredentials(String username, String password)
-  {
-    this.username = username;
-    this.password = password;
   }
   
   synchronized public void initialize()
   {
-    this.client = new HttpClient();
+    super.initialize();
+    
     this.accessToken = ExternalProfile.getAccessToken();
     
     if (!isInitialized() && username != null && password != null)
@@ -138,7 +92,7 @@ public class DHIS2HTTPConnector
   
   public boolean isInitialized()
   {
-    return client != null && accessToken != null;
+    return super.isInitialized() && accessToken != null;
   }
   
   @Transaction
@@ -164,11 +118,11 @@ public class DHIS2HTTPConnector
       OauthServer oauth = new OauthServer();
       oauth.setKeyName(OAUTH_KEY_NAME);
       oauth.getDisplayLabel().setValue("DHIS2");
-      oauth.setAuthorizationLocation(externalUrl + "/uaa/oauth/authorize");
-      oauth.setTokenLocation(externalUrl + "/uaa/oauth/token");
-      oauth.setProfileLocation(externalUrl + "/api/me");
-      oauth.setClientId(DHIS2HTTPConnector.CLIENT_ID);
-      oauth.setSecretKey(DHIS2HTTPConnector.SECRET);
+      oauth.setAuthorizationLocation(serverurl + "uaa/oauth/authorize");
+      oauth.setTokenLocation(serverurl + "uaa/oauth/token");
+      oauth.setProfileLocation(serverurl + "api/me");
+      oauth.setClientId(DHIS2OAuthConnector.CLIENT_ID);
+      oauth.setSecretKey(DHIS2OAuthConnector.SECRET);
       oauth.setServerType("DHIS2");
       oauth.apply();
     }
@@ -209,7 +163,7 @@ public class DHIS2HTTPConnector
       post.setRequestEntity(new StringRequestEntity(body, null, null));
 
       JSONObject response = new JSONObject();
-      int statusCode = httpRequest(client, post, response);
+      int statusCode = this.httpRequest(client, post, response);
 
       if (statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED)
       {
@@ -257,7 +211,7 @@ public class DHIS2HTTPConnector
       post.addParameter("format", "json");
 
       JSONObject json = new JSONObject();
-      int statusCode = httpRequest(client, post, json);
+      int statusCode = this.httpRequest(client, post, json);
 
       if (statusCode == HttpStatus.SC_OK)
       {
@@ -325,7 +279,7 @@ public class DHIS2HTTPConnector
       post.setRequestEntity(new StringRequestEntity(body, null, null));
 
       JSONObject response = new JSONObject();
-      int statusCode = httpRequest(this.client, post, response);
+      int statusCode = this.httpRequest(this.client, post, response);
 
       if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED)
       {
@@ -337,89 +291,6 @@ public class DHIS2HTTPConnector
     catch (JSONException | UnsupportedEncodingException e)
     {
       throw new RuntimeException(e);
-    }
-  }
-  
-  public int httpRequest(HttpClient client, HttpMethod method, JSONObject response)
-  {
-    String sResponse = null;
-    try
-    {
-      this.logger.info("Sending request to " + method.getURI());
-
-      // Execute the method.
-      int statusCode = client.executeMethod(method);
-      
-      // Follow Redirects
-      if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY || statusCode == HttpStatus.SC_MOVED_PERMANENTLY || statusCode == HttpStatus.SC_TEMPORARY_REDIRECT || statusCode == HttpStatus.SC_SEE_OTHER)
-      {
-        this.logger.info("Redirected [" + statusCode + "] to [" + method.getResponseHeader("location").getValue() + "].");
-        method.setURI(new URI(method.getResponseHeader("location").getValue(), true, method.getParams().getUriCharset()));
-        method.releaseConnection();
-        return httpRequest(client, method, response);
-      }
-      
-      // TODO : we might blow the memory stack here, read this as a stream somehow if possible.
-      Header contentTypeHeader = method.getResponseHeader("Content-Type");
-      if (contentTypeHeader == null)
-      {
-        sResponse = new String(method.getResponseBody(), "UTF-8");
-      }
-      else
-      {
-        sResponse = method.getResponseBodyAsString();
-      }
-      
-      if (sResponse.length() < 1000)
-      {
-        this.logger.info("Response string = '" + sResponse + "'.");
-      }
-      else
-      {
-        this.logger.info("Receieved a very large response.");
-      }
-
-      JSONObject jsonResp;
-      if (sResponse.startsWith("["))
-      {
-        jsonResp = new JSONArray(sResponse).getJSONObject(0);
-      }
-      else if (sResponse.startsWith("{"))
-      {
-        jsonResp = new JSONObject(sResponse);
-      }
-      else
-      {
-        jsonResp = new JSONObject();
-        jsonResp.put("errorCode", statusCode);
-        jsonResp.put("message", sResponse);
-      }
-
-      @SuppressWarnings("unchecked")
-      Iterator<String> it = jsonResp.keys();
-      while (it.hasNext())
-      {
-        String key = it.next();
-        response.put(key, jsonResp.get(key));
-      }
-
-      return statusCode;
-    }
-    catch (HttpException e)
-    {
-      throw new RuntimeException(e);
-    }
-    catch (IOException e)
-    {
-      throw new RuntimeException(e);
-    }
-    catch (JSONException e)
-    {
-      throw new RuntimeException(e);
-    }
-    finally
-    {
-      method.releaseConnection();
     }
   }
 }

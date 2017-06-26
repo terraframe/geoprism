@@ -18,15 +18,14 @@
  */
 package net.geoprism.dhis2.importer;
 
-import java.sql.Savepoint;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -48,7 +47,11 @@ public class OrgUnitJsonToGeoEntity
   
   private GeoEntity geo;
   
-  public OrgUnitJsonToGeoEntity(DHIS2DataImporter importer, GeometryFactory geometryFactory, GeometryHelper geometryHelper, JSONObject orgUnit)
+  private String[] countryOrgUnitExcludes;
+  
+  public static ArrayList<JSONObject> countryGeos = new ArrayList<JSONObject>();
+  
+  public OrgUnitJsonToGeoEntity(DHIS2DataImporter importer, GeometryFactory geometryFactory, GeometryHelper geometryHelper, JSONObject orgUnit, String[] countryOrgUnitExcludes)
   {
     this.geometryFactory = geometryFactory;
     
@@ -59,13 +62,18 @@ public class OrgUnitJsonToGeoEntity
     this.geo = new GeoEntity();
     
     this.importer = importer;
+    
+    this.countryOrgUnitExcludes = countryOrgUnitExcludes;
   }
   
   public void apply()
   {
-    geo.getDisplayLabel().setValue(json.getString("name"));
+    String id = json.getString("id");
+    if (ArrayUtils.contains(countryOrgUnitExcludes, id)) { return; }
     
-    geo.setGeoId(json.getString("id"));
+    geo.setGeoId(id);
+    
+    geo.getDisplayLabel().setValue(json.getString("name"));
     
     setUniversal();
     
@@ -78,6 +86,9 @@ public class OrgUnitJsonToGeoEntity
   
   public void applyLocatedIn()
   {
+    String id = json.getString("id");
+    if (ArrayUtils.contains(countryOrgUnitExcludes, id)) { return; }
+    
     GeoEntity parent;
     try
     {
@@ -128,6 +139,11 @@ public class OrgUnitJsonToGeoEntity
     }
     
     geo.setUniversal(uni);
+    
+    if (level == 0)
+    {
+      countryGeos.add(json);
+    }
   }
   
   private void setLocales()

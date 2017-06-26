@@ -1,0 +1,23 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="net.geoprism.dhis2.DHIS2Configuration">
+        <attributes>
+          <char name="url" size="1000" />
+          <char name="username" size="1000" />
+          <char name="pazzword" size="1000" />
+        </attributes>
+      </mdBusiness>
+      
+      <object type="net.geoprism.dhis2.DHIS2Configuration" key="DEFAULT" >
+        <attribute name="url" value=""/>
+        <attribute name="username" value=""/>
+        <attribute name="pazzword" value=""/>
+      </object>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
