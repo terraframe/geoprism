@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -82,6 +83,15 @@ public class OrgUnitJsonToGeoEntity
     setLocales();
     
     geo.apply();
+    
+    // Create a synonym that is the geo id and also the code
+//    Synonym synonym = new Synonym();
+//    synonym.getDisplayLabel().setValue(json.getString("code"));
+//    Synonym.create(synonym, geo.getId());
+    
+    Synonym synonym2 = new Synonym();
+    synonym2.getDisplayLabel().setValue(json.getString("id"));
+    Synonym.create(synonym2, geo.getId());
   }
   
   public void applyLocatedIn()
