@@ -24,7 +24,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0019</version>
+    <version>1.01.0020-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-dhis2</artifactId>
   <packaging>jar</packaging>
