@@ -32,6 +32,8 @@ import { CategoriesComponent } from './category/categories.component';
 import { CategoryDetailComponent, CategoryResolver} from './category/category-detail.component';
 import { OptionDetailComponent, OptionResolver} from './category/option-detail.component';
 
+import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
+
 declare var acp: any;
 
 const routes: Routes = [
@@ -39,6 +41,10 @@ const routes: Routes = [
     path: '',
     redirectTo: '/datasets',
     pathMatch: 'full'
+  },
+  {
+    path: 'dhis2',
+    component: DHIS2IdFinderComponent
   },
   {
     path: 'datasets',

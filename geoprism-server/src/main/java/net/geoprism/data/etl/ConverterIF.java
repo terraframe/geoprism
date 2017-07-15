@@ -23,4 +23,6 @@ import com.runwaysdk.business.Transient;
 public interface ConverterIF
 {
   public void create(Transient source);
+
+  public TargetContextIF getTargetContext();
 }

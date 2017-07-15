@@ -23,15 +23,23 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
 
 import org.apache.poi.ss.util.CellReference;
 
 import com.runwaysdk.business.Transient;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.generation.loader.DelegatingClassLoader;
+import com.runwaysdk.generation.loader.LoaderDecorator;
 
 import net.geoprism.ExceptionUtil;
+import net.geoprism.data.GeoprismDatasetExporterIF;
 import net.geoprism.data.etl.ColumnType;
 import net.geoprism.data.etl.ConverterIF;
+import net.geoprism.data.etl.DataImportState;
 import net.geoprism.data.etl.ProgressMonitorIF;
 import net.geoprism.data.etl.SourceContextIF;
 import net.geoprism.data.etl.SourceFieldIF;
@@ -87,7 +95,9 @@ public class SourceContentHandler implements SheetHandler
    * Format used for parsing and formatting dateTime fields
    */
   private DateFormat           dateFormat;
-
+  
+  private SpreadsheetImporterHeaderModifierIF headerModifier;
+  
   public SourceContentHandler(ConverterIF converter, SourceContextIF context, ProgressMonitorIF monitor)
   {
     this.converter = converter;
@@ -100,6 +110,31 @@ public class SourceContentHandler implements SheetHandler
     this.dateFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_FORMAT);
     
     this.monitor = monitor;
+    
+    this.headerModifier = this.getHeaderModifier();
+  }
+  
+  public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
+  {
+    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+
+    try
+    {
+      Iterator<SpreadsheetImporterHeaderModifierIF> it = loader.iterator();
+
+      if (it.hasNext())
+      {
+        return it.next();
+      }
+      else
+      {
+        return null;
+      }
+    }
+    catch (ServiceConfigurationError serviceError)
+    {
+      throw new ProgrammingErrorException(serviceError);
+    }
   }
   
   @Override
@@ -174,22 +209,45 @@ public class SourceContentHandler implements SheetHandler
       {
         throw new ExcelFormulaException();
       }
-
-      if (this.rowNum == 0)
+      
+      // Invoke DHIS2 header modifier processing code (if the DHIS2 plugin exists)
+      int headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT;
+      if (headerModifier != null)
+      {
+        String attributeName = null;
+        String columnName = this.getColumnName(cellReference);
+        SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
+        
+        if (field != null)
+        {
+          attributeName = field.getAttributeName();
+        }
+        
+        if (this.monitor.getState().equals(DataImportState.DATAIMPORT))
+        {
+          headerModifierCommand = headerModifier.processCell(cellReference, contentValue, formattedValue, cellType, rowNum, this.converter.getTargetContext().getType(this.context.getType(this.sheetName)), attributeName);
+        }
+        else
+        {
+          headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
+        }
+      }
+      
+      if ( (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER )
       {
         if (!cellType.equals(ColumnType.TEXT))
         {
           throw new InvalidHeaderRowException();
         }
-
+        
         this.setColumnName(cellReference, formattedValue);
       }
-      else if (this.view != null)
+      else if ( (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.view != null) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_BODY )
       {
         String columnName = this.getColumnName(cellReference);
         SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
         String attributeName = field.getAttributeName();
-
+        
         if (field.getType().equals(ColumnType.LONG))
         {
           formattedValue = this.nFormat.format(Double.parseDouble(contentValue));

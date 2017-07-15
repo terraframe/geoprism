@@ -21,7 +21,10 @@ package net.geoprism.data.etl.excel;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -36,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.generation.loader.DelegatingClassLoader;
+import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdView;
@@ -187,10 +192,37 @@ public class FieldInfoContentsHandler implements SheetHandler
    * JSONArray containing attribute information for all of the sheets.
    */
   private JSONArray           information;
+  
+  private SpreadsheetImporterHeaderModifierIF headerModifier;
 
   public FieldInfoContentsHandler()
   {
     this.information = new JSONArray();
+    
+    this.headerModifier = this.getHeaderModifier();
+  }
+  
+  public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
+  {
+    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+
+    try
+    {
+      Iterator<SpreadsheetImporterHeaderModifierIF> it = loader.iterator();
+
+      if (it.hasNext())
+      {
+        return it.next();
+      }
+      else
+      {
+        return null;
+      }
+    }
+    catch (ServiceConfigurationError serviceError)
+    {
+      throw new ProgrammingErrorException(serviceError);
+    }
   }
 
   private Field getField(String cellReference)
@@ -278,8 +310,14 @@ public class FieldInfoContentsHandler implements SheetHandler
     {
       throw new ExcelFormulaException();
     }
+    
+    int headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT;
+    if (headerModifier != null)
+    {
+      headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
+    }
 
-    if (this.rowNum == 0)
+    if ( (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER )
     {
       if (!cellType.equals(ColumnType.TEXT) || !this.attributeNames.add(formattedValue))
       {
@@ -290,7 +328,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       attribute.setName(formattedValue);
       attribute.setInputPosition(this.getFieldPosition(cellReference));
     }
-    else
+    else if (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_BODY)
     {
       Field attribute = this.getField(cellReference);
       attribute.addDataType(cellType);

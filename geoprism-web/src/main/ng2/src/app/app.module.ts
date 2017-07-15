@@ -52,6 +52,9 @@ import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
 import { IconService } from './service/icon.service';
 
+import { DHIS2Service } from './service/dhis2.service';
+import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
+
 // Upload wizard imports
 import { NavigationService } from './uploader/navigation.service';
 import { UploadWizardComponent } from './uploader/upload-wizard.component';
@@ -99,6 +102,8 @@ import { EventHttpService } from './service/event-http.service';
     ConfirmModalDirective,
     ConfirmModalComponent,
     
+    DHIS2IdFinderComponent,
+    
     // Upload Wizard components
     UploadWizardComponent,
     PagingComponent,
@@ -122,6 +127,7 @@ import { EventHttpService } from './service/event-http.service';
 	LocalizationService,
 	IdService,
     DatasetService,
+    DHIS2Service,
     CategoryService,
     IconService,
     UploadService,

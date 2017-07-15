@@ -45,10 +45,13 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
 import com.runwaysdk.system.metadata.MdClass;
 
+import net.geoprism.dhis2.DHIS2IdMapping;
+import net.geoprism.dhis2.DHIS2IdMappingQuery;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
 import net.geoprism.dhis2.response.DHIS2EmptyDatasetException;
 import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
 import net.geoprism.dhis2.response.GeoFieldRequiredException;
+import net.geoprism.dhis2.util.DHIS2IdCache;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
 
@@ -73,9 +76,9 @@ public class MdBusinessExporter
   
   private Map<String, String> trackedEntityAttributeIds;
   
-//  private Map<String, String> programTrackedEntityAttributeIds;
+  private DHIS2IdCache idCache;
   
-  private String programId = null;
+//  private Map<String, String> programTrackedEntityAttributeIds;
   
   private final int pageSize = 1000;
   
@@ -84,8 +87,9 @@ public class MdBusinessExporter
   public MdBusinessExporter(MdBusiness mdbiz, AbstractDHIS2Connector dhis2)
   {
     this.mdbiz = mdbiz;
-    this.converter = new MdBusinessToTrackerJson(mdbiz);
     this.dhis2 = dhis2;
+    this.idCache = new DHIS2IdCache(dhis2);
+    this.converter = new MdBusinessToTrackerJson(mdbiz, idCache);
   }
   
   public void xport(MdClass mdClass)
@@ -96,10 +100,38 @@ public class MdBusinessExporter
   public void exportToTracker()
   {
     validateExport();
-    createTrackedEntity();
-    createTrackedEntityAttributes();
-//    createProgramTrackedEntityAttributes(); // only works on 2.25
-    createProgram();
+    
+    QueryFactory qf = new QueryFactory();
+    DHIS2IdMappingQuery mapQ = new DHIS2IdMappingQuery(qf);
+    mapQ.WHERE(mapQ.getRunwayId().EQ(mdbiz.getId()));
+    long count = mapQ.getCount();
+    
+    if (count == 0)
+    {
+      createTrackedEntity();
+      createTrackedEntityAttributes();
+//      createProgramTrackedEntityAttributes(); // only works on 2.25
+      createProgram();
+    }
+    else
+    {
+      OIterator<? extends DHIS2IdMapping> it = mapQ.getIterator();
+      DHIS2IdMapping mapping;
+      try
+      {
+        mapping = it.next();
+      }
+      finally
+      {
+        it.close();
+      }
+      
+      String[] split = mapping.getDhis2Id().split(":");
+      
+      trackedEntityId = split[1];
+      converter.setTrackedEntityId(trackedEntityId);
+      converter.setProgramId(split[0]);
+    }
     createAndEnrollTrackedEntityInstances();
   }
   
@@ -148,6 +180,8 @@ public class MdBusinessExporter
   
   protected void createAndEnrollTrackedEntityInstances()
   {
+    String programId = converter.getProgramId();
+    
     List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
     
     QueryFactory qf = new QueryFactory();
@@ -267,37 +301,6 @@ public class MdBusinessExporter
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
     DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
-    
-    getTrackedEntityId();
-  }
-  
-  protected void getTrackedEntityId()
-  {
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
-      new NameValuePair("assumeTrue", "false"),
-      new NameValuePair("trackedEntities", "true")
-    });
-    
-    if (response != null && response.has("trackedEntities"))
-    {
-      JSONArray trackedEntities = response.getJSONArray("trackedEntities");
-      
-      for (int i = 0; i < trackedEntities.length(); ++i)
-      {
-        JSONObject trackedEntity = trackedEntities.getJSONObject(i);
-        
-        if (trackedEntity.getString("name").equals(mdbiz.getDisplayLabel().getValue()))
-        {
-          trackedEntityId = trackedEntity.getString("id");
-          break;
-        }
-      }
-    }
-    
-    if (trackedEntityId == null)
-    {
-      throw new RuntimeException("Unable to find previously created TrackedEntitiy.");
-    }
   }
   
   @Transaction
@@ -474,41 +477,74 @@ public class MdBusinessExporter
     JSONObject jsonMetadata = new JSONObject();
     
     JSONArray programs = new JSONArray();
-    programs.put(converter.getProgramJson(trackedEntityId, getCategoryComboId("default"), trackedEntityAttributeIds));
+    programs.put(converter.getProgramJson(getCategoryComboId("default"), trackedEntityAttributeIds));
     jsonMetadata.put("programs", programs);
     
     JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
     DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
-    
-    getProgramId();
   }
   
-  protected void getProgramId()
-  {
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
-      new NameValuePair("assumeTrue", "false"),
-      new NameValuePair("programs", "true")
-    });
-    
-    if (response != null && response.has("programs"))
-    {
-      JSONArray programs = response.getJSONArray("programs");
-      
-      for (int i = 0; i < programs.length(); ++i)
-      {
-        JSONObject program = programs.getJSONObject(i);
-        
-        if (program.getString("name").equals(mdbiz.getDisplayLabel().getValue() + " Program") && program.getJSONObject("trackedEntity").getString("id").equals(trackedEntityId))
-        {
-          programId = program.getString("id");
-          break;
-        }
-      }
-    }
-    
-    if (programId == null)
-    {
-      throw new RuntimeException("Unable to find previously created Program.");
-    }
-  }
+  
+  /**
+   * I wrote this code back when I was creating the DHIS2 objects and then fetching their ids. Now we just generate it and tell DHIS2 what the id is.
+   * I'm keeping it here (for now) because it might be useful later (as a starting point) in case we need to fetch any of these objects for any reason.
+   * This code was originally written on 2.25 but I think it also works on 2.27.
+   */
+//  protected void getTrackedEntityId()
+//  {
+//    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+//      new NameValuePair("assumeTrue", "false"),
+//      new NameValuePair("trackedEntities", "true")
+//    });
+//    
+//    if (response != null && response.has("trackedEntities"))
+//    {
+//      JSONArray trackedEntities = response.getJSONArray("trackedEntities");
+//      
+//      for (int i = 0; i < trackedEntities.length(); ++i)
+//      {
+//        JSONObject trackedEntity = trackedEntities.getJSONObject(i);
+//        
+//        if (trackedEntity.getString("name").equals(mdbiz.getDisplayLabel().getValue()))
+//        {
+//          trackedEntityId = trackedEntity.getString("id");
+//          break;
+//        }
+//      }
+//    }
+//    
+//    if (trackedEntityId == null)
+//    {
+//      throw new RuntimeException("Unable to find previously created TrackedEntitiy.");
+//    }
+//  }
+//  
+//  protected void getProgramId()
+//  {
+//    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+//      new NameValuePair("assumeTrue", "false"),
+//      new NameValuePair("programs", "true")
+//    });
+//    
+//    if (response != null && response.has("programs"))
+//    {
+//      JSONArray programs = response.getJSONArray("programs");
+//      
+//      for (int i = 0; i < programs.length(); ++i)
+//      {
+//        JSONObject program = programs.getJSONObject(i);
+//        
+//        if (program.getString("name").equals(mdbiz.getDisplayLabel().getValue() + " Program") && program.getJSONObject("trackedEntity").getString("id").equals(trackedEntityId))
+//        {
+//          programId = program.getString("id");
+//          break;
+//        }
+//      }
+//    }
+//    
+//    if (programId == null)
+//    {
+//      throw new RuntimeException("Unable to find previously created Program.");
+//    }
+//  }
 }
