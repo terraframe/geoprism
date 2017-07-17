@@ -17,7 +17,7 @@ import net.geoprism.dhis2.response.DHIS2UnexpectedResponseException;
 public class DHIS2IdCache
 {
   // Number of ids to fetch and cache
-  private static final int FETCH_NUM = 100;
+  private static final String FETCH_NUM = "10";
   
   Stack<String> cache = new Stack<String>();
   
@@ -33,7 +33,9 @@ public class DHIS2IdCache
    */
   public void fetchIds()
   {
-    JSONObject response = dhis2.httpGet("api/27/system/id.json?limit=" + FETCH_NUM, new NameValuePair[]{});
+    JSONObject response = dhis2.httpGet("api/27/system/id.json", new NameValuePair[]{
+        new NameValuePair("limit", FETCH_NUM)
+    });
     
     if (response.has("codes"))
     {

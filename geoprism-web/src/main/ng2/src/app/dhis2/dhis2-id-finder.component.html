@@ -1,4 +1,11 @@
-<div id="app-container" class="container" style="overflow-y:auto">
+<style>
+#main {
+  overflow-y: auto;
+  height: 90vh;
+}
+</style>
+
+<div id="app-container" class="container">
 
   <message ></message>
 
@@ -7,7 +14,7 @@
   <div *ngIf="programs === null">
     <localize key='dataset.loadingData'></localize>
   </div>
-  <div class="list-table-wrapper" style="overflow-y:visible">
+  <div class="list-table-wrapper" style="overflow-y:visible;max-height: 100%;">
     <table id="programs-table" class="list-table table table-bordered table-striped">        
       <thead>
         <tr>
@@ -24,7 +31,7 @@
     </table>
    </div>
    
-   <div class="list-table-wrapper" style="overflow-y:visible">
+   <div class="list-table-wrapper" style="overflow-y:visible;max-height: 100%;">
     <table id="tracked-entity-table" class="list-table table table-bordered table-striped">        
       <thead>
         <tr>
@@ -41,7 +48,7 @@
     </table>
    </div>
    
-   <div class="list-table-wrapper" style="overflow-y:visible">
+   <div class="list-table-wrapper" style="overflow-y:visible;max-height: 100%;">
     <table id="tracked-entity-attribute-table" class="list-table table table-bordered table-striped">        
       <thead>
         <tr>

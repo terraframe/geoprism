@@ -65,6 +65,8 @@ public class MdBusinessToTrackerJson
   
   private String programId;
   
+  private Map<String, String> trackedEntityAttributeIds;
+  
   public MdBusinessToTrackerJson(MdBusiness mdbiz, DHIS2IdCache idCache)
   {
     this.mdbiz = mdbiz;
@@ -85,6 +87,11 @@ public class MdBusinessToTrackerJson
   public void setTrackedEntityId(String trackedEntityId)
   {
     this.trackedEntityId = trackedEntityId;
+  }
+  
+  public String getTrackedEntityId()
+  {
+    return trackedEntityId;
   }
   
   /**
@@ -152,12 +159,22 @@ public class MdBusinessToTrackerJson
     return valueType;
   }
   
+  public void setTrackedEntityAttributeIds(Map<String, String> teaid)
+  {
+    trackedEntityAttributeIds = teaid;
+  }
+  
+  public Map<String, String> getTrackedEntityAttributeIds()
+  {
+    return trackedEntityAttributeIds;
+  }
+  
   /**
    * Creates a DHIS2 metadata export for creating tracked entity attributes based on the mdBusiness. This method will also create classifiers should they be required.
    * 
    * Example format: http://localhost:8085/api/25/metadata.json?trackedEntityAttributes=true
    */
-  public JSONObject getTrackedEntityAttributes()
+  public JSONObject getTrackedEntityAttributesJSON()
   {
     JSONObject jsonMetadata = new JSONObject();
     
@@ -178,6 +195,10 @@ public class MdBusinessToTrackerJson
         )
       {
         JSONObject jsonAttr = new JSONObject();
+        
+        String dhis2Id = idCache.next();
+        jsonAttr.put("id", dhis2Id);
+        
         jsonAttr.put("name", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("shortName", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("aggregationType", "NONE");
@@ -270,6 +291,8 @@ public class MdBusinessToTrackerJson
         
         if (valueType != null)
         {
+          trackedEntityAttributeIds.put(mdAttr.getId(), dhis2Id);
+          
           jsonAttr.put("valueType", valueType);
           jsonAttrs.put(jsonAttr);
         }
@@ -278,8 +301,9 @@ public class MdBusinessToTrackerJson
     
     JSONArray allOptions = new JSONArray();
     
+    
+    // Export all unknown classifiers and all their children to DHIS2 as new optionsets and options.
     JSONArray optionSets = new JSONArray();
-    // Before we add our attrs to the JSON, lets do the classifiers (because they have to exist first)
     for (Classifier root : rootsToExport)
     {
       JSONObject optionSet = new JSONObject();

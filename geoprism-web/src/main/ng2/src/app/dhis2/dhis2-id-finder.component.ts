@@ -29,6 +29,7 @@ import { LocalizationService } from '../service/localization.service';
 import { DHIS2Service } from '../service/dhis2.service';
 
 declare let acp: string;
+declare let $: any;
 
 @Component({
   selector: 'dhis2-id-finder',
@@ -47,6 +48,9 @@ export class DHIS2IdFinderComponent implements OnInit {
     private eventService: EventService) { }
 
   ngOnInit(): void {
+    $("#main").css("overflow-y", "auto");
+    $("#main").css("height", "90vh");
+  
     this.getPrograms();
     this.getTrackedEntities();
     this.getTrackedEntityAttributes();
