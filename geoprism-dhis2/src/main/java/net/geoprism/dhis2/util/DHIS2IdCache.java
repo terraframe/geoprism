@@ -25,7 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
+import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
 import net.geoprism.dhis2.response.DHIS2UnexpectedResponseException;
+import net.geoprism.dhis2.response.HTTPResponse;
 
 /**
  * This class is responsible for maintaining a cache of new DHIS2 ids that can be fetched at will.
@@ -51,13 +53,16 @@ public class DHIS2IdCache
    */
   public void fetchIds()
   {
-    JSONObject response = dhis2.httpGet("api/27/system/id.json", new NameValuePair[]{
+    HTTPResponse response = dhis2.httpGet("api/27/system/id.json", new NameValuePair[]{
         new NameValuePair("limit", FETCH_NUM)
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
     
-    if (response.has("codes"))
+    JSONObject json = response.getJSON();
+    
+    if (json.has("codes"))
     {
-      JSONArray codes = response.getJSONArray("codes");
+      JSONArray codes = json.getJSONArray("codes");
       
       for (int i = 0; i < codes.length(); ++i)
       {

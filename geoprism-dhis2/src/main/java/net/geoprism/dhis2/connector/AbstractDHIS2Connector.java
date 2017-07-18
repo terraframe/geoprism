@@ -34,8 +34,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.geoprism.account.ExternalProfile;
 import net.geoprism.dhis2.DHIS2Configuration;
+import net.geoprism.dhis2.response.HTTPResponse;
 
 abstract public class AbstractDHIS2Connector
 {
@@ -84,9 +84,9 @@ abstract public class AbstractDHIS2Connector
     return client != null;
   }
   
-  abstract public JSONObject httpGet(String url, NameValuePair[] params);
+  abstract public HTTPResponse httpGet(String url, NameValuePair[] params);
   
-  abstract public JSONObject httpPost(String url, String body);
+  abstract public HTTPResponse httpPost(String url, String body);
   
   public void readConfigFromDB()
   {

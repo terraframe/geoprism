@@ -49,6 +49,8 @@ import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.dhis2.DHIS2Configuration;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
 import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
+import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
+import net.geoprism.dhis2.response.HTTPResponse;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 
@@ -201,13 +203,16 @@ public class DHIS2DataImporter
   private void importOrgUnitLevels()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnitLevels=true"
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnitLevels", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
+    
+    JSONObject json = response.getJSON();
     
     // Create Universals from OrgUnitLevels
-    JSONArray levels = response.getJSONArray("organisationUnitLevels");
+    JSONArray levels = json.getJSONArray("organisationUnitLevels");
     universals = new OrgUnitLevelJsonToUniversal[levels.length()];
     for (int i = 0; i < levels.length(); ++i)
     {
@@ -229,13 +234,16 @@ public class DHIS2DataImporter
   private void importOrgUnits()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnits=true"
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
+    
+    JSONObject json = response.getJSON();
     
     // Create GeoEntities from OrgUnits
-    JSONArray units = response.getJSONArray("organisationUnits");
+    JSONArray units = json.getJSONArray("organisationUnits");
     OrgUnitJsonToGeoEntity[] converters = new OrgUnitJsonToGeoEntity[units.length()];
     for (int i = 0; i < units.length(); ++i)
     {
@@ -277,13 +285,16 @@ public class DHIS2DataImporter
   private void importOptionSets()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("optionSets", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
+    
+    JSONObject json = response.getJSON();
     
     // Create Classifiers from OptionSets
-    JSONArray units = response.getJSONArray("optionSets");
+    JSONArray units = json.getJSONArray("optionSets");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);
@@ -297,13 +308,16 @@ public class DHIS2DataImporter
   private void importOptions()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("options", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
+    
+    JSONObject json = response.getJSON();
     
     // Create Classifiers from Options
-    JSONArray units = response.getJSONArray("options");
+    JSONArray units = json.getJSONArray("options");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);
@@ -316,13 +330,16 @@ public class DHIS2DataImporter
   private void importOptionSetRelationships()
   {
  // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("optionSets", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
+    
+    JSONObject json = response.getJSON();
     
     // Create Relationships
-    JSONArray units = response.getJSONArray("optionSets");
+    JSONArray units = json.getJSONArray("optionSets");
     for (int i = 0; i < units.length(); ++i)
     {
       JSONObject unit = units.getJSONObject(i);

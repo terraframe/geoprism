@@ -22,6 +22,8 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.json.JSONObject;
 
 import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
+import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
+import net.geoprism.dhis2.response.HTTPResponse;
 
 public class DHIS2IdFinder
 {
@@ -30,14 +32,17 @@ public class DHIS2IdFinder
     DHIS2HTTPCredentialConnector dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.readConfigFromDB();
     
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("trackedEntityAttributes", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
     
-    if (response != null && response.has("trackedEntityAttributes"))
+    JSONObject json = response.getJSON();
+    
+    if (json != null && json.has("trackedEntityAttributes"))
     {
-      return response.getJSONArray("trackedEntityAttributes").toString();
+      return json.getJSONArray("trackedEntityAttributes").toString();
     }
     else
     {
@@ -50,14 +55,17 @@ public class DHIS2IdFinder
     DHIS2HTTPCredentialConnector dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.readConfigFromDB();
     
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("programs", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
     
-    if (response != null && response.has("programs"))
+    JSONObject json = response.getJSON();
+    
+    if (json != null && json.has("programs"))
     {
-      return response.getJSONArray("programs").toString();
+      return json.getJSONArray("programs").toString();
     }
     else
     {
@@ -70,14 +78,16 @@ public class DHIS2IdFinder
     DHIS2HTTPCredentialConnector dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.readConfigFromDB();
     
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("trackedEntities", "true")
     });
     
-    if (response != null && response.has("trackedEntities"))
+    JSONObject json = response.getJSON();
+    
+    if (json != null && json.has("trackedEntities"))
     {
-      return response.getJSONArray("trackedEntities").toString();
+      return json.getJSONArray("trackedEntities").toString();
     }
     else
     {

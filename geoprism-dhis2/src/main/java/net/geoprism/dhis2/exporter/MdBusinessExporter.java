@@ -19,7 +19,6 @@
 package net.geoprism.dhis2.exporter;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
-import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -50,10 +48,10 @@ import com.runwaysdk.system.metadata.MdClass;
 import net.geoprism.dhis2.DHIS2IdMapping;
 import net.geoprism.dhis2.DHIS2IdMappingQuery;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
-import net.geoprism.dhis2.importer.OptionSetJsonToClassifier;
 import net.geoprism.dhis2.response.DHIS2EmptyDatasetException;
-import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
+import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
 import net.geoprism.dhis2.response.GeoFieldRequiredException;
+import net.geoprism.dhis2.response.HTTPResponse;
 import net.geoprism.dhis2.util.DHIS2IdCache;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
@@ -327,8 +325,8 @@ public class MdBusinessExporter
       
       jsonMetadata.put("trackedEntityInstances", trackedEntityInstances);
       
-      JSONObject response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
-      DHIS2ResponseProcessor.validateImportSummaryResponse(response);
+      HTTPResponse response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
+      DHIS2TrackerResponseProcessor.validateImportSummaryResponse(response);
       
       page = page + 1;
     }
@@ -342,8 +340,8 @@ public class MdBusinessExporter
     trackedEntities.put(converter.getTrackedEntityJson());
     jsonMetadata.put("trackedEntities", trackedEntities);
     
-    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
+    HTTPResponse response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, false);
     
     this.trackedEntityId = converter.getTrackedEntityId();
   }
@@ -354,9 +352,8 @@ public class MdBusinessExporter
     converter.setTrackedEntityAttributeIds(trackedEntityAttributeIds);
     JSONObject metadata = converter.getTrackedEntityAttributesJSON();
     
-    JSONObject response = dhis2.httpPost("api/25/metadata", metadata.toString());
-    
-    DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
+    HTTPResponse response = dhis2.httpPost("api/25/metadata", metadata.toString());
+    DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, true);
     
     this.trackedEntityAttributeIds = converter.getTrackedEntityAttributeIds();
   }
@@ -416,14 +413,17 @@ public class MdBusinessExporter
   {
     String categoryComboId = null;
     
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("categoryCombos", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
     
-    if (response != null && response.has("categoryCombos"))
+    JSONObject json = response.getJSON();
+    
+    if (json != null && json.has("categoryCombos"))
     {
-      JSONArray combos = response.getJSONArray("categoryCombos");
+      JSONArray combos = json.getJSONArray("categoryCombos");
       
       for (int i = 0; i < combos.length(); ++i)
       {
@@ -453,8 +453,8 @@ public class MdBusinessExporter
     programs.put(converter.getProgramJson(getCategoryComboId("default"), trackedEntityAttributeIds));
     jsonMetadata.put("programs", programs);
     
-    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
+    HTTPResponse response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, false);
   }
   
   

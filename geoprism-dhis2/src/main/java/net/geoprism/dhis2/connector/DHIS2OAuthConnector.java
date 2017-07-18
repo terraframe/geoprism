@@ -40,6 +40,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import net.geoprism.account.ExternalProfile;
 import net.geoprism.account.OauthServer;
 import net.geoprism.dhis2.response.DHIS2ConflictException;
+import net.geoprism.dhis2.response.HTTPResponse;
 
 public class DHIS2OAuthConnector extends AbstractDHIS2Connector
 {
@@ -237,7 +238,7 @@ public class DHIS2OAuthConnector extends AbstractDHIS2Connector
     }
   }
   
-  public JSONObject httpGet(String url, NameValuePair[] params)
+  public HTTPResponse httpGet(String url, NameValuePair[] params)
   {
     if (!isInitialized())
     {
@@ -259,10 +260,10 @@ public class DHIS2OAuthConnector extends AbstractDHIS2Connector
       throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
     }
     
-    return response;
+    return new HTTPResponse(response, statusCode);
   }
   
-  public JSONObject httpPost(String url, String body)
+  public HTTPResponse httpPost(String url, String body)
   {
     if (!isInitialized())
     {
@@ -286,7 +287,7 @@ public class DHIS2OAuthConnector extends AbstractDHIS2Connector
         throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
       }
       
-      return response;
+      return new HTTPResponse(response, statusCode);
     }
     catch (JSONException | UnsupportedEncodingException e)
     {
