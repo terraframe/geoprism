@@ -60,11 +60,6 @@ public class DHIS2HTTPCredentialConnector extends AbstractDHIS2Connector
     JSONObject response = new JSONObject();
     int statusCode = this.httpRequest(this.client, get, response);
     
-    if (statusCode != HttpStatus.SC_OK)
-    {
-      throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
-    }
-    
     return new HTTPResponse(response, statusCode);
   }
   
