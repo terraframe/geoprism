@@ -20,7 +20,6 @@ package net.geoprism.dhis2;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ServletMethod;
@@ -31,9 +30,19 @@ import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
 
+import net.geoprism.PluginUtilDTO;
+
 @Controller(url = "dhis2")
 public class DHIS2Controller implements Reloadable
-{ 
+{
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF isEnabled(ClientRequestIF request) throws java.io.IOException, javax.servlet.ServletException, JSONException
+  {
+    boolean isEnabled = PluginUtilDTO.isDHIS2Enabled(request);
+    
+    return new RestBodyResponse(isEnabled);
+  }
+  
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF getTrackedEntities(ClientRequestIF request) throws java.io.IOException, javax.servlet.ServletException, JSONException
   {

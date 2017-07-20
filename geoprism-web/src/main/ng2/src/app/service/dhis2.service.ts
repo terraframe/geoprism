@@ -36,6 +36,16 @@ export class DHIS2Service extends BasicService {
 
   constructor(service: EventService, private ehttp: EventHttpService, private http: Http) { super(service); }
 
+  isEnabled() : Promise<boolean> {
+    return this.ehttp
+      .get(acp + '/dhis2/isEnabled')
+      .toPromise()
+      .then(response => {
+        return response.json() as boolean;
+      })
+      .catch(this.handleError.bind(this));
+  }
+
   getPrograms(): Promise<Program[]> {
     return this.ehttp
       .get(acp + '/dhis2/getPrograms')

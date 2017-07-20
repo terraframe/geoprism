@@ -1,0 +1,13 @@
+<version xsi:noNamespaceSchemaLocation="/home/rick/Documents/eclipse/workspace/MDSS/profiles/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdUtil label="Geoprism Plugin Util" name="net.geoprism.PluginUtil" >
+        <mdMethod name="isDHIS2Enabled" static="true" label="isDHIS2Enabled" returnType="java.lang.Boolean"></mdMethod>
+      </mdUtil>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
