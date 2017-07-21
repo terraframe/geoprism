@@ -39,10 +39,6 @@ import net.geoprism.dhis2.response.HTTPResponse;
 
 abstract public class AbstractDHIS2Connector
 {
-  public static final String CLIENT_ID = "geoprism";
-  
-  public static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6"; // TODO : Don't hardcode this
-  
   HttpClient client;
   
   Logger logger = LoggerFactory.getLogger(DHIS2OAuthConnector.class);
