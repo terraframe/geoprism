@@ -30,6 +30,8 @@ import { DropdownModule } from 'ng2-bootstrap'
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
+import { BooleanFieldComponent } from './core/boolean-field.component';
+
 import { LocalizeComponent } from './core/localize.component';
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { MessageComponent } from './core/message.component';
@@ -95,6 +97,8 @@ import { EventHttpService } from './service/event-http.service';
     FunctionValidator,
     KeysPipe,
     LocalizePipe,
+    
+    BooleanFieldComponent,
     
     AutoCompleteDirective,
     AutoCompleteComponent,

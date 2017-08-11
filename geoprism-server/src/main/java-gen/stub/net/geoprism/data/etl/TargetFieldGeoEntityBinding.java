@@ -138,6 +138,8 @@ public class TargetFieldGeoEntityBinding extends TargetFieldGeoEntityBindingBase
 
       tField.addUniversalAttribute(attributeName, label, universal);
     }
+    
+    tField.setCoordinateObject(this.getLatitudeAttributeName(), this.getLongitudeAttributeName());
   }
 
   @Override

@@ -110,6 +110,7 @@ export class SummaryPageComponent implements OnInit {
         let universal = this.universals[j];
         
         if(attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE') {
+          universal.useCoordinatesForLocationAssignment = attribute.useCoordinatesForLocationAssignment;
           this.universalMap[id].push(universal);
         }
       }

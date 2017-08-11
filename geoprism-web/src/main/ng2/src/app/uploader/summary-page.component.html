@@ -155,6 +155,9 @@
                         </tr> 
                       </tbody>
                     </table>
+                    
+                    <br *ngIf="key.value.useCoordinatesForLocationAssignment">
+                    <p *ngIf="key.value.useCoordinatesForLocationAssignment"><localize key="dataUploader.useCoordinatesForLocationAssociationSummaryMessage"></localize></p>
                   </td>
               </tr>  
             </tbody>

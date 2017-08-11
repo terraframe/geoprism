@@ -1,0 +1,23 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldGeoEntityBinding" >
+        <create>
+	        <attributes>
+	          <char name="latitudeAttributeName" label="Latitude Attribute Name" required="false" size="255"  />
+	          <char name="longitudeAttributeName" label="Longitude Attribute Name" required="false" size="255"  />
+	        </attributes>
+        </create>
+      </mdBusiness>
+    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.data.etl.TargetFieldGeoEntityBinding.latitudeAttributeName" type="com.runwaysdk.system.metadata.MdAttribute" />
+      <object key="net.geoprism.data.etl.TargetFieldGeoEntityBinding.longitudeAttributeName" type="com.runwaysdk.system.metadata.MdAttribute" />
+    </delete>
+  </undoIt>
+</version>

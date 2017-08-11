@@ -27,6 +27,10 @@
     </div> <!-- end holder -->
   </div> 
     
+    
+  <!--
+  -- Location field configuration form
+  -->
   <form *ngIf="attribute != null" #attributeForm="ngForm">
     <div class="label-holder">
       <strong><localize key="dataUploader.locationCreatorWidgetLabel"></localize></strong>
@@ -39,14 +43,19 @@
           <span class="text">
           <input [(ngModel)]="attribute.label" #label="ngModel" name="label" required type="text" funcValidator [validator]="this" config="label" />
         </span>
+        
+        
         <div class="error-message">
           <p *ngIf="label.invalid">
             <localize key="dataUploader.unique"></localize>
-          </p>    
+          </p> 
         </div>
-        <div class="row-holder">
+        
+        
+        <div *ngIf="universalOptions.length > 0" class="row-holder">
           <hr>
-        </div>        
+        </div>  
+              
         <div class="row-holder" *ngFor="let universal of universalOptions; let i = index;">
           <div class="label-help-ico-container">
             <i class="fa fa-question-circle help-info-ico"></i>      
@@ -62,15 +71,49 @@
             </div>
           </div>
         </div>
-          <div class="row-holder">
-          <div class="button-holder">
-              <input type="button" value="+" class="btn btn-primary set-location-btn pull-right" (click)="newAttribute()" [disabled]="attributeForm.invalid" [title]="'dataUploader.createBtnToolTip' | localize" />
+        
+        <hr>
+       
+        <div *ngIf="attribute.coordinatesForLocationAssignmentOptions.length > 0" class="row-holder" >
+          <boolean-field (valueChange)="setDefaults()" [(value)]="attribute.useCoordinatesForLocationAssignment" localizeLabelKey="dataUploader.useCoordinatesForLocationAssignment" ></boolean-field>
+          
+          <div class="row-holder" *ngIf="attribute.useCoordinatesForLocationAssignment">
+            
+            <h4><localize key="dataUploader.selectLatitudeHeader"></localize></h4>
+            <ul style="list-style: none;">
+              <li *ngFor="let coords of attribute.coordinatesForLocationAssignmentOptions[0]; let i = index;" >
+                <label for="latForLocationAssignment" >
+                  <input [(ngModel)]="attribute.latForLocationAssignment" value="{{coords.label}}" name="latForLocationAssignment" type="radio" class="jcf-unselectable rad-area" />
+                  <span>{{coords.label}}</span>
+                </label>
+              </li>
+            </ul>
+            
+            <h4><localize key="dataUploader.selectLongitudeHeader"></localize></h4>
+            <ul style="list-style: none;">
+              <li *ngFor="let coords of attribute.coordinatesForLocationAssignmentOptions[1]; let i = index;" >
+                <label for="longForLocationAssignment" >
+                  <input [(ngModel)]="attribute.longForLocationAssignment" value="{{coords.label}}" name="longForLocationAssignment" type="radio" class="jcf-unselectable rad-area" />
+                  <span>{{coords.label}}</span>
+                </label>
+              </li>
+            </ul>
           </div>
-          </div>  
+        </div>
+        
+        <div class="row-holder">
+          <div class="button-holder">
+           <input type="button" value="+" class="btn btn-primary set-location-btn pull-right" (click)="newAttribute()" [disabled]="attributeForm.invalid" [title]="'dataUploader.createBtnToolTip' | localize" />
+          </div>
+        </div>  
       </div>  
     </div>
-  </form>  
+  </form> 
   
+  
+  <!--
+  -- Set location cards 
+  -->
   <div *ngIf="sheet.attributes.ids.length > 0">
     <div class="label-holder">
       <strong><localize key="dataUploader.attributes"></localize></strong>
@@ -92,7 +135,16 @@
                   <i class="fa fa-check-square"></i>{{key.value.fields[universal.value]}}            
                 </li>
               </div>
-            </ul>   
+            </ul>
+            
+            <div *ngIf="key.value.useCoordinatesForLocationAssignment">
+              <hr>
+              <ul class="location-field-list-display">
+                <li>
+                  <i class="fa fa-check-square"></i><localize key="dataUploader.useCoordinatesForLocationAssignment"></localize> {{key.value.coordinatesForLocationAssignment}}    
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         
@@ -101,15 +153,17 @@
   </div> <!-- end *ngIf -->
   
   <div class="label-holder"></div>
+  
   <div class="holder">
     <div class="error-message">
       <p *ngIf="(unassignedFields.length > 0 || attribute != null)"><localize key="dataUploader.unassignedLocationFields"></localize></p>
     </div>          
   </div>  
+  
 </div>
 
       </section>        
-    </fieldset>   
+    </fieldset> 
     
     <paging [form]="form" [page]="page" [global]="(unassignedFields.length == 0 && attribute == null)"></paging>
   </div>

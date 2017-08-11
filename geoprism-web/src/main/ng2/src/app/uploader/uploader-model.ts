@@ -65,6 +65,10 @@ export class LocationAttribute {
   fields: { [key:string]:string};
   id: string;
   editing: boolean;
+  useCoordinatesForLocationAssignment: boolean; 
+  coordinatesForLocationAssignmentOptions: Field[];
+  latForLocationAssignment = '';
+  longForLocationAssignment = '';
 }
 
 export class Locations {

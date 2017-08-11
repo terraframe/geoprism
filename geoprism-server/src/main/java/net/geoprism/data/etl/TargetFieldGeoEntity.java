@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.etl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,6 +36,7 @@ import org.json.JSONObject;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -95,6 +98,10 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   private GeoEntity                     root;
 
   private Universal                     rootUniversal;
+  
+  private boolean 						useCoordinatesForLocationAssignment = false;
+  
+  private JSONObject  					coordinateObject;
 
   public TargetFieldGeoEntity()
   {
@@ -116,6 +123,74 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   {
     this.root = root;
     this.rootUniversal = root.getUniversal();
+  }
+
+  public void setUseCoordinatesForLocationAssignment(boolean useCoords)
+  {
+	  this.useCoordinatesForLocationAssignment = useCoords;
+  }
+  
+  public boolean getUseCoordinatesForLocationAssignment()
+  {
+	  return this.useCoordinatesForLocationAssignment;
+  }
+  
+  public void setCoordinateObject(String latitude, String longitude)
+  {
+	  if(latitude != null && latitude != "")
+	  {
+		  try
+		  {
+		    JSONObject coordsObj = new JSONObject();
+		    coordsObj.put("latitude", latitude);
+		    coordsObj.put("longitude", longitude);
+		  
+		    this.coordinateObject = coordsObj;
+		  }
+		  catch(JSONException e)
+		  {
+			  throw new ProgrammingErrorException(e);
+		  }
+	  }
+  }
+  
+  public JSONObject getCoordinateObject()
+  {
+	  return this.coordinateObject;
+  }
+  
+  public String getCoordinateObjectLatitude()
+  {
+	  String lat = null;
+	  JSONObject coordObj = this.getCoordinateObject();
+	  
+	  try
+	  {
+	    lat = coordObj.getString("latitude");
+	  }
+	  catch(JSONException e)
+	  {
+		  throw new ProgrammingErrorException(e);
+	  }
+	  
+	  return lat;
+  }
+  
+  public String getCoordinateObjectLongitude()
+  {
+	  String lat = null;
+	  JSONObject coordObj = this.getCoordinateObject();
+	  
+	  try
+	  {
+	    lat = coordObj.getString("longitude");
+	  }
+	  catch(JSONException e)
+	  {
+		  throw new ProgrammingErrorException(e);
+	  }
+	   
+	  return lat;
   }
 
   public void addUniversalAttribute(String attributeName, String label, Universal universal)
@@ -145,8 +220,28 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     {
       labels.add(source.getValue(attribute.getAttributeName()));
     }
+    
+    JSONObject coordObj = new JSONObject();
+    try
+    {
+    	String latitudeFieldName = this.getCoordinateObject().get("latitude").toString().toLowerCase();
+        String longitudeFieldName = this.getCoordinateObject().get("longitude").toString().toLowerCase();
+        if(longitudeFieldName.equals("long"))
+        {
+        	longitudeFieldName = "longAttribute"; // long is a keyword so we need to change to what it is coerced to in TransientDAO 
+        }
+        String latitude = source.getValue(latitudeFieldName);
+        String longitude = source.getValue(longitudeFieldName);
+	    coordObj.put("latitude", latitude);
+	    coordObj.put("longitude", longitude);
+    }
+	catch(JSONException e)
+	{
+	  throw new ProgrammingErrorException(e);
+	}
+    
 
-    GeoEntity entity = this.getLocation(this.root, labels);
+    GeoEntity entity = this.getLocation(this.root, labels, coordObj);
 
     return new FieldValue(entity.getId());
   }
@@ -157,7 +252,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
    * @param labels
    * @return
    */
-  private GeoEntity getLocation(GeoEntity root, List<String> labels)
+  private GeoEntity getLocation(GeoEntity root, List<String> labels, JSONObject spatialRefCoordObj)
   {
     GeoEntity parent = root;
 
@@ -176,7 +271,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
         }
         else
         {
-          GeoEntity entity = this.findGeoEntity(parent, universal, label);
+          GeoEntity entity = this.findGeoEntity(parent, universal, label, spatialRefCoordObj);
 
           if (entity == null)
           {
@@ -191,7 +286,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     return parent;
   }
 
-  private GeoEntity findGeoEntity(GeoEntity parent, Universal universal, String label)
+  private GeoEntity findGeoEntity(GeoEntity parent, Universal universal, String label, JSONObject spatialRefCoordObj)
   {
     QueryFactory factory = new QueryFactory();
 
@@ -213,26 +308,92 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       if (iterator.hasNext())
       {
         GeoEntity entity = iterator.next();
-
+        // If there's another entity there is more than one location found given the criteria (ambiguous)
         if (iterator.hasNext())
         {
-          NonUniqueEntityResultException e = new NonUniqueEntityResultException();
-          e.setLabel(label);
-          e.setUniversal(universal.getDisplayLabel().getValue());
-          e.setParent(parent.getDisplayLabel().getValue());
-
-          throw e;
+          	
+      	  GeoEntity spatiallyDeterminedEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj);
+    	  
+      	  if(spatiallyDeterminedEntity != null)
+      	  {
+      	    return spatiallyDeterminedEntity; 
+      	  }
+      	  else
+      	  {
+            NonUniqueEntityResultException e = new NonUniqueEntityResultException();
+            e.setLabel(label);
+            e.setUniversal(universal.getDisplayLabel().getValue());
+            e.setParent(parent.getDisplayLabel().getValue());
+  
+            throw e;
+      	  }
         }
 
         return entity;
       }
-
-      return null;
     }
     finally
     {
       iterator.close();
     }
+    
+    return null;
+  }
+  
+  private GeoEntity findGeoEntityByNearestNeighbor(String locationName, Universal universal, JSONObject spatialRefCoordObj)
+  {
+	  String comparativeTargetGeomColumnName = "geo_multi_polygon"; // use geo_multi_polygon because all geonodes have point and polygon representation
+	  
+	  String sourceLat = null;
+	  String sourceLong = null;
+	  try
+	  {
+	    sourceLat = spatialRefCoordObj.getString("latitude");
+	    sourceLong = spatialRefCoordObj.getString("longitude");
+	  }
+	  catch(JSONException e)
+	  {
+	    throw new ProgrammingErrorException(e);
+	  }
+	    
+	  StringBuffer sql = new StringBuffer();
+      sql.append("SELECT g.id, ST_Distance(g."
+    		  .concat(comparativeTargetGeomColumnName)
+    		  .concat(", ST_SetSRID(st_pointfromtext('POINT("
+    	        .concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")
+    	      ) 
+      );
+      sql.append(" FROM geo_entity g");
+      sql.append(" WHERE g.universal = '".concat(universal.getId()).concat("'"));
+      sql.append(" ORDER BY 2 ASC");
+      sql.append(" LIMIT 1;");
+
+//      SELECT g.id, ST_Distance(g.geo_multi_polygon, ST_SetSRID(st_pointfromtext('POINT(-112.480092 36.016899)'),4326)) 
+//      FROM geo_entity g 
+//      WHERE g.universal = 'i5iqjq0fms812sx0np4jbj7r7qqt1q30i1vpa2tywfkq0wgqelwt6ay8b49cnbch'
+//      ORDER BY 2 ASC 
+//      LIMIT 1;
+
+      ResultSet resultSet = Database.query(sql.toString());
+	  
+      GeoEntity geoEntity = null;
+      if(resultSet != null)
+      {
+    	try {
+		  if(resultSet.next())
+			{
+			  String entityId = resultSet.getString(1);
+			  geoEntity = GeoEntity.get(entityId);
+			  
+			  return geoEntity;
+			}
+		} 
+    	catch (SQLException e) {
+			throw new ProgrammingErrorException(e);
+		}
+      }
+      
+	return null; 
   }
 
   @Override
@@ -245,6 +406,8 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     field.setTargetAttribute(targetAttribute);
     field.setColumnLabel(this.getLabel());
     field.setGeoEntity(this.root);
+    field.setLatitudeAttributeName(this.getCoordinateObjectLatitude());
+    field.setLongitudeAttributeName(this.getCoordinateObjectLongitude());
     field.apply();
 
     for (UniversalAttribute attribute : this.attributes)
@@ -290,63 +453,75 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   @Override
   public ImportProblemIF validate(Transient source, Map<String, Object> parameters)
   {
-    GeoEntity parent = this.root;
-
-    Map<String, Set<String>> locationExclusions = (Map<String, Set<String>>) parameters.get("locationExclusions");
-
-    List<JSONObject> context = new LinkedList<JSONObject>();
-
-    for (UniversalAttribute attribute : attributes)
-    {
-      String label = source.getValue(attribute.getAttributeName());
-      Universal entityUniversal = attribute.getUniversal();
-
-      if (label != null && label.length() > 0)
-      {
-        if (this.isExcluded(locationExclusions, entityUniversal, parent, label))
-        {
-          return null;
-        }
-
-        if (parent.getUniversalId().equals(entityUniversal.getId()))
-        {
-          GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label);
-
-          if (entity == null)
-          {
-            return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
-          }
-        }
-        else
-        {
-          GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label);
-
-          if (entity == null)
-          {
-            return new LocationProblem(label, context, parent, entityUniversal);
-          }
-          else
-          {
-            parent = entity;
-          }
-        }
-      }
-
-      try
-      {
-        JSONObject object = new JSONObject();
-        object.put("label", label);
-        object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
-
-        context.add(object);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-
-    return null;
+	try
+	{
+	    GeoEntity parent = this.root;
+	
+	    Map<String, Set<String>> locationExclusions = (Map<String, Set<String>>) parameters.get("locationExclusions");
+	
+	    List<JSONObject> context = new LinkedList<JSONObject>();
+	
+	    for (UniversalAttribute attribute : attributes)
+	    {
+	      String label = source.getValue(attribute.getAttributeName());
+	      Universal entityUniversal = attribute.getUniversal();
+	
+	      if (label != null && label.length() > 0)
+	      {
+	        if (this.isExcluded(locationExclusions, entityUniversal, parent, label))
+	        {
+	          return null;
+	        }
+	
+	        String latitudeFieldName = this.getCoordinateObject().get("latitude").toString().toLowerCase();
+	        String longitudeFieldName = this.getCoordinateObject().get("longitude").toString().toLowerCase();
+	        if(longitudeFieldName.equals("long"))
+	        {
+	        	longitudeFieldName = "longAttribute"; // long is a keyword so we need to change to what it is coerced to in TransientDAO 
+	        }
+	        String latitude = source.getValue(latitudeFieldName);
+	        String longitude = source.getValue(longitudeFieldName);
+	        JSONObject coordObj = new JSONObject();
+	        coordObj.put("latitude", latitude);
+	        coordObj.put("longitude", longitude);
+	        
+	        if (parent.getUniversalId().equals(entityUniversal.getId()))
+	        {
+	          GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label, coordObj);
+	
+	          if (entity == null)
+	          {
+	            return new LocationProblem(label, context, GeoEntity.getRoot(), entityUniversal);
+	          }
+	        }
+	        else
+	        {
+	          GeoEntity entity = this.findGeoEntity(parent, entityUniversal, label, coordObj);
+	
+	          if (entity == null)
+	          {
+	            return new LocationProblem(label, context, parent, entityUniversal);
+	          }
+	          else
+	          {
+	            parent = entity;
+	          }
+	        }
+	      }
+	
+	      JSONObject object = new JSONObject();
+	      object.put("label", label);
+	      object.put("universal", parent.getUniversal().getDisplayLabel().getValue());
+	
+	      context.add(object);
+	    }
+	    
+	    return null;
+	}
+	catch (JSONException e)
+	{
+	      throw new ProgrammingErrorException(e);
+	}
   }
 
   private boolean isExcluded(Map<String, Set<String>> locationExclusions, Universal universal, GeoEntity parent, String label)
