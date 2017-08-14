@@ -312,7 +312,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
         if (iterator.hasNext())
         {
           	
-      	  GeoEntity spatiallyDeterminedEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj);
+      	  GeoEntity spatiallyDeterminedEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj, iterator);
     	  
       	  if(spatiallyDeterminedEntity != null)
       	  {
@@ -340,7 +340,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     return null;
   }
   
-  private GeoEntity findGeoEntityByNearestNeighbor(String locationName, Universal universal, JSONObject spatialRefCoordObj)
+  private GeoEntity findGeoEntityByNearestNeighbor(String locationName, Universal universal, JSONObject spatialRefCoordObj, OIterator<? extends GeoEntity> geoEntities)
   {
 	  String comparativeTargetGeomColumnName = "geo_multi_polygon"; // use geo_multi_polygon because all geonodes have point and polygon representation
 	  
@@ -355,7 +355,20 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 	  {
 	    throw new ProgrammingErrorException(e);
 	  }
-	    
+	  
+	  StringBuffer geoIdString = new StringBuffer();
+	  while(geoEntities.hasNext())
+	  {
+		  GeoEntity entity = geoEntities.next();
+		  geoIdString.append("'").append(entity.getGeoId()).append("'");
+		  
+		  if(geoEntities.hasNext())
+		  {
+			  geoIdString.append(",");
+		  }
+	  }
+	  
+	  
 	  StringBuffer sql = new StringBuffer();
       sql.append("SELECT g.id, ST_Distance(g."
     		  .concat(comparativeTargetGeomColumnName)
@@ -364,9 +377,22 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     	      ) 
       );
       sql.append(" FROM geo_entity g");
-      sql.append(" WHERE g.universal = '".concat(universal.getId()).concat("'"));
+      sql.append(" WHERE g.geo_id IN (".concat(geoIdString.toString()).concat(")") );
       sql.append(" ORDER BY 2 ASC");
       sql.append(" LIMIT 1;");
+      
+	    
+//	  StringBuffer sql = new StringBuffer();
+//      sql.append("SELECT g.id, ST_Distance(g."
+//    		  .concat(comparativeTargetGeomColumnName)
+//    		  .concat(", ST_SetSRID(st_pointfromtext('POINT("
+//    	        .concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")
+//    	      ) 
+//      );
+//      sql.append(" FROM geo_entity g");
+//      sql.append(" WHERE g.universal = '".concat(universal.getId()).concat("'"));
+//      sql.append(" ORDER BY 2 ASC");
+//      sql.append(" LIMIT 1;");
 
 //      SELECT g.id, ST_Distance(g.geo_multi_polygon, ST_SetSRID(st_pointfromtext('POINT(-112.480092 36.016899)'),4326)) 
 //      FROM geo_entity g 

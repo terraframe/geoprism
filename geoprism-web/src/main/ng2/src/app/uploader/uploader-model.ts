@@ -23,6 +23,7 @@ import { Pair } from '../model/pair';
 export class Universal {
   value: string;
   label: string; 
+  useCoordinatesForLocationAssignment: boolean;
 }
 
 export class Country {

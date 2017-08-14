@@ -71,7 +71,7 @@ public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysd
     if (mdClass instanceof MdEntityDAOIF)
     {
       QueryFactory factory = new QueryFactory();
-      EntityQuery query = factory.entityQuery((MdEntityDAOIF) mdClass);
+      EntityQuery query = (EntityQuery) factory.componentQueryEntity((MdEntityDAOIF) mdClass);
       OIterator<? extends ComponentIF> iterator = query.getIterator();
 
       try
