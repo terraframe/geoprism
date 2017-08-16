@@ -1,4 +1,4 @@
-<version xsi:noNamespaceSchemaLocation="/home/rick/Documents/eclipse/workspace/MDSS/profiles/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
       <mdUtil label="Geoprism Plugin Util" name="net.geoprism.PluginUtil" >
