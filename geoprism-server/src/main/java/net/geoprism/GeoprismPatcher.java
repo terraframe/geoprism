@@ -49,7 +49,6 @@ import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.context.PatchingContextListener;
 import net.geoprism.context.ProjectDataConfiguration;
 import net.geoprism.data.CachedEndpoint;
-import net.geoprism.data.LocalEndpoint;
 import net.geoprism.data.LocationImporter;
 import net.geoprism.data.XMLEndpoint;
 import net.geoprism.data.XMLLocationImporter;
@@ -64,8 +63,6 @@ public class GeoprismPatcher
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
   private File metadataDir;
-  
-  private File externalConfigDir;
   
   public GeoprismPatcher(File metadataDir)
   {

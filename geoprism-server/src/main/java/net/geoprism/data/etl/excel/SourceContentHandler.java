@@ -36,7 +36,6 @@ import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 
 import net.geoprism.ExceptionUtil;
-import net.geoprism.data.GeoprismDatasetExporterIF;
 import net.geoprism.data.etl.ColumnType;
 import net.geoprism.data.etl.ConverterIF;
 import net.geoprism.data.etl.DataImportState;
@@ -176,7 +175,7 @@ public class SourceContentHandler implements SheetHandler
     catch (Exception e)
     {
       // Wrap all exceptions with information about the cell and row
-      ExcelObjectException exception = new ExcelObjectException();
+      ExcelObjectException exception = new ExcelObjectException(e);
       exception.setRow(new Long(this.rowNum));
       exception.setMsg(ExceptionUtil.getLocalizedException(e));
 
