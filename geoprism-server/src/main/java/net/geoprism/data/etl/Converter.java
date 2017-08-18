@@ -34,6 +34,12 @@ public class Converter implements ConverterIF
   {
     this.context = context;
   }
+  
+  @Override
+  public TargetContextIF getTargetContext()
+  {
+    return this.context;
+  }
 
   @Override
   public void create(Transient source)

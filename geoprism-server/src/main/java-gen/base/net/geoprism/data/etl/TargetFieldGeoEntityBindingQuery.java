@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -1647232445)
+@com.runwaysdk.business.ClassSignature(hash = 387250412)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -79,6 +61,40 @@ public  class TargetFieldGeoEntityBindingQuery extends net.geoprism.data.etl.Tar
     return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.data.etl.TargetFieldGeoEntityBinding.GEOENTITY, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName()
+  {
+    return getLatitudeAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LATITUDEATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LATITUDEATTRIBUTENAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName()
+  {
+    return getLongitudeAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LONGITUDEATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LONGITUDEATTRIBUTENAME, alias, displayLabel);
+
+  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -128,6 +144,12 @@ public  class TargetFieldGeoEntityBindingQuery extends net.geoprism.data.etl.Tar
     public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity();
     public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity(String alias);
     public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLatitudeAttributeName();
+    public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias);
+    public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLongitudeAttributeName();
+    public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias);
+    public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias, String displayLabel);
 
     public com.runwaysdk.query.BasicCondition EQ(net.geoprism.data.etl.TargetFieldGeoEntityBinding targetFieldGeoEntityBinding);
 
@@ -180,6 +202,40 @@ public  class TargetFieldGeoEntityBindingQuery extends net.geoprism.data.etl.Tar
     return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.GEOENTITY,  alias, displayLabel);
 
   }
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName()
+  {
+    return getLatitudeAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LATITUDEATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LATITUDEATTRIBUTENAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName()
+  {
+    return getLongitudeAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LONGITUDEATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LONGITUDEATTRIBUTENAME, alias, displayLabel);
+
+  }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
   {
     String name = mdAttributeIF.definesAttribute();
@@ -206,6 +262,12 @@ public  class TargetFieldGeoEntityBindingQuery extends net.geoprism.data.etl.Tar
     public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity();
     public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity(String alias);
     public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLatitudeAttributeName();
+    public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias);
+    public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableChar getLongitudeAttributeName();
+    public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias);
+    public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias, String displayLabel);
 
     public com.runwaysdk.query.Condition containsAny(net.geoprism.data.etl.TargetFieldGeoEntityBinding ... targetFieldGeoEntityBinding);
     public com.runwaysdk.query.Condition notContainsAny(net.geoprism.data.etl.TargetFieldGeoEntityBinding ... targetFieldGeoEntityBinding);
@@ -305,6 +367,40 @@ public  class TargetFieldGeoEntityBindingQuery extends net.geoprism.data.etl.Tar
   public com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF getGeoEntity(String alias, String displayLabel)
   {
     return (com.runwaysdk.system.gis.geo.GeoEntityQuery.GeoEntityQueryReferenceIF)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.GEOENTITY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName()
+  {
+    return getLatitudeAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LATITUDEATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLatitudeAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LATITUDEATTRIBUTENAME, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName()
+  {
+    return getLongitudeAttributeName(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LONGITUDEATTRIBUTENAME, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableChar getLongitudeAttributeName(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.data.etl.TargetFieldGeoEntityBinding.LONGITUDEATTRIBUTENAME, alias, displayLabel);
 
   }
   protected com.runwaysdk.query.AttributeReference referenceFactory( com.runwaysdk.dataaccess.MdAttributeRefDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdBusinessDAOIF referenceMdBusinessIF, String referenceTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)

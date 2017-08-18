@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.exporter;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -46,9 +46,8 @@ import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdBusiness;
 
 import net.geoprism.dhis2.importer.OptionSetJsonToClassifier;
-import net.geoprism.dhis2.util.DHIS2IdGenerator;
+import net.geoprism.dhis2.util.DHIS2IdCache;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierSynonym;
 
 /**
@@ -60,11 +59,39 @@ public class MdBusinessToTrackerJson
 {
   MdBusiness mdbiz;
   
-  public MdBusinessToTrackerJson(MdBusiness mdbiz)
+  DHIS2IdCache idCache;
+  
+  private String trackedEntityId;
+  
+  private String programId;
+  
+  private Map<String, String> trackedEntityAttributeIds;
+  
+  public MdBusinessToTrackerJson(MdBusiness mdbiz, DHIS2IdCache idCache)
   {
     this.mdbiz = mdbiz;
     
-    
+    this.idCache = idCache;
+  }
+  
+  public String getProgramId()
+  {
+    return programId;
+  }
+  
+  public void setProgramId(String programId)
+  {
+    this.programId = programId;
+  }
+  
+  public void setTrackedEntityId(String trackedEntityId)
+  {
+    this.trackedEntityId = trackedEntityId;
+  }
+  
+  public String getTrackedEntityId()
+  {
+    return trackedEntityId;
   }
   
   /**
@@ -78,7 +105,9 @@ public class MdBusinessToTrackerJson
     
     trackedEntity.put("name", mdbiz.getDisplayLabel().getValue());
     trackedEntity.put("description", mdbiz.getDescription().getValue());
-    trackedEntity.put("id", mdbiz.getId().substring(0, 11));
+    
+    trackedEntityId = idCache.next();
+    trackedEntity.put("id", trackedEntityId);
     
     return trackedEntity;
   }
@@ -130,18 +159,33 @@ public class MdBusinessToTrackerJson
     return valueType;
   }
   
+  public void setTrackedEntityAttributeIds(Map<String, String> teaid)
+  {
+    trackedEntityAttributeIds = teaid;
+  }
+  
+  public Map<String, String> getTrackedEntityAttributeIds()
+  {
+    return trackedEntityAttributeIds;
+  }
+  
   /**
    * Creates a DHIS2 metadata export for creating tracked entity attributes based on the mdBusiness. This method will also create classifiers should they be required.
    * 
    * Example format: http://localhost:8085/api/25/metadata.json?trackedEntityAttributes=true
    */
-  public JSONObject getTrackedEntityAttributes()
+  public JSONObject getTrackedEntityAttributesJSON()
   {
     JSONObject jsonMetadata = new JSONObject();
     
     JSONArray jsonAttrs = new JSONArray();
     
     ArrayList<Classifier> rootsToExport = new ArrayList<Classifier>();
+    
+    // When we export our roots, we need to remember what we've referenced the ids as.
+    // key=runwayId value=DHIS2id
+    Map<String, String> rootIdMap = new HashMap<String, String>();
+    
     
     OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
     for (MdAttribute mdAttr : mdAttrs)
@@ -151,6 +195,10 @@ public class MdBusinessToTrackerJson
         )
       {
         JSONObject jsonAttr = new JSONObject();
+        
+        String dhis2Id = idCache.next();
+        jsonAttr.put("id", dhis2Id);
+        
         jsonAttr.put("name", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("shortName", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("aggregationType", "NONE");
@@ -218,7 +266,10 @@ public class MdBusinessToTrackerJson
             {
               // If its not prefixed then it doesn't exist already in DHIS2
               rootsToExport.add(root);
-              optionSet.put("id", root.getId().substring(0, 11));
+              
+              String rootDhis2Id = idCache.next();
+              rootIdMap.put(root.getId(), rootDhis2Id);
+              optionSet.put("id", rootDhis2Id);
             }
             else
             {
@@ -240,6 +291,8 @@ public class MdBusinessToTrackerJson
         
         if (valueType != null)
         {
+          trackedEntityAttributeIds.put(mdAttr.getId(), dhis2Id);
+          
           jsonAttr.put("valueType", valueType);
           jsonAttrs.put(jsonAttr);
         }
@@ -248,18 +301,19 @@ public class MdBusinessToTrackerJson
     
     JSONArray allOptions = new JSONArray();
     
+    
+    // Export all unknown classifiers and all their children to DHIS2 as new optionsets and options.
     JSONArray optionSets = new JSONArray();
-    // Before we add our attrs to the JSON, lets do the classifiers (because they have to exist first)
     for (Classifier root : rootsToExport)
     {
       JSONObject optionSet = new JSONObject();
       
-      String rootIdInDHIS2 = root.getId().substring(0, 11);
+      String rootIdInDHIS2 = rootIdMap.get(root.getId());
       
       optionSet.put("name", root.getDisplayLabel().getValue());
       optionSet.put("id", rootIdInDHIS2);
       optionSet.put("valueType", "TEXT");
-      optionSet.put("code", DHIS2IdGenerator.generateUid()); // Required for 2.27 but not 2.25
+      optionSet.put("code", idCache.next()); // Required for 2.27 but not 2.25
       
       JSONArray optionSetOptions = new JSONArray();
       
@@ -267,7 +321,7 @@ public class MdBusinessToTrackerJson
       while (cit.hasNext())
       {
         Classifier child = cit.next();
-        String childIdInDHIS2 = child.getId().substring(0, 11);
+        String childIdInDHIS2 = idCache.next();
         
         JSONObject jChild = new JSONObject();
         jChild.put("id", childIdInDHIS2);
@@ -374,17 +428,17 @@ public class MdBusinessToTrackerJson
 //  }
   
   // version 2.27
-  public JSONObject getProgramJson(String trackedEntityId, String categoryComboId, Map<String, String> trackedEntityAttributeIds)
+  public JSONObject getProgramJson(String categoryComboId, Map<String, String> trackedEntityAttributeIds)
   {
     JSONObject program = new JSONObject();
     
-    String programId = DHIS2IdGenerator.generateUid();
+    programId = idCache.next();
     
     program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("programType", "WITH_REGISTRATION");
     program.put("id", programId);
-    program.put("trackedEntity", new JSONObject().put("id", mdbiz.getId().substring(0, 11)));
+    program.put("trackedEntity", new JSONObject().put("id", trackedEntityId));
     program.put("incidentDateLabel", "Incident date");
     program.put("enrollmentDateLabel", "Enrollment date");
     program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
@@ -416,16 +470,6 @@ public class MdBusinessToTrackerJson
       }
     }
     program.put("programTrackedEntityAttributes", attrs);
-    
-    return program;
-  }
-  
-  
-  public JSONObject getPatchProgramJson(Collection<String> attributeIds)
-  {
-    JSONObject program = new JSONObject();
-    
-    
     
     return program;
   }

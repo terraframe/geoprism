@@ -34,15 +34,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.geoprism.account.ExternalProfile;
 import net.geoprism.dhis2.DHIS2Configuration;
+import net.geoprism.dhis2.response.HTTPResponse;
 
 abstract public class AbstractDHIS2Connector
 {
-  public static final String CLIENT_ID = "geoprism";
-  
-  public static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6"; // TODO : Don't hardcode this
-  
   HttpClient client;
   
   Logger logger = LoggerFactory.getLogger(DHIS2OAuthConnector.class);
@@ -84,9 +80,9 @@ abstract public class AbstractDHIS2Connector
     return client != null;
   }
   
-  abstract public JSONObject httpGet(String url, NameValuePair[] params);
+  abstract public HTTPResponse httpGet(String url, NameValuePair[] params);
   
-  abstract public JSONObject httpPost(String url, String body);
+  abstract public HTTPResponse httpPost(String url, String body);
   
   public void readConfigFromDB()
   {

@@ -45,10 +45,14 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
 import com.runwaysdk.system.metadata.MdClass;
 
+import net.geoprism.dhis2.DHIS2IdMapping;
+import net.geoprism.dhis2.DHIS2IdMappingQuery;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
 import net.geoprism.dhis2.response.DHIS2EmptyDatasetException;
-import net.geoprism.dhis2.response.DHIS2ResponseProcessor;
+import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
 import net.geoprism.dhis2.response.GeoFieldRequiredException;
+import net.geoprism.dhis2.response.HTTPResponse;
+import net.geoprism.dhis2.util.DHIS2IdCache;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
 
@@ -71,21 +75,30 @@ public class MdBusinessExporter
   
   private String trackedEntityId;
   
+  // Key is runway ID value is dhis2 id
   private Map<String, String> trackedEntityAttributeIds;
   
-//  private Map<String, String> programTrackedEntityAttributeIds;
+  private DHIS2IdCache idCache;
   
-  private String programId = null;
+//  private Map<String, String> programTrackedEntityAttributeIds;
   
   private final int pageSize = 1000;
   
   private long teiCount;
   
+  static String[] skipAttrs = new String[]{
+    MdBusinessDTO.CACHEALGORITHM, MdBusinessDTO.TABLENAME, MdBusinessDTO.KEYNAME,
+    MdBusinessDTO.BASECLASS, MdBusinessDTO.BASESOURCE, MdBusinessDTO.DTOCLASS, MdBusinessDTO.DTOSOURCE, MdBusinessDTO.STUBCLASS, MdBusinessDTO.STUBDTOCLASS, MdBusinessDTO.STUBDTOSOURCE, MdBusinessDTO.STUBSOURCE,
+    MdAttributeConcreteDTO.GETTERVISIBILITY, MdAttributeConcreteDTO.INDEXTYPE, MdAttributeConcreteDTO.INDEXNAME, MdAttributeConcreteDTO.COLUMNNAME,
+    MdAttributeConcreteDTO.DEFININGMDCLASS, MdAttributeConcreteDTO.ENTITYDOMAIN, MdAttributeConcreteDTO.OWNER, MdAttributeConcreteDTO.SETTERVISIBILITY, MdAttributeConcreteDTO.SITEMASTER
+  };
+  
   public MdBusinessExporter(MdBusiness mdbiz, AbstractDHIS2Connector dhis2)
   {
     this.mdbiz = mdbiz;
-    this.converter = new MdBusinessToTrackerJson(mdbiz);
     this.dhis2 = dhis2;
+    this.idCache = new DHIS2IdCache(dhis2);
+    this.converter = new MdBusinessToTrackerJson(mdbiz, idCache);
   }
   
   public void xport(MdClass mdClass)
@@ -95,11 +108,71 @@ public class MdBusinessExporter
   
   public void exportToTracker()
   {
+    trackedEntityAttributeIds = new HashMap<String, String>();
+    
     validateExport();
-    createTrackedEntity();
-    createTrackedEntityAttributes();
-//    createProgramTrackedEntityAttributes(); // only works on 2.25
-    createProgram();
+    
+    QueryFactory qf = new QueryFactory();
+    DHIS2IdMappingQuery mapQ = new DHIS2IdMappingQuery(qf);
+    mapQ.WHERE(mapQ.getRunwayId().EQ(mdbiz.getId()));
+    long count = mapQ.getCount();
+    
+    if (count == 0)
+    {
+      createTrackedEntity();
+      createTrackedEntityAttributes();
+//      createProgramTrackedEntityAttributes(); // only works on 2.25
+      createProgram();
+    }
+    else
+    {
+      OIterator<? extends DHIS2IdMapping> it = mapQ.getIterator();
+      DHIS2IdMapping mapping;
+      try
+      {
+        mapping = it.next();
+      }
+      finally
+      {
+        it.close();
+      }
+      
+      String[] split = mapping.getDhis2Id().split(":");
+      
+      trackedEntityId = split[1];
+      converter.setTrackedEntityId(trackedEntityId);
+      converter.setProgramId(split[0]);
+      
+      List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
+      for (MdAttribute mdAttr : mdAttrs)
+      {
+        if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
+            !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
+          )
+        {
+          QueryFactory qf2 = new QueryFactory();
+          DHIS2IdMappingQuery mapQ2 = new DHIS2IdMappingQuery(qf2);
+          mapQ2.WHERE(mapQ2.getRunwayId().EQ(mdAttr.getId()));
+          OIterator<? extends DHIS2IdMapping> it2 = mapQ2.getIterator();
+          
+          try
+          {
+            if (it2.hasNext())
+            {
+              DHIS2IdMapping attrMapping = it2.next();
+              
+              trackedEntityAttributeIds.put(attrMapping.getRunwayId(), attrMapping.getDhis2Id());
+            }
+          }
+          catch (Exception ex)
+          {
+            it2.close();
+          }
+        }
+      }
+      
+//      linkClassifiersToOptions();
+    }
     createAndEnrollTrackedEntityInstances();
   }
   
@@ -148,6 +221,8 @@ public class MdBusinessExporter
   
   protected void createAndEnrollTrackedEntityInstances()
   {
+    String programId = converter.getProgramId();
+    
     List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
     
     QueryFactory qf = new QueryFactory();
@@ -250,8 +325,8 @@ public class MdBusinessExporter
       
       jsonMetadata.put("trackedEntityInstances", trackedEntityInstances);
       
-      JSONObject response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
-      DHIS2ResponseProcessor.validateImportSummaryResponse(response);
+      HTTPResponse response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
+      DHIS2TrackerResponseProcessor.validateImportSummaryResponse(response);
       
       page = page + 1;
     }
@@ -265,169 +340,67 @@ public class MdBusinessExporter
     trackedEntities.put(converter.getTrackedEntityJson());
     jsonMetadata.put("trackedEntities", trackedEntities);
     
-    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
+    HTTPResponse response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, false);
     
-    getTrackedEntityId();
-  }
-  
-  protected void getTrackedEntityId()
-  {
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
-      new NameValuePair("assumeTrue", "false"),
-      new NameValuePair("trackedEntities", "true")
-    });
-    
-    if (response != null && response.has("trackedEntities"))
-    {
-      JSONArray trackedEntities = response.getJSONArray("trackedEntities");
-      
-      for (int i = 0; i < trackedEntities.length(); ++i)
-      {
-        JSONObject trackedEntity = trackedEntities.getJSONObject(i);
-        
-        if (trackedEntity.getString("name").equals(mdbiz.getDisplayLabel().getValue()))
-        {
-          trackedEntityId = trackedEntity.getString("id");
-          break;
-        }
-      }
-    }
-    
-    if (trackedEntityId == null)
-    {
-      throw new RuntimeException("Unable to find previously created TrackedEntitiy.");
-    }
+    this.trackedEntityId = converter.getTrackedEntityId();
   }
   
   @Transaction
   protected void createTrackedEntityAttributes()
   {
-    JSONObject metadata = converter.getTrackedEntityAttributes();
+    converter.setTrackedEntityAttributeIds(trackedEntityAttributeIds);
+    JSONObject metadata = converter.getTrackedEntityAttributesJSON();
     
-    JSONObject response = dhis2.httpPost("api/25/metadata", metadata.toString());
+    HTTPResponse response = dhis2.httpPost("api/25/metadata", metadata.toString());
+    DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, true);
     
-    DHIS2ResponseProcessor.validateTypeReportResponse(response, true);
-    
-    getTrackedEntityAttributeIds();
+    this.trackedEntityAttributeIds = converter.getTrackedEntityAttributeIds();
   }
   
-  static String[] skipAttrs = new String[]{
-    MdBusinessDTO.CACHEALGORITHM, MdBusinessDTO.TABLENAME, MdBusinessDTO.KEYNAME,
-    MdBusinessDTO.BASECLASS, MdBusinessDTO.BASESOURCE, MdBusinessDTO.DTOCLASS, MdBusinessDTO.DTOSOURCE, MdBusinessDTO.STUBCLASS, MdBusinessDTO.STUBDTOCLASS, MdBusinessDTO.STUBDTOSOURCE, MdBusinessDTO.STUBSOURCE,
-    MdAttributeConcreteDTO.GETTERVISIBILITY, MdAttributeConcreteDTO.INDEXTYPE, MdAttributeConcreteDTO.INDEXNAME, MdAttributeConcreteDTO.COLUMNNAME,
-    MdAttributeConcreteDTO.DEFININGMDCLASS, MdAttributeConcreteDTO.ENTITYDOMAIN, MdAttributeConcreteDTO.OWNER, MdAttributeConcreteDTO.SETTERVISIBILITY, MdAttributeConcreteDTO.SITEMASTER
-  };
-  protected void getTrackedEntityAttributeIds()
-  {
-    trackedEntityAttributeIds = new HashMap<String, String>();
-    
-    List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
-    
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
-      new NameValuePair("assumeTrue", "false"),
-      new NameValuePair("trackedEntityAttributes", "true")
-    });
-    
-    boolean fatalResponse = false;
-    
-    if (response != null && response.has("trackedEntityAttributes"))
-    {
-      JSONArray TEAs = response.getJSONArray("trackedEntityAttributes");
-      
-      if (TEAs.length() == 0)
-      {
-        fatalResponse = true;
-      }
-      
-      for (int i = 0; i < TEAs.length(); ++i)
-      {
-        JSONObject TEA = TEAs.getJSONObject(i);
-        
-        for (MdAttribute mdAttr : mdAttrs)
-        {
-          if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
-              !ArrayUtils.contains(skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) &&
-              TEA.getString("name").equals(mdAttr.getDisplayLabel().getValue())
-            )
-          {
-            trackedEntityAttributeIds.put(mdAttr.getId(), TEA.getString("id"));
-          }
-        }
-      }
-    }
-    else
-    {
-      fatalResponse = true;
-    }
-    
-    if (fatalResponse || trackedEntityAttributeIds.values().size() == 0)
-    {
-      throw new RuntimeException("Unable to find previously created TrackedEntitiyAttributes.");
-    }
-  }
-  
-  
-/*
- * This code only works on 2.25
- */
-//  protected void createProgramTrackedEntityAttributes()
+  /**
+   * Call this method for an update or 'createTrackedEntityAttributes' for new.
+   */
+//  protected void linkClassifiersToOptions()
 //  {
-//    JSONObject jsonMetadata = new JSONObject();
+//    ArrayList<Classifier> rootsToLink = new ArrayList<Classifier>();
 //    
-//    jsonMetadata.put("programTrackedEntityAttributes", converter.getProgramTrackedEntityAttributes(programId, trackedEntityAttributeIds));
-//    
-//    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-//    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
-//    
-//    getProgramTrackedEntityAttributeIds();
-//  }
-//  protected void getProgramTrackedEntityAttributeIds()
-//  {
-//    programTrackedEntityAttributeIds = new HashMap<String, String>();
-//    
-//    List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
-//    
-//    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
-//      new NameValuePair("assumeTrue", "false"),
-//      new NameValuePair("programTrackedEntityAttributes", "true")
-//    });
-//    
-//    boolean fatalResponse = false;
-//    
-//    if (response != null && response.has("programTrackedEntityAttributes"))
+//    OIterator<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute();
+//    for (MdAttribute mdAttr : mdAttrs)
 //    {
-//      JSONArray PTEAs = response.getJSONArray("programTrackedEntityAttributes");
-//      
-//      if (PTEAs.length() == 0)
+//      if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
+//          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME))
+//        )
 //      {
-//        fatalResponse = true;
-//      }
-//      
-//      for (int i = 0; i < PTEAs.length(); ++i)
-//      {
-//        JSONObject PTEA = PTEAs.getJSONObject(i);
-//        
-//        for (MdAttribute mdAttr : mdAttrs)
+//        if (mdAttr instanceof MdAttributeReference)
 //        {
-//          if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
-//              !ArrayUtils.contains(skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) &&
-//              ( PTEA.has("trackedEntityAttribute") && PTEA.getJSONObject("trackedEntityAttribute").getString("id").equals(trackedEntityAttributeIds.get(mdAttr.getId())) )
-//            )
+//          MdBusiness reference = ((MdAttributeReference) mdAttr).getMdBusiness();
+//          
+//          if (reference.definesType().equals(Classifier.CLASS))
 //          {
-//            programTrackedEntityAttributeIds.put(mdAttr.getId(), PTEA.getString("id"));
+//            Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getId()));
+//            
+//            String pack = root.getClassifierPackage();
+//            
+//            if (!pack.startsWith(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX))
+//            {
+//              // If its not prefixed then its not linked to anything in DHIS2
+//              rootsToLink.add(root);
+//            }
 //          }
 //        }
 //      }
 //    }
-//    else
-//    {
-//      fatalResponse = true;
-//    }
 //    
-//    if (fatalResponse || programTrackedEntityAttributeIds.values().size() == 0)
+//    for (Classifier root : rootsToLink)
 //    {
-//      throw new RuntimeException("Unable to find previously created ProgramTrackedEntitiyAttributes.");
+//      OIterator<? extends Classifier> cit = root.getAllIsAChild();
+//      while (cit.hasNext())
+//      {
+//        Classifier child = cit.next();
+//        
+//        
+//      }
 //    }
 //  }
   
@@ -440,14 +413,17 @@ public class MdBusinessExporter
   {
     String categoryComboId = null;
     
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("categoryCombos", "true")
     });
+    DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
     
-    if (response != null && response.has("categoryCombos"))
+    JSONObject json = response.getJSON();
+    
+    if (json != null && json.has("categoryCombos"))
     {
-      JSONArray combos = response.getJSONArray("categoryCombos");
+      JSONArray combos = json.getJSONArray("categoryCombos");
       
       for (int i = 0; i < combos.length(); ++i)
       {
@@ -474,41 +450,123 @@ public class MdBusinessExporter
     JSONObject jsonMetadata = new JSONObject();
     
     JSONArray programs = new JSONArray();
-    programs.put(converter.getProgramJson(trackedEntityId, getCategoryComboId("default"), trackedEntityAttributeIds));
+    programs.put(converter.getProgramJson(getCategoryComboId("default"), trackedEntityAttributeIds));
     jsonMetadata.put("programs", programs);
     
-    JSONObject response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
-    DHIS2ResponseProcessor.validateTypeReportResponse(response, false);
-    
-    getProgramId();
+    HTTPResponse response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, false);
   }
   
-  protected void getProgramId()
-  {
-    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
-      new NameValuePair("assumeTrue", "false"),
-      new NameValuePair("programs", "true")
-    });
-    
-    if (response != null && response.has("programs"))
-    {
-      JSONArray programs = response.getJSONArray("programs");
-      
-      for (int i = 0; i < programs.length(); ++i)
-      {
-        JSONObject program = programs.getJSONObject(i);
-        
-        if (program.getString("name").equals(mdbiz.getDisplayLabel().getValue() + " Program") && program.getJSONObject("trackedEntity").getString("id").equals(trackedEntityId))
-        {
-          programId = program.getString("id");
-          break;
-        }
-      }
-    }
-    
-    if (programId == null)
-    {
-      throw new RuntimeException("Unable to find previously created Program.");
-    }
-  }
+  
+  /**
+   * I wrote this code back when I was creating the DHIS2 objects and then fetching their ids. Now we just generate it and tell DHIS2 what the id is.
+   * I'm keeping it here (for now) because it might be useful later (as a starting point) in case we need to fetch any of these objects for any reason.
+   * This code was originally written on 2.25 but I think it also works on 2.27.
+   */
+//protected void getTrackedEntityAttributeIds()
+//{
+//trackedEntityAttributeIds = new HashMap<String, String>();
+//
+//List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
+//
+//JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+//  new NameValuePair("assumeTrue", "false"),
+//  new NameValuePair("trackedEntityAttributes", "true")
+//});
+//
+//boolean fatalResponse = false;
+//
+//if (response != null && response.has("trackedEntityAttributes"))
+//{
+//  JSONArray TEAs = response.getJSONArray("trackedEntityAttributes");
+//  
+//  if (TEAs.length() == 0)
+//  {
+//    fatalResponse = true;
+//  }
+//  
+//  for (int i = 0; i < TEAs.length(); ++i)
+//  {
+//    JSONObject TEA = TEAs.getJSONObject(i);
+//    
+//    for (MdAttribute mdAttr : mdAttrs)
+//    {
+//      if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
+//          !ArrayUtils.contains(skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) &&
+//          TEA.getString("name").equals(mdAttr.getDisplayLabel().getValue())
+//        )
+//      {
+//        trackedEntityAttributeIds.put(mdAttr.getId(), TEA.getString("id"));
+//      }
+//    }
+//  }
+//}
+//else
+//{
+//  fatalResponse = true;
+//}
+//
+//if (fatalResponse || trackedEntityAttributeIds.values().size() == 0)
+//{
+//  throw new RuntimeException("Unable to find previously created TrackedEntitiyAttributes.");
+//}
+//}
+//  
+//  protected void getTrackedEntityId()
+//  {
+//    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+//      new NameValuePair("assumeTrue", "false"),
+//      new NameValuePair("trackedEntities", "true")
+//    });
+//    
+//    if (response != null && response.has("trackedEntities"))
+//    {
+//      JSONArray trackedEntities = response.getJSONArray("trackedEntities");
+//      
+//      for (int i = 0; i < trackedEntities.length(); ++i)
+//      {
+//        JSONObject trackedEntity = trackedEntities.getJSONObject(i);
+//        
+//        if (trackedEntity.getString("name").equals(mdbiz.getDisplayLabel().getValue()))
+//        {
+//          trackedEntityId = trackedEntity.getString("id");
+//          break;
+//        }
+//      }
+//    }
+//    
+//    if (trackedEntityId == null)
+//    {
+//      throw new RuntimeException("Unable to find previously created TrackedEntitiy.");
+//    }
+//  }
+//  
+//  protected void getProgramId()
+//  {
+//    JSONObject response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+//      new NameValuePair("assumeTrue", "false"),
+//      new NameValuePair("programs", "true")
+//    });
+//    
+//    if (response != null && response.has("programs"))
+//    {
+//      JSONArray programs = response.getJSONArray("programs");
+//      
+//      for (int i = 0; i < programs.length(); ++i)
+//      {
+//        JSONObject program = programs.getJSONObject(i);
+//        
+//        if (program.getString("name").equals(mdbiz.getDisplayLabel().getValue() + " Program") && program.getJSONObject("trackedEntity").getString("id").equals(trackedEntityId))
+//        {
+//          programId = program.getString("id");
+//          break;
+//        }
+//      }
+//    }
+//    
+//    if (programId == null)
+//    {
+//      throw new RuntimeException("Unable to find previously created Program.");
+//    }
+//  }
 }

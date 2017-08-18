@@ -224,6 +224,10 @@ public abstract class LayerPublisher
         writer.endObject();
       }
     }
+    catch(JSONException e)
+    {
+    	throw new ProgrammingErrorException(e);
+    }
     finally
     {
       iterator.close();

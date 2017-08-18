@@ -82,6 +82,56 @@ export class LocationPageComponent implements OnInit, LocalValidator {
       
     this.setLocationFieldAutoAssignment();
   }
+  
+  getCoordinateFieldsFromSource(): Field[] {
+    let coordinateFields: any[] = [];
+    let latFields: Field[] = [];
+    let longFields: Field[] = [];
+    if(this.sheet){
+      for(let i = 0; i < this.sheet.fields.length; i++) {
+        let field = this.sheet.fields[i];
+          
+        if(field.type == 'LATITUDE'){
+        	latFields.push(field);
+        }
+        else if(field.type == 'LONGITUDE'){
+        	longFields.push(field);
+        }
+      }
+      
+      if(latFields.length > 0 && longFields.length >0){
+        coordinateFields.push(latFields);
+        coordinateFields.push(longFields);
+      }
+    }
+    
+    return coordinateFields;
+  }
+  
+  setDefaults(): void {
+	  if(this.attribute && 
+			  (!this.attribute.latForLocationAssignment || this.attribute.latForLocationAssignment.length < 1) && 
+			  (!this.attribute.longForLocationAssignment ||this.attribute.longForLocationAssignment.length < 1)){
+		  
+		let latFields: Field[] = [];
+	    let longFields: Field[] = [];
+	    if(this.sheet){
+	      for(let i = 0; i < this.sheet.fields.length; i++) {
+	        let field = this.sheet.fields[i];
+	          
+	        if(field.type == 'LATITUDE'){
+	        	latFields.push(field);
+	        }
+	        else if(field.type == 'LONGITUDE'){
+	        	longFields.push(field);
+	        }
+	      }
+	    }
+	      
+        this.attribute.latForLocationAssignment = latFields[0].label;
+        this.attribute.longForLocationAssignment = longFields[0].label;
+      }
+  }
     
     
   /**
@@ -310,6 +360,10 @@ export class LocationPageComponent implements OnInit, LocalValidator {
     attribute.universal = '';
     attribute.id = '';	  
     attribute.fields = {};
+    attribute.useCoordinatesForLocationAssignment = false;
+    attribute.coordinatesForLocationAssignmentOptions = this.getCoordinateFieldsFromSource();
+    attribute.latForLocationAssignment = null;
+    attribute.longForLocationAssignment = null;
     
     return attribute;
   }
@@ -401,12 +455,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
               
         // There is only one or no universal options (i.e. context locations) so just set the field
         // to save a click for the user
-        if(this.universalOptions.length < 1){
-          // calling newAttribute() is safe because there are no other location fields so the 
-          // location attribute will just be set to null.
-          this.newAttribute(); 
-        }
-        else{
+        if(this.universalOptions.length > 0){
           // Attempting auto-assignment of context fields
           this.constructContextFieldsForAttribute(field);
         }
@@ -464,12 +513,6 @@ export class LocationPageComponent implements OnInit, LocalValidator {
           
           fieldsSetToUniversalOptions.push(unassignedLocationFieldsForThisUniversal[0].name);
         }
-      }
-          
-      // set the location attribute only if all the universal options have been set automatically
-      // i.e. The # of universal options must match the # of fields set
-      if(fieldsSetToUniversalOptions.length === this.universalOptions.length){
-        this.newAttribute();
       }
           
       this.refreshUnassignedFields(fieldsSetToUniversalOptions);
@@ -562,12 +605,13 @@ export class LocationPageComponent implements OnInit, LocalValidator {
   
   
   localValidate(value: string, config: string): {[key : string] : any} {
-    if(config == 'label') {
+    if(config === 'label') {
       return this.validateLabel(value);  
     }
     
     return null;
   }
+  
   
   validateLabel(label: string): {[key : string] : any} {
     if(this.sheet != null) {

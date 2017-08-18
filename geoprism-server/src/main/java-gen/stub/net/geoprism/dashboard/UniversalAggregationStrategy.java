@@ -82,14 +82,14 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
       log.debug("SLD for Layer [%s], this:\n" + valueQuery.getSQL());
     }
 
-    if (valueQuery.getCount() == 0)
-    {
-      EmptyLayerInformation info = new EmptyLayerInformation();
-      info.setLayerName(layer.getName());
-      info.apply();
-
-      info.throwIt();
-    }
+//    if (valueQuery.getCount() == 0)
+//    {
+//      EmptyLayerInformation info = new EmptyLayerInformation();
+//      info.setLayerName(layer.getName());
+//      info.apply();
+//
+//      info.throwIt();
+//    }
 
     // Set the GeoID and the Geometry attribute for the second query
     GeoEntityQuery entityQuery = new GeoEntityQuery(geometryQuery);

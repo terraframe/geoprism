@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 714460506)
+@com.runwaysdk.business.ClassSignature(hash = -1266611019)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +12,9 @@ public abstract class TargetFieldGeoEntityBindingBase extends net.geoprism.data.
 {
   public final static String CLASS = "net.geoprism.data.etl.TargetFieldGeoEntityBinding";
   public static java.lang.String GEOENTITY = "geoEntity";
-  private static final long serialVersionUID = 714460506;
+  public static java.lang.String LATITUDEATTRIBUTENAME = "latitudeAttributeName";
+  public static java.lang.String LONGITUDEATTRIBUTENAME = "longitudeAttributeName";
+  private static final long serialVersionUID = -1266611019;
   
   public TargetFieldGeoEntityBindingBase()
   {
@@ -74,6 +58,62 @@ public abstract class TargetFieldGeoEntityBindingBase extends net.geoprism.data.
     else
     {
       setValue(GEOENTITY, value.getId());
+    }
+  }
+  
+  public String getLatitudeAttributeName()
+  {
+    return getValue(LATITUDEATTRIBUTENAME);
+  }
+  
+  public void validateLatitudeAttributeName()
+  {
+    this.validateAttribute(LATITUDEATTRIBUTENAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getLatitudeAttributeNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.etl.TargetFieldGeoEntityBinding.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(LATITUDEATTRIBUTENAME);
+  }
+  
+  public void setLatitudeAttributeName(String value)
+  {
+    if(value == null)
+    {
+      setValue(LATITUDEATTRIBUTENAME, "");
+    }
+    else
+    {
+      setValue(LATITUDEATTRIBUTENAME, value);
+    }
+  }
+  
+  public String getLongitudeAttributeName()
+  {
+    return getValue(LONGITUDEATTRIBUTENAME);
+  }
+  
+  public void validateLongitudeAttributeName()
+  {
+    this.validateAttribute(LONGITUDEATTRIBUTENAME);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF getLongitudeAttributeNameMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.etl.TargetFieldGeoEntityBinding.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(LONGITUDEATTRIBUTENAME);
+  }
+  
+  public void setLongitudeAttributeName(String value)
+  {
+    if(value == null)
+    {
+      setValue(LONGITUDEATTRIBUTENAME, "");
+    }
+    else
+    {
+      setValue(LONGITUDEATTRIBUTENAME, value);
     }
   }
   

@@ -508,7 +508,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     }
     else if (dashboard != null)
     {
-      List<GeoEntity> countries = dashboard.getCountries();
+      List<ValueObject> countries = dashboard.getCountries();
 
       MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
       MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
@@ -524,17 +524,17 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       boolean first = true;
 
-      for (GeoEntity country : countries)
+      for (ValueObject country : countries)
       {
         if (first)
         {
-          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
 
           first = false;
         }
         else
         {
-          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
         }
       }
 
@@ -551,7 +551,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     if (dashboard != null)
     {
-      List<GeoEntity> countries = dashboard.getCountries();
+      List<ValueObject> countries = dashboard.getCountries();
       List<? extends DashboardLayer> dashboardLayers = this.getLayers();
 
       if (dashboardLayers.size() > 0)
@@ -578,17 +578,17 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
         boolean first = true;
 
-        for (GeoEntity country : countries)
+        for (ValueObject country : countries)
         {
           if (first)
           {
-            sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+            sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
 
             first = false;
           }
           else
           {
-            sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getId() + "'");
+            sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
           }
         }
 

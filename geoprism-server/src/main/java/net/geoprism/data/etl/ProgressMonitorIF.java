@@ -24,5 +24,7 @@ public interface ProgressMonitorIF
   
   public void setState(DataImportState state);
   
+  public DataImportState getState();
+  
   public void setCurrentRow(double rowNum);
 }

@@ -48,7 +48,7 @@
           <div class="box" *ngIf="longitudes.length != 1">
             <select class="select-area" [name]="i + '-longitude'" [(ngModel)]="coordinate.longitude" required>
               <option value=""></option>
-              <option *ngFor="let opt of longitudes" [value]="opt.value">{{opt.label}}</option>              
+              <option *ngFor="let opt of longitudes" [value]="opt.label">{{opt.label}}</option>              
             </select>
           </div>
           <div class="inline-text" style="padding-right: 26px" *ngIf="longitudes.length == 1">

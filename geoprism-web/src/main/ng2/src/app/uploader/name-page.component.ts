@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component, Input} from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 
 import { Sheet, Options, Field, Page } from './uploader-model';
 
@@ -36,6 +36,16 @@ export class NamePageComponent implements RemoteValidator {
   @Input() page: Page;  
 
   constructor(private service: DatasetService) { }
+  
+  ngOnInit(): void {
+	  //
+	  // Optomizing user experience
+	  //
+	  if(this.options && this.options.countries && this.options.countries.length > 0){
+		  // select the first options to make it a little easier for the user
+		  this.sheet.country = this.options.countries[0].value;
+	  }
+  }
  
   validate(value:string): Promise<{[key : string] : any}> {
     return this.service.validateDatasetName(value, '')

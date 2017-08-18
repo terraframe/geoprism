@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,94 +35,28 @@ import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.Pair;
 
-public class DHIS2ResponseProcessor
+public class DHIS2TrackerResponseProcessor
 {
-  private static Logger logger = LoggerFactory.getLogger(DHIS2ResponseProcessor.class);
+  private static Logger logger = LoggerFactory.getLogger(DHIS2TrackerResponseProcessor.class);
   
-  
-  // This code only works on 2.25 (regardless of whatever the hell the api version is)
-//  public static void validateImportSummaryResponse(JSONObject response)
-//  {
-////    {
-////      "ignored": 0,
-////      "responseType": "ImportSummaries",
-////      "deleted": 0,
-////      "imported": 0,
-////      "importSummaries": [
-////        {
-////          "responseType": "ImportSummary",
-////          "importCount": {
-////            "ignored": 0,
-////            "deleted": 0,
-////            "imported": 0,
-////            "updated": 0
-////          },
-////          "conflicts": [
-////            {
-////              "value": "No org unit ID in tracked entity instance object."
-////            }
-////          ],
-////          "status": "SUCCESS"
-////        },
-////    }
-//    
-//    if (!response.has("responseType") || !response.getString("responseType").equals("ImportSummaries"))
-//    {
-//      DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-//      ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
-//      throw ex;
-//    }
-//    
-//    JSONArray summaries = response.getJSONArray("importSummaries");
-//    
-//    for (int i = 0; i < summaries.length(); ++i)
-//    {
-//      JSONObject summary = summaries.getJSONObject(i);
-//      
-//      String status = summary.getString("status");
-//      if (!status.equals("SUCCESS"))
-//      {
-//        DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-//        ex.setDhis2Response(summary.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
-//        throw ex;
-//      }
-//      
-//      if (summary.has("conflicts"))
-//      {
-//        JSONArray conflicts = summary.getJSONArray("conflicts");
-//        
-//        for (int j = 0; j < conflicts.length(); ++j)
-//        {
-//          JSONObject conflict = conflicts.getJSONObject(j);
-//          String value = conflict.getString("value");
-//          
-//          if (value.contains("No org unit"))
-//          {
-//            DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-//            ex.setDhis2Response(value);
-//            throw ex;
-//          }
-//        }
-//      }
-//      
-//      if (summary.has("enrollments"))
-//      {
-//        JSONObject enrollments = summary.getJSONObject("enrollments");
-//        
-//        validateImportSummaryResponse(enrollments);
-//      }
-//    }
-//  }
-  
+  public static void validateStatusCode(HTTPResponse response)
+  {
+    int statusCode = response.getStatusCode();
+    
+    if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED)
+    {
+      throw new RuntimeException("Invalid status code [" + statusCode + "].");
+    }
+  }
   
   // This code works on the 25 api version of DHIS2 2.27 (what a mess)
-  public static void validateImportSummaryResponse(JSONObject response)
+  public static void validateImportSummaryResponse(HTTPResponse response)
   {
 //    {
 //      "response": {
 //        "ignored": 0,
 //        "importOptions": {
-//          "strictAttributeOptionCombos": false,
+//          "strictAttributeOptionCombos": false,TTPREs
 //          "dryRun": false,
 //          "skipExistingCheck": false,
 //          "datasetAllowsPeriods": false,
@@ -149,49 +84,99 @@ public class DHIS2ResponseProcessor
 //      "status": "OK"
 //    }
     
-    if (response.has("response"))
+    JSONObject json = response.getJSON();
+    int statusCode = response.getStatusCode();
+    
+    if (json.has("response"))
     {
-      if (response.has("status") && !response.getString("status").equals("OK"))
-      {
-        DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-        if (response.has("message"))
-        {
-          ex.setDhis2Response(response.getString("message"));
-        }
-        else
-        {
-          ex.setDhis2Response(response.getString("status"));
-        }
-        throw ex;
-      }
-      
-      validateImportSummaryResponse(response.getJSONObject("response"));
+      validateImportSummaryResponse(new HTTPResponse(json.getJSONObject("response"), statusCode));
       return;
     }
     
-    if (!response.has("responseType") || !response.getString("responseType").equals("ImportSummaries"))
+    if (!json.has("responseType") || !json.getString("responseType").equals("ImportSummaries"))
     {
       DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-//      ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
+      if (json.has("message"))
+      {
+        ex.setDhis2Response(json.getString("message"));
+      }
+      else if (json.has("responseType"))
+      {
+        ex.setDhis2Response(json.getString("responseType"));
+      }
       throw ex;
     }
     
+    if (json.has("importSummaries"))
+    {
+      JSONArray summaries = json.getJSONArray("importSummaries");
+    
+      for (int i = 0; i < summaries.length(); ++i)
+      {
+        JSONObject summary = summaries.getJSONObject(i);
+        
+        if (summary.has("conflicts"))
+        {
+          JSONArray conflicts = summary.getJSONArray("conflicts");
+          
+          for (int j = 0; j < conflicts.length(); ++j)
+          {
+            JSONObject conflict = conflicts.getJSONObject(j);
+            String value = conflict.getString("value");
+            String object = conflict.getString("object");
+            
+            DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+            ex.setDhis2Response(value + ". [" + object + "]");
+            throw ex;
+            
+//                if (value.contains("No org unit"))
+//                {
+//                  DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+//                  ex.setDhis2Response(value);
+//                  throw ex;
+//                }
+//                else if (object.equals("Attribute.value") && value.contains("is not a valid option for attribute") && value.contains("option set"))
+//                {
+//                  DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+//                  ex.setDhis2Response("The specified value does not match the expected "); // TODO : Localize
+//                  throw ex;
+//                }
+          }
+        }
+        
+        if (summary.has("enrollments"))
+        {
+          JSONObject enrollments = summary.getJSONObject("enrollments");
+          
+          validateImportSummaryResponse(new HTTPResponse(enrollments, statusCode));
+        }
+        
+        String status = summary.getString("status");
+        if (!status.equals("SUCCESS"))
+        {
+          DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
+          ex.setDhis2Response(summary.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
+          throw ex;
+        }
+      }
+    }
+    
     int modified = 0;
-    if (response.has("deleted"))
+    if (json.has("deleted"))
     {
-      modified = modified + response.getInt("deleted");
+      modified = modified + json.getInt("deleted");
     }
-    if (response.has("imported"))
+    if (json.has("imported"))
     {
-      modified = modified + response.getInt("imported");
+      modified = modified + json.getInt("imported");
     }
-    if (response.has("updated"))
+    if (json.has("updated"))
     {
-      modified = modified + response.getInt("updated");
+      modified = modified + json.getInt("updated");
     }
-//    if (response.has("ignored")) // TODO : Should we throw an error when they ignore us?
+//    if (json.has("ignored")) // TODO : Should we throw an error when they ignore us?
 //    {
-//      modified = modified + response.getInt("updated");
+//      modified = modified + json.getInt("updated");
 //    }
     
     if (modified == 0)
@@ -200,9 +185,11 @@ public class DHIS2ResponseProcessor
       ex.setDhis2Response("No objects were imported"); // TODO : Localize
       throw ex;
     }
+    
+    validateStatusCode(response);
   }
   
-  public static void validateTypeReportResponse(JSONObject response, boolean errorOnAlreadyExists)
+  public static void validateTypeReportResponse(HTTPResponse response, boolean errorOnAlreadyExists)
   {
 //  {
 //  "status": "ERROR",
@@ -239,18 +226,22 @@ public class DHIS2ResponseProcessor
 //    "ignored": 1
 //  }
 //}
-    if (!response.has("status"))
+    
+    JSONObject json = response.getJSON();
+    int statusCode = response.getStatusCode();
+    
+    if (!json.has("status"))
     {
       DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-      ex.setDhis2Response(response.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
+      ex.setDhis2Response(json.toString().substring(0, 1000)); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
       throw ex;
     }
     
     List<String> attrErrs = new ArrayList<String>();
     
-    if (response.getString("status").equals("ERROR"))
+    if (json.getString("status").equals("ERROR"))
     {
-      JSONArray typeReports = response.getJSONArray("typeReports");
+      JSONArray typeReports = json.getJSONArray("typeReports");
       
       for (int i = 0; i < typeReports.length(); ++i)
       {
@@ -346,6 +337,8 @@ public class DHIS2ResponseProcessor
       ex.setDhis2Attrs(StringUtils.join(attrNames, ", "));
       throw ex;
     }
+    
+    validateStatusCode(response);
   }
   
   /**

@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
@@ -236,16 +237,18 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
     try
     {
       Universal root = Universal.getRoot();
-      List<GeoEntity> countries = dashboard.getCountries();
+      List<ValueObject> countries = dashboard.getCountries();
       DashboardMap map = dashboard.getMap();
 
       JSONArray array = new JSONArray();
 
       Map<String, JSONObject> options = new LinkedHashMap<String, JSONObject>();
 
-      for (GeoEntity country : countries)
+      for (ValueObject country : countries)
       {
-        Universal universal = country.getUniversal();
+        String universalId = country.getValue("universalId");
+        String displayLabel = country.getValue("displayLabel");
+        Universal universal = Universal.get(universalId);
 
         List<Term> children = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
@@ -255,7 +258,7 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
           {
             JSONObject object = new JSONObject();
             object.put("value", child.getId());
-            object.put("label", country.getDisplayLabel().getValue() + " (" + child.getDisplayLabel().getValue() + ")");
+            object.put("label", displayLabel + " (" + child.getDisplayLabel().getValue() + ")");
 
             options.put(child.getId(), object);
           }

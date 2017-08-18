@@ -31,6 +31,8 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import net.geoprism.dhis2.response.HTTPResponse;
+
 public class DHIS2HTTPCredentialConnector extends AbstractDHIS2Connector
 {
   synchronized public void initialize()
@@ -42,7 +44,7 @@ public class DHIS2HTTPCredentialConnector extends AbstractDHIS2Connector
     client.getState().setCredentials(AuthScope.ANY, defaultcreds);
   }
   
-  public JSONObject httpGet(String url, NameValuePair[] params)
+  public HTTPResponse httpGet(String url, NameValuePair[] params)
   {
     if (!isInitialized())
     {
@@ -58,15 +60,10 @@ public class DHIS2HTTPCredentialConnector extends AbstractDHIS2Connector
     JSONObject response = new JSONObject();
     int statusCode = this.httpRequest(this.client, get, response);
     
-    if (statusCode != HttpStatus.SC_OK)
-    {
-      throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
-    }
-    
-    return response;
+    return new HTTPResponse(response, statusCode);
   }
   
-  public JSONObject httpPost(String url, String body)
+  public HTTPResponse httpPost(String url, String body)
   {
     if (!isInitialized())
     {
@@ -84,12 +81,7 @@ public class DHIS2HTTPCredentialConnector extends AbstractDHIS2Connector
       JSONObject response = new JSONObject();
       int statusCode = this.httpRequest(this.client, post, response);
 
-      if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_CREATED)
-      {
-        throw new RuntimeException("DHIS2 returned unexpected status code [" + statusCode + "].");
-      }
-      
-      return response;
+      return new HTTPResponse(response, statusCode);
     }
     catch (JSONException | UnsupportedEncodingException e)
     {

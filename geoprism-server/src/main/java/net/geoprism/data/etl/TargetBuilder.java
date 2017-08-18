@@ -244,7 +244,7 @@ public class TargetBuilder
         String universalId = cField.getString("universal");
 
         lowest = this.setLowest(lowest, universalId);
-
+        
         TargetFieldIF field = this.createMdGeoEntity(mdBusiness, sheetName, country, cField);
 
         definition.addField(field);
@@ -706,8 +706,10 @@ public class TargetBuilder
   {
     String label = cAttribute.getString("label");
     String universalId = cAttribute.getString("universal");
+    boolean useCoordinatesForLocationAssignment = cAttribute.getBoolean("useCoordinatesForLocationAssignment");
     Boolean aggregatable = this.getAggregatable(cAttribute);
     String attributeName = this.generateAttributeName(label);
+    
 
     MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
     mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
@@ -728,6 +730,15 @@ public class TargetBuilder
     field.setKey(mdClass.definesType() + "." + attributeName);
     field.setRoot(country);
     field.setAggregatable(aggregatable);
+    field.setUseCoordinatesForLocationAssignment(useCoordinatesForLocationAssignment);
+    
+    if(useCoordinatesForLocationAssignment)
+    {
+    	String latForLocationAssignment = cAttribute.getString("latForLocationAssignment");
+    	String longForLocationAssignment = cAttribute.getString("longForLocationAssignment");
+    	
+    	field.setCoordinateObject(latForLocationAssignment, longForLocationAssignment);
+    }
 
     JSONObject fields = cAttribute.getJSONObject("fields");
 

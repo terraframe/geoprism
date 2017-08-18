@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard;
 
@@ -843,49 +841,85 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
   }
 
-  public List<GeoEntity> getCountries()
+  public List<ValueObject> getCountries()
   {
     QueryFactory factory = new QueryFactory();
 
-    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
-    mwQuery.WHERE(mwQuery.getDashboard().EQ(this));
+    // MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
+    // mwQuery.WHERE(mwQuery.getDashboard().EQ(this));
+    //
+    // MappableClassQuery mcQuery = new MappableClassQuery(factory);
+    // mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+    //
+    // ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
+    // cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+    //
+    // AllowedInQuery aiQuery = new AllowedInQuery(factory);
+    // aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+    //
+    // UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    // aptQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    // aptQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
+    //
+    // GeoEntityQuery query = new GeoEntityQuery(factory);
+    // query.WHERE(query.getUniversal().EQ(aptQuery.getParentTerm()));
+    // query.ORDER_BY_ASC(query.getDisplayLabel().localize());
+    //
+    // OIterator<? extends GeoEntity> it = query.getIterator();
+    //
+    // try
+    // {
+    // List<? extends GeoEntity> entities = it.getAll();
+    //
+    // return new LinkedList<GeoEntity>(entities);
+    // }
+    // finally
+    // {
+    // it.close();
+    // }
 
-    MappableClassQuery mcQuery = new MappableClassQuery(factory);
-    mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
+    ValueQuery vQuery = new ValueQuery(factory);
 
-    ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
-    cuQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
+    MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(vQuery);
+    vQuery.WHERE(mwQuery.getDashboard().EQ(this));
 
-    AllowedInQuery aiQuery = new AllowedInQuery(factory);
-    aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
+    MappableClassQuery mcQuery = new MappableClassQuery(vQuery);
+    vQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
-    aptQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
-    aptQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
+    ClassUniversalQuery cuQuery = new ClassUniversalQuery(vQuery);
+    vQuery.WHERE(cuQuery.getParent().EQ(mcQuery));
 
-    GeoEntityQuery query = new GeoEntityQuery(factory);
-    query.WHERE(query.getUniversal().EQ(aptQuery.getParentTerm()));
-    query.ORDER_BY_ASC(query.getDisplayLabel().localize());
+    AllowedInQuery aiQuery = new AllowedInQuery(vQuery);
+    vQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    OIterator<? extends GeoEntity> it = query.getIterator();
+    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(vQuery);
+    vQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
+    vQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
+
+    GeoEntityQuery geQuery = new GeoEntityQuery(vQuery);
+    vQuery.WHERE(geQuery.getUniversal().EQ(aptQuery.getParentTerm()));
+    vQuery.ORDER_BY_ASC(geQuery.getDisplayLabel().localize());
+
+    vQuery.SELECT(geQuery.getId(), geQuery.getDisplayLabel().localize("displayLabel"), geQuery.getUniversal("universalId"));
+
+    OIterator<ValueObject> iterator = vQuery.getIterator();
 
     try
     {
-      List<? extends GeoEntity> entities = it.getAll();
-
-      return new LinkedList<GeoEntity>(entities);
+      return iterator.getAll();
     }
     finally
     {
-      it.close();
+      iterator.close();
     }
+
   }
 
   public ValueQuery getGeoEntitySuggestions(String text, Integer limit)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
-    List<GeoEntity> countries = this.getCountries();
+    List<ValueObject> countries = this.getCountries();
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
     GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
@@ -902,15 +936,17 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     Condition cCondition = null;
 
-    for (GeoEntity country : countries)
+    for (ValueObject country : countries)
     {
+      String countryId = country.getValue("id");
+
       if (cCondition == null)
       {
-        cCondition = aptQuery.getParentTerm().EQ(country);
+        cCondition = aptQuery.getParentTerm().EQ(countryId);
       }
       else
       {
-        cCondition = OR.get(cCondition, aptQuery.getParentTerm().EQ(country));
+        cCondition = OR.get(cCondition, aptQuery.getParentTerm().EQ(countryId));
       }
     }
 
@@ -1131,19 +1167,20 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public Map<String, Integer> getUniversalIndices()
   {
-    List<GeoEntity> countries = this.getCountries();
+    List<ValueObject> countries = this.getCountries();
 
     Map<String, Integer> indices = new HashMap<String, Integer>();
 
     int count = 0;
 
-    for (GeoEntity country : countries)
+    for (ValueObject country : countries)
     {
-      Universal universal = country.getUniversal();
+      String universalId = country.getValue("universalId");
+      Universal universal = Universal.get(universalId);
 
       Collection<Term> children = GeoEntityUtil.getOrderedDescendants(universal, AllowedIn.CLASS);
 
-      indices.put(universal.getId(), count++);
+      indices.put(universalId, count++);
 
       for (Term child : children)
       {
@@ -1569,13 +1606,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     object.put("editData", GeoprismUser.hasAccess(AccessConstants.EDIT_DATA));
     object.put("types", types);
 
-    List<GeoEntity> countries = this.getCountries();
+    List<ValueObject> countries = this.getCountries();
 
     JSONArray areas = new JSONArray();
 
-    for (GeoEntity country : countries)
+    for (ValueObject country : countries)
     {
-      areas.put(country.getDisplayLabel().getValue());
+      areas.put(country.getValue("displayLabel"));
     }
 
     object.put("focusAreas", areas);
@@ -1741,13 +1778,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
 
-      List<GeoEntity> countries = this.getCountries();
+      List<ValueObject> countries = this.getCountries();
 
       JSONArray areas = new JSONArray();
 
-      for (GeoEntity country : countries)
+      for (ValueObject country : countries)
       {
-        areas.put(country.getDisplayLabel().getValue());
+        areas.put(country.getValue("displayLabel"));
       }
 
       object.put("focusAreas", areas);

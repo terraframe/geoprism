@@ -79,6 +79,12 @@ public class ImportValidator implements ConverterIF
     this.attributes = new HashMap<String, DecimalAttribute>();
 
   }
+  
+  @Override
+  public TargetContextIF getTargetContext()
+  {
+    return this.context;
+  }
 
   @Override
   public void create(Transient source)

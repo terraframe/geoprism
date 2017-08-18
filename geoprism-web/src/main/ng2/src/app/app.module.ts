@@ -30,6 +30,8 @@ import { DropdownModule } from 'ng2-bootstrap'
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
+import { BooleanFieldComponent } from './core/boolean-field.component';
+
 import { LocalizeComponent } from './core/localize.component';
 import { LoadingBarComponent } from './core/loading-bar.component';
 import { MessageComponent } from './core/message.component';
@@ -51,6 +53,9 @@ import { LocalizationService } from './service/localization.service';
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
 import { IconService } from './service/icon.service';
+
+import { DHIS2Service } from './service/dhis2.service';
+import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
 
 // Upload wizard imports
 import { NavigationService } from './uploader/navigation.service';
@@ -93,11 +98,15 @@ import { EventHttpService } from './service/event-http.service';
     KeysPipe,
     LocalizePipe,
     
+    BooleanFieldComponent,
+    
     AutoCompleteDirective,
     AutoCompleteComponent,
     
     ConfirmModalDirective,
     ConfirmModalComponent,
+    
+    DHIS2IdFinderComponent,
     
     // Upload Wizard components
     UploadWizardComponent,
@@ -122,6 +131,7 @@ import { EventHttpService } from './service/event-http.service';
 	LocalizationService,
 	IdService,
     DatasetService,
+    DHIS2Service,
     CategoryService,
     IconService,
     UploadService,

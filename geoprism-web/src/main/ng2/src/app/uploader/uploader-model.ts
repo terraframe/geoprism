@@ -23,6 +23,7 @@ import { Pair } from '../model/pair';
 export class Universal {
   value: string;
   label: string; 
+  useCoordinatesForLocationAssignment: boolean;
 }
 
 export class Country {
@@ -65,6 +66,10 @@ export class LocationAttribute {
   fields: { [key:string]:string};
   id: string;
   editing: boolean;
+  useCoordinatesForLocationAssignment: boolean; 
+  coordinatesForLocationAssignmentOptions: Field[];
+  latForLocationAssignment = '';
+  longForLocationAssignment = '';
 }
 
 export class Locations {
