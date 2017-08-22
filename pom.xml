@@ -196,6 +196,7 @@
             <exclude>**/typings/**</exclude>
             <exclude>**/ng2/**</exclude>
             <exclude>**/webapp/dist/**</exclude>
+            <exclude>**/cldr/**</exclude>
 
             <!-- 3rd party library mishmashes. When we upgrade tomcat we can remove these with webjars. -->
             <exclude>**/webapp/3rd-party/**</exclude>
