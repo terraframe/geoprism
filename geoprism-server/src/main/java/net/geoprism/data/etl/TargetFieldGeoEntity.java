@@ -285,12 +285,12 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(parent));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);
-    synonymQuery.WHERE(synonymQuery.getDisplayLabel().localize().EQ(label));
+    synonymQuery.WHERE(synonymQuery.getDisplayLabel().localize().EQi(label));
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.getUniversal().EQ(universal));
     query.AND(query.getId().EQ(aptQuery.getChildTerm().getId()));
-    query.AND(OR.get(query.getDisplayLabel().localize().EQ(label), query.synonym(synonymQuery)));
+    query.AND(OR.get(query.getDisplayLabel().localize().EQi(label), query.synonym(synonymQuery)));
 
     OIterator<? extends GeoEntity> iterator = query.getIterator();
 
