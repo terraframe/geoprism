@@ -33,6 +33,7 @@ import net.geoprism.ontology.NonUniqueEntityResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.Business;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -43,6 +44,7 @@ import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -294,27 +296,37 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     try
     {
-      if (iterator.hasNext())
+      if(iterator.hasNext())
       {
         GeoEntity entity = iterator.next();
         // If there's another entity there is more than one location found given the criteria (ambiguous)
-        if (iterator.hasNext())
+        if(iterator.hasNext())
         {
 
-          GeoEntity spatiallyDeterminedEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj, iterator);
+          // first try coordinate (from spreadsheet) based nearest neighbor analysis
+          GeoEntity inferredEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj, iterator);
 
-          if (spatiallyDeterminedEntity != null)
+          if(inferredEntity != null)
           {
-            return spatiallyDeterminedEntity;
+            return inferredEntity;
           }
           else
           {
-            NonUniqueEntityResultException e = new NonUniqueEntityResultException();
-            e.setLabel(label);
-            e.setUniversal(universal.getDisplayLabel().getValue());
-            e.setParent(parent.getDisplayLabel().getValue());
-
-            throw e;
+        	  
+        	inferredEntity = findGeoEntityByParentComparison(label, parent, universal, iterator);
+        	
+        	if(inferredEntity != null)
+        	{
+        		return inferredEntity;
+        	}
+        	else{
+              NonUniqueEntityResultException e = new NonUniqueEntityResultException();
+              e.setLabel(label);
+              e.setUniversal(universal.getDisplayLabel().getValue());
+              e.setParent(parent.getDisplayLabel().getValue());
+              
+              throw e;
+        	}
           }
         }
 
@@ -367,25 +379,6 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       sql.append(" ORDER BY 2 ASC");
       sql.append(" LIMIT 1;");
 
-      // StringBuffer sql = new StringBuffer();
-      // sql.append("SELECT g.id, ST_Distance(g."
-      // .concat(comparativeTargetGeomColumnName)
-      // .concat(", ST_SetSRID(st_pointfromtext('POINT("
-      // .concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")
-      // )
-      // );
-      // sql.append(" FROM geo_entity g");
-      // sql.append(" WHERE g.universal = '".concat(universal.getId()).concat("'"));
-      // sql.append(" ORDER BY 2 ASC");
-      // sql.append(" LIMIT 1;");
-
-      // SELECT g.id, ST_Distance(g.geo_multi_polygon, ST_SetSRID(st_pointfromtext('POINT(-112.480092
-      // 36.016899)'),4326))
-      // FROM geo_entity g
-      // WHERE g.universal = 'i5iqjq0fms812sx0np4jbj7r7qqt1q30i1vpa2tywfkq0wgqelwt6ay8b49cnbch'
-      // ORDER BY 2 ASC
-      // LIMIT 1;
-
       ResultSet resultSet = Database.query(sql.toString());
 
       GeoEntity geoEntity = null;
@@ -409,6 +402,37 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     }
 
     return null;
+  }
+  
+  private GeoEntity findGeoEntityByParentComparison(String locationName, GeoEntity parentEntity, Universal universal, OIterator<? extends GeoEntity> geoEntities)
+  {
+	  OIterator<? extends Business> parentUniversals = universal.getParents(LocatedIn.CLASS);
+	  while(parentUniversals.hasNext())
+	  {
+		  Universal parentUniversal = (Universal) parentUniversals.next();
+		  
+		  if(parentUniversals.hasNext())
+		  {
+			  return null;  // We can't reduce ambigu
+		  }
+	  }
+	  
+	  while (geoEntities.hasNext())
+      {
+        GeoEntity entity = geoEntities.next();
+        OIterator<? extends Business> parents = entity.getParents(LocatedIn.CLASS);
+        
+        while(parents.hasNext())
+        {
+        	GeoEntity parent = (GeoEntity) parents.next();
+        	if(parent == parentEntity)
+        	{
+        		return entity;
+        	}
+        }
+      }
+	  
+	  return null;
   }
 
   @Override
