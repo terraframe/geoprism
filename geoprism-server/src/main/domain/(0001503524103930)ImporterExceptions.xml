@@ -1,0 +1,23 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+    
+      
+      <mdException name="net.geoprism.data.etl.excel.ExcelHeaderException" message="Error occured when importing the header value at column [{column}] row [{row}]: {msg}">
+        <attributes>
+          <text name="row" label="Row" />
+          <text name="column" label="Column" />
+          <text name="msg" label="Message"/>
+        </attributes>
+      </mdException>
+    
+    </create>
+    <update>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.data.etl.excel.ExcelHeaderException" type="com.runwaysdk.system.metadata.MdException" />
+    </delete>
+  </undoIt>
+</version>

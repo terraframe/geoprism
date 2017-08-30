@@ -1,0 +1,19 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldGeoEntityBinding" >
+        <create>
+          <attributes>
+            <boolean name="useCoordinatesForLocationAssignment" label="Use coordinates for location assignment" required="false" defaultValue="false"  />
+          </attributes>
+        </create>
+      </mdBusiness>
+    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
