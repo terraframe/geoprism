@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = -1266611019)
+@com.runwaysdk.business.ClassSignature(hash = 1680641141)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -32,7 +32,8 @@ public abstract class TargetFieldGeoEntityBindingBase extends net.geoprism.data.
   public static java.lang.String GEOENTITY = "geoEntity";
   public static java.lang.String LATITUDEATTRIBUTENAME = "latitudeAttributeName";
   public static java.lang.String LONGITUDEATTRIBUTENAME = "longitudeAttributeName";
-  private static final long serialVersionUID = -1266611019;
+  public static java.lang.String USECOORDINATESFORLOCATIONASSIGNMENT = "useCoordinatesForLocationAssignment";
+  private static final long serialVersionUID = 1680641141;
   
   public TargetFieldGeoEntityBindingBase()
   {
@@ -132,6 +133,34 @@ public abstract class TargetFieldGeoEntityBindingBase extends net.geoprism.data.
     else
     {
       setValue(LONGITUDEATTRIBUTENAME, value);
+    }
+  }
+  
+  public Boolean getUseCoordinatesForLocationAssignment()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(USECOORDINATESFORLOCATIONASSIGNMENT));
+  }
+  
+  public void validateUseCoordinatesForLocationAssignment()
+  {
+    this.validateAttribute(USECOORDINATESFORLOCATIONASSIGNMENT);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF getUseCoordinatesForLocationAssignmentMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.data.etl.TargetFieldGeoEntityBinding.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBooleanDAOIF)mdClassIF.definesAttribute(USECOORDINATESFORLOCATIONASSIGNMENT);
+  }
+  
+  public void setUseCoordinatesForLocationAssignment(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(USECOORDINATESFORLOCATIONASSIGNMENT, "");
+    }
+    else
+    {
+      setValue(USECOORDINATESFORLOCATIONASSIGNMENT, java.lang.Boolean.toString(value));
     }
   }
   

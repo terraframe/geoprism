@@ -22,20 +22,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import net.geoprism.SessionParameterFacade;
-import net.geoprism.dashboard.DashboardMap;
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.HasStyle;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.data.DatabaseUtil;
-import net.geoprism.gis.geoserver.GeoserverBatch;
-import net.geoprism.gis.geoserver.GeoserverFacade;
-import net.geoprism.gis.geoserver.GeoserverProperties;
-import net.geoprism.gis.geoserver.SessionPredicate;
-import net.geoprism.gis.wrapper.FeatureStrategy;
-import net.geoprism.gis.wrapper.FeatureType;
-import net.geoprism.gis.wrapper.Layer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
@@ -52,6 +38,21 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
+
+import net.geoprism.SessionParameterFacade;
+import net.geoprism.dashboard.DashboardMap;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.HasStyle;
+import net.geoprism.dashboard.MdTableBuilder;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.data.DatabaseUtil;
+import net.geoprism.gis.geoserver.GeoserverBatch;
+import net.geoprism.gis.geoserver.GeoserverFacade;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.gis.geoserver.SessionPredicate;
+import net.geoprism.gis.wrapper.FeatureStrategy;
+import net.geoprism.gis.wrapper.FeatureType;
+import net.geoprism.gis.wrapper.Layer;
 
 public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
 {
@@ -267,7 +268,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
 
     DatabaseUtil.createView(this.getViewName(), sql);
   }
-  
+
   /**
    * Publishes the layer and all its styles to GeoServer, creating a new database view that GeoServer will read, if it
    * does not exist yet.
@@ -476,4 +477,17 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     return clone;
   }
 
+  public void export()
+  {
+    ValueQuery query = this.getViewQuery();
+
+    String viewName = "mv_" + this.getViewName();
+
+    String statement = "CREATE MATERIALIZED VIEW " + viewName + " AS (" + query.getSQL() + ")";
+
+    Database.executeStatement(statement);
+
+    MdTableBuilder builder = new MdTableBuilder();
+    builder.build(this.getName(), viewName, query);
+  }
 }
