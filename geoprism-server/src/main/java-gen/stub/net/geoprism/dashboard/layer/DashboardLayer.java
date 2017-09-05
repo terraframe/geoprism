@@ -30,6 +30,7 @@ import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.metadata.MdTableDAO;
 import com.runwaysdk.dataaccess.transaction.AbortIfProblem;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.QueryFactory;
@@ -473,19 +474,5 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     }
 
     return clone;
-  }
-
-  public void export()
-  {
-    ValueQuery query = this.getViewQuery();
-
-    String viewName = "mv_" + this.getViewName();
-
-    String statement = "CREATE MATERIALIZED VIEW " + viewName + " AS (" + query.getSQL() + ")";
-
-    Database.executeStatement(statement);
-
-    MdTableBuilder builder = new MdTableBuilder();
-    builder.build(this.getName(), viewName, query);
   }
 }
