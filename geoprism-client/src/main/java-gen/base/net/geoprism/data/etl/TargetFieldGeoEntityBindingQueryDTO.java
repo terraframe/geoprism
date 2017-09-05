@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 1683882558)
+@com.runwaysdk.business.ClassSignature(hash = -1719525762)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +29,7 @@ package net.geoprism.data.etl;
 public class TargetFieldGeoEntityBindingQueryDTO extends net.geoprism.data.etl.TargetFieldBindingQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 1683882558;
+private static final long serialVersionUID = -1719525762;
 
   protected TargetFieldGeoEntityBindingQueryDTO(String type)
   {

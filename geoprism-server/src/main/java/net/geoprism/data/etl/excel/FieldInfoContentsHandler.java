@@ -28,6 +28,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.geoprism.ExceptionUtil;
 import net.geoprism.data.etl.ColumnType;
 import net.geoprism.data.etl.ExcelFieldBindingQuery;
 import net.geoprism.data.etl.ExcelSourceBinding;
@@ -258,6 +259,20 @@ public class FieldInfoContentsHandler implements SheetHandler
     this.map = new HashMap<Integer, Field>();
     this.attributeNames = new TreeSet<String>();
   }
+  
+  private boolean validateField(Field field, Integer columnPosition)
+  {
+	  if(field.name == null)
+	  {
+		  ExcelHeaderException exception = new ExcelHeaderException();
+		  exception.setRow(Integer.toString(field.getInputPosition()));
+		  exception.setColumn(Integer.toString(columnPosition));
+		  
+	      throw exception;
+	  }
+	  
+	  return true;
+  }
 
   @Override
   public void endSheet()
@@ -270,6 +285,8 @@ public class FieldInfoContentsHandler implements SheetHandler
 
       for (Integer key : keys)
       {
+    	validateField(this.map.get(key), key);
+    	
         fields.put(this.map.get(key).toJSON());
       }
 

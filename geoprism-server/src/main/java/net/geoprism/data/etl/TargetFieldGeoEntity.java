@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import net.geoprism.data.importer.ExclusionException;
 import net.geoprism.ontology.NonUniqueEntityResultException;
@@ -33,16 +34,21 @@ import net.geoprism.ontology.NonUniqueEntityResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.Business;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.database.DatabaseException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -179,6 +185,21 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     return null;
   }
+  
+  public String getCoordinateObjectLatitude(JSONObject coordinateObject)
+  {
+      String sourceLat = null;
+      try
+      {
+        sourceLat = coordinateObject.getString("latitude");
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
+      
+      return sourceLat;
+  }
 
   public String getCoordinateObjectLongitude()
   {
@@ -198,6 +219,21 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       }
     }
     return null;
+  }
+  
+  public String getCoordinateObjectLongitude(JSONObject coordinateObject)
+  {
+      String sourceLong = null;
+      try
+      {
+        sourceLong = coordinateObject.getString("longitude");
+      }
+      catch (JSONException e)
+      {
+        throw new ProgrammingErrorException(e);
+      }
+      
+      return sourceLong;
   }
 
   public void addUniversalAttribute(String attributeName, String label, Universal universal)
@@ -283,132 +319,248 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(parent));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);
-    synonymQuery.WHERE(synonymQuery.getDisplayLabel().localize().EQi(label));
+    synonymQuery.WHERE(F.TRIM( synonymQuery.getDisplayLabel().localize() ).EQi(label));
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.getUniversal().EQ(universal));
     query.AND(query.getId().EQ(aptQuery.getChildTerm().getId()));
-    query.AND(OR.get(query.getDisplayLabel().localize().EQi(label), query.synonym(synonymQuery)));
+    query.AND(OR.get(F.TRIM( query.getDisplayLabel().localize() ).EQi(label), query.synonym(synonymQuery)));
 
     OIterator<? extends GeoEntity> iterator = query.getIterator();
-
+    ArrayList<GeoEntity> possibleEntities = new ArrayList<GeoEntity>();
     try
     {
-      if (iterator.hasNext())
-      {
-        GeoEntity entity = iterator.next();
-        // If there's another entity there is more than one location found given the criteria (ambiguous)
-        if (iterator.hasNext())
-        {
-
-          GeoEntity spatiallyDeterminedEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj, iterator);
-
-          if (spatiallyDeterminedEntity != null)
-          {
-            return spatiallyDeterminedEntity;
-          }
-          else
-          {
-            NonUniqueEntityResultException e = new NonUniqueEntityResultException();
-            e.setLabel(label);
-            e.setUniversal(universal.getDisplayLabel().getValue());
-            e.setParent(parent.getDisplayLabel().getValue());
-
-            throw e;
-          }
-        }
-
-        return entity;
-      }
+	    while(iterator.hasNext())
+	    {
+	    	  GeoEntity ge = iterator.next();
+	    	  possibleEntities.add(ge);
+	    }
     }
     finally
     {
-      iterator.close();
+    	  iterator.close();
     }
+    
+    if(possibleEntities.size() == 1)
+    {
+    	  return possibleEntities.get(0);
+    }
+    // If there's another entity there is more than one location found given the criteria (ambiguous)
+    else if(possibleEntities.size() > 1)
+    {
+    	  if(this.getUseCoordinatesForLocationAssignment())
+    	  {
+           // try determining if one of the ambiguous entities are within the parent as determined by spatial st_within from
+    	      // coordinates in the spreadsheet
+          GeoEntity inferredEntity = findGeoEntityByParentComparison(label, parent, universal, spatialRefCoordObj, possibleEntities); 
 
+          if(inferredEntity != null)
+          {
+            return inferredEntity;
+          }
+          else
+          {
+        	     // try coordinate (from spreadsheet) based nearest neighbor analysis
+	        	inferredEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj, possibleEntities);
+	        	if(inferredEntity != null)
+	        	{
+	        		return inferredEntity;
+	        	}
+	        	else
+	        	{
+	              NonUniqueEntityResultException e = new NonUniqueEntityResultException();
+	              e.setLabel(label);
+	              e.setUniversal(universal.getDisplayLabel().getValue());
+	              e.setParent(parent.getDisplayLabel().getValue());
+	              
+	              throw e;
+	        	}
+          }
+    	  }
+    	  else
+    	  {
+          NonUniqueEntityResultException e = new NonUniqueEntityResultException();
+          e.setLabel(label);
+          e.setUniversal(universal.getDisplayLabel().getValue());
+          e.setParent(parent.getDisplayLabel().getValue());
+          
+          throw e;
+    	  }
+    }
+    
     return null;
   }
 
-  private GeoEntity findGeoEntityByNearestNeighbor(String locationName, Universal universal, JSONObject spatialRefCoordObj, OIterator<? extends GeoEntity> geoEntities)
+  private GeoEntity findGeoEntityByNearestNeighbor(String locationName, Universal universal, JSONObject spatialRefCoordObj, ArrayList<GeoEntity> geoEntities)
   {
     if (spatialRefCoordObj != null)
     {
       String comparativeTargetGeomColumnName = "geo_multi_polygon"; // use geo_multi_polygon because all geonodes have
                                                                     // point and polygon representation
 
-      String sourceLat = null;
-      String sourceLong = null;
-      try
-      {
-        sourceLat = spatialRefCoordObj.getString("latitude");
-        sourceLong = spatialRefCoordObj.getString("longitude");
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
+      String sourceLat = this.getCoordinateObjectLatitude(spatialRefCoordObj);
+      String sourceLong = this.getCoordinateObjectLongitude(spatialRefCoordObj);
 
-      StringBuffer geoIdString = new StringBuffer();
-      while (geoEntities.hasNext())
+      StringJoiner geoIdString = new StringJoiner(",");
+      for(int i=0; i<geoEntities.size(); i++)
       {
-        GeoEntity entity = geoEntities.next();
-        geoIdString.append("'").append(entity.getGeoId()).append("'");
-
-        if (geoEntities.hasNext())
+    	    GeoEntity entity = geoEntities.get(i);
+    	    
+        // geometries are needed for doing st_distance calculations
+        if(entity.getGeoMultiPolygon() != null)
         {
-          geoIdString.append(",");
+          geoIdString.add("'".concat((entity.getGeoId()).concat("'")));
         }
       }
 
-      StringBuffer sql = new StringBuffer();
-      sql.append("SELECT g.id, ST_Distance(g.".concat(comparativeTargetGeomColumnName).concat(", ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")));
-      sql.append(" FROM geo_entity g");
-      sql.append(" WHERE g.geo_id IN (".concat(geoIdString.toString()).concat(")"));
-      sql.append(" ORDER BY 2 ASC");
-      sql.append(" LIMIT 1;");
-
-      // StringBuffer sql = new StringBuffer();
-      // sql.append("SELECT g.id, ST_Distance(g."
-      // .concat(comparativeTargetGeomColumnName)
-      // .concat(", ST_SetSRID(st_pointfromtext('POINT("
-      // .concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")
-      // )
-      // );
-      // sql.append(" FROM geo_entity g");
-      // sql.append(" WHERE g.universal = '".concat(universal.getId()).concat("'"));
-      // sql.append(" ORDER BY 2 ASC");
-      // sql.append(" LIMIT 1;");
-
-      // SELECT g.id, ST_Distance(g.geo_multi_polygon, ST_SetSRID(st_pointfromtext('POINT(-112.480092
-      // 36.016899)'),4326))
-      // FROM geo_entity g
-      // WHERE g.universal = 'i5iqjq0fms812sx0np4jbj7r7qqt1q30i1vpa2tywfkq0wgqelwt6ay8b49cnbch'
-      // ORDER BY 2 ASC
-      // LIMIT 1;
-
-      ResultSet resultSet = Database.query(sql.toString());
-
-      GeoEntity geoEntity = null;
-      if (resultSet != null)
+      if(geoIdString != null && geoIdString.length() > 0)
       {
-        try
-        {
-          if (resultSet.next())
-          {
-            String entityId = resultSet.getString(1);
-            geoEntity = GeoEntity.get(entityId);
-
-            return geoEntity;
-          }
-        }
-        catch (SQLException e)
-        {
-          throw new ProgrammingErrorException(e);
-        }
+	      StringBuffer sql = new StringBuffer();
+	      sql.append("SELECT g.id, ST_Distance(g.".concat(comparativeTargetGeomColumnName).concat(", ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")));
+	      sql.append(" FROM geo_entity g");
+	      sql.append(" WHERE g.geo_id IN (".concat(geoIdString.toString()).concat(")"));
+	      sql.append(" ORDER BY 2 ASC");
+	      sql.append(" LIMIT 1;");
+	
+	      ResultSet resultSet = Database.query(sql.toString());
+	
+	      try
+	      {
+		      GeoEntity geoEntity = null;
+		      if (resultSet != null)
+		      {
+		        try
+		        {
+		          if (resultSet.next())
+		          {
+		            String entityId = resultSet.getString(1);
+		            geoEntity = GeoEntity.get(entityId);
+		
+		            return geoEntity;
+		          }
+		        }
+		        catch (SQLException e)
+		        {
+		          throw new ProgrammingErrorException(e);
+		        }
+		      }
+	      }
+	      finally
+	      {
+	    	  	try {
+				resultSet.close();
+			}
+	    	  	catch(SQLException e) {
+				throw new DatabaseException(e);
+			}
+	      }
       }
     }
 
     return null;
+  }
+  
+  private GeoEntity findGeoEntityByParentComparison(String locationName, GeoEntity parentEntity, Universal universal, JSONObject spatialRefCoordObj, ArrayList<GeoEntity> geoEntities)
+  {
+	  
+      String sourceLat = this.getCoordinateObjectLatitude(spatialRefCoordObj);
+      String sourceLong = this.getCoordinateObjectLongitude(spatialRefCoordObj);
+      
+      ArrayList<String> geoIdList = new ArrayList<String>();
+      for(GeoEntity entity : geoEntities)
+      {
+        geoIdList.add(entity.getGeoId());
+      }
+      
+      GeoEntity extractedParentEntity = null;
+	  OIterator<? extends Business> parentUniversals = universal.getParents(AllowedIn.CLASS);
+	  try
+	  {
+		  while(parentUniversals.hasNext())
+		  {
+			  Universal parentUniversal = (Universal) parentUniversals.next();
+			  
+			  if(parentUniversals.hasNext())
+			  {
+				  return null;  // We can't support multi-parent hierarchies for this process
+			  }
+			  else
+			  {
+			      StringBuffer sql = new StringBuffer();
+			      sql.append("SELECT g.*");
+			      sql.append("FROM geo_entity g ");
+			      sql.append("WHERE ST_Within(ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326)").concat(", g.geo_multi_polygon) "));
+			      sql.append("AND g.universal = ".concat("'").concat(parentUniversal.getId()).concat("'"));
+			      ResultSet resultSet = Database.query(sql.toString());
+			      
+			      try
+			      {
+				      if (resultSet != null)
+				      {
+				        try
+				        {
+				        	 // Assuming there's only one parent geometry in the parent universal (i.e. no overlapping geometries)
+				          if (resultSet.next())
+				          {
+				            String entityId = resultSet.getString(1);
+				            extractedParentEntity = GeoEntity.get(entityId);
+				          }
+				        }
+				        catch (SQLException e)
+				        {
+				          throw new ProgrammingErrorException(e);
+				        }
+				      }
+			      }
+			      finally
+			      {
+			    	    try {
+						resultSet.close();
+					}
+			    	    catch (SQLException e) {
+						throw new DatabaseException(e);
+					}
+			      }
+			  }
+		  }
+	  }
+	  finally
+	  {
+		  parentUniversals.close();
+	  }
+	  
+	  if(extractedParentEntity != null)
+	  {
+		ArrayList<GeoEntity> childEntities = new ArrayList<GeoEntity>();
+		OIterator<? extends Business> children = extractedParentEntity.getChildren(LocatedIn.CLASS);
+		try
+		{
+			while(children.hasNext())
+			{
+				GeoEntity child = (GeoEntity) children.next();
+				if(geoIdList.contains(child.getGeoId()))
+				{
+					childEntities.add(child);
+				}
+			}
+		}
+		finally
+		{
+			children.close();
+		}
+		
+		int numChildren = childEntities.size();
+		if(numChildren > 1)
+		{
+			return null; // Ambiguous children of the parent. Must return unique single result.
+		}
+		else if(numChildren == 1)
+		{
+			return childEntities.get(0);
+		}
+	  }
+	  
+	  return null;
   }
 
   @Override
@@ -421,6 +573,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     field.setTargetAttribute(targetAttribute);
     field.setColumnLabel(this.getLabel());
     field.setGeoEntity(this.root);
+    field.setUseCoordinatesForLocationAssignment(this.getUseCoordinatesForLocationAssignment());
     field.setLatitudeAttributeName(this.getCoordinateObjectLatitude());
     field.setLongitudeAttributeName(this.getCoordinateObjectLongitude());
     field.apply();
@@ -454,6 +607,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     object.put("universal", attribute.getUniversal().getId());
     object.put("fields", fields);
     object.put("id", this.id);
+    object.put("useCoordinatesForLocationAssignment", this.getUseCoordinatesForLocationAssignment());
 
     return object;
   }
