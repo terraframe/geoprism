@@ -33,9 +33,9 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
@@ -116,7 +116,7 @@ public class LocationCondition extends DashboardCondition implements com.runways
   }
 
   @Override
-  public void restrictQuery(ValueQuery _vQuery, Attribute _attribute)
+  public void restrictQuery(ValueQuery _vQuery, Selectable _attribute)
   {
     List<GeoEntity> entities = this.getGeoEntities();
 

@@ -21,8 +21,8 @@ package net.geoprism.dashboard.condition;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
 public abstract class DashboardAttributeCondition extends DashboardCondition implements Reloadable
@@ -72,7 +72,7 @@ public abstract class DashboardAttributeCondition extends DashboardCondition imp
 
     if (key.startsWith(_type))
     {
-      Attribute attribute = _query.get(attributeName);
+      Selectable attribute = _query.get(attributeName);
 
       this.restrictQuery(_vQuery, attribute);
     }

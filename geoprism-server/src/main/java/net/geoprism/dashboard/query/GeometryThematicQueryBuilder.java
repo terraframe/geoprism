@@ -20,19 +20,12 @@ package net.geoprism.dashboard.query;
 
 import java.util.List;
 
-import net.geoprism.dashboard.AllAggregationType;
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.dashboard.condition.LocationCondition;
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.QueryFactory;
@@ -41,6 +34,12 @@ import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
+
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.condition.LocationCondition;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
 public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implements Reloadable
 {
@@ -71,7 +70,7 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
     MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getDisplayLabelAttribute().getId());
     String attributeName = mdAttribute.definesAttribute();
 
-    Attribute attribute = query.get(attributeName, GeoEntity.DISPLAYLABEL);
+    Selectable attribute = query.get(attributeName, GeoEntity.DISPLAYLABEL);
     SelectableSingle label = null;
 
     if (attribute instanceof AttributeLocal)
@@ -106,12 +105,12 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
     return attribute;
   }
 
-  private Attribute getGeoEntityAttribute(GeneratedComponentQuery componentQuery)
+  private Selectable getGeoEntityAttribute(GeneratedComponentQuery componentQuery)
   {
     MdAttributeReferenceDAOIF geoRef = MdAttributeReferenceDAO.get(this.geoNode.getGeoEntityAttributeId());
 
     // Join the entity's GeoEntity reference with the all paths table
-    Attribute geoAttr = componentQuery.get(geoRef.definesAttribute());
+    Selectable geoAttr = componentQuery.get(geoRef.definesAttribute());
 
     return geoAttr;
   }

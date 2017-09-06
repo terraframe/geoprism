@@ -22,17 +22,17 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.localization.LocalizationFacade;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.GeneratedComponentQuery;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
+
+import net.geoprism.localization.LocalizationFacade;
 
 public abstract class DashboardCondition implements Reloadable
 {
@@ -57,7 +57,7 @@ public abstract class DashboardCondition implements Reloadable
 
   public abstract List<String> getConditionInformation();
 
-  public abstract void restrictQuery(ValueQuery vQuery, Attribute attribute);
+  public abstract void restrictQuery(ValueQuery vQuery, Selectable attribute);
 
   public abstract void restrictQuery(String _type, ValueQuery _vQuery, GeneratedComponentQuery _query);
 

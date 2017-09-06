@@ -22,10 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import net.geoprism.QueryUtil;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierQuery;
-
 import org.json.JSONException;
 
 import com.runwaysdk.constants.MdClassInfo;
@@ -39,7 +35,6 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.GeneratedComponentQuery;
@@ -50,6 +45,10 @@ import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdClass;
+
+import net.geoprism.QueryUtil;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
 
 public class GenericTypeProvider extends AbstractProvider implements Reloadable, ReportProviderIF
 {
@@ -105,7 +104,7 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
     /*
      * IMPORTANT: All results must be ordered for blocking to work
      */
-    Attribute id = query.get(MdClassInfo.ID);
+    Selectable id = query.get(MdClassInfo.ID);
 
     ValueQuery vQuery = config.getValueQuery();
     vQuery.SELECT(id);
