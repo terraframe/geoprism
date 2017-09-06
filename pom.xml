@@ -46,7 +46,7 @@
     <aspectj.plugin.version>1.7</aspectj.plugin.version>
     
     <geotools.version>16.1</geotools.version>
-    <runway.version>2.0.28-SNAPSHOT</runway.version>
+    <runway.version>2.0.28</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
   </properties>
 
