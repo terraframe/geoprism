@@ -6,7 +6,11 @@ import { ConfirmService, IListener, IAction } from "./confirm-modal.service";
     
   selector: "confirm-modal",
   templateUrl: './confirm-modal.component.html',
-  styleUrls: ['./confirm-modal.component.css'],
+  styles: [
+    '.confirm-overlay { z-index: 99998; }',
+    '.confirm-modal { background: #fff; position: absolute; color: #222; top: 50%; left: 50%; -ms-transform: translateX(-50%) translateY(-50%); -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); z-index: 99999; }',
+    '.confirm-text { display: block; width: auto; min-height: 22px; max-height: none; height: auto;}'
+  ],
 })
 export class ConfirmModalComponent implements OnInit, IListener  {
 	

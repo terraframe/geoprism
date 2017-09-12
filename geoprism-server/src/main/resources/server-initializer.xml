@@ -20,6 +20,7 @@
 
 -->
 <server-context-listeners>
+  <server-context-listener class="net.geoprism.context.PatchingContextListener" />
   <server-context-listener class="net.geoprism.context.RMIContextListener" />
   <server-context-listener class="net.geoprism.ontology.StrategyContextListener" /> 
   <server-context-listener class="net.geoprism.account.SchedulerContextListener" /> 

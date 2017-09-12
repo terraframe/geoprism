@@ -27,7 +27,7 @@ import 'rxjs/add/operator/switchMap';
 import { Dataset } from '../model/dataset';
 import { BasicCategory } from '../model/category';
 
-import { EventService } from '../service/core.service';
+import { EventService } from '../core/service/core.service';
 import { DatasetService } from '../service/dataset.service';
 
 export class DatasetResolver implements Resolve<Dataset> {

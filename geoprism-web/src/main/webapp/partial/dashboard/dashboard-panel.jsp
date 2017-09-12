@@ -77,8 +77,7 @@
     <!-- Global geo filter -->
     <location-filter filter="dashboard.model.location" dashboard-id="dashboard.dashboardId"></location-filter>
 
-    <type-accordion types="dashboard.model.types" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>  
-                                                
+    <type-accordion types="dashboard.model.types" new-layer="dashboard.newLayer(mdAttributeId)"></type-accordion>                                                  
     <div id="filter-buttons-container">
       <a id="refreshFilterIco" href="#" ng-click="form.$invalid || dashboard.refresh('refreshFilterIco', false)" ng-disabled="form.$invalid" ng-class="{'fa-spin' : dashboard.icoSpin == 'refreshFilterIco' }" class="fa fa-refresh filters-button apply-filters-button" title="<gdb:localize key="dashboardViewer.applyFiltersTooltip"/>" data-placement="left""></a>
       <a href="#" ng-click="form.$invalid || dashboard.save(false, 'saveToMapIco')" ng-disabled="form.$invalid" class="fa fa-floppy-o filters-button save-filters-button" title="<gdb:localize key="dashboardViewer.saveFiltersTooltip"/>" data-placement="left"">
@@ -88,5 +87,6 @@
       	<i ng-show="dashboard.icoSpin == 'saveToDashboardIco'" class="fa fa-refresh fa-spin" style="position: absolute; right: 10px; bottom: 10px; font-size: 23px; color:#bababa; border-radius: 25px; background-color: rgba(66,66,66,0.9);"></i>
       </a>
     </div>
+
   </ng-form>
 </aside>

@@ -27,8 +27,7 @@ import 'rxjs/add/operator/switchMap';
 import { Category, BasicCategory } from '../model/category';
 import { Synonym } from '../model/synonym';
 
-import { EventService } from '../service/core.service';
-import { LocalizationService } from '../service/localization.service';
+import { EventService } from '../core/service/core.service';
 import { CategoryService } from '../service/category.service';
 
 
@@ -70,8 +69,7 @@ export class OptionDetailComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
-    private location: Location,
-    private localizationService: LocalizationService) {
+    private location: Location) {
   }
 
   ngOnInit(): void {
@@ -108,14 +106,9 @@ export class OptionDetailComponent implements OnInit {
   
   restore(synonym: Synonym): void {
 	  
-//	let message = this.localizationService.localize("category.management", "restoreConfirm");
-//    message = message.replace('{0}', this.category.label);
-//
-//    if(confirm(message)) {
       this.action.restore.push(synonym.id);
         	
       this.category.synonyms = this.category.synonyms.filter(h => h !== synonym);            	        	
-//    }	  
   } 
   
 }

@@ -22,7 +22,6 @@ import { Router } from '@angular/router';
 
 import { Category, BasicCategory } from '../model/category';
 
-import { EventService } from '../service/core.service';
 import { CategoryService } from '../service/category.service';
 
 class Instance {
@@ -42,7 +41,6 @@ export class CategoriesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private eventService: EventService,
     private categoryService: CategoryService) { }
 
   ngOnInit(): void {

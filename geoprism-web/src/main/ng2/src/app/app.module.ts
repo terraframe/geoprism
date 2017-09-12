@@ -30,25 +30,7 @@ import { DropdownModule } from 'ng2-bootstrap'
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
-import { BooleanFieldComponent } from './core/boolean-field.component';
-
-import { LocalizeComponent } from './core/localize.component';
-import { LoadingBarComponent } from './core/loading-bar.component';
-import { MessageComponent } from './core/message.component';
-import { AsyncValidator } from './core/async-validator.directive';
-import { FunctionValidator } from './core/function-validator.directive';
-import { KeysPipe } from './core/keys.pipe';
-import { LocalizePipe } from './core/localize.pipe';
-
-import { AutoCompleteDirective } from './autocomplete/auto-complete.directive';
-import { AutoCompleteComponent } from './autocomplete/auto-complete.component';
-
-import { ConfirmModalDirective } from './confirm/confirm-modal.directive';
-import { ConfirmModalComponent } from './confirm/confirm-modal.component';
-import { ConfirmService } from './confirm/confirm-modal.service';
-
-import { EventService, IdService} from './service/core.service';
-import { LocalizationService } from './service/localization.service';
+import { CoreModule } from './core/core.module';
 
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
@@ -75,8 +57,6 @@ import { CategoryValidationPageComponent } from './uploader/category-validation-
 import { CategoryValidationProblemComponent } from './uploader/category-validation-problem.component';
 import { UploadService } from './service/upload.service';
 
-import { EventHttpService } from './service/event-http.service';
-
 
 @NgModule({
   imports: [
@@ -85,26 +65,12 @@ import { EventHttpService } from './service/event-http.service';
     AppRoutingModule,
     HttpModule,
     FileUploadModule,
-    DropdownModule.forRoot()
+    DropdownModule.forRoot(),
+    CoreModule
   ],
   declarations: [
 	// Global components
     AppComponent,
-    LocalizeComponent,
-    LoadingBarComponent,
-    MessageComponent,
-    AsyncValidator,
-    FunctionValidator,
-    KeysPipe,
-    LocalizePipe,
-    
-    BooleanFieldComponent,
-    
-    AutoCompleteDirective,
-    AutoCompleteComponent,
-    
-    ConfirmModalDirective,
-    ConfirmModalComponent,
     
     DHIS2IdFinderComponent,
     
@@ -128,25 +94,13 @@ import { EventHttpService } from './service/event-http.service';
     routedComponents
   ],
   providers: [
-	LocalizationService,
-	IdService,
     DatasetService,
     DHIS2Service,
     CategoryService,
     IconService,
     UploadService,
-    NavigationService,
-    ConfirmService,
-    EventService,
-    { 
-      provide : EventHttpService,
-      useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions, service: EventService) => {
-        return new EventHttpService(xhrBackend, requestOptions, service)
-      },
-      deps: [XHRBackend, RequestOptions, EventService]
-    }   
+    NavigationService
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [AutoCompleteComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

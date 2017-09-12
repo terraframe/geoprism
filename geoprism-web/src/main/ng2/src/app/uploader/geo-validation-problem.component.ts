@@ -21,7 +21,7 @@ import { Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
 import { Page, LocationProblem, Workbook, LocationExclusion} from './uploader-model';
 import { UploadService } from '../service/upload.service';
-import { IdService } from '../service/core.service';
+import { IdService } from '../core/service/core.service';
 
 @Component({
   

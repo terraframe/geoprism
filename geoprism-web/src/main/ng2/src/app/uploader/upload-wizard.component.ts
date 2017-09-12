@@ -26,8 +26,8 @@ import * as _ from 'lodash';
 import { Dataset } from '../model/dataset';
 import { UploadInformation, Step, Sheet, Snapshot, Page, Locations, Problems } from './uploader-model';
 
-import { EventService } from '../service/core.service';
-import { LocalizationService } from '../service/localization.service';
+import { EventService } from '../core/service/core.service';
+import { LocalizationService } from '../core/service/localization.service';
 
 import { UploadService } from '../service/upload.service';
 import { NavigationService } from './navigation.service';

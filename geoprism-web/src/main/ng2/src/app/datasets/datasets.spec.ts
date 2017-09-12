@@ -6,8 +6,8 @@ import { AppModule } from '../app.module';
 import { Dataset } from '../model/dataset';
 import { DatasetsComponent } from './datasets.component';
 
-import { LocalizationService } from '../service/localization.service';
-import { MockLocalizationService } from '../service/localization.service.mock';
+import { LocalizationService } from '../core/service/localization.service';
+import { MockLocalizationService } from '../core/service/localization.service.mock';
 
 import { DatasetService } from '../service/dataset.service';
 import { MockDatasetService } from '../service/dataset.service.mock';

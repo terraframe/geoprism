@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -22,6 +20,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -37,9 +37,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import com.runwaysdk.constants.ClientConstants;
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
+import com.runwaysdk.web.ServletUtility;
 import com.runwaysdk.web.WebClientSession;
 
 public class SessionFilter implements Filter, Reloadable
@@ -126,6 +129,23 @@ public class SessionFilter implements Filter, Reloadable
 
       return;
     }
+    else if (isPublic(request))
+    {
+      if (clientSession == null)
+      {
+        Locale[] locales = ServletUtility.getLocales(request);
+
+        clientSession = WebClientSession.createAnonymousSession(locales);
+        ClientRequestIF clientRequest = clientSession.getRequest();
+
+        request.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+        request.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+        request.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
+      }
+
+      chain.doFilter(req, res);
+      return;
+    }
     else if (pathAllowed(request))
     {
       chain.doFilter(req, res);
@@ -153,6 +173,23 @@ public class SessionFilter implements Filter, Reloadable
     }
   }
 
+  private boolean isPublic(HttpServletRequest req)
+  {
+    String uri = req.getRequestURI();
+
+    Set<String> endpoints = ClientConfigurationService.getPublicEndpoints();
+
+    for (String endpoint : endpoints)
+    {
+      if (uri.equals(req.getContextPath() + "/" + endpoint))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private boolean pathAllowed(HttpServletRequest req)
   {
     String uri = req.getRequestURI();
@@ -167,6 +204,7 @@ public class SessionFilter implements Filter, Reloadable
     endpoints.add("session/form");
     endpoints.add("session/login");
     endpoints.add("session/ologin");
+    endpoints.add("published/explore");
 
     for (String endpoint : endpoints)
     {
@@ -180,6 +218,7 @@ public class SessionFilter implements Filter, Reloadable
     directories.add("jquery");
     directories.add("font-awesome");
     directories.add("fontawesome");
+    directories.add("3rd-party");
 
     // Allow direct hitting of all page resources in login directories.
     directories.add("/net/geoprism/login");
@@ -207,6 +246,9 @@ public class SessionFilter implements Filter, Reloadable
     extensions.add(".pdf");
     extensions.add(".otf");
     extensions.add(".mp4");
+
+    extensions.add(".js");
+    extensions.add("Localized.js.jsp");
 
     // Login/Logout requests for mojax/mojo extensions.
     extensions.add(SessionController.LOGIN_ACTION);

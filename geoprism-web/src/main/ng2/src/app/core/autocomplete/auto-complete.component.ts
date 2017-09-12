@@ -16,7 +16,10 @@ class Item {
     
   selector: "auto-complete-component",
   templateUrl: './auto-complete.component.html',
-  styleUrls: ['./auto-complete.component.css'],
+  styles: [
+    '.search-results { position: relative; right: 0; display: block; overflow-y: auto; overflow-x: hidden; max-height: 100px; }',
+	'.search-hover { background:#DEDEDE; }'
+  ],
 })
 export class AutoCompleteComponent {
 

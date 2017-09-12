@@ -38,17 +38,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
-import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.TransformException;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -91,7 +84,6 @@ import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
-import net.geoprism.dashboard.Dashboard;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.GeometrySerializationUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
