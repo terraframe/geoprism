@@ -256,4 +256,12 @@ public class GeoserverProperties implements Reloadable
   {
     return Singleton.getProps().getString("geoserver.keystore.pass");
   }
+  
+  /**
+   * MapboxGL access token
+   */
+  public static String getMapboxglAccessToken()
+  {
+    return Singleton.getProps().getString("mapboxgl.accessToken");
+  }
 }
