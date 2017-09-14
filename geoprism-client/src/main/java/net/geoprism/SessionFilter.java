@@ -37,7 +37,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import com.runwaysdk.constants.ClientConstants;
-import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.generation.loader.Reloadable;
@@ -70,7 +69,24 @@ public class SessionFilter implements Filter, Reloadable
     // This isLoggedIn check is not 100% sufficient, it doesn't go to the server
     // and check, it only does it locally, so if the session has expired it'l
     // let it through.
-    if (clientSession != null && clientSession.getRequest().isLoggedIn())
+    if (isPublic(request))
+    {
+      if (clientSession == null)
+      {
+        Locale[] locales = ServletUtility.getLocales(request);
+
+        clientSession = WebClientSession.createAnonymousSession(locales);
+
+        request.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+        request.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+      }
+
+      req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
+
+      chain.doFilter(req, res);
+      return;
+    }
+    else if (clientSession != null && clientSession.getRequest().isLoggedIn() && !clientSession.getRequest().isPublicUser())
     {
       try
       {
@@ -129,28 +145,11 @@ public class SessionFilter implements Filter, Reloadable
 
       return;
     }
-    else if (isPublic(request))
-    {
-      if (clientSession == null)
-      {
-        Locale[] locales = ServletUtility.getLocales(request);
-
-        clientSession = WebClientSession.createAnonymousSession(locales);
-        ClientRequestIF clientRequest = clientSession.getRequest();
-
-        request.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
-        request.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
-        request.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
-      }
-
-      chain.doFilter(req, res);
-      return;
-    }
     else if (pathAllowed(request))
     {
       chain.doFilter(req, res);
       return;
-    }
+    }    
     else
     {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -181,10 +180,15 @@ public class SessionFilter implements Filter, Reloadable
 
     for (String endpoint : endpoints)
     {
-      if (uri.equals(req.getContextPath() + "/" + endpoint))
+      if (uri.contains(req.getContextPath() + "/" + endpoint))
       {
         return true;
       }
+    }
+
+    if (uri.endsWith("Localized.js.jsp"))
+    {
+      return true;
     }
 
     return false;
@@ -204,7 +208,6 @@ public class SessionFilter implements Filter, Reloadable
     endpoints.add("session/form");
     endpoints.add("session/login");
     endpoints.add("session/ologin");
-    endpoints.add("published/explore");
 
     for (String endpoint : endpoints)
     {
@@ -248,7 +251,6 @@ public class SessionFilter implements Filter, Reloadable
     extensions.add(".mp4");
 
     extensions.add(".js");
-    extensions.add("Localized.js.jsp");
 
     // Login/Logout requests for mojax/mojo extensions.
     extensions.add(SessionController.LOGIN_ACTION);
