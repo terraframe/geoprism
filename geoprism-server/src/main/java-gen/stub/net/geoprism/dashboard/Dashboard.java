@@ -1321,7 +1321,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     return new ByteArrayInputStream(buffer);
   }
 
-  private DashboardState getDashboardState()
+  public DashboardState getDashboardState()
   {
     SingleActor user = GeoprismUser.getCurrentUser();
 
