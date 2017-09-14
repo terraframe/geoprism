@@ -3,21 +3,20 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -34,13 +33,21 @@ public class UserDataConverter implements IUserDataConverter
   {
     if (userData != null)
     {
-      Map<String, String> data = (Map<String, String>) userData;
-      Set<Entry<String, String>> entries = data.entrySet();
+      Map<String, Object> data = (Map<String, Object>) userData;
+      Set<Entry<String, Object>> entries = data.entrySet();
 
-      for (Entry<String, String> entry : entries)
+      for (Entry<String, Object> entry : entries)
       {
-        int kIndex = layerProps.addKey(entry.getKey());
-        int vIndex = layerProps.addValue(entry.getValue());
+        Object value = entry.getValue();
+        String key = entry.getKey();
+
+        if (value instanceof BigDecimal)
+        {
+          value = ( (BigDecimal) value ).doubleValue();
+        }
+
+        int kIndex = layerProps.addKey(key);
+        int vIndex = layerProps.addValue(value);
 
         featureBuilder.addTags(kIndex);
         featureBuilder.addTags(vIndex);
