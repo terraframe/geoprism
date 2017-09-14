@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.Attribute;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
 public class DateCondition extends DashboardAttributeCondition implements Reloadable
@@ -50,7 +50,7 @@ public class DateCondition extends DashboardAttributeCondition implements Reload
   }
 
   @Override
-  public void restrictQuery(ValueQuery query, Attribute attr)
+  public void restrictQuery(ValueQuery query, Selectable attr)
   {
     if (startDate != null && startDate.length() > 0)
     {

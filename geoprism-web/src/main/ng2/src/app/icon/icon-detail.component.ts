@@ -26,7 +26,7 @@ import { FileSelectDirective, FileDropDirective, FileUploader, FileUploaderOptio
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { EventService } from '../service/core.service';
+import { EventService } from '../core/service/core.service';
 
 import { Icon } from '../model/icon';
 import { IconService } from '../service/icon.service';

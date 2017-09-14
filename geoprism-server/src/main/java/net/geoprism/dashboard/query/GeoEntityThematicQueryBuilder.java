@@ -3,28 +3,20 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard.query;
 
 import java.util.List;
-
-import net.geoprism.dashboard.AllAggregationType;
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.dashboard.condition.LocationCondition;
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
@@ -39,10 +31,15 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 import com.runwaysdk.system.gis.geo.Universal;
+
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.condition.LocationCondition;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
 public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implements Reloadable
 {
@@ -97,16 +94,16 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
     geoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
     geoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
     geoId.setUserDefinedDisplayLabel(mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
-    
+
     return geoId;
   }
 
-  private Attribute getGeoEntityAttribute(GeneratedComponentQuery componentQuery)
+  private Selectable getGeoEntityAttribute(GeneratedComponentQuery componentQuery)
   {
     MdAttributeReferenceDAOIF geoRef = MdAttributeReferenceDAO.get(this.geoNode.getGeoEntityAttributeId());
 
     // Join the entity's GeoEntity reference with the all paths table
-    Attribute geoAttr = componentQuery.get(geoRef.definesAttribute());
+    Selectable geoAttr = componentQuery.get(geoRef.definesAttribute());
 
     return geoAttr;
   }
@@ -114,7 +111,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
   @Override
   protected void addLocationCriteria(ValueQuery vQuery, GeneratedComponentQuery componentQuery)
   {
-    Attribute geoAttr = this.getGeoEntityAttribute(componentQuery);
+    Attribute geoAttr = (Attribute) this.getGeoEntityAttribute(componentQuery);
 
     // the entity's GeoEntity should match the all path's child
     GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(vQuery);

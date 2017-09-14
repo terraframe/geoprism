@@ -20,9 +20,9 @@ package net.geoprism.dashboard.condition;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
 public class DashboardGreaterThanCondition extends DashboardPrimitiveCondition implements Reloadable
@@ -38,7 +38,7 @@ public class DashboardGreaterThanCondition extends DashboardPrimitiveCondition i
   }
 
   @Override
-  public void restrictQuery(ValueQuery query, Attribute attr)
+  public void restrictQuery(ValueQuery query, Selectable attr)
   {
     if (attr instanceof AttributeNumber)
     {

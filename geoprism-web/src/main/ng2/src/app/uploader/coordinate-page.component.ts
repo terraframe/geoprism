@@ -22,7 +22,7 @@ import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
 
 import { LocalValidator } from '../core/function-validator.directive';
 import { UploadInformation, Sheet, Page, Field, Universal, CoordinateAttribute, Coordinates} from './uploader-model';
-import { LocalizationService } from '../service/localization.service';
+import { LocalizationService } from '../core/service/localization.service';
 
 @Component({
   

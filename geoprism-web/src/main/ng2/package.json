@@ -1,14 +1,16 @@
 {
-  "name": "geoprism",
+  "name": "@terraframe/geoprism",
   "version": "0.1.0",
   "scripts": {
-    "start": "webpack-dev-server --inline --progress --port 8080",  
+    "start": "webpack-dev-server --https --inline --progress --port 8080",
     "test": "karma start",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile"
   },
+  "publishConfig": {
+    "registry": "http://localhost:4873/"
+  },
   "dependencies": {
     "@angular/common": "~2.4.0",
-    "@angular/compiler": "~2.4.0",
     "@angular/core": "~2.4.0",
     "@angular/forms": "~2.4.0",
     "@angular/http": "~2.4.0",
@@ -23,8 +25,10 @@
     "ng2-bootstrap": "1.2.6"
   },
   "devDependencies": {
-    "@types/node": "^6.0.45",
+    "@angular/compiler": "^2.4.10",
+    "@angular/compiler-cli": "^4.4.0-RC.0",
     "@types/jasmine": "2.5.41",
+    "@types/node": "^6.0.45",
     "angular2-template-loader": "^0.6.0",
     "awesome-typescript-loader": "^3.0.0-beta.18",
     "css-loader": "^0.26.1",
@@ -34,17 +38,19 @@
     "html-webpack-plugin": "^2.16.1",
     "jasmine-core": "^2.4.1",
     "karma": "^1.2.0",
+    "karma-chrome-launcher": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2",
-    "karma-chrome-launcher": "^1.0.1",    
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.1",
     "null-loader": "^0.1.1",
     "phantomjs-prebuilt": "^2.1.7",
     "raw-loader": "^0.5.1",
     "rimraf": "^2.5.2",
+    "rollup": "^0.49.3",
     "style-loader": "^0.13.1",
-    "typescript": "~2.0.10",
+    "typescript": "^2.0.10",
+    "uglify-js": "^3.1.0",
     "webpack": "2.2.0",
     "webpack-dev-server": "2.2.0-rc.0",
     "webpack-merge": "^2.4.0"

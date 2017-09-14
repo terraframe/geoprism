@@ -43,7 +43,6 @@ import net.geoprism.SessionParameterFacade;
 import net.geoprism.dashboard.DashboardMap;
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.HasStyle;
-import net.geoprism.dashboard.MdTableBuilder;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.gis.geoserver.GeoserverBatch;
@@ -475,19 +474,5 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     }
 
     return clone;
-  }
-
-  public void export()
-  {
-    ValueQuery query = this.getViewQuery();
-
-    String viewName = "mv_" + this.getViewName();
-
-    String statement = "CREATE MATERIALIZED VIEW " + viewName + " AS (" + query.getSQL() + ")";
-
-    Database.executeStatement(statement);
-
-    MdTableBuilder builder = new MdTableBuilder();
-    builder.build(this.getName(), viewName, query);
   }
 }

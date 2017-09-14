@@ -24,7 +24,6 @@ import { Pair } from '../model/pair';
 
 import { CategoryService } from '../service/category.service';
 import { UploadService } from '../service/upload.service';
-import { IdService } from '../service/core.service';
 
 @Component({
   
@@ -44,7 +43,7 @@ export class CategoryValidationProblemComponent implements OnInit {
   show: boolean;
   hasSynonym: boolean;
   
-  constructor(private uploadService: UploadService, private categoryService: CategoryService, private idService: IdService) {
+  constructor(private uploadService: UploadService, private categoryService: CategoryService) {
   }   
   
   ngOnInit(): void {

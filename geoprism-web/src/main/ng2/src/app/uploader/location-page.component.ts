@@ -24,7 +24,7 @@ import { LocalValidator } from '../core/function-validator.directive';
 import { RemoteValidator } from '../core/async-validator.directive';
 import { UploadInformation, Sheet, Page, Field, Universal, Locations, LocationAttribute} from './uploader-model';
 import { CategoryService } from '../service/category.service';
-import { IdService } from '../service/core.service';
+import { IdService } from '../core/service/core.service';
 
 class LocationField {
   constructor(public field: Field, public universal: Universal) {}

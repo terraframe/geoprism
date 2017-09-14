@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 
-import { RunwayException } from '../model/runway-exception';
+import { RunwayException } from '../runway-exception';
 
 export interface IEventListener {
   start(): void;

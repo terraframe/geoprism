@@ -24,8 +24,6 @@ import { Program } from '../model/dhis2-program';
 import { TrackedEntity } from '../model/dhis2-tracked-entity';
 import { TrackedEntityAttribute } from '../model/dhis2-tracked-entity-attribute';
 
-import { EventService } from '../service/core.service';
-import { LocalizationService } from '../service/localization.service';
 import { DHIS2Service } from '../service/dhis2.service';
 
 declare let acp: string;
@@ -43,9 +41,7 @@ export class DHIS2IdFinderComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private dhis2Service: DHIS2Service,
-    private localizationService: LocalizationService,
-    private eventService: EventService) { }
+    private dhis2Service: DHIS2Service) { }
 
   ngOnInit(): void {
     $("#main").css("overflow-y", "auto");

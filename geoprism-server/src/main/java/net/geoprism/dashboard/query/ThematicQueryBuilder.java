@@ -40,7 +40,6 @@ import com.runwaysdk.query.SelectableNumber;
 import com.runwaysdk.query.SelectableSingle;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.gis.geo.GeoEntity;
 
 import net.geoprism.QueryUtil;
 import net.geoprism.dashboard.AllAggregationType;
@@ -179,7 +178,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
     String attributeName = mdAttribute.definesAttribute();
     String displayLabel = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
 
-    SelectableSingle thematicAttr = query.get(attributeName);
+    Selectable thematicAttr = query.get(attributeName);
     // use the basic Selectable if no aggregate is selected
     Selectable thematicSel = thematicAttr;
 
@@ -291,7 +290,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
         winFuncQuery.SELECT_DISTINCT(rank);
         winFuncQuery.SELECT_DISTINCT(label);
         winFuncQuery.SELECT_DISTINCT(id);
-        winFuncQuery.GROUP_BY(thematicAttr, (SelectableSingle) id);
+        winFuncQuery.GROUP_BY((SelectableSingle) thematicAttr, (SelectableSingle) id);
         winFuncQuery.ORDER_BY(thematicSel, sortOrder);
 
         this.setCriteriaOnInnerQuery(winFuncQuery, query);
@@ -341,7 +340,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
           if (definedByClass.getId().equals(mdClass.getId()))
           {
-            Attribute attr = componentQuery.get(mdAttribute.definesAttribute());
+            Selectable attr = componentQuery.get(mdAttribute.definesAttribute());
 
             condition.restrictQuery(vQuery, attr);
           }

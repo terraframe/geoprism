@@ -22,8 +22,8 @@ import { Headers, Http, Response, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { EventService, BasicService } from './core.service';
-import { EventHttpService } from './event-http.service';
+import { EventService, BasicService } from '../core/service/core.service';
+import { EventHttpService } from '../core/service/event-http.service';
 
 import { Program } from '../model/dhis2-program';
 import { TrackedEntity } from '../model/dhis2-tracked-entity';

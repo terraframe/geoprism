@@ -21,16 +21,6 @@ package net.geoprism.report;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.dashboard.AggregationStrategy;
-import net.geoprism.dashboard.AggregationStrategyView;
-import net.geoprism.dashboard.AllAggregationType;
-import net.geoprism.dashboard.GeometryAggregationStrategy;
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-import net.geoprism.dashboard.query.ThematicQueryBuilder;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierQuery;
-
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -41,7 +31,6 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
@@ -65,6 +54,16 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeReference;
+
+import net.geoprism.dashboard.AggregationStrategy;
+import net.geoprism.dashboard.AggregationStrategyView;
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.GeometryAggregationStrategy;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
 
 public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 {
@@ -126,7 +125,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
 
   protected SelectablePrimitive getSelectable(ValueQuery vQuery, GeneratedComponentQuery query, ReportAttributeMetadata attribute)
   {
-    Attribute selectable = query.get(attribute.getAttributeName());
+    Selectable selectable = query.get(attribute.getAttributeName());
 
     if (selectable instanceof SelectableReference)
     {
