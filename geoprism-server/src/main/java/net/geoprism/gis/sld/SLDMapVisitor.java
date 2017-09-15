@@ -72,6 +72,7 @@ import net.geoprism.dashboard.condition.wrapper.Primitive;
 import net.geoprism.dashboard.layer.CategoryIcon;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.gis.style.MapStyleUtil;
 import net.geoprism.gis.wrapper.AttributeType;
 import net.geoprism.gis.wrapper.FeatureStrategy;
 import net.geoprism.gis.wrapper.FeatureType;
@@ -314,24 +315,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       return null;
     }
 
-    protected JSONArray getCategories(String cats)
-    {
-      try
-      {
-        JSONObject catsJSON = new JSONObject(cats);
-        
-        if(catsJSON.has("catLiElems"))
-        {
-          return catsJSON.getJSONArray("catLiElems");
-        }
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException("Can not parse categories json. There may be missing data.", e);
-      }
-      
-      return new JSONArray();
-    }
   }
 
   private static class PointSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
@@ -350,7 +333,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     @Override
     protected Node getSLD()
     {
-      NumberFormat formatter = getRuleNumberFormatter();
+      NumberFormat formatter = MapStyleUtil.getRuleNumberFormatter();
       Node root = super.getSLD();
 
       node("FeatureTypeName").text(style.getName()).build(root);
@@ -593,7 +576,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           String cats = dTStyle.getCategoryPointStyles();
           if (cats.length() > 0)
           {
-            JSONArray catsArrJSON = this.getCategories(cats);
+            JSONArray catsArrJSON = MapStyleUtil.getCategories(cats);
 
             // SLD for all the categories scraped from the client
             for (int i = 0; i < catsArrJSON.length(); i++)
@@ -653,7 +636,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               if(isRangeCat == true)
               {
                 HashMap<String, Double> attributeMinMax = tLayer.getLayerMinMax(attribute);
-                HashMap<String,Object> catsHashMap = getCategoryProps(thisObj, attributeType, attributeMinMax);
+                HashMap<String,Object> catsHashMap = MapStyleUtil.getCategoryProps(thisObj, attributeType, attributeMinMax);
                 catVal = (String) catsHashMap.get(ThematicStyle.CATEGORYVALUE);
                 catColor = (String) catsHashMap.get(ThematicStyle.CATEGORYCOLOR);
                 catTitle = (String) catsHashMap.get(ThematicStyle.CATEGORYTITLE);
@@ -684,7 +667,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               }
               else
               {
-                HashMap<String,Object> catsHashMap = getCategoryProps(thisObj, attributeType);
+                HashMap<String,Object> catsHashMap = MapStyleUtil.getCategoryProps(thisObj, attributeType);
                 catVal = (String) catsHashMap.get(ThematicStyle.CATEGORYVALUE);
                 catColor = (String) catsHashMap.get(ThematicStyle.CATEGORYCOLOR);
                 catTitle = (String) catsHashMap.get(ThematicStyle.CATEGORYTITLE);
@@ -979,7 +962,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
       String wkn = tStyle.getBubbleWellKnownName();
       Integer rotation = tStyle.getBubbleRotation();
 
-      NumberFormat formatter = getRuleNumberFormatter();
+      NumberFormat formatter = MapStyleUtil.getRuleNumberFormatter();
 
       if (tStyle.getBubbleContinuousSize() == true)
       {
@@ -1469,7 +1452,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     @Override
     protected Node getSLD()
     {
-      NumberFormat formatter = getRuleNumberFormatter();
+      NumberFormat formatter = MapStyleUtil.getRuleNumberFormatter();
       Node root = super.getSLD();
       String currentLayerName = this.visitor.currentLayer.getName();
 
@@ -1589,7 +1572,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
           String cats = dTStyle.getCategoryPolygonStyles();
           if (cats.length() > 0)
           {
-            JSONArray catsArrJSON = this.getCategories(cats);
+            JSONArray catsArrJSON = MapStyleUtil.getCategories(cats);
 
             // SLD for all the categories scraped from the client
             for (int i = 0; i < catsArrJSON.length(); i++)
@@ -1617,7 +1600,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               if(isRangeCat == true)
               {
                 HashMap<String, Double> attributeMinMax = tLayer.getLayerMinMax(attribute);
-                HashMap<String,Object> catsHashMap = getCategoryProps(thisObj, attributeType, attributeMinMax);
+                HashMap<String,Object> catsHashMap = MapStyleUtil.getCategoryProps(thisObj, attributeType, attributeMinMax);
                 catVal = (String) catsHashMap.get(ThematicStyle.CATEGORYVALUE);
                 catColor = (String) catsHashMap.get(ThematicStyle.CATEGORYCOLOR);
                 catTitle = (String) catsHashMap.get(ThematicStyle.CATEGORYTITLE);
@@ -1648,7 +1631,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
               }
               else
               {
-                HashMap<String,Object> catsHashMap = getCategoryProps(thisObj, attributeType);
+                HashMap<String,Object> catsHashMap = MapStyleUtil.getCategoryProps(thisObj, attributeType);
                 catVal = (String) catsHashMap.get(ThematicStyle.CATEGORYVALUE);
                 catColor = (String) catsHashMap.get(ThematicStyle.CATEGORYCOLOR);
                 catTitle = (String) catsHashMap.get(ThematicStyle.CATEGORYTITLE);
@@ -2355,147 +2338,6 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   }
   
-  protected static NumberFormat getRuleNumberFormatter()
-  {
-    return new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(LocalizationFacade.getLocale()));
-  }
-  
-  
-  public static HashMap<String,Object> getCategoryProps(JSONObject categoryJSON, AttributeType attributeType)
-  {
-    NumberFormat formatter = getRuleNumberFormatter();
-    HashMap<String,Object> categoryMap = new HashMap<String,Object>();
-    
-    String catVal;
-    String catTitle;
-    String catColor;
-    boolean isOtherCat = false;
-    boolean otherCatEnabled = true;
-    boolean isOntologyCat;
-    
-    try
-    {
-      catVal = categoryJSON.getString(ThematicStyle.VAL);
-      catColor = categoryJSON.getString(ThematicStyle.COLOR);
-      catTitle = catVal;
-      isOntologyCat = categoryJSON.getBoolean("isOntologyCat");
-  
-      if (isOntologyCat == false)
-      {
-        // 'other' attributes only relevant for non-ontology categories
-        isOtherCat = categoryJSON.getBoolean(ThematicStyle.ISOTHERCAT);
-        otherCatEnabled = categoryJSON.getBoolean("otherEnabled");
-      }
-    }
-    catch (JSONException e)
-    {
-      String msg = "Can not parse JSON during SLD generation.";
-      throw new ProgrammingErrorException(msg, e);
-    }
-
-    // If this category is a defined category (i.e. not the other category)
-    if (isOtherCat == false)
-    {
-      if (attributeType.equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
-      {
-        try
-        {
-          catTitle = formatter.format(new Double(catVal));
-        }
-        catch (Exception e)
-        {
-          // The category isn't actually a number so it can't be localized
-        }
-      }
-    }
-    
-    categoryMap.put(ThematicStyle.CATEGORYVALUE, catVal);
-    categoryMap.put(ThematicStyle.CATEGORYTITLE, catTitle);
-    categoryMap.put(ThematicStyle.CATEGORYCOLOR, catColor);
-    categoryMap.put("catOtherCat", isOtherCat);
-    categoryMap.put("catOtherEnabled", otherCatEnabled);
-    categoryMap.put("isOntologyCat", isOntologyCat);
-    
-    return categoryMap;
-  }
-  
-  
-  public static HashMap<String,Object> getCategoryProps(JSONObject categoryJSON, AttributeType attributeType, HashMap<String, Double> attributeMinMax)
-  {
-    NumberFormat formatter = getRuleNumberFormatter();
-    
-    HashMap<String,Object> categoryMap = getCategoryProps(categoryJSON, attributeType);
-    
-    String catVal = (String) categoryMap.get(ThematicStyle.CATEGORYVALUE); // should be/become the min val
-    String catTitle = (String) categoryMap.get(ThematicStyle.CATEGORYTITLE);
-    boolean isOtherCat = (boolean) categoryMap.get("catOtherCat");
-    boolean isOntologyCat = (boolean) categoryMap.get("isOntologyCat");
-    
-    String catMaxVal = null;
-    boolean rangeAllMin = false;
-    boolean rangeAllMax = false;
-    
-    try
-    {
-      if (isOntologyCat == false)
-      {
-        if(isOtherCat == false)
-        {
-          catMaxVal = categoryJSON.getString(ThematicStyle.VALMAX);
-          if(categoryJSON.has(ThematicStyle.RANGEALLMIN))
-          {
-            rangeAllMin = categoryJSON.getBoolean(ThematicStyle.RANGEALLMIN);
-            if(rangeAllMin == true)
-            {
-              catVal = Double.toString(attributeMinMax.get("min"));
-            }
-          }
-          if(categoryJSON.has(ThematicStyle.RANGEALLMAX))
-          {
-            rangeAllMax = categoryJSON.getBoolean(ThematicStyle.RANGEALLMAX);
-            if(rangeAllMax == true)
-            {
-              catMaxVal = Double.toString(attributeMinMax.get("max"));
-            }
-          }
-        }
-      }
-    }
-    catch (JSONException e)
-    {
-      String msg = "Can not parse JSON during SLD generation.";
-      throw new ProgrammingErrorException(msg, e);
-    }
-
-    // If this category is a defined category (i.e. not the other category)
-    if (isOtherCat == false)
-    {
-      if (attributeType.equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
-      {
-        if(catMaxVal != null && catMaxVal.length() > 0)
-        {
-          try
-          {
-            String catMin = formatter.format(new Double(catVal));
-            String catMax = formatter.format(new Double(catMaxVal));
-            catTitle = catMin.concat(" - ").concat(catMax);
-          }
-          catch (Exception e)
-          {
-            // The category isn't actually a number so it can't be localized
-          }
-        }
-      }
-    }
-    
-    categoryMap.put(ThematicStyle.CATEGORYVALUE, catVal);
-    categoryMap.put(ThematicStyle.CATEGORYMAXVALUE, catMaxVal);
-    categoryMap.put(ThematicStyle.CATEGORYTITLE, catTitle);
-    categoryMap.put(ThematicStyle.RANGEALLMIN, rangeAllMin);
-    categoryMap.put(ThematicStyle.RANGEALLMAX, rangeAllMax);
-    
-    return categoryMap;
-  }
   
   /**
    * Rather than throwing an error if a json object doesn't have an expected property we will 
