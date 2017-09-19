@@ -41,14 +41,14 @@ public class CompositePublisher
     this.publishers.add(publisher);
   }
 
-  public byte[] writeVectorTiles(Envelope envelope)
+  public byte[] writeVectorTiles(Envelope envelope, Envelope bounds)
   {
     // Add built layer to MVT
     final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
 
     for (VectorLayerPublisherIF publisher : this.publishers)
     {
-      List<Layer> layers = publisher.writeVectorLayers(envelope);
+      List<Layer> layers = publisher.writeVectorLayers(envelope, bounds);
 
       for (Layer layer : layers)
       {

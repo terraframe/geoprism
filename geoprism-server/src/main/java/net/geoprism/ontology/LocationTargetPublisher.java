@@ -196,7 +196,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
   }
 
   @Override
-  public List<Layer> writeVectorLayers(Envelope envelope)
+  public List<Layer> writeVectorLayers(Envelope envelope, Envelope bounds)
   {
     try
     {
@@ -222,12 +222,12 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     }
   }
 
-  public byte[] writeVectorTiles(Envelope envelope)
+  public byte[] writeVectorTiles(Envelope envelope, Envelope bounds)
   {
     // Add built layer to MVT
     final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
 
-    List<Layer> layers = this.writeVectorLayers(envelope);
+    List<Layer> layers = this.writeVectorLayers(envelope, bounds);
 
     for (Layer layer : layers)
     {

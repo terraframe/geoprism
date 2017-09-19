@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -183,7 +181,7 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
   }
 
   @Override
-  public List<Layer> writeVectorLayers(Envelope envelope)
+  public List<Layer> writeVectorLayers(Envelope envelope, Envelope bounds)
   {
     try
     {
@@ -209,12 +207,12 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     }
   }
 
-  public byte[] writeVectorTiles(Envelope envelope)
+  public byte[] writeVectorTiles(Envelope envelope, Envelope bounds)
   {
     // Add built layer to MVT
     final VectorTile.Tile.Builder builder = VectorTile.Tile.newBuilder();
 
-    List<Layer> layers = this.writeVectorLayers(envelope);
+    List<Layer> layers = this.writeVectorLayers(envelope, bounds);
 
     for (Layer layer : layers)
     {

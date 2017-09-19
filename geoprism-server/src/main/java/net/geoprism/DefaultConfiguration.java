@@ -193,26 +193,27 @@ public class DefaultConfiguration implements ConfigurationIF
         String id = object.getString("id");
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
         
-        Envelope envelope = PublisherUtil.getTileBounds(object);
+        Envelope envelope = PublisherUtil.getEnvelope(object);
+        Envelope bounds = PublisherUtil.getTileBounds(object);
 
         if (type.equals(LM_CONTEXT))
         {
           LocationContextPublisher publisher = new LocationContextPublisher(id, "");
-          byte[] bytes = publisher.writeVectorTiles(envelope);
+          byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM_TARGET))
         {
           LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
-          byte[] bytes = publisher.writeVectorTiles(envelope);
+          byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM))
         {
           CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(id, universalId, ""), new LocationContextPublisher(id, ""));
-          byte[] bytes = publisher.writeVectorTiles(envelope);
+          byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }

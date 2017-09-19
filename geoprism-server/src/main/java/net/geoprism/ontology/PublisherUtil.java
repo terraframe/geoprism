@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -48,7 +46,29 @@ public class PublisherUtil
     }
   }
 
+  public static Envelope getEnvelope(JSONObject object)
+  {
+    try
+    {
+      int x = object.getInt("x");
+      int y = object.getInt("y");
+      int zoom = object.getInt("z");
+
+      return PublisherUtil.getEnvelope(x, y, zoom);
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
   public static Envelope getTileBounds(int x, int y, int zoom)
+  {
+    Envelope envelope = getEnvelope(x, y, zoom);
+    return getTileBounds(envelope);
+  }
+
+  public static Envelope getTileBounds(Envelope envelope)
   {
     try
     {
@@ -56,14 +76,17 @@ public class PublisherUtil
       CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:3857", true);
       MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
 
-      Envelope envelope = new Envelope(getLong(x, zoom), getLong(x + 1, zoom), getLat(y, zoom), getLat(y + 1, zoom));
-
       return JTS.transform(envelope, transform);
     }
     catch (FactoryException | TransformException e)
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  public static Envelope getEnvelope(int x, int y, int zoom)
+  {
+    return new Envelope(getLong(x, zoom), getLong(x + 1, zoom), getLat(y, zoom), getLat(y + 1, zoom));
   }
 
   public static double getLong(int x, int zoom)

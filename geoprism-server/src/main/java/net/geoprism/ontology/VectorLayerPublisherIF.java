@@ -25,5 +25,5 @@ import com.wdtinc.mapbox_vector_tile.VectorTile;
 
 public interface VectorLayerPublisherIF
 {
-  public List<VectorTile.Tile.Layer> writeVectorLayers(Envelope envelope);
+  public List<VectorTile.Tile.Layer> writeVectorLayers(Envelope envelope, Envelope bounds);
 }
