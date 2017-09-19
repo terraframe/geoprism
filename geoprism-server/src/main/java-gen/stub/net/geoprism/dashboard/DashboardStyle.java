@@ -289,5 +289,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
     this.setLabelHalo(source.getLabelHalo());
     this.setLabelFont(source.getLabelFont());
     this.setLabelColor(source.getLabelColor());
+    this.setEnableLabel(source.getEnableLabel());
+    this.setEnableValue(source.getEnableValue());
   }
 }
