@@ -207,7 +207,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
         String layerName = this.getLayerName();
 
         List<Layer> layers = new LinkedList<Layer>();
-        layers.add(this.writeVectorLayer(layerName, envelope, resultSet));
+        layers.add(this.writeVectorLayer(layerName, bounds, resultSet));
 
         return layers;
       }

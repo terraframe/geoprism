@@ -192,7 +192,7 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
         String layerName = this.getLayerName();
 
         List<Layer> layers = new LinkedList<Layer>();
-        layers.add(this.writeVectorLayer(layerName, envelope, resultSet));
+        layers.add(this.writeVectorLayer(layerName, bounds, resultSet));
 
         return layers;
       }

@@ -335,7 +335,7 @@ public abstract class LayerPublisher
     return mvt.toByteArray();
   }
 
-  public VectorTile.Tile.Layer writeVectorLayer(String layerName, Envelope envelope, ResultSet resultSet) throws IOException
+  public VectorTile.Tile.Layer writeVectorLayer(String layerName, Envelope bounds, ResultSet resultSet) throws IOException
   {
     try
     {
@@ -367,7 +367,7 @@ public abstract class LayerPublisher
 
       MvtLayerParams layerParams = new MvtLayerParams();
 
-      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, envelope, geomFactory, layerParams, acceptAllGeomFilter);
+      TileGeomResult tileGeom = JtsAdapter.createTileGeom(geometries, bounds, geomFactory, layerParams, acceptAllGeomFilter);
 
       // Create MVT layer
       final MvtLayerProps layerProps = new MvtLayerProps();
