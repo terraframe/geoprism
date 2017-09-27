@@ -70,7 +70,9 @@ public class DHIS2DataImporter
   
   private OrgUnitLevelJsonToUniversal[] universals;
   
-  private String[] countryOrgUnitExcludes;
+//  private String[] countryOrgUnitExcludes;
+  
+  private String countryOrgUnitId;
   
   public static void main(String[] args)
   {
@@ -80,7 +82,7 @@ public class DHIS2DataImporter
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
-    options.addOption(Option.builder("countryOrgUnitExcludes").hasArg().argName("countryOrgUnitExcludes").longOpt("countryOrgUnitExcludes").desc("DHIS2 does not support multiple countries. However, some systems are misconfigured and have multiple countries. Our importer does not support this. You must exclude the extraneous countries to get this importer to work. This is a comma separated list of org unit ids to exclude from the import.").optionalArg(true).build());
+    options.addOption(Option.builder("countryOrgUnitId").hasArg().argName("countryOrgUnitId").longOpt("countryOrgUnitId").desc("DHIS2 does not support multiple countries. However, some systems are misconfigured and have multiple countries. Our importer does not support this. You must hardcode the real country org unit to get this importer to work.").optionalArg(true).build());
     
     try {
       CommandLine line = parser.parse( options, args );
@@ -89,7 +91,7 @@ public class DHIS2DataImporter
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
       String appcfgPath = line.getOptionValue("appcfgPath");
-      String countryOrgUnitExcludes = line.getOptionValue("countryOrgUnitExcludes");
+      String countryOrgUnitId = line.getOptionValue("countryOrgUnitId");
       
       if (url == null)
       {
@@ -101,7 +103,7 @@ public class DHIS2DataImporter
         resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
-      doImportInRequest(url, username, password, countryOrgUnitExcludes);
+      doImportInRequest(url, username, password, countryOrgUnitId);
     }
     catch (ParseException e)
     {
@@ -111,7 +113,7 @@ public class DHIS2DataImporter
   
   // Don't ever put an @Request on a main method or you will regret it I promise you
   @Request
-  public static void doImportInRequest(String url, String username, String password, String countryOrgUnitExcludes)
+  public static void doImportInRequest(String url, String username, String password, String countryOrgUnitId)
   {
     DHIS2Configuration config = DHIS2Configuration.getByKey("DEFAULT");
     config.setPazzword(password);
@@ -120,18 +122,15 @@ public class DHIS2DataImporter
     config.appLock();
     config.apply();
     
-    new DHIS2DataImporter(url, username, password, countryOrgUnitExcludes).importAll();
+    new DHIS2DataImporter(url, username, password, countryOrgUnitId).importAll();
   }
   
-  public DHIS2DataImporter(String url, String username, String password, String countryOrgUnitExcludes)
+  public DHIS2DataImporter(String url, String username, String password, String countryOrgUnitId)
   {
     this.geometryFactory = new GeometryFactory();
     this.geometryHelper = new GeometryHelper();
     
-    if (countryOrgUnitExcludes != null)
-    {
-      this.countryOrgUnitExcludes = StringUtils.split(countryOrgUnitExcludes, ",");
-    }
+    this.countryOrgUnitId = countryOrgUnitId;
     
     dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.setServerUrl(url);
@@ -167,6 +166,8 @@ public class DHIS2DataImporter
     Database.executeStatement("truncate allowed_in;");
     Database.executeStatement("truncate classifier;");
     Database.executeStatement("truncate classifier_is_a_relationship;");
+    Database.executeStatement("truncate rwsynonym;");
+    Database.executeStatement("truncate synonym_relationship;");
    
     Universal rootUni = new Universal();
     rootUni.getDisplayLabel().setValue("ROOT");
@@ -249,7 +250,7 @@ public class DHIS2DataImporter
     {
       JSONObject unit = units.getJSONObject(i);
       
-      OrgUnitJsonToGeoEntity converter = new OrgUnitJsonToGeoEntity(this, geometryFactory, geometryHelper, unit, this.countryOrgUnitExcludes);
+      OrgUnitJsonToGeoEntity converter = new OrgUnitJsonToGeoEntity(this, geometryFactory, geometryHelper, unit, this.countryOrgUnitId);
       converter.apply();
       
       converters[i] = converter;
@@ -257,7 +258,7 @@ public class DHIS2DataImporter
     
     if (OrgUnitJsonToGeoEntity.countryGeos.size() > 1)
     {
-      throw new RuntimeException("Multiple country geo entities were detected. You need to figure out which ones of these are bogus and add their ids as exclusions.\n" + StringUtils.join(OrgUnitJsonToGeoEntity.countryGeos, "\n"));
+      throw new RuntimeException("Multiple country geo entities were detected. You need to figure out which ones of these is the real country level Org unit and add it as an argument to this program.\n" + StringUtils.join(OrgUnitJsonToGeoEntity.countryGeos, "\n"));
     }
     
     // Assign parents

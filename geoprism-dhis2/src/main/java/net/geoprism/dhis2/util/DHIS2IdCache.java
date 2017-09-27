@@ -53,7 +53,7 @@ public class DHIS2IdCache
    */
   public void fetchIds()
   {
-    HTTPResponse response = dhis2.httpGet("api/27/system/id.json", new NameValuePair[]{
+    HTTPResponse response = dhis2.httpGet("api/25/system/id.json", new NameValuePair[]{
         new NameValuePair("limit", FETCH_NUM)
     });
     DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
