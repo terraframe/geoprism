@@ -48,11 +48,13 @@ public class OrgUnitJsonToGeoEntity
   
   private GeoEntity geo;
   
-  private String[] countryOrgUnitExcludes;
+  private String countryOrgUnitId;
+  
+  private boolean skipMe = false;
   
   public static ArrayList<JSONObject> countryGeos = new ArrayList<JSONObject>();
   
-  public OrgUnitJsonToGeoEntity(DHIS2DataImporter importer, GeometryFactory geometryFactory, GeometryHelper geometryHelper, JSONObject orgUnit, String[] countryOrgUnitExcludes)
+  public OrgUnitJsonToGeoEntity(DHIS2DataImporter importer, GeometryFactory geometryFactory, GeometryHelper geometryHelper, JSONObject orgUnit, String countryOrgUnitId)
   {
     this.geometryFactory = geometryFactory;
     
@@ -64,19 +66,22 @@ public class OrgUnitJsonToGeoEntity
     
     this.importer = importer;
     
-    this.countryOrgUnitExcludes = countryOrgUnitExcludes;
+    this.countryOrgUnitId = countryOrgUnitId;
   }
   
   public void apply()
   {
     String id = json.getString("id");
-    if (ArrayUtils.contains(countryOrgUnitExcludes, id)) { return; }
     
     geo.setGeoId(id);
     
     geo.getDisplayLabel().setValue(json.getString("name"));
     
-    setUniversal();
+    if (!setUniversal())
+    {
+      skipMe = true;
+      return;
+    }
     
     setGeometry();
     
@@ -96,8 +101,9 @@ public class OrgUnitJsonToGeoEntity
   
   public void applyLocatedIn()
   {
+    if (skipMe) { return; }
+    
     String id = json.getString("id");
-    if (ArrayUtils.contains(countryOrgUnitExcludes, id)) { return; }
     
     GeoEntity parent;
     try
@@ -127,7 +133,7 @@ public class OrgUnitJsonToGeoEntity
     geo.applyInternal(false);
   }
   
-  private void setUniversal()
+  private boolean setUniversal()
   {
     String path = json.getString("path");
     
@@ -137,6 +143,11 @@ public class OrgUnitJsonToGeoEntity
     }
     
     int level = StringUtils.countMatches(path, "/") - 1;
+    
+    if (level == 0 && countryOrgUnitId != null && !json.getString("id").equals(countryOrgUnitId))
+    {
+      return false;
+    }
     
     Universal uni;
     try
@@ -150,10 +161,7 @@ public class OrgUnitJsonToGeoEntity
     
     geo.setUniversal(uni);
     
-    if (level == 0)
-    {
-      countryGeos.add(json);
-    }
+    return true;
   }
   
   private void setLocales()
