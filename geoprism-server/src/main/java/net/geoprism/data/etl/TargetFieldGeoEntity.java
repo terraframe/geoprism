@@ -562,12 +562,19 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 	    for (GeoEntity geo : geoEntities)
 	    {
 	      OIterator<Term> it = geo.getAllAncestors(LocatedIn.CLASS);
-	      for (Term ancestor : it)
+	      try
 	      {
-	        if (ancestor.getId().equals(extractedParentEntity.getId()))
+	        for (Term ancestor : it)
 	        {
-	          childEntities.add(geo);
+	          if (ancestor.getId().equals(extractedParentEntity.getId()))
+	          {
+	            childEntities.add(geo);
+	          }
 	        }
+	      }
+	      finally
+	      {
+	    	  it.close();
 	      }
 	    }
 	    
