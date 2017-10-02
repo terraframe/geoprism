@@ -369,15 +369,21 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
             }
             
             OIterator<? extends Business> it = current.getParents(AllowedIn.CLASS);
-            
-            if (!it.hasNext())
+            try
             {
-              continue;
+              if (!it.hasNext())
+              {
+                continue;
+              }
+              
+              for (Business parentOfCurrent : it)
+              {
+                stack.push((Universal) parentOfCurrent);
+              }
             }
-            
-            for (Business parentOfCurrent : it)
+            finally
             {
-              stack.push((Universal) parentOfCurrent);
+              it.close();
             }
           }
           
