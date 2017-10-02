@@ -706,7 +706,11 @@ public class TargetBuilder
   {
     String label = cAttribute.getString("label");
     String universalId = cAttribute.getString("universal");
-    boolean useCoordinatesForLocationAssignment = cAttribute.getBoolean("useCoordinatesForLocationAssignment");
+    boolean useCoordinatesForLocationAssignment = false;
+    if(cAttribute.has("useCoordinatesForLocationAssignment"))
+    {
+      useCoordinatesForLocationAssignment = cAttribute.getBoolean("useCoordinatesForLocationAssignment");
+    }
     Boolean aggregatable = this.getAggregatable(cAttribute);
     String attributeName = this.generateAttributeName(label);
     
