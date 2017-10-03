@@ -35,10 +35,10 @@
               </table>            
             </div>
           </div>
-          <div class="label-holder">
+          <div *ngIf="summary.file != null" class="label-holder">
             <strong></strong>
           </div>
-          <div class="holder">
+          <div *ngIf="summary.file != null" class="holder">
             <div class="row-holder">
               <p>
                 <a class="fa fa-sign-out ico-export" (click)="download()"><localize key="dataUploader.downloadFailures"></localize></a>                 
