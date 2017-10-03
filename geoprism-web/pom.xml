@@ -24,7 +24,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0021-SNAPSHOT</version>
+    <version>1.01.0022-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-web</artifactId>
   <packaging>war</packaging>
@@ -362,6 +362,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
         <executions>
           <execution>
             <id>exec-npm-install</id>

@@ -19,9 +19,10 @@
 package net.geoprism.dhis2.importer;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -75,13 +76,13 @@ public class OrgUnitJsonToGeoEntity
     
     geo.setGeoId(id);
     
-    geo.getDisplayLabel().setValue(json.getString("name"));
-    
     if (!setUniversal())
     {
       skipMe = true;
       return;
     }
+    
+    setName();
     
     setGeometry();
     
@@ -97,6 +98,27 @@ public class OrgUnitJsonToGeoEntity
     Synonym synonym2 = new Synonym();
     synonym2.getDisplayLabel().setValue(json.getString("id"));
     Synonym.create(synonym2, geo.getId());
+    
+    
+    // Akros has some weird naming conventions. We're matching here based on like 'vil Mulala SCHOOL'. In this case we'll extract 'Mulala'.
+    String prefixPattern = "^([a-z]{0,4}) ?(\\w*) ?(.*)$";
+    Pattern pattern = Pattern.compile(prefixPattern);
+    Matcher matcher = pattern.matcher(json.getString("name"));
+    if (matcher.find() && matcher.group(2) != null && !matcher.group(2).equals(""))
+    {
+      String synonymText = matcher.group(2);
+      
+      Synonym synonym = new Synonym();
+      synonym.getDisplayLabel().setValue(synonymText);
+      Synonym.create(synonym, geo.getId());
+    }
+  }
+  
+  private void setName()
+  {
+    String name = json.getString("name");
+    
+    geo.getDisplayLabel().setValue(name);
   }
   
   public void applyLocatedIn()

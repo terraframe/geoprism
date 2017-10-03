@@ -26,16 +26,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.StringJoiner;
 
-import net.geoprism.data.importer.ExclusionException;
-import net.geoprism.ontology.NonUniqueEntityResultException;
-
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.Transient;
+import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
@@ -53,6 +53,9 @@ import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.data.importer.ExclusionException;
+import net.geoprism.ontology.NonUniqueEntityResultException;
 
 public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoEntityIF, TargetFieldValidationIF
 {
@@ -352,15 +355,46 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     	  {
            // try determining if one of the ambiguous entities are within the parent as determined by spatial st_within from
     	      // coordinates in the spreadsheet
-          GeoEntity inferredEntity = findGeoEntityByParentComparison(label, parent, universal, spatialRefCoordObj, possibleEntities); 
-
+    	    GeoEntity inferredEntity = null;
+    	    
+    	    Stack<Universal> stack = new Stack<Universal>();
+    	    stack.push(universal);
+          while (stack.size() > 0)
+          {
+            Universal current = stack.pop();
+            
+            inferredEntity = findGeoEntityByParentComparison(label, current, spatialRefCoordObj, possibleEntities);
+            if (inferredEntity != null)
+            {
+              break;
+            }
+            
+            OIterator<? extends Business> it = current.getParents(AllowedIn.CLASS);
+            try
+            {
+              if (!it.hasNext())
+              {
+                continue;
+              }
+              
+              for (Business parentOfCurrent : it)
+              {
+                stack.push((Universal) parentOfCurrent);
+              }
+            }
+            finally
+            {
+              it.close();
+            }
+          }
+          
           if(inferredEntity != null)
           {
             return inferredEntity;
           }
           else
           {
-        	     // try coordinate (from spreadsheet) based nearest neighbor analysis
+        	  // try coordinate (from spreadsheet) based nearest neighbor analysis
 	        	inferredEntity = findGeoEntityByNearestNeighbor(label, universal, spatialRefCoordObj, possibleEntities);
 	        	if(inferredEntity != null)
 	        	{
@@ -460,19 +494,17 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     return null;
   }
   
-  private GeoEntity findGeoEntityByParentComparison(String locationName, GeoEntity parentEntity, Universal universal, JSONObject spatialRefCoordObj, ArrayList<GeoEntity> geoEntities)
+  private GeoEntity findGeoEntityByParentComparison(String locationName, Universal universal, JSONObject spatialRefCoordObj, ArrayList<GeoEntity> geoEntities)
   {
-	  
-      String sourceLat = this.getCoordinateObjectLatitude(spatialRefCoordObj);
-      String sourceLong = this.getCoordinateObjectLongitude(spatialRefCoordObj);
-      
-      ArrayList<String> geoIdList = new ArrayList<String>();
-      for(GeoEntity entity : geoEntities)
-      {
-        geoIdList.add(entity.getGeoId());
-      }
-      
-      GeoEntity extractedParentEntity = null;
+    String sourceLat = this.getCoordinateObjectLatitude(spatialRefCoordObj);
+    String sourceLong = this.getCoordinateObjectLongitude(spatialRefCoordObj);
+    
+    ArrayList<String> geoIdList = new ArrayList<String>();
+    for(GeoEntity entity : geoEntities)
+    {
+      geoIdList.add(entity.getGeoId());
+    }
+    
 	  OIterator<? extends Business> parentUniversals = universal.getParents(AllowedIn.CLASS);
 	  try
 	  {
@@ -486,41 +518,54 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 			  }
 			  else
 			  {
-			      StringBuffer sql = new StringBuffer();
-			      sql.append("SELECT g.*");
-			      sql.append("FROM geo_entity g ");
-			      sql.append("WHERE ST_Within(ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326)").concat(", g.geo_multi_polygon) "));
-			      sql.append("AND g.universal = ".concat("'").concat(parentUniversal.getId()).concat("'"));
-			      ResultSet resultSet = Database.query(sql.toString());
-			      
-			      try
+			    ArrayList<String> childIds = new ArrayList<String>();
+			    for (GeoEntity geo : geoEntities)
+			    {
+			      childIds.add(geo.getId());
+			    }
+			    
+		      StringBuffer sql = new StringBuffer();
+		      sql.append("SELECT g.id, apt.child_term ");
+		      sql.append("FROM geo_entity g, geo_entity_all_paths_table apt ");
+		      sql.append("WHERE ST_Within(ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326)").concat(", g.geo_multi_polygon) "));
+		      sql.append("AND g.universal = '" + parentUniversal.getId() + "' ");
+		      sql.append("AND apt.parent_term=g.id ");
+		      sql.append("AND apt.child_term = ANY('{" + StringUtils.join(childIds, ",") + "}')");
+		      ResultSet resultSet = Database.query(sql.toString());
+			    
+		      try
+		      {
+			      if (resultSet != null)
 			      {
-				      if (resultSet != null)
-				      {
-				        try
-				        {
-				        	 // Assuming there's only one parent geometry in the parent universal (i.e. no overlapping geometries)
-				          if (resultSet.next())
-				          {
-				            String entityId = resultSet.getString(1);
-				            extractedParentEntity = GeoEntity.get(entityId);
-				          }
-				        }
-				        catch (SQLException e)
-				        {
-				          throw new ProgrammingErrorException(e);
-				        }
-				      }
+			        try
+			        {
+			          if (resultSet.next())
+			          {
+			            String childTerm = resultSet.getString(2);
+			            
+			            if (resultSet.next()) // Our query should only return 1 result
+			            {
+			              return null;
+			            }
+			            return GeoEntity.get(childTerm);
+			          }
+			          return null;
+			        }
+			        catch (SQLException e)
+			        {
+			          throw new ProgrammingErrorException(e);
+			        }
 			      }
-			      finally
-			      {
-			    	    try {
-						resultSet.close();
-					}
-			    	    catch (SQLException e) {
-						throw new DatabaseException(e);
-					}
+		      }
+		      finally
+		      {
+			    	try {
+						  resultSet.close();
 			      }
+			    	catch (SQLException e) {
+	            throw new DatabaseException(e);
+					  }
+		      }
 			  }
 		  }
 	  }
@@ -529,36 +574,70 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 		  parentUniversals.close();
 	  }
 	  
-	  if(extractedParentEntity != null)
-	  {
-		ArrayList<GeoEntity> childEntities = new ArrayList<GeoEntity>();
-		OIterator<? extends Business> children = extractedParentEntity.getChildren(LocatedIn.CLASS);
-		try
-		{
-			while(children.hasNext())
-			{
-				GeoEntity child = (GeoEntity) children.next();
-				if(geoIdList.contains(child.getGeoId()))
-				{
-					childEntities.add(child);
-				}
-			}
-		}
-		finally
-		{
-			children.close();
-		}
-		
-		int numChildren = childEntities.size();
-		if(numChildren > 1)
-		{
-			return null; // Ambiguous children of the parent. Must return unique single result.
-		}
-		else if(numChildren == 1)
-		{
-			return childEntities.get(0);
-		}
-	  }
+//	  if(extractedParentEntity != null)
+//	  {
+//	    ArrayList<GeoEntity> childEntities = new ArrayList<GeoEntity>();
+//	    for (GeoEntity geo : geoEntities)
+//	    {
+//	      OIterator<Term> it = geo.getAllAncestors(LocatedIn.CLASS);
+//	      try
+//	      {
+//	        for (Term ancestor : it)
+//	        {
+//	          if (ancestor.getId().equals(extractedParentEntity.getId()))
+//	          {
+//	            childEntities.add(geo);
+//	          }
+//	        }
+//	      }
+//	      finally
+//	      {
+//	    	  it.close();
+//	      }
+//	    }
+//	    
+//	    int numChildren = childEntities.size();
+//      if(numChildren > 1)
+//      {
+//        return null; // Ambiguous children of the parent. Must return unique single result.
+//      }
+//      else if(numChildren == 1)
+//      {
+//        return childEntities.get(0);
+//      }
+//      else
+//      {
+//        return null; // Mismatch between ontology and coordinates
+//      }
+	    
+//  		ArrayList<GeoEntity> childEntities = new ArrayList<GeoEntity>();
+//  		OIterator<? extends Business> children = extractedParentEntity.getChildren(LocatedIn.CLASS);
+//  		try
+//  		{
+//  			while(children.hasNext())
+//  			{
+//  				GeoEntity child = (GeoEntity) children.next();
+//  				if(geoIdList.contains(child.getGeoId()))
+//  				{
+//  					childEntities.add(child);
+//  				}
+//  			}
+//  		}
+//  		finally
+//  		{
+//  			children.close();
+//  		}
+//  		
+//  		int numChildren = childEntities.size();
+//  		if(numChildren > 1)
+//  		{
+//  			return null; // Ambiguous children of the parent. Must return unique single result.
+//  		}
+//  		else if(numChildren == 1)
+//  		{
+//  			return childEntities.get(0);
+//  		}
+//	  }
 	  
 	  return null;
   }
