@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
@@ -89,14 +87,10 @@ public class SourceField implements SourceFieldIF
     field.setSourceDefinition(source);
     field.apply();
   }
-  
+
   @Override
   public JSONObject toJSON() throws JSONException
   {
-//    "$$hashKey":"object:564",
-//    "universal":"i8moh5ne0j66q2tbpawrpgkhnlbp4lx0i1vpa2tywfkq0wgqelwt6ay8b49cnbch",
-//    "selected":true    
-    
     JSONObject object = new JSONObject();
     object.put("name", this.attributeName);
     object.put("accepted", true);
@@ -104,7 +98,13 @@ public class SourceField implements SourceFieldIF
     object.put("label", this.label);
     object.put("type", this.type.name());
     object.put("columnType", this.type.name());
-    
+
     return object;
+  }
+
+  @Override
+  public boolean isNumber()
+  {
+    return ( this.type.equals(ColumnType.NUMBER) || this.type.equals(ColumnType.LONG) || this.type.equals(ColumnType.DOUBLE) );
   }
 }

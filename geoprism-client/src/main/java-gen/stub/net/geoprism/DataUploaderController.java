@@ -71,11 +71,19 @@ public class DataUploaderController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF getErrorFile(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    InputStream stream = DataUploaderDTO.getErrorFile(request, id);
+
+    return new InputStreamResponse(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", null);
+  }
+  
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF importData(ClientRequestIF request, @RequestParamter(name = "configuration") String configuration) throws JSONException
   {
-    String result = DataUploaderDTO.importData(request, configuration);
-
-    return new RestBodyResponse(new JSONObject(result));
+    ContentStream stream = (ContentStream) DataUploaderDTO.importData(request, configuration);
+    
+    return new InputStreamResponse(stream, stream.getContentType(), "Test.xlsx");
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)

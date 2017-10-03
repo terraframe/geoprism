@@ -972,7 +972,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
         // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
-        url = new URL("http://irs.gis-lab.info/?layers=" + wmsLayerName + "&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+//        url = new URL("http://irs.gis-lab.info/?layers=" + wmsLayerName + "&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
 
         //
         // BACKUP SERVICE
@@ -980,9 +980,9 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         // because this one http://irs.gis-lab.info/ is un-reliable and most web services are offered as
         // Tiled Map Services (TMS) which are not directly consumable by geotools.
         //
-        // wmsLayerName = "osm-wms";
-        // url = new
-        // URL("http://ows.terrestris.de/osm/service?layers="+wmsLayerName+"&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+         wmsLayerName = "osm-wms";
+         url = new
+         URL("http://ows.terrestris.de/osm/service?layers="+wmsLayerName+"&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
 
       }
       catch (MalformedURLException e)

@@ -1,4 +1,5 @@
 <div id="innerFrameHtml">
+    <loading-bar></loading-bar>
     
     <!-- HEADER AND NAVBAR -->
     <header>
@@ -14,7 +15,7 @@
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
                 <localize key="Data_Management"></localize><span class="caret"></span>
               </a>            
-              <ul dropdownMenu class="dropdown-menu">
+              <ul *dropdownMenu class="dropdown-menu">
                 <li role="menuitem"><a class="dropdown-item" routerLink="/datasets" routerLinkActive="active"><localize key="Data_Sets"></localize></a></li>
                 <li role="menuitem"><a class="dropdown-item" routerLink="/icons" routerLinkActive="active"><i></i><localize key="Icons"></localize></a></li>
                 <li role="menuitem"><a class="dropdown-item" routerLink="/categories" routerLinkActive="active"><i></i><localize key="Categories"></localize></a></li>

@@ -14,4 +14,5 @@ import 'rxjs';
 // You can import js, ts, css, sass, ...
 
 import 'ng2-file-upload/ng2-file-upload';
-import 'ng2-bootstrap'
+import 'ngx-bootstrap/dropdown'
+import 'ngx-bootstrap/modal'

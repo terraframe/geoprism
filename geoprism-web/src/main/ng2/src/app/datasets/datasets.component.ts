@@ -20,6 +20,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+
 import { FileSelectDirective, FileDropDirective, FileUploader, FileUploaderOptions } from 'ng2-file-upload/ng2-file-upload';
 
 import { Dataset } from '../model/dataset';
@@ -28,6 +31,7 @@ import { EventService } from '../core/service/core.service';
 import { DatasetService } from '../service/dataset.service';
 
 import { UploadWizardComponent } from '../uploader/upload-wizard.component';
+import { UploadResultComponent } from '../uploader/upload-result.component';
 
 declare let acp: string;
 
@@ -49,11 +53,14 @@ export class DatasetsComponent implements OnInit {
   
   @ViewChild('uploadEl') 
   private uploadElRef: ElementRef;
+  
+  bsModalRef: BsModalRef;  
 
   constructor(
     private router: Router,
     private datasetService: DatasetService,
-    private eventService: EventService) { }
+    private eventService: EventService,
+    private modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.getDatasets();
@@ -118,6 +125,11 @@ export class DatasetsComponent implements OnInit {
   onSuccess(data: any): void {
     if(data.datasets != null) {
       this.addDatasets(data.datasets);
+    }
+    
+    if(data.summary != null) {
+      this.bsModalRef = this.modalService.show(UploadResultComponent, {backdrop: 'static', class: 'gray modal-lg'});
+      this.bsModalRef.content.summary = data.summary;              	
     }
   }
   

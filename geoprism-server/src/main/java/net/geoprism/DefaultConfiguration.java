@@ -194,7 +194,7 @@ public class DefaultConfiguration implements ConfigurationIF
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
         
         Envelope envelope = PublisherUtil.getEnvelope(object);
-        Envelope bounds = PublisherUtil.getTileBounds(object);
+        Envelope bounds = PublisherUtil.getTileBounds(envelope);
 
         if (type.equals(LM_CONTEXT))
         {

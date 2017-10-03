@@ -34,4 +34,6 @@ public interface SourceFieldIF
   public void persist(ExcelSourceBinding source);
 
   public JSONObject toJSON() throws JSONException;
+
+  public boolean isNumber();
 }

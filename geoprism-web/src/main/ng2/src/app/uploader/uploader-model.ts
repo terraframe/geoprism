@@ -186,11 +186,18 @@ export class Problems {
   options: { [key:string]:Pair[]};
 }
 
+export class DatasetResult {
+  total:number;
+  failures:number;
+  file:string;	
+}
+
 export class DatasetResponse {
   success: boolean;
   datasets: Dataset[];
   sheets: Sheet[];
   problems: Problems;
+  summary:DatasetResult;
 }
 
 export class Label {

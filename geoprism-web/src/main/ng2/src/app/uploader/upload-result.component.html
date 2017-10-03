@@ -1,0 +1,60 @@
+<div class="modal-body">
+
+  <form #form="ngForm" name="form" class="modal-form">
+    <div>
+      <fieldset>
+        <section class="form-container">
+          <div class="label-holder"></div>
+          <div class="holder">
+            <div class="row-holder">
+              <h3><localize key="dataUploader.resultsHeader"></localize></h3>
+            </div>
+          </div>
+        
+          <div class="label-holder">
+            <strong><localize key="dataUploader.totalNumberOfRows"></localize></strong>
+          </div>
+          <div class="holder">
+            <div class="row-holder">
+              <table class="table table-bordered" style="font-size:inherit;"> 
+                <tbody>
+                  <tr><td>{{summary.total}}</td></tr>
+                </tbody>
+              </table>            
+            </div>
+          </div>
+          <div class="label-holder">
+            <strong><localize key="dataUploader.numberOfFailures"></localize></strong>
+          </div>
+          <div class="holder">
+            <div class="row-holder">
+              <table class="table table-bordered" style="font-size:inherit;"> 
+                <tbody>
+                  <tr><td>{{summary.failures}}</td></tr>
+                </tbody>
+              </table>            
+            </div>
+          </div>
+          <div class="label-holder">
+            <strong></strong>
+          </div>
+          <div class="holder">
+            <div class="row-holder">
+              <p>
+                <a class="fa fa-sign-out ico-export" (click)="download()"><localize key="dataUploader.downloadFailures"></localize></a>                 
+              </p>
+            </div>
+          </div>
+          <div class="label-holder">
+            <strong></strong>
+          </div>
+          <div class="holder">
+            <div class="row-holder">
+              <input type="button" [value]="'layer.category.ok' | localize" class="btn btn-primary" (click)="submit()" />              
+            </div>
+          </div>
+        </section>        
+      </fieldset>   
+    </div>
+  </form>
+</div>

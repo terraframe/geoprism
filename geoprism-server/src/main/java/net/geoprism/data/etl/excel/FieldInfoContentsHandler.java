@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl.excel;
 
@@ -33,6 +31,7 @@ import net.geoprism.data.etl.ColumnType;
 import net.geoprism.data.etl.ExcelFieldBindingQuery;
 import net.geoprism.data.etl.ExcelSourceBinding;
 import net.geoprism.data.etl.ExcelSourceBindingQuery;
+import net.geoprism.localization.LocalizationFacade;
 
 import org.apache.poi.ss.util.CellReference;
 import org.json.JSONArray;
@@ -59,9 +58,9 @@ public class FieldInfoContentsHandler implements SheetHandler
 
     private int              precision;
 
-    private int             scale;
-    
-    private int             inputPosition;
+    private int              scale;
+
+    private int              inputPosition;
 
     private Set<ColumnType>  dataTypes;
 
@@ -84,12 +83,12 @@ public class FieldInfoContentsHandler implements SheetHandler
     {
       return name.trim();
     }
-    
+
     public void setInputPosition(int position)
     {
       this.inputPosition = position;
     }
-    
+
     public int getInputPosition()
     {
       return this.inputPosition;
@@ -172,37 +171,37 @@ public class FieldInfoContentsHandler implements SheetHandler
   /**
    * Current row number
    */
-  private int                 rowNum;
+  private int                                 rowNum;
 
   /**
    * Current sheet name
    */
-  private String              sheetName;
+  private String                              sheetName;
 
   /**
    * Column-Attribute Map for the current sheet
    */
-  private Map<Integer, Field> map;
+  private Map<Integer, Field>                 map;
 
   /**
    * Set of the attributes names in the current sheet
    */
-  private Set<String>         attributeNames;
+  private Set<String>                         attributeNames;
 
   /**
    * JSONArray containing attribute information for all of the sheets.
    */
-  private JSONArray           information;
-  
+  private JSONArray                           information;
+
   private SpreadsheetImporterHeaderModifierIF headerModifier;
 
   public FieldInfoContentsHandler()
   {
     this.information = new JSONArray();
-    
+
     this.headerModifier = this.getHeaderModifier();
   }
-  
+
   public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
   {
     ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
@@ -238,7 +237,7 @@ public class FieldInfoContentsHandler implements SheetHandler
 
     return this.map.get(column);
   }
-  
+
   private int getFieldPosition(String cellReference)
   {
     CellReference reference = new CellReference(cellReference);
@@ -259,19 +258,19 @@ public class FieldInfoContentsHandler implements SheetHandler
     this.map = new HashMap<Integer, Field>();
     this.attributeNames = new TreeSet<String>();
   }
-  
+
   private boolean validateField(Field field, Integer columnPosition)
   {
-	  if(field.name == null)
-	  {
-		  ExcelHeaderException exception = new ExcelHeaderException();
-		  exception.setRow(Integer.toString(field.getInputPosition()));
-		  exception.setColumn(Integer.toString(columnPosition));
-		  
-	      throw exception;
-	  }
-	  
-	  return true;
+    if (field.name == null)
+    {
+      ExcelHeaderException exception = new ExcelHeaderException();
+      exception.setRow(Integer.toString(field.getInputPosition()));
+      exception.setColumn(Integer.toString(columnPosition));
+
+      throw exception;
+    }
+
+    return true;
   }
 
   @Override
@@ -285,8 +284,8 @@ public class FieldInfoContentsHandler implements SheetHandler
 
       for (Integer key : keys)
       {
-    	validateField(this.map.get(key), key);
-    	
+        validateField(this.map.get(key), key);
+
         fields.put(this.map.get(key).toJSON());
       }
 
@@ -327,16 +326,16 @@ public class FieldInfoContentsHandler implements SheetHandler
     {
       throw new ExcelFormulaException();
     }
-    
+
     int headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT;
     if (headerModifier != null)
     {
       headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
     }
 
-    if ( (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER )
+    if ( ( headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0 ) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER)
     {
-      if (!cellType.equals(ColumnType.TEXT) || !this.attributeNames.add(formattedValue))
+      if (! ( cellType.equals(ColumnType.TEXT) || cellType.equals(ColumnType.INLINE_STRING) ) || !this.attributeNames.add(formattedValue))
       {
         throw new InvalidHeaderRowException();
       }
@@ -363,7 +362,7 @@ public class FieldInfoContentsHandler implements SheetHandler
         attribute.setPrecision(precision - scale);
         attribute.setScale(scale);
       }
-      else if (cellType.equals(ColumnType.TEXT))
+      else if (cellType.equals(ColumnType.TEXT) || cellType.equals(ColumnType.INLINE_STRING))
       {
         attribute.addValue(contentValue);
       }
@@ -377,6 +376,8 @@ public class FieldInfoContentsHandler implements SheetHandler
 
   private JSONArray findMatches() throws JSONException
   {
+    String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
+
     JSONArray options = new JSONArray();
 
     QueryFactory factory = new QueryFactory();
@@ -388,11 +389,15 @@ public class FieldInfoContentsHandler implements SheetHandler
     for (Integer key : keys)
     {
       Field field = this.map.get(key);
+      String name = field.getName();
 
-      ExcelFieldBindingQuery fieldQuery = new ExcelFieldBindingQuery(factory);
-      fieldQuery.WHERE(fieldQuery.getColumnHeader().EQ(field.getName()));
+      if (!name.equals(label))
+      {
+        ExcelFieldBindingQuery fieldQuery = new ExcelFieldBindingQuery(factory);
+        fieldQuery.WHERE(fieldQuery.getColumnHeader().EQ(name));
 
-      query.WHERE(query.EQ(fieldQuery.getSourceDefinition()));
+        query.WHERE(query.EQ(fieldQuery.getSourceDefinition()));
+      }
     }
 
     OIterator<? extends ExcelSourceBinding> iterator = null;

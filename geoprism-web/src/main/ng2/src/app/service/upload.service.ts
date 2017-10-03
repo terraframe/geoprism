@@ -18,7 +18,7 @@
 ///
 
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response, URLSearchParams } from '@angular/http';
+import { Headers, Http, Response, URLSearchParams, RequestOptions, ResponseContentType } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
@@ -75,12 +75,27 @@ export class UploadService extends BasicService {
     let data = JSON.stringify({configuration : workbook });
     
     return this.ehttp
-      .post(acp + '/uploader/importData', data, {headers: headers})
+      .post(acp + '/uploader/importData', data, {headers:headers})
       .toPromise() 
       .then((response: any) => {
-        return response.json() as DatasetResponse;
+        return response.json() as DatasetResponse;        
       })      
       .catch(this.handleError.bind(this));
+  }
+  
+  getErrorFile(id:string): Promise<Response> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });    
+    
+    let data = JSON.stringify({id : id });
+    
+    let options = new RequestOptions({responseType: ResponseContentType.Blob, headers });
+    
+    return this.ehttp
+    .post(acp + '/uploader/getErrorFile', data, options)
+    .toPromise() 
+    .catch(this.handleError.bind(this));
   }
   
   getGeoEntitySuggestions(parentId: string, universalId: string, text: string, limit: string): Promise<Array<{ text: string, data: any }>> {
