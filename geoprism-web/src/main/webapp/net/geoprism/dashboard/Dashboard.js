@@ -809,7 +809,7 @@
     });
   }
   
-  angular.module("dashboard", ["dashboard-service", "localization-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-layer-form", "dashboard-builder", "data-uploader"]);
+  angular.module("dashboard", ["dashboard-service", "localization-service", "map-service", "report-panel", "dashboard-layer", "dashboard-map", "dashboard-panel", "dashboard-layer-form", "dashboard-builder"]);
   angular.module("dashboard")
    .controller('DashboardController', DashboardController)
 })();

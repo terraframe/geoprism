@@ -167,32 +167,6 @@
       return false;
     }
     
-    /*
-     * Data Upload Section
-     */
-    controller.uploadFile = function(files) {
-      var connection = {
-    	elementId : '#builder-div',
-        onSuccess : function(result) {
-          $scope.$emit('dataUpload', {information:result.information, options:result.options});            
-                
-          // Hide modal, but preserve the elements and values        
-          $scope.hidden = true;
-          $scope.$apply();
-        },            
-        onFailure : function(e){
-          $scope.fileErrors.push(e.message);
-                                 
-          $scope.$apply();
-                        
-          $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
-        },
-      };
-      
-      // Reset the file Errors
-      $scope.fileErrors = [];
-      datasetService.uploadSpreadsheet(connection, files[0]);
-    }
     
     /*
      * Event Listeners
