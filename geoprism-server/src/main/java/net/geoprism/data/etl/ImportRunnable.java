@@ -44,6 +44,7 @@ import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.MappableClass;
 import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
+import net.geoprism.data.etl.excel.CountSheetHandler;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
 import net.geoprism.data.etl.excel.ExcelSheetReader;
 import net.geoprism.data.etl.excel.SourceContentHandler;
@@ -51,8 +52,6 @@ import net.geoprism.gis.geoserver.SessionPredicate;
 
 public class ImportRunnable
 {
-  private ProgressMonitorIF monitor;
-
   static class ValidationResult
   {
     private ImportResponseIF              response;
@@ -76,9 +75,11 @@ public class ImportRunnable
     }
   }
 
-  private String configuration;
+  private ProgressMonitorIF monitor;
 
-  private File   file;
+  private String            configuration;
+
+  private File              file;
 
   public ImportRunnable(String configuration, File file, ProgressMonitorIF monitor)
   {
@@ -92,6 +93,10 @@ public class ImportRunnable
   {
     try
     {
+      int total = this.getRowNum(this.file);
+      
+      monitor.setTotal(total);
+      
       /*
        * First create the data types from the configuration
        */
@@ -209,16 +214,15 @@ public class ImportRunnable
 
     try
     {
-      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor);
+      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor, DataImportState.DATAIMPORT);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(istream, this.configuration);
-      
+      reader.process(istream);
+
       JSONObject summary = new JSONObject();
       summary.put("total", handler.getTotalRows());
       summary.put("failures", handler.getNumberOfErrors());
-
 
       Workbook errors = converter.getErrors();
 
@@ -244,7 +248,6 @@ public class ImportRunnable
         }
 
         summary.put("file", name + "/" + fileName);
-        
 
         return summary;
       }
@@ -265,11 +268,11 @@ public class ImportRunnable
 
     try
     {
-      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor);
+      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor, DataImportState.VALIDATION);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(istream, configuration);
+      reader.process(istream);
     }
     finally
     {
@@ -284,5 +287,25 @@ public class ImportRunnable
     }
 
     return new ValidationResult(response, converter.getAttributes());
+  }
+
+  private int getRowNum(File file) throws FileNotFoundException, IOException, Exception
+  {
+    FileInputStream istream = new FileInputStream(file);
+
+    try
+    {
+      CountSheetHandler handler = new CountSheetHandler();
+      ExcelDataFormatter formatter = new ExcelDataFormatter();
+
+      ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
+      reader.process(istream);
+
+      return handler.getRowNum();
+    }
+    finally
+    {
+      istream.close();
+    }
   }
 }

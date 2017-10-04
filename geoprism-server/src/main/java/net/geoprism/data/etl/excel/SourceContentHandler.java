@@ -122,10 +122,13 @@ public class SourceContentHandler implements SheetHandler
 
   private HashMap<String, Object>             values;
 
-  public SourceContentHandler(ConverterIF converter, SourceContextIF context, ProgressMonitorIF monitor)
+  private DataImportState                     mode;
+
+  public SourceContentHandler(ConverterIF converter, SourceContextIF context, ProgressMonitorIF monitor, DataImportState mode)
   {
     this.converter = converter;
     this.context = context;
+    this.mode = mode;
 
     this.map = new HashMap<Integer, String>();
     this.nFormat = new DecimalFormat("###.#");
@@ -324,7 +327,7 @@ public class SourceContentHandler implements SheetHandler
           attributeName = field.getAttributeName();
         }
 
-        if (this.monitor.getState().equals(DataImportState.DATAIMPORT))
+        if (this.mode.equals(DataImportState.DATAIMPORT))
         {
           headerModifierCommand = headerModifier.processCell(cellReference, contentValue, formattedValue, cellType, rowNum, this.converter.getTargetContext().getType(this.context.getType(this.sheetName)), attributeName);
         }

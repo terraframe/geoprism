@@ -53,8 +53,8 @@ import net.geoprism.data.etl.DefinitionBuilder;
 import net.geoprism.data.etl.ExcelSourceBinding;
 import net.geoprism.data.etl.ImportResponseIF;
 import net.geoprism.data.etl.ImportRunnable;
-import net.geoprism.data.etl.LoggingProgressMonitor;
 import net.geoprism.data.etl.ProgressMonitorIF;
+import net.geoprism.data.etl.ProgressStateMonitor;
 import net.geoprism.data.etl.SourceDefinitionIF;
 import net.geoprism.data.etl.TargetDefinitionIF;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
@@ -189,7 +189,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(new FileInputStream(file), "");
+      reader.process(new FileInputStream(file));
 
       JSONObject object = new JSONObject();
       object.put("sheets", handler.getSheets());
@@ -290,19 +290,29 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       String name = object.getString("directory");
       String filename = object.getString("filename");
+      String uploadId = object.getString("uploadId");
 
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
       File file = new File(directory, filename);
-      ProgressMonitorIF monitor = new LoggingProgressMonitor(file.getName());
 
-      ImportResponseIF response = new ImportRunnable(configuration, file, monitor).run();
+      // ProgressMonitorIF monitor = new LoggingProgressMonitor(file.getName());
+      ProgressMonitorIF monitor = new ProgressStateMonitor(uploadId);
 
-      if (!response.hasProblems())
+      try
       {
-        FileUtils.deleteDirectory(directory);
-      }
+        ImportResponseIF response = new ImportRunnable(configuration, file, monitor).run();
 
-      return response.getStream();
+        if (!response.hasProblems())
+        {
+          FileUtils.deleteDirectory(directory);
+        }
+
+        return response.getStream();
+      }
+      finally
+      {
+        monitor.finished();
+      }
     }
     catch (JSONException | IOException e)
     {

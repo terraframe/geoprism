@@ -53,7 +53,7 @@ public class ExcelSheetReader
     this.formatter = formatter;
   }
 
-  public void process(InputStream stream, String configuration) throws Exception
+  public void process(InputStream stream) throws Exception
   {
     try
     {
