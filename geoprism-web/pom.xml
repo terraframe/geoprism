@@ -15,7 +15,7 @@
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
-    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses />.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -24,7 +24,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0021-SNAPSHOT</version>
+    <version>1.01.0022-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-web</artifactId>
   <packaging>war</packaging>
@@ -102,7 +102,7 @@
     <profile>
       <id>ng2-dev</id>
       <properties>
-        <local.host>http://localhost:8080</local.host>
+        <local.host>https://localhost:8080</local.host>
       </properties>
     </profile>
     
@@ -362,6 +362,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
         <executions>
           <execution>
             <id>exec-npm-install</id>

@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.poi.ss.usermodel.Workbook;
+
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
@@ -154,5 +156,17 @@ public class ImportValidator implements ConverterIF
   public Collection<ImportProblemIF> getProblems()
   {
     return problems;
+  }
+
+  @Override
+  public void setErrors(Workbook workbook)
+  {
+    // Do nothing
+  }
+
+  @Override
+  public Workbook getErrors()
+  {
+    return null;
   }
 }

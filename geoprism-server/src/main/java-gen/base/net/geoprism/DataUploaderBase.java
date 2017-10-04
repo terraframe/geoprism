@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 643786876)
+@com.runwaysdk.business.ClassSignature(hash = 529266961)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +12,7 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
 {
   public final static String CLASS = "net.geoprism.DataUploader";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 643786876;
+  private static final long serialVersionUID = 529266961;
   
   public DataUploaderBase()
   {
@@ -111,6 +93,12 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
+  public static java.io.InputStream getErrorFile(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static java.lang.String getOptionsJSON()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
@@ -123,7 +111,7 @@ public abstract class DataUploaderBase extends com.runwaysdk.business.Util imple
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static java.lang.String importData(java.lang.String configuration)
+  public static java.io.InputStream importData(java.lang.String configuration)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploader.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

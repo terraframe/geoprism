@@ -475,7 +475,7 @@ export class UploadWizardComponent implements OnDestroy {
         if(result.success) {          
           this.clear();
           
-          this.onSuccess.emit({datasets:result.datasets, finished : true});          
+          this.onSuccess.emit({datasets:result.datasets, summary:result.summary, finished : true});          
         }
         else {          
             

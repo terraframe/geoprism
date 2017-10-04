@@ -3,23 +3,22 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -283,7 +282,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   }
 
   @Authenticate
-  public static String importData(String configuration)
+  public static InputStream importData(String configuration)
   {
     try
     {
@@ -303,7 +302,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
         FileUtils.deleteDirectory(directory);
       }
 
-      return response.toJSON().toString();
+      return response.getStream();
     }
     catch (JSONException | IOException e)
     {
@@ -486,6 +485,20 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       ex.setLabel(name.trim());
 
       throw ex;
+    }
+  }
+
+  public static InputStream getErrorFile(String id)
+  {
+    File file = new File(new File(VaultProperties.getPath("vault.default"), "files"), id);
+
+    try
+    {
+      return new FileInputStream(file);
+    }
+    catch (FileNotFoundException e)
+    {
+      throw new ProgrammingErrorException(e);
     }
   }
 }

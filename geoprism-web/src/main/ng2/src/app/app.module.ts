@@ -25,7 +25,9 @@ import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 import './rxjs-extensions';
 
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
-import { DropdownModule } from 'ng2-bootstrap'
+
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal'
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
@@ -55,6 +57,7 @@ import { GeoValidationPageComponent } from './uploader/geo-validation-page.compo
 import { GeoValidationProblemComponent } from './uploader/geo-validation-problem.component';
 import { CategoryValidationPageComponent } from './uploader/category-validation-page.component';
 import { CategoryValidationProblemComponent } from './uploader/category-validation-problem.component';
+import { UploadResultComponent } from './uploader/upload-result.component';
 import { UploadService } from './service/upload.service';
 
 
@@ -65,7 +68,8 @@ import { UploadService } from './service/upload.service';
     AppRoutingModule,
     HttpModule,
     FileUploadModule,
-    DropdownModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot(),    
     CoreModule
   ],
   declarations: [
@@ -89,6 +93,7 @@ import { UploadService } from './service/upload.service';
     GeoValidationProblemComponent,
     CategoryValidationPageComponent,
     CategoryValidationProblemComponent,
+    UploadResultComponent,
     
     // Routing components
     routedComponents
@@ -101,6 +106,9 @@ import { UploadService } from './service/upload.service';
     UploadService,
     NavigationService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    UploadResultComponent,
+  ],      
 })
 export class AppModule { }

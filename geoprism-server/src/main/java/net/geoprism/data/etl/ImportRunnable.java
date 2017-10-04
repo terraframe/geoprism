@@ -3,52 +3,56 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.runwaysdk.RunwayException;
 import com.runwaysdk.business.SmartException;
 import com.runwaysdk.constants.MdAttributeDecInfo;
+import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDecDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.MappableClass;
 import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
 import net.geoprism.data.etl.excel.ExcelSheetReader;
 import net.geoprism.data.etl.excel.SourceContentHandler;
+import net.geoprism.gis.geoserver.SessionPredicate;
 
 public class ImportRunnable
 {
   private ProgressMonitorIF monitor;
-  
+
   static class ValidationResult
   {
     private ImportResponseIF              response;
@@ -80,11 +84,10 @@ public class ImportRunnable
   {
     this.configuration = configuration;
     this.file = file;
-    
+
     this.monitor = monitor;
   }
 
-  @Transaction
   public ImportResponseIF run()
   {
     try
@@ -94,36 +97,27 @@ public class ImportRunnable
        */
       DataSetBuilderIF builder = new DataSetBuilder(configuration);
       builder.build();
-      
+
       /*
        * Create and import the view objects from the configuration
        */
       SourceContextIF sContext = builder.getSourceContext();
       TargetContextIF tContext = builder.getTargetContext();
 
-      /*
-       * Before importing the data we must validate that the location text information
-       */
-      monitor.setState(DataImportState.VALIDATION);
-      ValidationResult result = this.validateData(file, sContext, tContext);
-      
-      if (result.getResponse() != null)
-      {
-        monitor.setState(DataImportState.VALIDATIONFAIL);
-        return result.getResponse();
-      }
+      ImportResponseIF response = this.validateAndConfigure(sContext, tContext);
 
-      /*
-       * Update any scale or precision which is greater than its current definition
-       */
-      this.updateScaleAndPrecision(result.getAttributes());
+      if (response != null)
+      {
+        return response;
+      }
 
       /*
        * Import the data
        */
       monitor.setState(DataImportState.DATAIMPORT);
-      this.importData(file, sContext, tContext);
-      
+
+      JSONObject summary = this.importData(file, sContext, tContext);
+
       /*
        * Return a JSONArray of the datasets which were created as part of the import. Do not include datasets which have
        * already been created.
@@ -141,11 +135,11 @@ public class ImportRunnable
 
         datasets.put(mClass.toJSON());
       }
-      
+
       monitor.setState(DataImportState.COMPLETE);
 
       // Return the new data set definition
-      return new SuccessResponse(datasets);
+      return new SuccessResponse(datasets, summary);
     }
     catch (RunwayException | SmartException e)
     {
@@ -155,6 +149,29 @@ public class ImportRunnable
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+
+  @Transaction
+  private ImportResponseIF validateAndConfigure(SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, Exception, IOException
+  {
+    /*
+     * Before importing the data we must validate that the location text information
+     */
+    monitor.setState(DataImportState.VALIDATION);
+    ValidationResult result = this.validateData(file, sContext, tContext);
+
+    if (result.getResponse() != null)
+    {
+      monitor.setState(DataImportState.VALIDATIONFAIL);
+      return result.getResponse();
+    }
+
+    /*
+     * Update any scale or precision which is greater than its current definition
+     */
+    this.updateScaleAndPrecision(result.getAttributes());
+
+    return null;
   }
 
   private void updateScaleAndPrecision(Map<String, DecimalAttribute> attributes)
@@ -184,7 +201,7 @@ public class ImportRunnable
     }
   }
 
-  private void importData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, Exception, IOException
+  private JSONObject importData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, IOException, Exception
   {
     ConverterIF converter = new Converter(tContext);
 
@@ -197,6 +214,42 @@ public class ImportRunnable
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
       reader.process(istream, this.configuration);
+      
+      JSONObject summary = new JSONObject();
+      summary.put("total", handler.getTotalRows());
+      summary.put("failures", handler.getNumberOfErrors());
+
+
+      Workbook errors = converter.getErrors();
+
+      if (errors != null)
+      {
+        String name = SessionPredicate.generateId();
+
+        File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
+        directory.mkdirs();
+
+        String fileName = IDGenerator.nextID();
+        File dest = new File(directory, fileName);
+
+        FileOutputStream fos = new FileOutputStream(dest);
+
+        try
+        {
+          errors.write(fos);
+        }
+        finally
+        {
+          fos.close();
+        }
+
+        summary.put("file", name + "/" + fileName);
+        
+
+        return summary;
+      }
+
+      return summary;
     }
     finally
     {
