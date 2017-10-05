@@ -32,6 +32,12 @@ export class ProgressBarComponent implements OnInit, IProgressListener {
   }
   
   start(): void {
+    this.prog = {
+      current:0,
+      total:1,
+      description:"Initializing"      
+    };	  
+    
     this.showIndicator = true;    
   }
   
