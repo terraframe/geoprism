@@ -481,7 +481,7 @@ export class UploadWizardComponent implements OnDestroy {
     /*
      * Setup progress observable
      */
-    let subscription = Observable.interval(1000)
+    let subscription = Observable.interval(3000)
       .subscribe(() => {
         this.uploadService.progress(uploadId).then(progress => {
           this.progressService.progress(progress);

@@ -49,6 +49,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdClassQuery;
 
+import net.geoprism.data.etl.CompositeMonitor;
 import net.geoprism.data.etl.DefinitionBuilder;
 import net.geoprism.data.etl.ExcelSourceBinding;
 import net.geoprism.data.etl.ImportResponseIF;
@@ -295,8 +296,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
       File file = new File(directory, filename);
 
-      // ProgressMonitorIF monitor = new LoggingProgressMonitor(file.getName());
-      ProgressMonitorIF monitor = new ProgressStateMonitor(uploadId);
+      ProgressMonitorIF monitor = new CompositeMonitor(new LoggingProgressMonitor(file.getName()), new ProgressStateMonitor(uploadId));
 
       try
       {
