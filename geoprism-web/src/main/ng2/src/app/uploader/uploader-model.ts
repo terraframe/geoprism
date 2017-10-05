@@ -116,6 +116,7 @@ export class LocationExclusion {
 
 export class Workbook {
   filename: string;
+  uploadId: string;
   directory: string;
   sheets: Sheet[];
   locationExclusions: LocationExclusion[];

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -42,6 +40,8 @@ import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
 import net.geoprism.ontology.ClassifierDTO;
 import net.geoprism.ontology.GeoEntityUtilDTO;
+import net.geoprism.util.ProgressFacade;
+import net.geoprism.util.ProgressState;
 
 @Controller(url = "uploader")
 public class DataUploaderController implements Reloadable
@@ -77,12 +77,12 @@ public class DataUploaderController implements Reloadable
 
     return new InputStreamResponse(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", null);
   }
-  
+
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF importData(ClientRequestIF request, @RequestParamter(name = "configuration") String configuration) throws JSONException
   {
     ContentStream stream = (ContentStream) DataUploaderDTO.importData(request, configuration);
-    
+
     return new InputStreamResponse(stream, stream.getContentType(), "Test.xlsx");
   }
 
@@ -195,7 +195,7 @@ public class DataUploaderController implements Reloadable
 
     return new RestBodyResponse("");
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF getGeoEntitySuggestions(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
   {
@@ -214,5 +214,18 @@ public class DataUploaderController implements Reloadable
     }
 
     return new RestBodyResponse(response);
-  }  
+  }
+
+  @Endpoint(error = ErrorSerialization.JSON)
+  public ResponseIF progress(@RequestParamter(name = "id") String id) throws JSONException
+  {
+    ProgressState progress = ProgressFacade.get(id);
+
+    if (progress == null)
+    {
+      progress = new ProgressState(id);
+    }
+
+    return new RestBodyResponse(progress.toJSON());
+  }
 }

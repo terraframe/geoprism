@@ -19,15 +19,17 @@
 
 import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
 
+import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
 
 import { Dataset } from '../model/dataset';
-import { UploadInformation, Step, Sheet, Snapshot, Page, Locations, Problems } from './uploader-model';
+import { UploadInformation, Step, Sheet, Snapshot, Page, Locations, Problems, DatasetResponse } from './uploader-model';
 
-import { EventService } from '../core/service/core.service';
+import { EventService, IdService } from '../core/service/core.service';
 import { LocalizationService } from '../core/service/localization.service';
+import { ProgressService } from '../core/progress-bar/progress.service';
 
 import { UploadService } from '../service/upload.service';
 import { NavigationService } from './navigation.service';
@@ -56,7 +58,9 @@ export class UploadWizardComponent implements OnDestroy {
   constructor(
     private localizationService: LocalizationService,
     private uploadService: UploadService,
-    private navigationService: NavigationService) {
+    private navigationService: NavigationService,
+    private progressService: ProgressService,
+    private idService: IdService) {
  
     this.subscription = navigationService.navigationAnnounced$.subscribe(
       direction => {
@@ -469,9 +473,33 @@ export class UploadWizardComponent implements OnDestroy {
     
   persist(): void {
     this.info.information.sheets[0] = _.cloneDeep(this.sheet) as Sheet;
+    
+    let uploadId = this.idService.generateId();
+    
+    this.info.information.uploadId = uploadId;
+    
+    /*
+     * Setup progress observable
+     */
+    let subscription = Observable.interval(1000)
+      .subscribe(() => {
+        this.uploadService.progress(uploadId).then(progress => {
+          this.progressService.progress(progress);
+        });
+      });
+    
+    this.progressService.start();    
 	  
     this.uploadService.importData(this.info.information)
-      .then(result => {
+      .finally(()=>{    	  
+        subscription.unsubscribe();
+        
+        this.progressService.complete();            
+      })
+      .toPromise()      
+      .then((response: any) => {
+        let result = response.json() as DatasetResponse;        
+    	  
         if(result.success) {          
           this.clear();
           
@@ -513,8 +541,7 @@ export class UploadWizardComponent implements OnDestroy {
                                  
           this.onSuccess.emit({datasets:result.datasets, finished : false});          
         }         
-      });    
-	  
+      });	  
   }
   
   isReady(name: string) : boolean {      
