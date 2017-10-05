@@ -25,6 +25,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { EventService, BasicService } from '../core/service/core.service';
 import { EventHttpService } from '../core/service/event-http.service';
+import { Progress } from '../core/progress-bar/progress';
 
 import { Pair } from '../model/pair';
 import { Sheet, Workbook, GeoSynonym, ClassifierSynonym, Entity, DatasetResponse } from '../uploader/uploader-model';
@@ -67,19 +68,15 @@ export class UploadService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  importData(workbook: Workbook): Promise<DatasetResponse> {
+  importData(workbook: Workbook): Observable<DatasetResponse> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
     let data = JSON.stringify({configuration : workbook });
     
-    return this.ehttp
+    return this.http
       .post(acp + '/uploader/importData', data, {headers:headers})
-      .toPromise() 
-      .then((response: any) => {
-        return response.json() as DatasetResponse;        
-      })      
       .catch(this.handleError.bind(this));
   }
   
@@ -216,6 +213,19 @@ export class UploadService extends BasicService {
     .post(acp + '/uploader/deleteClassifierSynonym', data, {headers: headers})
     .toPromise() 
     .catch(this.handleError.bind(this));    
+  }
+  
+  progress(id: string): Promise<Progress> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('id', id);
+    
+    return this.http
+      .get(acp + '/uploader/progress', {search: params})
+      .toPromise()
+      .then((response: any) => {
+        return response.json();
+      })
+      .catch(this.handleError.bind(this));    
   }
   
   

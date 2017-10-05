@@ -46,6 +46,37 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
     
   }
   
+  public int checkRow(int rowNum)
+  {
+    if (!isDhis2Spreadsheet)
+    {
+      if (rowNum == 0)
+      {
+        return SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
+      }
+      else
+      {
+        return SpreadsheetImporterHeaderModifierIF.BODY_ROW;
+      }
+    }
+    
+    if (rowNum <= 2)
+    {
+      return SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
+    }
+    
+    return SpreadsheetImporterHeaderModifierIF.BODY_ROW;
+  }
+  
+  public int getColumnNameRowNum()
+  {
+    if (isDhis2Spreadsheet)
+    {
+      return 2;
+    }
+    return 0;
+  }
+  
   @Override
   public int checkCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum)
   {
