@@ -27,7 +27,7 @@ public class LoggingProgressMonitor implements ProgressMonitorIF
   
   private DataImportState state;
   
-  private double currentRow;
+  private int currentRow;
   
   private String filename;
   
@@ -55,7 +55,7 @@ public class LoggingProgressMonitor implements ProgressMonitorIF
     return this.state;
   }
   
-  public void setCurrentRow(double rowNum)
+  public void setCurrentRow(int rowNum)
   {
     this.currentRow = rowNum;
     
