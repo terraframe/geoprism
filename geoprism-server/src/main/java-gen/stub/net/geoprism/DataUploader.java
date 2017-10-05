@@ -54,6 +54,7 @@ import net.geoprism.data.etl.DefinitionBuilder;
 import net.geoprism.data.etl.ExcelSourceBinding;
 import net.geoprism.data.etl.ImportResponseIF;
 import net.geoprism.data.etl.ImportRunnable;
+import net.geoprism.data.etl.LoggingProgressMonitor;
 import net.geoprism.data.etl.ProgressMonitorIF;
 import net.geoprism.data.etl.ProgressStateMonitor;
 import net.geoprism.data.etl.SourceDefinitionIF;
