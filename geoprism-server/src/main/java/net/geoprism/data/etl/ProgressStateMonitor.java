@@ -1,5 +1,6 @@
 package net.geoprism.data.etl;
 
+import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.util.ProgressFacade;
 import net.geoprism.util.ProgressState;
 
@@ -22,7 +23,10 @@ public class ProgressStateMonitor implements ProgressMonitorIF
   @Override
   public void setState(DataImportState state)
   {
-    this.state.setDescription(state.name());
+    String key = "dataUploader.state." + state.name().toLowerCase();
+    String description = LocalizationFacade.getFromBundles(key);
+    
+    this.state.setDescription(description);
   }
 
   @Override
