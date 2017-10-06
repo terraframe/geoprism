@@ -36,6 +36,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -53,6 +55,8 @@ import net.geoprism.localization.LocalizationFacade;
 
 public class SourceContentHandler implements SheetHandler
 {
+  private static Logger logger = LoggerFactory.getLogger(SourceContentHandler.class);
+  
   /**
    * Handles progress reporting
    */
@@ -429,6 +433,8 @@ public class SourceContentHandler implements SheetHandler
     }
     catch (Exception e)
     {
+      logger.error("An error occurred while importing cell [" + cellReference + "].", e);
+      
       // Wrap all exceptions with information about the cell and row
       ExcelValueException exception = new ExcelValueException();
       exception.setCell(cellReference);

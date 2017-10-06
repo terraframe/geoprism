@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoggingProgressMonitor implements ProgressMonitorIF
 {
-  private static Logger   logger = LoggerFactory.getLogger(ImportRunnable.class);
+  private static Logger   logger = LoggerFactory.getLogger(LoggingProgressMonitor.class);
 
   private DataImportState state;
 

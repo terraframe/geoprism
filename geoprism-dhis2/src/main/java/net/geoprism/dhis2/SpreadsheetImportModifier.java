@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.poi.ss.util.CellReference;
 
+import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 
@@ -161,10 +162,33 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
       {
         String runwayId = MdBusiness.getMdBusiness(type).getId();
         
-        DHIS2IdMapping mapping = new DHIS2IdMapping();
-        mapping.setDhis2Id(programId + ":" + contentValue);
-        mapping.setRunwayId(runwayId);
-        mapping.apply();
+//        Savepoint sp = Database.setSavepoint(); // We aren't in a transaction
+        try
+        {
+          DHIS2IdMapping mapping = new DHIS2IdMapping();
+          mapping.setDhis2Id(programId + ":" + contentValue);
+          mapping.setRunwayId(runwayId);
+          mapping.apply();
+        }
+        catch (DuplicateDataException ex)
+        {
+//          Database.rollbackSavepoint(sp);
+          
+          DHIS2IdMapping mapping = DHIS2IdMapping.getByRunwayId(runwayId);
+          mapping.appLock();
+          mapping.setDhis2Id(programId + ":" + contentValue);
+          mapping.setRunwayId(runwayId);
+          mapping.apply();
+        }
+        catch (RuntimeException ex)
+        {
+//          Database.rollbackSavepoint(sp);
+          throw ex;
+        }
+        finally
+        {
+//          Database.releaseSavepoint(sp);
+        }
         
         return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
       }
@@ -188,10 +212,33 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
         {
           String attrId = MdAttributeConcrete.getByKey(type + "." + attrName).getId();
           
-          DHIS2IdMapping mapping = new DHIS2IdMapping();
-          mapping.setDhis2Id(dhis2Id);
-          mapping.setRunwayId(attrId);
-          mapping.apply();
+//          Savepoint sp = Database.setSavepoint(); // We aren't in a transaction
+          try
+          {
+            DHIS2IdMapping mapping = new DHIS2IdMapping();
+            mapping.setDhis2Id(dhis2Id);
+            mapping.setRunwayId(attrId);
+            mapping.apply();
+          }
+          catch (DuplicateDataException ex)
+          {
+//            Database.rollbackSavepoint(sp);
+            
+            DHIS2IdMapping mapping = DHIS2IdMapping.getByRunwayId(attrId);
+            mapping.appLock();
+            mapping.setDhis2Id(dhis2Id);
+            mapping.setRunwayId(attrId);
+            mapping.apply();
+          }
+          catch (RuntimeException ex)
+          {
+//            Database.rollbackSavepoint(sp);
+            throw ex;
+          }
+          finally
+          {
+//            Database.releaseSavepoint(sp);
+          }
         }
       }
       
