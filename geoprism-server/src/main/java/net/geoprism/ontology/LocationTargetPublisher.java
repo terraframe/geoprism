@@ -123,6 +123,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     {
       vQuery.AND(query.getUniversal().EQ(this.universalId));
     }
+    vQuery.AND(geom.getAttribute().NE((String) null));
 
     return vQuery;
   }
