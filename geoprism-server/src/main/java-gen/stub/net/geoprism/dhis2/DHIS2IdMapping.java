@@ -23,8 +23,12 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
+import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 
 public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -33,6 +37,31 @@ public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.
   public DHIS2IdMapping()
   {
     super();
+  }
+  
+  public static DHIS2IdMapping getByRunwayId(String runwayId)
+  {
+    DHIS2IdMappingQuery q = new DHIS2IdMappingQuery(new QueryFactory());
+    q.WHERE(q.getRunwayId().EQ(runwayId));
+    OIterator<? extends DHIS2IdMapping> it = q.getIterator();
+    
+    try
+    {
+      if (it.hasNext())
+      {
+        return it.next();
+      }
+      else
+      {
+        String message = "Unable to find a [" + DHIS2IdMapping.CLASS + "] with a runwayId of [" + runwayId + "]";
+  
+        throw new DataNotFoundException(message, MdClassDAO.getMdClassDAO(DHIS2IdMapping.CLASS));
+      }
+    }
+    finally
+    {
+      it.close();
+    }
   }
   
   /**

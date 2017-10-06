@@ -36,6 +36,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
@@ -53,6 +55,8 @@ import net.geoprism.localization.LocalizationFacade;
 
 public class SourceContentHandler implements SheetHandler
 {
+  private static Logger logger = LoggerFactory.getLogger(SourceContentHandler.class);
+  
   /**
    * Handles progress reporting
    */
@@ -177,8 +181,14 @@ public class SourceContentHandler implements SheetHandler
   public void endSheet()
   {
     Sheet sheet = this.getWorkbook().getSheet(this.sheetName);
+    
+    int headerNum = 0;
+    if (this.headerModifier != null)
+    {
+      headerNum = this.headerModifier.getColumnNameRowNum();
+    }
 
-    if (sheet.getLastRowNum() > 0)
+    if (sheet.getLastRowNum() > headerNum)
     {
       this.converter.setErrors(this.getWorkbook());
     }
@@ -190,7 +200,13 @@ public class SourceContentHandler implements SheetHandler
     this.rowNum = rowNum;
     this.values = new HashMap<String, Object>();
 
-    if (rowNum != 0)
+    boolean isHeader = (rowNum == 0);
+    if (this.headerModifier != null)
+    {
+      isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
+    }
+    
+    if (!isHeader)
     {
       this.view = this.context.newView(this.sheetName);
 
@@ -213,11 +229,17 @@ public class SourceContentHandler implements SheetHandler
       /*
        * Write the header row
        */
-      if (rowNum == 0)
+      boolean isHeader = (rowNum == 0);
+      if (this.headerModifier != null)
+      {
+        isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
+      }
+      
+      if (isHeader)
       {
         Sheet sheet = this.getWorkbook().getSheet(sheetName);
 
-        this.writeRow(sheet, 0);
+        this.writeRow(sheet, rowNum);
       }
     }
     catch (Exception e)
@@ -236,8 +258,14 @@ public class SourceContentHandler implements SheetHandler
   private void writeException(Exception e)
   {
     Sheet sheet = this.getWorkbook().getSheet(sheetName);
+    
+    int headerRowNum = 0;
+    if (this.headerModifier != null)
+    {
+      headerRowNum = this.headerModifier.getColumnNameRowNum();
+    }
 
-    Row row = this.writeRow(sheet, this.errorNum++);
+    Row row = this.writeRow(sheet, headerRowNum + this.errorNum++);
 
     /*
      * Add exception
@@ -276,8 +304,14 @@ public class SourceContentHandler implements SheetHandler
         cell.setCellValue(helper.createRichTextString((String) value));
       }
     }
+    
+    int headerRowNum = 0;
+    if (this.headerModifier != null)
+    {
+      headerRowNum = this.headerModifier.getColumnNameRowNum();
+    }
 
-    if (rowNum == 0)
+    if (rowNum == headerRowNum)
     {
       String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
 
@@ -334,6 +368,11 @@ public class SourceContentHandler implements SheetHandler
         else
         {
           headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
+        }
+        
+        if (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE)
+        {
+          this.values.put(cellReference, contentValue);
         }
       }
 
@@ -394,6 +433,8 @@ public class SourceContentHandler implements SheetHandler
     }
     catch (Exception e)
     {
+      logger.error("An error occurred while importing cell [" + cellReference + "].", e);
+      
       // Wrap all exceptions with information about the cell and row
       ExcelValueException exception = new ExcelValueException();
       exception.setCell(cellReference);

@@ -30,7 +30,20 @@ public interface SpreadsheetImporterHeaderModifierIF
   
   public static final int PROCESS_CELL_AS_IGNORE = 3;
   
+  public static final int HEADER_ROW = 0;
+  
+  public static final int BODY_ROW = 1;
+  
+  public static final int INGORE_ROW = 2;
+  
   public int processCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum, String type, String attrName);
   
   public int checkCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum);
+  
+  /**
+   * Returns the row number where the column headers are stored.
+   */
+  public int getColumnNameRowNum();
+  
+  public int checkRow(int rowNum);
 }
