@@ -524,3 +524,12 @@ h4.location-summary-sub-table-heading{
 .inline-value.error-message{
 	text-align: left;
 }
+
+.fa.fa-sign-out.ico-export{
+  font-size: 20px;
+  color: #979796;
+}
+
+.fa.fa-sign-out.ico-export:hover{
+  color: #00bfff;
+}
