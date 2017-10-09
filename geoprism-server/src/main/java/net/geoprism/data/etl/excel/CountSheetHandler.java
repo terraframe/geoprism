@@ -46,4 +46,9 @@ public class CountSheetHandler implements SheetHandler
   {
     return rowNum;
   }
+  
+  @Override
+  public void setDatasetProperty(String dataset)
+  {
+  }
 }

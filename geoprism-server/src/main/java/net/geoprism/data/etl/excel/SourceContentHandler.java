@@ -28,6 +28,7 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import org.apache.poi.POIXMLProperties;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -36,6 +37,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +57,8 @@ import net.geoprism.localization.LocalizationFacade;
 
 public class SourceContentHandler implements SheetHandler
 {
-  private static Logger logger = LoggerFactory.getLogger(SourceContentHandler.class);
-  
+  private static Logger                       logger = LoggerFactory.getLogger(SourceContentHandler.class);
+
   /**
    * Handles progress reporting
    */
@@ -117,7 +119,7 @@ public class SourceContentHandler implements SheetHandler
   /**
    * Workbook containing error rows
    */
-  private Workbook                            workbook;
+  private SXSSFWorkbook                       workbook;
 
   /**
    * Date style format
@@ -181,7 +183,7 @@ public class SourceContentHandler implements SheetHandler
   public void endSheet()
   {
     Sheet sheet = this.getWorkbook().getSheet(this.sheetName);
-    
+
     int headerNum = 0;
     if (this.headerModifier != null)
     {
@@ -200,12 +202,12 @@ public class SourceContentHandler implements SheetHandler
     this.rowNum = rowNum;
     this.values = new HashMap<String, Object>();
 
-    boolean isHeader = (rowNum == 0);
+    boolean isHeader = ( rowNum == 0 );
     if (this.headerModifier != null)
     {
       isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
     }
-    
+
     if (!isHeader)
     {
       this.view = this.context.newView(this.sheetName);
@@ -229,12 +231,12 @@ public class SourceContentHandler implements SheetHandler
       /*
        * Write the header row
        */
-      boolean isHeader = (rowNum == 0);
+      boolean isHeader = ( rowNum == 0 );
       if (this.headerModifier != null)
       {
         isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
       }
-      
+
       if (isHeader)
       {
         Sheet sheet = this.getWorkbook().getSheet(sheetName);
@@ -258,8 +260,9 @@ public class SourceContentHandler implements SheetHandler
   private void writeException(Exception e)
   {
     Sheet sheet = this.getWorkbook().getSheet(sheetName);
-    
+
     int headerRowNum = 0;
+
     if (this.headerModifier != null)
     {
       headerRowNum = this.headerModifier.getColumnNameRowNum();
@@ -304,7 +307,7 @@ public class SourceContentHandler implements SheetHandler
         cell.setCellValue(helper.createRichTextString((String) value));
       }
     }
-    
+
     int headerRowNum = 0;
     if (this.headerModifier != null)
     {
@@ -369,7 +372,7 @@ public class SourceContentHandler implements SheetHandler
         {
           headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
         }
-        
+
         if (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE)
         {
           this.values.put(cellReference, contentValue);
@@ -434,7 +437,7 @@ public class SourceContentHandler implements SheetHandler
     catch (Exception e)
     {
       logger.error("An error occurred while importing cell [" + cellReference + "].", e);
-      
+
       // Wrap all exceptions with information about the cell and row
       ExcelValueException exception = new ExcelValueException();
       exception.setCell(cellReference);
@@ -458,6 +461,12 @@ public class SourceContentHandler implements SheetHandler
 
       CreationHelper helper = this.workbook.getCreationHelper();
       this.style.setDataFormat(helper.createDataFormat().getFormat("MM/DD/YY"));
+      
+      XSSFWorkbook wb = this.workbook.getXSSFWorkbook();
+      POIXMLProperties props = wb.getProperties();
+      
+      POIXMLProperties.CustomProperties custProp = props.getCustomProperties();
+      custProp.addProperty("dataset", this.context.getId(this.sheetName));
     }
 
     return this.workbook;
@@ -471,5 +480,11 @@ public class SourceContentHandler implements SheetHandler
   public int getNumberOfErrors()
   {
     return ( this.errorNum - 1 );
+  }
+
+  @Override
+  public void setDatasetProperty(String dataset)
+  {
+    // Do nothing    
   }
 }

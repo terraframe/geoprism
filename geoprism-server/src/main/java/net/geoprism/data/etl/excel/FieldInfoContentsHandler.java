@@ -26,24 +26,24 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.geoprism.ExceptionUtil;
-import net.geoprism.data.etl.ColumnType;
-import net.geoprism.data.etl.ExcelFieldBindingQuery;
-import net.geoprism.data.etl.ExcelSourceBinding;
-import net.geoprism.data.etl.ExcelSourceBindingQuery;
-import net.geoprism.localization.LocalizationFacade;
-
 import org.apache.poi.ss.util.CellReference;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdView;
+
+import net.geoprism.data.etl.ColumnType;
+import net.geoprism.data.etl.ExcelFieldBindingQuery;
+import net.geoprism.data.etl.ExcelSourceBinding;
+import net.geoprism.data.etl.ExcelSourceBindingQuery;
+import net.geoprism.localization.LocalizationFacade;
 
 public class FieldInfoContentsHandler implements SheetHandler
 {
@@ -194,6 +194,8 @@ public class FieldInfoContentsHandler implements SheetHandler
   private JSONArray                           information;
 
   private SpreadsheetImporterHeaderModifierIF headerModifier;
+
+  private String                              dataset;
 
   public FieldInfoContentsHandler()
   {
@@ -376,9 +378,27 @@ public class FieldInfoContentsHandler implements SheetHandler
 
   private JSONArray findMatches() throws JSONException
   {
-    String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
+    if (this.dataset != null)
+    {
+      try
+      {
+        ExcelSourceBinding binding = ExcelSourceBinding.get(this.dataset);
 
-    JSONArray options = new JSONArray();
+        JSONArray options = new JSONArray();
+
+        JSONObject option = this.getOption(binding);
+
+        options.put(option);
+
+        return options;
+      }
+      catch (DataNotFoundException e)
+      {
+        // Do nothing
+      }
+    }
+
+    String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
 
     QueryFactory factory = new QueryFactory();
 
@@ -406,17 +426,17 @@ public class FieldInfoContentsHandler implements SheetHandler
     {
       iterator = query.getIterator();
 
+      JSONArray options = new JSONArray();
+
       while (iterator.hasNext())
       {
         ExcelSourceBinding binding = iterator.next();
-        MdView mdView = binding.getMdView();
-
-        JSONObject option = new JSONObject();
-        option.put("id", binding.getId());
-        option.put("label", mdView.getDisplayLabel().getValue());
+        JSONObject option = this.getOption(binding);
 
         options.put(option);
       }
+
+      return options;
     }
     finally
     {
@@ -426,6 +446,22 @@ public class FieldInfoContentsHandler implements SheetHandler
       }
     }
 
-    return options;
+  }
+
+  private JSONObject getOption(ExcelSourceBinding binding)
+  {
+    MdView mdView = binding.getMdView();
+
+    JSONObject option = new JSONObject();
+    option.put("id", binding.getId());
+    option.put("label", mdView.getDisplayLabel().getValue());
+
+    return option;
+  }
+
+  @Override
+  public void setDatasetProperty(String dataset)
+  {
+    this.dataset = dataset;
   }
 }

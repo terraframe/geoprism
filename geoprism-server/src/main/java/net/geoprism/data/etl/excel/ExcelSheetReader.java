@@ -3,28 +3,30 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl.excel;
 
 import java.io.InputStream;
+import java.util.List;
 
+import org.apache.poi.POIXMLProperties;
+import org.apache.poi.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.eventusermodel.ReadOnlySharedStringsTable;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.StylesTable;
+import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -58,6 +60,12 @@ public class ExcelSheetReader
     try
     {
       OPCPackage pkg = OPCPackage.open(stream);
+
+      POIXMLProperties props = new POIXMLProperties(pkg);
+
+      String dataset = this.getProperty(props.getCustomProperties(), "dataset");
+      
+      this.handler.setDatasetProperty(dataset);
 
       ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(pkg);
       XSSFReader xssfReader = new XSSFReader(pkg);
@@ -93,5 +101,20 @@ public class ExcelSheetReader
     {
       stream.close();
     }
+  }
+
+  public String getProperty(CustomProperties props, String name)
+  {
+    List<CTProperty> customProperties = props.getUnderlyingProperties().getPropertyList();
+
+    for (CTProperty prop : customProperties)
+    {
+      if (prop.getName().equals(name))
+      {
+        return prop.getLpwstr();
+      }
+    }
+
+    return null;
   }
 }

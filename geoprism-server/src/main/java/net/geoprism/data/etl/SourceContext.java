@@ -84,6 +84,14 @@ public class SourceContext implements SourceContextIF
     return sheet.getType();
   }
 
+  @Override
+  public String getId(String sheetName)
+  {
+    SourceDefinitionIF sheet = this.getSheet(sheetName);
+    
+    return sheet.getId();
+  }
+  
   public void persist()
   {
     Collection<SourceDefinitionIF> definitions = this.sheets.values();

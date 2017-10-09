@@ -33,4 +33,6 @@ public interface SourceContextIF
   public SourceFieldIF getFieldByLabel(String sheetName, String label);
 
   public Collection<SourceDefinitionIF> getDefinitions();
+
+  public String getId(String sheetName);
 }
