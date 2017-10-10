@@ -108,6 +108,8 @@ export class Sheet {
   coordinates: CoordinateAttribute[];
   categories: any;
   matches: any[];
+  
+  format: number;
 }
 
 export class LocationExclusion {

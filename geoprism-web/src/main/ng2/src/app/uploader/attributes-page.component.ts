@@ -62,7 +62,11 @@ export class AttributesPageComponent implements OnInit, AfterViewChecked, LocalV
         field.categoryLabel = field.label;
       }
       
-      if(field.root == null) {
+      if (field.root == null && this.sheet.format == 1)
+      {
+        field.root = this.info.classifiers[0].value;
+      }
+      else if (field.root == null) {
         field.root = '';
       }
       
