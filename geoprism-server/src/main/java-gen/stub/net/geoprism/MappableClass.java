@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -110,7 +108,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
     return super.buildKey();
   }
-  
+
   /**
    * MdMethod
    * 
@@ -120,13 +118,13 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   public void xport()
   {
     MdClass mdClass = this.getWrappedMdClass();
-    
+
     Iterator<GeoprismDatasetExporterIF> it = GeoprismDatasetExporterService.getAllExporters();
-    
+
     while (it.hasNext())
     {
       GeoprismDatasetExporterIF exporter = it.next();
-      
+
       exporter.xport(mdClass);
     }
   }
@@ -135,6 +133,13 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   @Transaction
   public void delete()
   {
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.onMappableClassDelete(this);
+    }
+
     MdClass mdClass = this.getWrappedMdClass();
 
     if (mdClass.getGenerateSource())
@@ -763,9 +768,9 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     try
     {
       JSONObject jObject = new JSONObject();
-      
+
       jObject.put("canExport", GeoprismDatasetExporterService.getAllExporters().hasNext());
-      
+
       JSONArray array = new JSONArray();
 
       MappableClass[] mClasses = MappableClass.getAll();
@@ -774,7 +779,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       {
         array.put(mClass.toJSON());
       }
-      
+
       jObject.put("datasets", array);
 
       return jObject.toString();

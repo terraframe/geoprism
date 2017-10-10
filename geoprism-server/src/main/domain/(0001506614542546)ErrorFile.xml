@@ -1,0 +1,18 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdUtil name="net.geoprism.DataUploader">
+        <mdMethod name="importData" static="true" returnType="java.io.InputStream"></mdMethod>
+        <create>
+          <mdMethod name="getErrorFile" static="true" returnType="java.io.InputStream">
+            <mdParameter name="id" label="id" order="0" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdUtil>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+    </delete>
+  </undoIt>
+</version>
