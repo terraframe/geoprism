@@ -34,6 +34,7 @@ export class GeoValidationProblemComponent implements OnInit {
   @Input() problem: LocationProblem;
   @Input() index: number;
   @Input() workbook: Workbook;
+  @Input() format: number;
   
   @Output() onProblemChange = new EventEmitter();
   

@@ -12,7 +12,7 @@
         </div>
         <div class="inline-actions">
           <i aria-hidden="true" data-icon="&#xe900;" class="icon-synonym_icon" (ngClass)="{disabled: !hasSynonym}" (click)="createSynonym()" [title]="'dataUploader.createSynonymCategoryTooltip' | localize" ></i>
-          <i aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" (click)="createOption()" [title]="'dataUploader.createNewOptionTooltip' | localize" ></i>          
+          <i *ngIf="format != 1" aria-hidden="true" data-icon="&#xe901;" class="icon-new_location_icon" (click)="createOption()" [title]="'dataUploader.createNewOptionTooltip' | localize" ></i>          
           <span class="fa-stack fa-lg" [title]="'dataUploader.ignoreCategoryTooltip' | localize" (click)="ignoreValue()">
             <i class="fa fa-square fa-stack-2x"></i>
             <i class="fa fa-times fa-stack-1x"></i>

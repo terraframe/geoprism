@@ -37,6 +37,7 @@ export class CategoryValidationProblemComponent implements OnInit {
   @Input() index: number;
   @Input() workbook: Workbook;
   @Input() options: Pair[];
+  @Input() format: number;
 
   @Output() onProblemChange = new EventEmitter();
   

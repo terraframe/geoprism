@@ -42,8 +42,8 @@
       <location-page *ngIf="page.name == 'LOCATION'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></location-page>
       <coordinate-page *ngIf="page.name == 'COORDINATE'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></coordinate-page>
       <summary-page *ngIf="page.name == 'SUMMARY'" [page]="page" [sheet]="sheet" [info]="info" [ngClass]="{'slide-right': pageDirection == 'NEXT', 'slide-left': pageDirection == 'PREVIOUS'}"></summary-page>
-      <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information"></geo-validation-page>
-      <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information"></category-validation-page>      
+      <geo-validation-page *ngIf="page.name == 'GEO-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information" [format]="sheet.format"></geo-validation-page>
+      <category-validation-page *ngIf="page.name == 'CATEGORY-VALIDATION'" [page]="page" [problems]="problems" [workbook]="info.information" [format]="sheet.format"></category-validation-page>      
     </div>
     </div>
   </div>  
