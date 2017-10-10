@@ -47,6 +47,18 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
     
   }
   
+  public int getSpreadsheetFormat()
+  {
+    if (isDhis2Spreadsheet)
+    {
+      return SpreadsheetImporterHeaderModifierIF.FORMAT_DHIS2;
+    }
+    else
+    {
+      return SpreadsheetImporterHeaderModifierIF.FORMAT_DEFAULT;
+    }
+  }
+  
   public int checkRow(int rowNum)
   {
     if (!isDhis2Spreadsheet)

@@ -67,7 +67,7 @@
       <div class="inline-box fade-ngIf" *ngIf="field.type == 'CATEGORY'">
         <label><localize key="dataUploader.domainRoot"></localize></label>
         <select class="select-area" [(ngModel)]="field.root" [name]="i + '-root'">
-          <option value=""><localize key="dataUploader.new"></localize></option>          
+          <option *ngIf="sheet.format != 1" value=""><localize key="dataUploader.new"></localize></option>          
           <option *ngFor="let opt of info.classifiers" [value]="opt.value">{{opt.label}}</option>          
         </select>
       </div>      

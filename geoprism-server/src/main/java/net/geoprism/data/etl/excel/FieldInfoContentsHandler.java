@@ -301,6 +301,15 @@ public class FieldInfoContentsHandler implements SheetHandler
       sheet.put("label", this.sheetName);
       sheet.put("fields", fields);
       sheet.put("matches", matches);
+      
+      if (this.headerModifier != null)
+      {
+        sheet.put("format", this.headerModifier.getSpreadsheetFormat());
+      }
+      else
+      {
+        sheet.put("format", SpreadsheetImporterHeaderModifierIF.FORMAT_DEFAULT);
+      }
 
       this.information.put(sheet);
     }

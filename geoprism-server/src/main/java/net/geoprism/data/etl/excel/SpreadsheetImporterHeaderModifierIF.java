@@ -36,6 +36,12 @@ public interface SpreadsheetImporterHeaderModifierIF
   
   public static final int INGORE_ROW = 2;
   
+  public static final int FORMAT_DEFAULT = 0;
+  
+  public static final int FORMAT_DHIS2 = 1;
+  
+  public int getSpreadsheetFormat();
+  
   public int processCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum, String type, String attrName);
   
   public int checkCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum);
