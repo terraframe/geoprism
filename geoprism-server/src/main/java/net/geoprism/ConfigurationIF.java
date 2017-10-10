@@ -100,4 +100,11 @@ public interface ConfigurationIF extends Reloadable
    * @param entity
    */
   public void onEntityDelete(GeoEntity entity);
+  
+  /**
+   * Extension point for deleting datasets
+   * 
+   * @param mClass
+   */
+  public void onMappableClassDelete(MappableClass mClass);
 }

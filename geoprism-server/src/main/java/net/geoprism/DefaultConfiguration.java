@@ -232,4 +232,10 @@ public class DefaultConfiguration implements ConfigurationIF
   {
     // Do nothing
   }
+  
+  @Override
+  public void onMappableClassDelete(MappableClass mClass)
+  {
+    // Do nothing
+  }
 }
