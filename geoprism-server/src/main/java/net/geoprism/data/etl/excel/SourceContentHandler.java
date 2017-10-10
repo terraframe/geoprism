@@ -366,7 +366,14 @@ public class SourceContentHandler implements SheetHandler
 
         if (this.mode.equals(DataImportState.DATAIMPORT))
         {
-          headerModifierCommand = headerModifier.processCell(cellReference, contentValue, formattedValue, cellType, rowNum, this.converter.getTargetContext().getType(this.context.getType(this.sheetName)), attributeName);
+          if (field != null && field.getType().equals(ColumnType.IGNORE))
+          {
+            headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
+          }
+          else
+          {
+            headerModifierCommand = headerModifier.processCell(cellReference, contentValue, formattedValue, cellType, rowNum, this.converter.getTargetContext().getType(this.context.getType(this.sheetName)), attributeName);
+          }
         }
         else
         {
@@ -401,7 +408,7 @@ public class SourceContentHandler implements SheetHandler
         String columnName = this.getColumnName(cellReference);
         SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
 
-        if (field != null)
+        if (field != null && !field.getType().equals(ColumnType.IGNORE))
         {
           String attributeName = field.getAttributeName();
 
@@ -461,10 +468,10 @@ public class SourceContentHandler implements SheetHandler
 
       CreationHelper helper = this.workbook.getCreationHelper();
       this.style.setDataFormat(helper.createDataFormat().getFormat("MM/DD/YY"));
-      
+
       XSSFWorkbook wb = this.workbook.getXSSFWorkbook();
       POIXMLProperties props = wb.getProperties();
-      
+
       POIXMLProperties.CustomProperties custProp = props.getCustomProperties();
       custProp.addProperty("dataset", this.context.getId(this.sheetName));
     }
@@ -485,6 +492,6 @@ public class SourceContentHandler implements SheetHandler
   @Override
   public void setDatasetProperty(String dataset)
   {
-    // Do nothing    
+    // Do nothing
   }
 }
