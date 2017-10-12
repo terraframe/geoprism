@@ -377,7 +377,7 @@ public class SourceContentHandler implements SheetHandler
         }
         else
         {
-          headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
+          headerModifierCommand = headerModifier.checkCell(null, cellReference, contentValue, formattedValue, cellType, rowNum);
         }
 
         if (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE)

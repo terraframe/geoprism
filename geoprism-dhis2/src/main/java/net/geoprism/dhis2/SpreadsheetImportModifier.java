@@ -21,23 +21,41 @@ package net.geoprism.dhis2;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.poi.ss.util.CellReference;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdBusiness;
 
 import net.geoprism.data.etl.ColumnType;
+import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
+import net.geoprism.data.etl.excel.FieldInfoContentsHandler.Field;
 import net.geoprism.data.etl.excel.SpreadsheetImporterHeaderModifierIF;
+import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
+import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
+import net.geoprism.dhis2.importer.OptionSetJsonToClassifier;
+import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
+import net.geoprism.dhis2.response.HTTPResponse;
+import net.geoprism.ontology.Classifier;
 
 public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModifierIF
 {
+  private static final Logger logger = LoggerFactory.getLogger(SpreadsheetImportModifier.class);
+  
   private boolean isDhis2Spreadsheet = false;
   
   private String programId = null;
   
+  private AbstractDHIS2Connector dhis2;
+  
   // We have to hold onto this until after we read the 3rd row because we don't know the attributes till then
-  private Map<Integer, String> attrDhis2Ids = new HashMap<Integer, String>();
+  private Map<Integer, String> attrDhis2Ids;
   
   /**
    * Service lodaer paradigm : we're required to have a 0 argument constructor.
@@ -90,8 +108,18 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
     return 0;
   }
   
+  public void connectDhis2()
+  {
+    if (dhis2 == null)
+    {
+      dhis2 = new DHIS2HTTPCredentialConnector();
+      
+      dhis2.readConfigFromDB();
+    }
+  }
+  
   @Override
-  public int checkCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum)
+  public int checkCell(FieldInfoContentsHandler importer, String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum)
   {
     CellReference reference = new CellReference(cellReference);
     Integer column = new Integer(reference.getCol());
@@ -100,7 +128,10 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
     {
       if (column == 0 && formattedValue.equals("programId"))
       {
+        attrDhis2Ids = new HashMap<Integer, String>();
         isDhis2Spreadsheet = true;
+        connectDhis2();
+        
         return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
       }
       else if (column == 0)
@@ -116,11 +147,98 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
     }
     else if (isDhis2Spreadsheet && rowNum == 1)
     {
+      attrDhis2Ids.put(column, contentValue);
+      
       return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
     }
     else if (isDhis2Spreadsheet && rowNum == 2)
     {
-      return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER;
+      if (attrDhis2Ids.containsKey(column) && importer != null)
+      {
+        String id = attrDhis2Ids.get(column);
+        
+        try
+        {
+          HTTPResponse response = dhis2.httpGet("api/25/metadata.json", new NameValuePair[] {
+              new NameValuePair("assumeTrue", "false"),
+              new NameValuePair("trackedEntityAttributes", "true"),
+              new NameValuePair("filter", "id:eq:" + id)
+            });
+          DHIS2TrackerResponseProcessor.validateStatusCode(response);
+          
+          JSONObject json = response.getJSON();
+          if (json.has("trackedEntityAttributes"))
+          {
+            JSONArray trackedEntityAttributes = json.getJSONArray("trackedEntityAttributes");
+            
+            if (trackedEntityAttributes.length() == 1)
+            {
+              JSONObject trackedEntityAttr = trackedEntityAttributes.getJSONObject(0);
+              
+              if (trackedEntityAttr.has("name"))
+              {
+                String name = trackedEntityAttr.getString("name");
+                
+                Field attribute = importer.getField(cellReference);
+                attribute.setName(name);
+                attribute.setInputPosition(importer.getFieldPosition(cellReference));
+                
+                if (trackedEntityAttr.has("optionSet"))
+                {
+                  String optionSetId = trackedEntityAttr.getJSONObject("optionSet").getString("id");
+                  try
+                  {
+                    Classifier classy = Classifier.getByKey(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + optionSetId + Classifier.KEY_CONCATENATOR + optionSetId);
+                    attribute.setCategoryId(classy.getId());
+                  }
+                  catch(DataNotFoundException e)
+                  {
+                    
+                  }
+                }
+                
+                if (trackedEntityAttr.has("valueType"))
+                {
+                  String valueType = trackedEntityAttr.getString("valueType");
+                  
+                  if (valueType.equals("TEXT"))
+                  {
+                    attribute.setRealType(ColumnType.TEXT);
+                  }
+                  else if (valueType.equals("DATE"))
+                  {
+                    attribute.setRealType(ColumnType.DATE);
+                  }
+                  else if (valueType.equals("NUMBER"))
+                  {
+                    attribute.setRealType(ColumnType.NUMBER);
+                  }
+                  else if (valueType.equals("BOOLEAN"))
+                  {
+                    attribute.setRealType(ColumnType.BOOLEAN);
+                  }
+                  else if (valueType.equals("LONG_TEXT"))
+                  {
+                    attribute.setRealType(ColumnType.TEXT);
+                  }
+                }
+                
+                return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
+              }
+            }
+          }
+        }
+        catch(RuntimeException ex)
+        {
+          logger.warn("Error happened while trying to fetch DHIS2 tracked entity attribute info on row:column [3:" + column + "]", ex);
+        }
+        
+        return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER;
+      }
+      else
+      {
+        return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER;
+      }
     }
     else
     {
@@ -143,6 +261,9 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
         if (formattedValue.equals("programId"))
         {
           isDhis2Spreadsheet = true;
+          connectDhis2();
+          attrDhis2Ids = new HashMap<Integer, String>();
+          
           return SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
         }
         else

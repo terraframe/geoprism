@@ -541,7 +541,7 @@ public class TargetBuilder
     // Create the attribute
     if (columnType.equals(ColumnType.CATEGORY.name()))
     {
-      if (!cField.has("root") || cField.getString("root").length() == 0)
+      if (!cField.has("root") || cField.getString("root").length() == 0 || cField.getString("root").equals("new"))
       {
         MdAttributeTermDAO mdAttribute = createMdAttributeTerm(mdClass, label, attributeName);
 

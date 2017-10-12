@@ -66,12 +66,12 @@
       </div>      
       <div class="inline-box fade-ngIf" *ngIf="field.type == 'CATEGORY'">
         <label><localize key="dataUploader.domainRoot"></localize></label>
-        <select class="select-area" [(ngModel)]="field.root" [name]="i + '-root'">
-          <option *ngIf="sheet.format != 1" value=""><localize key="dataUploader.new"></localize></option>          
+        <select class="select-area" required [(ngModel)]="field.root" [name]="i + '-root'">
+          <option *ngIf="sheet.format != 1" value="new"><localize key="dataUploader.new"></localize></option>          
           <option *ngFor="let opt of info.classifiers" [value]="opt.value">{{opt.label}}</option>          
         </select>
       </div>      
-      <div class="inline-text fade-ngIf" *ngIf="field.type == 'CATEGORY' && field.root == ''">
+      <div class="inline-text fade-ngIf" *ngIf="field.type == 'CATEGORY' && field.root == 'new'">
         <label><localize key="dataUploader.categoryLabel"></localize></label>
         <input [(ngModel)]="field.categoryLabel" #categoryLabel="ngModel" [name]="i + '-categoryLabel'" required type="text" asyncValidator [validator]="this" config="category" />
       </div>      
