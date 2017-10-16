@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -192209931)
+@com.runwaysdk.business.ClassSignature(hash = -161137210)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -87,6 +69,23 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardLegend.ID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot()
+  {
+    return getImageSnapshot(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.getComponentQuery().get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.getComponentQuery().get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -195,6 +194,9 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBlob getImageSnapshot();
+    public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias);
+    public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -255,6 +257,23 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardLegend.ID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot()
+  {
+    return getImageSnapshot(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

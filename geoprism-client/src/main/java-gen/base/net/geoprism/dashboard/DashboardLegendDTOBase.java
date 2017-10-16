@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -1854030068)
+@com.runwaysdk.business.ClassSignature(hash = -413858993)
 public abstract class DashboardLegendDTOBase extends com.runwaysdk.business.StructDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardLegend";
-  private static final long serialVersionUID = -1854030068;
+  private static final long serialVersionUID = -413858993;
   
   protected DashboardLegendDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -47,6 +29,7 @@ public abstract class DashboardLegendDTOBase extends com.runwaysdk.business.Stru
   
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
+  public static java.lang.String IMAGESNAPSHOT = "imageSnapshot";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
@@ -86,6 +69,36 @@ public abstract class DashboardLegendDTOBase extends com.runwaysdk.business.Stru
   public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getGroupedInLegendMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(GROUPEDINLEGEND).getAttributeMdDTO();
+  }
+  
+  public byte[] getImageSnapshot()
+  {
+    return super.getBlob(IMAGESNAPSHOT);
+  }
+  
+  public void setImageSnapshot(byte[] bytes)
+  {
+    super.setBlob(IMAGESNAPSHOT, bytes);
+  }
+  
+  public boolean isImageSnapshotWritable()
+  {
+    return isWritable(IMAGESNAPSHOT);
+  }
+  
+  public boolean isImageSnapshotReadable()
+  {
+    return isReadable(IMAGESNAPSHOT);
+  }
+  
+  public boolean isImageSnapshotModified()
+  {
+    return isModified(IMAGESNAPSHOT);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBlobMdDTO getImageSnapshotMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBlobMdDTO) getAttributeDTO(IMAGESNAPSHOT).getAttributeMdDTO();
   }
   
   public String getKeyName()
