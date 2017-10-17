@@ -204,7 +204,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     byte[] imageInByte = null;
 	try {
-      ImageIO.write(legendImage, "jpg", baos );
+      ImageIO.write(legendImage, "png", baos );
       imageInByte = baos.toByteArray();
 	} 
 	catch (IOException e) {

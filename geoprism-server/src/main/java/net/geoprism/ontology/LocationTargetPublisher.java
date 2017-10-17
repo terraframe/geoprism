@@ -123,6 +123,8 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     {
       vQuery.AND(query.getUniversal().EQ(this.universalId));
     }
+    
+    // prevent NULL geometries to prevent errors in MapboxGL
     vQuery.AND(geom.getAttribute().NE((String) null));
 
     return vQuery;
