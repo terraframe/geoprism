@@ -1,0 +1,21 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+    
+      <mdStruct name="net.geoprism.dashboard.DashboardLegend" >
+        <create>
+          <attributes>
+            <blob name="imageSnapshot" label="Legend Image"></blob>
+          </attributes>
+        </create>
+      </mdStruct>
+    
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+       <object key="net.geoprism.dashboard.DashboardLegend.imageSnapshot" type="com.runwaysdk.system.metadata.MdAttribute" />
+    </delete>
+  </undoIt>
+</version>
