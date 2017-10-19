@@ -19,9 +19,18 @@
 package net.geoprism.dhis2.connector;
 
 import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -37,6 +46,34 @@ public class DHIS2HTTPCredentialConnector extends AbstractDHIS2Connector
 {
   synchronized public void initialize()
   {
+    class DefaultTrustManager implements X509TrustManager {
+
+      @Override
+      public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+      @Override
+      public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+      @Override
+      public X509Certificate[] getAcceptedIssuers() {
+          return null;
+      }
+    }
+    
+    try
+    {
+      SSLContext ctx = SSLContext.getInstance("TLS");
+    
+      ctx.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
+    
+      SSLContext.setDefault(ctx);
+    }
+    catch (KeyManagementException | NoSuchAlgorithmException e)
+    {
+      throw new RuntimeException(e);
+    }
+    
+    
     super.initialize();
     
     client.getParams().setAuthenticationPreemptive(true);

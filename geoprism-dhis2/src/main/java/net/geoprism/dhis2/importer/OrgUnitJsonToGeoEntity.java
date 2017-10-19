@@ -24,7 +24,10 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.gis.geometry.GeometryHelper;
@@ -39,6 +42,8 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class OrgUnitJsonToGeoEntity
 {
+  private static final Logger logger = LoggerFactory.getLogger(OrgUnitJsonToGeoEntity.class);
+  
   private DHIS2DataImporter importer;
   
   private GeometryFactory geometryFactory;
@@ -209,49 +214,56 @@ public class OrgUnitJsonToGeoEntity
   
   private void setGeometry()
   {
-    if (json.has("featureType") && json.has("coordinates"))
+    try
     {
-      String featureType = json.getString("featureType");
-      
-      if (featureType == null || featureType.equals("NONE") || featureType.equals("")) { return; }
-      
-      JSONArray coordinates = new JSONArray(json.getString("coordinates")); // DHIS2 woes: Their coordinates are wrapped in quotes (its a string). We want to parse it as JSON.
-      
-      if (coordinates == null || coordinates.equals("NONE") || coordinates.equals("")) { return; }
-      
-      if (featureType.equals("POINT"))
+      if (json.has("featureType") && json.has("coordinates"))
       {
-        Coordinate coord = jsonToCoordinate(coordinates);
-        Point point = geometryFactory.createPoint(coord);
-  
-        geo.setGeoPoint(this.geometryHelper.getGeoPoint(point));
-        geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(point));
-        geo.setWkt(point.toText());
-      }
-      else if (featureType.equals("POLYGON"))
-      {
-        coordinates = coordinates.getJSONArray(0).getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+        String featureType = json.getString("featureType");
         
-        Polygon polygon = jsonToPolygon(coordinates);
+        if (featureType == null || featureType.equals("NONE") || featureType.equals("")) { return; }
         
-        geo.setGeoPoint(this.geometryHelper.getGeoPoint(polygon));
-        geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(polygon));
-        geo.setWkt(polygon.toText());
-      }
-      else if (featureType.equals("MULTI_POLYGON"))
-      {
-        coordinates = coordinates.getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+        JSONArray coordinates = new JSONArray(json.getString("coordinates")); // DHIS2 woes: Their coordinates are wrapped in quotes (its a string). We want to parse it as JSON.
         
-        MultiPolygon multipolygon = jsonToMultiPolygon(coordinates);
+        if (coordinates == null || coordinates.equals("NONE") || coordinates.equals("")) { return; }
         
-        geo.setGeoPoint(this.geometryHelper.getGeoPoint(multipolygon));
-        geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multipolygon));
-        geo.setWkt(multipolygon.toText());
+        if (featureType.equals("POINT"))
+        {
+          Coordinate coord = jsonToCoordinate(coordinates);
+          Point point = geometryFactory.createPoint(coord);
+    
+          geo.setGeoPoint(this.geometryHelper.getGeoPoint(point));
+          geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(point));
+          geo.setWkt(point.toText());
+        }
+        else if (featureType.equals("POLYGON"))
+        {
+          coordinates = coordinates.getJSONArray(0).getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+          
+          Polygon polygon = jsonToPolygon(coordinates);
+          
+          geo.setGeoPoint(this.geometryHelper.getGeoPoint(polygon));
+          geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(polygon));
+          geo.setWkt(polygon.toText());
+        }
+        else if (featureType.equals("MULTI_POLYGON"))
+        {
+          coordinates = coordinates.getJSONArray(0); // DHIS2 woes: Why is it wrapped in so many arrays??
+          
+          MultiPolygon multipolygon = jsonToMultiPolygon(coordinates);
+          
+          geo.setGeoPoint(this.geometryHelper.getGeoPoint(multipolygon));
+          geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(multipolygon));
+          geo.setWkt(multipolygon.toText());
+        }
+        else
+        {
+          throw new UnsupportedOperationException("Unexpected featureType [" + featureType + "] on OrgUnit [" + json.toString() + "].");
+        }
       }
-      else
-      {
-        throw new UnsupportedOperationException("Unexpected featureType [" + featureType + "] on OrgUnit [" + json.toString() + "].");
-      }
+    }
+    catch (JSONException e)
+    {
+      logger.warn("Problem importing geometries for Org unit [" + geo.getDisplayLabel() + " : " + geo.getGeoId() + "]");
     }
   }
   
