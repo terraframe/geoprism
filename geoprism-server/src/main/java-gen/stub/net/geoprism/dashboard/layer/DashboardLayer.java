@@ -18,9 +18,14 @@
  */
 package net.geoprism.dashboard.layer;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +45,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 
 import net.geoprism.SessionParameterFacade;
+import net.geoprism.dashboard.DashboardLegend;
 import net.geoprism.dashboard.DashboardMap;
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.HasStyle;
@@ -141,6 +147,17 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
 
     return this.publish();
   }
+  
+  @Transaction
+  public void setLegendImage()
+  {
+    byte[] legendGraphic = this.getLayerLegendGraphic();
+    DashboardLegend legend = this.getDashboardLegend();
+    this.lock();
+    legend.setImageSnapshot(legendGraphic);
+    legend.apply();
+    this.unlock();
+  }
 
   protected String publish()
   {
@@ -154,6 +171,8 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     this.publish(batch);
 
     GeoserverFacade.pushUpdates(batch);
+    
+    this.setLegendImage();
 
     try
     {
@@ -174,6 +193,38 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     {
       throw new ProgrammingErrorException(e);
     }
+  }
+  
+  private byte[] getLayerLegendGraphic()
+  {
+	DashboardMap map = this.getDashboardMap();
+    String url = map.getLegendURL(this);
+    BufferedImage legendImage = map.getImageFromGeoserver(url);
+    
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    byte[] imageInByte = null;
+	try {
+      ImageIO.write(legendImage, "png", baos );
+      imageInByte = baos.toByteArray();
+	} 
+	catch (IOException e) {
+		throw new ProgrammingErrorException(e);
+	}
+	finally
+	{
+	  try {
+		baos.flush();
+	  } catch (IOException e) {
+		  throw new ProgrammingErrorException(e);
+	  }
+	  try {
+		baos.close();
+	  } catch (IOException e) {
+		  throw new ProgrammingErrorException(e);
+	  }
+	}
+	
+	return imageInByte;
   }
 
   @Transaction
@@ -198,14 +249,14 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     }
 
     style.apply();
-
+    
     this.apply();
 
     // Create hasLayer and hasStyle relationships
     if (isNew)
     {
       DashboardMap map = DashboardMap.get(mapId);
-
+    	
       HasLayer hasLayer = map.addHasLayer(this);
       hasLayer.setLayerIndex(map.getMaxIndex() + 1);
       hasLayer.apply();
