@@ -102,7 +102,7 @@
                   </div>
                   
                    <div ng-show="showWidgetType == 'DATASETS'" class="row-holder vertical-checkbox-list">
-                    <div class="builder-data-set" ng-if="dashboard.options.types != null && dashboard.options.types.length > 0" fire-on-ready>
+                    <div class="builder-data-set" ng-if="dashboard.options.types != null && dashboard.options.types.length > 0">
                       <div id="type-field-row" class="collapse in">
 	                      <ul class="list-unstyled">
 	                        <li ng-repeat="type in dashboard.options.types">
@@ -124,7 +124,7 @@
 	                      </ul>
                       </div>
                     </div>
-                    <div class="" ng-if="dashboard.options.types != null && dashboard.options.types.length < 1">
+                    <div class="" ng-if="dashboard.options.types != null && dashboard.options.types.length < 1" fire-on-ready>
                       <h4 class="user-notice"><gdb:localize key='dashboard.noDataSetsMsg'/></h4>
                     </div>
                   </div>
