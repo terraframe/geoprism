@@ -519,7 +519,9 @@ export class UploadWizardComponent implements OnDestroy {
             
           this.problems = result.problems;
           this.info.information.sheets = result.sheets;
-          this.sheet = result.sheets[0];          
+          
+          result.sheets[0].format = this.sheet.format
+          this.sheet = result.sheets[0];
           
           if( !result.problems.locations || result.problems.locations.length > 0) {
         	

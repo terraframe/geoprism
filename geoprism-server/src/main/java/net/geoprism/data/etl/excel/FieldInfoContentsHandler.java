@@ -3,16 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl.excel;
 
@@ -47,7 +49,7 @@ import net.geoprism.localization.LocalizationFacade;
 
 public class FieldInfoContentsHandler implements SheetHandler
 {
-  private static class Field
+  public static class Field
   {
     /**
      * Number of unique values
@@ -65,6 +67,10 @@ public class FieldInfoContentsHandler implements SheetHandler
     private Set<ColumnType>  dataTypes;
 
     private Set<String>      values;
+    
+    private String           categoryId;
+    
+    private ColumnType       realType; // this is read from dhis2
 
     public Field()
     {
@@ -116,6 +122,16 @@ public class FieldInfoContentsHandler implements SheetHandler
         this.values.add(value);
       }
     }
+    
+    public void setCategoryId(String id)
+    {
+      this.categoryId = id;
+    }
+    
+    public void setRealType(ColumnType realType)
+    {
+      this.realType = realType;
+    }
 
     public JSONObject toJSON() throws JSONException
     {
@@ -124,16 +140,28 @@ public class FieldInfoContentsHandler implements SheetHandler
       object.put("label", this.name.trim());
       object.put("aggregatable", true);
       object.put("fieldPosition", this.getInputPosition());
-
+      
       if (this.dataTypes.size() == 1)
       {
         ColumnType type = this.dataTypes.iterator().next();
-
+        if (this.realType != null)
+        {
+          type = this.realType;
+        }
+        
         object.put("type", type.name());
         object.put("columnType", type.name());
         object.put("accepted", false);
 
-        if (type.equals(ColumnType.NUMBER))
+        if (realType != null)
+        {
+          if (this.categoryId != null)
+          {
+            object.put("type", ColumnType.CATEGORY.name());
+            object.put("root", this.categoryId);
+          }
+        }
+        else if (type.equals(ColumnType.NUMBER))
         {
           if (this.scale > 0)
           {
@@ -147,7 +175,7 @@ public class FieldInfoContentsHandler implements SheetHandler
             object.put("type", ColumnType.LONG.name());
           }
         }
-        else if (type.equals(ColumnType.TEXT) && this.values.size() < LIMIT)
+        else if ((type.equals(ColumnType.TEXT) && this.values.size() < LIMIT))
         {
           object.put("type", ColumnType.CATEGORY.name());
         }
@@ -158,9 +186,14 @@ public class FieldInfoContentsHandler implements SheetHandler
         object.put("type", ColumnType.TEXT.name());
         object.put("accepted", false);
 
-        if (this.values.size() < LIMIT)
+        if (this.categoryId != null || this.values.size() < LIMIT)
         {
           object.put("type", ColumnType.CATEGORY.name());
+          
+          if (this.categoryId != null)
+          {
+            object.put("root", this.categoryId);
+          }
         }
       }
 
@@ -227,7 +260,7 @@ public class FieldInfoContentsHandler implements SheetHandler
     }
   }
 
-  private Field getField(String cellReference)
+  public Field getField(String cellReference)
   {
     CellReference reference = new CellReference(cellReference);
     Integer column = new Integer(reference.getCol());
@@ -240,7 +273,7 @@ public class FieldInfoContentsHandler implements SheetHandler
     return this.map.get(column);
   }
 
-  private int getFieldPosition(String cellReference)
+  public int getFieldPosition(String cellReference)
   {
     CellReference reference = new CellReference(cellReference);
 
@@ -341,7 +374,7 @@ public class FieldInfoContentsHandler implements SheetHandler
     int headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT;
     if (headerModifier != null)
     {
-      headerModifierCommand = headerModifier.checkCell(cellReference, contentValue, formattedValue, cellType, rowNum);
+      headerModifierCommand = headerModifier.checkCell(this, cellReference, contentValue, formattedValue, cellType, rowNum);
     }
 
     if ( ( headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0 ) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER)

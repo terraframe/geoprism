@@ -56,7 +56,7 @@
 	       					<p><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></p>
 	       				</li>
 	       			</a>
-	       			<a href="${pageContext.request.contextPath}/management">
+	       			<a href="${pageContext.request.contextPath}/prism/management#/datasets">
 	           			<li ng-if="dashboard.canEdit()">
 	           				<i class="fa fa-table"></i>
 	           				<p><gdb:localize key="dashboardViewer.dataManagementLinkLabel"/></p>

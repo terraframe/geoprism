@@ -64,10 +64,10 @@ export class AttributesPageComponent implements OnInit, AfterViewChecked, LocalV
       
       if (field.root == null && this.sheet.format == 1)
       {
-        field.root = this.info.classifiers[0].value;
+        field.root = '';
       }
       else if (field.root == null) {
-        field.root = '';
+        field.root = 'new';
       }
       
       this.accept(field);

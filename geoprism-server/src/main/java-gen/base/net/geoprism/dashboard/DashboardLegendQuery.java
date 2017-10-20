@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = -192209931)
+@com.runwaysdk.business.ClassSignature(hash = -161137210)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -87,6 +87,23 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardLegend.ID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot()
+  {
+    return getImageSnapshot(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.getComponentQuery().get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.getComponentQuery().get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -195,6 +212,9 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
     public com.runwaysdk.query.SelectableChar getId();
     public com.runwaysdk.query.SelectableChar getId(String alias);
     public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableBlob getImageSnapshot();
+    public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias);
+    public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -255,6 +275,23 @@ public  class DashboardLegendQuery extends com.runwaysdk.query.GeneratedStructQu
   public com.runwaysdk.query.SelectableChar getId(String alias, String displayLabel)
   {
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardLegend.ID, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot()
+  {
+    return getImageSnapshot(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableBlob getImageSnapshot(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableBlob)this.get(net.geoprism.dashboard.DashboardLegend.IMAGESNAPSHOT, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

@@ -117,14 +117,14 @@ public class MdBusinessExporter
     mapQ.WHERE(mapQ.getRunwayId().EQ(mdbiz.getId()));
     long count = mapQ.getCount();
     
-    if (count == 0)
+    if (count == 0) // CREATE NEW
     {
       createTrackedEntity();
       createTrackedEntityAttributes();
 //      createProgramTrackedEntityAttributes(); // only works on 2.25
       createProgram();
     }
-    else
+    else // UPDATE EXISTING
     {
       OIterator<? extends DHIS2IdMapping> it = mapQ.getIterator();
       DHIS2IdMapping mapping;

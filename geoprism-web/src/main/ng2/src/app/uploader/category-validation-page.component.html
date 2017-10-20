@@ -34,7 +34,7 @@
     </div>  
 
     <div *ngFor="let problem of problems.categories; let i = index;">
-      <category-validation-problem [problem]="problem" [workbook]="workbook" [index]="i" [options]="problems.options[problem.mdAttributeId]" (onResolve)="onResolve($event)"></category-validation-problem>
+      <category-validation-problem [problem]="problem" [workbook]="workbook" [index]="i" [options]="problems.options[problem.mdAttributeId]" [format]="format" (onResolve)="onResolve($event)"></category-validation-problem>
     </div>
   </div>
   <div class="wide-holder">

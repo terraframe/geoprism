@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard;
 
-@com.runwaysdk.business.ClassSignature(hash = 1488949388)
+@com.runwaysdk.business.ClassSignature(hash = -941506097)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -31,11 +31,12 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
   public final static String CLASS = "net.geoprism.dashboard.DashboardLegend";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
   public static java.lang.String ID = "id";
+  public static java.lang.String IMAGESNAPSHOT = "imageSnapshot";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LEGENDXPOSITION = "legendXPosition";
   public static java.lang.String LEGENDYPOSITION = "legendYPosition";
   public static java.lang.String SITEMASTER = "siteMaster";
-  private static final long serialVersionUID = 1488949388;
+  private static final long serialVersionUID = -941506097;
   
   public DashboardLegendBase()
   {
@@ -99,6 +100,34 @@ public abstract class DashboardLegendBase extends com.runwaysdk.business.Struct 
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF)mdClassIF.definesAttribute(ID);
+  }
+  
+  public byte[] getImageSnapshot()
+  {
+    return getBlob(IMAGESNAPSHOT);
+  }
+  
+  public void validateImageSnapshot()
+  {
+    this.validateAttribute(IMAGESNAPSHOT);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeBlobDAOIF getImageSnapshotMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.dashboard.DashboardLegend.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeBlobDAOIF)mdClassIF.definesAttribute(IMAGESNAPSHOT);
+  }
+  
+  public void setImageSnapshot(byte[] value)
+  {
+    if(value == null)
+    {
+      setValue(IMAGESNAPSHOT, "");
+    }
+    else
+    {
+      setBlob(IMAGESNAPSHOT, value);
+    }
   }
   
   public String getKeyName()

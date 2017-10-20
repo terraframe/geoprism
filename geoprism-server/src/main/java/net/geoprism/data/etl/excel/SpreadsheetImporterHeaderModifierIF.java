@@ -44,7 +44,7 @@ public interface SpreadsheetImporterHeaderModifierIF
   
   public int processCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum, String type, String attrName);
   
-  public int checkCell(String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum);
+  public int checkCell(FieldInfoContentsHandler handler, String cellReference, String contentValue, String formattedValue, ColumnType cellType, int rowNum);
   
   /**
    * Returns the row number where the column headers are stored.

@@ -35,7 +35,7 @@
     </div>  
     
     <div *ngFor="let problem of problems.locations; let i = index;">
-      <geo-validation-problem [problem]="problem" [workbook]="workbook" [index]="i"></geo-validation-problem>
+      <geo-validation-problem [problem]="problem" [workbook]="workbook" [index]="i" [format]="format"></geo-validation-problem>
     </div>
   </div>
   <div class="wide-holder">

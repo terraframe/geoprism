@@ -32,6 +32,7 @@ export class CategoryValidationPageComponent {
   @Input() workbook: Workbook;
   @Input() page: Page;
   @Input() problems: Problems;
+  @Input() format: number;
   
   constructor() {
   }  

@@ -139,7 +139,7 @@ public class SourceBuilder
     String label = cField.getString("label");
     String attributeName = this.generateAttributeName(label);
     String type = cField.getString("type");
-
+    
     MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
     mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
     mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
@@ -163,6 +163,12 @@ public class SourceBuilder
   private String generateAttributeName(String label, String suffix)
   {
     String name = DataUploader.getSystemName(label, suffix, false);
+    
+    // For some reason there's logic in 'getSystemName' that thinks an all uppercase name is an acronym.  'LATITUDE' is not an acronym.
+    if (name.equals(name.toUpperCase()))
+    {
+      name = name.toLowerCase();
+    }
 
     return name;
   }

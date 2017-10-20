@@ -1318,7 +1318,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return base;
   }
 
-  private String getLegendURL(DashboardLayer layer)
+  public String getLegendURL(DashboardLayer layer)
   {
     String layerString = GeoserverProperties.getWorkspace() + ":" + layer.getViewName();
 
@@ -1443,7 +1443,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     return newLegendTitleBase;
   }
 
-  private BufferedImage getImageFromGeoserver(String _requestURL)
+  public BufferedImage getImageFromGeoserver(String _requestURL)
   {
     for (int i = 0; i < 10; i++)
     {
