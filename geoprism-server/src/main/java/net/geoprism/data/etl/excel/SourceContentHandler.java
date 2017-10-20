@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl.excel;
 
@@ -132,8 +130,12 @@ public class SourceContentHandler implements SheetHandler
 
   private DataImportState                     mode;
 
+  boolean                                     isFirstSheet;
+
   public SourceContentHandler(ConverterIF converter, SourceContextIF context, ProgressMonitorIF monitor, DataImportState mode)
   {
+    this.isFirstSheet = true;
+
     this.converter = converter;
     this.context = context;
     this.mode = mode;
@@ -187,6 +189,7 @@ public class SourceContentHandler implements SheetHandler
     Sheet sheet = this.getWorkbook().getSheet(this.sheetName);
 
     int headerNum = 0;
+
     if (this.headerModifier != null)
     {
       headerNum = this.headerModifier.getColumnNameRowNum();
@@ -196,66 +199,75 @@ public class SourceContentHandler implements SheetHandler
     {
       this.converter.setErrors(this.getWorkbook());
     }
+
+    this.isFirstSheet = false;
   }
 
   @Override
   public void startRow(int rowNum)
   {
-    this.rowNum = rowNum;
-    this.values = new HashMap<String, Object>();
-
-    boolean isHeader = ( rowNum == 0 );
-    if (this.headerModifier != null)
+    if (this.isFirstSheet)
     {
-      isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
-    }
+      this.rowNum = rowNum;
+      this.values = new HashMap<String, Object>();
 
-    if (!isHeader)
-    {
-      this.view = this.context.newView(this.sheetName);
-
-      this.monitor.setCurrentRow(rowNum);
-    }
-  }
-
-  @Override
-  public void endRow()
-  {
-    try
-    {
-      if (this.view != null)
-      {
-        this.converter.create(this.view);
-
-        this.view = null;
-      }
-
-      /*
-       * Write the header row
-       */
       boolean isHeader = ( rowNum == 0 );
       if (this.headerModifier != null)
       {
         isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
       }
 
-      if (isHeader)
+      if (!isHeader)
       {
-        Sheet sheet = this.getWorkbook().getSheet(sheetName);
+        this.view = this.context.newView(this.sheetName);
 
-        this.writeRow(sheet, rowNum);
+        this.monitor.setCurrentRow(rowNum);
       }
     }
-    catch (Exception e)
-    {
-      this.writeException(e);
+  }
 
-      // // Wrap all exceptions with information about the cell and row
-      // ExcelObjectException exception = new ExcelObjectException(e);
-      // exception.setRow(new Long(this.rowNum));
-      // exception.setMsg(ExceptionUtil.getLocalizedException(e));
-      //
-      // throw exception;
+  @Override
+  public void endRow()
+  {
+    if (this.isFirstSheet)
+    {
+
+      try
+      {
+        if (this.view != null)
+        {
+          this.converter.create(this.view);
+
+          this.view = null;
+        }
+
+        /*
+         * Write the header row
+         */
+        boolean isHeader = ( rowNum == 0 );
+        if (this.headerModifier != null)
+        {
+          isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
+        }
+
+        if (isHeader)
+        {
+          Sheet sheet = this.getWorkbook().getSheet(sheetName);
+
+          this.writeRow(sheet, rowNum);
+        }
+      }
+      catch (Exception e)
+      {
+        this.writeException(e);
+
+        // // Wrap all exceptions with information about the cell and row
+        // ExcelObjectException exception = new ExcelObjectException(e);
+        // exception.setRow(new Long(this.rowNum));
+        // exception.setMsg(ExceptionUtil.getLocalizedException(e));
+        //
+        // throw exception;
+      }
     }
   }
 
@@ -345,114 +357,118 @@ public class SourceContentHandler implements SheetHandler
   @Override
   public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
-    try
+    if (this.isFirstSheet)
     {
-      if (cellType.equals(ColumnType.FORMULA))
+
+      try
       {
-        throw new ExcelFormulaException();
-      }
-
-      // Invoke DHIS2 header modifier processing code (if the DHIS2 plugin exists)
-      int headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT;
-
-      if (headerModifier != null)
-      {
-        String attributeName = null;
-        String columnName = this.getColumnName(cellReference);
-        SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
-
-        if (field != null)
+        if (cellType.equals(ColumnType.FORMULA))
         {
-          attributeName = field.getAttributeName();
+          throw new ExcelFormulaException();
         }
 
-        if (this.mode.equals(DataImportState.DATAIMPORT))
+        // Invoke DHIS2 header modifier processing code (if the DHIS2 plugin exists)
+        int headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT;
+
+        if (headerModifier != null)
         {
-          if (field != null && field.getType().equals(ColumnType.IGNORE))
+          String attributeName = null;
+          String columnName = this.getColumnName(cellReference);
+          SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
+
+          if (field != null)
           {
-            headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
+            attributeName = field.getAttributeName();
+          }
+
+          if (this.mode.equals(DataImportState.DATAIMPORT))
+          {
+            if (field != null && field.getType().equals(ColumnType.IGNORE))
+            {
+              headerModifierCommand = SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE;
+            }
+            else
+            {
+              headerModifierCommand = headerModifier.processCell(cellReference, contentValue, formattedValue, cellType, rowNum, this.converter.getTargetContext().getType(this.context.getType(this.sheetName)), attributeName);
+            }
           }
           else
           {
-            headerModifierCommand = headerModifier.processCell(cellReference, contentValue, formattedValue, cellType, rowNum, this.converter.getTargetContext().getType(this.context.getType(this.sheetName)), attributeName);
+            headerModifierCommand = headerModifier.checkCell(null, cellReference, contentValue, formattedValue, cellType, rowNum);
           }
-        }
-        else
-        {
-          headerModifierCommand = headerModifier.checkCell(null, cellReference, contentValue, formattedValue, cellType, rowNum);
-        }
 
-        if (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE)
-        {
-          this.values.put(cellReference, contentValue);
-        }
-      }
-
-      if ( ( headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0 ) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER)
-      {
-        if (! ( cellType.equals(ColumnType.TEXT) || cellType.equals(ColumnType.INLINE_STRING) ))
-        {
-          throw new InvalidHeaderRowException();
-        }
-
-        this.setColumnName(cellReference, formattedValue);
-
-        // Store the original value in a temp map in case there is an error
-        String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
-
-        if (!contentValue.equals(label))
-        {
-          this.values.put(cellReference, contentValue);
-        }
-      }
-      else if ( ( headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.view != null ) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_BODY)
-      {
-        String columnName = this.getColumnName(cellReference);
-        SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
-
-        if (field != null && !field.getType().equals(ColumnType.IGNORE))
-        {
-          String attributeName = field.getAttributeName();
-
-          Object original = contentValue;
-
-          if (field.isNumber())
+          if (headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_IGNORE)
           {
-            original = Double.parseDouble(contentValue);
+            this.values.put(cellReference, contentValue);
           }
+        }
 
-          if (field.getType().equals(ColumnType.LONG))
+        if ( ( headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.rowNum == 0 ) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_HEADER)
+        {
+          if (! ( cellType.equals(ColumnType.TEXT) || cellType.equals(ColumnType.INLINE_STRING) ))
           {
-            double value = Double.parseDouble(contentValue);
-
-            formattedValue = this.nFormat.format(value);
-          }
-          else if (field.getType().equals(ColumnType.DATE))
-          {
-            Date date = this.dateTimeFormat.parse(contentValue);
-
-            formattedValue = this.dateFormat.format(date);
-
-            original = date;
+            throw new InvalidHeaderRowException();
           }
 
-          this.view.setValue(attributeName, formattedValue);
+          this.setColumnName(cellReference, formattedValue);
 
           // Store the original value in a temp map in case there is an error
-          this.values.put(cellReference, original);
+          String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
+
+          if (!contentValue.equals(label))
+          {
+            this.values.put(cellReference, contentValue);
+          }
+        }
+        else if ( ( headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_DEFAULT && this.view != null ) || headerModifierCommand == SpreadsheetImporterHeaderModifierIF.PROCESS_CELL_AS_BODY)
+        {
+          String columnName = this.getColumnName(cellReference);
+          SourceFieldIF field = this.context.getFieldByName(this.sheetName, columnName);
+
+          if (field != null && !field.getType().equals(ColumnType.IGNORE))
+          {
+            String attributeName = field.getAttributeName();
+
+            Object original = contentValue;
+
+            if (field.isNumber())
+            {
+              original = Double.parseDouble(contentValue);
+            }
+
+            if (field.getType().equals(ColumnType.LONG))
+            {
+              double value = Double.parseDouble(contentValue);
+
+              formattedValue = this.nFormat.format(value);
+            }
+            else if (field.getType().equals(ColumnType.DATE))
+            {
+              Date date = this.dateTimeFormat.parse(contentValue);
+
+              formattedValue = this.dateFormat.format(date);
+
+              original = date;
+            }
+
+            this.view.setValue(attributeName, formattedValue);
+
+            // Store the original value in a temp map in case there is an error
+            this.values.put(cellReference, original);
+          }
         }
       }
-    }
-    catch (Exception e)
-    {
-      logger.error("An error occurred while importing cell [" + cellReference + "].", e);
+      catch (Exception e)
+      {
+        logger.error("An error occurred while importing cell [" + cellReference + "].", e);
 
-      // Wrap all exceptions with information about the cell and row
-      ExcelValueException exception = new ExcelValueException();
-      exception.setCell(cellReference);
-      exception.setMsg(ExceptionUtil.getLocalizedException(e));
+        // Wrap all exceptions with information about the cell and row
+        ExcelValueException exception = new ExcelValueException();
+        exception.setCell(cellReference);
+        exception.setMsg(ExceptionUtil.getLocalizedException(e));
 
-      throw exception;
+        throw exception;
+      }
     }
   }
 
