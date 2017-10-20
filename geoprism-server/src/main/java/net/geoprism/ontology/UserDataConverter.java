@@ -43,16 +43,19 @@ public class UserDataConverter implements IUserDataConverter
         Object value = entry.getValue();
         String key = entry.getKey();
 
-        if (value instanceof BigDecimal)
+        if (value != null)
         {
-          value = ( (BigDecimal) value ).doubleValue();
+          if (value instanceof BigDecimal)
+          {
+            value = ( (BigDecimal) value ).doubleValue();
+          }
+
+          int kIndex = layerProps.addKey(key);
+          int vIndex = layerProps.addValue(value);
+
+          featureBuilder.addTags(kIndex);
+          featureBuilder.addTags(vIndex);
         }
-
-        int kIndex = layerProps.addKey(key);
-        int vIndex = layerProps.addValue(value);
-
-        featureBuilder.addTags(kIndex);
-        featureBuilder.addTags(vIndex);
       }
     }
   }
