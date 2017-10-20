@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard.query;
 
@@ -35,6 +33,8 @@ import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OrderBy;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableBoolean;
+import com.runwaysdk.query.SelectableIndicator;
 import com.runwaysdk.query.SelectableMoment;
 import com.runwaysdk.query.SelectableNumber;
 import com.runwaysdk.query.SelectableSingle;
@@ -178,14 +178,14 @@ public abstract class ThematicQueryBuilder implements Reloadable
     String attributeName = mdAttribute.definesAttribute();
     String displayLabel = mdAttribute.getDisplayLabel(Session.getCurrentLocale());
 
-    Selectable thematicAttr = query.get(attributeName);
+    Selectable thematicAttr = query.getS(attributeName);
     // use the basic Selectable if no aggregate is selected
     Selectable thematicSel = thematicAttr;
 
     SelectableSingle label = this.getLabelSelectable(query);
     Selectable id = this.getIdentifierSelectable(query);
 
-    if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment)
+    if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment || thematicSel instanceof SelectableBoolean || thematicSel instanceof SelectableIndicator)
     {
       boolean isAggregate = false;
 
@@ -340,7 +340,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
           if (definedByClass.getId().equals(mdClass.getId()))
           {
-            Selectable attr = componentQuery.get(mdAttribute.definesAttribute());
+            Selectable attr = componentQuery.getS(mdAttribute.definesAttribute());
 
             condition.restrictQuery(vQuery, attr);
           }

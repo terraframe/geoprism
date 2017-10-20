@@ -1,0 +1,73 @@
+<div class='ng-modal' *ngIf="show">
+  <div id="uploader-overlay" class='ng-modal-overlay'></div>
+  <div id="uploader-div" class='ng-modal-dialog'>
+  
+    <form #form="ngForm" class="modal-form">    
+      <div class='ng-modal-dialog-content'>
+        <div role="dialog" class="ng-modal-content modal-content">
+        
+          <div class="heading">
+            <h1><localize key="indicator.header"></localize></h1>
+          </div>      
+                
+          <fieldset>          
+            <div class="row-holder">
+              <div class="label-holder">
+                <label><localize key="dataset.label"></localize></label>
+              </div>          
+              <div class="holder" >
+                <span class="text">
+                  <input type="text" [(ngModel)]="indicator.label" name="label" required>
+                </span>
+              </div>
+            </div>            
+            <div class="row-holder">
+              <div class="label-holder">
+                <label><localize key="indicator.numerator"></localize></label>              
+              </div>          
+              <div class="holder">
+                <select class="select-area" [(ngModel)]="indicator.left.aggregation" name="left-agg" required>
+                  <option *ngFor="let agg of aggregations" [ngValue]="agg.id">{{agg.value}}</option>                
+                </select>                
+                <select class="select-area" [(ngModel)]="indicator.left.attribute" name="left-attr" required>
+                  <option *ngFor="let attribute of attributes" [ngValue]="attribute.id">{{attribute.label}}</option>                
+                </select>                
+              </div>
+            </div>
+            <div class="row-holder">
+              <div class="label-holder">
+                <label><localize key="indicator.denominator"></localize></label>              
+              </div>          
+              <div class="holder">
+                <select class="select-area" [(ngModel)]="indicator.right.aggregation" name="right-agg" required>
+                  <option *ngFor="let agg of aggregations" [ngValue]="agg.id">{{agg.value}}</option>                
+                </select>                
+                <select class="select-area" [(ngModel)]="indicator.right.attribute" name="right-attr" required>
+                  <option *ngFor="let attribute of attributes" [ngValue]="attribute.id">{{attribute.label}}</option>                
+                </select>                
+              </div>
+            </div>
+            <div class="row-holder">
+              <div class="label-holder">
+                <label><localize key="indicator.percentage"></localize></label>              
+              </div>          
+              <div class="holder">
+                <boolean-field [(value)]="indicator.percentage"></boolean-field>
+              </div>
+            </div>
+            <div class="row-holder">
+              <div class="label-holder">
+              </div>                    
+              <div class="holder">
+                <div class="button-holder">
+                  <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
+                  <input type="button" [value]="'dataset.submit' | localize" class="btn btn-primary" (click)="onSubmit()" [disabled]="!(form.valid)" />
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </form>           
+  </div>  
+</div>

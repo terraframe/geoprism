@@ -1,0 +1,16 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <object key="NONE" type="net.geoprism.dashboard.AggregationType">
+        <attribute name="enumName" value="NONE" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="None" />
+        </attributeStruct>
+      </object>    
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

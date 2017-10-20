@@ -1,0 +1,72 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdBusiness name="net.geoprism.MappableClass">
+        <create>
+          <mdMethod name="addIndicator" label="Add indicator" returnType="java.lang.String" static="true">
+            <mdParameter name="datasetId" label="Dataset Id" order="0" type="java.lang.String"/>
+            <mdParameter name="indicator" label="Indicator" order="1" type="java.lang.String"/>
+          </mdMethod>
+          <mdMethod name="lockIndicator" label="Lock indicator" returnType="java.lang.String" static="true">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>
+          </mdMethod>
+          <mdMethod name="removeIndicator" label="Remove indicator" returnType="void" static="true">
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>
+          </mdMethod>          
+        </create>
+      </mdBusiness>      
+      
+      <mdController name="net.geoprism.DataSetController">
+        <create>
+          <mdAction name="addIndicator" label="Add indicator" isPost="true">
+            <mdParameter name="datasetId" label="Dataset Id" order="0" type="java.lang.String"/>
+            <mdParameter name="indicator" label="Indicator" order="1" type="java.lang.String"/>
+          </mdAction>
+          <mdAction name="editAttribute" label="Edit attribute" isPost="true" >
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>          
+          </mdAction>
+          <mdAction name="removeAttribute" label="Remove attribute" isPost="true" >
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>          
+          </mdAction>
+          <mdAction name="unlockAttribute" label="Unlock attribute" isPost="true" >
+            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>          
+          </mdAction>          
+        </create>
+      </mdController>
+    </update>
+    <permissions>
+      <method methodName="addIndicator" type="net.geoprism.MappableClass">
+        <assignedRole roleName="Administrator"/>
+      </method>   
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.MappableClass">
+            <mdMethodPermission methodName="addIndicator">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.MappableClass">
+            <mdMethodPermission methodName="addIndicator">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>       
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.MappableClass.addIndicator" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.MappableClass.lockIndicator" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.MappableClass.removeIndicator" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.DataSetController.addIndicator" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.DataSetController.editAttribute" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.DataSetController.removeAttribute" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.DataSetController.unlockAttribute" type="com.runwaysdk.system.metadata.MdAction"/>
+    </delete>
+  </undoIt>
+</version>

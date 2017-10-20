@@ -27,6 +27,7 @@ import { IconDetailComponent, IconResolver} from './icon/icon-detail.component';
 
 import { DatasetsComponent } from './datasets/datasets.component';
 import { DatasetDetailComponent, DatasetResolver} from './datasets/dataset-detail.component';
+import { IndicatorModalComponent } from './datasets/indicator-modal.component';
 
 import { CategoriesComponent } from './category/categories.component';
 import { CategoryDetailComponent, CategoryResolver} from './category/category-detail.component';
@@ -96,4 +97,4 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent];
+export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent, IndicatorModalComponent];

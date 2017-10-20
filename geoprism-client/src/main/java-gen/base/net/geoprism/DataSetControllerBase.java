@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -289399826)
+@com.runwaysdk.business.ClassSignature(hash = -1958771617)
 public class DataSetControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.DataSetController";
@@ -83,6 +65,20 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:datasetId, java.lang.String:indicator", post=true)
+  public void addIndicator(java.lang.String datasetId, java.lang.String indicator) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.addIndicator");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:datasetId, java.lang.String:indicator", post=true)
+  public void failAddIndicator(java.lang.String datasetId, java.lang.String indicator) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failAddIndicator");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:config", post=true)
   public void apply(java.lang.String config) throws java.io.IOException, javax.servlet.ServletException
   {
@@ -139,6 +135,20 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failEdit");
   }
   
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void editAttribute(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.editAttribute");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void failEditAttribute(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failEditAttribute");
+  }
+  
   @com.runwaysdk.controller.ActionParameters(parameters="", post=true)
   public void getAll() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -165,6 +175,34 @@ public class DataSetControllerBase implements com.runwaysdk.generation.loader.Re
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failRemove");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void removeAttribute(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.removeAttribute");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void failRemoveAttribute(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failRemoveAttribute");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void unlockAttribute(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.unlockAttribute");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
+  public void failUnlockAttribute(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataSetController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataSetController.failUnlockAttribute");
   }
   
 }

@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1480924545)
+@com.runwaysdk.business.ClassSignature(hash = -946604429)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -43,7 +25,7 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
   public static java.lang.String WRAPPEDMDCLASS = "wrappedMdClass";
-  private static final long serialVersionUID = 1480924545;
+  private static final long serialVersionUID = -946604429;
   
   public MappableClassBase()
   {
@@ -484,6 +466,12 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
     return (MappableClass) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
+  public static java.lang.String addIndicator(java.lang.String datasetId, java.lang.String indicator)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static void applyDatasetUpdate(java.lang.String dataset)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
@@ -526,7 +514,19 @@ public abstract class MappableClassBase extends com.runwaysdk.business.Business 
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
+  public static java.lang.String lockIndicator(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
   public static void remove(java.lang.String id)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void removeIndicator(java.lang.String id)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClass.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

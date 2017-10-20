@@ -25,7 +25,7 @@ import 'rxjs/add/operator/toPromise';
 import { EventService, BasicService } from '../core/service/core.service';
 import { EventHttpService } from '../core/service/event-http.service';
 
-import { Dataset, DatasetCollection } from '../model/dataset';
+import { Dataset, DatasetCollection, IndicatorField, DatasetAttribute } from '../model/dataset';
 
 declare var acp: any;
 
@@ -120,4 +120,56 @@ export class DatasetService extends BasicService {
       })
       .catch(this.handleError.bind(this));
   }
+  
+  addIndicator(datasetId:string, indicator:IndicatorField): Promise<DatasetAttribute> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });    
+    
+    let param = JSON.stringify({datasetId:datasetId, indicator:indicator});
+    
+    return this.ehttp
+     .post(acp + '/prism/add-indicator', param, {headers: headers})
+     .toPromise() 
+     .then((response: any) => {
+       return response.json() as DatasetAttribute;
+      })          
+     .catch(this.handleError.bind(this));
+  }    
+  
+  removeAttribute(attribute:DatasetAttribute): Promise<Response> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });  
+    
+    return this.ehttp
+      .post(acp + '/prism/remove-attribute', JSON.stringify({id:attribute.id}), {headers: headers})
+      .toPromise()
+      .catch(this.handleError.bind(this));
+  }
+  
+  unlockAttribute(id:string): Promise<Response> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });  
+    
+    return this.ehttp
+     .post(acp + '/prism/unlock-attribute', JSON.stringify({id:id}), {headers: headers})
+     .toPromise()
+     .catch(this.handleError.bind(this));
+  }
+  
+  editAttribute(attribute:DatasetAttribute): Promise<IndicatorField> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });  
+    
+    return this.ehttp
+      .post(acp + '/prism/edit-attribute', JSON.stringify({id:attribute.id}), {headers: headers})
+      .toPromise()
+      .then((response: any) => {
+        return response.json() as IndicatorField;
+      })          
+     .catch(this.handleError.bind(this));
+  }  
 }

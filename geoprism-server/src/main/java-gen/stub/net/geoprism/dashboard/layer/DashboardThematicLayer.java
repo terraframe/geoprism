@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard.layer;
 
@@ -25,39 +23,27 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import net.geoprism.MappableAttribute;
-import net.geoprism.QueryUtil;
-import net.geoprism.dashboard.AggregationStrategy;
-import net.geoprism.dashboard.AggregationStrategyView;
-import net.geoprism.dashboard.AggregationType;
-import net.geoprism.dashboard.AllAggregationType;
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.DashboardLegend;
-import net.geoprism.dashboard.DashboardMap;
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.DashboardThematicStyle;
-import net.geoprism.dashboard.GeometryAggregationStrategy;
-import net.geoprism.dashboard.MdAttributeView;
-import net.geoprism.dashboard.MissingLocationAttributeException;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.dashboard.query.ThematicQueryBuilder;
-import net.geoprism.gis.wrapper.AttributeType;
-import net.geoprism.gis.wrapper.MapVisitor;
-import net.geoprism.gis.wrapper.ThematicLayer;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationship;
-import net.geoprism.util.CollectionUtil;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ComponentInfo;
+import com.runwaysdk.constants.MdAttributeBooleanInfo;
+import com.runwaysdk.constants.MdAttributeDecimalInfo;
+import com.runwaysdk.constants.MdAttributeDoubleInfo;
+import com.runwaysdk.constants.MdAttributeFloatInfo;
+import com.runwaysdk.constants.MdAttributeIndicatorInfo;
+import com.runwaysdk.constants.MdAttributeIntegerInfo;
+import com.runwaysdk.constants.MdAttributeLongInfo;
+import com.runwaysdk.dataaccess.IndicatorElementDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeIndicatorDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
@@ -86,6 +72,28 @@ import com.runwaysdk.system.metadata.MdAttributeDate;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
+
+import net.geoprism.MappableAttribute;
+import net.geoprism.QueryUtil;
+import net.geoprism.dashboard.AggregationStrategy;
+import net.geoprism.dashboard.AggregationStrategyView;
+import net.geoprism.dashboard.AggregationType;
+import net.geoprism.dashboard.AllAggregationType;
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardLegend;
+import net.geoprism.dashboard.DashboardMap;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicStyle;
+import net.geoprism.dashboard.GeometryAggregationStrategy;
+import net.geoprism.dashboard.MdAttributeView;
+import net.geoprism.dashboard.MissingLocationAttributeException;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.gis.wrapper.AttributeType;
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.gis.wrapper.ThematicLayer;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.util.CollectionUtil;
 
 public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
 {
@@ -159,7 +167,19 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     //
     // Only number types can be used
     //
-    if (thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeLong") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeInteger") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDouble") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeDecimal") || thematicAttrType.equals("com.runwaysdk.system.metadata.MdAttributeFloat"))
+    //
+    // Only number types can be used
+    //
+    Set<String> numerics = new TreeSet<String>();
+    numerics.add(MdAttributeLongInfo.CLASS);
+    numerics.add(MdAttributeIntegerInfo.CLASS);
+    numerics.add(MdAttributeDoubleInfo.CLASS);
+    numerics.add(MdAttributeDecimalInfo.CLASS);
+    numerics.add(MdAttributeFloatInfo.CLASS);
+    numerics.add(MdAttributeBooleanInfo.CLASS);
+    numerics.add(MdAttributeIndicatorInfo.CLASS);
+
+    if (numerics.contains(thematicAttrType))
     {
       selectables.add(wrapper.aSQLAggregateDouble("min_data", "MIN(" + _attribute + ")"));
       selectables.add(wrapper.aSQLAggregateDouble("max_data", "MAX(" + _attribute + ")"));
@@ -299,7 +319,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       Boolean aggregatable = ( mAttribute != null ? mAttribute.getAggregatable() : true );
 
       String[] fonts = DashboardThematicStyle.getSortedFonts();
-      OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
       String geoNodesJSON = dashboard.getGeoNodesJSON(tAttr, aggregatable);
 
       JSONArray aggStrategiesJSON = new JSONArray();
@@ -366,7 +385,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       }
 
       JSONObject json = new JSONObject();
-      json.put("aggregations", formatAggregationMethods(aggregations));
+      json.put("aggregations", getAggregationMethodsAsJSON(thematicAttributeId, aggregatable));
       json.put("aggegationStrategies", aggStrategiesJSON);
       json.put("fonts", new JSONArray(Arrays.asList(fonts)));
       json.put("geoNodes", new JSONArray(geoNodesJSON));
@@ -401,29 +420,6 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     {
       throw new ProgrammingErrorException(e);
     }
-  }
-
-  private static JSONArray formatAggregationMethods(OIterator<? extends AggregationType> aggregations)
-  {
-    JSONArray formattedAggMethods = new JSONArray();
-    for (AggregationType aggMethod : aggregations)
-    {
-      try
-      {
-        JSONObject aggMethodObj = new JSONObject();
-        String formattedAggMethod = aggMethod.toString().replaceAll(".*\\.", "");
-        aggMethodObj.put("method", formattedAggMethod);
-        aggMethodObj.put("label", aggMethod.getDisplayLabel());
-        aggMethodObj.put("id", aggMethod.getId());
-        formattedAggMethods.put(aggMethodObj);
-      }
-      catch (JSONException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-
-    return formattedAggMethods;
   }
 
   private static JSONArray getSecodaryAttributesJSON(String mapId, String mdAttributeId)
@@ -632,6 +628,19 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     {
       return AttributeType.TIME;
     }
+    else if (mdAttribute instanceof MdAttributeIndicatorDAOIF)
+    {
+      IndicatorElementDAOIF indicator = ( (MdAttributeIndicatorDAOIF) mdAttribute ).getIndicator();
+
+      if (indicator.isPercentage())
+      {
+        return AttributeType.PERCENT;
+      }
+      else
+      {
+        return AttributeType.NUMBER;
+      }
+    }
     else if (mdAttribute instanceof MdAttributeNumberDAOIF)
     {
       return AttributeType.NUMBER;
@@ -774,5 +783,52 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     }
 
     return json.toString();
+  }
+
+  private static JSONArray getAggregationMethodsAsJSON(String thematicAttributeId, boolean aggregatable)
+  {
+    try
+    {
+      JSONArray methods = new JSONArray();
+
+      if (aggregatable)
+      {
+        OIterator<? extends AggregationType> aggregations = DashboardStyle.getSortedAggregations(thematicAttributeId).getIterator();
+
+        try
+        {
+          for (AggregationType aggMethod : aggregations)
+          {
+            String formattedAggMethod = aggMethod.toString().replaceAll(".*\\.", "");
+
+            JSONObject aggMethodObj = new JSONObject();
+            aggMethodObj.put("method", formattedAggMethod);
+            aggMethodObj.put("label", aggMethod.getDisplayLabel());
+            aggMethodObj.put("id", aggMethod.getId());
+
+            methods.put(aggMethodObj);
+          }
+        }
+        finally
+        {
+          aggregations.close();
+        }
+      }
+      else
+      {
+        JSONObject method = new JSONObject();
+        method.put("method", AllAggregationType.NONE.name());
+        method.put("label", AllAggregationType.NONE.getDisplayLabel());
+        method.put("id", AllAggregationType.NONE.getId());
+
+        methods.put(method);
+      }
+
+      return methods;
+    }
+    catch (JSONException e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
   }
 }

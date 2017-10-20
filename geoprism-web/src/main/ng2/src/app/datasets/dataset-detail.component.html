@@ -49,6 +49,13 @@
               <table class="list-table table table-bordered table-striped">
                 <tbody>
                   <tr *ngFor="let attribute of dataset.attributes" class="fade-ngRepeat-item">
+                    <td class="button-column">
+                      <a *ngIf="attribute.type == 'MdAttributeIndicator'" class="fa fa-pencil ico-edit" (click)="editAttribute(attribute, $event)" [title]="'dataset.editAttributeTooltip' | localize"></a>                             
+                      <a *ngIf="attribute.type == 'MdAttributeIndicator'" class="fa fa-trash-o ico-remove" [title]="'dataset.removeAttributeTooltip' | localize"
+                        confirm-modal 
+                        [message]="'dataset.removeAttribute' | localize"
+                        (onConfirm)="removeAttribute(attribute, $event)"></a>
+                    </td>                  
                     <td class="submit-form">
                       <dl>
                         <dd>
@@ -68,6 +75,13 @@
             <div class="label-holder">
             </div>                    
             <div class="holder">
+              <i class="fa fa-plus" aria-hidden="true" (click)="addIndicator()"><localize key="dataset.addIndicator"></localize></i>
+            </div>
+          </div>          
+          <div class="row-holder">
+            <div class="label-holder">
+            </div>                    
+            <div class="holder">
               <div class="button-holder">
                 <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
                 <input type="submit" [value]="'dataset.submit' | localize" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
@@ -78,4 +92,6 @@
       </div>
     </div>
   </form>
+  
+  <indicator-modal (onSuccess)="onIndicatorSuccess($event)"></indicator-modal> 
 </div>

@@ -24,11 +24,14 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import { Dataset } from '../model/dataset';
+import { Dataset, DatasetAttribute } from '../model/dataset';
 import { BasicCategory } from '../model/category';
+
+import { IndicatorModalComponent } from './indicator-modal.component';
 
 import { EventService } from '../core/service/core.service';
 import { DatasetService } from '../service/dataset.service';
+
 
 export class DatasetResolver implements Resolve<Dataset> {
   constructor(@Inject(DatasetService) private datasetService: DatasetService, @Inject(EventService) private eventService: EventService) {}
@@ -52,6 +55,9 @@ export class DatasetResolver implements Resolve<Dataset> {
 export class DatasetDetailComponent implements OnInit {
   @Input() dataset: Dataset;
   @Output() close = new EventEmitter();
+  
+  @ViewChild(IndicatorModalComponent)
+  private modal: IndicatorModalComponent;  
 
   validName: boolean = true;
 
@@ -99,4 +105,47 @@ export class DatasetDetailComponent implements OnInit {
     
     this.location.back();
   }
+  
+  getNumericAttributes() : DatasetAttribute[] {
+    let attributes:DatasetAttribute[] = [];
+  
+    for (let i = 0; i < this.dataset.attributes.length; i++) {
+      let attribute:DatasetAttribute = this.dataset.attributes[i];
+    
+      if(attribute.numeric) {
+        attributes.push(attribute);        
+      }
+    }        
+    
+    return attributes;
+  }
+  
+  addIndicator() : void {
+    this.modal.initialize(this.dataset.id, this.dataset.aggregations, this.getNumericAttributes(), undefined);
+  }
+  
+  onIndicatorSuccess(attribute:DatasetAttribute): void {
+    if(this.dataset.attributes === undefined) {
+      this.dataset.attributes = [];
+    }    
+    
+    this.dataset.attributes = this.dataset.attributes.filter(attr => attr.id !== attribute.id);
+    
+    this.dataset.attributes.push(attribute);    
+  }
+  
+  editAttribute(attribute:DatasetAttribute): void{
+    this.datasetService.editAttribute(attribute)
+      .then(indicator => {      
+        this.modal.initialize(this.dataset.id, this.dataset.aggregations, this.getNumericAttributes(), indicator);          
+      });
+  
+  }
+  
+  removeAttribute(attribute:DatasetAttribute): void {
+    this.datasetService.removeAttribute(attribute)
+      .then(response => {
+        this.dataset.attributes = this.dataset.attributes.filter(attr => attr.id !== attribute.id);
+      });
+  }  
 }

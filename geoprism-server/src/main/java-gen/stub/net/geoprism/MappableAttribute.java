@@ -41,7 +41,7 @@ public class MappableAttribute extends MappableAttributeBase implements com.runw
     return getMappableAttribute(mdAttribute.getId());
   }
 
-  private static MappableAttribute getMappableAttribute(String id)
+  public static MappableAttribute getMappableAttribute(String id)
   {
     MappableAttributeQuery query = new MappableAttributeQuery(new QueryFactory());
     query.WHERE(query.getWrappedMdAttribute().EQ(id));

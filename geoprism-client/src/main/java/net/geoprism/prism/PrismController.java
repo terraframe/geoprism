@@ -3,20 +3,22 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.prism;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +34,9 @@ import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.mvc.ViewResponse;
+import com.runwaysdk.system.metadata.MdAttributeIndicatorDTO;
 
+import net.geoprism.JSONControllerUtil;
 import net.geoprism.MappableClassDTO;
 
 @Controller(url = "prism")
@@ -67,7 +71,7 @@ public class PrismController implements Reloadable
 
     return new RestBodyResponse(new JSONObject(mappableClass.getAsJSON()));
   }
-  
+
   @Endpoint(url = "xport-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF xport(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
   {
@@ -95,6 +99,38 @@ public class PrismController implements Reloadable
     ds.unlock();
 
     return new RestBodyResponse(new JSONObject(ds.getAsJSON()));
+  }
+
+  @Endpoint(url = "add-indicator", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF addIndicator(ClientRequestIF request, @RequestParamter(name = "datasetId") String datasetId, @RequestParamter(name = "indicator") String indicator) throws JSONException
+  {
+    String response = MappableClassDTO.addIndicator(request, datasetId, indicator);
+
+    return new RestBodyResponse(new JSONObject(response));
+  }
+
+  @Endpoint(url = "edit-attribute", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF editAttribute(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    String response = MappableClassDTO.lockIndicator(request, id);
+
+    return new RestBodyResponse(new JSONObject(response));
+  }
+
+  @Endpoint(url = "remove-attribute", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF removeAttribute(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    MappableClassDTO.removeIndicator(request, id);
+
+    return new RestResponse();
+  }
+
+  @Endpoint(url = "unlock-attribute", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF unlockAttribute(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    MdAttributeIndicatorDTO.unlock(request, id);
+
+    return new RestResponse();
   }
 
 }

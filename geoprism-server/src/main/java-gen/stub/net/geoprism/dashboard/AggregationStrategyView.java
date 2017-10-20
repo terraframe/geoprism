@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard;
 
@@ -62,42 +60,39 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
   {
     List<AggregationStrategyView> list = new LinkedList<AggregationStrategyView>();
 
-    if (aggregatable)
+    MappableClassGeoNodeQuery query = new MappableClassGeoNodeQuery(new QueryFactory());
+    query.WHERE(query.getChild().EQ(node));
+
+    OIterator<? extends MappableClassGeoNode> iterator = query.getIterator();
+
+    try
     {
-      MappableClassGeoNodeQuery query = new MappableClassGeoNodeQuery(new QueryFactory());
-      query.WHERE(query.getChild().EQ(node));
+      MappableClassGeoNode relationship = iterator.next();
+      MappableClass wrapper = relationship.getParent();
 
-      OIterator<? extends MappableClassGeoNode> iterator = query.getIterator();
+      List<? extends Universal> lowests = wrapper.getAllUniversal().getAll();
 
-      try
+      for (Universal lowest : lowests)
       {
-        MappableClassGeoNode relationship = iterator.next();
-        MappableClass wrapper = relationship.getParent();
+        Universal root = Universal.getRoot();
 
-        List<? extends Universal> lowests = wrapper.getAllUniversal().getAll();
+        Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
 
-        for (Universal lowest : lowests)
+        for (Term universal : universals)
         {
-          Universal root = Universal.getRoot();
+          AggregationStrategyView view = new AggregationStrategyView();
+          view.setAggregationType(UniversalAggregationStrategy.CLASS);
+          view.setValue(universal.getId());
+          view.setDisplayLabel(universal.getDisplayLabel().getValue());
+          view.setAvailableGeometryTypes(new JSONArray().toString());
 
-          Collection<Term> universals = GeoEntityUtil.getOrderedAncestors(root, lowest, AllowedIn.CLASS);
-
-          for (Term universal : universals)
-          {
-            AggregationStrategyView view = new AggregationStrategyView();
-            view.setAggregationType(UniversalAggregationStrategy.CLASS);
-            view.setValue(universal.getId());
-            view.setDisplayLabel(universal.getDisplayLabel().getValue());
-            view.setAvailableGeometryTypes(new JSONArray().toString());
-
-            list.add(view);
-          }
+          list.add(view);
         }
       }
-      finally
-      {
-        iterator.close();
-      }
+    }
+    finally
+    {
+      iterator.close();
     }
 
     if (node instanceof GeoNodeGeometry)

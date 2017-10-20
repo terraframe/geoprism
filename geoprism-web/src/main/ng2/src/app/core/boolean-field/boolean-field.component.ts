@@ -7,7 +7,7 @@ declare var acp:string;
 @Component({    
   selector: 'boolean-field',
   templateUrl: './boolean-field.component.html',
-  styleUrls: []
+  styles: ['.modal-form .holder .check-block .chk-area {margin: 10px 0px 0 0;}']
 })
 export class BooleanFieldComponent {
 

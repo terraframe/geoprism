@@ -19,5 +19,10 @@
 package net.geoprism.gis.wrapper;
 
 public enum AttributeType {
-  DATE, DATETIME, TIME, NUMBER, BASIC
+  DATE, DATETIME, TIME, NUMBER, BASIC, PERCENT;
+  
+  public boolean isNumber()
+  {
+    return this.equals(AttributeType.NUMBER) || this.equals(AttributeType.PERCENT);
+  }  
 }

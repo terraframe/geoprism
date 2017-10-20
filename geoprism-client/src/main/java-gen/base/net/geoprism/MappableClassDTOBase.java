@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1914429695)
+@com.runwaysdk.business.ClassSignature(hash = 1673258227)
 public abstract class MappableClassDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.MappableClass";
-  private static final long serialVersionUID = -1914429695;
+  private static final long serialVersionUID = 1673258227;
   
   protected MappableClassDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -491,6 +473,14 @@ public abstract class MappableClassDTOBase extends com.runwaysdk.business.Busine
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(WRAPPEDMDCLASS).getAttributeMdDTO();
   }
   
+  public static final java.lang.String addIndicator(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String datasetId, java.lang.String indicator)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{datasetId, indicator};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.MappableClassDTO.CLASS, "addIndicator", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final void applyDatasetUpdate(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String dataset)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
@@ -547,11 +537,27 @@ public abstract class MappableClassDTOBase extends com.runwaysdk.business.Busine
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
+  public static final java.lang.String lockIndicator(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.MappableClassDTO.CLASS, "lockIndicator", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final void remove(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.MappableClassDTO.CLASS, "remove", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void removeIndicator(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.MappableClassDTO.CLASS, "removeIndicator", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

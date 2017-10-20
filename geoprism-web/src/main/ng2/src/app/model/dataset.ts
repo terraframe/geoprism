@@ -17,7 +17,16 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { DatasetAttribute } from './dataset-attribute';
+import { BasicCategory } from '../model/category';
+
+export class DatasetAttribute { 
+  id: string;
+  label: string;
+  type: string
+  numeric: boolean;  
+  selected: boolean;
+  root: BasicCategory;
+}
 
 export class Dataset {
   id: string;
@@ -27,9 +36,24 @@ export class Dataset {
   value: string;
   source: string;
   attributes : DatasetAttribute[];
+  aggregations: {id: string;value: string;}[];
+  indicators: IndicatorField[];
 }
 
 export class DatasetCollection {
   canExport: boolean;
   datasets: Dataset[];
+}
+
+export class Indicator {
+  aggregation: string;
+  attribute: string; 
+}
+
+export class IndicatorField {
+  label: string; 
+  left: Indicator;
+  right: Indicator;
+  id: string;
+  percentage: boolean;
 }

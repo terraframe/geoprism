@@ -81,7 +81,7 @@ public class MapStyleUtil
     // If this category is a defined category (i.e. not the other category)
     if (isOtherCat == false)
     {
-      if (attributeType.equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+      if (attributeType.isNumber() && catVal != null && catVal.length() > 0)
       {
         try
         {
@@ -173,7 +173,7 @@ public class MapStyleUtil
     // If this category is a defined category (i.e. not the other category)
     if (isOtherCat == false)
     {
-      if (attributeType.equals(AttributeType.NUMBER) && catVal != null && catVal.length() > 0)
+      if (attributeType.isNumber() && catVal != null && catVal.length() > 0)
       {
         if(catMaxVal != null && catMaxVal.length() > 0)
         {
