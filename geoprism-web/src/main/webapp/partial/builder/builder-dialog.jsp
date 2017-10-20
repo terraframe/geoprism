@@ -124,9 +124,10 @@
 	                      </ul>
                       </div>
                     </div>
-                    <div class="" ng-if="dashboard.options.types != null && dashboard.options.types.length < 1" fire-on-ready>
+                    <div class="" ng-show="dashboard.options.types != null && dashboard.options.types.length < 1">
                       <h4 class="user-notice"><gdb:localize key='dashboard.noDataSetsMsg'/></h4>
                     </div>
+                    <div fire-on-ready></div>
                   </div>
                  
               </div> <!-- end widget container -->
