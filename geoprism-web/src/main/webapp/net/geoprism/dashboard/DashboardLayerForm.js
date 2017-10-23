@@ -26,15 +26,19 @@
       scope: {
         categories : '=',
         autoComplete : '&',
-        showOther : '@',
         type : '@',
-        dynamic : '='
+        dynamic : '=',
+        showOther : '@',
+        showRanged : '@'
       },
       controller : StyleCategoryListController,
       controllerAs : 'ctrl',
       link: function (scope, element, attrs) {
         if(scope.showOther == null) {
           scope.showOther = 'true';
+        }
+        if(scope.showRanged == null) {
+          scope.showRanged = true;
         }
       }
     };    

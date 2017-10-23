@@ -193,7 +193,7 @@
                   <style-category-ontology ng-if="ctrl.ready && ctrl.isSecondaryAttributeOntology()" categories="styleModel.secondaryAggregation" nodes="styleModel.secondaryAggregation.attribute.nodes" show-other="false"></style-category-ontology>
                   
                   <!-- RENDER SECONDARY CATEGORIES -->
-                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()"  dynamic="ctrl.isSecondaryDynamic()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false" type="{{styleModel.secondaryAggregation.attribute.categoryType}}" is-secondary-attribute-list="false"></style-category-list>
+                  <style-category-list ng-if="ctrl.ready && !ctrl.isSecondaryAttributeOntology()"  dynamic="ctrl.isSecondaryDynamic()" categories="styleModel.secondaryAggregation" auto-complete="ctrl.secondaryCategoryAutocompleteSource" show-other="false" type="{{styleModel.secondaryAggregation.attribute.categoryType}}" show-range="true"></style-category-list>
                 </div>
               </div>
             </div>
