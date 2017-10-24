@@ -92,7 +92,7 @@ export class OptionDetailComponent implements OnInit {
   }
   
   cancel(): void {
-    this.categoryService.unlock(this.category)
+    this.categoryService.unlock(this.category.id)
       .then(response => {
         this.goBack(this.category);
       })

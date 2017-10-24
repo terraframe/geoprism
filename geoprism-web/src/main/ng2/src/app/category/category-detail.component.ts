@@ -103,8 +103,10 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   cancel(): void {
-    this.instance.active = false;
-    this.instance.label = '';
+    this.categoryService.unlock(this.category.id)
+      .then(response => {  
+        this.goBack(this.category);
+      });
   }
   
   remove(descendant: BasicCategory) {

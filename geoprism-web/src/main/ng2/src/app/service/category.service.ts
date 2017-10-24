@@ -74,13 +74,13 @@ export class CategoryService extends BasicService {
     .catch(this.handleError.bind(this));
   }
   
-  unlock(category: Category): Promise<Response> {
+  unlock(id:string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
     return this.ehttp
-      .post(acp + '/category/unlock', JSON.stringify({id:category.id}), { headers: headers })
+      .post(acp + '/category/unlock', JSON.stringify({id:id}), { headers: headers })
       .toPromise()
       .catch(this.handleError.bind(this));
   }

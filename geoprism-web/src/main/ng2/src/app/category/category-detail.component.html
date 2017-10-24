@@ -64,7 +64,8 @@
             </div>  
             <div class="holder">
               <div class="button-holder">
-                <input type="submit" [value]="'category.management.done' | localize" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
+                <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
+                <input type="submit" [value]="'dataset.submit' | localize" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
               </div>
             </div>
           </div>
