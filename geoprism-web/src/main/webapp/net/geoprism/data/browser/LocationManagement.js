@@ -121,8 +121,12 @@
         onSuccess : function(data) {          
           $scope.children = data.children.resultSet;
           $scope.layers = data.layers;
-            
-//          $scope.$broadcast('sharedGeoData', data);          
+      
+          var layers = [
+            {name:'target-multipolygon', config: {id: $scope.entity.id, universalId: $scope.universal.value, type:"LM"}, bbox:'[]'}
+          ];
+      
+          $scope.$broadcast('sharedGeoData', layers);
         }
       };
       
