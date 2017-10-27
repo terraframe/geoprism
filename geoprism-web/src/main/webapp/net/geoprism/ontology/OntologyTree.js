@@ -533,6 +533,8 @@
         }
        
         var node = this.$__createTreeNode(childId, parentNode, hasFetched, config, hide);
+        
+        return node;
       },      
       
       
