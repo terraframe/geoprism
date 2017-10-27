@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -60,7 +58,7 @@ import net.geoprism.TermSynonymRelationship;
 
 public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static final long   serialVersionUID = 1158111601;
+  private static final long  serialVersionUID = 1158111601;
 
   public static final String KEY_CONCATENATOR = ".";
 
@@ -488,11 +486,11 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       source.removeLink((Term) parent, ClassifierIsARelationship.CLASS);
     }
     Classifier.getStrategy().removeTerm(source, ClassifierIsARelationship.CLASS);
-    
+
     BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
 
     source.delete();
-    
+
     /*
      * Add the dest to the allpaths table
      */
@@ -500,7 +498,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     for (Business parent : parents)
     {
       Savepoint savepoint = Database.setSavepoint();
-      
+
       try
       {
         destination.addLink((Term) parent, ClassifierIsARelationship.CLASS);
@@ -758,6 +756,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
       ClassifierQuery query = new ClassifierQuery(new QueryFactory());
       query.WHERE(query.getCategory().EQ(true));
+      query.ORDER_BY_ASC(query.getDisplayLabel().localize());
 
       OIterator<? extends Classifier> it = null;
 
@@ -878,8 +877,8 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     {
       JSONObject object = new JSONObject(option);
       String label = object.getString("label");
-      
-      if(object.has("validate") && object.getBoolean("validate"))
+
+      if (object.has("validate") && object.getBoolean("validate"))
       {
         Classifier.validateCategoryName(label, null);
       }
@@ -902,15 +901,15 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       else
       {
         Classifier parent = Classifier.getRoot();
-        
+
         Classifier classifier = new Classifier();
         classifier.setClassifierPackage(IDGenerator.nextID());
         classifier.setClassifierId(IDGenerator.nextID());
         classifier.getDisplayLabel().setValue(label);
         classifier.setCategory(true);
-        
+
         Classifier.create(classifier, parent.getId());
-        
+
         return classifier;
       }
     }
@@ -925,24 +924,24 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   public static void deleteOption(String id)
   {
     Classifier classifier = Classifier.get(id);
-    
+
     Boolean category = classifier.getCategory();
-    
-    if(category != null && category)
+
+    if (category != null && category)
     {
       // Validate that the category isn't being used as an attribute root any more
       ClassifierTermAttributeRootQuery query = new ClassifierTermAttributeRootQuery(new QueryFactory());
       query.WHERE(query.getChild().EQ(classifier));
-      
-      if(query.getCount() > 0)
+
+      if (query.getCount() > 0)
       {
         CategoryInUseException ex = new CategoryInUseException();
         ex.setLabel(classifier.getDisplayLabel().getValue());
-        
+
         throw ex;
       }
     }
-    
+
     classifier.delete();
   }
 
