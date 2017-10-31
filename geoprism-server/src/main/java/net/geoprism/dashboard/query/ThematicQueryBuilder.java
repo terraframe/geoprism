@@ -125,7 +125,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
         thematicLabel.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
         Attribute thematicAttribute = thematicQuery.get(thematicMdAttribute.definesAttribute());
-        thematicAttribute.setColumnAlias(thematicMdAttribute.definesAttribute());
+        thematicAttribute.setColumnAlias(thematicMdAttribute.definesAttribute().toLowerCase());
 
         ValueQuery innerQuery = new ValueQuery(factory);
         innerQuery.SELECT(thematicGeoId, thematicLabel, thematicAttribute);
@@ -240,7 +240,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
         thematicSel = vQuery.aSQLDouble(thematicSel.getResultAttributeName(), sql, attributeName, displayLabel);
       }
 
-      thematicSel.setColumnAlias(attributeName);
+      thematicSel.setColumnAlias(attributeName.toLowerCase());
 
       this.setCriteriaOnInnerQuery(vQuery, query);
 
@@ -282,6 +282,8 @@ public abstract class ThematicQueryBuilder implements Reloadable
         }
 
         thematicSel = F.COUNT(thematicAttr, "COUNT");
+        thematicSel.setColumnAlias(attributeName.toLowerCase());
+        
         AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), id));
         stringAgg.setUserDefinedDisplayLabel(thematicAttr.getUserDefinedDisplayLabel());
 
