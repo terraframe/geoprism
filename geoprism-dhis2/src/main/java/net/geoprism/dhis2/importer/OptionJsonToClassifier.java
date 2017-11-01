@@ -20,6 +20,7 @@ package net.geoprism.dhis2.importer;
 
 import org.json.JSONObject;
 
+import net.geoprism.dhis2.util.DHIS2Util;
 import net.geoprism.ontology.Classifier;
 
 public class OptionJsonToClassifier
@@ -39,5 +40,8 @@ public class OptionJsonToClassifier
     classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
     classy.setCategory(false);
     classy.apply();
+    
+    DHIS2Util.mapIds(classy.getId(), json.getString("id"));
+    DHIS2Util.mapOptionCode(classy.getId(), json.getString("code"));
   }
 }

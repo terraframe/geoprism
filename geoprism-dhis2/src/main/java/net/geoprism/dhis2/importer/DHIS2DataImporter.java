@@ -168,6 +168,7 @@ public class DHIS2DataImporter
     Database.executeStatement("truncate classifier_is_a_relationship;");
     Database.executeStatement("truncate rwsynonym;");
     Database.executeStatement("truncate synonym_relationship;");
+    Database.executeStatement("truncate basic_id_mapping;");
    
     Universal rootUni = new Universal();
     rootUni.getDisplayLabel().setValue("ROOT");

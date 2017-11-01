@@ -40,6 +40,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
+import com.runwaysdk.system.metadata.MdAttributeNumber;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessDTO;
@@ -53,8 +54,42 @@ import net.geoprism.dhis2.response.DHIS2TrackerResponseProcessor;
 import net.geoprism.dhis2.response.GeoFieldRequiredException;
 import net.geoprism.dhis2.response.HTTPResponse;
 import net.geoprism.dhis2.util.DHIS2IdCache;
+import net.geoprism.dhis2.util.DHIS2Util;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
+
+
+
+/**
+ * 
+ * http://clts2.dhis2.net/dhis/api/25/trackedEntityInstances?ou=PmcKpRzAf4B
+ * http://clts2.dhis2.net/dhis/api/25/enrollments?ou=PmcKpRzAf4B
+ * http://clts2.dhis2.net/dhis/api/25/events?ou=PmcKpRzAf4B&program=rDRZrQiZJnG
+ * 
+ * 
+ * SNV waterpoint
+ * 
+ * 
+ * 
+
+event reports -> events
+
+
+
+
+https://github.com/jembi/dhis2-tracker-populator
+
+
+
+TODO : 
+
+1. why does CLTS_Village need a attribute id? (hint: it doesn't)
+2. events
+3. updating an existing option doesn't work, its assuming the code = id (probably a problem with the importer, not the exporter)
+4. [incident date] and [enrollment date] set to [report date]
+ */
+
+
 
 /**
  * This class is responsible for exporting an MdBusiness to DHIS2.
@@ -82,7 +117,7 @@ public class MdBusinessExporter
   
 //  private Map<String, String> programTrackedEntityAttributeIds;
   
-  private final int pageSize = 1000;
+  private final int pageSize = 10000;
   
   private long teiCount;
   
@@ -173,7 +208,8 @@ public class MdBusinessExporter
       
 //      linkClassifiersToOptions();
     }
-    createAndEnrollTrackedEntityInstances();
+    
+    exportAndEnrollTEIs();
   }
   
   protected void validateExport()
@@ -219,8 +255,10 @@ public class MdBusinessExporter
     }
   }
   
-  protected void createAndEnrollTrackedEntityInstances()
+  protected void exportAndEnrollTEIs()
   {
+    
+    
     String programId = converter.getProgramId();
     
     List<? extends MdAttribute> mdAttrs = mdbiz.getAllAttribute().getAll();
@@ -232,9 +270,11 @@ public class MdBusinessExporter
     
     while ( (page * pageSize) < teiCount )
     {
-      JSONObject jsonMetadata = new JSONObject();
+      JSONObject teiPayload = new JSONObject();
+//      JSONObject eventPayload = new JSONObject();
       
       JSONArray trackedEntityInstances = new JSONArray();
+//      JSONArray events = new JSONArray();
       
       OIterator<Business> it = bq.getIterator(pageSize, page+1);
       try
@@ -244,6 +284,7 @@ public class MdBusinessExporter
           Business biz = it.next();
           
           JSONObject trackedEntityInstance = new JSONObject();
+          JSONObject event = new JSONObject();
           
           trackedEntityInstance.put("trackedEntity", trackedEntityId);
           
@@ -274,7 +315,10 @@ public class MdBusinessExporter
                   else if (reference.definesType().equals(Classifier.CLASS))
                   {
                     Classifier classy = Classifier.get(refId);
-                    jAttribute.put("value", classy.getClassifierId()); // in 2.25 options were set via their display label here. In 2.27 they specify them via the 'code', which we have set to the DHIS2 id.
+                    
+                     // in 2.25 options were set via their display label here. In 2.27 they specify them via the 'code', which we have a basic id mapping for.
+                    String code = DHIS2Util.getOptionCode(classy.getId());
+                    jAttribute.put("value", code);
                   }
                   else if (reference.definesType().equals(ClassifierSynonym.CLASS))
                   {
@@ -298,6 +342,10 @@ public class MdBusinessExporter
           
           if (orgUnit != null)
           {
+            // TEIs //
+//            String teiId = this.idCache.next();
+//            trackedEntityInstance.put("id", teiId);
+            
             trackedEntityInstance.put("attributes", jAttributes);
             
             JSONArray enrollments = new JSONArray();
@@ -315,6 +363,18 @@ public class MdBusinessExporter
             trackedEntityInstance.put("orgUnit", orgUnit.getGeoId());
             
             trackedEntityInstances.put(trackedEntityInstance);
+            
+            
+            // Data Elements //
+            
+            
+            
+            // Events //
+//            event.put("program", programId);
+//            event.put("programStage", value);
+//            event.put("trackedEntityInstance", teiId);
+//            event.put("orgUnit", orgUnit.getGeoId());
+//            event.put("eventDate", date);
           }
         }
       }
@@ -323,10 +383,13 @@ public class MdBusinessExporter
         it.close();
       }
       
-      jsonMetadata.put("trackedEntityInstances", trackedEntityInstances);
-      
-      HTTPResponse response = dhis2.httpPost("api/25/trackedEntityInstances", jsonMetadata.toString());
+      teiPayload.put("trackedEntityInstances", trackedEntityInstances);
+      HTTPResponse response = dhis2.httpPost("api/25/trackedEntityInstances", teiPayload.toString());
       DHIS2TrackerResponseProcessor.validateImportSummaryResponse(response);
+      
+//      eventPayload.put("events", events);
+//      HTTPResponse response3 = dhis2.httpPost("api/25/events", eventPayload.toString());
+//      DHIS2TrackerResponseProcessor.validateImportSummaryResponse(response3);
       
       page = page + 1;
     }
