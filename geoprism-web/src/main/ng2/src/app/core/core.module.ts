@@ -3,6 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule} from '@angular/forms';
 import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { ProgressService } from './progress-bar/progress.service';
+
 import { AutoCompleteDirective } from './autocomplete/auto-complete.directive';
 import { AutoCompleteComponent } from './autocomplete/auto-complete.component';
 
@@ -31,9 +36,13 @@ import { EventHttpService } from './service/event-http.service';
   imports: [
     BrowserModule,
     FormsModule,  
-    HttpModule
+    HttpModule,
+    ProgressbarModule.forRoot()       
   ],
   declarations: [
+    ProgressBarComponent,    
+    LoadingBarComponent,
+	  
     AutoCompleteDirective,
     AutoCompleteComponent,
     
@@ -41,7 +50,6 @@ import { EventHttpService } from './service/event-http.service';
     ConfirmModalComponent,
     	  
     LocalizeComponent,
-    LoadingBarComponent,
     MessageComponent,
     AsyncValidator,
     FunctionValidator,
@@ -51,6 +59,7 @@ import { EventHttpService } from './service/event-http.service';
     BooleanFieldComponent
   ],
   providers: [
+    ProgressService,	  
     ConfirmService,
     LocalizationService,
     IdService,
@@ -64,6 +73,8 @@ import { EventHttpService } from './service/event-http.service';
     }   
   ],
   exports: [
+    ProgressBarComponent,
+    LoadingBarComponent,
 	  
     AutoCompleteDirective,
     AutoCompleteComponent,
@@ -72,7 +83,6 @@ import { EventHttpService } from './service/event-http.service';
     ConfirmModalComponent,
     	  
     LocalizeComponent,
-    LoadingBarComponent,
     MessageComponent,
     AsyncValidator,
     FunctionValidator,

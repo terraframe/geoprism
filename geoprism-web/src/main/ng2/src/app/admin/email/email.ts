@@ -17,25 +17,12 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { enableProdMode } from '@angular/core';
-
-import { AppModule } from './app/app.module';
-import { AdminModule } from './app/admin/admin.module';
-
-declare var appname: string;
-
-if (process.env.ENV === 'production') {
-  enableProdMode();
-}
-
-if(appname !== undefined && appname === 'admin-app' ) {
-  platformBrowserDynamic().bootstrapModule(AdminModule)
-    .then(success => console.log('Admin Bootstrap success'))
-    .catch(error => console.log(error));  
-}
-else {
-  platformBrowserDynamic().bootstrapModule(AppModule)
-    .then(success => console.log('App bootstrap success'))
-    .catch(error => console.log(error));  
+export class Email {
+  id: string;
+  server: string;
+  username: string;
+  password: string;
+  port: number;
+  from: string;
+  to: string;
 }

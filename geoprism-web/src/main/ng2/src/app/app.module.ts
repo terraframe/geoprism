@@ -33,7 +33,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule, routedComponents } from './app-routing.module';
 
 import { CoreModule } from './core/core.module';
-import { ProgressModule } from './core/progress-bar/progress.module';
 
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
@@ -71,8 +70,7 @@ import { UploadService } from './service/upload.service';
     FileUploadModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),    
-    CoreModule,
-    ProgressModule    
+    CoreModule
   ],
   declarations: [
 	// Global components

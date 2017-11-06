@@ -3,25 +3,22 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +26,6 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.TeeInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +45,17 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
 
   public static final String getImagesTempDir(HttpServletRequest request)
   {
-    return request.getContextPath() + "/" + IMAGES_TEMP_DIR + "/";
+    if (request != null)
+    {
+      return request.getContextPath() + "/" + IMAGES_TEMP_DIR + "/";
+    }
+
+    return getImagesTempDir();
+  }
+
+  public static final String getImagesTempDir()
+  {
+    return LocalProperties.getJspDir() + "/../" + IMAGES_TEMP_DIR + "/";
   }
 
   final static Logger logger = LoggerFactory.getLogger(SystemLogoSingletonDTO.class);
@@ -94,7 +100,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
       IOUtils.copy(fileStream, buffer);
       buffer.close();
       fos.close();
-      
+
       // Send the cache file to the server for vault persistance.
       FileInputStream serverInput = new FileInputStream(bannerCache);
       SystemLogoSingletonDTOBase.uploadBanner(clientRequest, serverInput, fileName);
@@ -120,7 +126,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
     String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
     new File(tempDir).mkdir();
     miniLogoCache = new File(tempDir, fileName);
-    
+
     try
     {
       // Write the file locally to our cache
@@ -129,7 +135,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
       IOUtils.copy(fileStream, buffer);
       buffer.close();
       fos.close();
-      
+
       // Send the cache file to the server for vault persistance.
       FileInputStream serverInput = new FileInputStream(miniLogoCache);
       SystemLogoSingletonDTOBase.uploadMiniLogo(clientRequest, serverInput, fileName);

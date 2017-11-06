@@ -37,14 +37,7 @@
 	  <meta http-equiv="pragma" content="no-cache" />
 	
 	  <title><gdb:localize key="dashboardViewer.title"/></title>
-	  
-	  	<c:choose>
-			<c:when test="${not empty miniLogoFilePath}" >
-				<link rel="icon" href="${miniLogoFilePath}"/>
-			</c:when>
-			<c:otherwise>
-				<link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png"/>
-			</c:otherwise>
+  		<link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
 		</c:choose>
 	  
 	  <!-- Tell Runway what the application context path is. -->

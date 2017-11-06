@@ -3,24 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.prism;
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +32,6 @@ import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.mvc.ViewResponse;
 import com.runwaysdk.system.metadata.MdAttributeIndicatorDTO;
 
-import net.geoprism.JSONControllerUtil;
 import net.geoprism.MappableClassDTO;
 
 @Controller(url = "prism")
@@ -47,7 +40,21 @@ public class PrismController implements Reloadable
   @Endpoint(method = ServletMethod.GET)
   public ResponseIF management()
   {
-    return new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
+    ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
+    response.set("appname", "my-app");
+    response.set("base", "prism/management");
+
+    return response;
+  }
+
+  @Endpoint(method = ServletMethod.GET)
+  public ResponseIF admin()
+  {
+    ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
+    response.set("appname", "admin-app");
+    response.set("base", "prism/admin");
+
+    return response;
   }
 
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)

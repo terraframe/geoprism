@@ -28,14 +28,7 @@
 <head>
   <gdb:localize var="page_title" key="login.header"/>
   
-	<c:choose>
-		<c:when test="${not empty miniLogoFilePath}" >
-			<link rel="icon" href="${miniLogoFilePath}"/>
-		</c:when>
-		<c:otherwise>
-			<link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png"/>
-		</c:otherwise>
-	</c:choose>
+  <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
   
   <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
@@ -73,7 +66,7 @@
 <%-- 	        <c:if test="${not empty miniLogoFilePath}" > --%>
 <%--             <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
 <%--           </c:if> --%>
-	        <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
+	        <img id="logo-icon" class="img-responsive" src="${pageContext.request.contextPath}/logo/view?id=logo" alt="logo"/>
 	      </a>
 	      <p id="user-link-container" class="text-right">
 <%-- 	        <c:choose> --%>

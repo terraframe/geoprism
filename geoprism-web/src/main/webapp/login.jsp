@@ -39,7 +39,7 @@
   
   <title><gdb:localize key="login.title" /> </title>	
   
-  <link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png">
+  <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo">
 </head>
 <body>
   

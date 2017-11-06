@@ -27,14 +27,7 @@
 <head>
   <gdb:localize var="page_title" key="login.header"/>
   
-  <c:choose>
-    <c:when test="${not empty miniLogoFilePath}" >
-      <link rel="icon" href="${miniLogoFilePath}">
-    </c:when>
-    <c:otherwise>
-      <link rel="icon" href="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png">
-    </c:otherwise>
-  </c:choose>
+  <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo">
 
     <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
@@ -61,7 +54,7 @@
       <header id="header">
         <div id="header-link-container" class="text-right">
           <a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>">
-            <img id="logo-icon" class="img-responsive" src="net/geoprism/images/splash_logo_icon.png" alt="logo"/>
+            <img id="logo-icon" class="img-responsive" src="${pageContext.request.contextPath}/logo/view?id=logo" alt="logo"/>
           </a>
           <p id="user-link-container" class="text-right">                
             <c:if test="${isAdmin}">

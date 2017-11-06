@@ -24,7 +24,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="<%=request.getContextPath()%>/prism/management">
+  <base href="${pageContext.request.contextPath}/${base}">
   
   <title><gdb:localize key="prism.management.title"/></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,6 +42,7 @@
   
   <script>
     window.acp = "<%=request.getContextPath()%>";  
+    window.appname = "${appname}";  
   </script>
   
   <!-- IE required polyfills, in this exact order -->
@@ -60,7 +61,7 @@
         <nav class="navbar navbar-default">
           <div class="container">
             <div class="navbar-header">
-              <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/net/geoprism/images/splash_logo_icon.png" /></a>
+              <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/logo/view?id=logo" /></a>
               <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management"><gdb:localize key="data.management.title"/></a>
             </div>
 
