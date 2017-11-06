@@ -98,11 +98,11 @@ public class DHIS2TrackerResponseProcessor
       DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
       if (json.has("message"))
       {
-        ex.setDhis2Response(json.getString("message"));
+        ex.setDhis2Response(json.getString("message").substring(0,1000));
       }
       else if (json.has("responseType"))
       {
-        ex.setDhis2Response(json.getString("responseType"));
+        ex.setDhis2Response(json.getString("responseType").substring(0,1000));
       }
       throw ex;
     }
@@ -155,7 +155,7 @@ public class DHIS2TrackerResponseProcessor
         if (!status.equals("SUCCESS"))
         {
           DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-          ex.setDhis2Response(summary.toString()); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
+          ex.setDhis2Response(summary.toString().substring(0, 1000)); // TODO : We need to be very careful about putting the entire response in here because the response could be very large. Also its raw JSON.
           throw ex;
         }
       }
@@ -297,7 +297,7 @@ public class DHIS2TrackerResponseProcessor
                 {
                   // If we get some weird message back that doesn't match our regex
                   DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-                  ex.setDhis2Response(message);
+                  ex.setDhis2Response(message.substring(0, 1000));
                   throw ex;
                 }
                 
@@ -309,7 +309,7 @@ public class DHIS2TrackerResponseProcessor
               else
               {
                 DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-                ex.setDhis2Response(message);
+                ex.setDhis2Response(message.substring(0, 1000));
                 throw ex;
               }
             }
@@ -364,7 +364,7 @@ public class DHIS2TrackerResponseProcessor
     {
       // If we get some weird message back that doesn't match our regex
       DHIS2UnexpectedResponseException ex = new DHIS2UnexpectedResponseException();
-      ex.setDhis2Response(msg);
+      ex.setDhis2Response(msg.substring(0, 1000));
       throw ex;
     }
   }

@@ -37,7 +37,7 @@ import net.geoprism.dhis2.response.HTTPResponse;
 public class DHIS2IdCache
 {
   // Number of ids to fetch and cache
-  private static final String FETCH_NUM = "10";
+  private static final String FETCH_NUM = "1000";
   
   Stack<String> cache = new Stack<String>();
   

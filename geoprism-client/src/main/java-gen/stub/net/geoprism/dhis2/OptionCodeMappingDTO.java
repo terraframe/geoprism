@@ -16,32 +16,26 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2.importer;
+package net.geoprism.dhis2;
 
-import org.json.JSONObject;
-
-import net.geoprism.dhis2.util.DHIS2Util;
-import net.geoprism.ontology.Classifier;
-
-public class OptionJsonToClassifier
-{
-  private JSONObject json;
+public class OptionCodeMappingDTO extends OptionCodeMappingDTOBase
+ implements com.runwaysdk.generation.loader.Reloadable{
+  private static final long serialVersionUID = 335370209;
   
-  public OptionJsonToClassifier(JSONObject json)
+  public OptionCodeMappingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
-    this.json = json;
+    super(clientRequest);
   }
   
-  public void apply()
+  /**
+  * Copy Constructor: Duplicates the values and attributes of the given BusinessDTO into a new DTO.
+  * 
+  * @param businessDTO The BusinessDTO to duplicate
+  * @param clientRequest The clientRequest this DTO should use to communicate with the server.
+  */
+  protected OptionCodeMappingDTO(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
-    Classifier classy = new Classifier();
-    classy.getDisplayLabel().setValue(json.getString("name"));
-    classy.setClassifierId(json.getString("id"));
-    classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
-    classy.setCategory(false);
-    classy.apply();
-    
-    DHIS2Util.mapIds(classy.getId(), json.getString("id"));
-    DHIS2Util.mapOptionCode(classy.getId(), json.getString("code"));
+    super(businessDTO, clientRequest);
   }
+  
 }

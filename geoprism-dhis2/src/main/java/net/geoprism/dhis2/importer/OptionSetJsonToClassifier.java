@@ -21,6 +21,7 @@ package net.geoprism.dhis2.importer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import net.geoprism.dhis2.util.DHIS2Util;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 
@@ -50,19 +51,21 @@ public class OptionSetJsonToClassifier
     this.classy.setCategory(true);
     this.classy.apply();
     
+    DHIS2Util.mapIds(classy.getId(), json.getString("id"));
+    
     Classifier parent = Classifier.getRoot();
     this.classy.addLink(parent, ClassifierIsARelationship.CLASS);
   }
   
   public void applyCategoryRelationships()
   {
-    this.classy = Classifier.getByKey(DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id") + Classifier.KEY_CONCATENATOR + json.getString("id"));
+    this.classy = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(json.getString("id")));
     
     JSONArray options = json.getJSONArray("options");
     for (int i = 0; i < options.length(); ++i)
     {
       JSONObject jsonOption = options.getJSONObject(i);
-      Classifier option = Classifier.getByKey(DHIS2_CLASSIFIER_PACKAGE_PREFIX + jsonOption.getString("id") + Classifier.KEY_CONCATENATOR + jsonOption.getString("id"));
+      Classifier option = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(jsonOption.getString("id")));
       
       option.addLink(classy, ClassifierIsARelationship.CLASS);
     }
