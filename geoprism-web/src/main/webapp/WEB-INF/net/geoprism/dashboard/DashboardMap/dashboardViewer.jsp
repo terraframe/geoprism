@@ -37,8 +37,7 @@
 	  <meta http-equiv="pragma" content="no-cache" />
 	
 	  <title><gdb:localize key="dashboardViewer.title"/></title>
-  		<link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
-		</c:choose>
+		<link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
 	  
 	  <!-- Tell Runway what the application context path is. -->
 	  <script>
