@@ -24,7 +24,7 @@ import com.runwaysdk.mvc.RestBodyResponse;
 @Controller(url = "logo")
 public class SystemLogoController
 {
-  @Endpoint(method = ServletMethod.POST)
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "file") MultipartFileParameter file) throws IOException
   {
     if (id != null && id.equals("banner"))
@@ -60,7 +60,7 @@ public class SystemLogoController
     return new RestBodyResponse(object);
   }
 
-  @Endpoint(method = ServletMethod.GET)
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF view(ClientRequestIF request, @RequestParamter(name = "id") String id) throws IOException
   {
     String path = null;

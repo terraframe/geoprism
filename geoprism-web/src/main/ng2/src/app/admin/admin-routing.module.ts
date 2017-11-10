@@ -24,7 +24,9 @@ import { Observable } from 'rxjs/Observable';
 
 import { EmailComponent } from './email/email.component';
 import { SystemLogoComponent } from './logo/system-logo.component';
-import { SystemLogosComponent} from './logo/system-logos.component';
+import { SystemLogosComponent } from './logo/system-logos.component';
+import { AccountsComponent } from './account/accounts.component';
+import { AccountComponent, AccountResolver } from './account/account.component';
 
 declare var acp: any;
 
@@ -46,13 +48,24 @@ const routes: Routes = [
     path: 'email',
     component: EmailComponent
   },
+  {
+    path: 'accounts',
+    component: AccountsComponent
+  },
+  {
+    path: 'account/:id',
+    component: AccountComponent,
+    resolve: {
+      account: AccountResolver
+    }        
+  },  
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, AccountResolver]
 })
 export class AdminRoutingModule { }
 
-export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent];
+export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent];

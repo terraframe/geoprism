@@ -23,16 +23,16 @@ import { FormsModule} from '@angular/forms';
 import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
-
 import { CustomFormsModule } from 'ng2-validation'
-
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal'
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { CoreModule } from '../core/core.module';
 
 import { SystemLogoService } from './logo/system-logo.service';
 import { EmailService } from './email/email.service';
+import { AccountService } from './account/account.service';
 import { AdminRoutingModule, routedComponents } from './admin-routing.module';
 
 import { AdminComponent } from './admin.component'
@@ -46,6 +46,7 @@ import { AdminComponent } from './admin.component'
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),    
     CustomFormsModule,
+    NgxPaginationModule,    
     AdminRoutingModule,
     CoreModule
   ],
@@ -56,7 +57,8 @@ import { AdminComponent } from './admin.component'
   ],
   providers: [
     SystemLogoService,
-    EmailService
+    EmailService,
+    AccountService
   ],
   bootstrap: [AdminComponent],  
   exports: [	
