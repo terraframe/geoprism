@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 389003211)
+@com.runwaysdk.business.ClassSignature(hash = 1781175157)
 public abstract class SystemLogoSingletonDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.SystemLogoSingleton";
-  private static final long serialVersionUID = 389003211;
+  private static final long serialVersionUID = 1781175157;
   
   protected SystemLogoSingletonDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -509,6 +491,22 @@ public abstract class SystemLogoSingletonDTOBase extends com.runwaysdk.business.
     Object[] _parameters = new Object[]{};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.SystemLogoSingletonDTO.CLASS, "getMiniLogoFilename", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void removeBanner(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.SystemLogoSingletonDTO.CLASS, "removeBanner", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final void removeMiniLogo(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.SystemLogoSingletonDTO.CLASS, "removeMiniLogo", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final void uploadBanner(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)

@@ -18,6 +18,7 @@
 ///
 
 export class SystemLogo {
-  label: string;
-  id: string;
+  label:string;
+  id:string;
+  custom:boolean;
 }

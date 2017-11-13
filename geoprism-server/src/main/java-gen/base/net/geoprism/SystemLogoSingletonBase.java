@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 2053355083)
+@com.runwaysdk.business.ClassSignature(hash = -285830667)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -43,7 +25,7 @@ public abstract class SystemLogoSingletonBase extends com.runwaysdk.business.Bus
   public static java.lang.String SEQ = "seq";
   public static java.lang.String SITEMASTER = "siteMaster";
   public static java.lang.String TYPE = "type";
-  private static final long serialVersionUID = 2053355083;
+  private static final long serialVersionUID = -285830667;
   
   public SystemLogoSingletonBase()
   {
@@ -159,6 +141,18 @@ public abstract class SystemLogoSingletonBase extends com.runwaysdk.business.Bus
     else
     {
       setValue(ENTITYDOMAIN, value.getId());
+    }
+  }
+  
+  public void setEntityDomain(java.lang.String id)
+  {
+    if(id == null)
+    {
+      setValue(ENTITYDOMAIN, "");
+    }
+    else
+    {
+      setValue(ENTITYDOMAIN, id);
     }
   }
   
@@ -346,6 +340,18 @@ public abstract class SystemLogoSingletonBase extends com.runwaysdk.business.Bus
     }
   }
   
+  public void setOwner(java.lang.String id)
+  {
+    if(id == null)
+    {
+      setValue(OWNER, "");
+    }
+    else
+    {
+      setValue(OWNER, id);
+    }
+  }
+  
   public Long getSeq()
   {
     return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQ));
@@ -435,6 +441,18 @@ public abstract class SystemLogoSingletonBase extends com.runwaysdk.business.Bus
   }
   
   public static java.lang.String getMiniLogoFilename()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SystemLogoSingleton.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void removeBanner()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SystemLogoSingleton.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void removeMiniLogo()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.SystemLogoSingleton.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

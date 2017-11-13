@@ -20,6 +20,7 @@ import com.runwaysdk.mvc.InputStreamResponse;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.mvc.RestResponse;
 
 @Controller(url = "logo")
 public class SystemLogoController
@@ -45,10 +46,12 @@ public class SystemLogoController
     JSONObject banner = new JSONObject();
     banner.put("id", "banner");
     banner.put("label", "Banner");
+    banner.put("custom", SystemLogoSingletonDTO.getBannerFileFromCache(request, null) != null);
 
     JSONObject logo = new JSONObject();
     logo.put("id", "logo");
     logo.put("label", "Logo");
+    logo.put("custom", SystemLogoSingletonDTO.getMiniLogoFileFromCache(request, null) != null);
 
     JSONArray icons = new JSONArray();
     icons.put(banner);
@@ -90,6 +93,21 @@ public class SystemLogoController
     String ext = FilenameUtils.getExtension(file.getName());
 
     return new InputStreamResponse(fis, "image/" + ext);
+  }
+
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id) throws IOException
+  {
+    if (id != null && id.equals("banner"))
+    {
+      SystemLogoSingletonDTO.removeBannerFileFromCache(request, null);
+    }
+    else
+    {
+      SystemLogoSingletonDTO.removeMiniLogoFileFromCache(request, null);
+    }
+
+    return new RestResponse();
   }
 
 }

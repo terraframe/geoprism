@@ -22,6 +22,10 @@
           <td class="button-column">
             <span>
               <a class="fa fa-pencil ico-edit" (click)="edit(icon)" [title]="'system.image.editTooltip' | localize"></a>                     
+              <a *ngIf="icon.custom" class="fa fa-trash-o ico-remove" [title]="'system.image.removeTooltip' | localize"
+                 confirm-modal 
+                 [message]="'system.image.removeContent' | localize"
+                 (onConfirm)="remove(icon, $event)"></a>              
             </span>
           </td>
           <td class="label-column">{{ icon.label }}</td>

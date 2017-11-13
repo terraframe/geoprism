@@ -38,11 +38,9 @@ export class SystemLogosComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private iconService: SystemLogoService,
-    private titleService: Title) {
+    private service: SystemLogoService) {
 	  
     this.context = acp as string;    
-    this.titleService.setTitle( 'Test' );        
   }
 
   ngOnInit(): void {
@@ -50,14 +48,18 @@ export class SystemLogosComponent implements OnInit {
   }
     
   getIcons() : void {
-    this.iconService
-      .getIcons()
-      .then(icons => {
-        this.icons = icons        
-      })
+    this.service.getIcons().then(icons => {
+      this.icons = icons        
+    })
   }
   
   edit(icon: SystemLogo) : void {
     this.router.navigate(['/logo', icon.id]);
+  }  
+  
+  remove(icon: SystemLogo) : void {
+    this.service.remove(icon.id).then(response => {
+      icon.custom = false;
+    });
   }  
 }

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -45,7 +43,7 @@ import com.runwaysdk.vault.VaultFileDAOIF;
  */
 public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.runwaysdk.generation.loader.Reloadable
 {
-  private static Logger logger = LoggerFactory.getLogger(SystemLogoSingleton.class);
+  private static Logger              logger           = LoggerFactory.getLogger(SystemLogoSingleton.class);
 
   private static SystemLogoSingleton instance         = null;
 
@@ -94,8 +92,40 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
     catch (FileReadException e)
     {
       logger.error("Unable to retrieve banner file", e);
-      
+
       return null;
+    }
+  }
+
+  public static void removeBanner()
+  {
+    SystemLogoSingleton instance = getInstance();
+
+    String bannertId = instance != null ? instance.getBannerVaultId() : null;
+
+    if (bannertId != null && bannertId.length() > 0)
+    {
+      instance.lock();
+      instance.setBannerVaultId(null);
+      instance.apply();
+
+      VaultFileDAO.get(bannertId).getBusinessDAO().delete();
+    }
+  }
+
+  public static void removeMiniLogo()
+  {
+    SystemLogoSingleton instance = getInstance();
+
+    String logoId = instance != null ? instance.getMiniLogoVaultId() : null;
+
+    if (logoId != null && logoId.length() > 0)
+    {
+      instance.lock();
+      instance.setMiniLogoVaultId(null);
+      instance.apply();
+
+      VaultFileDAO.get(logoId).getBusinessDAO().delete();
     }
   }
 
@@ -116,7 +146,7 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
     catch (FileReadException e)
     {
       logger.error("Unable to retrieve mini logo file", e);
-      
+
       return null;
     }
   }

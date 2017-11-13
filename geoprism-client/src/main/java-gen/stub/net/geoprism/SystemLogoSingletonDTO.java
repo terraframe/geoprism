@@ -25,6 +25,7 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,6 +147,34 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implement
       logger.error("Error creating image file [" + fileName + "].", e);
       return;
     }
+  }
+
+  public static synchronized void removeBannerFileFromCache(ClientRequestIF clientRequest, HttpServletRequest request)
+  {
+    if (bannerCache != null)
+    {
+      String path = getImagesTempDir(request) + bannerCache.getName();
+
+      FileUtils.deleteQuietly(new File(path));
+
+      bannerCache = null;
+    }
+
+    SystemLogoSingletonDTOBase.removeBanner(clientRequest);
+  }
+
+  public static synchronized void removeMiniLogoFileFromCache(ClientRequestIF clientRequest, HttpServletRequest request)
+  {
+    if (miniLogoCache != null)
+    {
+      String path = getImagesTempDir(request) + miniLogoCache.getName();
+
+      FileUtils.deleteQuietly(new File(path));
+
+      miniLogoCache = null;
+    }
+
+    SystemLogoSingletonDTOBase.removeMiniLogo(clientRequest);
   }
 
   /**
