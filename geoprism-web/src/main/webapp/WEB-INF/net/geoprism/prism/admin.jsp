@@ -64,6 +64,7 @@
   <script>
     window.acp = "<%=request.getContextPath()%>";  
     window.appname = "${appname}";  
+    window.gp = {admin : ${admin}};
     
     window.com = window.com || {};
     window.com.runwaysdk = window.com.runwaysdk || {};
@@ -91,18 +92,6 @@
     <!-- TEMP CONTENT WHILE THE PAGE IS LOADING -->
 
     <div id="innerFrameHtml">
-      <header>
-        <nav class="navbar navbar-default">
-          <div class="container">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/logo/view?id=logo" /></a>
-              <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/admin"><gdb:localize key="geoprismLanding.administration"/></a>
-            </div>
-
-          </div>
-        </nav>
-      </header>
-        
       <div id="main" class="new-admin-design-main">
         <div class="text-center">
           <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>

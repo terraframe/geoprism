@@ -20,6 +20,7 @@
 import { Component } from '@angular/core';
 
 declare var acp: any;
+declare var gp: any;
 
 @Component({
   selector: 'my-app',
@@ -27,9 +28,11 @@ declare var acp: any;
   styleUrls: []
 })
 export class AdminComponent {
-  context: string;
+  context:string;
+  admin:boolean;
 
   constructor() {
     this.context = acp as string;
+    this.admin = gp.admin;
   }
 }

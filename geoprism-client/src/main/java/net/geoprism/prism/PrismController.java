@@ -32,8 +32,10 @@ import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.mvc.ViewResponse;
 import com.runwaysdk.system.metadata.MdAttributeIndicatorDTO;
 
+import net.geoprism.GeoprismUserDTO;
 import net.geoprism.JavascriptUtil;
 import net.geoprism.MappableClassDTO;
+import net.geoprism.RoleConstants;
 
 @Controller(url = "prism")
 public class PrismController implements Reloadable
@@ -55,6 +57,7 @@ public class PrismController implements Reloadable
     ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/admin.jsp");
     response.set("appname", "admin-app");
     response.set("base", "prism/admin");
+    response.set("admin", GeoprismUserDTO.isRoleMemeber(request, RoleConstants.ADIM_ROLE));
 
     JavascriptUtil.loadAdminBundle(request, response);
 

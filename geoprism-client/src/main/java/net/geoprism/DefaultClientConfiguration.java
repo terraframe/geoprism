@@ -60,6 +60,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
   {
     TreeSet<String> endpoint = new TreeSet<String>();
     endpoint.add("logo/view");
+    endpoint.add("prism/admin");
 
     return endpoint;
   }
