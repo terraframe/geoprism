@@ -14,26 +14,18 @@
 /// GNU Lesser General Public License for more details.
 ///
 /// You should have received a copy of the GNU Lesser General Public
-/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+/// License along with Runway SDK(tm).  If not, see <ehttp://www.gnu.org/licenses/>.
 ///
+import { Injectable } from '@angular/core';
 
-import { Component } from '@angular/core';
+declare var gp: any;
 
-import { AuthService } from '../core/authentication/auth.service';
+@Injectable()
+export class AuthService {
 
-declare var acp: any;
-
-@Component({
-  selector: 'my-app',
-  templateUrl: './admin.component.html',
-  styleUrls: []
-})
-export class AdminComponent {
-  context:string;
-  admin:boolean;
-
-  constructor(private authService:AuthService) {
-    this.context = acp as string;
-    this.admin = this.authService.isAdmin();
-  }
+  constructor() {}
+  
+  isAdmin():boolean {
+    return gp.admin;
+  }  
 }

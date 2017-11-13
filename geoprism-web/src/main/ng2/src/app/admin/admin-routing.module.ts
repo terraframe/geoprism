@@ -32,6 +32,8 @@ import { UniversalTreeComponent } from './universaltree/universaltree.component'
 import { ClassifierTreeComponent } from './classifiertree/classifiertree.component';
 import { BrowserComponent } from './browser/browser.component';
 
+import { AuthGuardService } from '../core/authentication/auth-guard.service';
+
 declare var acp: any;
 
 const routes: Routes = [
@@ -42,39 +44,48 @@ const routes: Routes = [
   },
   {
     path: 'logos',
-    component: SystemLogosComponent
+    component: SystemLogosComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'logo/:id',
     component: SystemLogoComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'email',
-    component: EmailComponent
+    component: EmailComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'accounts',
-    component: AccountsComponent
+    component: AccountsComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'geotree',
-    component: GeoTreeComponent
+    component: GeoTreeComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'universaltree',
-    component: UniversalTreeComponent
+    component: UniversalTreeComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'classifiertree',
-    component: ClassifierTreeComponent
+    component: ClassifierTreeComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'browser',
-    component: BrowserComponent
+    component: BrowserComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'account/:id',
     component: AccountComponent,
+    canActivate: [ AuthGuardService ],
     resolve: {
       account: AccountResolver
     }        
