@@ -48,11 +48,18 @@ export class AccountsComponent implements OnInit {
   }
   
   remove(user:User) : void {
+    this.service.remove(user.id).then(response => {
+      this.res.resultSet = this.res.resultSet.filter(h => h.id !== user.id);    
+    });	  	  
   }
   
   edit(user:User) : void {
     this.router.navigate(['/account', user.id]);	  
   }
+  
+  newInstance(pageNumber:number): void {
+    this.router.navigate(['/account', 'NEW']);	  
+  }  
   
   onPageChange(pageNumber:number): void {
     this.service.page(pageNumber).then(res => {

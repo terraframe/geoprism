@@ -18,6 +18,7 @@
 ///
 
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 import { SystemLogo } from './system-logo';
@@ -37,8 +38,11 @@ export class SystemLogosComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private iconService: SystemLogoService) {
-    this.context = acp as string;	  
+    private iconService: SystemLogoService,
+    private titleService: Title) {
+	  
+    this.context = acp as string;    
+    this.titleService.setTitle( 'Test' );        
   }
 
   ngOnInit(): void {

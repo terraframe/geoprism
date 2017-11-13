@@ -27,13 +27,17 @@ import { SystemLogoComponent } from './logo/system-logo.component';
 import { SystemLogosComponent } from './logo/system-logos.component';
 import { AccountsComponent } from './account/accounts.component';
 import { AccountComponent, AccountResolver } from './account/account.component';
+import { GeoTreeComponent } from './geotree/geotree.component';
+import { UniversalTreeComponent } from './universaltree/universaltree.component';
+import { ClassifierTreeComponent } from './classifiertree/classifiertree.component';
+import { BrowserComponent } from './browser/browser.component';
 
 declare var acp: any;
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/logos',
+    redirectTo: '/accounts',
     pathMatch: 'full'
   },
   {
@@ -53,6 +57,22 @@ const routes: Routes = [
     component: AccountsComponent
   },
   {
+    path: 'geotree',
+    component: GeoTreeComponent
+  },
+  {
+    path: 'universaltree',
+    component: UniversalTreeComponent
+  },
+  {
+    path: 'classifiertree',
+    component: ClassifierTreeComponent
+  },
+  {
+    path: 'browser',
+    component: BrowserComponent
+  },
+  {
     path: 'account/:id',
     component: AccountComponent,
     resolve: {
@@ -68,4 +88,4 @@ const routes: Routes = [
 })
 export class AdminRoutingModule { }
 
-export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent];
+export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent];

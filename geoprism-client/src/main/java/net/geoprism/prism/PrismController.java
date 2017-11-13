@@ -32,6 +32,7 @@ import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.mvc.ViewResponse;
 import com.runwaysdk.system.metadata.MdAttributeIndicatorDTO;
 
+import net.geoprism.JavascriptUtil;
 import net.geoprism.MappableClassDTO;
 
 @Controller(url = "prism")
@@ -43,16 +44,19 @@ public class PrismController implements Reloadable
     ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
     response.set("appname", "my-app");
     response.set("base", "prism/management");
+    response.set("js", "");
 
     return response;
   }
 
   @Endpoint(method = ServletMethod.GET)
-  public ResponseIF admin()
+  public ResponseIF admin(ClientRequestIF request)
   {
-    ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
+    ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/admin.jsp");
     response.set("appname", "admin-app");
     response.set("base", "prism/admin");
+
+    JavascriptUtil.loadAdminBundle(request, response);
 
     return response;
   }

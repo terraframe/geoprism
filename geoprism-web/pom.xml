@@ -247,7 +247,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-          <warSourceExcludes>**/prism.jsp</warSourceExcludes>
+          <warSourceExcludes>**/prism.jsp,**/admin.jsp</warSourceExcludes>
           <packagingExcludes>
             <!-- Source/class project jars must be excluded for reloaded to work -->
             **/*geoprism-common*.jar,
@@ -411,19 +411,36 @@
         <version>1.4.1</version>
         <executions>
           <execution>
+            <id>replace-prism.jsp</id>
             <phase>prepare-package</phase>
             <goals>
               <goal>replace</goal>
             </goals>
+            <inherited>false</inherited>
+            <configuration>
+              <file>src/main/webapp/WEB-INF/net/geoprism/prism/prism.jsp</file>
+              <outputFile>target/geoprism/WEB-INF/net/geoprism/prism/prism.jsp</outputFile>
+              <regex>false</regex>
+              <token>$local.host$</token>
+              <value>${local.host}</value>
+            </configuration>
+          </execution>
+          <execution>
+            <id>replace-admin.jsp</id>          
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <inherited>false</inherited>
+            <configuration>
+              <file>src/main/webapp/WEB-INF/net/geoprism/prism/admin.jsp</file>
+              <outputFile>target/geoprism/WEB-INF/net/geoprism/prism/admin.jsp</outputFile>
+              <regex>false</regex>
+              <token>$local.host$</token>
+              <value>${local.host}</value>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <file>src/main/webapp/WEB-INF/net/geoprism/prism/prism.jsp</file>
-          <outputFile>target/geoprism/WEB-INF/net/geoprism/prism/prism.jsp</outputFile>
-          <regex>false</regex>
-          <token>$local.host$</token>
-          <value>${local.host}</value>
-        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -48,17 +48,9 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     management.addRole(RoleConstants.ADIM_ROLE);
     management.addRole(RoleConstants.BUILDER_ROLE);
 
-    GeoprismApplication admin = new GeoprismApplication();
-    admin.setId("admin");
-    admin.setLabel(LocalizationFacadeDTO.getFromBundles(request, "geoprismLanding.administration"));
-    admin.setSrc("net/geoprism/images/admin_icon.png");
-    admin.setUrl("prism/admin");
-    admin.addRole(RoleConstants.ADIM_ROLE);
-
     List<GeoprismApplication> applications = new LinkedList<GeoprismApplication>();
     applications.add(kaleidoscope);
     applications.add(management);
-    applications.add(admin);
 
     return applications;
   }

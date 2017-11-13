@@ -39,6 +39,41 @@ public class AccountController
     GeoprismUserDTO user = GeoprismUserDTO.lock(request, id);
     RoleViewDTO[] roles = RoleViewDTO.getRoles(request, user);
 
+    JSONArray groups = this.createRoleMap(roles);
+
+    RestResponse response = new RestResponse();
+    response.set("user", user);
+    response.set("groups", groups);
+
+    return response;
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF newInstance(ClientRequestIF request) throws JSONException
+  {
+    GeoprismUserDTO user = new GeoprismUserDTO(request);
+    RoleViewDTO[] roles = RoleViewDTO.getRoles(request, user);
+
+    JSONArray groups = this.createRoleMap(roles);
+
+    RestResponse response = new RestResponse();
+    response.set("user", user);
+    response.set("groups", groups);
+
+    return response;
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  {
+    GeoprismUserDTO user = GeoprismUserDTO.lock(request, id);
+    user.delete();
+
+    return new RestResponse();
+  }
+
+  private JSONArray createRoleMap(RoleViewDTO[] roles) throws JSONException
+  {
     Map<String, JSONArray> map = new HashMap<String, JSONArray>();
 
     for (RoleViewDTO role : roles)
@@ -68,12 +103,7 @@ public class AccountController
 
       groups.put(group);
     }
-
-    RestResponse response = new RestResponse();
-    response.set("user", user);
-    response.set("groups", groups);
-
-    return response;
+    return groups;
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)

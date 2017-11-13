@@ -16,10 +16,10 @@
 
                 <div>
                   <!-- For display only when editing an icon-->
-                  <img *ngIf="!file" [src]="context + '/logo/view?id=' + id" class="thumb">
+                  <img *ngIf="!file" style="max-width:300px;max-height:300px;" [src]="context + '/logo/view?id=' + id" class="thumb">
                       
                   <!-- Actual uploaded file preview -->
-                  <img *ngIf="file" [src]="file" class="thumb">
+                  <img *ngIf="file" style="max-width:300px;max-height:300px;" [src]="file" class="thumb">
                 </div>                        
               
                 <div class="drop-box-container" ng2FileDrop [ngClass]="{'drop-active': dropActive}" (fileOver)="fileOver($event)" [uploader]="uploader" (click)=fileInput.click()>

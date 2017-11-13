@@ -34,12 +34,22 @@ export class AccountResolver implements Resolve<Account> {
   constructor(@Inject(AccountService) private accountService:AccountService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Account> {
-    return this.accountService.edit(route.params['id'])
-      .catch((error:any) => {
+	let id = route.params['id'];
+	
+	if(id === 'NEW') {
+      return this.accountService.newInstance().catch((error:any) => {
         this.eventService.onError(error); 
         
         return Promise.reject(error);
-      });    
+      });    				
+	}
+	else {	
+      return this.accountService.edit(id).catch((error:any) => {
+        this.eventService.onError(error); 
+        
+        return Promise.reject(error);
+      });    		
+	}
   }
 }
 
@@ -62,9 +72,14 @@ export class AccountComponent implements OnInit {
   }
   
   cancel(): void {
-    this.service.unlock(this.account.user.id).then(response => {
-      this.location.back();
-    });
+	if(this.account.user.newInstance === true) {
+      this.location.back();		
+	}
+	else {
+      this.service.unlock(this.account.user.id).then(response => {
+        this.location.back();
+      });		
+	}
   } 
   
   onSubmit(): void {
@@ -80,6 +95,10 @@ export class AccountComponent implements OnInit {
           roleIds.push(role.roleId);
         }      
       }    
+    }
+    
+    if(!this.account.changePassword && !this.account.user.newInstance) {
+      delete this.account.user.password;
     }
     
     this.service.apply(this.account.user, roleIds).then(response => {

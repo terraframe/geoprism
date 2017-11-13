@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -22,6 +20,36 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.mvc.AttributeResponseIF;
+import com.runwaysdk.system.RolesDTO;
+import com.runwaysdk.system.gis.geo.AllowedInDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityController;
+import com.runwaysdk.system.gis.geo.GeoEntityDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityProblemDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityProblemViewDTO;
+import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
+import com.runwaysdk.system.gis.geo.GeoNodeDTO;
+import com.runwaysdk.system.gis.geo.GeoNodeEntityDTO;
+import com.runwaysdk.system.gis.geo.GeoNodeGeometryDTO;
+import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
+import com.runwaysdk.system.gis.geo.LocatedInDTO;
+import com.runwaysdk.system.gis.geo.SynonymDTO;
+import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
+import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
+import com.runwaysdk.system.ontology.TermUtilDTO;
+import com.runwaysdk.system.scheduler.ExecutableJobDTO;
+import com.runwaysdk.system.scheduler.ExecutableJobDescriptionDTO;
+import com.runwaysdk.system.scheduler.JobHistoryDTO;
+import com.runwaysdk.system.scheduler.JobHistoryHistoryInformationController;
+import com.runwaysdk.system.scheduler.JobHistoryViewDTO;
+import com.runwaysdk.system.scheduler.JobSnapshotDTO;
+import com.runwaysdk.system.scheduler.QualifiedTypeJobDTO;
+import com.runwaysdk.web.json.JSONController;
 
 import net.geoprism.account.ExternalProfileDTO;
 import net.geoprism.dashboard.AggregationStrategyDTO;
@@ -64,36 +92,6 @@ import net.geoprism.report.ReportItemController;
 import net.geoprism.report.ReportItemDTO;
 import net.geoprism.report.ReportItemViewDTO;
 
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.mvc.ViewTemplateResponse;
-import com.runwaysdk.system.RolesDTO;
-import com.runwaysdk.system.gis.geo.AllowedInDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityController;
-import com.runwaysdk.system.gis.geo.GeoEntityDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabelDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityProblemDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityProblemViewDTO;
-import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
-import com.runwaysdk.system.gis.geo.GeoNodeDTO;
-import com.runwaysdk.system.gis.geo.GeoNodeEntityDTO;
-import com.runwaysdk.system.gis.geo.GeoNodeGeometryDTO;
-import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
-import com.runwaysdk.system.gis.geo.LocatedInDTO;
-import com.runwaysdk.system.gis.geo.SynonymDTO;
-import com.runwaysdk.system.gis.geo.SynonymDisplayLabelDTO;
-import com.runwaysdk.system.gis.geo.UniversalDTO;
-import com.runwaysdk.system.gis.geo.UniversalDisplayLabelDTO;
-import com.runwaysdk.system.ontology.TermUtilDTO;
-import com.runwaysdk.system.scheduler.ExecutableJobDTO;
-import com.runwaysdk.system.scheduler.ExecutableJobDescriptionDTO;
-import com.runwaysdk.system.scheduler.JobHistoryDTO;
-import com.runwaysdk.system.scheduler.JobHistoryHistoryInformationController;
-import com.runwaysdk.system.scheduler.JobHistoryViewDTO;
-import com.runwaysdk.system.scheduler.JobSnapshotDTO;
-import com.runwaysdk.system.scheduler.QualifiedTypeJobDTO;
-import com.runwaysdk.web.json.JSONController;
-
 public class JavascriptUtil implements Reloadable
 {
   public static String getJavascript(ClientRequestIF clientRequest, String... types)
@@ -111,38 +109,32 @@ public class JavascriptUtil implements Reloadable
     req.setAttribute("js", javascript);
   }
 
-  private static void loadJavascript(ClientRequestIF request, ViewTemplateResponse response, Set<String> set)
+  private static void loadJavascript(ClientRequestIF request, AttributeResponseIF response, Set<String> set)
   {
     String[] types = set.toArray(new String[set.size()]);
     String javascript = JavascriptUtil.getJavascript(request, types);
-    
+
     response.set("js", javascript);
   }
-  
+
   public static void loadGeoEntityBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-    types.add(GeoEntityDTO.CLASS);
-    types.add(LocatedInDTO.CLASS);
-    types.add(GeoEntityDisplayLabelDTO.CLASS);
-    types.add(GeoEntityController.CLASS);
-    types.add(UniversalDTO.CLASS);
-    types.add(UniversalDisplayLabelDTO.CLASS);
-    types.add(TermUtilDTO.CLASS);
-    types.add(GeoEntityViewDTO.CLASS);
-    types.add(SynonymDTO.CLASS);
-    types.add(SynonymDisplayLabelDTO.CLASS);
-    types.add(GeoEntityExportMenuDTO.CLASS);
-    types.add(GeoEntityUtilDTO.CLASS);
-    types.add(GeoEntityProblemViewDTO.CLASS);
-    types.add(GeoEntityProblemDTO.CLASS);
+    loadGeoEntityBundle(types);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadGeoEntityBundle(ClientRequestIF request, ViewTemplateResponse response)
+  public static void loadGeoEntityBundle(ClientRequestIF request, AttributeResponseIF response)
   {
     Set<String> types = new HashSet<String>();
+    loadGeoEntityBundle(types);
+
+    JavascriptUtil.loadJavascript(request, response, types);
+  }
+
+  private static void loadGeoEntityBundle(Set<String> types)
+  {
     types.add(GeoEntityDTO.CLASS);
     types.add(LocatedInDTO.CLASS);
     types.add(GeoEntityDisplayLabelDTO.CLASS);
@@ -157,10 +149,20 @@ public class JavascriptUtil implements Reloadable
     types.add(GeoEntityUtilDTO.CLASS);
     types.add(GeoEntityProblemViewDTO.CLASS);
     types.add(GeoEntityProblemDTO.CLASS);
-    
+  }
+
+  public static void loadAdminBundle(ClientRequestIF request, AttributeResponseIF response)
+  {
+    Set<String> types = new HashSet<String>();
+
+    loadGeoEntityBundle(types);
+    loadUniversalBundle(types);
+    types.addAll(getOntologyTypes());
+    types.addAll(getDatabrowserTypes());
+
     JavascriptUtil.loadJavascript(request, response, types);
   }
-  
+
   public static void loadSchedulerBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -175,7 +177,7 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadSchedulerBundle(ClientRequestIF request, ViewTemplateResponse response)
+  public static void loadSchedulerBundle(ClientRequestIF request, AttributeResponseIF response)
   {
     Set<String> types = new HashSet<String>();
     types.add(ExecutableJobDTO.CLASS);
@@ -185,10 +187,10 @@ public class JavascriptUtil implements Reloadable
     types.add(JobSnapshotDTO.CLASS);
     types.add(JobHistoryViewDTO.CLASS);
     types.add(JobHistoryHistoryInformationController.CLASS);
-    
+
     JavascriptUtil.loadJavascript(request, response, types);
   }
-  
+
   public static void loadUserBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -199,13 +201,13 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
-//    types.add(DataUploaderController.CLASS);
+    // types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadUserBundle(ClientRequestIF request, ViewTemplateResponse response)
+  public static void loadUserBundle(ClientRequestIF request, AttributeResponseIF response)
   {
     Set<String> types = new HashSet<String>();
     types.add(RolesDTO.CLASS);
@@ -215,34 +217,36 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDTO.CLASS);
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
-//    types.add(DataUploaderController.CLASS);
+    // types.add(DataUploaderController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
-    
+
     JavascriptUtil.loadJavascript(request, response, types);
   }
-  
+
   public static void loadDatabrowserBundle(ClientRequestIF request, HttpServletRequest req)
   {
-    Set<String> types = new HashSet<String>();
-    types.add(DataBrowserUtilDTO.CLASS);
-    types.add(MetadataTypeDTO.CLASS);
-    types.add(PairViewDTO.CLASS);
-    types.add(ReportItemDTO.CLASS);
+    Set<String> types = getDatabrowserTypes();
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadDatabrowserBundle(ClientRequestIF request, ViewTemplateResponse response)
+  private static Set<String> getDatabrowserTypes()
   {
     Set<String> types = new HashSet<String>();
     types.add(DataBrowserUtilDTO.CLASS);
     types.add(MetadataTypeDTO.CLASS);
     types.add(PairViewDTO.CLASS);
     types.add(ReportItemDTO.CLASS);
-    
+    return types;
+  }
+
+  public static void loadDatabrowserBundle(ClientRequestIF request, AttributeResponseIF response)
+  {
+    Set<String> types = getDatabrowserTypes();
+
     JavascriptUtil.loadJavascript(request, response, types);
   }
-  
+
   public static void loadSystemBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
@@ -257,20 +261,13 @@ public class JavascriptUtil implements Reloadable
   public static void loadUniversalBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-    types.add(UniversalDTO.CLASS);
-    types.add(AllowedInDTO.CLASS);
-    types.add(UniversalDisplayLabelDTO.CLASS);
-    types.add(GeoEntityDTO.CLASS);
-    types.add(IsARelationshipDTO.CLASS);
-    types.add(TermUtilDTO.CLASS);
-    types.add(UniversalExportMenuDTO.CLASS);
+    loadUniversalBundle(types);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadUniversalBundle(ClientRequestIF request, ViewTemplateResponse response)
+  private static void loadUniversalBundle(Set<String> types)
   {
-    Set<String> types = new HashSet<String>();
     types.add(UniversalDTO.CLASS);
     types.add(AllowedInDTO.CLASS);
     types.add(UniversalDisplayLabelDTO.CLASS);
@@ -278,10 +275,16 @@ public class JavascriptUtil implements Reloadable
     types.add(IsARelationshipDTO.CLASS);
     types.add(TermUtilDTO.CLASS);
     types.add(UniversalExportMenuDTO.CLASS);
-    
+  }
+
+  public static void loadUniversalBundle(ClientRequestIF request, AttributeResponseIF response)
+  {
+    Set<String> types = new HashSet<String>();
+    loadUniversalBundle(types);
+
     JavascriptUtil.loadJavascript(request, response, types);
   }
-  
+
   public static void loadOntologyBundle(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = JavascriptUtil.getOntologyTypes();
@@ -289,13 +292,13 @@ public class JavascriptUtil implements Reloadable
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadOntologyBundle(ClientRequestIF request, ViewTemplateResponse response)
+  public static void loadOntologyBundle(ClientRequestIF request, AttributeResponseIF response)
   {
     Set<String> types = JavascriptUtil.getOntologyTypes();
-    
+
     JavascriptUtil.loadJavascript(request, response, types);
   }
-  
+
   private static Set<String> getOntologyTypes()
   {
     Set<String> types = new HashSet<String>();
@@ -348,8 +351,8 @@ public class JavascriptUtil implements Reloadable
     types.add(MappableClassDTO.CLASS);
     types.add(AllAggregationTypeDTO.CLASS);
     types.add(AggregationTypeDTO.CLASS);
-//    types.add(DataUploaderController.CLASS);
-//    types.add(CategoryIconController.CLASS);
+    // types.add(DataUploaderController.CLASS);
+    // types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -369,7 +372,7 @@ public class JavascriptUtil implements Reloadable
     types.add(DashboardDisplayLabelDTO.CLASS);
     types.add(DashboardController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
-//    types.add(DataUploaderController.CLASS);
+    // types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -379,25 +382,25 @@ public class JavascriptUtil implements Reloadable
     Set<String> types = new HashSet<String>();
     types.add(DataSetController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
-//    types.add(DataUploaderController.CLASS);
+    // types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
 
-  public static void loadDatasets(ClientRequestIF request, ViewTemplateResponse req)
+  public static void loadDatasets(ClientRequestIF request, AttributeResponseIF req)
   {
     Set<String> types = new HashSet<String>();
     types.add(DataSetController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
-//    types.add(DataUploaderController.CLASS);
-    
+    // types.add(DataUploaderController.CLASS);
+
     JavascriptUtil.loadJavascript(request, req, types);
   }
-  
+
   public static void loadIcons(ClientRequestIF request, HttpServletRequest req)
   {
     Set<String> types = new HashSet<String>();
-//    types.add(CategoryIconController.CLASS);
+    // types.add(CategoryIconController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }
@@ -408,8 +411,8 @@ public class JavascriptUtil implements Reloadable
     types.add(ClassifierController.CLASS);
     types.add(DataSetController.CLASS);
     types.add(GeoEntityUtilDTO.CLASS);
-//    types.add(CategoryIconController.CLASS);
-//    types.add(DataUploaderController.CLASS);
+    // types.add(CategoryIconController.CLASS);
+    // types.add(DataUploaderController.CLASS);
 
     JavascriptUtil.loadJavascript(request, req, types);
   }

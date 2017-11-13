@@ -27,12 +27,17 @@ import { CustomFormsModule } from 'ng2-validation'
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal'
 import { NgxPaginationModule } from 'ngx-pagination';
+import { PasswordStrengthBarModule } from 'ng2-password-strength-bar';
 
 import { CoreModule } from '../core/core.module';
 
 import { SystemLogoService } from './logo/system-logo.service';
 import { EmailService } from './email/email.service';
 import { AccountService } from './account/account.service';
+import { GeoTreeService } from './geotree/geotree.service';
+import { UniversalTreeService } from './universaltree/universaltree.service';
+import { ClassifierTreeService } from './classifiertree/classifiertree.service';
+import { BrowserService } from './browser/browser.service';
 import { AdminRoutingModule, routedComponents } from './admin-routing.module';
 
 import { AdminComponent } from './admin.component'
@@ -47,6 +52,7 @@ import { AdminComponent } from './admin.component'
     ModalModule.forRoot(),    
     CustomFormsModule,
     NgxPaginationModule,    
+    PasswordStrengthBarModule,
     AdminRoutingModule,
     CoreModule
   ],
@@ -58,7 +64,11 @@ import { AdminComponent } from './admin.component'
   providers: [
     SystemLogoService,
     EmailService,
-    AccountService
+    AccountService,
+    GeoTreeService,
+    UniversalTreeService,
+    ClassifierTreeService,
+    BrowserService    
   ],
   bootstrap: [AdminComponent],  
   exports: [	

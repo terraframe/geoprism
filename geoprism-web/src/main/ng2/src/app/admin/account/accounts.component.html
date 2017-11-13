@@ -29,6 +29,12 @@
 	        <td class="label-column"> {{ account.lastName }} </td>
 	        <td class="label-column"> {{ account.email }} </td>
 	      </tr>
+        <tr>
+          <td class="button-column">
+            <a class="fa fa-plus" (click)="newInstance()" [title]="'account.newTooltip' | localize"></a>
+          </td>                 
+        </tr>        
+	      
 	    </tbody>    
 	  </table>
     <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>	  

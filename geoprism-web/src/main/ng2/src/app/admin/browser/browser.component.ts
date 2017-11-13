@@ -17,37 +17,33 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-export class User {
-  id: string;
-  username: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  inactive: boolean;
-  newInstance: boolean;
-}
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
-export class Role {
-  roleId:string;
-  displayLabel:string;
-  assigned:boolean;
-}
+import { BrowserService } from './browser.service';
+import { Browser } from './browser';
 
-export class Group {
-  name:string;
-  roles:Role[];
-}
+declare var Mojo:any;
+declare var net:any;
+declare var com:any;
 
-export class Account {
-  user:User;
-  groups:Group[];
-  changePassword:boolean;
-}
+@Component({
+  
+  selector: 'browser',
+  templateUrl: './browser.component.html',
+  styles: []
+})
+export class BrowserComponent implements OnInit {
+  
+  constructor(private service:BrowserService) {}
 
-export class PageResult {
-  count: number;
-  pageNumber: number;
-  pageSize: number;
-  resultSet: User[];
+  ngOnInit() {
+    this.service.getInstance().then(browser => {
+      var db = new net.geoprism.data.browser.DataBrowser({
+        types: com.runwaysdk.DTOUtil.convertToType(browser.types.returnValue[0]).getResultSet(),
+        editData : browser.edit
+      });
+      db.render("#databrowser");    	
+    });
+  }  
 }

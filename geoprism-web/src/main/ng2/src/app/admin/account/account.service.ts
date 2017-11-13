@@ -64,6 +64,33 @@ export class AccountService extends BasicService {
       .catch(this.handleError.bind(this));      
   }
   
+  newInstance(): Promise<Account> {
+    
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });  
+    
+    return this.ehttp
+    .post(acp + '/account/newInstance', JSON.stringify({}), {headers: headers})
+    .toPromise()
+    .then((response: any) => {
+      return response.json() as Account;
+    })
+    .catch(this.handleError.bind(this));      
+  }
+  
+  remove(id:string): Promise<Response> {
+    
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });  
+    
+    return this.ehttp
+    .post(acp + '/account/remove', JSON.stringify({id:id}), {headers: headers})
+    .toPromise()
+    .catch(this.handleError.bind(this));      
+  }
+  
   apply(user:User, roleIds:string[]): Promise<User> {
     
     let headers = new Headers({
