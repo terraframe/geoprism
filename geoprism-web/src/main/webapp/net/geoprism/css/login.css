@@ -30,7 +30,9 @@ html, body, #container {
 h1 {
     color: maroon;
     margin-left: 40px;
-} 
+}
+
+
 
 #logo{
    	margin-left: 50px;
@@ -107,8 +109,6 @@ a:active {
   		transform: translateY(-50%);
 }
 
-
-
 #login-form input[type="text"]{
 	float:left;
 	width:200px;
@@ -182,6 +182,12 @@ a:active {
   		margin-top: 10px;
 }
 
+.forgot-password {
+	float: left;
+	color: white;
+	margin: 10px;
+	cursor: pointer;
+}
 
 
 /* 		#login-form input{ */
@@ -212,7 +218,7 @@ a:active {
   		right: 25px;
 /*    			top: 43px; */
  			position: absolute;
-  		top: 50%;
+  		top: 40%;
   		transform: translateY(-50%);
 }
 

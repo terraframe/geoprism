@@ -48,19 +48,20 @@
 	    	<header id="header">
 				  <form id="login-form" method="post" action="login" class="login">
 				  
-    					<div class="error-message">
-      						<p>${errorMessage}</p>
-    					</div>
-  
-				  	  <div id="login-input-container">
-				  	  	<div>
-						  <input name="username" type="text" placeholder="<gdb:localize key="login.username"/>" id="login" />
-						  <input name="password" type="password" placeholder="<gdb:localize key="login.password"/>" id="password" value="" />
-						</div>
-					    <p class="login-submit">
-					      <button type="submit" class="login-button"><i class="fa fa-sign-in"></i><gdb:localize key="login.button" /></button>
-					    </p>
-					 </div>				
+  					<div class="error-message">
+    						<p>${errorMessage}</p>
+  					</div>
+
+			  	  <div id="login-input-container">
+			  	    <div>
+					      <input name="username" type="text" placeholder="<gdb:localize key="login.username"/>" id="login" />
+					      <input name="password" type="password" placeholder="<gdb:localize key="login.password"/>" id="password" value="" />
+                <a href="${pageContext.request.contextPath}/prism/admin#/forgotpassword" class="forgot-password"><gdb:localize key="login.forgotPassword" /></a>
+					    </div>
+				      <p class="login-submit">
+				        <button type="submit" class="login-button"><i class="fa fa-sign-in"></i><gdb:localize key="login.button" /></button>
+				      </p>
+				    </div>				
 				  </form>
           <!-- TODO : Maybe someday DHIS2 will have working OAuth
 				  <c:forEach items="${servers}" var="server">

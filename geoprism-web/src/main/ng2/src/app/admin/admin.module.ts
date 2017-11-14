@@ -38,6 +38,7 @@ import { GeoTreeService } from './geotree/geotree.service';
 import { UniversalTreeService } from './universaltree/universaltree.service';
 import { ClassifierTreeService } from './classifiertree/classifiertree.service';
 import { BrowserService } from './browser/browser.service';
+import { ForgotPasswordService } from './forgotpassword/forgotpassword.service';
 import { AdminRoutingModule, routedComponents } from './admin-routing.module';
 
 import { AdminComponent } from './admin.component'
@@ -68,7 +69,8 @@ import { AdminComponent } from './admin.component'
     GeoTreeService,
     UniversalTreeService,
     ClassifierTreeService,
-    BrowserService    
+    BrowserService,
+    ForgotPasswordService
   ],
   bootstrap: [AdminComponent],  
   exports: [	

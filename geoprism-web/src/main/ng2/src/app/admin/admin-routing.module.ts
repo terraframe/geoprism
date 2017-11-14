@@ -31,6 +31,7 @@ import { GeoTreeComponent } from './geotree/geotree.component';
 import { UniversalTreeComponent } from './universaltree/universaltree.component';
 import { ClassifierTreeComponent } from './classifiertree/classifiertree.component';
 import { BrowserComponent } from './browser/browser.component';
+import { ForgotPasswordComponent } from './forgotpassword/forgotpassword.component';
 
 import { AuthGuardService } from '../core/authentication/auth-guard.service';
 
@@ -89,7 +90,11 @@ const routes: Routes = [
     resolve: {
       account: AccountResolver
     }        
-  },  
+  },
+  {
+    path: 'forgotpassword',
+    component: ForgotPasswordComponent
+  }
 ];
 
 @NgModule({
@@ -99,4 +104,4 @@ const routes: Routes = [
 })
 export class AdminRoutingModule { }
 
-export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent];
+export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent, ForgotPasswordComponent];
