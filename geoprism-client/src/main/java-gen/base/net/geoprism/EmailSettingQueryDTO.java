@@ -1,6 +1,6 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -442688746)
+@com.runwaysdk.business.ClassSignature(hash = -1894388723)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism;
 public class EmailSettingQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -442688746;
+private static final long serialVersionUID = -1894388723;
 
   protected EmailSettingQueryDTO(String type)
   {

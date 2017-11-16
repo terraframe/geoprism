@@ -1,6 +1,6 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -364397121)
+@com.runwaysdk.business.ClassSignature(hash = -679913788)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -29,7 +29,7 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
   public static java.lang.String TO = "to";
   public static java.lang.String TYPE = "type";
   public static java.lang.String USERNAME = "username";
-  private static final long serialVersionUID = -364397121;
+  private static final long serialVersionUID = -679913788;
   
   public EmailSettingBase()
   {
@@ -536,6 +536,12 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
   public static EmailSetting getByKey(String key)
   {
     return (EmailSetting) com.runwaysdk.business.Business.get(CLASS, key);
+  }
+  
+  public static net.geoprism.EmailSetting editDefault()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSetting.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static net.geoprism.EmailSetting getDefault()

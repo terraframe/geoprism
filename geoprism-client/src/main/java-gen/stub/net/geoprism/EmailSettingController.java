@@ -35,7 +35,7 @@ public class EmailSettingController implements Reloadable
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF getInstance(ClientRequestIF request) throws JSONException
   {
-    EmailSettingDTO setting = EmailSettingDTO.getDefault(request);
+    EmailSettingDTO setting = EmailSettingDTO.editDefault(request);
 
     return new RestBodyResponse(setting);
   }
@@ -44,7 +44,7 @@ public class EmailSettingController implements Reloadable
   public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "setting", parser = ParseType.BASIC_JSON) EmailSettingDTO setting) throws JSONException
   {
     setting.apply();
-
+    
     return new RestBodyResponse(setting);
   }
 

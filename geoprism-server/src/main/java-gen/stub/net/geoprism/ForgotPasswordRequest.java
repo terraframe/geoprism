@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.business.rbac.Authenticate;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.ServerIDGenerator;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
@@ -58,7 +60,7 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
     
     if (!it.hasNext())
     {
-      throw new RuntimeException("User not found."); // TODO LOCALIZE
+      throw new DataNotFoundException("User [" + username + "] does not exist.", MdBusinessDAO.getMdBusinessDAO(GeoprismUser.CLASS));
     }
     
     GeoprismUser user = it.next();

@@ -1,10 +1,10 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 452701247)
+@com.runwaysdk.business.ClassSignature(hash = 223467588)
 public abstract class EmailSettingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.EmailSetting";
-  private static final long serialVersionUID = 452701247;
+  private static final long serialVersionUID = 223467588;
   
   protected EmailSettingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -611,6 +611,14 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getUsernameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(USERNAME).getAttributeMdDTO();
+  }
+  
+  public static final net.geoprism.EmailSettingDTO editDefault(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "editDefault", _declaredTypes);
+    return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final net.geoprism.EmailSettingDTO getDefault(com.runwaysdk.constants.ClientRequestIF clientRequest)

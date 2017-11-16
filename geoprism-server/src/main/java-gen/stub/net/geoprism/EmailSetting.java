@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -33,9 +34,16 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.dataaccess.BusinessDAO;
+import com.runwaysdk.dataaccess.attributes.AttributeValueException;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
+import net.geoprism.email.EmailSendAuthenticationException;
+import net.geoprism.email.EmailSendException;
+import net.geoprism.email.InvalidEmailSettings;
+import net.geoprism.email.InvalidToRecipient;
 import net.geoprism.localization.LocalizationFacade;
 
 public class EmailSetting extends EmailSettingBase implements com.runwaysdk.generation.loader.Reloadable
@@ -59,10 +67,10 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
    */
   public static void sendEmail(String subject, String body, String[] toAddresses)
   {
-    EmailSetting settings = EmailSetting.readDefault();
+    EmailSetting settings = EmailSetting.getDefault();
     if (settings == null || settings.getPort() == null || settings.getServer() == null || settings.getUsername() == null || settings.getPassword() == null)
     {
-      throw new RuntimeException("Bad email settings"); // TODO LOCALIZE
+      throw new InvalidEmailSettings();
     }
     
     if (toAddresses == null)
@@ -85,7 +93,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     }
     catch (AddressException e)
     {
-      throw new RuntimeException("There is a problem with the 'to' recipients. Unable to send email(s)."); // TODO : LOCALIZE
+      throw new InvalidToRecipient();
     }
     if (iaTos.size() == 0) { return; }
     
@@ -105,8 +113,14 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     }
     catch (EmailException e)
     {
-      logger.error("Error sending email with body [" + body + "] to recipients [" + StringUtils.join(toAddresses, ", ") + "].", e);
-      throw new RuntimeException(e); // TODO : Localize
+      Throwable cause = e.getCause();
+      
+      if (cause instanceof AuthenticationFailedException)
+      {
+        throw new EmailSendAuthenticationException(e);
+      }
+      
+      throw new EmailSendException(e);
     }
   }
   
@@ -124,13 +138,13 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
   /**
    * MdMethod
    * 
-   * TODO : Rename to 'editDefault'
-   * 
    * Used when you want to edit the default email settings. They will be created if not exist, locked, and returned.
+   * 
+   * @return The default email settings.
    */
-  public static net.geoprism.EmailSetting getDefault()
+  public static net.geoprism.EmailSetting editDefault()
   {
-    EmailSetting setting = readDefault();
+    EmailSetting setting = getDefault();
     
     if (setting == null)
     {
@@ -144,14 +158,14 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
   }
   
   /**
+   * MdMethod
+   * 
    * Used in a situation where you want the email settings, but you want them in a read-only environment. We will not lock
    * them, we will not create them if they don't exist. Its just the most basic 'get' query. If they do not exist we will return null.
    * 
-   * TODO : Rename to 'getDefault'
-   * 
-   * @return
+   * @return The default email settings.
    */
-  public static net.geoprism.EmailSetting readDefault()
+  public static net.geoprism.EmailSetting getDefault()
   {
     EmailSettingQuery query = new EmailSettingQuery(new QueryFactory());
     OIterator<? extends EmailSetting> it = query.getIterator();
@@ -162,7 +176,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
       
       if (it.hasNext())
       {
-        throw new RuntimeException("Bad email settings"); // TODO : LOCALIZE
+        throw new InvalidEmailSettings();
       }
       
       return first;
@@ -174,6 +188,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
   }
   
   @Override
+  @Transaction
   public void apply()
   {
     String server = this.getServer();
@@ -188,10 +203,12 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
       }
       catch (MalformedURLException e)
       {
-        throw new RuntimeException(e); // TODO : LOCALIZE
+        throw new AttributeValueException("Server is not url parseable", e, BusinessDAO.get(this.getId()).getAttributeIF(EmailSetting.SERVER), server);
       }
     }
     
     super.apply();
+    
+    EmailSetting.sendTestEmail();
   }
 }
