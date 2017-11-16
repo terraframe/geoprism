@@ -62,6 +62,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     endpoint.add("logo/view");
     endpoint.add("prism/admin");
     endpoint.add("forgotpassword/initiate");
+    endpoint.add("forgotpassword/verify");
 
     return endpoint;
   }

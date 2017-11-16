@@ -32,14 +32,13 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
    * 
    * Verifies that the user owns the email address and allows them to log in.
    * 
-   * TODO
-   * 
    * @param token
    */
   @Authenticate
   public static void verify(String token)
   {
-    // TODO
+    
+    
     // Don't forget to invalidate the token afterwards
   }
   
