@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 892774494)
+@com.runwaysdk.business.ClassSignature(hash = -364397121)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -47,7 +29,7 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
   public static java.lang.String TO = "to";
   public static java.lang.String TYPE = "type";
   public static java.lang.String USERNAME = "username";
-  private static final long serialVersionUID = 892774494;
+  private static final long serialVersionUID = -364397121;
   
   public EmailSettingBase()
   {
@@ -135,6 +117,18 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
     else
     {
       setValue(ENTITYDOMAIN, value.getId());
+    }
+  }
+  
+  public void setEntityDomain(java.lang.String id)
+  {
+    if(id == null)
+    {
+      setValue(ENTITYDOMAIN, "");
+    }
+    else
+    {
+      setValue(ENTITYDOMAIN, id);
     }
   }
   
@@ -319,6 +313,18 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
     else
     {
       setValue(OWNER, value.getId());
+    }
+  }
+  
+  public void setOwner(java.lang.String id)
+  {
+    if(id == null)
+    {
+      setValue(OWNER, "");
+    }
+    else
+    {
+      setValue(OWNER, id);
     }
   }
   
@@ -533,6 +539,12 @@ public abstract class EmailSettingBase extends com.runwaysdk.business.Business i
   }
   
   public static net.geoprism.EmailSetting getDefault()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSetting.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static void sendTestEmail()
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.EmailSetting.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

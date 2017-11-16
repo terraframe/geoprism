@@ -1,18 +1,11 @@
 package net.geoprism;
 
-import java.util.ArrayList;
 import java.util.Date;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.database.ServerIDGenerator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -34,11 +27,29 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
   
   /**
    * MdMethod
+   * 
+   * Verifies that the user owns the email address and allows them to log in.
+   * 
+   * TODO
+   * 
+   * @param token
+   */
+  @Authenticate
+  public static void verify(String token)
+  {
+    // TODO
+    // Don't forget to invalidate the token afterwards
+  }
+  
+  /**
+   * MdMethod
+   * 
    * Initiates a forgot password request. If the user already has one in progress, it will be invalidated and a new one will be issued. If the
    * server's email settings have not been properly set up, or the user does not exist, an error will be thrown.
    * 
    * @param username
    */
+  @Authenticate
   public static void initiate(String username, String serverExternalUrl)
   {
     GeoprismUserQuery q = new GeoprismUserQuery(new QueryFactory());
@@ -79,45 +90,13 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
   {
     String address = this.getUserRef().getEmail();
     String link = serverExternalUrl + "/forgotpassword/verify?token=" + this.getToken();
-    EmailSetting settings = EmailSetting.getDefault();
     
-    if (settings.getPort() == null || settings.getServer() == null || settings.getUsername() == null || settings.getPassword() == null || address == null || address.contains("@noreply"))
-    {
-      throw new RuntimeException("Bad email settings"); // TODO LOCALIZE
-    }
-    
-    ArrayList<InternetAddress> iaTos = new ArrayList<InternetAddress>();
-    try
-    {
-      iaTos.add(new InternetAddress(this.getUserRef().getEmail().trim()));
-    }
-    catch (AddressException e)
-    {
-      logger.error("Problem sending email to address [" + address + "].", e);
-      throw new RuntimeException(e); // TODO : Localize
-    }
     String subject = LocalizationFacade.getFromBundles("forgotpassword.emailSubject");
     String body = LocalizationFacade.getFromBundles("forgotpassword.emailBody");
     body = body.replace("${link}", link);
     body = body.replace("${expireTime}", String.valueOf(expireTime));
-    try
-    {
-      Email email = new SimpleEmail();
-      email.setHostName(settings.getServer());
-      email.setSmtpPort(settings.getPort());
-      email.setAuthenticator(new DefaultAuthenticator(settings.getUsername(), settings.getPassword()));
-      email.setSSLOnConnect(true);
-      email.setFrom(settings.getFrom());
-      email.setSubject(subject);
-      email.setMsg(body);
-      email.setTo(iaTos);
-      email.send();
-    }
-    catch (EmailException e)
-    {
-      logger.error("Error sending email with body [" + body + "] to recipients [" + address + "].", e);
-      throw new RuntimeException(e); // TODO : Localize
-    }
+    
+    EmailSetting.sendEmail(subject, body, new String[]{address});
   }
   
   public String generateEncryptedToken()

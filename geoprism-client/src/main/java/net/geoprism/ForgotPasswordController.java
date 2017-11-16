@@ -10,14 +10,15 @@ import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestResponse;
+import com.runwaysdk.request.ServletRequestIF;
 
 @Controller(url = "forgotpassword")
 public class ForgotPasswordController
 {
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
-  public ResponseIF initiate(ClientRequestIF request, @RequestParamter(name = "username") String username) throws JSONException
+  public ResponseIF initiate(ClientRequestIF request, ServletRequestIF sr, @RequestParamter(name = "username") String username) throws JSONException
   {
-    ForgotPasswordRequestDTO.initiate(request, username, "<external url>"); // TODO : We need to get this external url from somewhere
+    ForgotPasswordRequestDTO.initiate(request, username, getBaseUrl(sr));
     
     return new RestResponse();
   }
@@ -25,8 +26,16 @@ public class ForgotPasswordController
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF verify(ClientRequestIF request, @RequestParamter(name = "token") String token) throws JSONException
   {
-//    ForgotPasswordRequestDTO.verify(request, token);
+    ForgotPasswordRequestDTO.verify(request, token);
     
     return new RestResponse();
+  }
+  
+  public static String getBaseUrl(ServletRequestIF request) {
+    String scheme = request.getScheme() + "://";
+    String serverName = request.getServerName();
+    String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+    String contextPath = request.getContextPath();
+    return scheme + serverName + serverPort + contextPath;
   }
 }
