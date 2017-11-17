@@ -1,6 +1,6 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -989296909)
+@com.runwaysdk.business.ClassSignature(hash = -535135970)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism;
 public class ForgotPasswordRequestQueryDTO extends com.runwaysdk.business.BusinessQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = -989296909;
+private static final long serialVersionUID = -535135970;
 
   protected ForgotPasswordRequestQueryDTO(String type)
   {

@@ -1,10 +1,10 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -732842134)
+@com.runwaysdk.business.ClassSignature(hash = -350874859)
 public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.ForgotPasswordRequest";
-  private static final long serialVersionUID = -732842134;
+  private static final long serialVersionUID = -350874859;
   
   protected ForgotPasswordRequestDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -511,19 +511,19 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(USERREF).getAttributeMdDTO();
   }
   
+  public static final void complete(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String token, java.lang.String newPassword)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{token, newPassword};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "complete", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final void initiate(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String username, java.lang.String serverUrl)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
     Object[] _parameters = new Object[]{username, serverUrl};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "initiate", _declaredTypes);
-    clientRequest.invokeMethod(_metadata, null, _parameters);
-  }
-  
-  public static final void verify(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String token)
-  {
-    String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{token};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "verify", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   

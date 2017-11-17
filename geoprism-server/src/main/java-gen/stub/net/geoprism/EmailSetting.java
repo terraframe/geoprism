@@ -85,7 +85,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
       {
         if (to.contains("@noreply"))
         {
-          continue;
+          throw new InvalidToRecipient("The email address [" + to + "] is invalid.");
         }
         
         iaTos.add(new InternetAddress(to.trim()));
@@ -149,7 +149,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     if (setting == null)
     {
       setting = new EmailSetting();
-      setting.apply();
+      setting.applyWithoutTesting();
     }
     
     setting.lock();
@@ -191,6 +191,13 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
   @Transaction
   public void apply()
   {
+    this.applyWithoutTesting();
+    
+    EmailSetting.sendTestEmail();
+  }
+  
+  public void applyWithoutTesting()
+  {
     String server = this.getServer();
     
     if (server.contains("://"))
@@ -208,7 +215,5 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     }
     
     super.apply();
-    
-    EmailSetting.sendTestEmail();
   }
 }

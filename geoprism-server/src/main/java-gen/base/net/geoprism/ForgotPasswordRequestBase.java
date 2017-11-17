@@ -1,6 +1,6 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = -1111714326)
+@com.runwaysdk.business.ClassSignature(hash = -1769131627)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -26,7 +26,7 @@ public abstract class ForgotPasswordRequestBase extends com.runwaysdk.business.B
   public static java.lang.String TOKEN = "token";
   public static java.lang.String TYPE = "type";
   public static java.lang.String USERREF = "userRef";
-  private static final long serialVersionUID = -1111714326;
+  private static final long serialVersionUID = -1769131627;
   
   public ForgotPasswordRequestBase()
   {
@@ -475,13 +475,13 @@ public abstract class ForgotPasswordRequestBase extends com.runwaysdk.business.B
     return (ForgotPasswordRequest) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public static void initiate(java.lang.String username, java.lang.String serverUrl)
+  public static void complete(java.lang.String token, java.lang.String newPassword)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ForgotPasswordRequest.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static void verify(java.lang.String token)
+  public static void initiate(java.lang.String username, java.lang.String serverUrl)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ForgotPasswordRequest.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

@@ -24,9 +24,9 @@ public class ForgotPasswordController
   }
   
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
-  public ResponseIF verify(ClientRequestIF request, @RequestParamter(name = "token") String token) throws JSONException
+  public ResponseIF complete(ClientRequestIF request, @RequestParamter(name = "token") String token, @RequestParamter(name = "newPassword") String newPassword) throws JSONException
   {
-    ForgotPasswordRequestDTO.verify(request, token);
+    ForgotPasswordRequestDTO.complete(request, token, newPassword);
     
     return new RestResponse();
   }

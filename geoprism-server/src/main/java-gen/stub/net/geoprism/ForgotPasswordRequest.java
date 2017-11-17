@@ -2,6 +2,8 @@ package net.geoprism;
 
 import java.util.Date;
 
+import net.geoprism.localization.LocalizationFacade;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,10 +11,10 @@ import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.ServerIDGenerator;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-
-import net.geoprism.localization.LocalizationFacade;
+import com.runwaysdk.session.Request;
 
 public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -30,16 +32,51 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
   /**
    * MdMethod
    * 
-   * Verifies that the user owns the email address and allows them to log in.
+   * Completes the forgot password request by verifying the token is valid, changing the user's password to the one provided, and then invalidating the request. 
    * 
    * @param token
    */
-  @Authenticate
-  public static void verify(String token)
+  @Authenticate // TODO : Is there any problem with having both these annotations on the same method?
+  @Transaction
+  public static void complete(String token, String newPassword)
   {
+    ForgotPasswordRequestQuery reqQ = new ForgotPasswordRequestQuery(new QueryFactory());
+    reqQ.WHERE(reqQ.getToken().EQ(token));
+    OIterator<? extends ForgotPasswordRequest> reqIt = reqQ.getIterator();
     
+    ForgotPasswordRequest req;
+    if (reqIt.hasNext())
+    {
+      req = reqIt.next();
+      req.appLock();
+    }
+    else
+    {
+      throw new InvalidForgotPasswordToken();
+    }
     
-    // Don't forget to invalidate the token afterwards
+    if ((System.currentTimeMillis() - req.getStartTime().getTime()) > (expireTime * 3600000))
+    {
+      throw new InvalidForgotPasswordToken();
+    }
+    
+    req.changeUserPassword(newPassword);
+    
+    req.delete();
+  }
+  
+  /**
+   * Executes with SYSTEM level privileges and changes the users password to the one provided.
+   * 
+   * @param newPassword
+   */
+  @Request
+  private void changeUserPassword(String newPassword)
+  {
+    GeoprismUser user = this.getUserRef();
+    user.appLock();
+    user.setPassword(newPassword);
+    user.apply();
   }
   
   /**
@@ -50,7 +87,8 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
    * 
    * @param username
    */
-  @Authenticate
+  @Authenticate // TODO : Is there any problem with having both these annotations on the same method?
+  @Transaction
   public static void initiate(String username, String serverExternalUrl)
   {
     GeoprismUserQuery q = new GeoprismUserQuery(new QueryFactory());
@@ -87,10 +125,10 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
     req.sendEmail(serverExternalUrl);
   }
   
-  public void sendEmail(String serverExternalUrl)
+  private void sendEmail(String serverExternalUrl)
   {
     String address = this.getUserRef().getEmail();
-    String link = serverExternalUrl + "/forgotpassword/verify?token=" + this.getToken();
+    String link = serverExternalUrl + "/forgotpassword/complete?token=" + this.getToken();
     
     String subject = LocalizationFacade.getFromBundles("forgotpassword.emailSubject");
     String body = LocalizationFacade.getFromBundles("forgotpassword.emailBody");
@@ -100,11 +138,10 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
     EmailSetting.sendEmail(subject, body, new String[]{address});
   }
   
-  public String generateEncryptedToken()
+  private String generateEncryptedToken()
   {
     String hashedTime = ServerIDGenerator.hashedId(String.valueOf(System.currentTimeMillis()));
-    String hashedUser = ServerIDGenerator.hashedId(this.getUserRefId());
     
-    return hashedTime + hashedUser;
+    return hashedTime;
   }
 }
