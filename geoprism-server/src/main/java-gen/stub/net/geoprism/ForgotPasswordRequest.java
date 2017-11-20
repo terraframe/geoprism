@@ -40,6 +40,8 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
   @Transaction
   public static void complete(String token, String newPassword)
   {
+    if (newPassword == null || newPassword.equals("")) { return; }
+    
     ForgotPasswordRequestQuery reqQ = new ForgotPasswordRequestQuery(new QueryFactory());
     reqQ.WHERE(reqQ.getToken().EQ(token));
     OIterator<? extends ForgotPasswordRequest> reqIt = reqQ.getIterator();
@@ -60,24 +62,27 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
       throw new InvalidForgotPasswordToken();
     }
     
-    req.changeUserPassword(newPassword);
+//    req.changeUserPassword(newPassword);
+    GeoprismUser user = req.getUserRef();
+    user.appLock();
+    user.setPassword(newPassword);
+    user.apply();
     
     req.delete();
   }
   
   /**
-   * Executes with SYSTEM level privileges and changes the users password to the one provided.
+   * Changes the users password to the one provided.
    * 
    * @param newPassword
    */
-  @Request
-  private void changeUserPassword(String newPassword)
-  {
-    GeoprismUser user = this.getUserRef();
-    user.appLock();
-    user.setPassword(newPassword);
-    user.apply();
-  }
+//  private void changeUserPassword(String newPassword)
+//  {
+//    GeoprismUser user = this.getUserRef();
+//    user.appLock();
+//    user.setPassword(newPassword);
+//    user.apply();
+//  }
   
   /**
    * MdMethod
@@ -128,7 +133,7 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
   private void sendEmail(String serverExternalUrl)
   {
     String address = this.getUserRef().getEmail();
-    String link = serverExternalUrl + "/forgotpassword/complete?token=" + this.getToken();
+    String link = serverExternalUrl + "/prism/admin#/forgotpassword-complete/" + this.getToken();
     
     String subject = LocalizationFacade.getFromBundles("forgotpassword.emailSubject");
     String body = LocalizationFacade.getFromBundles("forgotpassword.emailBody");

@@ -32,6 +32,7 @@ import { UniversalTreeComponent } from './universaltree/universaltree.component'
 import { ClassifierTreeComponent } from './classifiertree/classifiertree.component';
 import { BrowserComponent } from './browser/browser.component';
 import { ForgotPasswordComponent } from './forgotpassword/forgotpassword.component';
+import { ForgotPasswordCompleteComponent } from './forgotpassword-complete/forgotpassword-complete.component';
 
 import { AuthGuardService } from '../core/authentication/auth-guard.service';
 
@@ -94,6 +95,10 @@ const routes: Routes = [
   {
     path: 'forgotpassword',
     component: ForgotPasswordComponent
+  },
+  {
+    path: 'forgotpassword-complete/:token',
+    component: ForgotPasswordCompleteComponent
   }
 ];
 
@@ -104,4 +109,4 @@ const routes: Routes = [
 })
 export class AdminRoutingModule { }
 
-export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent, ForgotPasswordComponent];
+export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent, ForgotPasswordComponent, ForgotPasswordCompleteComponent];

@@ -39,6 +39,7 @@ import { UniversalTreeService } from './universaltree/universaltree.service';
 import { ClassifierTreeService } from './classifiertree/classifiertree.service';
 import { BrowserService } from './browser/browser.service';
 import { ForgotPasswordService } from './forgotpassword/forgotpassword.service';
+import { ForgotPasswordCompleteService } from './forgotpassword-complete/forgotpassword-complete.service';
 import { AdminRoutingModule, routedComponents } from './admin-routing.module';
 
 import { AdminComponent } from './admin.component'
@@ -70,7 +71,8 @@ import { AdminComponent } from './admin.component'
     UniversalTreeService,
     ClassifierTreeService,
     BrowserService,
-    ForgotPasswordService
+    ForgotPasswordService,
+    ForgotPasswordCompleteService
   ],
   bootstrap: [AdminComponent],  
   exports: [	
