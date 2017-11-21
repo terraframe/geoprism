@@ -14,13 +14,12 @@ import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.session.Request;
 
 public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements com.runwaysdk.generation.loader.Reloadable
 {
   private static final long serialVersionUID = 961492736;
   
-  private static final int expireTime = 2; // in hours // TODO : Store in a properties file
+  private static final int expireTime = GeoprismProperties.getForgotPasswordExpireTime(); // in hours
   
   private static Logger logger = LoggerFactory.getLogger(ForgotPasswordRequest.class);
   
@@ -69,6 +68,9 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
     user.apply();
     
     req.delete();
+    
+    // TODO : Info level is somewhat useless in a production environment. I'm not sure what else to log it as though.
+    logger.info("Password for user [" + user.getUsername() + "] has been changed via ForgotPasswordRequest!");
   }
   
   /**

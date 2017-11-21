@@ -138,19 +138,13 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
   /**
    * MdMethod
    * 
-   * Used when you want to edit the default email settings. They will be created if not exist, locked, and returned.
+   * Used when you want to edit the default email settings. Same as 'getDefault' except we lock them before returning them.
    * 
    * @return The default email settings.
    */
   public static net.geoprism.EmailSetting editDefault()
   {
     EmailSetting setting = getDefault();
-    
-    if (setting == null)
-    {
-      setting = new EmailSetting();
-      setting.applyWithoutTesting();
-    }
     
     setting.lock();
     
@@ -160,8 +154,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
   /**
    * MdMethod
    * 
-   * Used in a situation where you want the email settings, but you want them in a read-only environment. We will not lock
-   * them, we will not create them if they don't exist. Its just the most basic 'get' query. If they do not exist we will return null.
+   * Fetches the default email settings and returns them.
    * 
    * @return The default email settings.
    */
@@ -170,21 +163,36 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     EmailSettingQuery query = new EmailSettingQuery(new QueryFactory());
     OIterator<? extends EmailSetting> it = query.getIterator();
     
+    EmailSetting setting;
+    
     if (it.hasNext())
     {
-      EmailSetting first = it.next();
+      setting = it.next();
       
       if (it.hasNext())
       {
         throw new InvalidEmailSettings();
       }
-      
-      return first;
     }
     else
     {
-      return null;
+      setting = readSettingsFromProperties();
+      setting.applyWithoutTesting();
     }
+    
+    return setting;
+  }
+  
+  private static EmailSetting readSettingsFromProperties()
+  {
+    EmailSetting set = new EmailSetting();
+    set.setUsername(GeoprismProperties.getEmailUsername());
+    set.setPassword(GeoprismProperties.getEmailPassword());
+    set.setServer(GeoprismProperties.getEmailServer());
+    set.setPort(GeoprismProperties.getEmailPort());
+    set.setFrom(GeoprismProperties.getEmailFrom());
+    set.setTo(GeoprismProperties.getEmailTo());
+    return set;
   }
   
   @Override
