@@ -109,6 +109,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
       email.setSubject(subject);
       email.setMsg(body);
       email.setTo(iaTos);
+      email.setStartTLSRequired(GeoprismProperties.getRequireStartTLS());
       email.send();
     }
     catch (EmailException e)
