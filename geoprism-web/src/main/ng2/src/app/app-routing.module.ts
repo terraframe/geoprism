@@ -22,79 +22,46 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { Routes, RouterModule, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { IconsComponent } from './icon/icons.component';
-import { IconDetailComponent, IconResolver} from './icon/icon-detail.component';
+import { LoginComponent } from './authentication/login.component';
+import { HubComponent } from './hub/hub.component';
 
-import { DatasetsComponent } from './datasets/datasets.component';
-import { DatasetDetailComponent, DatasetResolver} from './datasets/dataset-detail.component';
-import { IndicatorModalComponent } from './datasets/indicator-modal.component';
-
-import { CategoriesComponent } from './category/categories.component';
-import { CategoryDetailComponent, CategoryResolver} from './category/category-detail.component';
-import { OptionDetailComponent, OptionResolver} from './category/option-detail.component';
-
-import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
+import { AuthGuard } from './authentication/auth.guard';
+import { AdminGuard } from './authentication/admin.guard';
 
 declare var acp: any;
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/datasets',
+    redirectTo: '/menu',
     pathMatch: 'full'
   },
   {
-    path: 'dhis2',
-    component: DHIS2IdFinderComponent
+    path: 'login',
+    component: LoginComponent
   },
   {
-    path: 'datasets',
-    component: DatasetsComponent
+    path: 'menu',
+    component: HubComponent,
+    canActivate: [ AuthGuard ],    
   },
   {
-    path: 'dataset/:id',
-    component: DatasetDetailComponent,
-    resolve: {
-      dataset: DatasetResolver
-    }    
+    path: 'data',
+    canActivate: [ AuthGuard ],
+    loadChildren: './data/data.module#DataModule'    
   },
   {
-	  path: 'categories',
-	  component: CategoriesComponent
-  },
-  {
-    path: 'category/:id',
-    component: CategoryDetailComponent,
-    resolve: {
-      category: CategoryResolver
-    }    
-  },  
-  {
-    path: 'category-option/:parentId/:id',
-    component: OptionDetailComponent,
-    resolve: {
-      category: OptionResolver
-    }    
-  },
-  {
-    path: 'icons',
-    component: IconsComponent
-  },
-  {
-    path: 'icon/:id',
-    component: IconDetailComponent,
-    resolve: {
-      icon: IconResolver
-    }    
-  },
-  
+	  path: 'admin',
+	  canActivate: [ AdminGuard ],
+	  loadChildren: './admin/admin.module#AdminModule'    
+  }  
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver, OptionResolver, IconResolver]
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent, IndicatorModalComponent];
+export const routedComponents = [LoginComponent, HubComponent];

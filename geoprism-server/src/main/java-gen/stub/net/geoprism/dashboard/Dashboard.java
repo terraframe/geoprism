@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard;
 
@@ -1213,25 +1211,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
     for (GeoNode node : nodes)
     {
-      if (aggregatable || ( node instanceof GeoNodeGeometry ))
+      try
       {
-        try
-        {
-          JSONObject nodeJSON = new JSONObject();
-          nodeJSON.put("id", node.getId());
-          nodeJSON.put("type", node.getType());
-          nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
-          nodesArr.put(nodeJSON);
-        }
-        catch (JSONException e)
-        {
-          String error = "Could not build GeoNode JSON.";
-          throw new ProgrammingErrorException(error, e);
-        }
+        JSONObject nodeJSON = new JSONObject();
+        nodeJSON.put("id", node.getId());
+        nodeJSON.put("type", node.getType());
+        nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
+        nodesArr.put(nodeJSON);
+      }
+      catch (JSONException e)
+      {
+        String error = "Could not build GeoNode JSON.";
+        throw new ProgrammingErrorException(error, e);
       }
     }
 
-    if (aggregatable && nodesArr.length() == 0)
+    if (nodesArr.length() == 0)
     {
       throw new UnsupportedAggregationException();
     }

@@ -33,60 +33,55 @@ import { ClassifierTreeComponent } from './classifiertree/classifiertree.compone
 import { BrowserComponent } from './browser/browser.component';
 import { ForgotPasswordComponent } from './forgotpassword/forgotpassword.component';
 
-import { AuthGuardService } from '../core/authentication/auth-guard.service';
-
 declare var acp: any;
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/accounts',
-    pathMatch: 'full'
-  },
+    component: AccountsComponent,    
+  },	
   {
     path: 'logos',
     component: SystemLogosComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'logo/:id',
     component: SystemLogoComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'email',
     component: EmailComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'accounts',
-    component: AccountsComponent,
-    canActivate: [ AuthGuardService ]
+    component: AccountsComponent,    
   },
   {
     path: 'geotree',
     component: GeoTreeComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'universaltree',
     component: UniversalTreeComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'classifiertree',
     component: ClassifierTreeComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'browser',
     component: BrowserComponent,
-    canActivate: [ AuthGuardService ]
+    
   },
   {
     path: 'account/:id',
     component: AccountComponent,
-    canActivate: [ AuthGuardService ],
     resolve: {
       account: AccountResolver
     }        
@@ -98,7 +93,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, AccountResolver]
 })

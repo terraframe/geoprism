@@ -18,27 +18,13 @@
 ///
 
 import { Component } from '@angular/core';
-import { DHIS2Service } from './service/dhis2.service';
-
-declare var acp: any;
 
 @Component({
   
   selector: 'my-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: []
 })
 export class AppComponent {
-  context: string;
-  public isDhis2Enabled: boolean;
-
-  constructor(private dhis2Service: DHIS2Service) {
-    this.context = acp as string;
-    
-    this.isDhis2Enabled = false;
-    this.dhis2Service.isEnabled().then(isEnabled => {
-      this.isDhis2Enabled = isEnabled;
-      console.log("setting isDhis2Enabled = " + this.isDhis2Enabled);
-    })
-  }
+  constructor() {}
 }

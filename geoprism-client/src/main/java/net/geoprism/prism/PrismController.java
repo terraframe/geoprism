@@ -41,12 +41,25 @@ import net.geoprism.RoleConstants;
 public class PrismController implements Reloadable
 {
   @Endpoint(method = ServletMethod.GET)
-  public ResponseIF management()
+  public ResponseIF home(ClientRequestIF request)
+  {
+    ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/admin.jsp");
+    response.set("appname", "my-app");
+    response.set("base", "prism/home");
+
+    JavascriptUtil.loadAdminBundle(request, response);
+
+    return response;
+  }
+  
+  @Endpoint(method = ServletMethod.GET)
+  public ResponseIF management(ClientRequestIF request)
   {
     ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
     response.set("appname", "my-app");
     response.set("base", "prism/management");
-    response.set("js", "");
+    
+    JavascriptUtil.loadAdminBundle(request, response);
 
     return response;
   }

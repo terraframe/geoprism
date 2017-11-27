@@ -54,7 +54,7 @@ export class SystemLogosComponent implements OnInit {
   }
   
   edit(icon: SystemLogo) : void {
-    this.router.navigate(['/logo', icon.id]);
+    this.router.navigate(['/admin/logo', icon.id]);
   }  
   
   remove(icon: SystemLogo) : void {

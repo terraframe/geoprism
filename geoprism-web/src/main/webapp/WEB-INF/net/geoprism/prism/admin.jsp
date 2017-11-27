@@ -64,7 +64,6 @@
   <script>
     window.acp = "<%=request.getContextPath()%>";  
     window.appname = "${appname}";  
-    window.gp = {admin : ${admin}};
     
     window.com = window.com || {};
     window.com.runwaysdk = window.com.runwaysdk || {};

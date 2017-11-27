@@ -21,6 +21,7 @@ import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.mvc.RestResponse;
+import com.runwaysdk.system.SingleActorDTO;
 
 @Controller(url = "account")
 public class AccountController
@@ -46,6 +47,15 @@ public class AccountController
     response.set("groups", groups);
 
     return response;
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF get(ClientRequestIF request) throws JSONException
+  {
+    SingleActorDTO user = GeoprismUserDTO.getCurrentUser(request);
+    user.lock();
+
+    return new RestBodyResponse(user);
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)

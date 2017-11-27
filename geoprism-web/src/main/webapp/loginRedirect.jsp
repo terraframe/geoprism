@@ -30,7 +30,7 @@
   // A standalone window will have the parent set to itself.
   var standalone = (window.parent === window);
 
-  var loginPath = '${pageContext.request.contextPath}' + '/session/form';
+  var loginPath = '${pageContext.request.contextPath}' + '/prism/home';
 
   if(standalone)
   {

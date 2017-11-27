@@ -54,11 +54,11 @@ export class AccountsComponent implements OnInit {
   }
   
   edit(user:User) : void {
-    this.router.navigate(['/account', user.id]);	  
+    this.router.navigate(['/admin/account', user.id]);	  
   }
   
   newInstance(pageNumber:number): void {
-    this.router.navigate(['/account', 'NEW']);	  
+    this.router.navigate(['/admin/account', 'NEW']);	  
   }  
   
   onPageChange(pageNumber:number): void {

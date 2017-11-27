@@ -1,0 +1,101 @@
+<div class="new-admin-design-main">
+  <data-header></data-header>
+  
+<div>
+  <message ></message>  
+
+  <form #form="ngForm" class="modal-form" (ngSubmit)="form.valid && validName && onSubmit()">    
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="heading">
+          <h1><localize key="dataset.editTooltip"></localize></h1>
+        </div>      
+        <fieldset>            
+          <div class="row-holder">
+            <div class="label-holder">
+              <label><localize key="dataset.label"></localize></label>
+            </div>          
+            <div class="holder" >
+              <span class="text">
+                <input type="text" [ngClass]="{ 'ng-invalid' : !validName }" [(ngModel)]="dataset.label" name="label" required (blur)="validateName($event.target.value)">
+              </span>
+              <div *ngIf="!validName" class="inline-error-message">
+                <localize key="dataUploader.unique"></localize>
+              </div>              
+            </div>
+          </div>
+          <div class="row-holder">
+            <div class="label-holder">
+              <label><localize key="dataset.source"></localize></label>
+            </div>          
+            <div class="holder" >
+              <span class="text">                  
+                <textarea [(ngModel)]="dataset.source" name="source"></textarea>
+              </span>
+            </div>
+          </div>
+          <div class="row-holder">
+            <div class="label-holder">
+              <label><localize key="dataset.description"></localize></label>
+            </div>          
+            <div class="holder" >
+              <span class="text">                  
+                <textarea [(ngModel)]="dataset.description" name="description"></textarea>
+              </span>
+            </div>
+          </div>
+          <div class="row-holder">
+            <div class="label-holder">
+              <label><localize key="dataset.attributes"></localize></label>
+            </div>          
+            <div class="holder dataset-attr-holder" >
+              <table class="list-table table table-bordered table-striped">
+                <tbody>
+                  <tr *ngFor="let attribute of dataset.attributes" class="fade-ngRepeat-item">
+                    <td class="button-column">
+                      <a *ngIf="attribute.type == 'MdAttributeIndicator'" class="fa fa-pencil ico-edit" (click)="editAttribute(attribute, $event)" [title]="'dataset.editAttributeTooltip' | localize"></a>                             
+                      <a *ngIf="attribute.type == 'MdAttributeIndicator'" class="fa fa-trash-o ico-remove" [title]="'dataset.removeAttributeTooltip' | localize"
+                        confirm-modal 
+                        [message]="'dataset.removeAttribute' | localize"
+                        (onConfirm)="removeAttribute(attribute, $event)"></a>
+                    </td>                  
+                    <td class="submit-form">
+                      <dl>
+                        <dd>
+                          <input type="text" name="{{attribute.label}}" [(ngModel)]="attribute.label" required>
+                        </dd>
+                        <dd *ngIf="attribute.type == 'Category'">
+                          <localize key="dataset.category"></localize> <a (click)="open(attribute.root, $event)" [title]="'category.management.editThisCategoryTooltip' | localize">{{attribute.root.label}}</a>
+                        </dd>
+                      </dl>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>      
+          <div class="row-holder">
+            <div class="label-holder">
+            </div>                    
+            <div class="holder">
+              <i class="fa fa-plus" aria-hidden="true" (click)="addIndicator()"><localize key="dataset.addIndicator"></localize></i>
+            </div>
+          </div>          
+          <div class="row-holder">
+            <div class="label-holder">
+            </div>                    
+            <div class="holder">
+              <div class="button-holder">
+                <input type="button" [value]="'dataset.cancel' | localize" class="btn btn-default" (click)="cancel()" />              
+                <input type="submit" [value]="'dataset.submit' | localize" class="btn btn-primary" [disabled]="!(form.valid  && validName)" />
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </form>
+  
+  <indicator-modal (onSuccess)="onIndicatorSuccess($event)"></indicator-modal> 
+</div>
+</div>

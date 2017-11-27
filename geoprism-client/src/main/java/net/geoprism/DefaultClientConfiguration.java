@@ -44,7 +44,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     management.setId("management");
     management.setLabel(LocalizationFacadeDTO.getFromBundles(request, "geoprismLanding.dataManagement"));
     management.setSrc("net/geoprism/images/dm_icon.svg");
-    management.setUrl("prism/management");
+    management.setUrl("prism/home#data");
     management.addRole(RoleConstants.ADIM_ROLE);
     management.addRole(RoleConstants.BUILDER_ROLE);
 
@@ -61,6 +61,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     TreeSet<String> endpoint = new TreeSet<String>();
     endpoint.add("logo/view");
     endpoint.add("prism/admin");
+    endpoint.add("prism/home");
 
     return endpoint;
   }

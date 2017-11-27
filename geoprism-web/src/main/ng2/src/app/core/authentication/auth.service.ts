@@ -18,14 +18,43 @@
 ///
 import { Injectable } from '@angular/core';
 
-declare var gp: any;
+import { CookieService } from 'angular2-cookie/core';
+import { User } from './user';
 
 @Injectable()
 export class AuthService {
+  private user:User = {
+    loggedIn:false,
+    username:'',
+    roles:[]
+  };
 
-  constructor() {}
+  constructor(private service:CookieService) {
+    let cookie = service.get('user');
+    
+    if(cookie != null && cookie.length > 0) {
+      this.user = JSON.parse(JSON.parse(cookie)) as User;      
+    }        
+  }
+  
+  setUser(user:User):void {
+    this.user = user;    
+  }
+  
+  removeUser():void {
+    this.user = {
+      loggedIn:false,
+      username:'',
+      roles:[]
+    };	  
+  }
+  
+  isLoggedIn():boolean {
+    return this.user.loggedIn;
+  }
   
   isAdmin():boolean {
-    return gp.admin;
+    return true;
+//    return this.user.roles.indexOf("Admin") !== -1;
   }  
 }

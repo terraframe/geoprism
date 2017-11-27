@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Response } from '@angular/http';
 
+import { AuthService } from '../authentication/auth.service';
 import { RunwayException } from '../runway-exception';
+
+declare var acp:string;
 
 export interface IEventListener {
   start(): void;
@@ -14,7 +18,7 @@ export interface IEventListener {
 export class EventService {
   private listeners: IEventListener[] = [];
   
-  public constructor() {}
+  public constructor(private authService:AuthService, private router:Router) {}
   
   public registerListener(listener: IEventListener): void {
    this.listeners.push(listener);
@@ -54,15 +58,24 @@ export class EventService {
     let rError:any = null;
 	
 	if(error instanceof Response) {
-      rError = error.json() as RunwayException;
+      if(error.status === 401) {
+        this.authService.removeUser();
+        
+        this.router.navigate(['login']); 
+      } 
+      else {
+        rError = error.json() as RunwayException;    	  
+      }
 	}
 	else {
       rError = JSON.parse(error) as RunwayException;
 	}
-
-    for (const listener of this.listeners) {
-      listener.onError(rError);
-    }  
+	
+	if(rError != null) {
+      for (const listener of this.listeners) {
+        listener.onError(rError);
+      }  		
+	}
   }
 }
 

@@ -32,10 +32,6 @@
   	<action method="account" uri=""/> 
   </map>
 
-  <map uri="menu" controller="net.geoprism.UserMenuController">
-    <action method="menu" uri=""/>    
-  </map>
-  
   <map uri="management" controller="net.geoprism.UserMenuController">
     <action method="dataManagement" uri=""/>    
   </map>
@@ -46,10 +42,6 @@
   
   <map uri="mapthumb" controller="net.geoprism.UserMenuController">
   	<action method=".*" uri="${method}" />
-  </map>
-
-  <map uri="session" controller="net.geoprism.SessionController">
-    <action method=".*" uri="${method}"/>
   </map>
   
   <map uri="app" forward="/index.jsp"/>

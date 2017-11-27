@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+
+import { CommonModule} from '@angular/common';
 import { FormsModule} from '@angular/forms';
-import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
+import { XHRBackend, RequestOptions, Http} from '@angular/http';
 
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
@@ -32,16 +33,14 @@ import { EventService, IdService, BasicService} from './service/core.service';
 import { LocalizationService } from './service/localization.service';
 import { EventHttpService } from './service/event-http.service';
 
-import { AuthGuardService } from './authentication/auth-guard.service';
 import { AuthService } from './authentication/auth.service';
 
-
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 @NgModule({
   imports: [
-    BrowserModule,
-    FormsModule,  
-    HttpModule,
+	CommonModule,
+	FormsModule,	
     ProgressbarModule.forRoot()       
   ],
   declarations: [
@@ -68,8 +67,8 @@ import { AuthService } from './authentication/auth.service';
     ConfirmService,
     LocalizationService,
     IdService,
-    AuthGuardService,
     AuthService,
+    CookieService,    
     EventService,
     { 
       provide : EventHttpService,

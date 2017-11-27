@@ -18,9 +18,8 @@
 ///
 
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule} from '@angular/forms';
-import { HttpModule, XHRBackend, RequestOptions, Http} from '@angular/http';
 
 import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
 import { CustomFormsModule } from 'ng2-validation'
@@ -41,13 +40,12 @@ import { BrowserService } from './browser/browser.service';
 import { ForgotPasswordService } from './forgotpassword/forgotpassword.service';
 import { AdminRoutingModule, routedComponents } from './admin-routing.module';
 
-import { AdminComponent } from './admin.component'
+import { AdminHeaderComponent } from './admin-header.component'
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     FormsModule,
-    HttpModule,
     FileUploadModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),    
@@ -59,8 +57,8 @@ import { AdminComponent } from './admin.component'
   ],
   declarations: [
 	// Global components
-	AdminComponent,
-	routedComponents
+    AdminHeaderComponent,
+    routedComponents
   ],
   providers: [
     SystemLogoService,
@@ -71,11 +69,6 @@ import { AdminComponent } from './admin.component'
     ClassifierTreeService,
     BrowserService,
     ForgotPasswordService
-  ],
-  bootstrap: [AdminComponent],  
-  exports: [	
-	AdminComponent,
-    routedComponents
   ]
 })
 export class AdminModule { }

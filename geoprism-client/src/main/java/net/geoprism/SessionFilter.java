@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -32,6 +30,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -99,7 +98,7 @@ public class SessionFilter implements Filter, Reloadable
 
         if (path.equals("/"))
         {
-          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + "/menu");
+          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + "/prism/home");
         }
         else
         {
@@ -151,11 +150,18 @@ public class SessionFilter implements Filter, Reloadable
     {
       chain.doFilter(req, res);
       return;
-    }    
+    }
     else
     {
+      Cookie cookie = new Cookie("user", "");
+      cookie.setMaxAge(0);
+      cookie.setPath(request.getContextPath());
+
+      response.addCookie(cookie);
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.addHeader("WWW-Authenticate", "FormBased");
+
+      //
 
       // The user is not logged in
       // If we're asynchronous, we want to return a serialized exception

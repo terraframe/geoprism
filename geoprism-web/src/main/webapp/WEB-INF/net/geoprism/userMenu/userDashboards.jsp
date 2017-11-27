@@ -62,7 +62,7 @@
   <div id="container" ng-controller="DashboardMenuController as ctrl" >
     <header id="header">
     	<div id="header-link-container" class="text-right">
-	      <a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userDashboards.menuTooltip"/>">
+	      <a href="${pageContext.request.contextPath}/prism/home" title="<gdb:localize key="userDashboards.menuTooltip"/>">
 <%-- 	        <c:if test="${not empty miniLogoFilePath}" > --%>
 <%--             <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
 <%--           </c:if> --%>

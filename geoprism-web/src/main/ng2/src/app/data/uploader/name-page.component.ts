@@ -1,0 +1,59 @@
+///
+/// Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+///
+/// This file is part of Runway SDK(tm).
+///
+/// Runway SDK(tm) is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Lesser General Public License as
+/// published by the Free Software Foundation, either version 3 of the
+/// License, or (at your option) any later version.
+///
+/// Runway SDK(tm) is distributed in the hope that it will be useful, but
+/// WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Lesser General Public License for more details.
+///
+/// You should have received a copy of the GNU Lesser General Public
+/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+///
+
+import { Component, Input, OnInit} from '@angular/core';
+
+import { Sheet, Options, Field, Page } from './uploader-model';
+
+import { RemoteValidator } from '../../core/async-validator.directive';
+import { DatasetService } from '../service/dataset.service';
+
+@Component({
+  
+  selector: 'name-page',
+  templateUrl: './name-page.component.html',
+  styleUrls: []
+})
+export class NamePageComponent implements RemoteValidator {
+  @Input() options: Options;
+  @Input() sheet: Sheet;
+  @Input() page: Page;  
+
+  constructor(private service: DatasetService) { }
+  
+  ngOnInit(): void {
+	  //
+	  // Optomizing user experience
+	  //
+	  if(this.options && this.options.countries && this.options.countries.length > 0){
+		  // select the first options to make it a little easier for the user
+		  this.sheet.country = this.options.countries[0].value;
+	  }
+  }
+ 
+  validate(value:string): Promise<{[key : string] : any}> {
+    return this.service.validateDatasetName(value, '')
+      .then((response:any) => {
+        return null;
+      })
+      .catch((error:any) => {
+        return {uniqueName: false};
+      });            
+  }  
+}
