@@ -31,7 +31,6 @@ import { GeoTreeComponent } from './geotree/geotree.component';
 import { UniversalTreeComponent } from './universaltree/universaltree.component';
 import { ClassifierTreeComponent } from './classifiertree/classifiertree.component';
 import { BrowserComponent } from './browser/browser.component';
-import { ForgotPasswordComponent } from './forgotpassword/forgotpassword.component';
 
 declare var acp: any;
 
@@ -90,11 +89,6 @@ const routes: Routes = [
       account: AccountResolver
     },        
     data: { title: 'account.title' }              
-  },
-  {
-    path: 'forgotpassword',
-    component: ForgotPasswordComponent,
-    data: { title: 'useraccounts.title' }                
   }
 ];
 
@@ -105,4 +99,4 @@ const routes: Routes = [
 })
 export class AdminRoutingModule { }
 
-export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent, ForgotPasswordComponent];
+export const routedComponents = [SystemLogosComponent, SystemLogoComponent, EmailComponent, AccountsComponent, AccountComponent, GeoTreeComponent, UniversalTreeComponent, ClassifierTreeComponent, BrowserComponent];

@@ -24,9 +24,13 @@ import { Observable } from 'rxjs/Observable';
 
 import { LoginComponent } from './authentication/login.component';
 import { HubComponent } from './hub/hub.component';
+import { ForgotPasswordComponent } from './forgotpassword/forgotpassword.component';
+import { ForgotPasswordCompleteComponent } from './forgotpassword-complete/forgotpassword-complete.component';
 
 import { AuthGuard } from './authentication/auth.guard';
 import { AdminGuard } from './authentication/admin.guard';
+
+
 
 declare var acp: any;
 
@@ -48,6 +52,15 @@ const routes: Routes = [
     data: { title: 'login.header' }    
   },
   {
+    path: 'forgotpassword',
+    component: ForgotPasswordComponent,
+    data: { title: 'useraccounts.title' }                
+  },
+  {
+    path: 'forgotpassword-complete/:token',
+    component: ForgotPasswordCompleteComponent
+  }, 
+  {
     path: 'data',
     canActivate: [ AuthGuard ],
     loadChildren: './data/data.module#DataModule'    
@@ -66,4 +79,4 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [LoginComponent, HubComponent];
+export const routedComponents = [LoginComponent, HubComponent, ForgotPasswordComponent, ForgotPasswordCompleteComponent];

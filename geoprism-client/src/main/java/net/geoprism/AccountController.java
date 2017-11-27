@@ -127,15 +127,22 @@ public class AccountController
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "account", parser = ParseType.BASIC_JSON) GeoprismUserDTO account, @RequestParamter(name = "roleIds") String roleIds) throws JSONException
   {
-    JSONArray array = new JSONArray(roleIds);
-    List<String> list = new LinkedList<String>();
-
-    for (int i = 0; i < array.length(); i++)
+    if (roleIds != null)
     {
-      list.add(array.getString(i));
-    }
+      JSONArray array = new JSONArray(roleIds);
+      List<String> list = new LinkedList<String>();
 
-    account.applyWithRoles(list.toArray(new String[list.size()]));
+      for (int i = 0; i < array.length(); i++)
+      {
+        list.add(array.getString(i));
+      }
+
+      account.applyWithRoles(list.toArray(new String[list.size()]));
+    }
+    else
+    {
+      account.apply();
+    }
 
     return new RestBodyResponse(account);
   }

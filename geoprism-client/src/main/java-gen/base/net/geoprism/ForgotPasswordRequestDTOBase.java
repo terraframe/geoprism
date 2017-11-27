@@ -1,12 +1,12 @@
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 223467588)
-public abstract class EmailSettingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+@com.runwaysdk.business.ClassSignature(hash = -350874859)
+public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
 {
-  public final static String CLASS = "net.geoprism.EmailSetting";
-  private static final long serialVersionUID = 223467588;
+  public final static String CLASS = "net.geoprism.ForgotPasswordRequest";
+  private static final long serialVersionUID = -350874859;
   
-  protected EmailSettingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected ForgotPasswordRequestDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(clientRequest);
   }
@@ -17,7 +17,7 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   * @param businessDTO The BusinessDTO to duplicate
   * @param clientRequest The clientRequest this DTO should use to communicate with the server.
   */
-  protected EmailSettingDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
+  protected ForgotPasswordRequestDTOBase(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
   }
@@ -30,21 +30,18 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String FROM = "from";
   public static java.lang.String ID = "id";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
   public static java.lang.String LOCKEDBY = "lockedBy";
   public static java.lang.String OWNER = "owner";
-  public static java.lang.String PASSWORD = "password";
-  public static java.lang.String PORT = "port";
   public static java.lang.String SEQ = "seq";
-  public static java.lang.String SERVER = "server";
   public static java.lang.String SITEMASTER = "siteMaster";
-  public static java.lang.String TO = "to";
+  public static java.lang.String STARTTIME = "startTime";
+  public static java.lang.String TOKEN = "token";
   public static java.lang.String TYPE = "type";
-  public static java.lang.String USERNAME = "username";
+  public static java.lang.String USERREF = "userRef";
   public java.util.Date getCreateDate()
   {
     return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(CREATEDATE));
@@ -154,43 +151,6 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getEntityDomainMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(ENTITYDOMAIN).getAttributeMdDTO();
-  }
-  
-  public String getFrom()
-  {
-    return getValue(FROM);
-  }
-  
-  public void setFrom(String value)
-  {
-    if(value == null)
-    {
-      setValue(FROM, "");
-    }
-    else
-    {
-      setValue(FROM, value);
-    }
-  }
-  
-  public boolean isFromWritable()
-  {
-    return isWritable(FROM);
-  }
-  
-  public boolean isFromReadable()
-  {
-    return isReadable(FROM);
-  }
-  
-  public boolean isFromModified()
-  {
-    return isModified(FROM);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getFromMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(FROM).getAttributeMdDTO();
   }
   
   public String getKeyName()
@@ -378,80 +338,6 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(OWNER).getAttributeMdDTO();
   }
   
-  public String getPassword()
-  {
-    return getValue(PASSWORD);
-  }
-  
-  public void setPassword(String value)
-  {
-    if(value == null)
-    {
-      setValue(PASSWORD, "");
-    }
-    else
-    {
-      setValue(PASSWORD, value);
-    }
-  }
-  
-  public boolean isPasswordWritable()
-  {
-    return isWritable(PASSWORD);
-  }
-  
-  public boolean isPasswordReadable()
-  {
-    return isReadable(PASSWORD);
-  }
-  
-  public boolean isPasswordModified()
-  {
-    return isModified(PASSWORD);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getPasswordMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(PASSWORD).getAttributeMdDTO();
-  }
-  
-  public Integer getPort()
-  {
-    return com.runwaysdk.constants.MdAttributeIntegerUtil.getTypeSafeValue(getValue(PORT));
-  }
-  
-  public void setPort(Integer value)
-  {
-    if(value == null)
-    {
-      setValue(PORT, "");
-    }
-    else
-    {
-      setValue(PORT, java.lang.Integer.toString(value));
-    }
-  }
-  
-  public boolean isPortWritable()
-  {
-    return isWritable(PORT);
-  }
-  
-  public boolean isPortReadable()
-  {
-    return isReadable(PORT);
-  }
-  
-  public boolean isPortModified()
-  {
-    return isModified(PORT);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getPortMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(PORT).getAttributeMdDTO();
-  }
-  
   public Long getSeq()
   {
     return com.runwaysdk.constants.MdAttributeLongUtil.getTypeSafeValue(getValue(SEQ));
@@ -475,43 +361,6 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   public final com.runwaysdk.transport.metadata.AttributeNumberMdDTO getSeqMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeNumberMdDTO) getAttributeDTO(SEQ).getAttributeMdDTO();
-  }
-  
-  public String getServer()
-  {
-    return getValue(SERVER);
-  }
-  
-  public void setServer(String value)
-  {
-    if(value == null)
-    {
-      setValue(SERVER, "");
-    }
-    else
-    {
-      setValue(SERVER, value);
-    }
-  }
-  
-  public boolean isServerWritable()
-  {
-    return isWritable(SERVER);
-  }
-  
-  public boolean isServerReadable()
-  {
-    return isReadable(SERVER);
-  }
-  
-  public boolean isServerModified()
-  {
-    return isModified(SERVER);
-  }
-  
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getServerMd()
-  {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SERVER).getAttributeMdDTO();
   }
   
   public String getSiteMaster()
@@ -539,109 +388,150 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public String getTo()
+  public java.util.Date getStartTime()
   {
-    return getValue(TO);
+    return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(STARTTIME));
   }
   
-  public void setTo(String value)
+  public void setStartTime(java.util.Date value)
   {
     if(value == null)
     {
-      setValue(TO, "");
+      setValue(STARTTIME, "");
     }
     else
     {
-      setValue(TO, value);
+      setValue(STARTTIME, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATETIME_FORMAT).format(value));
     }
   }
   
-  public boolean isToWritable()
+  public boolean isStartTimeWritable()
   {
-    return isWritable(TO);
+    return isWritable(STARTTIME);
   }
   
-  public boolean isToReadable()
+  public boolean isStartTimeReadable()
   {
-    return isReadable(TO);
+    return isReadable(STARTTIME);
   }
   
-  public boolean isToModified()
+  public boolean isStartTimeModified()
   {
-    return isModified(TO);
+    return isModified(STARTTIME);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getToMd()
+  public final com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO getStartTimeMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(TO).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeDateTimeMdDTO) getAttributeDTO(STARTTIME).getAttributeMdDTO();
   }
   
-  public String getUsername()
+  public String getToken()
   {
-    return getValue(USERNAME);
+    return getValue(TOKEN);
   }
   
-  public void setUsername(String value)
+  public void setToken(String value)
   {
     if(value == null)
     {
-      setValue(USERNAME, "");
+      setValue(TOKEN, "");
     }
     else
     {
-      setValue(USERNAME, value);
+      setValue(TOKEN, value);
     }
   }
   
-  public boolean isUsernameWritable()
+  public boolean isTokenWritable()
   {
-    return isWritable(USERNAME);
+    return isWritable(TOKEN);
   }
   
-  public boolean isUsernameReadable()
+  public boolean isTokenReadable()
   {
-    return isReadable(USERNAME);
+    return isReadable(TOKEN);
   }
   
-  public boolean isUsernameModified()
+  public boolean isTokenModified()
   {
-    return isModified(USERNAME);
+    return isModified(TOKEN);
   }
   
-  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getUsernameMd()
+  public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getTokenMd()
   {
-    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(USERNAME).getAttributeMdDTO();
+    return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(TOKEN).getAttributeMdDTO();
   }
   
-  public static final net.geoprism.EmailSettingDTO editDefault(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public net.geoprism.GeoprismUserDTO getUserRef()
   {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "editDefault", _declaredTypes);
-    return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    if(getValue(USERREF) == null || getValue(USERREF).trim().equals(""))
+    {
+      return null;
+    }
+    else
+    {
+      return net.geoprism.GeoprismUserDTO.get(getRequest(), getValue(USERREF));
+    }
   }
   
-  public static final net.geoprism.EmailSettingDTO getDefault(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public String getUserRefId()
   {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "getDefault", _declaredTypes);
-    return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    return getValue(USERREF);
   }
   
-  public static final void sendTestEmail(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  public void setUserRef(net.geoprism.GeoprismUserDTO value)
   {
-    String[] _declaredTypes = new String[]{};
-    Object[] _parameters = new Object[]{};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "sendTestEmail", _declaredTypes);
+    if(value == null)
+    {
+      setValue(USERREF, "");
+    }
+    else
+    {
+      setValue(USERREF, value.getId());
+    }
+  }
+  
+  public boolean isUserRefWritable()
+  {
+    return isWritable(USERREF);
+  }
+  
+  public boolean isUserRefReadable()
+  {
+    return isReadable(USERREF);
+  }
+  
+  public boolean isUserRefModified()
+  {
+    return isModified(USERREF);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeReferenceMdDTO getUserRefMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(USERREF).getAttributeMdDTO();
+  }
+  
+  public static final void complete(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String token, java.lang.String newPassword)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{token, newPassword};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "complete", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.EmailSettingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static final void initiate(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String username, java.lang.String serverUrl)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{username, serverUrl};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "initiate", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static net.geoprism.ForgotPasswordRequestDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
   {
     com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
     
-    return (net.geoprism.EmailSettingDTO) dto;
+    return (net.geoprism.ForgotPasswordRequestDTO) dto;
   }
   
   public void apply()
@@ -660,9 +550,9 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     getRequest().delete(this.getId());
   }
   
-  public static net.geoprism.EmailSettingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
+  public static net.geoprism.ForgotPasswordRequestQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
   {
-    return (net.geoprism.EmailSettingQueryDTO) clientRequest.getAllInstances(net.geoprism.EmailSettingDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
+    return (net.geoprism.ForgotPasswordRequestQueryDTO) clientRequest.getAllInstances(net.geoprism.ForgotPasswordRequestDTO.CLASS, sortAttribute, ascending, pageSize, pageNumber);
   }
   
   public void lock()
@@ -670,12 +560,12 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     getRequest().lock(this);
   }
   
-  public static net.geoprism.EmailSettingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ForgotPasswordRequestDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "lock", _declaredTypes);
-    return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "lock", _declaredTypes);
+    return (net.geoprism.ForgotPasswordRequestDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public void unlock()
@@ -683,12 +573,12 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.EmailSettingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ForgotPasswordRequestDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
     Object[] _parameters = new Object[]{id};
-    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "unlock", _declaredTypes);
-    return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "unlock", _declaredTypes);
+    return (net.geoprism.ForgotPasswordRequestDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
 }

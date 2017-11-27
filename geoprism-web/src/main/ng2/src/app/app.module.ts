@@ -40,6 +40,8 @@ import { ProfileService } from './profile/profile.service';
 import { ProfileComponent } from './profile/profile.component';
 
 import { HubService } from './hub/hub.service';
+import { ForgotPasswordService } from './forgotpassword/forgotpassword.service';
+import { ForgotPasswordCompleteService } from './forgotpassword-complete/forgotpassword-complete.service';
 import { AuthGuard } from './authentication/auth.guard';
 import { AdminGuard } from './authentication/admin.guard';
 
@@ -68,6 +70,8 @@ import { AdminGuard } from './authentication/admin.guard';
   providers: [
     ProfileService,
     SessionService,
+    ForgotPasswordService,
+    ForgotPasswordCompleteService,
     HubService,
     AuthGuard,
     AdminGuard

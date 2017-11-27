@@ -1,4 +1,5 @@
 <div id="container">
+  <message></message>
   <div id="geoprism-landing-top-div">
     <header id="header">
       <form id="login-form" class="login" #form="ngForm" (ngSubmit)="form.valid && onSubmit()">
@@ -7,7 +8,7 @@
           <div>
             <input [(ngModel)]="username" name="username" type="text" [placeholder]="'login.username' | localize" id="login" required />
             <input [(ngModel)]="password" name="password" type="password" [placeholder]="'login.password' | localize" id="password"  required />
-            <a [href]="context + '/prism/admin#/forgotpassword'" class="forgot-password"><localize key="login.forgotPassword"></localize></a>
+            <a routerLink="/forgotpassword" class="forgot-password"><localize key="login.forgotPassword"></localize></a>
           </div>
           <p class="login-submit">
             <button type="submit" class="login-button" [disabled]="!(form.valid)"><i class="fa fa-sign-in"></i><localize key="login.button"></localize></button>

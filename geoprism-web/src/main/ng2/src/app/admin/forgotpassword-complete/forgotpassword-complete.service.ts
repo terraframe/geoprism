@@ -22,60 +22,29 @@ import { Headers, Http, Response, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { EventService, BasicService } from '../core/service/core.service';
-import { EventHttpService } from '../core/service/event-http.service';
-
-import { Profile } from './profile';
+import { EventService, BasicService } from '../../core/service/core.service';
+import { EventHttpService } from '../../core/service/event-http.service';
 
 declare var acp: any;
 
 @Injectable()
-export class ProfileService extends BasicService {
+export class ForgotPasswordCompleteService extends BasicService {
   
   constructor(service: EventService, private ehttp: EventHttpService, private http: Http) {
     super(service); 
   }
   
-  get(): Promise<Profile> {
-
+  complete(newPassword:string, token:string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
   
     return this.ehttp
-      .post(acp + '/account/get', {headers: headers})
+      .post(acp + '/forgotpassword/complete', JSON.stringify({newPassword:newPassword,token:token}), {headers: headers})
       .toPromise()
       .then((response: any) => {
-        return response.json() as Profile;
+        return response.json();
       })
       .catch(this.handleError.bind(this));      
-  }  
-  
-  
-  apply(profile:Profile): Promise<Profile> {
-    
-    let headers = new Headers({
-      'Content-Type': 'application/json'
-    });  
-    
-    return this.ehttp
-    .post(acp + '/account/apply', JSON.stringify({account:profile}), {headers: headers})
-    .toPromise()
-    .then((response: any) => {
-      return response.json() as Profile;
-    })
-    .catch(this.handleError.bind(this));      
-  }  
-  
-  unlock(id:string): Promise<Response> {
-    
-    let headers = new Headers({
-      'Content-Type': 'application/json'
-    });  
-    
-    return this.ehttp
-    .post(acp + '/account/unlock', JSON.stringify({id:id}), {headers: headers})
-    .toPromise()
-    .catch(this.handleError.bind(this));      
   }  
 }

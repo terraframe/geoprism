@@ -26,7 +26,7 @@
 <head>
   <base href="${pageContext.request.contextPath}/${base}">
   
-  <title><gdb:localize key="geoprismLanding.administration"/></title>
+  <title><gdb:localize key="login.header"/></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <!-- CSS imports -->
@@ -37,7 +37,6 @@
   <jwr:style src="/bundles/widget.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/termtree.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-  <jwr:style src="/net/geoprism/data/browser/databrowser.css" useRandomParam="false"/>  
   
   
   <!-- Default imports -->  

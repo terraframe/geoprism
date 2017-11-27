@@ -1,11 +1,13 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
+<!-- 
       <mdView name="net.geoprism.RoleView">
         <create>
           <mdMethod name="getCurrentRoles" label="Get Current roles" returnType="java.lang.String" static="true" />
         </create>
       </mdView>
+ -->  
     </update>
   </doIt>
   <undoIt>
