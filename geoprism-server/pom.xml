@@ -55,6 +55,12 @@
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-server</artifactId>
       <version>${runway.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.geoprism</groupId>
