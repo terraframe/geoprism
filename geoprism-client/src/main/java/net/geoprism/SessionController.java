@@ -39,9 +39,7 @@ import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
-import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.request.ServletRequestIF;
-import com.runwaysdk.system.SingleActorDTO;
 import com.runwaysdk.web.WebClientSession;
 
 import net.geoprism.account.ExternalProfileDTO;
@@ -97,7 +95,7 @@ public class SessionController implements Reloadable
   // }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF login(ServletRequestIF req, @RequestParamter(name = "username") String username, @RequestParamter(name = "password") String password)
+  public ResponseIF login(ServletRequestIF req, @RequestParamter(name = "username") String username, @RequestParamter(name = "password") String password) throws JSONException
   {
     if (username != null)
     {
@@ -113,17 +111,9 @@ public class SessionController implements Reloadable
     req.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
     req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
 
-    GeoprismUserDTO user = (GeoprismUserDTO) GeoprismUserDTO.getCurrentUser(clientRequest);
-    RoleViewDTO[] views = RoleViewDTO.getRoles(clientRequest, user);
-    JSONArray roles = new JSONArray();
-
-    for (RoleViewDTO view : views)
-    {
-      roles.put(view.getRoleId());
-    }
+    JSONArray roles = new JSONArray(RoleViewDTO.getCurrentRoles(clientRequest));
 
     CookieResponse response = new CookieResponse("user", -1);
-    response.set("username", username);
     response.set("loggedIn", clientRequest.isLoggedIn());
     response.set("roles", roles);
 
@@ -182,7 +172,13 @@ public class SessionController implements Reloadable
 
       this.createSession(req, sessionId, locales);
 
-      return new RestResponse();
+      JSONArray roles = new JSONArray(RoleViewDTO.getCurrentRoles(clientRequest));
+
+      CookieResponse response = new CookieResponse("user", -1);
+      response.set("loggedIn", clientRequest.isLoggedIn());
+      response.set("roles", roles);
+
+      return response;
     }
     finally
     {

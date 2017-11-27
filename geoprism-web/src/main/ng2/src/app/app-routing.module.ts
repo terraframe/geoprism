@@ -38,12 +38,14 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    data: { title: 'login.title' }    
   },
   {
     path: 'menu',
     component: HubComponent,
-    canActivate: [ AuthGuard ],    
+    canActivate: [ AuthGuard ],
+    data: { title: 'login.header' }    
   },
   {
     path: 'data',

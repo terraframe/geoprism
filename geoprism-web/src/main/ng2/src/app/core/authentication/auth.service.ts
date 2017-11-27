@@ -54,7 +54,6 @@ export class AuthService {
   }
   
   isAdmin():boolean {
-    return true;
-//    return this.user.roles.indexOf("Admin") !== -1;
+    return this.user.roles.indexOf("geoprism.admin.Administrator") !== -1;
   }  
 }

@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -24,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.json.JSONArray;
+
 import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -31,6 +31,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
+import com.runwaysdk.system.SingleActor;
 
 public class RoleView extends RoleViewBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -66,6 +67,25 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
     list.addAll(Arrays.asList(RoleView.getDashboardRoles(user)));
 
     return list.toArray(new RoleView[list.size()]);
+  }
+
+  public static String getCurrentRoles()
+  {
+    JSONArray array = new JSONArray();
+
+    SingleActor user = GeoprismUser.getCurrentUser();
+
+    if (user.isAppliedToDB())
+    {
+      Set<RoleDAOIF> roles = UserDAO.get(user.getId()).authorizedRoles();
+
+      for (RoleDAOIF role : roles)
+      {
+        array.put(role.getRoleName());
+      }
+    }
+
+    return array.toString();
   }
 
   @Transaction

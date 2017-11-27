@@ -17,7 +17,15 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
-import { Component } from '@angular/core';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+
+import { LocalizationService } from './core/service/localization.service';
 
 @Component({
   
@@ -26,5 +34,29 @@ import { Component } from '@angular/core';
   styleUrls: []
 })
 export class AppComponent {
-  constructor() {}
+  constructor(    
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private titleService: Title,
+    private localizationService: LocalizationService) {	  
+  }
+  
+  ngOnInit() {
+    this.router.events
+      .filter((event) => event instanceof NavigationEnd)
+      .map(() => this.activatedRoute)
+      .map((route) => {
+        while (route.firstChild) route = route.firstChild;
+        return route;
+      })
+      .filter((route) => route.outlet === 'primary')
+      .mergeMap((route) => route.data)
+      .subscribe((event) => {
+    	let key = event['title'];
+    	
+    	if(key != null) {
+          this.titleService.setTitle(this.localizationService.decode(key));
+    	}
+      });
+  }  
 }

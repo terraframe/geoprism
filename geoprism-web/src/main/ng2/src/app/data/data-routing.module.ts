@@ -40,51 +40,60 @@ declare var acp: any;
 const routes: Routes = [
   {
     path: '',
-    component: DatasetsComponent,    
+    component: DatasetsComponent,
+    data: { title: 'dataset.title' }        
   },
   {
     path: 'dhis2',
     component: DHIS2IdFinderComponent,    
+    data: { title: 'dhis2.id.finder.title' }            
   },
   {
     path: 'datasets',
     component: DatasetsComponent,    
+    data: { title: 'dataset.title' }            
   },
   {
     path: 'dataset/:id',
     component: DatasetDetailComponent,
     resolve: {
       dataset: DatasetResolver
-    }        
+    },
+    data: { title: 'dataset.title' }                
   },
   {
     path: 'categories',
-    component: CategoriesComponent,    
+    component: CategoriesComponent, 
+    data: { title: 'category.management.title' }                
   },
   {
     path: 'category/:id',
     component: CategoryDetailComponent,
     resolve: {
       category: CategoryResolver
-    }       
+    },
+    data: { title: 'category.management.title' }                    
   },  
   {
     path: 'category-option/:parentId/:id',
     component: OptionDetailComponent,
     resolve: {
       category: OptionResolver
-    }    
+    },
+    data: { title: 'category.management.title' }                    
   },
   {
     path: 'icons',
     component: IconsComponent,    
+    data: { title: 'category.icon.title' }                    
   },
   {
     path: 'icon/:id',
     component: IconDetailComponent,
     resolve: {
       icon: IconResolver
-    }    
+    },
+    data: { title: 'category.icon.title' }                        
   }  
 ];
 
