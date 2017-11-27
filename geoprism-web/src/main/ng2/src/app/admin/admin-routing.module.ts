@@ -38,57 +38,63 @@ declare var acp: any;
 const routes: Routes = [
   {
     path: '',
-    component: AccountsComponent,    
+    component: AccountsComponent,   
+    data: { title: 'useraccounts.title' }            
   },	
   {
     path: 'logos',
     component: SystemLogosComponent,
-    
+    data: { title: 'System_Configuration' }                
   },
   {
     path: 'logo/:id',
     component: SystemLogoComponent,
+    data: { title: 'System_Configuration' }            
     
   },
   {
     path: 'email',
     component: EmailComponent,
+    data: { title: 'System_Configuration' }            
     
   },
   {
     path: 'accounts',
     component: AccountsComponent,    
+    data: { title: 'useraccounts.title' }                
   },
   {
     path: 'geotree',
     component: GeoTreeComponent,
-    
+    data: { title: 'geoEntity.title' }                
   },
   {
     path: 'universaltree',
     component: UniversalTreeComponent,
-    
+    data: { title: 'universal.title' }                
   },
   {
     path: 'classifiertree',
     component: ClassifierTreeComponent,
-    
+    data: { title: 'Term_Ontology_Admin' }                
   },
   {
     path: 'browser',
     component: BrowserComponent,
-    
+    data: { title: 'Data_Browser' }                
   },
   {
     path: 'account/:id',
     component: AccountComponent,
     resolve: {
       account: AccountResolver
-    }        
+    },        
+    data: { title: 'account.title' }              
   },
   {
     path: 'forgotpassword',
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
+    data: { title: 'useraccounts.title' }                
   }
 ];
 
