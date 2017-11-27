@@ -103,8 +103,6 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
       Email email = new SimpleEmail();
       email.setHostName(settings.getServer());
 //      email.setSmtpPort(settings.getPort());
-      email.setSmtpPort(25);
-//      email.setSslSmtpPort("587");
       email.setAuthenticator(new DefaultAuthenticator(settings.getUsername(), settings.getPassword()));
       email.setFrom(settings.getFrom());
       email.setSubject(subject);
@@ -135,7 +133,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     String subject = LocalizationFacade.getFromBundles("emailSettings.testEmailSubject");
     String body = LocalizationFacade.getFromBundles("emailSettings.testEmailBody");
     
-    sendEmail(subject, body, new String[]{"jsmethie@email.com"});
+    sendEmail(subject, body, null);
   }
   
   /**
@@ -226,10 +224,5 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     }
     
     super.apply();
-  }
-  
-  public static void main(String[] args)
-  {
-    sendTestEmail();
-  }
+  }  
 }
