@@ -18,10 +18,14 @@
  */
  
 .body {
-  height: 100%;   
   background-color: black;
-  background-image: url(../net/geoprism/images/theme_background.png);
-  background-size: 100%;	
+  margin: 0;
+  min-width: 100%;
+}
+
+.body, #container {
+  height: 100vh; 
+  overflow: hidden;
 }
  
 #container{
@@ -32,8 +36,8 @@
 }
 
 h1 {
-    color: maroon;
-    margin-left: 40px;
+  color: maroon;
+  margin-left: 40px;
 } 
 
 #header-link-container{
@@ -59,14 +63,14 @@ h1 {
 
 #geodash-landing-top-div{
   border-bottom: grey solid 3px;
-  height: 30%; 
+  height: 30vh; 
   position: relative;
   background-color: #333;
 }
 
 #geodash-landing-bottom-div{
   overflow: hidden;
-  height: 70%;
+  height: 100vh;
   overflow-y: auto;
   background-image: url(../net/geoprism/images/theme_background.png);
   background-size: 100%;
