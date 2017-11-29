@@ -29,12 +29,13 @@
      
     <div id="geodash-landing-bottom-div">
       <div id="mask"></div>
+      <div>
       <div class="nav-icon-container container-fluid">
         <div class="row-fluid vertical-center-row">
           <div class="col-sm-4 hidden-xs"></div>
           <div class="col-xs-12 col-sm-4">
             <div class="row-fluid">
-              <div *ngFor="let application of applications" class="col-xs-12 col-sm-6 text-center" (click)="open(application)">
+              <div *ngFor="let application of applications" class="col-xs-12 col-sm-4 text-center" (click)="open(application)">
                 <div [id]="application.id" class="nav-option">
                   <img class="nav-icon-img img-responsive" [src]="context + '/' + application.src" alt="Navigation" />
                   <h3 class="nav-icon-img-label">{{application.label}}</h3>
@@ -45,6 +46,7 @@
           </div>
           <div class="col-sm-4 hidden-xs"></div>
         </div>
+      </div>
       </div>
             
       <div id="geodash-landing-footer">
