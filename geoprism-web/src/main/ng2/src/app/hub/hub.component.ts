@@ -41,6 +41,7 @@ export class HubComponent implements OnInit {
   context:string;
   applications:Application[] = [];
   isAdmin:boolean = false;
+  buckets:string = 'col-sm-6';
   bsModalRef: BsModalRef;  
 
   constructor(private service:HubService, 
@@ -56,6 +57,16 @@ export class HubComponent implements OnInit {
   ngOnInit():void {
     this.service.applications().then(applications => {
       this.applications = applications;
+      
+      if(this.applications.length > 3 || this.applications.length % 3 === 0) {
+        this.buckets = 'col-sm-4';
+      }
+      else if(this.applications.length === 2) {
+        this.buckets = 'col-sm-6';
+      }
+      else {
+        this.buckets = 'col-sm-12';
+      }
     }); 	  
     
     this.isAdmin = this.authService.isAdmin();
