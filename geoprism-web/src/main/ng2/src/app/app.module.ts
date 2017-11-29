@@ -51,7 +51,7 @@ import { AdminGuard } from './authentication/admin.guard';
 	FormsModule,
 	HttpModule,	
 	CommonModule,
-    CoreModule,	  
+    CoreModule.forRoot(),	  
     AppRoutingModule,
     FileUploadModule,
     BsDropdownModule.forRoot(),

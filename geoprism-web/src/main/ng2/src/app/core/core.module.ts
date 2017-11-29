@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { CommonModule} from '@angular/common';
 import { FormsModule} from '@angular/forms';
@@ -62,22 +62,6 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
     
     BooleanFieldComponent
   ],
-  providers: [
-    ProgressService,	  
-    ConfirmService,
-    LocalizationService,
-    IdService,
-    AuthService,
-    CookieService,    
-    EventService,
-    { 
-      provide : EventHttpService,
-      useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions, service: EventService) => {
-        return new EventHttpService(xhrBackend, requestOptions, service)
-      },
-      deps: [XHRBackend, RequestOptions, EventService]
-    }
-  ],
   exports: [
     ProgressBarComponent,
     LoadingBarComponent,
@@ -99,4 +83,28 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
   ],
   entryComponents: [AutoCompleteComponent]  
 })
-export class CoreModule { }
+export class CoreModule {
+  static forRoot(): ModuleWithProviders {
+	console.log('For root');
+	
+    return {
+      ngModule: CoreModule,
+      providers: [
+        ProgressService,	  
+        ConfirmService,
+        LocalizationService,
+        IdService,
+        AuthService,
+        CookieService,    
+        EventService,
+        { 
+          provide : EventHttpService,
+          useFactory: (xhrBackend: XHRBackend, requestOptions: RequestOptions, service: EventService) => {
+            return new EventHttpService(xhrBackend, requestOptions, service)
+          },
+          deps: [XHRBackend, RequestOptions, EventService]
+        }
+      ]
+    }
+  }	
+}
