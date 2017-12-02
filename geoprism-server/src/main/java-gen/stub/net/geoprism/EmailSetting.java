@@ -102,14 +102,14 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
     {
       Email email = new SimpleEmail();
       email.setHostName(settings.getServer());
-//      email.setSmtpPort(settings.getPort());
+      email.setSmtpPort(settings.getPort());
       email.setAuthenticator(new DefaultAuthenticator(settings.getUsername(), settings.getPassword()));
       email.setFrom(settings.getFrom());
       email.setSubject(subject);
       email.setMsg(body);
       email.setTo(iaTos);
-      email.setSSLOnConnect(true);
-      email.setStartTLSRequired(GeoprismProperties.getRequireStartTLS());
+      email.setSSLOnConnect(GeoprismProperties.getEncrypted());
+      email.setStartTLSRequired(GeoprismProperties.getEncrypted());
       email.send();
     }
     catch (EmailException e)

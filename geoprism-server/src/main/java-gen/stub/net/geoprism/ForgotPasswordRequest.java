@@ -126,7 +126,7 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
     
     req.setUserRef(user);
     req.setStartTime(new Date());
-    req.setToken(req.generateEncryptedToken());
+    req.setToken(req.generateEncryptedToken(user));
     req.apply();
     
     req.sendEmail(serverExternalUrl);
@@ -145,10 +145,12 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
     EmailSetting.sendEmail(subject, body, new String[]{address});
   }
   
-  private String generateEncryptedToken()
+  private String generateEncryptedToken(GeoprismUser user)
   {
     String hashedTime = ServerIDGenerator.hashedId(String.valueOf(System.currentTimeMillis()));
     
-    return hashedTime;
+    String hashedUser = ServerIDGenerator.hashedId(user.getId());
+    
+    return hashedTime + hashedUser;
   }
 }

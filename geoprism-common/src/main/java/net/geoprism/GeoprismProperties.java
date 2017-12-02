@@ -55,8 +55,8 @@ public class GeoprismProperties
     return Singleton.INSTANCE.props.getInteger("forgotPassword.expireTime");
   }
   
-  public static Boolean getRequireStartTLS()
+  public static Boolean getEncrypted()
   {
-    return Singleton.INSTANCE.props.getBoolean("email.requireStartTLS");
+    return Singleton.INSTANCE.props.getBoolean("email.encrypted");
   }
 }
