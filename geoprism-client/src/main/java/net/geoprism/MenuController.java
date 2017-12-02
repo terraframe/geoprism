@@ -3,7 +3,6 @@ package net.geoprism;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,13 +26,17 @@ public class MenuController
     Set<String> roleNames = this.getAssignedRoleNames(request);
 
     List<GeoprismApplication> allApplications = ClientConfigurationService.getApplications(request);
-    List<GeoprismApplication> authorizedApplications = allApplications.stream().filter(p -> p.isValid(roleNames)).collect(Collectors.toList());
+    // List<GeoprismApplication> authorizedApplications = allApplications.stream().filter(p ->
+    // p.isValid(roleNames)).collect(Collectors.toList());
 
     JSONArray response = new JSONArray();
 
-    for (GeoprismApplication application : authorizedApplications)
+    for (GeoprismApplication application : allApplications)
     {
-      response.put(application.toJSON());
+      if (application.isValid(roleNames))
+      {
+        response.put(application.toJSON());
+      }
     }
 
     return new RestBodyResponse(response);
