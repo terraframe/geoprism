@@ -24,9 +24,13 @@ import { AppModule } from './app/app.module';
 import { AdminModule } from './app/admin/admin.module';
 
 declare var appname: string;
+declare var  acp:string; 
+declare var  __webpack_public_path__:string; 
 
 if (process.env.ENV === 'production') {
-  enableProdMode();
+  __webpack_public_path__ = acp + '/dist/';
+	
+  enableProdMode();  
 }
 
 if(appname !== undefined && appname === 'admin-app' ) {
