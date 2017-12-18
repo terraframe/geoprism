@@ -299,7 +299,9 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
       File file = new File(directory, filename);
 
-      ProgressMonitorIF monitor = new CompositeMonitor(new LoggingProgressMonitor(file.getName()), new ProgressStateMonitor(uploadId));
+      ProgressMonitorIF monitor = new CompositeMonitor(new LoggingProgressMonitor(), new ProgressStateMonitor(uploadId));
+      
+      monitor.setFilename(filename);
 
       try
       {

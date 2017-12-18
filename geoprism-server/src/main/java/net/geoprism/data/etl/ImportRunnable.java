@@ -95,9 +95,12 @@ public class ImportRunnable
   {
     try
     {
+      this.monitor.setState(DataImportState.INITIAL);
+      
+      
       int total = this.getRowNum(this.file);
       
-      monitor.setTotal(total);
+      monitor.setTotalProgressUnits(total);
       
       /*
        * First create the data types from the configuration
@@ -210,7 +213,7 @@ public class ImportRunnable
 
   private JSONObject importData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, IOException, Exception
   {
-    ConverterIF converter = new Converter(tContext);
+    ConverterIF converter = new Converter(tContext, this.monitor);
 
     FileInputStream istream = new FileInputStream(file);
 
@@ -223,7 +226,7 @@ public class ImportRunnable
       reader.process(istream);
 
       JSONObject summary = new JSONObject();
-      summary.put("total", handler.getTotalRows());
+      summary.put("total", this.monitor.getImportCount());
       summary.put("failures", handler.getNumberOfErrors());
 
       Workbook errors = converter.getErrors();

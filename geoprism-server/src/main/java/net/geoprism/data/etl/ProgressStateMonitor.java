@@ -22,46 +22,49 @@ import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.util.ProgressFacade;
 import net.geoprism.util.ProgressState;
 
-public class ProgressStateMonitor implements ProgressMonitorIF
+public class ProgressStateMonitor extends AbstractProgressMonitor
 {
-  private ProgressState state;
+  private ProgressState progress;
 
   public ProgressStateMonitor(String uploadId)
   {
-    this.state = new ProgressState(uploadId);
+    this.progress = new ProgressState(uploadId);
 
-    ProgressFacade.add(state);
-  }
-
-  @Override
-  public void setFilename(String filename)
-  {
+    ProgressFacade.add(progress);
   }
 
   @Override
   public void setState(DataImportState state)
   {
+    super.setState(state);
+    
     String key = "dataUploader.state." + state.name().toLowerCase();
     String description = LocalizationFacade.getFromBundles(key);
     
-    this.state.setDescription(description);
+    this.progress.setDescription(description);
   }
 
   @Override
-  public void setCurrentRow(int rowNum)
+  public void setTotalProgressUnits(int total)
   {
-    this.state.setCurrent(rowNum);
+    super.setTotalProgressUnits(total);
+    
+    this.progress.setTotal(total);
   }
-
+  
   @Override
-  public void setTotal(int total)
+  public void setCurrentProgressUnit(int unit)
   {
-    this.state.setTotal(total);
+    super.setCurrentProgressUnit(unit);
+    
+    this.progress.setCurrent(unit);
   }
 
   @Override
   public void finished()
   {
-    ProgressFacade.remove(this.state.getId());
+    super.finished();
+    
+    ProgressFacade.remove(this.progress.getId());
   }
 }

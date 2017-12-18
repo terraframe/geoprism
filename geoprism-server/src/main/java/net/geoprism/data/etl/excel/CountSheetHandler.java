@@ -23,6 +23,8 @@ import net.geoprism.data.etl.ColumnType;
 public class CountSheetHandler implements SheetHandler
 {
   private int rowNum;
+  
+  private boolean hasCell;
 
   public CountSheetHandler()
   {
@@ -42,17 +44,22 @@ public class CountSheetHandler implements SheetHandler
   @Override
   public void startRow(int rowNum)
   {
-    this.rowNum = rowNum;
+    this.hasCell = false;
   }
 
   @Override
   public void endRow()
   {
+    if (hasCell)
+    {
+      this.rowNum++;
+    }
   }
 
   @Override
   public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
+    this.hasCell = true;
   }
 
   @Override
