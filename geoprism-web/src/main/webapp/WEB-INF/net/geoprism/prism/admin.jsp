@@ -25,6 +25,7 @@
 <html>
 <head>
   <base href="${pageContext.request.contextPath}/${base}">
+  <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
   
   <title><gdb:localize key="login.header"/></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">

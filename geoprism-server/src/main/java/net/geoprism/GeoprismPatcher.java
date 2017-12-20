@@ -25,6 +25,10 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.business.ontology.CompositeStrategy;
+import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
+import com.runwaysdk.business.ontology.OntologyStrategyFactory;
+import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
@@ -43,6 +47,8 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
+import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
 import com.runwaysdk.util.ServerInitializerFacade;
 
 import net.geoprism.configuration.GeoprismConfigurationResolver;
@@ -116,7 +122,7 @@ public class GeoprismPatcher
   public void initialize()
   {
     LocalProperties.setSkipCodeGenAndCompile(true);
-
+    
     if (!Database.tableExists("md_class"))
     {
       this.initializeDatabase();
@@ -145,6 +151,15 @@ public class GeoprismPatcher
   public void startup()
   {
     SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
+    
+    OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
+    {
+      @Override
+      public OntologyStrategyIF build()
+      {
+        return new CompositeStrategy(DatabaseAllPathsStrategy.factory(GeoEntity.CLASS), new SolrOntolgyStrategy(GeoEntity.CLASS));
+      }
+    });        
 
     this.patchMetadata();
   }

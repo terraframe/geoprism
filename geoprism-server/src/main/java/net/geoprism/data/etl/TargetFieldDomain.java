@@ -3,24 +3,24 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
 
 import java.util.Map;
 import java.util.Set;
 
+import net.geoprism.Cache;
+import net.geoprism.GeoprismProperties;
 import net.geoprism.data.importer.ExclusionException;
 import net.geoprism.ontology.Classifier;
 
@@ -33,6 +33,13 @@ import com.runwaysdk.system.metadata.MdAttribute;
 
 public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF, TargetFieldValidationIF
 {
+  private Cache<String, Classifier> cache;
+
+  public TargetFieldDomain()
+  {
+    this.cache = new Cache<String, Classifier>(GeoprismProperties.getClassifierCacheSize());
+  }
+
   @Override
   public FieldValue getValue(MdAttributeConcreteDAOIF mdAttribute, Transient source)
   {
@@ -40,16 +47,24 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
 
     if (value != null && value.length() > 0)
     {
-      MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
-
-      Classifier classifier = Classifier.findMatchingTerm(value.trim(), mdAttributeTerm);
-
-      if (classifier == null)
+      if (!this.cache.containsKey(value))
       {
-        throw new ExclusionException("Unable to find matching term with label [" + value + "]");
+
+        MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
+
+        Classifier classifier = Classifier.findMatchingTerm(value.trim(), mdAttributeTerm);
+
+        if (classifier == null)
+        {
+          throw new ExclusionException("Unable to find matching term with label [" + value + "]");
+        }
+        else
+        {
+          this.cache.put(value, classifier);
+        }
       }
 
-      return new FieldValue(classifier.getId());
+      return new FieldValue(this.cache.get(value).getId());
     }
 
     return new FieldValue();

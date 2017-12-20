@@ -194,4 +194,10 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
       }
     }
   }
+  
+  @Override
+  public String getLabel()
+  {
+    return this.getDisplayLabel().getValue();
+  }
 }

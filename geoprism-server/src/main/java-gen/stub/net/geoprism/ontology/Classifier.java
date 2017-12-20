@@ -3,26 +3,28 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -40,18 +42,25 @@ import com.runwaysdk.business.ontology.TermAndRel;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeLocalDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
+import com.runwaysdk.dataaccess.MdDimensionDAOIF;
+import com.runwaysdk.dataaccess.MdLocalStructDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.util.IDGenerator;
@@ -148,37 +157,157 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
    */
   public static Classifier findMatchingTerm(String sfTermToMatch, MdAttributeTermDAOIF mdAttributeTermDAOIF)
   {
-    QueryFactory qf = new QueryFactory();
+    // QueryFactory qf = new QueryFactory();
+    //
+    // ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
+    // ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
+    // ClassifierQuery classifierQ = new ClassifierQuery(qf);
+    // ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
+    // ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
+    //
+    // carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
+    //
+    // classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
+    //
+    // allPathsQ.WHERE(allPathsQ.getParentTerm().EQ(classifierRootQ));
+    //
+    // synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(sfTermToMatch));
+    //
+    // classifierQ.WHERE(OR.get(classifierQ.getDisplayLabel().localize().EQ(sfTermToMatch),
+    // classifierQ.hasSynonym(synonymQ)).AND(classifierQ.EQ(allPathsQ.getChildTerm())));
+    //
+    // OIterator<? extends Classifier> i = classifierQ.getIterator();
+    // try
+    // {
+    // for (Classifier classifier : i)
+    // {
+    // return classifier;
+    // }
+    // }
+    // finally
+    // {
+    // i.close();
+    // }
 
-    ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
-    ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
-    ClassifierQuery classifierQ = new ClassifierQuery(qf);
-    ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
-    ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
+    String termId = null;
 
-    carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
+    MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(CLASS);
+    MdAttributeLocalDAOIF mdAttributeLocal = (MdAttributeLocalDAOIF) mdBusiness.definesAttribute(DISPLAYLABEL);
+    MdLocalStructDAOIF mdStruct = mdAttributeLocal.getMdStructDAOIF();
 
-    classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
+    StringBuilder sql = new StringBuilder();
+    sql.append("select t.id AS id");
+    sql.append(" from classifier_term_attribute_root AS br");
+    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_id");
+    sql.append(" join classifier AS t ON t.id = apt.child_term");
+    sql.append(" LEFT JOIN classifier_display_label AS tdl ON t.display_label = tdl.id");
+    sql.append(" where br.parent_id = '" + mdAttributeTermDAOIF.getId() + "'");
+    sql.append(" AND (");
+    sql.append("  UPPER(" + localize(mdStruct, "tdl") + ") = UPPER('" + sfTermToMatch + "')");
+    sql.append("  OR t.classifier_id = '" + sfTermToMatch + "'");
+    sql.append(" )");
+    sql.append(" UNION");
+    sql.append(" SELECT DISTINCT t.id AS id");
+    sql.append(" from classifier_term_attribute_root AS br");
+    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_id");
+    sql.append(" join classifier AS t ON t.id = apt.child_term");
+    sql.append(" JOIN classifier_has_synonym AS hs ON hs.parent_id = t.id");
+    sql.append(" JOIN classifier_synonym AS ts ON hs.child_id = ts.id");
+    sql.append(" LEFT JOIN classifier_synonym_display_lab AS tdl ON ts.display_label = tdl.id");
+    sql.append(" where br.parent_id = '" + mdAttributeTermDAOIF.getId() + "'");
+    sql.append(" AND " + localize(mdStruct, "tdl") + " = '" + sfTermToMatch + "'");
 
-    allPathsQ.WHERE(allPathsQ.getParentTerm().EQ(classifierRootQ));
-
-    synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(sfTermToMatch));
-
-    classifierQ.WHERE(OR.get(classifierQ.getDisplayLabel().localize().EQ(sfTermToMatch), classifierQ.hasSynonym(synonymQ)).AND(classifierQ.EQ(allPathsQ.getChildTerm())));
-
-    OIterator<? extends Classifier> i = classifierQ.getIterator();
     try
     {
-      for (Classifier classifier : i)
+      ResultSet results = Database.query(sql.toString());
+
+      try
       {
-        return classifier;
+        if (results.next())
+        {
+          termId = results.getString("id");
+        }
+      }
+      finally
+      {
+        results.close();
       }
     }
-    finally
+    catch (SQLException e)
     {
-      i.close();
+      throw new ProgrammingErrorException(e);
     }
+
+    if (termId != null)
+    {
+      return Classifier.get(termId);
+    }
+
     return null;
+  }
+
+  public static String localize(MdLocalStructDAOIF mdLocalStruct, String prefix)
+  {
+    List<String> selectableList = new ArrayList<String>();
+    Locale locale = Session.getCurrentLocale();
+
+    String[] localeStringArray;
+
+    MdDimensionDAOIF mdDimensionDAOIF = Session.getCurrentDimension();
+    if (mdDimensionDAOIF != null)
+    {
+      localeStringArray = new String[2];
+      localeStringArray[0] = mdDimensionDAOIF.getLocaleAttributeName(locale);
+      localeStringArray[1] = locale.toString();
+    }
+    else
+    {
+      localeStringArray = new String[1];
+      localeStringArray[0] = locale.toString();
+    }
+
+    boolean firstIterationComplete = false;
+    for (String localeString : localeStringArray)
+    {
+      for (int i = localeString.length(); i > 0; i = localeString.lastIndexOf('_', i - 1))
+      {
+        String subLocale = localeString.substring(0, i);
+        for (MdAttributeConcreteDAOIF a : mdLocalStruct.definesAttributes())
+        {
+          if (a.definesAttribute().equalsIgnoreCase(subLocale))
+          {
+            selectableList.add(a.getColumnName());
+          }
+        }
+      }
+
+      // Check the default for the dimension
+      if (mdDimensionDAOIF != null && !firstIterationComplete)
+      {
+        String dimensionDefaultAttr = mdDimensionDAOIF.getDefaultLocaleAttributeName();
+        MdAttributeDAOIF definesDimensionDefault = mdLocalStruct.definesAttribute(dimensionDefaultAttr);
+        if (definesDimensionDefault != null)
+        {
+          selectableList.add(definesDimensionDefault.getColumnName());
+        }
+      }
+
+      firstIterationComplete = true;
+    }
+    // And finally, add the default at the very end
+    selectableList.add("default_locale");
+
+    StringBuilder sql = new StringBuilder();
+    sql.append("COALESCE(" + prefix + "." + selectableList.remove(0));
+
+    for (String selectable : selectableList)
+    {
+      sql.append(", " + prefix + "." + selectable);
+    }
+
+    sql.append(")");
+
+    return sql.toString();
   }
 
   /**
@@ -249,7 +378,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
   public static OntologyStrategyIF createStrategy()
   {
-    return new DatabaseAllPathsStrategy();
+    return DatabaseAllPathsStrategy.factory(Classifier.CLASS);
   }
 
   public static Classifier getRoot()
@@ -981,5 +1110,11 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
       throw ex;
     }
+  }
+
+  @Override
+  public String getLabel()
+  {
+    return this.getDisplayLabel().getValue();
   }
 }

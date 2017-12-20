@@ -59,4 +59,9 @@ public class GeoprismProperties
   {
     return Singleton.INSTANCE.props.getBoolean("email.encrypted");
   }
+
+  public static int getClassifierCacheSize()
+  {
+    return Singleton.INSTANCE.props.getInteger("classifier.cache.size", 10);
+  }
 }

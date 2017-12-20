@@ -3,31 +3,38 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl;
-
-import net.geoprism.ontology.Classifier;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.system.metadata.MdAttribute;
 
+import net.geoprism.Cache;
+import net.geoprism.GeoprismProperties;
+import net.geoprism.ontology.Classifier;
+
 public class TargetFieldClassifier extends TargetFieldBasic implements TargetFieldIF
 {
-  private String packageName;
+  private String                    packageName;
+
+  private Cache<String, Classifier> cache;
+
+  public TargetFieldClassifier()
+  {
+    this.cache = new Cache<String, Classifier>(GeoprismProperties.getClassifierCacheSize());
+  }
 
   public void setPackageName(String packageName)
   {
@@ -46,11 +53,16 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
 
     if (value != null && value.length() > 0)
     {
-      MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
+      if (!this.cache.containsKey(value))
+      {
+        MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
 
-      Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm, true);
+        Classifier classifier = Classifier.findClassifierAddIfNotExist(this.packageName, value.trim(), mdAttributeTerm, true);
 
-      return new FieldValue(classifier.getId());
+        this.cache.put(value, classifier);
+      }
+
+      return new FieldValue(this.cache.get(value).getId());
     }
 
     return new FieldValue();
