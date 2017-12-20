@@ -21,68 +21,27 @@ package net.geoprism.data.etl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoggingProgressMonitor implements ProgressMonitorIF
+public class LoggingProgressMonitor extends AbstractProgressMonitor
 {
   private static Logger   logger = LoggerFactory.getLogger(LoggingProgressMonitor.class);
-
-  private DataImportState state;
-
-  private String          filename;
-
-  private int             total;
-
-  private int             currentRow;
-
-  public LoggingProgressMonitor(String filename)
-  {
-    this.currentRow = 0;
-    this.total = 0;
-
-    this.setFilename(filename);
-    this.setState(DataImportState.INITIAL);
-  }
-
-  public void setFilename(String filename)
-  {
-    this.filename = filename;
-  }
-
+  
+  @Override
   public void setState(DataImportState state)
   {
-    this.state = state;
+    super.setState(state);
 
-    logger.info("Spreadsheet importer entering state [" + state.toString() + "] on file [" + filename + "].");
+    logger.info("Data uploader entering state [" + state.toString() + "] on file [" + this.getFilename() + "].");
   }
 
-  public DataImportState getState()
+  @Override
+  public void entityImported(TargetDefinitionIF entity)
   {
-    return this.state;
-  }
-
-  public void setCurrentRow(int rowNum)
-  {
-    this.currentRow = rowNum;
-
-    if (rowNum % 50 == 0)
+    super.entityImported(entity);
+    
+    if (this.getImportCount() % 50 == 0)
     {
-      logger.info("Spreadsheet importer processing row [" + rowNum + "]");
+      logger.info("Data uploader imported entity [" + this.getImportCount() + "]");
     }
-  }
-
-  public int getCurrentRow()
-  {
-    return this.currentRow;
-  }
-
-  @Override
-  public void setTotal(int total)
-  {
-    this.total = total;
-  }
-
-  @Override
-  public void finished()
-  {
   }
 
 }

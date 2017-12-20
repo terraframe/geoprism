@@ -21,12 +21,41 @@ package net.geoprism.data.etl;
 public interface ProgressMonitorIF
 {
   public void setFilename(String filename);
+  
+  public String getFilename();
 
   public void setState(DataImportState state);
+  
+  public DataImportState getState();
 
-  public void setTotal(int total);
+  /**
+   * Sets the total number of "progress units" that are requested to be imported. Should only be called once at the beginning of the import. In the case of an excel import, this is the total number of rows.
+   */
+  public void setTotalProgressUnits(int total);
+  
+  /**
+   * @return The total number of records that are requested to be imported. Does not increment as the import progresses.
+   */
+  public int getTotalProgressUnits();
+  
+  /**
+   * @return The current "progress unit" for the import. In the case of an excel spreadsheet, this is the current row number.
+   */
+  public int getCurrentProgressUnit();
+  
+  public void setCurrentProgressUnit(int unit);
+  
+  /**
+   * @return The number of successfully imported records thus far in the import process.
+   */
+  public int getImportCount();
 
-  public void setCurrentRow(int rowNum);
+  /**
+   * Invoked after the successful import of an entity. Invoking this will increment the import count.
+   * 
+   * @param entity The successfully imported entity.
+   */
+  public void entityImported(TargetDefinitionIF entity);
 
   public void finished();
 }

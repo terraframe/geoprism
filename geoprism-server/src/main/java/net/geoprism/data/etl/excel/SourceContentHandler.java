@@ -222,8 +222,8 @@ public class SourceContentHandler implements SheetHandler
       if (!isHeader)
       {
         this.view = this.context.newView(this.sheetName);
-
-        this.monitor.setCurrentRow(rowNum);
+        
+        this.monitor.setCurrentProgressUnit(rowNum);
       }
     }
   }

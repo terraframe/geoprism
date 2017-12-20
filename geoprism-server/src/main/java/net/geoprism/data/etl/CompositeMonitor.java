@@ -18,10 +18,10 @@
  */
 package net.geoprism.data.etl;
 
-public class CompositeMonitor implements ProgressMonitorIF
+public class CompositeMonitor extends AbstractProgressMonitor
 {
   private ProgressMonitorIF[] monitors;
-
+  
   public CompositeMonitor(ProgressMonitorIF... monitors)
   {
     this.monitors = monitors;
@@ -30,6 +30,8 @@ public class CompositeMonitor implements ProgressMonitorIF
   @Override
   public void setFilename(String filename)
   {
+    super.setFilename(filename);
+    
     for (ProgressMonitorIF monitor : monitors)
     {
       monitor.setFilename(filename);
@@ -39,6 +41,8 @@ public class CompositeMonitor implements ProgressMonitorIF
   @Override
   public void setState(DataImportState state)
   {
+    super.setState(state);
+    
     for (ProgressMonitorIF monitor : monitors)
     {
       monitor.setState(state);
@@ -46,26 +50,43 @@ public class CompositeMonitor implements ProgressMonitorIF
   }
 
   @Override
-  public void setTotal(int total)
+  public void setTotalProgressUnits(int totalProgressUnits)
   {
+    super.setTotalProgressUnits(totalProgressUnits);
+    
     for (ProgressMonitorIF monitor : monitors)
     {
-      monitor.setTotal(total);
+      monitor.setTotalProgressUnits(totalProgressUnits);
+    }
+  }
+  
+  @Override
+  public void setCurrentProgressUnit(int current)
+  {
+    super.setCurrentProgressUnit(current);
+    
+    for (ProgressMonitorIF monitor : monitors)
+    {
+      monitor.setCurrentProgressUnit(current);
     }
   }
 
   @Override
-  public void setCurrentRow(int rowNum)
+  public void entityImported(TargetDefinitionIF entity)
   {
+    super.entityImported(entity);
+    
     for (ProgressMonitorIF monitor : monitors)
     {
-      monitor.setCurrentRow(rowNum);
+      monitor.entityImported(entity);
     }
   }
 
   @Override
   public void finished()
   {
+    super.finished();
+    
     for (ProgressMonitorIF monitor : monitors)
     {
       monitor.finished();

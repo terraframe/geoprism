@@ -35,9 +35,12 @@ public class Converter implements ConverterIF
 
   private Workbook        errors;
 
-  public Converter(TargetContextIF context)
+  private ProgressMonitorIF monitor;
+
+  public Converter(TargetContextIF context, ProgressMonitorIF monitor)
   {
     this.context = context;
+    this.monitor = monitor;
   }
 
   @Override
@@ -85,6 +88,8 @@ public class Converter implements ConverterIF
         PersistenceStrategyIF strategy = definition.getStrategy();
 
         strategy.handle(business);
+        
+        this.monitor.entityImported(definition);
       }
     }
     catch (ExclusionException e)
