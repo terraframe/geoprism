@@ -3,18 +3,16 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -48,7 +46,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
-import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
+import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
 import com.runwaysdk.util.ServerInitializerFacade;
 
 import net.geoprism.configuration.GeoprismConfigurationResolver;
@@ -68,17 +66,17 @@ public class GeoprismPatcher
 {
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
-  private File metadataDir;
-  
+  private File          metadataDir;
+
   public GeoprismPatcher(File metadataDir)
   {
     this.metadataDir = metadataDir;
   }
-  
+
   public static void main(String[] args)
   {
     String metadataPath = null;
-    
+
     if (args.length > 0)
     {
       metadataPath = args[0];
@@ -86,11 +84,11 @@ public class GeoprismPatcher
     if (args.length > 1)
     {
       String externalConfigDir = args[1];
-      
+
       GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
       resolver.setExternalConfigDir(new File(externalConfigDir));
     }
-    
+
     executeWithRequest(metadataPath);
   }
 
@@ -107,10 +105,11 @@ public class GeoprismPatcher
     {
       fMetadataPath = new File(metadataPath);
     }
-    
+
     execute(fMetadataPath);
   }
-  
+
+  @Transaction
   public static void execute(File metadataDir)
   {
     GeoprismPatcher listener = new GeoprismPatcher(metadataDir);
@@ -118,11 +117,11 @@ public class GeoprismPatcher
     listener.startup();
     listener.shutdown();
   }
-  
+
   public void initialize()
   {
     LocalProperties.setSkipCodeGenAndCompile(true);
-    
+
     if (!Database.tableExists("md_class"))
     {
       this.initializeDatabase();
@@ -151,15 +150,18 @@ public class GeoprismPatcher
   public void startup()
   {
     SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
-    
-    OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
+
+    if (GeoprismProperties.getSolrLookup())
     {
-      @Override
-      public OntologyStrategyIF build()
+      OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
       {
-        return new CompositeStrategy(DatabaseAllPathsStrategy.factory(GeoEntity.CLASS), new SolrOntolgyStrategy(GeoEntity.CLASS));
-      }
-    });        
+        @Override
+        public OntologyStrategyIF build()
+        {
+          return new CompositeStrategy(DatabaseAllPathsStrategy.factory(GeoEntity.CLASS), new GeoEntitySolrOntologyStrategy());
+        }
+      });
+    }
 
     this.patchMetadata();
   }
@@ -243,6 +245,6 @@ public class GeoprismPatcher
     }
 
     return new AmazonEndpoint();
-//    return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
+    // return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
   }
 }

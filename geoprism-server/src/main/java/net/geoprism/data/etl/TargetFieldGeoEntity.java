@@ -64,6 +64,7 @@ import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
 import com.runwaysdk.system.metadata.ontology.SolrProperties;
 import com.runwaysdk.util.IDGenerator;
 
+import net.geoprism.GeoprismProperties;
 import net.geoprism.data.importer.ExclusionException;
 import net.geoprism.ontology.NonUniqueEntityResultException;
 
@@ -300,7 +301,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       {
         return ids.iterator().next();
       }
-      else if (ids.size() > 1)
+      else if (!GeoprismProperties.getSolrLookup() || ids.size() > 1)
       {
         GeoEntity parent = root;
 
@@ -350,6 +351,11 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
   private Collection<String> findSolrGeoEntities(List<String> labels) throws SolrServerException, IOException
   {
+    if (!GeoprismProperties.getSolrLookup())
+    {
+      return new LinkedList<String>();
+    }
+
     List<String> conditions = new LinkedList<String>();
 
     Universal uni = null;

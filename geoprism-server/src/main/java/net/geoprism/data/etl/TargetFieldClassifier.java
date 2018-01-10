@@ -20,8 +20,8 @@ import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.util.Cache;
 
-import net.geoprism.Cache;
 import net.geoprism.GeoprismProperties;
 import net.geoprism.ontology.Classifier;
 

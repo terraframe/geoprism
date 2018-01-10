@@ -19,17 +19,17 @@ package net.geoprism.data.etl;
 import java.util.Map;
 import java.util.Set;
 
-import net.geoprism.Cache;
-import net.geoprism.GeoprismProperties;
-import net.geoprism.data.importer.ExclusionException;
-import net.geoprism.ontology.Classifier;
-
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.util.Cache;
+
+import net.geoprism.GeoprismProperties;
+import net.geoprism.data.importer.ExclusionException;
+import net.geoprism.ontology.Classifier;
 
 public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF, TargetFieldValidationIF
 {
