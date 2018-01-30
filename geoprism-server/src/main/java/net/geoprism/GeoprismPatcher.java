@@ -106,6 +106,10 @@ public class GeoprismPatcher
       
       RunwayPatcher.main(runwayArgs);
     }
+    else
+    {
+      RunwayPatcher.main(new String[]{});
+    }
 
     
     executeWithRequest(fMetadataPath, patcher);
