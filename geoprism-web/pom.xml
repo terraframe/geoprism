@@ -303,7 +303,7 @@
                   <artifactId>geoprism-server</artifactId>
                   <version>${project.version}</version>
                   <type>jar</type>
-                  <excludes>**/*.java</excludes>
+                  <excludes>src/main/java/**/*.java, src/main/java-gen/**/*.java</excludes>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.geoprism</groupId>
