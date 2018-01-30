@@ -17,16 +17,11 @@
 package net.geoprism;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.Arrays;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.RunwayMetadataVersion;
 import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
@@ -34,17 +29,12 @@ import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
-import com.runwaysdk.constants.MdAttributeCharacterInfo;
-import com.runwaysdk.dataaccess.InstallerCP;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.io.Versioning;
-import com.runwaysdk.dataaccess.io.XMLImporter;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
-import com.runwaysdk.query.OIterator;
+import com.runwaysdk.patcher.RunwayPatcher;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -52,10 +42,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
-import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategyQuery;
 import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
-import com.runwaysdk.util.FileIO;
-import com.runwaysdk.util.ServerInitializerFacade;
 
 import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.context.PatchingContextListener;
@@ -89,20 +76,14 @@ public class GeoprismPatcher
     {
       metadataPath = args[0];
     }
-    if (args.length > 1)
+    if (args.length > 1 && args[1] != "null")
     {
       String externalConfigDir = args[1];
 
       GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
       resolver.setExternalConfigDir(new File(externalConfigDir));
     }
-
-    executeWithRequest(metadataPath);
-  }
-
-  @Request
-  private static void executeWithRequest(String metadataPath)
-  {
+    
     File fMetadataPath = null;
     if (metadataPath == null)
     {
@@ -113,109 +94,43 @@ public class GeoprismPatcher
     {
       fMetadataPath = new File(metadataPath);
     }
+    
+    
+    // The Runway bootstrapping cannot be done within a request
+    GeoprismPatcher patcher = new GeoprismPatcher(fMetadataPath);
+//    patcher.initialize();
+    
+    if (args.length > 2)
+    {
+      String[] runwayArgs = Arrays.copyOfRange(args, 2, args.length);
+      
+      RunwayPatcher.main(runwayArgs);
+    }
 
-    execute(fMetadataPath);
+    
+    executeWithRequest(fMetadataPath, patcher);
+  }
+
+  @Request
+  private static void executeWithRequest(File fMetadataPath, GeoprismPatcher patcher)
+  {
+    execute(fMetadataPath, patcher);
   }
 
   @Transaction
-  public static void execute(File metadataDir)
+  public static void execute(File metadataDir, GeoprismPatcher patcher)
   {
-    GeoprismPatcher listener = new GeoprismPatcher(metadataDir);
-    listener.initialize();
-    listener.startup();
-    listener.shutdown();
+    patcher.startup();
+    patcher.shutdown();
   }
 
   public void initialize()
   {
+    // Heads up : This method is not run if the patcher is run from a main method.
+    
     LocalProperties.setSkipCodeGenAndCompile(true);
 
-    if (!Database.tableExists("md_class"))
-    {
-      this.initializeDatabase();
-    }
-
-    RunwayMetadataVersion version = new RunwayMetadataVersion(1, 26, 0);
-
-    if (version.isGreater(Database.getMetadataVersion()))
-    {
-      try
-      {
-        // Patch ontology strategy metadata
-        InputStream stream = this.getClass().getResourceAsStream("/scripts/postgres/013_OntologyStrategy.sql");
-
-        try
-        {
-          String sql = IOUtils.toString(stream);
-
-          Database.executeStatement(sql);
-
-          // Update the existing data
-          this.updateUnsetStrategy(GeoEntity.CLASS);
-          this.updateUnsetStrategy(Universal.CLASS);
-          this.updateUnsetStrategy(Classifier.CLASS);
-
-          Database.setPropertyValue(Database.VERSION_NUMBER, MdAttributeCharacterInfo.CLASS, version.toString(), Database.RUNWAY_METADATA_VERSION_PROPERTY);
-        }
-        finally
-        {
-          stream.close();
-        }
-      }
-      catch (IOException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-  }
-
-  private void updateUnsetStrategy(String class1)
-  {
-    DatabaseAllPathsStrategy strategy = this.getUnsetStrategy();
-    strategy.lock();
-    strategy.setTermClass(class1);
-    strategy.apply();
-  }
-
-  private DatabaseAllPathsStrategy getUnsetStrategy()
-  {
-    DatabaseAllPathsStrategyQuery query = new DatabaseAllPathsStrategyQuery(new QueryFactory());
-    query.WHERE(query.getTermClass().EQ((String) null));
-
-    OIterator<? extends DatabaseAllPathsStrategy> it = query.getIterator();
-
-    try
-    {
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-
-      throw new ProgrammingErrorException("Unable to find an unset database ontology strategy");
-    }
-    finally
-    {
-      it.close();
-    }
-  }
-
-  private void initializeDatabase()
-  {
-    try
-    {
-      InputStream schema = this.getClass().getResourceAsStream("/com/runwaysdk/resources/xsd/schema.xsd");
-
-      InputStream[] xmlFilesIS = InstallerCP.buildMetadataInputStreamList();
-
-      XMLImporter importer = new XMLImporter(schema, xmlFilesIS);
-      importer.toDatabase();
-
-      ServerInitializerFacade.rebuild();
-    }
-    catch (IOException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+    RunwayPatcher.main(new String[]{});
   }
 
   public void startup()

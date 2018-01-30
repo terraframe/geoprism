@@ -287,6 +287,10 @@
                   <arguments>
                     <argument>${project.basedir}/target/classes/metadata</argument>
                     <argument>${configuration.dir}/${geoprism.app}</argument>
+                    <argument>${root.user}</argument>
+                    <argument>${root.pass}</argument>
+                    <argument>${root.db}</argument>
+                    <argument>${root.clean}</argument>
                     <argument>-Xmx4g</argument>
                     <argument>-Xms2g</argument>
                   </arguments>
