@@ -71,6 +71,8 @@ public class FieldInfoContentsHandler implements SheetHandler
     private String           categoryId;
     
     private ColumnType       realType; // this is read from dhis2
+    
+    private String           label;
 
     public Field()
     {
@@ -83,6 +85,11 @@ public class FieldInfoContentsHandler implements SheetHandler
     public void setName(String name)
     {
       this.name = name.trim();
+    }
+    
+    public void setLabel(String label)
+    {
+      this.label = label.trim();
     }
 
     public String getName()
@@ -137,7 +144,16 @@ public class FieldInfoContentsHandler implements SheetHandler
     {
       JSONObject object = new JSONObject();
       object.put("name", this.name.trim());
-      object.put("label", this.name.trim());
+      
+      if (label == null)
+      {
+        object.put("label", this.name.trim());
+      }
+      else
+      {
+        object.put("label", this.label.trim());
+      }
+      
       object.put("aggregatable", true);
       object.put("fieldPosition", this.getInputPosition());
       

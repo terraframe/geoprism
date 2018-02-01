@@ -180,7 +180,8 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
                 String name = trackedEntityAttr.getString("name");
                 
                 Field attribute = importer.getField(cellReference);
-                attribute.setName(name);
+                attribute.setLabel(name);
+                attribute.setName(formattedValue);
                 attribute.setInputPosition(importer.getFieldPosition(cellReference));
                 
                 if (trackedEntityAttr.has("optionSet"))
