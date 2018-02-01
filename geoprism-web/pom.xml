@@ -57,6 +57,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>net.geoprism</groupId>
+      <artifactId>geoprism-dhis2</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-gis-web</artifactId>
       <version>${runway.version}</version>

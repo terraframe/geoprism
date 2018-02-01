@@ -1,0 +1,16 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="net.geoprism.dhis2.OptionCodeMapping" label="Option Code Mapping">
+        <attributes>
+          <char name="runwayId" size="64" indexType="unique index" label="Runway Id" />
+          <char name="code" size="64" label="code" />
+        </attributes>
+      </mdBusiness>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

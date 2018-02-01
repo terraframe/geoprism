@@ -35,8 +35,8 @@ import com.runwaysdk.system.metadata.MdAttributeInteger;
 import com.runwaysdk.system.metadata.MdAttributeLong;
 import com.runwaysdk.system.metadata.MdAttributeText;
 
-import net.geoprism.dhis2.BasicIdMapping;
-import net.geoprism.dhis2.BasicIdMappingQuery;
+import net.geoprism.dhis2.DHIS2IdMapping;
+import net.geoprism.dhis2.DHIS2IdMappingQuery;
 import net.geoprism.dhis2.OptionCodeMapping;
 import net.geoprism.dhis2.OptionCodeMappingQuery;
 
@@ -95,7 +95,7 @@ public class DHIS2Util implements Reloadable
     Savepoint sp = Database.setSavepoint();
     try
     {
-      BasicIdMapping map = new BasicIdMapping();
+      DHIS2IdMapping map = new DHIS2IdMapping();
       map.setRunwayId(runwayId);
       map.setDhis2Id(dhis2Id);
       map.apply();
@@ -113,9 +113,9 @@ public class DHIS2Util implements Reloadable
   
   public static String getRunwayIdFromDhis2Id(String dhis2Id)
   {
-    BasicIdMappingQuery query = new BasicIdMappingQuery(new QueryFactory());
+    DHIS2IdMappingQuery query = new DHIS2IdMappingQuery(new QueryFactory());
     query.WHERE(query.getDhis2Id().EQ(dhis2Id));
-    OIterator<? extends BasicIdMapping> mappingIt = query.getIterator();
+    OIterator<? extends DHIS2IdMapping> mappingIt = query.getIterator();
     try
     {
       if (mappingIt.hasNext())
@@ -135,9 +135,9 @@ public class DHIS2Util implements Reloadable
   
   public static String getDhis2IdFromRunwayId(String runwayId)
   {
-    BasicIdMappingQuery query = new BasicIdMappingQuery(new QueryFactory());
+    DHIS2IdMappingQuery query = new DHIS2IdMappingQuery(new QueryFactory());
     query.WHERE(query.getRunwayId().EQ(runwayId));
-    OIterator<? extends BasicIdMapping> mappingIt = query.getIterator();
+    OIterator<? extends DHIS2IdMapping> mappingIt = query.getIterator();
     try
     {
       if (mappingIt.hasNext())
@@ -157,14 +157,14 @@ public class DHIS2Util implements Reloadable
   
   public static String queryAndMapIds(String runwayId, DHIS2IdCache idCache)
   {
-    BasicIdMappingQuery query = new BasicIdMappingQuery(new QueryFactory());
+    DHIS2IdMappingQuery query = new DHIS2IdMappingQuery(new QueryFactory());
     query.WHERE(query.getRunwayId().EQ(runwayId));
-    OIterator<? extends BasicIdMapping> mappingIt = query.getIterator();
+    OIterator<? extends DHIS2IdMapping> mappingIt = query.getIterator();
     try
     {
       if (mappingIt.hasNext())
       {
-        BasicIdMapping mapping = mappingIt.next();
+        DHIS2IdMapping mapping = mappingIt.next();
         
         return mapping.getDhis2Id();
       }
@@ -172,7 +172,7 @@ public class DHIS2Util implements Reloadable
       {
         String id = idCache.next();
         
-        BasicIdMapping map = new BasicIdMapping();
+        DHIS2IdMapping map = new DHIS2IdMapping();
         map.setRunwayId(runwayId);
         map.setDhis2Id(id);
         map.apply();

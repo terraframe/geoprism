@@ -34,8 +34,8 @@
     <module>geoprism-common</module>
     <module>geoprism-client</module>
     <module>geoprism-server</module>
-    <module>geoprism-web</module>
     <module>geoprism-dhis2</module>
+    <module>geoprism-web</module>
   </modules>
 
   <properties>
