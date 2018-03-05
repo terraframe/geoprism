@@ -32,7 +32,7 @@
   <name>Geoprism server</name>
   <description>The back-end database server for Geoprism</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
-
+  
   <properties>
     <!-- Specify your development root database credentials here. -->
     <root.db>template_postgis</root.db>
@@ -261,52 +261,7 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>patch</id>
-      <activation>
-        <property>
-          <name>patch</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>patch</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <executable>java</executable>
-                  <mainClass>net.geoprism.GeoprismPatcher</mainClass>
-                  <arguments>
-                    <argument>${project.basedir}/target/classes/metadata</argument>
-                    <argument>${configuration.dir}/${geoprism.app}</argument>
-                    <argument>${root.user}</argument>
-                    <argument>${root.pass}</argument>
-                    <argument>${root.db}</argument>
-                    <argument>${root.clean}</argument>
-                    <argument>-Xmx4g</argument>
-                    <argument>-Xms2g</argument>
-                  </arguments>
-                  <systemProperties>
-                    <systemProperty>
-                      <key>endpoint.cache</key>
-                      <value>${project.basedir}/cache</value>
-                    </systemProperty>
-                  </systemProperties>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+    
     <profile>
       <id>update-source-classes</id>
       <activation>
@@ -436,6 +391,50 @@
                     <argument />
                     <argument>false</argument>
                   </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>patch</id>
+      <activation>
+        <property>
+          <name>patch</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>patch</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <executable>java</executable>
+                  <mainClass>net.geoprism.GeoprismPatcher</mainClass>
+                  <arguments>
+                    <argument>${project.basedir}/target/classes/metadata</argument>
+                    <argument>${configuration.dir}/${geoprism.app}</argument>
+                    <argument>--rootUser=${root.user}</argument>
+                    <argument>--rootPass=${root.pass}</argument>
+                    <argument>--templateDb=${root.db}</argument>
+                    <argument>--clean=${root.clean}</argument>
+                  </arguments>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>endpoint.cache</key>
+                      <value>${project.basedir}/cache</value>
+                    </systemProperty>
+                  </systemProperties>
                 </configuration>
               </execution>
             </executions>

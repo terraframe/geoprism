@@ -61,7 +61,6 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
       String appName = deployedPath.getName();
       
       externalConfigDir = new File(sConfigDir, appName);
-      logger.info("Geoprism external config set to [" + externalConfigDir.getAbsolutePath() + "].");
       
       // No funny business!
       if (!externalConfigDir.exists() || !externalConfigDir.isDirectory())
@@ -74,6 +73,10 @@ public class GeoprismConfigurationResolver extends CommonsConfigurationResolver
     if (externalConfigDir == null)
     {
       logger.info("Geoprism external config dir not set. Using default resource loader strategy.");
+    }
+    else
+    {
+      logger.info("Geoprism external config set to [" + externalConfigDir.getAbsolutePath() + "].");
     }
   }
   
