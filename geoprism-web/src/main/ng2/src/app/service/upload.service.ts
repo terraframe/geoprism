@@ -68,7 +68,7 @@ export class UploadService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  importData(workbook: Workbook): Observable<DatasetResponse> {
+  importData(workbook: Workbook): Observable<any> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
