@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import net.geoprism.localization.LocalizationFacade;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -56,6 +56,8 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Geometry;
+
+import net.geoprism.localization.LocalizationFacade;
 
 /**
  * Class responsible for importing GeoEntity definitions from a shapefile.
@@ -217,7 +219,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
 
   public void setParent(String parent)
   {
-    this.setParent(new SingleValueFunction(parent));
+    this.setParent(new SingleValueAdapter(new BasicColumnFunction(parent)));
   }
 
   public void setParent(ShapefileMultivalueFunction parent)
@@ -433,13 +435,23 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       {
         entity.applyInternal(false);
 
-        synonyms = getSynonms();
+        Set<String> set = new TreeSet<String>();
 
-        for (ShapefileFunction synonym : synonyms)
+        for (ShapefileFunction synonym : this.synonyms)
+        {
+          String value = synonym.getValue(feature);
+
+          if (value != null && value.length() > 0)
+          {
+            set.add(value);
+          }
+        }
+
+        for (String synonymName : set)
         {
           Synonym syn = new Synonym();
-          syn.getDisplayLabel().setDefaultValue(synonym.getValue(feature));
-          syn.getDisplayLabel().setValue(synonym.getValue(feature));
+          syn.getDisplayLabel().setDefaultValue(synonymName);
+          syn.getDisplayLabel().setValue(synonymName);
           Synonym.create(syn, entity.getId());
         }
       }
@@ -603,18 +615,20 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
         {
           parents.add(this.parentCache.get(entityName));
         }
-
-        GeoEntity parent = GeoEntityShapefileImporter.getByEntityName(entityName);
-
-        if (parent != null)
-        {
-          this.parentCache.put(entityName, parent);
-
-          parents.add(this.parentCache.get(entityName));
-        }
         else
         {
-          System.out.println("Unable to find parent [" + entityName + "]");
+          GeoEntity parent = GeoEntityShapefileImporter.getByEntityName(entityName);
+
+          if (parent != null)
+          {
+            this.parentCache.put(entityName, parent);
+
+            parents.add(this.parentCache.get(entityName));
+          }
+          else
+          {
+            System.out.println("Unable to find parent [" + entityName + "] for type [" + this.universal.getKey() + "]");
+          }
         }
       }
     }

@@ -5,14 +5,13 @@ import java.util.List;
 
 import org.opengis.feature.simple.SimpleFeature;
 
-public class SingleValueFunction implements ShapefileMultivalueFunction
+public class SingleValueAdapter implements ShapefileMultivalueFunction
 {
+  private ShapefileFunction function;
 
-  private String attributeName;
-
-  public SingleValueFunction(String attributeName)
+  public SingleValueAdapter(ShapefileFunction function)
   {
-    this.attributeName = attributeName;
+    this.function = function;
   }
 
   @Override
@@ -20,11 +19,11 @@ public class SingleValueFunction implements ShapefileMultivalueFunction
   {
     List<String> values = new LinkedList<String>();
 
-    Object value = feature.getAttribute(this.attributeName);
+    String value = this.function.getValue(feature);
 
     if (value != null)
     {
-      values.add(value.toString());
+      values.add(value);
     }
 
     return values;
