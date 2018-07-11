@@ -348,14 +348,14 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
             {
               SimpleFeature feature = iterator.next();
 
-              try
-              {
+//              try
+//              {
                 importEntity(feature);
-              }
-              catch (Exception e)
-              {
-                logger.log(feature.getID(), e);
-              }
+//              }
+//              catch (Exception e)
+//              {
+//                logger.log(feature.getID(), e);
+//              }
 
               this.fireTaskProgress(1);
             }
