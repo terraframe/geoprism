@@ -101,7 +101,7 @@ export class AccountService extends BasicService {
     .post(acp + '/account/apply', JSON.stringify({account:user, roleIds:roleIds}), {headers: headers})
     .toPromise()
     .then((response: any) => {
-      return response.json() as Account;
+      return response.json() as User;
     })
     .catch(this.handleError.bind(this));      
   }
