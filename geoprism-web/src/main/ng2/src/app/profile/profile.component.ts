@@ -19,7 +19,7 @@
 
 import { Component} from '@angular/core';
 
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { Profile } from './profile';
 import { ProfileService } from './profile.service';

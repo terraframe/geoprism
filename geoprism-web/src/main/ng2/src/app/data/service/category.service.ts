@@ -144,7 +144,7 @@ export class CategoryService extends BasicService {
     .post(acp + '/category/update', JSON.stringify({category:category}), { headers: headers })
     .toPromise()
     .then((response:any) => {
-      return response.json() as BasicCategory;
+      return response.json() as Category;
     })          
     .catch(this.handleError.bind(this));
   }
