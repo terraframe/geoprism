@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.importer;
 
+import java.util.Map;
+
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.generation.loader.Reloadable;
@@ -37,7 +39,7 @@ public class GeometryColumn extends ExcelColumn implements Reloadable
   }
 
   @Override
-  public String getValue(ComponentIF component)
+  public String getValue(ComponentIF component, Map<String, String> overrides)
   {
     Object value = component.getObjectValue(this.attributeName);
     

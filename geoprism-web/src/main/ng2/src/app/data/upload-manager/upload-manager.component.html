@@ -1,0 +1,46 @@
+<div id="app-container" class="container">
+
+  <div *ngIf="histories === null">
+    <localize key='uploadmanager.loadingData'></localize>
+  </div>
+    <input type="button" [value]="'uploadmanager.clearHistory' | localize" class="btn btn-default btn-primary" (click)="clearHistory()" />
+  
+    <div class="list-table-wrapper">
+	  <table id="uploadmanager-table" class="list-table table table-bordered table-striped">        
+	    <thead>
+	      <tr>
+	        <th class="label-column"><localize key='uploadmanager.name'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.startTime'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.endTime'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.status'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.records'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.hasError'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.geoSyns'></localize></th>
+	        <th class="label-column"><localize key='uploadmanager.termSyns'></localize></th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr *ngFor="let history of histories" class="fade-ngRepeat-item">
+	        <td class="column-name"> {{ history.name }} </td>
+	        <td class="column-startTime"> {{history.startTime}} </td>
+	        <td class="column-startTime"> {{history.endTime}} </td>
+	        <td class="column-status"> {{history.status}} </td>
+	        <td class="column-records"> {{history.importCount}} / {{history.totalRecords}} </td>
+	        <td class="column-hasError">
+            <a *ngIf="history.hasError" class="fa fa-download" href="dss.vector.solutions.generator.ExcelController.downloadErrorSpreadsheet.mojo?historyId={{history.id}}"></a>
+          </td>
+	        <td class="column-hasSynonyms"> 
+            {{history.geoSyns}}
+            <br *ngIf="history.geoSyns > 0" />
+            <a *ngIf="history.geoSyns > 0" class="fa fa-pencil" href="dss.vector.solutions.generator.ExcelController.resolveGeoSynonyms.mojo?historyId={{history.id}}"></a>
+          </td>
+	        <td class="column-hasSynonyms">
+            {{history.termSyns}}
+            <br *ngIf="history.termSyns > 0" />
+            <a *ngIf="history.termSyns > 0" class="fa fa-pencil" href="dss.vector.solutions.generator.ExcelController.resolveTermSynonyms.mojo?historyId={{history.id}}"></a>
+          </td>
+	      </tr>
+	    </tbody>    
+	  </table>
+   </div>
+</div>

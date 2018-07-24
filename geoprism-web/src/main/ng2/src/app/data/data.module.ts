@@ -36,6 +36,7 @@ import { IconService } from './service/icon.service';
 
 import { DHIS2Service } from './service/dhis2.service';
 import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
+import { UploadManagerComponent } from './upload-manager/upload-manager.component';
 
 // Upload wizard imports
 import { NavigationService } from './uploader/navigation.service';
@@ -55,6 +56,7 @@ import { CategoryValidationPageComponent } from './uploader/category-validation-
 import { CategoryValidationProblemComponent } from './uploader/category-validation-problem.component';
 import { UploadResultComponent } from './uploader/upload-result.component';
 import { UploadService } from './service/upload.service';
+import { UploadManagerService } from './upload-manager/upload-manager.service';
 
 
 @NgModule({
@@ -72,6 +74,7 @@ import { UploadService } from './service/upload.service';
     DataHeaderComponent,
     
     DHIS2IdFinderComponent,
+    UploadManagerComponent,
     
     // Upload Wizard components
     UploadWizardComponent,
@@ -99,7 +102,8 @@ import { UploadService } from './service/upload.service';
     CategoryService,
     IconService,
     UploadService,
-    NavigationService
+    NavigationService,
+    UploadManagerService
   ],
   bootstrap: [DataHeaderComponent],
   entryComponents: [

@@ -19,8 +19,7 @@
 package net.geoprism.data.importer;
 
 import java.util.Collection;
-
-import net.geoprism.ontology.GeoEntityUtil;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 
@@ -30,6 +29,8 @@ import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
+
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class GeoEntityColumn extends ExcelColumn
 {
@@ -44,7 +45,7 @@ public class GeoEntityColumn extends ExcelColumn
   }
 
   @Override
-  public String getValue(ComponentIF component)
+  public String getValue(ComponentIF component, Map<String, String> overrides)
   {
     String attribute = this.attributeName.split(GeoEntityColumnListener.DELIMETER)[0];
 

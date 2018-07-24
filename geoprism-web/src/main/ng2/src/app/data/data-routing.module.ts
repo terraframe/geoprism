@@ -35,6 +35,8 @@ import { OptionDetailComponent, OptionResolver} from './category/option-detail.c
 
 import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
 
+import { UploadManagerComponent } from './upload-manager/upload-manager.component';
+
 declare var acp: any;
 
 const routes: Routes = [
@@ -94,7 +96,12 @@ const routes: Routes = [
       icon: IconResolver
     },
     data: { title: 'category.icon.title' }                        
-  }  
+  },
+  {
+    path: 'uploadmanager',
+    component: UploadManagerComponent,
+    data: { title: 'upload.manager.title' }                        
+  }
 ];
 
 @NgModule({
@@ -104,4 +111,4 @@ const routes: Routes = [
 })
 export class DataRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent, IndicatorModalComponent];
+export const routedComponents = [UploadManagerComponent, DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent, IndicatorModalComponent];
