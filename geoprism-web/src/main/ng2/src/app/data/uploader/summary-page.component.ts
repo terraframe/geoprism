@@ -33,10 +33,12 @@ export class SummaryPageComponent implements OnInit {
   @Input() sheet: Sheet;
   @Input() page: Page;
   @Input() info: UploadInformation;
+  @Input() hasError: boolean = false;
   
   universals: Universal[];
   labels: {[key : string] : string};  
   
+  formId: Field;
   texts: Field[];
   categories: Field[];
   numbers: Field[];
@@ -58,20 +60,16 @@ export class SummaryPageComponent implements OnInit {
     if(this.info.options != null) {
       let countries = this.info.options.countries;
           
-      for(let i = 0; i < countries.length; i++) {
-        let country = countries[i];
-                   
-        if(country.value == this.sheet.country) {
-          this.universals = country.options;
-          this.labels = {};
-              
-          for(let j = 0; j < country.options.length; j++) {
-            let universal = country.options[j];
-                
-            this.labels[universal.value] = universal.label;
-          }
-        }
-      }      
+      let country = countries[0];
+      
+      this.universals = country.options;
+      this.labels = {};
+      
+      for(let j = 0; j < country.options.length; j++) {
+        let universal = country.options[j];
+            
+        this.labels[universal.value] = universal.label;
+      }
     }
     
     for(let i=0; i<this.sheet.fields.length; i++){
@@ -79,15 +77,19 @@ export class SummaryPageComponent implements OnInit {
     
       let valid = this.isValid(field);
       
-      if(valid && field.type === 'TEXT') {
+      if(valid && (field.type === 'TEXT' || field.type === 'CHARACTER')) {
         this.texts.push(field);
+      }
+      
+      if(valid && field.type === 'FORMID') {
+        this.formId = field;
       }
       
       if(valid && (field.type === 'CATEGORY' || field.type === 'DOMAIN')) {
         this.categories.push(field);
       }
       
-      if(valid && field.type === 'DOUBLE' || field.type === 'LONG') {
+      if(valid && (field.type === 'DOUBLE' || field.type === 'LONG')) {
         this.numbers.push(field);
       }
       
@@ -109,8 +111,7 @@ export class SummaryPageComponent implements OnInit {
       for(let j = 0; j < this.universals.length; j++) {
         let universal = this.universals[j];
         
-        if(attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE') {
-          universal.useCoordinatesForLocationAssignment = attribute.useCoordinatesForLocationAssignment;
+        if(attribute.fields[universal.value] != null && attribute.fields[universal.value] !== 'EXCLUDE') {
           this.universalMap[id].push(universal);
         }
       }
@@ -144,6 +145,6 @@ export class SummaryPageComponent implements OnInit {
   }
     
   isValid(field: Field): boolean {
-    return !(field.type == 'LOCATION' || field.type == 'LONGITUDE' || field.type == 'LATITUDE' || field.type == 'IGNORE'  || field.type == ''); 
+    return !(field.type === 'LOCATION' || field.type === 'LONGITUDE' || field.type === 'LATITUDE' || field.type === 'IGNORE'  || field.type === ''); 
   }
 }

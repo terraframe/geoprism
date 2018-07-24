@@ -52,6 +52,7 @@ export class Field {
 
   // Properties for category fields 
   categoryLabel: string;
+  rootType: string;
   root: string;
 
   // Properties for location fields
@@ -123,6 +124,7 @@ export class Workbook {
   sheets: Sheet[];
   locationExclusions: LocationExclusion[];
   categoryExclusion: { [key:string]:string[]};
+  type:string;
 }
 
 export class UploadInformation {
@@ -167,9 +169,13 @@ export class LocationProblem {
   parentId: string;
   universalId: string;
   universalLabel: string;
+  universalType: string;
   context: LocationContext[];
   resolved: boolean;
-  synonym: string;
+  synonym: {
+    id:string,
+    geoId:string
+  };
   action: any;
 }
 
@@ -179,7 +185,7 @@ export class CategoryProblem {
   categoryId: string;
   optionId: string;
   resolved: boolean;
-  synonym: string;
+  synonym: Pair;
   action: any;
 }
 

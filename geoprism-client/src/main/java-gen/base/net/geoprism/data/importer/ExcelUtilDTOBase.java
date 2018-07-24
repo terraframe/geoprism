@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.data.importer;
 
-@com.runwaysdk.business.ClassSignature(hash = 942722440)
+@com.runwaysdk.business.ClassSignature(hash = -845000382)
 public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.data.importer.ExcelUtil";
-  private static final long serialVersionUID = 942722440;
+  private static final long serialVersionUID = -845000382;
   
   protected ExcelUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -35,6 +17,14 @@ public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO im
   }
   
   public static java.lang.String ID = "id";
+  public static final void excelImportFromVault(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String vaultId, java.lang.String config)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
+    Object[] _parameters = new Object[]{vaultId, config};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.importer.ExcelUtilDTO.CLASS, "excelImportFromVault", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
   public static final java.io.InputStream exportExcelFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type, java.lang.String country)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};

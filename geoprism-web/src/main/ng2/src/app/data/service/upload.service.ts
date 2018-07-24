@@ -68,16 +68,22 @@ export class UploadService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  importData(workbook: Workbook): Observable<DatasetResponse> {
+  importData(workbook: Workbook): Promise<DatasetResponse> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
     let data = JSON.stringify({configuration : workbook });
     
-    return this.http
-      .post(acp + '/uploader/importData', data, {headers:headers})
-      .catch(this.handleError.bind(this));
+    return this.ehttp
+      .post(acp + '/uploader/importData', data, {headers: headers})
+      .toPromise() 
+      .then((response: any) => {
+    	return response.json() as DatasetResponse;
+      })      
+      .catch(e => {
+         this.handleError.bind(this)
+      });
   }
   
   getErrorFile(id:string): Promise<Response> {
@@ -227,6 +233,4 @@ export class UploadService extends BasicService {
       })
       .catch(this.handleError.bind(this));    
   }
-  
-  
 }

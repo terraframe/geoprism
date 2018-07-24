@@ -1,24 +1,6 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.data.importer;
 
-@com.runwaysdk.business.ClassSignature(hash = 256617480)
+@com.runwaysdk.business.ClassSignature(hash = 2009608130)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -30,7 +12,7 @@ public abstract class ExcelUtilBase extends com.runwaysdk.business.Util implemen
 {
   public final static String CLASS = "net.geoprism.data.importer.ExcelUtil";
   public static java.lang.String ID = "id";
-  private static final long serialVersionUID = 256617480;
+  private static final long serialVersionUID = 2009608130;
   
   public ExcelUtilBase()
   {
@@ -61,6 +43,12 @@ public abstract class ExcelUtilBase extends com.runwaysdk.business.Util implemen
   public static ExcelUtil get(String id)
   {
     return (ExcelUtil) com.runwaysdk.business.Util.get(id);
+  }
+  
+  public static void excelImportFromVault(java.lang.String vaultId, java.lang.String config)
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelUtil.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
   public static java.io.InputStream exportExcelFile(java.lang.String type, java.lang.String country)

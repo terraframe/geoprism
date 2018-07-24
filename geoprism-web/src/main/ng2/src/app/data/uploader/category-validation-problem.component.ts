@@ -48,9 +48,8 @@ export class CategoryValidationProblemComponent implements OnInit {
   }   
   
   ngOnInit(): void {
-    this.problem.synonym = null;
-    this.show = false;    
-    this.hasSynonym = false;        
+    this.problem.synonym = {id :'', value:''};
+    this.show = false;
   }
   
   source = (text: string) => {
@@ -58,14 +57,10 @@ export class CategoryValidationProblemComponent implements OnInit {
 
     return this.uploadService.getClassifierSuggestions(this.problem.mdAttributeId, text, limit);
   }
-        
-  setSynonym() {  
-    this.hasSynonym = (this.problem.synonym != null && this.problem.synonym.length > 0);            
-  }
     
   createSynonym(): void {
-    if(this.hasSynonym){      
-      this.uploadService.createClassifierSynonym(this.problem.synonym, this.problem.label)
+    if(this.problem.synonym.id !== ''){      
+      this.uploadService.createClassifierSynonym(this.problem.synonym.id, this.problem.label)
         .then(response => {
           this.problem.resolved = true;
           this.problem.action = {
@@ -134,33 +129,29 @@ export class CategoryValidationProblemComponent implements OnInit {
         
       let action = this.problem.action;
         
-      if(action.name == 'IGNORE'){
+      if(action.name === 'IGNORE'){
         this.problem.resolved = false;
           
         this.removeExclusion();
         
         this.onProblemChange.emit(this.problem);
       }
-      else if(action.name == 'SYNONYM')  {    	
+      else if(action.name === 'SYNONYM')  {    	
         this.uploadService.deleteClassifierSynonym(action.synonymId)
           .then(response => {
           this.problem.resolved = false;
-          this.problem.synonym = null;
+          this.problem.synonym = {id :'', value:''};
           this.problem.action = null;
-          
-          this.hasSynonym = (this.problem.synonym != null);
           
           this.onProblemChange.emit(this.problem);
         });
       }
-      else if(action.name == 'OPTION')  {    	
+      else if(action.name === 'OPTION')  {    	
         this.categoryService.remove(action.optionId)
           .then(response => {
             this.problem.resolved = false;
             this.problem.optionId = null;
             this.problem.action = null;
-            
-            this.hasSynonym = (this.problem.synonym != null);
             
             this.onProblemChange.emit(this.problem);
           });

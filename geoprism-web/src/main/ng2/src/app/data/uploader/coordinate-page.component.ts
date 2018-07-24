@@ -91,7 +91,7 @@ export class CoordinatePageComponent implements OnInit, LocalValidator {
       else if(field.type == 'LONGITUDE') {
         this.longitudes.push(field);          
       }
-      else if(field.type == 'TEXT') {
+      else if(field.type == 'TEXT' || field.type === 'CHARACTER') {
         this.featureLabels.push(field);          
       }
       else if(this.isBasic(field)) {

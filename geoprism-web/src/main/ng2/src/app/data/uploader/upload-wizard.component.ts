@@ -1,25 +1,5 @@
-///
-/// Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
-///
-/// This file is part of Runway SDK(tm).
-///
-/// Runway SDK(tm) is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU Lesser General Public License as
-/// published by the Free Software Foundation, either version 3 of the
-/// License, or (at your option) any later version.
-///
-/// Runway SDK(tm) is distributed in the hope that it will be useful, but
-/// WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU Lesser General Public License for more details.
-///
-/// You should have received a copy of the GNU Lesser General Public
-/// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
-///
-
 import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
 
 import * as _ from 'lodash';
@@ -27,12 +7,14 @@ import * as _ from 'lodash';
 import { Dataset } from '../model/dataset';
 import { UploadInformation, Step, Sheet, Snapshot, Page, Locations, Problems, DatasetResponse } from './uploader-model';
 
-import { EventService, IdService } from '../../core/service/core.service';
 import { LocalizationService } from '../../core/service/localization.service';
-import { ProgressService } from '../../core/progress-bar/progress.service';
 
 import { UploadService } from '../service/upload.service';
 import { NavigationService } from './navigation.service';
+
+declare let reconstructionJSON: any;
+
+declare let acp: string;
 
 @Component({
   
@@ -50,23 +32,24 @@ export class UploadWizardComponent implements OnDestroy {
   sheet: Sheet;
   page: Page;
   problems: Problems;
+  hasError: boolean = false;
   
   pageDirection: string;
   currentStep: number;
   subscription: Subscription;
   
+  isPersisted: boolean = false;
+  
   constructor(
     private localizationService: LocalizationService,
     private uploadService: UploadService,
-    private navigationService: NavigationService,
-    private progressService: ProgressService,
-    private idService: IdService) {
+    private navigationService: NavigationService) {
  
     this.subscription = navigationService.navigationAnnounced$.subscribe(
       direction => {
         if(direction === 'next') {
           this.next(null, null);
-        }         
+        }
         else if(direction === 'prev') {
           this.prev();
         }         
@@ -84,33 +67,41 @@ export class UploadWizardComponent implements OnDestroy {
   }  
   
   initialize(info: string): void {
-    this.info = JSON.parse(info) as UploadInformation;
-    this.sheet = this.info.information.sheets[0];
-    	  
-	if(this.sheet.attributes == null) {
-	  this.sheet.attributes = new Locations();
-	  this.sheet.attributes.ids = [];
-	  this.sheet.attributes.values = {};
-	}
+    let uInfo = JSON.parse(info) as UploadInformation;
     
-	if(this.sheet.coordinates == null) {
-	  this.sheet.coordinates = [];
-	}    
-	
-    if(this.info.information.locationExclusions == null){
-      this.info.information.locationExclusions = [];    	
-    }
+    if(uInfo.information.type === 'ETL') {
+      this.info = uInfo;
+      this.sheet = this.info.information.sheets[0];
+      this.hasError = false;
+       
+      if(this.sheet.attributes == null) {
+        this.sheet.attributes = new Locations();
+        this.sheet.attributes.ids = [];
+        this.sheet.attributes.values = {};
+      }
+       
+      if(this.sheet.coordinates == null) {
+        this.sheet.coordinates = [];
+      }    
+
+      if(this.info.information.locationExclusions == null){
+        this.info.information.locationExclusions = [];    
+      }
     
-    if(this.sheet.matches.length > 0) {
-      this.page = new Page('MATCH-INITIAL', null);
+      if(this.sheet.matches.length > 0) {
+        this.page = new Page('MATCH-INITIAL', null);
+      }
+      else {
+        this.page = new Page('BEGINNING-INFO', null);    
+      }
+                  
+      this.initializeAttributes();
+    
+      this.refreshSteps();
     }
     else {
-      this.page = new Page('BEGINNING-INFO', null);    
+      window.location.href = acp + '/dss.vector.solutions.generator.ExcelController.viewManager.mojo#/manager';      
     }
-                  
-    this.initializeAttributes();
-    
-    this.refreshSteps();
   }
   
   initializeAttributes(): void {
@@ -130,25 +121,26 @@ export class UploadWizardComponent implements OnDestroy {
     for(let i=0; i<fields.length; i++){
       let field = fields[i];
         
-      if(field.columnType === "NUMBER"){
-        let label = field.label.toLowerCase();
-        
-        for(let j = 0; j < lats.length; j++) {
-          if(label.includes(lats[j]) ){
-            field.type = 'LATITUDE'; 
-          }
-        }
-        
-        for(let j = 0; j < longs.length; j++) {
-          if(label.includes(longs[j]) ){
-            field.type = 'LONGITUDE'; 
-          }
-        }
-      }
+//      if(field.columnType === "NUMBER"){
+//        let label = field.label.toLowerCase();
+//        
+//        for(let j = 0; j < lats.length; j++) {
+//          if(label.includes(lats[j]) ){
+//            field.type = 'LATITUDE'; 
+//          }
+//        }
+//        
+//        for(let j = 0; j < longs.length; j++) {
+//          if(label.includes(longs[j]) ){
+//            field.type = 'LONGITUDE'; 
+//          }
+//        }
+//      }
     }
   }
   
   refreshSteps(): void {
+    console.log("refreshSteps")
     this.steps = new Array<Step>();
     this.steps.push(new Step("1", "INITIAL"));
     this.steps.push(new Step("2", "FIELDS"));
@@ -199,7 +191,7 @@ export class UploadWizardComponent implements OnDestroy {
     for(let i = 0; i < this.sheet.fields.length; i++) {     
       let field = this.sheet.fields[i];
           
-      if(field.type == 'LOCATION') {
+      if(field.type === 'LOCATION') {
         return true;
       }
     }        
@@ -211,7 +203,7 @@ export class UploadWizardComponent implements OnDestroy {
     for(let i = 0; i < this.sheet.fields.length; i++) {     
       let field = this.sheet.fields[i];
               
-      if(field.type == 'LONGITUDE' || field.type == 'LATITUDE' ) {
+      if(field.type === 'LONGITUDE' || field.type === 'LATITUDE' ) {
         return true;
       }
     }        
@@ -223,7 +215,7 @@ export class UploadWizardComponent implements OnDestroy {
     for(let i = 0; i < this.sheet.fields.length; i++) {     
       let field = this.sheet.fields[i];
           
-      if(field.type == 'CATEGORY') {
+      if(field.type === 'CATEGORY') {
         return true;
       }
     }        
@@ -232,16 +224,17 @@ export class UploadWizardComponent implements OnDestroy {
   }
   
   incrementStep(targetPage: string): void {
+    console.log("incrementStep")
     if(targetPage === 'MATCH-INITIAL') {
       this.currentStep = -1;
     }
-    else if(targetPage == 'MATCH') {
+    else if(targetPage === 'MATCH') {
       this.currentStep = -1;
     }
-    else if(targetPage == 'BEGINNING-INFO') {
+    else if(targetPage === 'BEGINNING-INFO') {
       this.currentStep = -1;
     }
-    else if(targetPage == 'INITIAL') {
+    else if(targetPage === 'INITIAL') {
       this.currentStep = 1;        
     }
     else if(targetPage === 'FIELDS') {
@@ -280,6 +273,7 @@ export class UploadWizardComponent implements OnDestroy {
    * @param sourcePage <optional> 
    */
   next(targetPage: string, sourcePage: string) :void {
+    console.log("next")
     this.pageDirection = "NEXT";
       
     if(targetPage && sourcePage){
@@ -295,23 +289,23 @@ export class UploadWizardComponent implements OnDestroy {
     }
     else{
       this.page.snapshot = _.cloneDeep(this.sheet) as Sheet;
-    	
+    
         // Linear logic
-      if(this.page.name == 'MATCH-INITIAL') {
+      if(this.page.name === 'MATCH-INITIAL') {
         let page = new Page('MATCH', this.page);
         page.hasNext = this.hasNextPage('MATCH');
         page.isReady = this.isReady('MATCH');
         
         this.page = page;
       }
-      else if(this.page.name == 'MATCH') {
+      else if(this.page.name === 'MATCH') {
         let page = new Page('BEGINNING-INFO', this.page);
         page.hasNext = this.hasNextPage('BEGINNING-INFO');
         page.isReady = this.isReady('BEGINNING-INFO');
       
         this.page = page;
       }
-      else if(this.page.name == 'BEGINNING-INFO') {
+      else if(this.page.name === 'BEGINNING-INFO') {
         let page = new Page('INITIAL', this.page);
         page.hasNext = this.hasNextPage('INITIAL');
         page.isReady = this.isReady('INITIAL');
@@ -405,7 +399,7 @@ export class UploadWizardComponent implements OnDestroy {
   
   prev(): void {
     this.pageDirection = "PREVIOUS";
-	  
+  
     if(this.page.prev != null) { 
       this.page = this.page.prev;
       this.sheet = this.page.snapshot;
@@ -449,18 +443,28 @@ export class UploadWizardComponent implements OnDestroy {
   }
     
   onSubmit(): void {
+    console.log("onSubmit")
     this.onSuccess.emit();
     this.clear();
   }
     
-  cancel(): void {  
-    this.uploadService.cancelImport(this.info.information)
-      .then(response => {
-        this.clear();
-      });    
+  cancel(): void {
+    if (this.isPersisted)
+    {
+      // invoking cancel on the server is going to delete the vault file which we don't want to do if there's a job history record
+      this.clear();
+    }
+    else
+    {
+      this.uploadService.cancelImport(this.info.information)
+        .then(response => {
+          this.clear();
+        });
+    }    
   }
   
   clear(): void {
+    console.log("clear")
     this.steps = null;
     this.info = null;
     this.sheet = null;
@@ -473,77 +477,79 @@ export class UploadWizardComponent implements OnDestroy {
     
   persist(): void {
     this.info.information.sheets[0] = _.cloneDeep(this.sheet) as Sheet;
-    
-    let uploadId = this.idService.generateId();
-    
-    this.info.information.uploadId = uploadId;
-    
-    /*
-     * Setup progress observable
-     */
-    let subscription = Observable.interval(1000)
-      .subscribe(() => {
-        this.uploadService.progress(uploadId).then(progress => {
-          this.progressService.progress(progress);
-        });
-      });
-    
-    this.progressService.start();    
-	  
-    this.uploadService.importData(this.info.information)
-      .finally(()=>{    	  
-        subscription.unsubscribe();
-        
-        this.progressService.complete();            
-      })
-      .toPromise()      
-      .then((response: any) => {
-        let result = response.json() as DatasetResponse;        
-    	  
-        if(result.success) {          
-          this.clear();
-          
-          this.onSuccess.emit({datasets:result.datasets, summary:result.summary, finished : true});          
-        }
-        else {          
-            
-          if(this.hasLocationField() && this.hasCoordinateField()) {
-            this.currentStep = 5;
-          }
-          else if(this.hasLocationField() || this.hasCoordinateField()) {
-            this.currentStep = 4;
-          }
-          else{
-            this.currentStep = 3;
-          }
-            
-          this.problems = result.problems;
-          this.info.information.sheets = result.sheets;
-          
-          result.sheets[0].format = this.sheet.format
-          this.sheet = result.sheets[0];
-          
-          if( !result.problems.locations || result.problems.locations.length > 0) {
+  
+    if (reconstructionJSON != null && reconstructionJSON != "" && reconstructionJSON.configuration.filename.endsWith(".xls")) {
+      window.location.href = acp + "/dss.vector.solutions.generator.ExcelController.excelImportFromVault.mojo?vaultId=" + reconstructionJSON.configuration.vaultId + "&config=" + encodeURIComponent(JSON.stringify(this.problems));
+    }
+    else
+    {
+      this.uploadService.importData(this.info.information)
+        .then(result => {
+          window.location.href = acp + '/dss.vector.solutions.generator.ExcelController.viewManager.mojo#/manager';      
         	
-            let page = new Page('GEO-VALIDATION', null);
-            page.hasNext = this.hasNextPage('GEO-VALIDATION');
-            page.isReady = this.isReady('GEO-VALIDATION');
-            page.layout = 'wide-holder';
+//          console.log("persist importData return")
+//          if(result.success || (reconstructionJSON != null && reconstructionJSON != "")) {
+//            this.clear();
+//            console.log("onSuccess emit (importData)")
+//            this.onSuccess.emit({datasets:result.datasets, finished : true});          
+//          }
+//          else {
+//            this.afterPersist(result);
+//          }         
+        })
+        .catch(error => {
+          this.hasError = true;
+        });
+    }
+  }
+  
+  afterPersist(result: DatasetResponse): void {
+    console.log("afterPersist")
+    this.isPersisted = true;
+  
+    let externalPageRequest = -1;
+    if (reconstructionJSON != null && reconstructionJSON != "")
+    {
+      this.info = {options: {countries: []}, classifiers: [], information: reconstructionJSON.configuration}
+      
+      externalPageRequest = reconstructionJSON.pageNum;
+    }
+    
+    this.sheet = result.sheets[0];
+    
+    if(this.sheet != null && (this.hasLocationField() && this.hasCoordinateField())) {
+      this.currentStep = 5;
+    }
+    else if(this.sheet != null && (this.hasLocationField() || this.hasCoordinateField())) {
+      this.currentStep = 4;
+    }
+    else{
+      this.currentStep = 3;
+    }
+    
+    this.problems = result.problems;
+    this.info.information.sheets = result.sheets;
+//    this.sheet = result.sheets[0];
+    
+    if( externalPageRequest == 3 || (externalPageRequest == -1 && (!result.problems.locations || result.problems.locations.length > 0)) ) {
+    
+      let page = new Page('GEO-VALIDATION', null);
+      page.hasNext = this.hasNextPage('GEO-VALIDATION');
+      page.isReady = this.isReady('GEO-VALIDATION');
+      page.layout = 'wide-holder';
 
-            this.page = page;
-          }
-          else {
-            let page = new Page('CATEGORY-VALIDATION', null);
-            page.hasNext = false;
-            page.isReady = true;
-            page.layout = 'wide-holder';
+      this.page = page;
+    }
+    else {
+      let page = new Page('CATEGORY-VALIDATION', null);
+      page.hasNext = false;
+      page.isReady = true;
+      page.layout = 'wide-holder';
 
-            this.page = page;        	  
-          }
-                                 
-          this.onSuccess.emit({datasets:result.datasets, finished : false});          
-        }         
-      });	  
+      this.page = page;           
+    }
+                           
+    this.onSuccess.emit({datasets:result.datasets, finished : false});
   }
   
   isReady(name: string) : boolean {      
@@ -551,7 +557,7 @@ export class UploadWizardComponent implements OnDestroy {
   }
       
   hasNextPage(name: string): boolean {
-    if(name == 'GEO-VALIDATION') {
+    if(name === 'GEO-VALIDATION') {
       return (this.problems.categories !== null && this.problems.categories.length > 0);
     }
       
@@ -559,13 +565,14 @@ export class UploadWizardComponent implements OnDestroy {
   }  
   
   onNextPage(data: any) : void {
+    console.log("onNextPage")
     this.next(data.targetPage, data.sourcePage);
   }
   
   onSelectSheet(sheet: Sheet): void {
 
     this.page.snapshot = _.cloneDeep(this.sheet) as Sheet;
-	  
+  
     // Go to summary page
     let page = new Page('SUMMARY', this.page);
     page.hasNext = this.hasNextPage('SUMMARY');
@@ -576,9 +583,9 @@ export class UploadWizardComponent implements OnDestroy {
   }
   
   showStep(): boolean {
-	
+
     let names = ['MATCH-INITIAL', 'MATCH'];
-	
-    return this.page && (names.indexOf(this.page.name) === -1) && !this.sheet.exists;
+
+    return this.sheet != null && this.page && (names.indexOf(this.page.name) === -1) && !this.sheet.exists;
   }
 }

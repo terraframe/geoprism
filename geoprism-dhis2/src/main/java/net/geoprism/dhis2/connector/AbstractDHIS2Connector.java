@@ -41,7 +41,7 @@ abstract public class AbstractDHIS2Connector
 {
   HttpClient client;
   
-  Logger logger = LoggerFactory.getLogger(DHIS2OAuthConnector.class);
+  Logger logger = LoggerFactory.getLogger(AbstractDHIS2Connector.class);
   
   String serverurl;
   

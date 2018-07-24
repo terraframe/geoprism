@@ -1,0 +1,70 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="net.geoprism.data.etl.excel.DataUploaderImportJob" label="Data Uploader Import job" extends="com.runwaysdk.system.scheduler.ExecutableJob">
+     </mdBusiness>
+      
+      <mdBusiness name="net.geoprism.data.etl.excel.ExcelImportHistory" label="Excel Import history" extends="com.runwaysdk.system.scheduler.JobHistory">
+       <attributes>
+         <text name="serializedUnknownGeos" label="serialized unknown geos" required="false" />
+         <text name="serializedUnknownTerms" label="serialized unknown terms" required="false" />
+         <text name="fileName" label="file name" required="false" />
+         <reference name="errorFile" label="error file" type="com.runwaysdk.system.VaultFile" required="false" />
+         <boolean name="hasError" label="hasError"/>
+         <integer name="importCount" label="importCount" required="false" />
+         <integer name="totalRecords" label="totalRecords" required="false" />
+         
+         <text name="reconstructionJSON" label="reconstructionJSON" description="A JSON object that can be used to reconstruct the excel import should the user decide to later modify synonyms and reimport." />
+         <integer name="numberUnknownTerms" label="numberUnknownTerms" defaultValue="0" rejectNegative="true" />
+         <integer name="numberUnknownGeos" label="numberUnknownGeos" defaultValue="0" rejectNegative="true" />
+       </attributes>
+       
+       <mdMethod name="getAllHistory" label="Get all running excel import jobs" static="true" returnType="net.geoprism.data.etl.excel.ExcelImportHistory[]" ></mdMethod>
+       <mdMethod name="deleteAllHistory" label="Delete all history" static="true" returnType="void" ></mdMethod>
+       
+       <mdMethod name="downloadErrorSpreadsheet" label="downloadErrorSpreadsheet" returnType="void" static="false" >
+         <mdParameter name="outputStream" label="outputStream" order="0" type="java.io.OutputStream"  />
+       </mdMethod>
+     </mdBusiness>
+    </create>
+    <update>
+      <mdUtil name="net.geoprism.data.importer.ExcelUtil">
+        <create>
+          <mdMethod name="excelImportFromVault" label="excelImportFromVault" returnType="void" static="true">
+            <mdParameter name="vaultId" label="vaultId" order="0" type="java.lang.String"/>
+            <mdParameter name="config" label="config" order="1" type="java.lang.String"/>
+          </mdMethod>
+        </create>
+      </mdUtil>
+    
+      <mdController name="net.geoprism.data.importer.ExcelController">
+        <create>
+          <mdAction name="downloadErrorSpreadsheet" label="downloadErrorSpreadsheet" isPost="false" isQuery="false">
+            <mdParameter name="historyId" label="historyId" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="resolveTermSynonyms" label="resolveTermSynonyms" isPost="false" isQuery="false">
+            <mdParameter name="historyId" label="historyId" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="resolveGeoSynonyms" label="resolveGeoSynonyms" isPost="false" isQuery="false">
+            <mdParameter name="historyId" label="historyId" order="0" type="java.lang.String" />
+          </mdAction>
+          <mdAction name="excelImportFromVault" label="excelImportFromVault" isPost="false" isQuery="false">
+            <mdParameter name="vaultId" label="vaultId" order="0" type="java.lang.String"/>
+            <mdParameter name="config" label="config" order="1" type="java.lang.String"/>
+          </mdAction>
+        </create>
+      </mdController>
+       
+      <!-- <mdView name="dss.vector.solutions.ontology.UnknownTerm">
+        <create>
+          <attributes>
+            <char name="mdAttributeId" label="mdAttributeId" size="64" />
+          </attributes>
+        </create>
+      </mdView> -->
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>
