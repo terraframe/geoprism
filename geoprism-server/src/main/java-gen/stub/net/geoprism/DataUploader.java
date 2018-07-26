@@ -305,7 +305,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       try
       {
-        ImportResponseIF response = new ImportRunnable(configuration, file, monitor).run();
+        ImportResponseIF response = new ImportRunnable(filename, configuration, file, monitor).run();
 
         if (!response.hasProblems())
         {

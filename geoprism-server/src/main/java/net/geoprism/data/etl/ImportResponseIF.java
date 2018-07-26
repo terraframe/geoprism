@@ -18,13 +18,21 @@
  */
 package net.geoprism.data.etl;
 
-import net.geoprism.ContentStream;
+import java.io.InputStream;
+import java.util.Collection;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public interface ImportResponseIF
 {
-//  public JSONObject toJSON() throws JSONException;
-  
-  public ContentStream getStream();
+  public JSONObject toJSON() throws JSONException;
 
   public boolean hasProblems();
+
+  public Collection<ImportProblemIF> getProblems();
+  
+  public String getFileId();
+
+  public InputStream getStream();
 }

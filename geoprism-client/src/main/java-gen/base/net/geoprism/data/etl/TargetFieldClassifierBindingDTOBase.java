@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Runway SDK(tm).
- *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.data.etl;
 
-@com.runwaysdk.business.ClassSignature(hash = 1581466292)
+@com.runwaysdk.business.ClassSignature(hash = 1808313497)
 public abstract class TargetFieldClassifierBindingDTOBase extends net.geoprism.data.etl.TargetFieldBasicBindingDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.data.etl.TargetFieldClassifierBinding";
-  private static final long serialVersionUID = 1581466292;
+  private static final long serialVersionUID = 1808313497;
   
   protected TargetFieldClassifierBindingDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -45,7 +27,45 @@ public abstract class TargetFieldClassifierBindingDTOBase extends net.geoprism.d
     return CLASS;
   }
   
+  public static java.lang.String ISVALIDATE = "isValidate";
   public static java.lang.String PACKAGENAME = "packageName";
+  public Boolean getIsValidate()
+  {
+    return com.runwaysdk.constants.MdAttributeBooleanUtil.getTypeSafeValue(getValue(ISVALIDATE));
+  }
+  
+  public void setIsValidate(Boolean value)
+  {
+    if(value == null)
+    {
+      setValue(ISVALIDATE, "");
+    }
+    else
+    {
+      setValue(ISVALIDATE, java.lang.Boolean.toString(value));
+    }
+  }
+  
+  public boolean isIsValidateWritable()
+  {
+    return isWritable(ISVALIDATE);
+  }
+  
+  public boolean isIsValidateReadable()
+  {
+    return isReadable(ISVALIDATE);
+  }
+  
+  public boolean isIsValidateModified()
+  {
+    return isModified(ISVALIDATE);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeBooleanMdDTO getIsValidateMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeBooleanMdDTO) getAttributeDTO(ISVALIDATE).getAttributeMdDTO();
+  }
+  
   public String getPackageName()
   {
     return getValue(PACKAGENAME);

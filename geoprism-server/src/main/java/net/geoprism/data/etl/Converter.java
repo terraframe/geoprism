@@ -18,7 +18,9 @@
  */
 package net.geoprism.data.etl;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -36,6 +38,8 @@ public class Converter implements ConverterIF
   private Workbook        errors;
 
   private ProgressMonitorIF monitor;
+  
+  private Set<ImportProblemIF> problems;
 
   public Converter(TargetContextIF context, ProgressMonitorIF monitor)
   {
@@ -55,10 +59,11 @@ public class Converter implements ConverterIF
   {
     try
     {
+      List<TargetFieldIF> fields = this.context.getFields(source.getType());
+
       Mutable business = this.context.newMutable(source.getType());
       boolean hasValues = false;
-
-      List<TargetFieldIF> fields = this.context.getFields(source.getType());
+      boolean valid = true;
 
       for (TargetFieldIF field : fields)
       {
@@ -66,17 +71,29 @@ public class Converter implements ConverterIF
 
         MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) business.getMdAttributeDAO(attributeName);
 
-        // get value can intentionally fail if attempting to get the value of a location that is on the
-        // location exclusion list. Note the custom effor after this TRY statement.
+        // get value can intentionally fail if attempting to get the value of a
+        // location that is on the
+        // location exclusion list. Note the custom effor after this TRY
+        // statement.
         FieldValue fValue = field.getValue(mdAttribute, source);
-        Object value = fValue.getValue();
 
-        if (value != null)
+        if (! ( fValue instanceof ImportProblemIF ))
         {
-          business.setValue(attributeName, value);
-        }
+          Object value = fValue.getValue();
 
-        hasValues = hasValues || !fValue.isBlank();
+          if (value != null)
+          {
+            business.setValue(attributeName, value);
+          }
+
+          hasValues = hasValues || !fValue.isBlank();
+        }
+        else
+        {
+          this.problems.add((ImportProblemIF) fValue);
+
+          valid = false;
+        }
       }
 
       /*
@@ -88,14 +105,22 @@ public class Converter implements ConverterIF
         PersistenceStrategyIF strategy = definition.getStrategy();
 
         strategy.handle(business);
-        
-        this.monitor.entityImported(definition);
+
+        if (valid)
+        {
+          this.monitor.entityImported(definition);
+        }
       }
     }
     catch (ExclusionException e)
     {
       // Do nothing. It's likely that a source value was not found because of location exclusions
     }
+  }
+  
+  public Collection<ImportProblemIF> getProblems()
+  {
+    return problems;
   }
 
   @Override

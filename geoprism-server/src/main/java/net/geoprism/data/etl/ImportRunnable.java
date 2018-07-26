@@ -82,9 +82,12 @@ public class ImportRunnable
   private String            configuration;
 
   private File              file;
+  
+  private String                    filename;
 
-  public ImportRunnable(String configuration, File file, ProgressMonitorIF monitor)
+  public ImportRunnable(String filename, String configuration, File file, ProgressMonitorIF monitor)
   {
+    this.filename = filename;
     this.configuration = configuration;
     this.file = file;
 
@@ -95,61 +98,19 @@ public class ImportRunnable
   {
     try
     {
-      this.monitor.setState(DataImportState.INITIAL);
-      
-      
       int total = this.getRowNum(this.file);
       
       monitor.setTotalProgressUnits(total);
       
-      /*
-       * First create the data types from the configuration
-       */
       DataSetBuilderIF builder = new DataSetBuilder(configuration);
       builder.build();
 
-      /*
-       * Create and import the view objects from the configuration
-       */
-      SourceContextIF sContext = builder.getSourceContext();
-      TargetContextIF tContext = builder.getTargetContext();
+      String sheetName = builder.getSheetName();
+      String id = builder.getId();
+      
+      DataImportRunnable runnable = new DataImportRunnable(this.configuration, this.filename, this.file, this.monitor.getHistory());
 
-      ImportResponseIF response = this.validateAndConfigure(sContext, tContext);
-
-      if (response != null)
-      {
-        return response;
-      }
-
-      /*
-       * Import the data
-       */
-      monitor.setState(DataImportState.DATAIMPORT);
-
-      JSONObject summary = this.importData(file, sContext, tContext);
-
-      /*
-       * Return a JSONArray of the datasets which were created as part of the import. Do not include datasets which have
-       * already been created.
-       */
-      JSONArray datasets = new JSONArray();
-
-      List<TargetDefinitionIF> definitions = tContext.getDefinitions();
-
-      for (TargetDefinitionIF definition : definitions)
-      {
-        String type = definition.getTargetType();
-
-        MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
-        MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
-
-        datasets.put(mClass.toJSON());
-      }
-
-      monitor.setState(DataImportState.COMPLETE);
-
-      // Return the new data set definition
-      return new SuccessResponse(datasets, summary);
+      return runnable.run(id, sheetName);
     }
     catch (RunwayException | SmartException e)
     {
@@ -167,12 +128,10 @@ public class ImportRunnable
     /*
      * Before importing the data we must validate that the location text information
      */
-    monitor.setState(DataImportState.VALIDATION);
     ValidationResult result = this.validateData(file, sContext, tContext);
 
     if (result.getResponse() != null)
     {
-      monitor.setState(DataImportState.VALIDATIONFAIL);
       return result.getResponse();
     }
 

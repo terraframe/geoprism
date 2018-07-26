@@ -131,7 +131,7 @@ public class SourceContentHandler implements SheetHandler
   private HashMap<String, Object>             values;
 
   private DataImportState                     mode;
-
+  
   boolean                                     isFirstSheet;
 
   public SourceContentHandler(ConverterIF converter, SourceContextIF context, ProgressMonitorIF monitor, DataImportState mode)
@@ -382,7 +382,7 @@ public class SourceContentHandler implements SheetHandler
           {
             attributeName = field.getAttributeName();
           }
-
+          
           if (this.mode.equals(DataImportState.DATAIMPORT))
           {
             if (field != null && field.getType().equals(ColumnType.IGNORE))

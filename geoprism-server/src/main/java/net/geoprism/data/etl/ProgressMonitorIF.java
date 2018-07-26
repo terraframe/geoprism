@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.etl;
 
+import com.runwaysdk.system.scheduler.JobHistory;
+
 public interface ProgressMonitorIF
 {
   public void setFilename(String filename);
@@ -58,4 +60,6 @@ public interface ProgressMonitorIF
   public void entityImported(TargetDefinitionIF entity);
 
   public void finished();
+  
+  public JobHistory getHistory();
 }

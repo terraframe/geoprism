@@ -58,6 +58,11 @@ public class ProblemResponse implements ImportResponseIF
     this.sContext = sContext;
     this.tContext = tContext;
   }
+  
+  public Collection<ImportProblemIF> getProblems()
+  {
+    return problems;
+  }
 
   public String getJSON()
   {
@@ -189,12 +194,18 @@ public class ProblemResponse implements ImportResponseIF
     }
     return sheets;
   }
-
+  
   @Override
   public ContentStream getStream()
   {
     byte[] bytes = this.getJSON().getBytes(Charset.forName("UTF-8"));
 
     return new ContentStream(new ByteArrayInputStream(bytes), "application/json");
+  }
+
+  @Override
+  public String getFileId()
+  {
+    return null;
   }
 }

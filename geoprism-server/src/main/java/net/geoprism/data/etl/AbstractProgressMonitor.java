@@ -18,6 +18,8 @@
  */
 package net.geoprism.data.etl;
 
+import com.runwaysdk.system.scheduler.JobHistory;
+
 public class AbstractProgressMonitor implements ProgressMonitorIF
 {
   private int progressUnit;
@@ -100,5 +102,11 @@ public class AbstractProgressMonitor implements ProgressMonitorIF
   public void finished()
   {
     
+  }
+
+  @Override
+  public JobHistory getHistory()
+  {
+    return null;
   }
 }

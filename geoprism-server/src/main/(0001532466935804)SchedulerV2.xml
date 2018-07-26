@@ -62,6 +62,14 @@
           </attributes>
         </create>
       </mdView> -->
+      
+      <mdBusiness name="net.geoprism.data.etl.TargetFieldClassifierBinding">
+        <create>
+          <attributes>
+            <boolean name="isValidate" label="Is validate" negativeLabel="No" positiveLabel="Yes"/>
+          </attributes>
+        </create>
+      </mdBusiness>
     </update>
   </doIt>
   <undoIt>
