@@ -100,7 +100,9 @@ export class UploadWizardComponent implements OnDestroy {
       this.refreshSteps();
     }
     else {
-      window.location.href = acp + '/dss.vector.solutions.generator.ExcelController.viewManager.mojo#/manager';      
+      console.log("expected uInfo.information.type == ETL but was [" + uInfo.information.type + "]. Full data = [" + uInfo + "].");
+      console.log(uInfo);
+      window.location.href = acp + '/prism/home#/data/uploadmanager';      
     }
   }
   
@@ -479,13 +481,13 @@ export class UploadWizardComponent implements OnDestroy {
     this.info.information.sheets[0] = _.cloneDeep(this.sheet) as Sheet;
   
     if (reconstructionJSON != null && reconstructionJSON != "" && reconstructionJSON.configuration.filename.endsWith(".xls")) {
-      window.location.href = acp + "/dss.vector.solutions.generator.ExcelController.excelImportFromVault.mojo?vaultId=" + reconstructionJSON.configuration.vaultId + "&config=" + encodeURIComponent(JSON.stringify(this.problems));
+      window.location.href = acp + "/net.geoprism.data.importer.ExcelController.excelImportFromVault.mojo?vaultId=" + reconstructionJSON.configuration.vaultId + "&config=" + encodeURIComponent(JSON.stringify(this.problems));
     }
     else
     {
       this.uploadService.importData(this.info.information)
         .then(result => {
-          window.location.href = acp + '/dss.vector.solutions.generator.ExcelController.viewManager.mojo#/manager';      
+          window.location.href = acp + '/prism/home#/data/uploadmanager';
         	
 //          console.log("persist importData return")
 //          if(result.success || (reconstructionJSON != null && reconstructionJSON != "")) {

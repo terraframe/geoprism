@@ -1,8 +1,9 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
+      <!--
       <mdBusiness name="net.geoprism.data.etl.excel.DataUploaderImportJob" label="Data Uploader Import job" extends="com.runwaysdk.system.scheduler.ExecutableJob">
-     </mdBusiness>
+      </mdBusiness>
       
       <mdBusiness name="net.geoprism.data.etl.excel.ExcelImportHistory" label="Excel Import history" extends="com.runwaysdk.system.scheduler.JobHistory">
        <attributes>
@@ -26,8 +27,10 @@
          <mdParameter name="outputStream" label="outputStream" order="0" type="java.io.OutputStream"  />
        </mdMethod>
      </mdBusiness>
+     -->
     </create>
     <update>
+      <!--
       <mdUtil name="net.geoprism.data.importer.ExcelUtil">
         <create>
           <mdMethod name="excelImportFromVault" label="excelImportFromVault" returnType="void" static="true">
@@ -36,9 +39,10 @@
           </mdMethod>
         </create>
       </mdUtil>
-    
+      -->
       <mdController name="net.geoprism.data.importer.ExcelController">
         <create>
+          <!--
           <mdAction name="downloadErrorSpreadsheet" label="downloadErrorSpreadsheet" isPost="false" isQuery="false">
             <mdParameter name="historyId" label="historyId" order="0" type="java.lang.String" />
           </mdAction>
@@ -52,17 +56,14 @@
             <mdParameter name="vaultId" label="vaultId" order="0" type="java.lang.String"/>
             <mdParameter name="config" label="config" order="1" type="java.lang.String"/>
           </mdAction>
+          -->
+          
+          <mdAction name="getAllHistory" label="get all history" isPost="false" ></mdAction>
+          <mdAction name="clearHistory" label="clear history" isPost="false" ></mdAction>
         </create>
       </mdController>
-       
-      <!-- <mdView name="dss.vector.solutions.ontology.UnknownTerm">
-        <create>
-          <attributes>
-            <char name="mdAttributeId" label="mdAttributeId" size="64" />
-          </attributes>
-        </create>
-      </mdView> -->
       
+      <!-- 
       <mdBusiness name="net.geoprism.data.etl.TargetFieldClassifierBinding">
         <create>
           <attributes>
@@ -70,6 +71,7 @@
           </attributes>
         </create>
       </mdBusiness>
+      -->
     </update>
   </doIt>
   <undoIt>

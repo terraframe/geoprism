@@ -1,6 +1,6 @@
 package net.geoprism.data.importer;
 
-@com.runwaysdk.business.ClassSignature(hash = 974602379)
+@com.runwaysdk.business.ClassSignature(hash = -31246299)
 public class ExcelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.data.importer.ExcelController";
@@ -63,6 +63,20 @@ public class ExcelControllerBase implements com.runwaysdk.generation.loader.Relo
   public com.runwaysdk.ClientSession getClientSession()
   {
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void clearHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.clearHistory");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void failClearHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.failClearHistory");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:historyId", post=false)
@@ -133,6 +147,20 @@ public class ExcelControllerBase implements com.runwaysdk.generation.loader.Relo
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.failExportExcelForm");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void getAllHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.getAllHistory");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="", post=false)
+  public void failGetAllHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.failGetAllHistory");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.controller.MultipartFileParameter:file, java.lang.String:country, java.lang.String:downloadToken", post=true)

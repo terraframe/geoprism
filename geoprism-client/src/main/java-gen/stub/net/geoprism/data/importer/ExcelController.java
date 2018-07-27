@@ -20,15 +20,20 @@ package net.geoprism.data.importer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
+import net.geoprism.data.etl.excel.ExcelImportHistoryDTO;
 import net.geoprism.localization.LocalizationFacadeDTO;
 import net.geoprism.report.PairViewDTO;
 import net.geoprism.report.ReportItemDTO;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
@@ -42,6 +47,93 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
   public ExcelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
+  }
+  
+  public void excelImportFromVault(java.lang.String vaultId, String config) throws java.io.IOException, javax.servlet.ServletException
+  {
+    ExcelUtilDTO.excelImportFromVault(this.getClientRequest(), vaultId, config);
+    
+    resp.sendRedirect("prism/home#/data/uploadmanager");
+  }
+  
+  public void failExcelImportFromVault(java.lang.String vaultId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    // do NOTHING (as usual)
+  }
+  
+  @Override
+  public void clearHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    ExcelImportHistoryDTO.deleteAllHistory(getClientRequest());
+  }
+  
+  @Override
+  public void failClearHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    // Do nothing! Intentionally empty.
+  }
+  
+  @Override
+  public void getAllHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    try
+    {
+      JSONArray jHistories = new JSONArray();
+      
+      ExcelImportHistoryDTO[] histories = ExcelImportHistoryDTO.getAllHistory(getClientRequest());
+      
+      for (int i = 0; i < histories.length; ++i)
+      {
+        ExcelImportHistoryDTO history = histories[i];
+        
+        JSONObject jHistory = new JSONObject();
+        
+        jHistory.put("id", history.getId());
+        
+        jHistory.put("name", history.getFileName());
+        
+        if (history.getImportCount() != null)
+        {
+          jHistory.put("importCount", history.getImportCount());
+        }
+        else
+        {
+          jHistory.put("importCount", 0);
+        }
+        
+        jHistory.put("totalRecords", history.getTotalRecords());
+        jHistory.put("status", history.getStatus().get(0).item(getClientRequest()).getDisplayLabel().getValue());
+        jHistory.put("startTime", new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z").format(history.getStartTime()));
+        if (history.getEndTime() != null)
+        {
+          jHistory.put("endTime", new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z").format(history.getEndTime()));
+        }
+        else
+        {
+          jHistory.put("endTime", "");
+        }
+        jHistory.put("hasError", history.getErrorFile() != null);
+        
+        jHistory.put("geoSyns", history.getNumberUnknownGeos());
+        
+        jHistory.put("termSyns", history.getNumberUnknownTerms());
+        
+        jHistories.put(jHistory);
+      }
+      
+      resp.getWriter().write(jHistories.toString());
+    }
+    catch (JSONException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  
+  @Override
+  public void failGetAllHistory() throws java.io.IOException, javax.servlet.ServletException
+  {
+    req.getRequestDispatcher("/index.jsp").forward(req, resp);
   }
 
   @Override

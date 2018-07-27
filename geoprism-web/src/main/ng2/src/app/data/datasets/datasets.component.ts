@@ -33,6 +33,8 @@ import { DatasetService } from '../service/dataset.service';
 import { UploadWizardComponent } from '../uploader/upload-wizard.component';
 import { UploadResultComponent } from '../uploader/upload-result.component';
 
+declare let reconstructionJSON: any;
+
 declare let acp: string;
 
 @Component({

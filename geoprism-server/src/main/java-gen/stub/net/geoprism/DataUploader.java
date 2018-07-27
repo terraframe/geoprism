@@ -18,12 +18,33 @@
  */
 package net.geoprism;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+
+import net.geoprism.data.etl.CompositeMonitor;
+import net.geoprism.data.etl.DefinitionBuilder;
+import net.geoprism.data.etl.ExcelSourceBinding;
+import net.geoprism.data.etl.ImportResponseIF;
+import net.geoprism.data.etl.ImportRunnable;
+import net.geoprism.data.etl.LoggingProgressMonitor;
+import net.geoprism.data.etl.ProgressMonitorIF;
+import net.geoprism.data.etl.ProgressStateMonitor;
+import net.geoprism.data.etl.SourceDefinitionIF;
+import net.geoprism.data.etl.TargetDefinitionIF;
+import net.geoprism.data.etl.excel.ExcelDataFormatter;
+import net.geoprism.data.etl.excel.ExcelSheetReader;
+import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
+import net.geoprism.data.etl.excel.InvalidExcelFileException;
+import net.geoprism.data.importer.SeedKeyGenerator;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
+import net.geoprism.ontology.GeoEntityUtil;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -42,6 +63,7 @@ import com.runwaysdk.dataaccess.metadata.ReservedWords;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.system.VaultFile;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -50,27 +72,6 @@ import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdClassQuery;
-
-import net.geoprism.data.etl.CompositeMonitor;
-import net.geoprism.data.etl.DefinitionBuilder;
-import net.geoprism.data.etl.ExcelSourceBinding;
-import net.geoprism.data.etl.ImportResponseIF;
-import net.geoprism.data.etl.ImportRunnable;
-import net.geoprism.data.etl.LoggingProgressMonitor;
-import net.geoprism.data.etl.ProgressMonitorIF;
-import net.geoprism.data.etl.ProgressStateMonitor;
-import net.geoprism.data.etl.SourceDefinitionIF;
-import net.geoprism.data.etl.TargetDefinitionIF;
-import net.geoprism.data.etl.excel.ExcelDataFormatter;
-import net.geoprism.data.etl.excel.ExcelSheetReader;
-import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
-import net.geoprism.data.etl.excel.InvalidExcelFileException;
-import net.geoprism.data.importer.SeedKeyGenerator;
-import net.geoprism.gis.geoserver.SessionPredicate;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierSynonym;
-import net.geoprism.ontology.GeoEntityUtil;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -178,29 +179,26 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
   public static String getAttributeInformation(String fileName, InputStream fileStream)
   {
     // Save the file to the file system
-    try
+    try (BufferedInputStream bis = new BufferedInputStream(fileStream))
     {
-      String name = SessionPredicate.generateId();
+      VaultFile vf = VaultFile.createAndApply(fileName, bis);
 
-      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
-      directory.mkdirs();
-
-      File file = new File(directory, fileName);
-
-      FileUtils.copyInputStreamToFile(fileStream, file);
-
-      FieldInfoContentsHandler handler = new FieldInfoContentsHandler();
+      FieldInfoContentsHandler handler = new FieldInfoContentsHandler(fileName);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(new FileInputStream(file));
+      reader.process(vf.getFileStream());
 
-      JSONObject object = new JSONObject();
-      object.put("sheets", handler.getSheets());
-      object.put("directory", directory.getName());
-      object.put("filename", fileName);
+//      if (handler.getType().equals("ETL"))
+//      {
+        JSONObject object = new JSONObject();
+        object.put("sheets", handler.getSheets());
+        object.put("vaultId", vf.getId());
+        object.put("filename", fileName);
+        object.put("type", "ETL");
 
-      return object.toString();
+        return object.toString();
+//      }
     }
     catch (InvalidFormatException e)
     {

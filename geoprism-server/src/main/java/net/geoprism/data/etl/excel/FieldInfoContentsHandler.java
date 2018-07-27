@@ -243,14 +243,25 @@ public class FieldInfoContentsHandler implements SheetHandler
   private JSONArray                           information;
 
   private SpreadsheetImporterHeaderModifierIF headerModifier;
+  
+  private String              filename;
+
+  private String              type;
 
   private String                              dataset;
 
-  public FieldInfoContentsHandler()
+  public FieldInfoContentsHandler(String filename)
   {
     this.information = new JSONArray();
+    this.filename = filename;
+    this.type = "ETL";
 
     this.headerModifier = this.getHeaderModifier();
+  }
+  
+  public String getType()
+  {
+    return type;
   }
 
   public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
@@ -348,6 +359,7 @@ public class FieldInfoContentsHandler implements SheetHandler
       JSONObject sheet = new JSONObject();
       sheet.put("name", this.sheetName);
       sheet.put("label", this.sheetName);
+      sheet.put("source", this.filename);
       sheet.put("fields", fields);
       sheet.put("matches", matches);
       
