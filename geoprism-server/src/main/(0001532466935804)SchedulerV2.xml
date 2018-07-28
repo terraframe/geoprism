@@ -1,7 +1,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <!--
       <mdBusiness name="net.geoprism.data.etl.excel.DataUploaderImportJob" label="Data Uploader Import job" extends="com.runwaysdk.system.scheduler.ExecutableJob">
       </mdBusiness>
       
@@ -27,10 +26,8 @@
          <mdParameter name="outputStream" label="outputStream" order="0" type="java.io.OutputStream"  />
        </mdMethod>
      </mdBusiness>
-     -->
     </create>
     <update>
-      <!--
       <mdUtil name="net.geoprism.data.importer.ExcelUtil">
         <create>
           <mdMethod name="excelImportFromVault" label="excelImportFromVault" returnType="void" static="true">
@@ -39,10 +36,9 @@
           </mdMethod>
         </create>
       </mdUtil>
-      -->
+      
       <mdController name="net.geoprism.data.importer.ExcelController">
         <create>
-          <!--
           <mdAction name="downloadErrorSpreadsheet" label="downloadErrorSpreadsheet" isPost="false" isQuery="false">
             <mdParameter name="historyId" label="historyId" order="0" type="java.lang.String" />
           </mdAction>
@@ -56,14 +52,14 @@
             <mdParameter name="vaultId" label="vaultId" order="0" type="java.lang.String"/>
             <mdParameter name="config" label="config" order="1" type="java.lang.String"/>
           </mdAction>
-          -->
-          
           <mdAction name="getAllHistory" label="get all history" isPost="false" ></mdAction>
           <mdAction name="clearHistory" label="clear history" isPost="false" ></mdAction>
+          <mdAction name="getReconstructionJSON" label="getReconstructionJSON" isPost="false" isQuery="false">
+            <mdParameter name="historyId" label="historyId" order="0" type="java.lang.String" />
+          </mdAction>
         </create>
       </mdController>
       
-      <!-- 
       <mdBusiness name="net.geoprism.data.etl.TargetFieldClassifierBinding">
         <create>
           <attributes>
@@ -71,10 +67,53 @@
           </attributes>
         </create>
       </mdBusiness>
+      <!--
+      <mdUtil name="net.geoprism.DataUploader">
+        <create>
+          <mdMethod name="importData2" static="true" label="importData" returnType="java.lang.String">
+            <mdParameter name="configuration" label="configuration" order="0" type="java.lang.String"/>
+          </mdMethod>
+        </create>
+      </mdUtil>
       -->
     </update>
+    <permissions>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="com.runwaysdk.system.scheduler.JobStatus">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="geoprism.admin.DashboardBuilder">
+        <grant>
+          <mdBusinessPermission type="com.runwaysdk.system.scheduler.JobStatus">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </role>      
+      <role roleName="geoprism.DecisionMaker">
+        <grant>
+          <mdBusinessPermission type="com.runwaysdk.system.scheduler.JobStatus">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </role>
+    </permissions>
   </doIt>
   <undoIt>
-    <delete></delete>
+    <delete>
+      <object key="net.geoprism.data.etl.excel.DataUploaderImportJob" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.etl.excel.ExcelImportHistory" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.data.importer.ExcelUtil.excelImportFromVault" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.data.importer.ExcelController.downloadErrorSpreadsheet" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.importer.ExcelController.resolveTermSynonyms" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.importer.ExcelController.resolveGeoSynonyms" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.importer.ExcelController.excelImportFromVault" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.importer.ExcelController.getAllHistory" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.importer.ExcelController.clearHistory" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.importer.ExcelController.getReconstructionJSON" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.data.etl.TargetFieldClassifierBinding.isValidate" type="com.runwaysdk.system.metadata.MdAttributeBoolean"/>
+    </delete>
   </undoIt>
 </version>

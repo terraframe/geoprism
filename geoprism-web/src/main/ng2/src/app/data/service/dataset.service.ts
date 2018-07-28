@@ -44,6 +44,19 @@ export class DatasetService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
+  getReconstructionJson(historyId : string): Promise<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('historyId', historyId);
+  
+    return this.ehttp
+      .get(acp + 'net.geoprism.data.importer.ExcelController.getReconstructionJSON.mojo', {search: params})
+      .toPromise()
+      .then(response => {
+        return response.json() as string;
+      })
+      .catch(this.handleError.bind(this));
+  }
+  
   edit(id : string): Promise<Dataset> {
 
     let headers = new Headers({

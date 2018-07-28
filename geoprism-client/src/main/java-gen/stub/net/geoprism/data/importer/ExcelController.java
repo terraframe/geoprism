@@ -61,6 +61,20 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
     // do NOTHING (as usual)
   }
   
+  public void getReconstructionJSON(java.lang.String historyId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    ExcelImportHistoryDTO history = ExcelImportHistoryDTO.get(this.getClientRequest(), historyId);
+    
+    JSONObject reconstructJSON;
+    try {
+      reconstructJSON = new JSONObject(history.getReconstructionJSON());
+    } catch (JSONException e) {
+      throw new RuntimeException(e);
+    }
+    
+    resp.getWriter().write(reconstructJSON.toString());
+  }
+  
   @Override
   public void clearHistory() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -130,7 +144,7 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
     }
   }
   
-  @Override
+//  @Override
   public void failGetAllHistory() throws java.io.IOException, javax.servlet.ServletException
   {
     req.getRequestDispatcher("/index.jsp").forward(req, resp);

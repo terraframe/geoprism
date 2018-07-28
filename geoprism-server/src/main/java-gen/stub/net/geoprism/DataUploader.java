@@ -26,26 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
-import net.geoprism.data.etl.CompositeMonitor;
-import net.geoprism.data.etl.DefinitionBuilder;
-import net.geoprism.data.etl.ExcelSourceBinding;
-import net.geoprism.data.etl.ImportResponseIF;
-import net.geoprism.data.etl.ImportRunnable;
-import net.geoprism.data.etl.LoggingProgressMonitor;
-import net.geoprism.data.etl.ProgressMonitorIF;
-import net.geoprism.data.etl.ProgressStateMonitor;
-import net.geoprism.data.etl.SourceDefinitionIF;
-import net.geoprism.data.etl.TargetDefinitionIF;
-import net.geoprism.data.etl.excel.ExcelDataFormatter;
-import net.geoprism.data.etl.excel.ExcelSheetReader;
-import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
-import net.geoprism.data.etl.excel.InvalidExcelFileException;
-import net.geoprism.data.importer.SeedKeyGenerator;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierSynonym;
-import net.geoprism.ontology.GeoEntityUtil;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.json.JSONArray;
@@ -63,6 +43,7 @@ import com.runwaysdk.dataaccess.metadata.ReservedWords;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.VaultFile;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
@@ -72,6 +53,21 @@ import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 import com.runwaysdk.system.metadata.MdClassQuery;
+
+import net.geoprism.data.etl.DefinitionBuilder;
+import net.geoprism.data.etl.ExcelSourceBinding;
+import net.geoprism.data.etl.SourceDefinitionIF;
+import net.geoprism.data.etl.TargetDefinitionIF;
+import net.geoprism.data.etl.excel.DataUploaderImportJob;
+import net.geoprism.data.etl.excel.ExcelDataFormatter;
+import net.geoprism.data.etl.excel.ExcelSheetReader;
+import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
+import net.geoprism.data.etl.excel.InvalidExcelFileException;
+import net.geoprism.data.importer.SeedKeyGenerator;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierSynonym;
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -290,34 +286,18 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     {
       JSONObject object = new JSONObject(configuration);
 
-      String name = object.getString("directory");
-      String filename = object.getString("filename");
-      String uploadId = object.getString("uploadId");
+      String vaultId = object.getString("vaultId");
+      VaultFile vf = VaultFile.get(vaultId);
 
-      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
-      File file = new File(directory, filename);
-
-      ProgressMonitorIF monitor = new CompositeMonitor(new LoggingProgressMonitor(), new ProgressStateMonitor(uploadId));
+      DataUploaderImportJob job = new DataUploaderImportJob(configuration, vf.getFile(), object.getString("filename"));
+      job.setRunAsUserId(Session.getCurrentSession().getUser().getId());
+//      job.setRunAsDimensionId(Session.getCurrentDimension().getId());
+      job.apply();
+      job.doImport();
       
-      monitor.setFilename(filename);
-
-      try
-      {
-        ImportResponseIF response = new ImportRunnable(filename, configuration, file, monitor).run();
-
-        if (!response.hasProblems())
-        {
-          FileUtils.deleteDirectory(directory);
-        }
-
-        return response.getStream();
-      }
-      finally
-      {
-        monitor.finished();
-      }
+      return null;
     }
-    catch (JSONException | IOException e)
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }

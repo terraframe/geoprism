@@ -1,6 +1,6 @@
 package net.geoprism.data.importer;
 
-@com.runwaysdk.business.ClassSignature(hash = -31246299)
+@com.runwaysdk.business.ClassSignature(hash = 313173356)
 public class ExcelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
   public static final String CLASS = "net.geoprism.data.importer.ExcelController";
@@ -161,6 +161,20 @@ public class ExcelControllerBase implements com.runwaysdk.generation.loader.Relo
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.failGetAllHistory");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:historyId", post=false)
+  public void getReconstructionJSON(java.lang.String historyId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.getReconstructionJSON");
+  }
+  
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:historyId", post=false)
+  public void failGetReconstructionJSON(java.lang.String historyId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.data.importer.ExcelController.java";
+    throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.data.importer.ExcelController.failGetReconstructionJSON");
   }
   
   @com.runwaysdk.controller.ActionParameters(parameters="com.runwaysdk.controller.MultipartFileParameter:file, java.lang.String:country, java.lang.String:downloadToken", post=true)

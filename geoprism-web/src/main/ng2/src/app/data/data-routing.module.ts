@@ -56,6 +56,11 @@ const routes: Routes = [
     data: { title: 'dataset.title' }            
   },
   {
+    path: 'datasets/:historyId/:pageNum',
+    component: DatasetsComponent,
+    data: { title: 'dataset.title' }                        
+  },
+  {
     path: 'dataset/:id',
     component: DatasetDetailComponent,
     resolve: {
@@ -101,7 +106,7 @@ const routes: Routes = [
     path: 'uploadmanager',
     component: UploadManagerComponent,
     data: { title: 'upload.manager.title' }                        
-  }
+  },
 ];
 
 @NgModule({

@@ -38,6 +38,7 @@ import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
 import net.geoprism.ontology.ClassifierDTO;
@@ -83,9 +84,9 @@ public class DataUploaderController implements Reloadable
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF importData(ClientRequestIF request, @RequestParamter(name = "configuration") String configuration) throws JSONException
   {
-    ContentStream stream = (ContentStream) DataUploaderDTO.importData(request, configuration);
+    DataUploaderDTO.importData(request, configuration);
 
-    return new InputStreamResponse(stream, stream.getContentType(), "Test.xlsx");
+    return new RestResponse();
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)

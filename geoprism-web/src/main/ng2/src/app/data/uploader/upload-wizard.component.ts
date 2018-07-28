@@ -12,8 +12,6 @@ import { LocalizationService } from '../../core/service/localization.service';
 import { UploadService } from '../service/upload.service';
 import { NavigationService } from './navigation.service';
 
-declare let reconstructionJSON: any;
-
 declare let acp: string;
 
 @Component({
@@ -40,6 +38,8 @@ export class UploadWizardComponent implements OnDestroy {
   
   isPersisted: boolean = false;
   
+  reconstructionJSON: any;
+  
   constructor(
     private localizationService: LocalizationService,
     private uploadService: UploadService,
@@ -64,7 +64,11 @@ export class UploadWizardComponent implements OnDestroy {
   
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }  
+  }
+  
+  setReconstructionJSON(json: any): void {
+    this.reconstructionJSON = json;
+  }
   
   initialize(info: string): void {
     let uInfo = JSON.parse(info) as UploadInformation;
@@ -480,8 +484,8 @@ export class UploadWizardComponent implements OnDestroy {
   persist(): void {
     this.info.information.sheets[0] = _.cloneDeep(this.sheet) as Sheet;
   
-    if (reconstructionJSON != null && reconstructionJSON != "" && reconstructionJSON.configuration.filename.endsWith(".xls")) {
-      window.location.href = acp + "/net.geoprism.data.importer.ExcelController.excelImportFromVault.mojo?vaultId=" + reconstructionJSON.configuration.vaultId + "&config=" + encodeURIComponent(JSON.stringify(this.problems));
+    if (this.reconstructionJSON != null && this.reconstructionJSON != "" && this.reconstructionJSON.configuration.filename.endsWith(".xls")) {
+      window.location.href = acp + "/net.geoprism.data.importer.ExcelController.excelImportFromVault.mojo?vaultId=" + this.reconstructionJSON.configuration.vaultId + "&config=" + encodeURIComponent(JSON.stringify(this.problems));
     }
     else
     {
@@ -490,7 +494,7 @@ export class UploadWizardComponent implements OnDestroy {
           window.location.href = acp + '/prism/home#/data/uploadmanager';
         	
 //          console.log("persist importData return")
-//          if(result.success || (reconstructionJSON != null && reconstructionJSON != "")) {
+//          if(result.success || (this.reconstructionJSON != null && this.reconstructionJSON != "")) {
 //            this.clear();
 //            console.log("onSuccess emit (importData)")
 //            this.onSuccess.emit({datasets:result.datasets, finished : true});          
@@ -510,11 +514,11 @@ export class UploadWizardComponent implements OnDestroy {
     this.isPersisted = true;
   
     let externalPageRequest = -1;
-    if (reconstructionJSON != null && reconstructionJSON != "")
+    if (this.reconstructionJSON != null && this.reconstructionJSON != "")
     {
-      this.info = {options: {countries: []}, classifiers: [], information: reconstructionJSON.configuration}
+      this.info = {options: {countries: []}, classifiers: [], information: this.reconstructionJSON.configuration}
       
-      externalPageRequest = reconstructionJSON.pageNum;
+      externalPageRequest = this.reconstructionJSON.pageNum;
     }
     
     this.sheet = result.sheets[0];

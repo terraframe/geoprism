@@ -18,7 +18,7 @@
 ///
 
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
@@ -32,8 +32,6 @@ import { DatasetService } from '../service/dataset.service';
 
 import { UploadWizardComponent } from '../uploader/upload-wizard.component';
 import { UploadResultComponent } from '../uploader/upload-result.component';
-
-declare let reconstructionJSON: any;
 
 declare let acp: string;
 
@@ -49,6 +47,8 @@ export class DatasetsComponent implements OnInit {
 
   public uploader:FileUploader;
   public dropActive:boolean = false;
+  
+  public reconstructionJSON: any;
 
   @ViewChild(UploadWizardComponent)
   private wizard: UploadWizardComponent;
@@ -60,19 +60,21 @@ export class DatasetsComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private datasetService: DatasetService,
     private eventService: EventService,
     private modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.getDatasets();
+    this.getReconstructionJson();
     
     let options:FileUploaderOptions =  {
       autoUpload: true,
       queueLimit: 1,
       removeAfterUpload: true,
       url: acp + '/uploader/getAttributeInformation'      
-    };    
+    };
     
     this.uploader = new FileUploader(options);
     this.uploader.onBeforeUploadItem = (fileItem: any) => {
@@ -83,6 +85,7 @@ export class DatasetsComponent implements OnInit {
     };    
     this.uploader.onSuccessItem = (item: any, response: string, status: number, headers: any) => {
       this.wizard.initialize(response);
+      this.wizard.setReconstructionJSON(this.reconstructionJSON);
     };
     this.uploader.onErrorItem = (item: any, response: string, status: number, headers: any) => {
       this.eventService.onError(response);	
@@ -93,7 +96,7 @@ export class DatasetsComponent implements OnInit {
     this.uploader.onAfterAddingFile = (item => {
       this.uploadElRef.nativeElement.value = '';
     });
-  }  
+  }
   
   getDatasets() : void {
     this.datasetService
@@ -102,6 +105,18 @@ export class DatasetsComponent implements OnInit {
         this.datasets = datasetCollection.datasets;
         this.canExport = datasetCollection.canExport;
       })
+  };
+  
+  getReconstructionJson() : void {
+    if (this.route.params['historyId'] != null)
+    {
+      this.datasetService
+        .getReconstructionJson(this.route.params['historyId'])
+        .then(reconstructionJSON => {
+          this.reconstructionJSON = reconstructionJSON;
+          this.reconstructionJSON.pageNum = this.route.params['pageNum'];
+        })
+    }
   };
   
   remove(dataset: Dataset, event: any) : void {
