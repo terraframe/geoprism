@@ -338,6 +338,22 @@
       <build>
         <plugins>
           <plugin>
+             <groupId>org.apache.maven.plugins</groupId>
+             <artifactId>maven-compiler-plugin</artifactId>
+             <executions>
+               <execution>
+                 <id>default-compile</id>
+                 <phase>compile</phase>
+                 <goals>
+                    <goal>compile</goal>
+                 </goals>
+                 <configuration>
+                   <skipMain>true</skipMain>
+                 </configuration>
+               </execution>
+             </executions>
+          </plugin>
+          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
             <version>1.2.1</version>
@@ -372,6 +388,22 @@
       </activation>
       <build>
         <plugins>
+          <plugin>
+             <groupId>org.apache.maven.plugins</groupId>
+             <artifactId>maven-compiler-plugin</artifactId>
+             <executions>
+               <execution>
+                 <id>default-compile</id>
+                 <phase>compile</phase>
+                 <goals>
+                    <goal>compile</goal>
+                 </goals>
+                 <configuration>
+                   <skipMain>true</skipMain>
+                 </configuration>
+               </execution>
+             </executions>
+          </plugin>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
