@@ -1,6 +1,6 @@
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = 2125888676)
+@com.runwaysdk.business.ClassSignature(hash = -660671868)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -11,7 +11,7 @@ package net.geoprism.data.etl.excel;
 public class DataUploaderImportJobQueryDTO extends com.runwaysdk.system.scheduler.ExecutableJobQueryDTO
  implements com.runwaysdk.generation.loader.Reloadable
 {
-private static final long serialVersionUID = 2125888676;
+private static final long serialVersionUID = -660671868;
 
   protected DataUploaderImportJobQueryDTO(String type)
   {

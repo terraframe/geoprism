@@ -314,13 +314,12 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     {
       JSONObject object = new JSONObject(configuration);
 
-      String name = object.getString("directory");
+      String vaultId = object.getString("vaultId");
+      VaultFile vf = VaultFile.get(vaultId);
 
-      File directory = new File(new File(VaultProperties.getPath("vault.default"), "files"), name);
-
-      FileUtils.deleteDirectory(directory);
+      vf.delete();
     }
-    catch (JSONException | IOException e)
+    catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }

@@ -144,7 +144,7 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
     }
   }
   
-//  @Override
+  @Override
   public void failGetAllHistory() throws java.io.IOException, javax.servlet.ServletException
   {
     req.getRequestDispatcher("/index.jsp").forward(req, resp);

@@ -21,6 +21,7 @@ package net.geoprism.data.etl;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -45,6 +46,7 @@ public class Converter implements ConverterIF
   {
     this.context = context;
     this.monitor = monitor;
+    this.problems = new TreeSet<ImportProblemIF>();
   }
 
   @Override

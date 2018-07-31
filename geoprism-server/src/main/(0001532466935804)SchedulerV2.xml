@@ -2,6 +2,7 @@
   <doIt>
     <create>
       <mdBusiness name="net.geoprism.data.etl.excel.DataUploaderImportJob" label="Data Uploader Import job" extends="com.runwaysdk.system.scheduler.ExecutableJob">
+        <mdMethod name="executeAuthenticated" static="false" label="executeAuthenticated" returnType="void"></mdMethod>
       </mdBusiness>
       
       <mdBusiness name="net.geoprism.data.etl.excel.ExcelImportHistory" label="Excel Import history" extends="com.runwaysdk.system.scheduler.JobHistory">
@@ -83,6 +84,7 @@
           <mdBusinessPermission type="com.runwaysdk.system.scheduler.JobStatus">
             <operation name="ALL" />
           </mdBusinessPermission>
+          
         </grant>
       </role>
       <role roleName="geoprism.admin.DashboardBuilder">
@@ -96,6 +98,18 @@
         <grant>
           <mdBusinessPermission type="com.runwaysdk.system.scheduler.JobStatus">
             <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <method methodName="executeAuthenticated" type="net.geoprism.data.etl.excel.DataUploaderImportJob">
+        <assignedRole roleName="Administrator"/>
+      </method>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.data.etl.excel.DataUploaderImportJob">
+            <mdMethodPermission methodName="executeAuthenticated">
+              <operation name="EXECUTE"/>
+            </mdMethodPermission>
           </mdBusinessPermission>
         </grant>
       </role>

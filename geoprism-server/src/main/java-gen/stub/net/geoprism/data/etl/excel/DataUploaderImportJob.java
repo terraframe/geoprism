@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.system.scheduler.AllJobStatus;
 import com.runwaysdk.system.scheduler.ExecutionContext;
@@ -16,6 +19,8 @@ import net.geoprism.data.etl.SuccessResponse;
 
 public class DataUploaderImportJob extends DataUploaderImportJobBase implements com.runwaysdk.generation.loader.Reloadable
 {
+  private static Logger logger = LoggerFactory.getLogger(DataUploaderImportJob.class);
+  
   private static final long serialVersionUID = -450862498;
   
   public DataUploaderImportJob()

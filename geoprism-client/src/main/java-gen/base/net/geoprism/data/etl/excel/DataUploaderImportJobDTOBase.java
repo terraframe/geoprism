@@ -1,10 +1,10 @@
 package net.geoprism.data.etl.excel;
 
-@com.runwaysdk.business.ClassSignature(hash = -845149221)
+@com.runwaysdk.business.ClassSignature(hash = 72139899)
 public abstract class DataUploaderImportJobDTOBase extends com.runwaysdk.system.scheduler.ExecutableJobDTO implements com.runwaysdk.generation.loader.Reloadable
 {
   public final static String CLASS = "net.geoprism.data.etl.excel.DataUploaderImportJob";
-  private static final long serialVersionUID = -845149221;
+  private static final long serialVersionUID = 72139899;
   
   protected DataUploaderImportJobDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -25,6 +25,22 @@ public abstract class DataUploaderImportJobDTOBase extends com.runwaysdk.system.
   protected java.lang.String getDeclaredType()
   {
     return CLASS;
+  }
+  
+  public final void executeAuthenticated()
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.excel.DataUploaderImportJobDTO.CLASS, "executeAuthenticated", _declaredTypes);
+    getRequest().invokeMethod(_metadata, this, _parameters);
+  }
+  
+  public static final void executeAuthenticated(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  {
+    String[] _declaredTypes = new String[]{"java.lang.String"};
+    Object[] _parameters = new Object[]{id};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.excel.DataUploaderImportJobDTO.CLASS, "executeAuthenticated", _declaredTypes);
+    clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static net.geoprism.data.etl.excel.DataUploaderImportJobDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
