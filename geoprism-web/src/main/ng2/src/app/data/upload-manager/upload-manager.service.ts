@@ -8,7 +8,7 @@ import { EventHttpService } from '../../core/service/event-http.service';
 
 import { ExcelImportHistory } from './upload-manager.model';
 
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Rx';
 
 declare var acp: any;
 
