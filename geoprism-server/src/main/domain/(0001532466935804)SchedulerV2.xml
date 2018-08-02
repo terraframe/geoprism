@@ -60,23 +60,6 @@
           </mdAction>
         </create>
       </mdController>
-      
-      <mdBusiness name="net.geoprism.data.etl.TargetFieldClassifierBinding">
-        <create>
-          <attributes>
-            <boolean name="isValidate" label="Is validate" negativeLabel="No" positiveLabel="Yes"/>
-          </attributes>
-        </create>
-      </mdBusiness>
-      <!--
-      <mdUtil name="net.geoprism.DataUploader">
-        <create>
-          <mdMethod name="importData2" static="true" label="importData" returnType="java.lang.String">
-            <mdParameter name="configuration" label="configuration" order="0" type="java.lang.String"/>
-          </mdMethod>
-        </create>
-      </mdUtil>
-      -->
     </update>
     <permissions>
       <role roleName="geoprism.admin.Administrator">

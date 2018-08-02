@@ -22,13 +22,14 @@ import net.geoprism.data.etl.ColumnType;
 
 public class CountSheetHandler implements SheetHandler
 {
-  private int rowNum;
-  
-  private boolean hasCell;
+  private int     rowNum;
+
+  private boolean isFirstSheet;
 
   public CountSheetHandler()
   {
     this.rowNum = 0;
+    this.isFirstSheet = true;
   }
 
   @Override
@@ -39,27 +40,26 @@ public class CountSheetHandler implements SheetHandler
   @Override
   public void endSheet()
   {
+    this.isFirstSheet = false;
   }
 
   @Override
   public void startRow(int rowNum)
   {
-    this.hasCell = false;
+    if (this.isFirstSheet)
+    {
+      this.rowNum = rowNum;
+    }
   }
 
   @Override
   public void endRow()
   {
-    if (hasCell)
-    {
-      this.rowNum++;
-    }
   }
 
   @Override
   public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
-    this.hasCell = true;
   }
 
   @Override
@@ -71,7 +71,7 @@ public class CountSheetHandler implements SheetHandler
   {
     return rowNum;
   }
-  
+
   @Override
   public void setDatasetProperty(String dataset)
   {

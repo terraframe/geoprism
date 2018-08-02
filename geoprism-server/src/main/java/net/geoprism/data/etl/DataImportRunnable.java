@@ -20,17 +20,13 @@ import org.json.JSONObject;
 
 import com.runwaysdk.constants.MdAttributeDecInfo;
 import com.runwaysdk.dataaccess.MdAttributeDecDAOIF;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDecDAO;
-import com.runwaysdk.dataaccess.metadata.MdClassDAO;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.VaultFile;
-import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdWebAttribute;
-import com.runwaysdk.system.metadata.MdWebForm;
 import com.runwaysdk.system.scheduler.JobHistory;
 
 import net.geoprism.MappableClass;
@@ -153,51 +149,15 @@ public class DataImportRunnable implements Reloadable
 
     List<TargetDefinitionIF> definitions = tContext.getDefinitions();
 
+    
     for (TargetDefinitionIF definition : definitions)
     {
       String type = definition.getTargetType();
 
-      MdWebForm mdForm = MdWebForm.getByKey(type);
-      MdClass mdClass = mdForm.getFormMdClass();
-      MappableClass mClass = MappableClass.getMappableClass((MdClassDAO)MdClassDAO.get(mdClass.getId()));
+      MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
+      MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
 
       datasets.put(mClass.toJSON());
-
-      /*
-       * Update classifiers value
-       */
-      List<TargetFieldIF> fields = definition.getFields();
-
-      for (TargetFieldIF field : fields)
-      {
-        if (field instanceof TargetFieldClassifier)
-        {
-          String key = field.getKey();
-
-          MdWebAttribute mdWebAttribute = MdWebAttribute.getByKey(key);
-
-          TargetFieldClassifierBindingQuery query = new TargetFieldClassifierBindingQuery(new QueryFactory());
-          query.WHERE(query.getTargetAttribute().EQ(mdWebAttribute));
-
-          OIterator<? extends TargetFieldClassifierBinding> it = query.getIterator();
-
-          try
-          {
-            while (it.hasNext())
-            {
-              TargetFieldClassifierBinding binding = it.next();
-              binding.lock();
-              binding.setIsValidate(true);
-              binding.apply();
-            }
-          }
-          finally
-          {
-            it.close();
-          }
-        }
-      }
-
     }
 
     // monitor.setState(DataImportState.COMPLETE);

@@ -97,18 +97,18 @@ public class ImportValidator implements ConverterIF
     {
       if (field instanceof TargetFieldValidationIF)
       {
-        TargetFieldValidationIF entity = (TargetFieldValidationIF) field;
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("locationExclusions", this.context.getLocationExclusions());
-        parameters.put("categoryExclusions", this.context.getCategoryExclusions());
-
-        ImportProblemIF problem = entity.validate(source, parameters);
-
-        if (problem != null)
-        {
-          this.problems.add(problem);
-        }
+//        TargetFieldValidationIF entity = (TargetFieldValidationIF) field;
+//
+//        Map<String, Object> parameters = new HashMap<String, Object>();
+//        parameters.put("locationExclusions", this.context.getLocationExclusions());
+//        parameters.put("categoryExclusions", this.context.getCategoryExclusions());
+//
+//        ImportProblemIF problem = entity.validate(source, parameters);
+//
+//        if (problem != null)
+//        {
+//          this.problems.add(problem);
+//        }
       }
       else if (field instanceof TargetFieldBasic)
       {

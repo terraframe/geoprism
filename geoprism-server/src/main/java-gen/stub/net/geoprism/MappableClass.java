@@ -75,7 +75,6 @@ import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeIndicator;
 import com.runwaysdk.system.metadata.MdClass;
-import com.runwaysdk.system.metadata.MdWebForm;
 
 import net.geoprism.dashboard.AttributeWrapper;
 import net.geoprism.dashboard.AttributeWrapperQuery;
