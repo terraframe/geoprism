@@ -1,7 +1,7 @@
 import { Component} from '@angular/core';
 import { Response } from '@angular/http';
 
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import * as FileSaver from 'file-saver';
 
 import { UploadService } from '../service/upload.service';

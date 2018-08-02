@@ -68,7 +68,7 @@ export class UploadService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  importData(workbook: Workbook): Promise<DatasetResponse> {
+  importData(workbook: Workbook): Promise<void | DatasetResponse> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    

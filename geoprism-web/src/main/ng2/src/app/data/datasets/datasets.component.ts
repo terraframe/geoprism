@@ -21,7 +21,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { FileSelectDirective, FileDropDirective, FileUploader, FileUploaderOptions } from 'ng2-file-upload/ng2-file-upload';
 
@@ -128,7 +128,7 @@ export class DatasetsComponent implements OnInit {
   }
   
   edit(dataset: Dataset, event: any) : void {
-    this.router.navigate(['/data/dataset', dataset.id]);
+    this.router.navigate(['/dataset', dataset.id]);
   }
   
   xport(dataset: Dataset, event: any) : void {

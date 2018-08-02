@@ -26,7 +26,9 @@ export class UploadManagerService extends BasicService {
         return response.json() as ExcelImportHistory[];
       })
       .catch(e => {
-    	    	this.handleError.bind(this)
+    	  this.handleError.bind(this)
+    	  
+    	  return [];
       });
   }
   
@@ -36,7 +38,7 @@ export class UploadManagerService extends BasicService {
       .map(res => res.json() as ExcelImportHistory[])
   }
   
-  clearHistory(): Promise<Response> {
+  clearHistory(): Promise<void | Response> {
 	
     return this.ehttp
     .get(acp + '/net.geoprism.data.importer.ExcelController.clearHistory.mojo')
