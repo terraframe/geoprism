@@ -100,7 +100,7 @@ public class ImportRunnable
     {
       int total = this.getRowNum(this.file);
       
-      monitor.setTotalProgressUnits(total);
+      monitor.setTotalProgressUnits(total - 1);
       
       DataSetBuilderIF builder = new DataSetBuilder(configuration);
       builder.build();

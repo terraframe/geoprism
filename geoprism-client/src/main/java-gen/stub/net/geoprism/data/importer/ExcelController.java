@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
+import com.runwaysdk.system.VaultFileDTO;
 
 public class ExcelController extends ExcelControllerBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -47,6 +48,25 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
   public ExcelController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
+  }
+  
+  @Override
+  public void downloadErrorSpreadsheet(java.lang.String historyId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    VaultFileDTO vfile = ExcelImportHistoryDTO.get(getClientRequest(), historyId).getErrorFile();
+    
+    String fileName = vfile.getFileName() + "." + vfile.getFileExtension();
+    
+    resp.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    resp.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+    
+    ExcelImportHistoryDTO.downloadErrorSpreadsheet(getClientRequest(), historyId, resp.getOutputStream());
+  }
+  
+  @Override
+  public void failDownloadErrorSpreadsheet(java.lang.String historyId) throws java.io.IOException, javax.servlet.ServletException
+  {
+    // do nothing
   }
   
   public void excelImportFromVault(java.lang.String vaultId, String config) throws java.io.IOException, javax.servlet.ServletException
