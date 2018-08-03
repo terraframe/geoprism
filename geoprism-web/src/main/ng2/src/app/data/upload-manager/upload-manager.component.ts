@@ -19,7 +19,6 @@ declare let acp: string;
 })
 export class UploadManagerComponent implements OnInit {
   public histories: ExcelImportHistory[] = [];
-  private modelacp: string = acp;
 
   constructor(
     private router: Router,

@@ -142,7 +142,7 @@ public class DataUploaderImportJob extends DataUploaderImportJobBase implements 
     ImportRunnable run = new ImportRunnable(this.sharedState.fileName, this.sharedState.configuration, this.sharedState.file, monitor);
     ImportResponseIF response = run.run();
 
-    if (!(response instanceof SuccessResponse))
+    if (response.hasProblems() || !(response instanceof SuccessResponse))
     {
       context.setStatus(AllJobStatus.WARNING);
     }
