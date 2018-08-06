@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class LocationProblem implements ImportProblemIF, Comparable<ImportProblemIF>
+public class LocationProblem extends FieldValue implements ImportProblemIF, Comparable<ImportProblemIF>
 {
   public static final String TYPE = "locations";
 

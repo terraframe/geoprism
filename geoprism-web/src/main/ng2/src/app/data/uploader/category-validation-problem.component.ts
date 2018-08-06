@@ -57,6 +57,10 @@ export class CategoryValidationProblemComponent implements OnInit {
 
     return this.uploadService.getClassifierSuggestions(this.problem.mdAttributeId, text, limit);
   }
+  
+  setSynonym() {
+    
+  }
     
   createSynonym(): void {
     if(this.problem.synonym.id !== ''){      

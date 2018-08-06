@@ -214,12 +214,6 @@ public class DataImportRunnable implements Reloadable
     ((ExcelImportHistoryBase) history).setReconstructionJSON(reconstructionJSON.toString());
     history.apply();
 
-    JSONObject object = new JSONObject(this.configuration);
-
-    String vaultId = object.getString("vaultId");
-    VaultFile vf = VaultFile.get(vaultId);
-    vf.delete();
-
     return summary;
   }
 

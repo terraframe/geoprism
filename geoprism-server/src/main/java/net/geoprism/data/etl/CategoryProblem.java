@@ -21,7 +21,7 @@ package net.geoprism.data.etl;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CategoryProblem implements ImportProblemIF, Comparable<ImportProblemIF>
+public class CategoryProblem extends FieldValue implements ImportProblemIF, Comparable<ImportProblemIF>
 {
   public static final String TYPE = "categories";
 
