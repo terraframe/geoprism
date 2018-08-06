@@ -19,7 +19,7 @@
 
 import { Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
-import { Page, LocationProblem, Workbook, LocationExclusion, LocationProblemSynonym} from './uploader-model';
+import { Page, LocationProblem, Workbook, LocationExclusion} from './uploader-model';
 import { UploadService } from '../service/upload.service';
 import { IdService } from '../../core/service/core.service';
 
@@ -44,10 +44,25 @@ export class GeoValidationProblemComponent implements OnInit {
   }   
   
   ngOnInit(): void {
-//	console.log(this.problem);
-//    this.problem.synonym = {id :'', geoId:''};
-	this.problem.synonym = new LocationProblemSynonym('', '');
+    this.problem.synonym = {id :'', geoId:''};
     this.show = false;
+  }
+  
+  source = (keyword: string) => {
+    let limit = '20';
+
+    return this.uploadService.getGeoEntitySuggestions(this.problem.parentId, this.problem.universalId, keyword, limit);
+  }
+        
+  setSynonym(item: {text: string, data: any}) {	
+    if (item.data != null)
+    {
+      this.problem.synonym = {id: item.data, geoId:''};
+    }
+    else
+    {
+      this.problem.synonym = {id :'', geoId:''};
+    }
   }
     
   createSynonym(): void {
@@ -124,7 +139,7 @@ export class GeoValidationProblemComponent implements OnInit {
         this.uploadService.deleteGeoEntity(action.entityId)
           .then(response => {
             this.problem.resolved = false;
-            this.problem.synonym = new LocationProblemSynonym('', '');
+            this.problem.synonym = {id :'', geoId:''};
             this.problem.action = null;
             
             this.onProblemChange.emit(this.problem);
@@ -142,7 +157,7 @@ export class GeoValidationProblemComponent implements OnInit {
         this.uploadService.deleteGeoEntitySynonym(action.synonymId)
           .then(response => {
           this.problem.resolved = false;
-          this.problem.synonym = new LocationProblemSynonym('', '');
+          this.problem.synonym = {id :'', geoId:''};
           this.problem.action = null;
           
           this.onProblemChange.emit(this.problem);
