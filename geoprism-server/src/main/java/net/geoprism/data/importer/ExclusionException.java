@@ -18,6 +18,9 @@
  */
 package net.geoprism.data.importer;
 
+import net.geoprism.data.etl.ImportProblemIF;
+import net.geoprism.data.etl.LocationProblem;
+
 public class ExclusionException extends RuntimeException
 {
   /**
@@ -25,8 +28,17 @@ public class ExclusionException extends RuntimeException
    */
   private static final long serialVersionUID = -5764187692708424880L;
 
-  public ExclusionException(String msg)
+  private ImportProblemIF   problem;
+
+  public ExclusionException(String msg, ImportProblemIF problem)
   {
     super(msg);
+
+    this.problem = problem;
+  }
+
+  public ImportProblemIF getProblem()
+  {
+    return problem;
   }
 }
