@@ -34,6 +34,10 @@ import java.util.Stack;
 import java.util.StringJoiner;
 import java.util.TreeSet;
 
+import net.geoprism.GeoprismProperties;
+import net.geoprism.data.importer.ExclusionException;
+import net.geoprism.ontology.NonUniqueEntityResultException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -56,6 +60,7 @@ import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
@@ -65,10 +70,6 @@ import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
 import com.runwaysdk.system.metadata.ontology.SolrProperties;
 import com.runwaysdk.util.IDGenerator;
-
-import net.geoprism.GeoprismProperties;
-import net.geoprism.data.importer.ExclusionException;
-import net.geoprism.ontology.NonUniqueEntityResultException;
 
 public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoEntityIF, TargetFieldValidationIF
 {
@@ -306,6 +307,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       else if (!GeoprismProperties.getSolrLookup() || ids.size() > 1)
       {
         GeoEntity parent = root;
+        List<JSONObject> context = new LinkedList<JSONObject>();
 
         for (int i = 0; i < attributes.size(); i++)
         {
@@ -326,11 +328,24 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
               if (entity == null)
               {
-                throw new ExclusionException("Location not found in system.");
+                throw new ExclusionException("Location not found in system.", new LocationProblem(label, context, parent, universal));
               }
 
               parent = entity;
             }
+          }
+          
+          try
+          {
+            JSONObject object = new JSONObject();
+            object.put("label", label);
+            object.put("universal", parent.getMdClass().getDisplayLabel(Session.getCurrentLocale()));
+
+            context.add(object);
+          }
+          catch (JSONException e)
+          {
+            throw new ProgrammingErrorException(e);
           }
         }
 
@@ -338,7 +353,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       }
       else
       {
-        throw new ExclusionException("Location not found in system.");
+        throw new ExclusionException("Location not found in system.", new LocationProblem(labels.get(0), new LinkedList<JSONObject>(), GeoEntity.getRoot(), attributes.get(0).getUniversal()));
       }
     }
     catch (SolrServerException e)
@@ -832,10 +847,10 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
     JSONObject cObject = this.getCoordinateObject();
     if (cObject != null)
     {
-      String latitudeFieldName = cObject.get("latitude").toString().toLowerCase();
-      String longitudeFieldName = cObject.get("longitude").toString().toLowerCase();
+      String latitudeFieldName = cObject.getString("latitude");
+      String longitudeFieldName = cObject.getString("longitude");
 
-      if (longitudeFieldName.equals("long"))
+      if (longitudeFieldName.toLowerCase().equals("long"))
       {
         longitudeFieldName = "longAttribute"; // long is a keyword so we need to change to what it is coerced to
                                               // in

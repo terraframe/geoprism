@@ -128,8 +128,8 @@ export class LocationPageComponent implements OnInit, LocalValidator {
 	      }
 	    }
 	      
-        this.attribute.latForLocationAssignment = latFields[0].label;
-        this.attribute.longForLocationAssignment = longFields[0].label;
+        this.attribute.latForLocationAssignment = latFields[0].name;
+        this.attribute.longForLocationAssignment = longFields[0].name;
       }
   }
     

@@ -49,7 +49,7 @@ export class DatasetService extends BasicService {
     params.set('historyId', historyId);
   
     return this.ehttp
-      .get(acp + 'net.geoprism.data.importer.ExcelController.getReconstructionJSON.mojo', {search: params})
+      .get(acp + '/net.geoprism.data.importer.ExcelController.getReconstructionJSON.mojo', {search: params})
       .toPromise()
       .then(response => {
         return response.json() as string;

@@ -738,8 +738,8 @@ public class TargetBuilder
     
     if(useCoordinatesForLocationAssignment)
     {
-    	String latForLocationAssignment = cAttribute.getString("latForLocationAssignment");
-    	String longForLocationAssignment = cAttribute.getString("longForLocationAssignment");
+    	String latForLocationAssignment = this.generateAttributeName(cAttribute.getString("latForLocationAssignment"));
+    	String longForLocationAssignment = this.generateAttributeName(cAttribute.getString("longForLocationAssignment"));
     	
     	field.setCoordinateObject(latForLocationAssignment, longForLocationAssignment);
     }

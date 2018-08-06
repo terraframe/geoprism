@@ -83,7 +83,7 @@
             <ul style="list-style: none;">
               <li *ngFor="let coords of attribute.coordinatesForLocationAssignmentOptions[0]; let i = index;" >
                 <label for="latForLocationAssignment" >
-                  <input [(ngModel)]="attribute.latForLocationAssignment" value="{{coords.label}}" name="latForLocationAssignment" type="radio" class="jcf-unselectable rad-area" />
+                  <input [(ngModel)]="attribute.latForLocationAssignment" value="{{coords.name}}" name="latForLocationAssignment" type="radio" class="jcf-unselectable rad-area" />
                   <span>{{coords.label}}</span>
                 </label>
               </li>
@@ -93,7 +93,7 @@
             <ul style="list-style: none;">
               <li *ngFor="let coords of attribute.coordinatesForLocationAssignmentOptions[1]; let i = index;" >
                 <label for="longForLocationAssignment" >
-                  <input [(ngModel)]="attribute.longForLocationAssignment" value="{{coords.label}}" name="longForLocationAssignment" type="radio" class="jcf-unselectable rad-area" />
+                  <input [(ngModel)]="attribute.longForLocationAssignment" value="{{coords.name}}" name="longForLocationAssignment" type="radio" class="jcf-unselectable rad-area" />
                   <span>{{coords.label}}</span>
                 </label>
               </li>

@@ -54,11 +54,16 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
 
         MdAttributeTermDAOIF mdAttributeTerm = (MdAttributeTermDAOIF) mdAttribute;
 
-        Classifier classifier = Classifier.findMatchingTerm(value.trim(), mdAttributeTerm);
+        String label = value.trim();
+        
+        Classifier classifier = Classifier.findMatchingTerm(label, mdAttributeTerm);
 
         if (classifier == null)
         {
-          throw new ExclusionException("Unable to find matching term with label [" + value + "]");
+          Classifier root = Classifier.findClassifierRoot(mdAttributeTerm);
+          String attributeLabel = mdAttributeTerm.getDisplayLabel(Session.getCurrentLocale());
+          
+          throw new ExclusionException("Unable to find matching term with label [" + label + "]", new CategoryProblem(label, root.getId(), mdAttributeTerm.getId(), attributeLabel));
         }
         else
         {

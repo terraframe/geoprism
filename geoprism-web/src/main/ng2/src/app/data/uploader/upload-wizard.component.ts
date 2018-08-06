@@ -146,7 +146,6 @@ export class UploadWizardComponent implements OnDestroy {
   }
   
   refreshSteps(): void {
-    console.log("refreshSteps")
     this.steps = new Array<Step>();
     this.steps.push(new Step("1", "INITIAL"));
     this.steps.push(new Step("2", "FIELDS"));
@@ -230,7 +229,6 @@ export class UploadWizardComponent implements OnDestroy {
   }
   
   incrementStep(targetPage: string): void {
-    console.log("incrementStep")
     if(targetPage === 'MATCH-INITIAL') {
       this.currentStep = -1;
     }
@@ -279,7 +277,6 @@ export class UploadWizardComponent implements OnDestroy {
    * @param sourcePage <optional> 
    */
   next(targetPage: string, sourcePage: string) :void {
-    console.log("next")
     this.pageDirection = "NEXT";
       
     if(targetPage && sourcePage){
@@ -449,7 +446,6 @@ export class UploadWizardComponent implements OnDestroy {
   }
     
   onSubmit(): void {
-    console.log("onSubmit")
     this.onSuccess.emit();
     this.clear();
   }
@@ -470,7 +466,6 @@ export class UploadWizardComponent implements OnDestroy {
   }
   
   clear(): void {
-    console.log("clear")
     this.steps = null;
     this.info = null;
     this.sheet = null;
@@ -510,7 +505,6 @@ export class UploadWizardComponent implements OnDestroy {
   }
   
   afterPersist(result: DatasetResponse): void {
-    console.log("afterPersist")
     this.isPersisted = true;
   
     let externalPageRequest = -1;
@@ -571,7 +565,6 @@ export class UploadWizardComponent implements OnDestroy {
   }  
   
   onNextPage(data: any) : void {
-    console.log("onNextPage")
     this.next(data.targetPage, data.sourcePage);
   }
   

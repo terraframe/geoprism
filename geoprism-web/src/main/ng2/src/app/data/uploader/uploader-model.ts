@@ -172,11 +172,12 @@ export class LocationProblem {
   universalType: string;
   context: LocationContext[];
   resolved: boolean;
-  synonym: {
-    id:string,
-    geoId:string
-  };
+  synonym: LocationProblemSynonym;
   action: any;
+}
+
+export class LocationProblemSynonym {
+  constructor(public id: string, public geoId: string) {}
 }
 
 export class CategoryProblem {

@@ -35,12 +35,12 @@
 	        <td class="column-hasSynonyms"> 
             {{history.geoSyns}}
             <br *ngIf="history.geoSyns > 0" />
-            <a *ngIf="history.geoSyns > 0" class="fa fa-pencil" [routerLink]="['/datasets', history.id, 3]"></a>
+            <a *ngIf="history.geoSyns > 0" class="fa fa-pencil" [routerLink]="['/data/datasets', history.id, 3]"></a>
           </td>
 	        <td class="column-hasSynonyms">
             {{history.termSyns}}
             <br *ngIf="history.termSyns > 0" />
-            <a *ngIf="history.geoSyns > 0" class="fa fa-pencil" [routerLink]="['/datasets', history.id, 4]"></a>
+            <a *ngIf="history.geoSyns > 0" class="fa fa-pencil" [routerLink]="['/data/datasets', history.id, 4]"></a>
           </td>
 	      </tr>
 	    </tbody>    

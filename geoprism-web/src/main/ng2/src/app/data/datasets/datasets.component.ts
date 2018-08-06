@@ -67,7 +67,16 @@ export class DatasetsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDatasets();
-    this.getReconstructionJson();
+    
+    let sub = this.route.params.subscribe(params => {
+    	let historyId = params['historyId'];
+    	let pageNum = params['pageNum'];
+    	
+    	if (historyId != null)
+        {
+    	  this.getReconstructionJson(historyId, pageNum);
+        }
+     });
     
     let options:FileUploaderOptions =  {
       autoUpload: true,
@@ -107,16 +116,15 @@ export class DatasetsComponent implements OnInit {
       })
   };
   
-  getReconstructionJson() : void {
-    if (this.route.params['historyId'] != null)
-    {
-      this.datasetService
-        .getReconstructionJson(this.route.params['historyId'])
-        .then(reconstructionJSON => {
-          this.reconstructionJSON = reconstructionJSON;
-          this.reconstructionJSON.pageNum = this.route.params['pageNum'];
-        })
-    }
+  getReconstructionJson(historyId: string, pageNum: number) : void {
+    this.datasetService
+      .getReconstructionJson(historyId)
+      .then(reconstructionJSON => {
+        reconstructionJSON.pageNum = pageNum;
+        
+        this.wizard.setReconstructionJSON(reconstructionJSON);
+        this.wizard.afterPersist(reconstructionJSON.importResponse);
+    })
   };
   
   remove(dataset: Dataset, event: any) : void {

@@ -19,7 +19,7 @@
 
 import { Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
-import { Page, LocationProblem, Workbook, LocationExclusion} from './uploader-model';
+import { Page, LocationProblem, Workbook, LocationExclusion, LocationProblemSynonym} from './uploader-model';
 import { UploadService } from '../service/upload.service';
 import { IdService } from '../../core/service/core.service';
 
@@ -44,7 +44,9 @@ export class GeoValidationProblemComponent implements OnInit {
   }   
   
   ngOnInit(): void {
-    this.problem.synonym = {id :'', geoId:''};
+//	console.log(this.problem);
+//    this.problem.synonym = {id :'', geoId:''};
+	this.problem.synonym = new LocationProblemSynonym('', '');
     this.show = false;
   }
     
@@ -122,7 +124,7 @@ export class GeoValidationProblemComponent implements OnInit {
         this.uploadService.deleteGeoEntity(action.entityId)
           .then(response => {
             this.problem.resolved = false;
-            this.problem.synonym = {id :'', geoId:''};
+            this.problem.synonym = new LocationProblemSynonym('', '');
             this.problem.action = null;
             
             this.onProblemChange.emit(this.problem);
@@ -140,7 +142,7 @@ export class GeoValidationProblemComponent implements OnInit {
         this.uploadService.deleteGeoEntitySynonym(action.synonymId)
           .then(response => {
           this.problem.resolved = false;
-          this.problem.synonym = {id :'', geoId:''};
+          this.problem.synonym = new LocationProblemSynonym('', '');
           this.problem.action = null;
           
           this.onProblemChange.emit(this.problem);

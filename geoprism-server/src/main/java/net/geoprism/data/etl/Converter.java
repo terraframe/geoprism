@@ -116,7 +116,7 @@ public class Converter implements ConverterIF
     }
     catch (ExclusionException e)
     {
-      // Do nothing. It's likely that a source value was not found because of location exclusions
+      this.problems.add(e.getProblem());
     }
   }
   
