@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class SessionMapLimitExceptionDTO extends SessionMapLimitExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1665948637;
   
   public SessionMapLimitExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

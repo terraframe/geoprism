@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = 606546790)
-public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.LayerType";
   private static final long serialVersionUID = 606546790;
@@ -45,9 +45,9 @@ public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationM
     return CLASS;
   }
   
-  public static net.geoprism.dashboard.layer.LayerTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.layer.LayerTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.layer.LayerTypeDTO) dto;
   }
@@ -65,7 +65,7 @@ public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationM
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.layer.LayerTypeQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -78,10 +78,10 @@ public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationM
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.layer.LayerTypeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.LayerTypeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.LayerTypeDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.layer.LayerTypeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -91,10 +91,10 @@ public abstract class LayerTypeDTOBase extends com.runwaysdk.system.EnumerationM
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.layer.LayerTypeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.LayerTypeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.LayerTypeDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.layer.LayerTypeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

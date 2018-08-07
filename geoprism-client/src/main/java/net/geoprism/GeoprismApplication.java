@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 public class GeoprismApplication
 {
-  private String      id;
+  private String      oid;
 
   private String      src;
 
@@ -41,14 +41,14 @@ public class GeoprismApplication
     this.roleNames = new TreeSet<String>();
   }
 
-  public String getId()
+  public String getOid()
   {
-    return id;
+    return oid;
   }
 
-  public void setId(String id)
+  public void setId(String oid)
   {
-    this.id = id;
+    this.oid = oid;
   }
 
   public String getSrc()
@@ -107,7 +107,7 @@ public class GeoprismApplication
   public JSONObject toJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
-    object.put("id", this.id);
+    object.put("oid", this.oid);
     object.put("src", this.src);
     object.put("label", this.label);
     object.put("url", this.url);

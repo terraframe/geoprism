@@ -28,7 +28,7 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdTableDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.GenericBusinessQuery;
 import com.runwaysdk.query.GenericTableQuery;
@@ -36,7 +36,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class QueryUtil implements Reloadable
+public class QueryUtil 
 {
   @SuppressWarnings("unchecked")
   public static GeneratedComponentQuery getQuery(MdClassDAOIF mdClass, QueryFactory factory)

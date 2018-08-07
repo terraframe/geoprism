@@ -28,11 +28,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ClientConfigurationService implements Reloadable
+
+public class ClientConfigurationService 
 {
   /**
    * Retrieve all implementations of ConfigurationIF.
@@ -41,7 +39,7 @@ public class ClientConfigurationService implements Reloadable
   {
     List<ClientConfigurationIF> configurations = new ArrayList<ClientConfigurationIF>();
 
-    ServiceLoader<ClientConfigurationIF> loader = ServiceLoader.load(ClientConfigurationIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<ClientConfigurationIF> loader = ServiceLoader.load(ClientConfigurationIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {

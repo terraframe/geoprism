@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 
-public class UniversalAttributeBinding extends UniversalAttributeBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class UniversalAttributeBinding extends UniversalAttributeBindingBase 
 {
   private static final long serialVersionUID = -1961119088;
   

@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 public class DHIS2AttributeLengthExceptionDTO extends DHIS2AttributeLengthExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -2007055043;
   
   public DHIS2AttributeLengthExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

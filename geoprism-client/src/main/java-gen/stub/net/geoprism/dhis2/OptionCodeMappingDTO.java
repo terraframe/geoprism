@@ -19,7 +19,7 @@
 package net.geoprism.dhis2;
 
 public class OptionCodeMappingDTO extends OptionCodeMappingDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 335370209;
   
   public OptionCodeMappingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

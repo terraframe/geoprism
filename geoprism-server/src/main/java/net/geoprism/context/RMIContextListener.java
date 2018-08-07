@@ -19,9 +19,9 @@
 package net.geoprism.context;
 
 import com.runwaysdk.facade.RemoteAdapterServer;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class RMIContextListener implements Reloadable, ServerContextListener
+
+public class RMIContextListener implements ServerContextListener
 {
   @Override
   public void initialize()

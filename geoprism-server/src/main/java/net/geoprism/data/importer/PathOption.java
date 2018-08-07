@@ -39,17 +39,17 @@ public class PathOption
   /**
    * Id of the parent universal the (root, parent, child) tuple
    */
-  private String           id;
+  private String           oid;
 
   /**
    * Id of the parent universal of this node
    */
-  private String           parentId;
+  private String           parentOid;
 
   /**
    * Id of the child universal of this node
    */
-  private String           childId;
+  private String           childOid;
 
   /**
    * Flag indicating if the path is enabled
@@ -79,9 +79,9 @@ public class PathOption
   public PathOption(String root, AllowedIn allowedIn)
   {
     this.root = root;
-    this.id = allowedIn.getId();
-    this.parentId = allowedIn.getParentId();
-    this.childId = allowedIn.getChildId();
+    this.oid = allowedIn.getOid();
+    this.parentOid = allowedIn.getParentOid();
+    this.childOid = allowedIn.getChildOid();
     this.parentLabel = allowedIn.getParent().getDisplayLabel().getValue();
     this.childLabel = allowedIn.getChild().getDisplayLabel().getValue();
     this.enabled = true;
@@ -100,14 +100,14 @@ public class PathOption
     this.root = root;
   }
 
-  public String getId()
+  public String getOid()
   {
-    return id;
+    return oid;
   }
 
-  public void setId(String id)
+  public void setId(String oid)
   {
-    this.id = id;
+    this.oid = oid;
   }
 
   public boolean isEnabled()
@@ -140,24 +140,24 @@ public class PathOption
     this.childLabel = childLabel;
   }
 
-  public String getParentId()
+  public String getParentOid()
   {
-    return parentId;
+    return parentOid;
   }
 
-  public void setParentId(String parentId)
+  public void setParentId(String parentOid)
   {
-    this.parentId = parentId;
+    this.parentOid = parentOid;
   }
 
-  public String getChildId()
+  public String getChildOid()
   {
-    return childId;
+    return childOid;
   }
 
-  public void setChildId(String childId)
+  public void setChildId(String childOid)
   {
-    this.childId = childId;
+    this.childOid = childOid;
   }
 
   public void addChild(PathOption child)

@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class UnknownReportExceptionDTO extends UnknownReportExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 258513253;
   
   public UnknownReportExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

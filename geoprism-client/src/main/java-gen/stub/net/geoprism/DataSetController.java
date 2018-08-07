@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.system.metadata.MdAttributeIndicatorDTO;
 
-public class DataSetController extends DataSetControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DataSetController extends DataSetControllerBase 
 {
   public DataSetController(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp, java.lang.Boolean isAsynchronous)
   {
@@ -63,7 +63,7 @@ public class DataSetController extends DataSetControllerBase implements com.runw
     try
     {
       JSONObject dsJSONObj = new JSONObject(dataset);
-      String dsId = dsJSONObj.getString("id");
+      String dsId = dsJSONObj.getString("oid");
 
       MappableClassDTO ds = MappableClassDTO.lock(request, dsId);
       MappableClassDTO.applyDatasetUpdate(request, dataset);
@@ -78,13 +78,13 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
-  public void remove(String id) throws IOException, ServletException
+  public void remove(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      MappableClassDTO.remove(request, id);
+      MappableClassDTO.remove(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp, "");
     }
@@ -95,13 +95,13 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
-  public void edit(String id) throws IOException, ServletException
+  public void edit(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      MappableClassDTO mappableClass = MappableClassDTO.lock(request, id);
+      MappableClassDTO mappableClass = MappableClassDTO.lock(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp, new JSONObject(mappableClass.getAsJSON()));
     }
@@ -129,13 +129,13 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
-  public void cancel(String id) throws IOException, ServletException
+  public void cancel(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      MappableClassDTO.unlock(request, id);
+      MappableClassDTO.unlock(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp);
     }
@@ -163,13 +163,13 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
-  public void editAttribute(String id) throws IOException, ServletException
+  public void editAttribute(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      String response = MappableClassDTO.lockIndicator(request, id);
+      String response = MappableClassDTO.lockIndicator(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp, new JSONObject(response));
     }
@@ -180,13 +180,13 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
-  public void removeAttribute(String id) throws IOException, ServletException
+  public void removeAttribute(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      MappableClassDTO.removeIndicator(request, id);
+      MappableClassDTO.removeIndicator(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp);
     }
@@ -197,13 +197,13 @@ public class DataSetController extends DataSetControllerBase implements com.runw
   }
 
   @Override
-  public void unlockAttribute(String id) throws IOException, ServletException
+  public void unlockAttribute(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      MdAttributeIndicatorDTO.unlock(request, id);
+      MdAttributeIndicatorDTO.unlock(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp);
     }

@@ -41,7 +41,7 @@ import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
@@ -55,7 +55,7 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener, Reloadable
+public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener
 {
   public static final String        DELIMETER = "-#-#-";
 
@@ -130,7 +130,7 @@ public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExport
 
       if (location != null)
       {
-        _instance.setValue(this.attributeName, location.getId());
+        _instance.setValue(this.attributeName, location.getOid());
       }
     }
   }
@@ -231,7 +231,7 @@ public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExport
   }
 
   /**
-   * Returns the geo id of the
+   * Returns the geo oid of the
    * 
    * @return
    */

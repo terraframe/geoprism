@@ -20,11 +20,11 @@ package net.geoprism.data.importer;
 
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 
-public class GeometryColumn extends ExcelColumn implements Reloadable
+public class GeometryColumn extends ExcelColumn 
 {
 
   private WKTWriter writer;
@@ -36,7 +36,6 @@ public class GeometryColumn extends ExcelColumn implements Reloadable
     this.writer = writer;
   }
 
-  @Override
   public String getValue(ComponentIF component)
   {
     Object value = component.getObjectValue(this.attributeName);

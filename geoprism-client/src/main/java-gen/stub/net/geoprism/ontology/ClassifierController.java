@@ -36,7 +36,7 @@ import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
-public class ClassifierController extends ClassifierControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierController extends ClassifierControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/Classifier/";
 
@@ -47,13 +47,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
     super(req, resp, isAsynchronous, JSP_DIR, LAYOUT);
   }
 
-  public void create(ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  public void create(ClassifierDTO dto, java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       ClientRequestIF request = super.getClientRequest();
 
-      TermAndRelDTO tnr = ClassifierDTO.create(request, dto, parentId);
+      TermAndRelDTO tnr = ClassifierDTO.create(request, dto, parentOid);
 
       this.resp.getWriter().print(new JSONReturnObject(tnr.toJSON().toString()).toString());
     }
@@ -63,7 +63,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
 
       if (needsRedirect)
       {
-        this.failCreate(dto, parentId);
+        this.failCreate(dto, parentOid);
       }
     }
   }
@@ -80,13 +80,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
     }
   }
 
-  public void getDirectDescendants(java.lang.String parentId, java.lang.Integer pageNum, java.lang.Integer pageSize) throws java.io.IOException, javax.servlet.ServletException
+  public void getDirectDescendants(java.lang.String parentOid, java.lang.Integer pageNum, java.lang.Integer pageSize) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       JSONArray array = new JSONArray();
 
-      TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentId, new String[] { ClassifierIsARelationshipDTO.CLASS });
+      TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentOid, new String[] { ClassifierIsARelationshipDTO.CLASS });
 
       JSONObject page = new JSONObject();
 
@@ -142,12 +142,12 @@ public class ClassifierController extends ClassifierControllerBase implements co
 
       if (needsRedirect)
       {
-        this.viewUpdate(dto.getId());
+        this.viewUpdate(dto.getOid());
       }
     }
   }
 
-  public void failCreate(ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  public void failCreate(ClassifierDTO dto, java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     req.setAttribute("item", dto);
     render("createComponent.jsp");
@@ -156,12 +156,12 @@ public class ClassifierController extends ClassifierControllerBase implements co
   public void cancel(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
 
   public void failCancel(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
 
   public void failDelete(ClassifierDTO dto) throws java.io.IOException, javax.servlet.ServletException
@@ -170,19 +170,19 @@ public class ClassifierController extends ClassifierControllerBase implements co
     render("editComponent.jsp");
   }
 
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    ClassifierDTO dto = ClassifierDTO.lock(super.getClientRequest(), id);
+    ClassifierDTO dto = ClassifierDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
 
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
 
-  public void failGetDirectDescendants(java.lang.String parentId, java.lang.String pageNum, java.lang.String pageSize) throws java.io.IOException, javax.servlet.ServletException
+  public void failGetDirectDescendants(java.lang.String parentOid, java.lang.String pageNum, java.lang.String pageSize) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -206,14 +206,14 @@ public class ClassifierController extends ClassifierControllerBase implements co
     render("editComponent.jsp");
   }
 
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", ClassifierDTO.get(clientRequest, id));
+    req.setAttribute("item", ClassifierDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
 
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
@@ -258,14 +258,14 @@ public class ClassifierController extends ClassifierControllerBase implements co
   }
 
   @Override
-  public void viewUpdate(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void viewUpdate(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    ClassifierDTO dto = ClassifierDTO.lock(super.getClientRequest(), id);
+    ClassifierDTO dto = ClassifierDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
 
-  public void failViewUpdate(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failViewUpdate(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -289,13 +289,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
   }
 
   @Override
-  public void getCategory(String id) throws IOException, ServletException
+  public void getCategory(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      ClassifierDTO dto = ClassifierDTO.get(request, id);
+      ClassifierDTO dto = ClassifierDTO.get(request, oid);
 
       JSONArray dArray = new JSONArray();
 
@@ -305,14 +305,14 @@ public class ClassifierController extends ClassifierControllerBase implements co
       {
         JSONObject object = new JSONObject();
         object.put("label", descendant.getDisplayLabel().getValue());
-        object.put("id", descendant.getId());
+        object.put("oid", descendant.getOid());
 
         dArray.put(object);
       }
 
       JSONObject response = new JSONObject();
       response.put("label", dto.getDisplayLabel().getValue());
-      response.put("id", dto.getId());
+      response.put("oid", dto.getOid());
       response.put("descendants", dArray);
 
       JSONControllerUtil.writeReponse(this.resp, response);
@@ -324,13 +324,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
   }
 
   @Override
-  public void editOption(String id) throws IOException, ServletException
+  public void editOption(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      ClassifierDTO dto = ClassifierDTO.editOption(request, id);
+      ClassifierDTO dto = ClassifierDTO.editOption(request, oid);
 
       JSONArray sArray = new JSONArray();
 
@@ -340,14 +340,14 @@ public class ClassifierController extends ClassifierControllerBase implements co
       {
         JSONObject object = new JSONObject();
         object.put("label", synonym.getDisplayLabel().getValue());
-        object.put("id", synonym.getId());
+        object.put("oid", synonym.getOid());
 
         sArray.put(object);
       }
 
       JSONObject response = new JSONObject();
       response.put("label", dto.getDisplayLabel().getValue());
-      response.put("id", dto.getId());
+      response.put("oid", dto.getOid());
       response.put("synonyms", sArray);
 
       JSONControllerUtil.writeReponse(this.resp, response);
@@ -379,13 +379,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
   }
 
   @Override
-  public void unlockCategory(String id) throws IOException, ServletException
+  public void unlockCategory(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      ClassifierDTO.unlockCategory(request, id);
+      ClassifierDTO.unlockCategory(request, oid);
     }
     catch (Throwable t)
     {
@@ -404,7 +404,7 @@ public class ClassifierController extends ClassifierControllerBase implements co
 
       JSONObject object = new JSONObject();
       object.put("label", classifier.getDisplayLabel().getValue());
-      object.put("id", classifier.getId());
+      object.put("oid", classifier.getOid());
 
       JSONControllerUtil.writeReponse(this.resp, object);
     }
@@ -415,13 +415,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
   }
 
   @Override
-  public void deleteOption(String id) throws IOException, ServletException
+  public void deleteOption(String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      ClassifierDTO.deleteOption(request, id);
+      ClassifierDTO.deleteOption(request, oid);
 
       JSONControllerUtil.writeReponse(this.resp);
     }
@@ -432,13 +432,13 @@ public class ClassifierController extends ClassifierControllerBase implements co
   }
 
   @Override
-  public void validateCategoryName(String name, String id) throws IOException, ServletException
+  public void validateCategoryName(String name, String oid) throws IOException, ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      ClassifierDTO.validateCategoryName(request, name, id);
+      ClassifierDTO.validateCategoryName(request, name, oid);
 
       JSONControllerUtil.writeReponse(this.resp);
     }

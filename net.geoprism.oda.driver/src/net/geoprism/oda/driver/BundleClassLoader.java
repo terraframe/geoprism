@@ -22,7 +22,7 @@ import org.osgi.framework.Bundle;
 
 import com.runwaysdk.generation.loader.ReloadableClassLoaderIF;
 
-public class BundleClassLoader implements ReloadableClassLoaderIF
+public class BundleClassLoader ClassLoaderIF
 {
   private Bundle bundle;
 

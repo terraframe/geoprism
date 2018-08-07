@@ -95,11 +95,11 @@ public class DefaultConfiguration implements ConfigurationIF
     RoleDAOIF admin = RoleDAO.findRole(ADMIN);
     RoleDAOIF builder = RoleDAO.findRole(DASHBOARD_BUILDER);
 
-    if (! ( roleIds.contains(admin.getId()) || roleIds.contains(builder.getId()) ))
+    if (! ( roleIds.contains(admin.getOid()) || roleIds.contains(builder.getOid()) ))
     {
       RoleDAOIF role = RoleDAO.findRole(DECISION_MAKER);
 
-      roleIds.add(role.getId());
+      roleIds.add(role.getOid());
     }
   }
 
@@ -113,38 +113,38 @@ public class DefaultConfiguration implements ConfigurationIF
 
   private void grantAllPermissions(RoleDAO role, MdClassDAOIF mdClass)
   {
-    role.grantPermission(Operation.CREATE, mdClass.getId());
-    role.grantPermission(Operation.DELETE, mdClass.getId());
-    role.grantPermission(Operation.READ, mdClass.getId());
-    role.grantPermission(Operation.READ_ALL, mdClass.getId());
-    role.grantPermission(Operation.WRITE, mdClass.getId());
-    role.grantPermission(Operation.WRITE_ALL, mdClass.getId());
+    role.grantPermission(Operation.CREATE, mdClass.getOid());
+    role.grantPermission(Operation.DELETE, mdClass.getOid());
+    role.grantPermission(Operation.READ, mdClass.getOid());
+    role.grantPermission(Operation.READ_ALL, mdClass.getOid());
+    role.grantPermission(Operation.WRITE, mdClass.getOid());
+    role.grantPermission(Operation.WRITE_ALL, mdClass.getOid());
 
     if (mdClass instanceof MdRelationshipDAOIF)
     {
-      role.grantPermission(Operation.ADD_CHILD, mdClass.getId());
-      role.grantPermission(Operation.ADD_PARENT, mdClass.getId());
+      role.grantPermission(Operation.ADD_CHILD, mdClass.getOid());
+      role.grantPermission(Operation.ADD_PARENT, mdClass.getOid());
 
-      role.grantPermission(Operation.DELETE_CHILD, mdClass.getId());
-      role.grantPermission(Operation.DELETE_PARENT, mdClass.getId());
+      role.grantPermission(Operation.DELETE_CHILD, mdClass.getOid());
+      role.grantPermission(Operation.DELETE_PARENT, mdClass.getOid());
 
-      role.grantPermission(Operation.READ_CHILD, mdClass.getId());
-      role.grantPermission(Operation.READ_PARENT, mdClass.getId());
+      role.grantPermission(Operation.READ_CHILD, mdClass.getOid());
+      role.grantPermission(Operation.READ_PARENT, mdClass.getOid());
 
-      role.grantPermission(Operation.WRITE_CHILD, mdClass.getId());
-      role.grantPermission(Operation.WRITE_PARENT, mdClass.getId());
+      role.grantPermission(Operation.WRITE_CHILD, mdClass.getOid());
+      role.grantPermission(Operation.WRITE_PARENT, mdClass.getOid());
     }
   }
 
   private void grantReadPermissions(RoleDAO role, MdClassDAOIF mdClass)
   {
-    role.grantPermission(Operation.READ, mdClass.getId());
-    role.grantPermission(Operation.READ_ALL, mdClass.getId());
+    role.grantPermission(Operation.READ, mdClass.getOid());
+    role.grantPermission(Operation.READ_ALL, mdClass.getOid());
 
     if (mdClass instanceof MdRelationshipDAOIF)
     {
-      role.grantPermission(Operation.READ_CHILD, mdClass.getId());
-      role.grantPermission(Operation.READ_PARENT, mdClass.getId());
+      role.grantPermission(Operation.READ_CHILD, mdClass.getOid());
+      role.grantPermission(Operation.READ_PARENT, mdClass.getOid());
     }
   }
 
@@ -190,7 +190,7 @@ public class DefaultConfiguration implements ConfigurationIF
     {
       if (this.hasLocationData(type))
       {
-        String id = object.getString("id");
+        String oid = object.getString("oid");
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
         
         Envelope envelope = PublisherUtil.getEnvelope(object);
@@ -198,21 +198,21 @@ public class DefaultConfiguration implements ConfigurationIF
 
         if (type.equals(LM_CONTEXT))
         {
-          LocationContextPublisher publisher = new LocationContextPublisher(id, "");
+          LocationContextPublisher publisher = new LocationContextPublisher(oid, "");
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM_TARGET))
         {
-          LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
+          LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "");
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM))
         {
-          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(id, universalId, ""), new LocationContextPublisher(id, ""));
+          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(oid, universalId, ""), new LocationContextPublisher(oid, ""));
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);

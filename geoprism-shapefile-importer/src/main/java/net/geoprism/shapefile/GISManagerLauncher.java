@@ -32,7 +32,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.widgets.Display;
 
 import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.generation.loader.Reloadable;
+
 
 public class GISManagerLauncher
 {
@@ -85,7 +85,7 @@ public class GISManagerLauncher
 
     final Display display = Display.getDefault();
 
-    class WindowRunner implements Runnable, Reloadable
+    class WindowRunner implements Runnable
     {
       public void run()
       {

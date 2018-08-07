@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class UnsupportedComparisonExceptionDTO extends UnsupportedComparisonExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -363060926;
   
   public UnsupportedComparisonExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

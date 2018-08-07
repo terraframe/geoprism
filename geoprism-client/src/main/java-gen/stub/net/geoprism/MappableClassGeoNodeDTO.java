@@ -20,12 +20,12 @@ package net.geoprism;
 
 
 public class MappableClassGeoNodeDTO extends MappableClassGeoNodeDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -407937805;
   
-  public MappableClassGeoNodeDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public MappableClassGeoNodeDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

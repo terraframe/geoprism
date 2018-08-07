@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-public class GeometrySynonymException extends GeometrySynonymExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeometrySynonymException extends GeometrySynonymExceptionBase 
 {
   private static final long serialVersionUID = 1451794511;
   

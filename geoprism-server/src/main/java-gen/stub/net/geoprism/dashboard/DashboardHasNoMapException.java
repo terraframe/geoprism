@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class DashboardHasNoMapException extends DashboardHasNoMapExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardHasNoMapException extends DashboardHasNoMapExceptionBase 
 {
   private static final long serialVersionUID = -655333327;
   

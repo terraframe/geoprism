@@ -31,10 +31,10 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Display;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
 
-public abstract class ShapeFileBeanPage extends WizardPage implements Reloadable
+
+public abstract class ShapeFileBeanPage extends WizardPage 
 {
   protected final ShapeFileBean data;
 
@@ -50,7 +50,7 @@ public abstract class ShapeFileBeanPage extends WizardPage implements Reloadable
 
   protected void bind(ComboViewer viewer, String attribute)
   {
-    class TargetToModel extends UpdateValueStrategy implements Reloadable
+    class TargetToModel extends UpdateValueStrategy 
     {
       @Override
       protected IStatus doSet(IObservableValue observableValue, Object value)
@@ -66,7 +66,7 @@ public abstract class ShapeFileBeanPage extends WizardPage implements Reloadable
       }
     }
 
-    class ModelToTarget extends UpdateValueStrategy implements Reloadable
+    class ModelToTarget extends UpdateValueStrategy 
     {
       @Override
       protected IStatus doSet(IObservableValue observableValue, Object value)

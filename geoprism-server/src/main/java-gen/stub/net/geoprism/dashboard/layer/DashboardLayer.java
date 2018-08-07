@@ -59,7 +59,7 @@ import net.geoprism.gis.wrapper.FeatureStrategy;
 import net.geoprism.gis.wrapper.FeatureType;
 import net.geoprism.gis.wrapper.Layer;
 
-public abstract class DashboardLayer extends DashboardLayerBase implements com.runwaysdk.generation.loader.Reloadable, Layer
+public abstract class DashboardLayer extends DashboardLayerBase implements Layer
 {
   private static final long        serialVersionUID = 1992575686;
 
@@ -363,17 +363,17 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
   @Override
   public String getViewName()
   {
-    if (!SessionParameterFacade.containsKey(this.getId()))
+    if (!SessionParameterFacade.containsKey(this.getOid()))
     {
-      SessionParameterFacade.put(this.getId(), this.generateViewName());
+      SessionParameterFacade.put(this.getOid(), this.generateViewName());
     }
 
-    return SessionParameterFacade.get(this.getId());
+    return SessionParameterFacade.get(this.getOid());
   }
 
   public void setViewName(String value)
   {
-    SessionParameterFacade.put(this.getId(), value);
+    SessionParameterFacade.put(this.getOid(), value);
   }
 
   @Override
@@ -388,7 +388,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
      * The apply will fail because dashboard map is a required field. However, in order to give the user a better error
      * message we still need to populate the key with value.
      */
-    return this.getId();
+    return this.getOid();
   }
 
   //
@@ -452,7 +452,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     UniversalQuery q = new UniversalQuery(f);
 
     Universal root = Universal.getRoot();
-    q.WHERE(q.getId().NE(root.getId()));
+    q.WHERE(q.getOid().NE(root.getOid()));
 
     q.ORDER_BY_ASC(q.getDisplayLabel().localize());
 
@@ -521,7 +521,7 @@ public abstract class DashboardLayer extends DashboardLayerBase implements com.r
     {
       DashboardStyle cStyle = style.clone();
 
-      clone.applyAll(cStyle, map.getId(), new DashboardCondition[] {});
+      clone.applyAll(cStyle, map.getOid(), new DashboardCondition[] {});
     }
 
     return clone;

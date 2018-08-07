@@ -23,9 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class DashboardTypeInfo implements Reloadable
+
+public class DashboardTypeInfo 
 {
   private List<String>        attributes;
 

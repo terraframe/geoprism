@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -1014216876)
-public abstract class DateParseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DateParseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.DateParseException";
   private static final long serialVersionUID = -1014216876;
@@ -69,7 +69,7 @@ public abstract class DateParseExceptionDTOBase extends com.runwaysdk.business.S
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String INPUT = "input";
   public static java.lang.String PATTERN = "pattern";
   public String getInput()
@@ -154,7 +154,7 @@ public abstract class DateParseExceptionDTOBase extends com.runwaysdk.business.S
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{input}", this.getInput().toString());
     template = template.replace("{pattern}", this.getPattern().toString());
     

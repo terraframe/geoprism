@@ -52,7 +52,7 @@ public class CategoryController
     for (int i = 0; i < array.length(); i++)
     {
       JSONObject object = array.getJSONObject(i);
-      object.put("id", object.getString("value"));
+      object.put("oid", object.getString("value"));
       object.remove("value");
     }
 
@@ -60,9 +60,9 @@ public class CategoryController
   }
 
   @Endpoint(url = "get", method = ServletMethod.GET, error = ErrorSerialization.JSON)
-  public ResponseIF getCategory(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF getCategory(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    ClassifierDTO dto = ClassifierDTO.get(request, id);
+    ClassifierDTO dto = ClassifierDTO.get(request, oid);
 
     JSONArray dArray = new JSONArray();
 
@@ -72,23 +72,23 @@ public class CategoryController
     {
       JSONObject object = new JSONObject();
       object.put("label", descendant.getDisplayLabel().getValue());
-      object.put("id", descendant.getId());
+      object.put("oid", descendant.getOid());
 
       dArray.put(object);
     }
 
     JSONObject response = new JSONObject();
     response.put("label", dto.getDisplayLabel().getValue());
-    response.put("id", dto.getId());
+    response.put("oid", dto.getOid());
     response.put("descendants", dArray);
 
     return new RestBodyResponse(response);
   }
 
   @Endpoint(url = "edit", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF editOption(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF editOption(ClientRequestIF request, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    ClassifierDTO dto = ClassifierDTO.editOption(request, id);
+    ClassifierDTO dto = ClassifierDTO.editOption(request, oid);
 
     JSONArray sArray = new JSONArray();
 
@@ -98,12 +98,12 @@ public class CategoryController
     {
       JSONObject object = new JSONObject();
       object.put("label", synonym.getDisplayLabel().getValue());
-      object.put("id", synonym.getId());
+      object.put("oid", synonym.getOid());
 
       sArray.put(object);
     }
 
-    ClassifierDTO parent = ClassifierDTO.get(request, parentId);
+    ClassifierDTO parent = ClassifierDTO.get(request, parentOid);
 
     JSONArray dArray = new JSONArray();
 
@@ -111,11 +111,11 @@ public class CategoryController
 
     for (TermDTO descendant : descendants)
     {
-      if (!descendant.getId().equals(id))
+      if (!descendant.getOid().equals(oid))
       {
         JSONObject object = new JSONObject();
         object.put("label", descendant.getDisplayLabel().getValue());
-        object.put("id", descendant.getId());
+        object.put("oid", descendant.getOid());
 
         dArray.put(object);
       }
@@ -123,7 +123,7 @@ public class CategoryController
 
     JSONObject response = new JSONObject();
     response.put("label", dto.getDisplayLabel().getValue());
-    response.put("id", dto.getId());
+    response.put("oid", dto.getOid());
     response.put("synonyms", sArray);
     response.put("siblings", dArray);
 
@@ -143,9 +143,9 @@ public class CategoryController
   }
 
   @Endpoint(url = "unlock", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF unlockCategory(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF unlockCategory(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
-    ClassifierDTO.unlockCategory(request, id);
+    ClassifierDTO.unlockCategory(request, oid);
 
     return new RestResponse();
   }
@@ -157,23 +157,23 @@ public class CategoryController
 
     JSONObject object = new JSONObject();
     object.put("label", classifier.getDisplayLabel().getValue());
-    object.put("id", classifier.getId());
+    object.put("oid", classifier.getOid());
 
     return new RestBodyResponse(object);
   }
 
   @Endpoint(url = "remove", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF deleteOption(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF deleteOption(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
-    ClassifierDTO.deleteOption(request, id);
+    ClassifierDTO.deleteOption(request, oid);
 
     return new RestResponse();
   }
 
   @Endpoint(url = "validate", method = ServletMethod.GET, error = ErrorSerialization.JSON)
-  public ResponseIF validateCategoryName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "id") String id)
+  public ResponseIF validateCategoryName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "oid") String oid)
   {
-    ClassifierDTO.validateCategoryName(request, name, id);
+    ClassifierDTO.validateCategoryName(request, name, oid);
 
     return new RestResponse();
   }

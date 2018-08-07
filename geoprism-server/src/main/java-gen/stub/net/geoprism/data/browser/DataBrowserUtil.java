@@ -34,7 +34,7 @@ import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-public class DataBrowserUtil extends DataBrowserUtilBase implements com.runwaysdk.generation.loader.Reloadable
+public class DataBrowserUtil extends DataBrowserUtilBase 
 {
   private static final long serialVersionUID = 884335891;
 

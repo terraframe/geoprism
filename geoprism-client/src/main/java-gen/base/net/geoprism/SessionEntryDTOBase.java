@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 1361872795)
-public abstract class SessionEntryDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class SessionEntryDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.SessionEntry";
   private static final long serialVersionUID = 1361872795;
@@ -48,7 +48,7 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -146,7 +146,7 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -331,7 +331,7 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -442,7 +442,7 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(SESSIONUSER, value.getId());
+      setValue(SESSIONUSER, value.getOid());
     }
   }
   
@@ -558,60 +558,60 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO> getAllDashboardMap()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO>) getRequest().getChildren(this.getId(), net.geoprism.dashboard.SessionMapDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO>) getRequest().getChildren(this.getOid(), net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO> getAllDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO> getAllDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO>) clientRequestIF.getChildren(id, net.geoprism.dashboard.SessionMapDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardMapDTO>) clientRequestIF.getChildren(oid, net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.SessionMapDTO> getAllDashboardMapRelationships()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.SessionMapDTO>) getRequest().getChildRelationships(this.getId(), net.geoprism.dashboard.SessionMapDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.SessionMapDTO>) getRequest().getChildRelationships(this.getOid(), net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.SessionMapDTO> getAllDashboardMapRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.SessionMapDTO> getAllDashboardMapRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.SessionMapDTO>) clientRequestIF.getChildRelationships(id, net.geoprism.dashboard.SessionMapDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.SessionMapDTO>) clientRequestIF.getChildRelationships(oid, net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
   public net.geoprism.dashboard.SessionMapDTO addDashboardMap(net.geoprism.dashboard.DashboardMapDTO child)
   {
-    return (net.geoprism.dashboard.SessionMapDTO) getRequest().addChild(this.getId(), child.getId(), net.geoprism.dashboard.SessionMapDTO.CLASS);
+    return (net.geoprism.dashboard.SessionMapDTO) getRequest().addChild(this.getOid(), child.getOid(), net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.SessionMapDTO addDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.DashboardMapDTO child)
+  public static net.geoprism.dashboard.SessionMapDTO addDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.dashboard.DashboardMapDTO child)
   {
-    return (net.geoprism.dashboard.SessionMapDTO) clientRequestIF.addChild(id, child.getId(), net.geoprism.dashboard.SessionMapDTO.CLASS);
+    return (net.geoprism.dashboard.SessionMapDTO) clientRequestIF.addChild(oid, child.getOid(), net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
   public void removeDashboardMap(net.geoprism.dashboard.SessionMapDTO relationship)
   {
-    getRequest().deleteChild(relationship.getId());
+    getRequest().deleteChild(relationship.getOid());
   }
   
   public static void removeDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.dashboard.SessionMapDTO relationship)
   {
-    clientRequestIF.deleteChild(relationship.getId());
+    clientRequestIF.deleteChild(relationship.getOid());
   }
   
   public void removeAllDashboardMap()
   {
-    getRequest().deleteChildren(this.getId(), net.geoprism.dashboard.SessionMapDTO.CLASS);
+    getRequest().deleteChildren(this.getOid(), net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
-  public static void removeAllDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllDashboardMap(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteChildren(id, net.geoprism.dashboard.SessionMapDTO.CLASS);
+    clientRequestIF.deleteChildren(oid, net.geoprism.dashboard.SessionMapDTO.CLASS);
   }
   
-  public static net.geoprism.SessionEntryDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.SessionEntryDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.SessionEntryDTO) dto;
   }
@@ -629,7 +629,7 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.SessionEntryQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -642,10 +642,10 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     getRequest().lock(this);
   }
   
-  public static net.geoprism.SessionEntryDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.SessionEntryDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.SessionEntryDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.SessionEntryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -655,10 +655,10 @@ public abstract class SessionEntryDTOBase extends com.runwaysdk.business.Busines
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.SessionEntryDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.SessionEntryDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.SessionEntryDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.SessionEntryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

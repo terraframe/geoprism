@@ -66,7 +66,7 @@ import com.runwaysdk.dataaccess.MdAttributeLongDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributeLineStringDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributeMultiLineStringDAOIF;
@@ -86,9 +86,9 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class ShapefileExporter implements Reloadable
+public class ShapefileExporter 
 {
-  private static class AttributeDescription implements Reloadable
+  private static class AttributeDescription 
   {
     private String   name;
 
@@ -175,7 +175,7 @@ public class ShapefileExporter implements Reloadable
 
           List<Object> values = this.getFeatureValues(featureType, business, attributes);
 
-          SimpleFeature feature = SimpleFeatureBuilder.build(featureType, values, business.getId());
+          SimpleFeature feature = SimpleFeatureBuilder.build(featureType, values, business.getOid());
           SimpleFeatureCollection collection = DataUtilities.collection(feature);
           featureStore.addFeatures(collection);
         }
@@ -281,11 +281,11 @@ public class ShapefileExporter implements Reloadable
 
           if (referenceMdBusiness.definesType().equals(GeoEntity.CLASS))
           {
-            String id = business.getValue(mdAttribute.definesAttribute());
+            String oid = business.getValue(mdAttribute.definesAttribute());
 
-            if (id != null && id.length() > 0)
+            if (oid != null && oid.length() > 0)
             {
-              GeoEntity geoEntity = GeoEntity.get(id);
+              GeoEntity geoEntity = GeoEntity.get(oid);
 
               OIterator<Term> iterator = geoEntity.getAllAncestors(LocatedIn.CLASS);
 
@@ -333,11 +333,11 @@ public class ShapefileExporter implements Reloadable
           }
           else if (referenceMdBusiness.definesType().equals(Classifier.CLASS))
           {
-            String id = business.getValue(mdAttribute.definesAttribute());
+            String oid = business.getValue(mdAttribute.definesAttribute());
 
-            if (id != null && id.length() > 0)
+            if (oid != null && oid.length() > 0)
             {
-              Classifier classifier = Classifier.get(id);
+              Classifier classifier = Classifier.get(oid);
 
               map.put(name, classifier.getDisplayLabel().getValue());
             }
@@ -369,7 +369,7 @@ public class ShapefileExporter implements Reloadable
 
   private GeoEntity getAncestorOfType(GeoEntity entity, List<Term> terms, Universal universal)
   {
-    if (entity.getUniversalId().equals(universal.getId()))
+    if (entity.getUniversalId().equals(universal.getOid()))
     {
       return entity;
     }
@@ -378,7 +378,7 @@ public class ShapefileExporter implements Reloadable
     {
       GeoEntity ancestor = (GeoEntity) term;
 
-      if (ancestor.getUniversalId().equals(universal.getId()))
+      if (ancestor.getUniversalId().equals(universal.getOid()))
       {
         return ancestor;
       }

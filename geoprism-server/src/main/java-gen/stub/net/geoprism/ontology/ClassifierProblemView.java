@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-public class ClassifierProblemView extends ClassifierProblemViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierProblemView extends ClassifierProblemViewBase 
 {
   private static final long serialVersionUID = -1794673011;
   

@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public abstract class AggregationStrategyDTO extends AggregationStrategyDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1457813089;
   
   public AggregationStrategyDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

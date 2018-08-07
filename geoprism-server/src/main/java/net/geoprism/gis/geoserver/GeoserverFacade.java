@@ -21,9 +21,9 @@ package net.geoprism.gis.geoserver;
 import java.io.File;
 import java.util.List;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class GeoserverFacade implements Reloadable
+
+public class GeoserverFacade 
 {
   public static final String      GEOM_COLUMN = "geom";
 

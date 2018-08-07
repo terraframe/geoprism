@@ -27,10 +27,10 @@ import net.geoprism.shapefile.Localizer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class UniversalContentProvider implements IStructuredContentProvider, Reloadable
+public class UniversalContentProvider implements IStructuredContentProvider
 {
   private Collection<LabeledValueBean> universals;
 
@@ -41,7 +41,7 @@ public class UniversalContentProvider implements IStructuredContentProvider, Rel
 
     for (Universal universal : universals)
     {
-      this.universals.add(new LabeledValueBean(universal.getId(), universal.getDisplayLabel().getValue()));
+      this.universals.add(new LabeledValueBean(universal.getOid(), universal.getDisplayLabel().getValue()));
     }
   }
 

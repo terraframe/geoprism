@@ -48,9 +48,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.LocalProperties;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ReportParameterUtil implements Reloadable
+
+public class ReportParameterUtil 
 {
   public static final String TEXT_BOX     = "Text Box";
 

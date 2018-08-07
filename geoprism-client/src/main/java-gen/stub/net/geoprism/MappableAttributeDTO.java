@@ -19,7 +19,7 @@
 package net.geoprism;
 
 public class MappableAttributeDTO extends MappableAttributeDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 221907401;
   
   public MappableAttributeDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

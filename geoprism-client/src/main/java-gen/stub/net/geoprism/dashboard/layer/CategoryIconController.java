@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.controller.ServletMethod;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -40,7 +40,7 @@ import com.runwaysdk.mvc.RestResponse;
 import net.geoprism.JSONControllerUtil;
 
 @Controller(url = "iconimage")
-public class CategoryIconController implements Reloadable
+public class CategoryIconController 
 {
   @Endpoint(method = ServletMethod.POST)
   public ResponseIF create(ClientRequestIF request, @RequestParamter(name = "file") MultipartFileParameter file, @RequestParamter(name = "label") String label)
@@ -71,11 +71,11 @@ public class CategoryIconController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST)
-  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "file") MultipartFileParameter file, @RequestParamter(name = "label") String label)
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "file") MultipartFileParameter file, @RequestParamter(name = "label") String label)
   {
     try
     {
-      CategoryIconDTO icon = CategoryIconDTO.get(request, id);
+      CategoryIconDTO icon = CategoryIconDTO.get(request, oid);
       icon.getDisplayLabel().setValue(label);
 
       if (file != null)
@@ -109,11 +109,11 @@ public class CategoryIconController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST)
-  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
     try
     {
-      CategoryIconDTO icon = CategoryIconDTO.lock(request, id);
+      CategoryIconDTO icon = CategoryIconDTO.lock(request, oid);
 
       return new RestBodyResponse(new JSONObject(icon.getAsJSON()));
     }
@@ -124,9 +124,9 @@ public class CategoryIconController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
-    CategoryIconDTO.unlock(request, id);
+    CategoryIconDTO.unlock(request, oid);
 
     return new RestResponse();
   }
@@ -143,11 +143,11 @@ public class CategoryIconController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST)
-  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
     try
     {
-      CategoryIconDTO.remove(request, id);
+      CategoryIconDTO.remove(request, oid);
 
       return new RestBodyResponse("");
     }
@@ -158,9 +158,9 @@ public class CategoryIconController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.GET)
-  public ResponseIF getCategoryIconImage(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF getCategoryIconImage(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
-    CategoryIconDTO icon = CategoryIconDTO.get(request, id);
+    CategoryIconDTO icon = CategoryIconDTO.get(request, oid);
 
     return new InputStreamResponse(icon.getIcon(), "image/png");
   }

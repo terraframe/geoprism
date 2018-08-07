@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierAllPathsTable extends ClassifierAllPathsTableBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierAllPathsTable extends ClassifierAllPathsTableBase 
 {
   private static final long serialVersionUID = 943154652;
   

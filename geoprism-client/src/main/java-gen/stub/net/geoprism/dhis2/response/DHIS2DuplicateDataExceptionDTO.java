@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 public class DHIS2DuplicateDataExceptionDTO extends DHIS2DuplicateDataExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -502500597;
   
   public DHIS2DuplicateDataExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
-public class DHIS2UnexpectedResponseException extends DHIS2UnexpectedResponseExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DHIS2UnexpectedResponseException extends DHIS2UnexpectedResponseExceptionBase 
 {
   private static final long serialVersionUID = 70481014;
   

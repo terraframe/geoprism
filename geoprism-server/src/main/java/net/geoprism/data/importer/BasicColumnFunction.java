@@ -2,9 +2,9 @@ package net.geoprism.data.importer;
 
 import org.opengis.feature.simple.SimpleFeature;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class BasicColumnFunction implements ShapefileFunction, Reloadable
+
+public class BasicColumnFunction implements ShapefileFunction
 {
 
   private String attributeName;

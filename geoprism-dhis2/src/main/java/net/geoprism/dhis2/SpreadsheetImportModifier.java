@@ -155,14 +155,14 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
     {
       if (attrDhis2Ids.containsKey(column) && importer != null)
       {
-        String id = attrDhis2Ids.get(column);
+        String oid = attrDhis2Ids.get(column);
         
         try
         {
           HTTPResponse response = dhis2.httpGet("api/25/metadata.json", new NameValuePair[] {
               new NameValuePair("assumeTrue", "false"),
               new NameValuePair("trackedEntityAttributes", "true"),
-              new NameValuePair("filter", "id:eq:" + id)
+              new NameValuePair("filter", "oid:eq:" + oid)
             });
           DHIS2TrackerResponseProcessor.validateStatusCode(response);
           
@@ -186,11 +186,11 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
                 
                 if (trackedEntityAttr.has("optionSet"))
                 {
-                  String optionSetId = trackedEntityAttr.getJSONObject("optionSet").getString("id");
+                  String optionSetId = trackedEntityAttr.getJSONObject("optionSet").getString("oid");
                   try
                   {
                     Classifier classy = Classifier.getByKey(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + optionSetId + Classifier.KEY_CONCATENATOR + optionSetId);
-                    attribute.setCategoryId(classy.getId());
+                    attribute.setCategoryId(classy.getOid());
                   }
                   catch(DataNotFoundException e)
                   {
@@ -294,7 +294,7 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
       }
       else if (column == 3 && isDhis2Spreadsheet)
       {
-        String runwayId = MdBusiness.getMdBusiness(type).getId();
+        String runwayId = MdBusiness.getMdBusiness(type).getOid();
         
 //        Savepoint sp = Database.setSavepoint(); // We aren't in a transaction
         try
@@ -344,7 +344,7 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
         String dhis2Id = attrDhis2Ids.get(column);
         if (!dhis2Id.equals(""))
         {
-          String attrId = MdAttributeConcrete.getByKey(type + "." + attrName).getId();
+          String attrId = MdAttributeConcrete.getByKey(type + "." + attrName).getOid();
           
 //          Savepoint sp = Database.setSavepoint(); // We aren't in a transaction
           try

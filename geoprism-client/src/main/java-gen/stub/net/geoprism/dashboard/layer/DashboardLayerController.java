@@ -20,7 +20,7 @@ package net.geoprism.dashboard.layer;
 
 
 
-public class DashboardLayerController extends DashboardLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardLayerController extends DashboardLayerControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardLayer/";
 
@@ -41,7 +41,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
 
   public void failCancel(DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
 
   public void create(DashboardLayerDTO dto) throws java.io.IOException, javax.servlet.ServletException
@@ -49,7 +49,7 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch (com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -82,9 +82,9 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     render("editComponent.jsp");
   }
 
-  public void failEdit(String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
 
   public void failNewInstance() throws java.io.IOException, javax.servlet.ServletException
@@ -110,14 +110,14 @@ public class DashboardLayerController extends DashboardLayerControllerBase imple
     render("editComponent.jsp");
   }
 
-  public void view(String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("layer", DashboardLayerDTO.get(clientRequest, id));
+    req.setAttribute("layer", DashboardLayerDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
 
-  public void failView(String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }

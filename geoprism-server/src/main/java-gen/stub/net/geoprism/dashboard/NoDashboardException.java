@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class NoDashboardException extends NoDashboardExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class NoDashboardException extends NoDashboardExceptionBase 
 {
   private static final long serialVersionUID = 860053619;
   

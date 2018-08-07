@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
-public class DHIS2DuplicateAttributeException extends DHIS2DuplicateAttributeExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DHIS2DuplicateAttributeException extends DHIS2DuplicateAttributeExceptionBase 
 {
   private static final long serialVersionUID = -944876350;
   

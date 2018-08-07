@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
-public class DashboardReferenceLayerController extends DashboardReferenceLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardReferenceLayerController extends DashboardReferenceLayerControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardReferenceLayer/";
 
@@ -45,13 +45,13 @@ public class DashboardReferenceLayerController extends DashboardReferenceLayerCo
   }
 
   @Override
-  public void edit(String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      DashboardReferenceLayerDTO layer = DashboardReferenceLayerDTO.lock(request, id);
+      DashboardReferenceLayerDTO layer = DashboardReferenceLayerDTO.lock(request, oid);
       DashboardMapDTO map = layer.getDashboardMap();
       DashboardStyleDTO style = layer.getAllHasStyle().get(0);
 

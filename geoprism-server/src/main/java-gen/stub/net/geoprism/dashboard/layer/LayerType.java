@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 
-public class LayerType extends LayerTypeBase implements com.runwaysdk.generation.loader.Reloadable
+public class LayerType extends LayerTypeBase 
 {
   private static final long serialVersionUID = -1016396290;
   

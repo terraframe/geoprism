@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = -365034344)
-public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.DashboardLayerView";
   private static final long serialVersionUID = -365034344;
@@ -41,7 +41,7 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String FEATURESTRATEGY = "featureStrategy";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String LAYERID = "layerId";
   public static java.lang.String LAYERISACTIVE = "layerIsActive";
   public static java.lang.String LAYERNAME = "layerName";
@@ -519,7 +519,7 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
     }
     else
     {
-      setValue(MDATTRIBUTE, value.getId());
+      setValue(MDATTRIBUTE, value.getOid());
     }
   }
   
@@ -617,9 +617,9 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VIEWNAME).getAttributeMdDTO();
   }
   
-  public static DashboardLayerViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static DashboardLayerViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (DashboardLayerViewDTO) dto;
   }
@@ -637,7 +637,7 @@ public abstract class DashboardLayerViewDTOBase extends com.runwaysdk.business.V
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

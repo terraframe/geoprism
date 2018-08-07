@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 public class ProgressState
 {
-  private String id;
+  private String oid;
 
   private int    total;
 
@@ -31,16 +31,16 @@ public class ProgressState
 
   private String description;
 
-  public ProgressState(String id)
+  public ProgressState(String oid)
   {
-    this.id = id;
+    this.oid = oid;
     this.current = 0;
     this.total = 1;
   }
 
-  public String getId()
+  public String getOid()
   {
-    return id;
+    return oid;
   }
 
   public int getTotal()

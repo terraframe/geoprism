@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 
-public abstract class AggregationStrategy extends AggregationStrategyBase implements com.runwaysdk.generation.loader.Reloadable
+public abstract class AggregationStrategy extends AggregationStrategyBase 
 {
   private static final long serialVersionUID = -27686881;
 

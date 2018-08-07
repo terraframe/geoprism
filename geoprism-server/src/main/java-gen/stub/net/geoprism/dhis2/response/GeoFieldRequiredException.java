@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
-public class GeoFieldRequiredException extends GeoFieldRequiredExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeoFieldRequiredException extends GeoFieldRequiredExceptionBase 
 {
   private static final long serialVersionUID = -873792059;
   

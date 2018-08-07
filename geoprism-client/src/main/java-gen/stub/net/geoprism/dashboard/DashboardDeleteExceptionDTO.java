@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class DashboardDeleteExceptionDTO extends DashboardDeleteExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -751231256;
   
   public DashboardDeleteExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

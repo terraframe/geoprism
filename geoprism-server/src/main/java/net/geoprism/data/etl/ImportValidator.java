@@ -125,12 +125,12 @@ public class ImportValidator implements ConverterIF
             {
               BigDecimal decimal = new BigDecimal(value).stripTrailingZeros();
 
-              this.attributes.putIfAbsent(mdAttribute.getId(), new DecimalAttribute());
+              this.attributes.putIfAbsent(mdAttribute.getOid(), new DecimalAttribute());
 
               /*
                * Precision is the total number of digits. Scale is the number of digits after the decimal place.
                */
-              DecimalAttribute attribute = this.attributes.get(mdAttribute.getId());
+              DecimalAttribute attribute = this.attributes.get(mdAttribute.getOid());
 
               int precision = decimal.precision();
               int scale = decimal.scale();

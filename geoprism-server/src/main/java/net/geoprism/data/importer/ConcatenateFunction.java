@@ -2,9 +2,9 @@ package net.geoprism.data.importer;
 
 import org.opengis.feature.simple.SimpleFeature;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ConcatenateFunction implements ShapefileFunction, Reloadable
+
+public class ConcatenateFunction implements ShapefileFunction
 {
   private ShapefileFunction f1;
 

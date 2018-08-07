@@ -21,9 +21,9 @@ package net.geoprism.localization;
 import java.util.Properties;
 import java.util.Set;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class Bundle implements Reloadable
+
+public class Bundle 
 {
   private Properties properties;
 

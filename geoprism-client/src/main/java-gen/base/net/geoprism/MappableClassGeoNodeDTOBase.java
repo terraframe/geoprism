@@ -19,14 +19,14 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 6270805)
-public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business.RelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business.RelationshipDTO 
 {
   public final static String CLASS = "net.geoprism.MappableClassGeoNode";
   private static final long serialVersionUID = 6270805;
   
-  public MappableClassGeoNodeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
+  public MappableClassGeoNodeDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentOid, java.lang.String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   
@@ -49,7 +49,7 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -145,7 +145,7 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -330,7 +330,7 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -406,31 +406,31 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
   
   public net.geoprism.MappableClassDTO getParent()
   {
-    return net.geoprism.MappableClassDTO.get(getRequest(), super.getParentId());
+    return net.geoprism.MappableClassDTO.get(getRequest(), super.getParentOid());
   }
   
     public com.runwaysdk.system.gis.geo.GeoNodeDTO getChild()
   {
-    return com.runwaysdk.system.gis.geo.GeoNodeDTO.get(getRequest(), super.getChildId());
+    return com.runwaysdk.system.gis.geo.GeoNodeDTO.get(getRequest(), super.getChildOid());
   }
   
-  public static net.geoprism.MappableClassGeoNodeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.MappableClassGeoNodeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(id);
+    com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(oid);
     
     return (net.geoprism.MappableClassGeoNodeDTO) dto;
   }
   
-  public static net.geoprism.MappableClassGeoNodeQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId)
+  public static net.geoprism.MappableClassGeoNodeQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.MappableClassGeoNodeDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentId);
+    queryDTO.addCondition("parent_id", "EQ", parentOid);
     return (net.geoprism.MappableClassGeoNodeQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
-  public static net.geoprism.MappableClassGeoNodeQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childId)
+  public static net.geoprism.MappableClassGeoNodeQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.MappableClassGeoNodeDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childId);
+    queryDTO.addCondition("child_id", "EQ", childOid);
     return (net.geoprism.MappableClassGeoNodeQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()
@@ -446,7 +446,7 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.MappableClassGeoNodeQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -459,10 +459,10 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
     getRequest().lock(this);
   }
   
-  public static net.geoprism.MappableClassGeoNodeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.MappableClassGeoNodeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.MappableClassGeoNodeDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.MappableClassGeoNodeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -472,10 +472,10 @@ public abstract class MappableClassGeoNodeDTOBase extends com.runwaysdk.business
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.MappableClassGeoNodeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.MappableClassGeoNodeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.MappableClassGeoNodeDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.MappableClassGeoNodeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

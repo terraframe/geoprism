@@ -46,7 +46,7 @@ import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
-public class ReportItemController extends ReportItemControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportItemController extends ReportItemControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/report/ReportItem/";
 
@@ -60,7 +60,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
   public void cancel(ReportItemDTO dto) throws IOException, ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
 
   public void failCancel(ReportItemDTO dto) throws IOException, ServletException
@@ -157,14 +157,14 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
       if (!redirect)
       {
-        this.failEdit(dto.getId());
+        this.failEdit(dto.getOid());
       }
     }
   }
 
-  public void failEdit(String id) throws IOException, ServletException
+  public void failEdit(String oid) throws IOException, ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
 
   public void newInstance() throws IOException, ServletException
@@ -242,11 +242,11 @@ public class ReportItemController extends ReportItemControllerBase implements co
     this.edit(dto.getDashboardId(), dto);
   }
 
-  public void view(String id) throws IOException, ServletException
+  public void view(String oid) throws IOException, ServletException
   {
     try
     {
-      this.view(ReportItemDTO.get(super.getClientRequest(), id));
+      this.view(ReportItemDTO.get(super.getClientRequest(), oid));
     }
     catch (Throwable t)
     {
@@ -254,7 +254,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
       if (!redirect)
       {
-        this.failView(id);
+        this.failView(oid);
       }
     }
   }
@@ -272,12 +272,12 @@ public class ReportItemController extends ReportItemControllerBase implements co
 
       if (!redirect)
       {
-        this.failView(dto.getId());
+        this.failView(dto.getOid());
       }
     }
   }
 
-  public void failView(String id) throws IOException, ServletException
+  public void failView(String oid) throws IOException, ServletException
   {
     this.viewAll();
   }
@@ -491,7 +491,7 @@ public class ReportItemController extends ReportItemControllerBase implements co
 	    
 	    if(report != null)
 	    {
-		    String reportId = report.getId();
+		    String reportId = report.getOid();
 		    String reportName = report.getReportLabel().getValue().replaceAll("\\s", "_");
 	
 		    try

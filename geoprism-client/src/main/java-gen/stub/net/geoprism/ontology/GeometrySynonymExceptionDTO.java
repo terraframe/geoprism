@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 public class GeometrySynonymExceptionDTO extends GeometrySynonymExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1515237071;
   
   public GeometrySynonymExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

@@ -19,7 +19,7 @@
 package net.geoprism;
 
 
-public class DateParseException extends DateParseExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DateParseException extends DateParseExceptionBase 
 {
   private static final long serialVersionUID = 1053974576;
   

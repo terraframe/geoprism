@@ -25,11 +25,9 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ConfigurationService implements Reloadable
+
+public class ConfigurationService 
 {
   /**
    * Retrieve all implementations of ConfigurationIF.
@@ -38,7 +36,7 @@ public class ConfigurationService implements Reloadable
   {
     List<ConfigurationIF> configurations = new ArrayList<ConfigurationIF>();
 
-    ServiceLoader<ConfigurationIF> loader = ServiceLoader.load(ConfigurationIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<ConfigurationIF> loader = ServiceLoader.load(ConfigurationIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {

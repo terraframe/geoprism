@@ -30,11 +30,11 @@ import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.dataaccess.MdDimensionDAOIF;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.metadata.MdDimensionDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 
 import net.geoprism.configuration.GeoprismConfigGroup;
 
-public class LocaleDimension implements Reloadable
+public class LocaleDimension 
 {
   private String           locale;
 

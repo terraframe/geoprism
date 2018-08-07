@@ -20,7 +20,7 @@ package net.geoprism.ontology;
 
 
 public class ClassifierSynonymDisplayLabelDTO extends ClassifierSynonymDisplayLabelDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -530881759;
   
   public ClassifierSynonymDisplayLabelDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

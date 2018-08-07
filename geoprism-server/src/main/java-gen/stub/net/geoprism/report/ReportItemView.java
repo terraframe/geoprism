@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class ReportItemView extends ReportItemViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportItemView extends ReportItemViewBase 
 {
   private static final long serialVersionUID = -149941815;
 

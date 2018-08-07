@@ -19,7 +19,7 @@
 package net.geoprism.email;
 
 public class EmailSendExceptionDTO extends EmailSendExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 655331710;
   
   public EmailSendExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

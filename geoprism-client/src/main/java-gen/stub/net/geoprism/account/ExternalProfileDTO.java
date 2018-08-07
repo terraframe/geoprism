@@ -19,7 +19,7 @@
 package net.geoprism.account;
 
 public class ExternalProfileDTO extends ExternalProfileDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1609236436;
   
   public ExternalProfileDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

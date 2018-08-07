@@ -26,10 +26,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.runwaysdk.dataaccess.MdDimensionDAOIF;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Session;
 
-public class MultiBundle implements Reloadable
+public class MultiBundle 
 {
   private Map<String, Bundle> bundles;
 
@@ -44,7 +44,7 @@ public class MultiBundle implements Reloadable
    * Singleton is loaded on the first execution of MultiBundle.getInstance() or
    * the first access to Singleton.INSTANCE, not before.
    */
-  private static class Singleton implements Reloadable
+  private static class Singleton 
   {
     public static final MultiBundle INSTANCE = new MultiBundle();
   }

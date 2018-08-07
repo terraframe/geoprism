@@ -43,7 +43,6 @@ public class GeoEntityColumn extends ExcelColumn
     this.universal = universal;
   }
 
-  @Override
   public String getValue(ComponentIF component)
   {
     String attribute = this.attributeName.split(GeoEntityColumnListener.DELIMETER)[0];
@@ -71,7 +70,7 @@ public class GeoEntityColumn extends ExcelColumn
       {
         GeoEntity parent = (GeoEntity) ancestor;
 
-        if (parent.getUniversalId().equals(universal.getId()))
+        if (parent.getUniversalId().equals(universal.getOid()))
         {
           super.setValue(_cell, parent.getDisplayLabel().getValue());
         }

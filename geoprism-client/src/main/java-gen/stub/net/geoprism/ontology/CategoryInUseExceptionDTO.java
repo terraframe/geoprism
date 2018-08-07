@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 public class CategoryInUseExceptionDTO extends CategoryInUseExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1703152285;
   
   public CategoryInUseExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

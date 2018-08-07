@@ -50,7 +50,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdClassQuery;
 
-public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysdk.generation.loader.Reloadable
+public class MetadataWrapper extends MetadataWrapperBase 
 {
   private static final long serialVersionUID = -1121470685;
 
@@ -90,7 +90,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
     mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
-    mwQuery.AND(mwQuery.getId().NE(this.getId()));
+    mwQuery.AND(mwQuery.getOid().NE(this.getOid()));
 
     MappableClassQuery mcQuery = new MappableClassQuery(factory);
     mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
@@ -139,7 +139,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     DashboardAttributesQuery daQ = new DashboardAttributesQuery(f);
 
-    daQ.WHERE(daQ.parentId().EQ(this.getId()));
+    daQ.WHERE(daQ.parentOid().EQ(this.getOid()));
     daQ.ORDER_BY_ASC(daQ.getListOrder());
 
     OIterator<? extends DashboardAttributes> iter = daQ.getIterator();
@@ -153,7 +153,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
         MdAttributeDAOIF attr = MdAttributeDAO.get(aWrapper.getWrappedMdAttributeId());
         MdAttributeConcreteDAOIF mdAttributeConcrete = attr.getMdAttributeConcrete();
 
-        String attrId = attr.getId();
+        String attrId = attr.getOid();
         String attrType = mdAttributeConcrete.getType();
 
 
@@ -328,7 +328,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
     mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
-    mwQuery.AND(mwQuery.getId().NE(this.getId()));
+    mwQuery.AND(mwQuery.getOid().NE(this.getOid()));
 
     MappableClassQuery mcQuery = new MappableClassQuery(factory);
     mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));

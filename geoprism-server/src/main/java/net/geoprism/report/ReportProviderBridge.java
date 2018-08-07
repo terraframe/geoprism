@@ -25,16 +25,13 @@ import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import net.geoprism.dashboard.AggregationStrategyView;
-
 import org.json.JSONException;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
+
+import net.geoprism.dashboard.AggregationStrategyView;
 
 /**
  * This class is responsible for forwarding an MdMethod request from BIRT for either a query (getValues) or a list of
@@ -42,7 +39,7 @@ import com.runwaysdk.system.gis.geo.GeoNode;
  * 
  * @author rrowlands, jsmethie
  */
-public class ReportProviderBridge implements Reloadable
+public class ReportProviderBridge 
 {
   private static ReportProviderBridge instance;
 
@@ -75,7 +72,7 @@ public class ReportProviderBridge implements Reloadable
         }
       }
 
-      throw new ReportRenderException("ReportProvider with id '" + queryId + "' does not exist. Are you using the wrong RPT file?");
+      throw new ReportRenderException("ReportProvider with oid '" + queryId + "' does not exist. Are you using the wrong RPT file?");
     }
     catch (JSONException e)
     {
@@ -108,7 +105,7 @@ public class ReportProviderBridge implements Reloadable
       }
     }
 
-    throw new ReportRenderException("ReportProvider with id '" + queryId + "' does not exist. Are you using the wrong RPT file?");
+    throw new ReportRenderException("ReportProvider with oid '" + queryId + "' does not exist. Are you using the wrong RPT file?");
   }
 
   public static PairView[] getGeoNodeIds(String queryId)
@@ -127,7 +124,7 @@ public class ReportProviderBridge implements Reloadable
         {
           String displayLabel = AggregationStrategyView.getDisplayLabel(node);
 
-          list.add(PairView.createWithLabel(node.getId(), displayLabel));
+          list.add(PairView.createWithLabel(node.getOid(), displayLabel));
         }
       }
     }
@@ -143,7 +140,7 @@ public class ReportProviderBridge implements Reloadable
     List<ReportProviderIF> reports = new ArrayList<ReportProviderIF>();
     reports.add(new GenericTypeProvider());
 
-    ServiceLoader<ReportProviderIF> loader = ServiceLoader.load(ReportProviderIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<ReportProviderIF> loader = ServiceLoader.load(ReportProviderIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {

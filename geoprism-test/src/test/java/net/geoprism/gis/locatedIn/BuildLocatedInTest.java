@@ -134,7 +134,7 @@ public class BuildLocatedInTest
 //  public void testHandleOrphanedChildren()
 //  {
 //    GeoEntity earth = GeoEntity.getRoot();
-//    String earthId = earth.getId();
+//    String earthId = earth.getOid();
 //
 //    LocatedInBean bean = new LocatedInBean();
 //    bean.setOption(BuildTypes.REBUILD_ALL);
@@ -145,7 +145,7 @@ public class BuildLocatedInTest
 //    manager.handleOrphanedEntities();
 //
 //    GeoEntityQuery query = new GeoEntityQuery(new QueryFactory());
-//    query.WHERE(query.getId().NE(earthId));
+//    query.WHERE(query.getOid().NE(earthId));
 //
 //    OIterator<? extends GeoEntity> it = query.getIterator();
 //
@@ -165,10 +165,10 @@ public class BuildLocatedInTest
 //
 //          for (LocatedIn locatedIn : all)
 //          {
-//            String parentId = locatedIn.getParentId();
+//            String parentOid = locatedIn.getParentOid();
 //
-//            Assert.assertEquals(earthId, parentId);
-//            Assert.assertEquals(entity.getId(), locatedIn.getChildId());
+//            Assert.assertEquals(earthId, parentOid);
+//            Assert.assertEquals(entity.getOid(), locatedIn.getChildOid());
 //          }
 //        }
 //        finally

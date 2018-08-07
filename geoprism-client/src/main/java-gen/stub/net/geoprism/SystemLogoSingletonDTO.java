@@ -36,7 +36,7 @@ import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.util.FileIO;
 
-public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase implements com.runwaysdk.generation.loader.Reloadable
+public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase 
 {
   private static final long   serialVersionUID = -1855290440;
 

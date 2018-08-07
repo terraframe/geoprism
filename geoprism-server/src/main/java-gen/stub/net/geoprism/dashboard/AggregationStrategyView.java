@@ -42,7 +42,7 @@ import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
 import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public class AggregationStrategyView extends AggregationStrategyViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class AggregationStrategyView extends AggregationStrategyViewBase 
 {
   private static final long serialVersionUID = 1241142559;
 
@@ -84,7 +84,7 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
         {
           AggregationStrategyView view = new AggregationStrategyView();
           view.setAggregationType(UniversalAggregationStrategy.CLASS);
-          view.setValue(universal.getId());
+          view.setValue(universal.getOid());
           view.setDisplayLabel(universal.getDisplayLabel().getValue());
           view.setAvailableGeometryTypes(new JSONArray().toString());
 
@@ -159,14 +159,14 @@ public class AggregationStrategyView extends AggregationStrategyViewBase impleme
   public JSONObject toJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
-    String aggStratId = this.getId();
+    String aggStratId = this.getOid();
     String aggStratLabel = this.getDisplayLabel();
     String aggType = this.getAggregationType();
     String aggValue = this.getValue();
 
     JSONArray aggGeomTypes = new JSONArray(this.getAvailableGeometryTypes());
 
-    object.put("id", aggStratId);
+    object.put("oid", aggStratId);
     object.put("label", aggStratLabel);
     object.put("type", aggType);
     object.put("value", aggValue);

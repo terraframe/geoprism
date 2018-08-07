@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-public class RequiredMappableClassException extends RequiredMappableClassExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class RequiredMappableClassException extends RequiredMappableClassExceptionBase 
 {
   private static final long serialVersionUID = -582899440;
   

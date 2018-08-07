@@ -35,7 +35,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.SingleActor;
 
-public class RoleView extends RoleViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class RoleView extends RoleViewBase 
 {
   private static final long  serialVersionUID    = -875685428;
 
@@ -54,8 +54,8 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
   {
     RoleView view = new RoleView();
     view.setDisplayLabel(role.getDisplayLabel().getValue());
-    view.setRoleId(role.getId());
-    view.setAssigned(roles.contains(role.getId()));
+    view.setRoleId(role.getOid());
+    view.setAssigned(roles.contains(role.getOid()));
     view.setGroupName(groupName);
 
     return view;
@@ -79,7 +79,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 
     if (user.isAppliedToDB())
     {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getId()).authorizedRoles();
+      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
 
       for (RoleDAOIF role : roles)
       {
@@ -137,11 +137,11 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 
     if (user.isAppliedToDB())
     {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getId()).authorizedRoles();
+      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
 
       for (RoleDAOIF role : roles)
       {
-        set.add(role.getId());
+        set.add(role.getOid());
       }
     }
 

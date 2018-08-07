@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
 
 public class GeoprismPlugin extends AbstractUIPlugin
 {
-  // The plug-in ID
+  // The plug-in OID
   public static final String        PLUGIN_ID = "com.runwaysdk.oda.driver.ui"; //$NON-NLS-1$
 
   // The shared instance.

@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class DashboardLegend extends DashboardLegendBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardLegend extends DashboardLegendBase 
 {
   private static final long serialVersionUID = 1447016216;
 

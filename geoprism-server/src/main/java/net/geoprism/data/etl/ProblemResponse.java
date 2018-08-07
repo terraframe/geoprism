@@ -155,7 +155,7 @@ public class ProblemResponse implements ImportResponseIF
           {
             JSONObject option = new JSONObject();
             option.put("label", child.getDisplayLabel().getValue());
-            option.put("id", child.getId());
+            option.put("oid", child.getOid());
 
             array.put(option);
           }

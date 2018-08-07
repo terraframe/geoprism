@@ -29,7 +29,7 @@ import com.runwaysdk.ProblemException;
 import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -39,7 +39,7 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 
-public class LocatedInManager extends TaskObservable implements UncaughtExceptionHandler, Reloadable
+public class LocatedInManager extends TaskObservable implements UncaughtExceptionHandler
 {
   private LocatedInBean bean;
 
@@ -149,15 +149,15 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
 
   public GeoEntityQuery getOrphanedChildren()
   {
-    String earthId = GeoEntity.getRoot().getId();
+    String earthId = GeoEntity.getRoot().getOid();
 
     QueryFactory factory = new QueryFactory();
 
     LocatedInQuery locatedInQuery = new LocatedInQuery(factory);
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
-    query.WHERE(query.getId().NE(locatedInQuery.childId()));
-    query.AND(query.getId().NE(earthId));
+    query.WHERE(query.getOid().NE(locatedInQuery.childOid()));
+    query.AND(query.getOid().NE(earthId));
 
     return query;
   }
@@ -198,10 +198,10 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
   }
 
   @Transaction
-  private void buildRelationship(String parentId, String childId)
+  private void buildRelationship(String parentOid, String childOid)
   {
-    GeoEntity parent = GeoEntity.get(parentId);
-    GeoEntity child = GeoEntity.get(childId);
+    GeoEntity parent = GeoEntity.get(parentOid);
+    GeoEntity child = GeoEntity.get(childOid);
 
     child.addLink(parent, LocatedIn.CLASS);
 
@@ -305,17 +305,17 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
       while (it.hasNext())
       {
         ValueObject valueObject = it.next();
-        String id = valueObject.getValue(LocatedInBuilder.FAILED_ENTITY_ID);
+        String oid = valueObject.getValue(LocatedInBuilder.FAILED_ENTITY_ID);
 
         try
         {
-          GeoEntity entity = GeoEntity.get(id);
+          GeoEntity entity = GeoEntity.get(oid);
 
           logger.log(entity.getGeoId(), LocalizationFacade.getFromBundles("builder.unableToComputeGeometry"));
         }
         catch (Exception e)
         {
-          logger.log(id, LocalizationFacade.getFromBundles("builder.unableToComputeGeometry"));
+          logger.log(oid, LocalizationFacade.getFromBundles("builder.unableToComputeGeometry"));
         }
       }
     }

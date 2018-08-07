@@ -27,14 +27,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
 import net.geoprism.localization.LocalizationFacade;
 
-public abstract class DashboardCondition implements Reloadable
+public abstract class DashboardCondition 
 {
   /**
    * Magic value for the json attribute name which specifies the operation type

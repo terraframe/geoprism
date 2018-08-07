@@ -21,9 +21,9 @@ package net.geoprism.dashboard;
 import java.util.Comparator;
 
 import com.runwaysdk.business.ontology.Term;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class TermComparator implements Comparator<Term>, Reloadable
+
+public class TermComparator implements Comparator<Term>
 {
 
   @Override

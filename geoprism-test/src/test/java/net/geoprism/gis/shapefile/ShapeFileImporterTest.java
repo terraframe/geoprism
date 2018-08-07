@@ -196,7 +196,7 @@ public class ShapeFileImporterTest
 //    GISImportLoggerIF logger = new MockLogger();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(country.getId());
+//    importer.setUniversalId(country.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.run(logger);
 //
@@ -223,9 +223,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity entity = GeoEntity.get(id);
+//        GeoEntity entity = GeoEntity.get(oid);
 //
 //        entity.delete();
 //      }
@@ -244,7 +244,7 @@ public class ShapeFileImporterTest
 //    GISImportLoggerIF logger = new MockLogger();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(country.getId());
+//    importer.setUniversalId(country.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.run(logger);
@@ -275,9 +275,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -298,7 +298,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(country.getId());
+//    importer.setUniversalId(country.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.run(logger);
@@ -323,9 +323,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -349,7 +349,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(country.getId());
+//    importer.setUniversalId(country.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.run(logger);
@@ -374,9 +374,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -391,7 +391,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -423,9 +423,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -440,7 +440,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setParent("bogusValue");
@@ -474,9 +474,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -491,7 +491,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -524,9 +524,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -547,7 +547,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -581,9 +581,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -604,7 +604,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -637,9 +637,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -660,7 +660,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -693,9 +693,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -714,7 +714,7 @@ public class ShapeFileImporterTest
 //    MockTaskListener listener = new MockTaskListener();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(facility.getId());
+//    importer.setUniversalId(facility.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.addListener(listener);
@@ -759,9 +759,9 @@ public class ShapeFileImporterTest
 //    {
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }
@@ -779,7 +779,7 @@ public class ShapeFileImporterTest
 ////
 ////    try
 ////    {
-////      importer.setUniversalId(facility.getId());
+////      importer.setUniversalId(facility.getOid());
 ////      importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 ////      importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 ////      importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -805,9 +805,9 @@ public class ShapeFileImporterTest
 ////
 ////      for (String key : map.keySet())
 ////      {
-////        String id = map.get(key);
+////        String oid = map.get(key);
 ////
-////        GeoEntity.get(id).delete();
+////        GeoEntity.get(oid).delete();
 ////      }
 ////    }
 ////  }
@@ -824,7 +824,7 @@ public class ShapeFileImporterTest
 ////    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
 ////    try
 ////    {
-////      importer.setUniversalId(facility.getId());
+////      importer.setUniversalId(facility.getOid());
 ////      importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 ////      importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 ////      importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -851,9 +851,9 @@ public class ShapeFileImporterTest
 ////
 ////      for (String key : map.keySet())
 ////      {
-////        String id = map.get(key);
+////        String oid = map.get(key);
 ////
-////        GeoEntity.get(id).delete();
+////        GeoEntity.get(oid).delete();
 ////      }
 ////    }
 ////  }
@@ -881,7 +881,7 @@ public class ShapeFileImporterTest
 ////
 ////    try
 ////    {
-////      importer.setUniversalId(facility.getId());
+////      importer.setUniversalId(facility.getOid());
 ////      importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 ////      importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 ////      importer.setParent(ShapeFileBuilder.PARENT_ATTRIBUTE);
@@ -908,9 +908,9 @@ public class ShapeFileImporterTest
 ////
 ////      for (String key : map.keySet())
 ////      {
-////        String id = map.get(key);
+////        String oid = map.get(key);
 ////
-////        GeoEntity.get(id).delete();
+////        GeoEntity.get(oid).delete();
 ////      }
 ////    }
 ////  }
@@ -925,7 +925,7 @@ public class ShapeFileImporterTest
 ////    builder.build();
 ////
 ////    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-////    importer.setUniversalId(settlement.getId());
+////    importer.setUniversalId(settlement.getOid());
 ////    importer.setType(ShapeFileBuilder.TYPE_ATTRIBUTE);
 ////    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 ////    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
@@ -960,9 +960,9 @@ public class ShapeFileImporterTest
 ////    {
 ////      for (String key : map.keySet())
 ////      {
-////        String id = map.get(key);
+////        String oid = map.get(key);
 ////
-////        GeoEntity.get(id).delete();
+////        GeoEntity.get(oid).delete();
 ////      }
 ////    }
 ////  }
@@ -984,7 +984,7 @@ public class ShapeFileImporterTest
 //    builder.build();
 //
 //    GeoEntityShapefileImporter importer = new GeoEntityShapefileImporter(url);
-//    importer.setUniversalId(settlement.getId());
+//    importer.setUniversalId(settlement.getOid());
 //    importer.setName(ShapeFileBuilder.NAME_ATTRIBUTE);
 //    importer.setId(ShapeFileBuilder.ID_ATTRIBUTE);
 //    importer.setType(ShapeFileBuilder.TYPE_ATTRIBUTE);
@@ -1013,9 +1013,9 @@ public class ShapeFileImporterTest
 //
 //      for (String key : map.keySet())
 //      {
-//        String id = map.get(key);
+//        String oid = map.get(key);
 //
-//        GeoEntity.get(id).delete();
+//        GeoEntity.get(oid).delete();
 //      }
 //    }
 //  }

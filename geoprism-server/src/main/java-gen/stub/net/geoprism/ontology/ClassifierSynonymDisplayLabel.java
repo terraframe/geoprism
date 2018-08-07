@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierSynonymDisplayLabel extends ClassifierSynonymDisplayLabelBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierSynonymDisplayLabel extends ClassifierSynonymDisplayLabelBase 
 {
   private static final long serialVersionUID = 2062262689;
   

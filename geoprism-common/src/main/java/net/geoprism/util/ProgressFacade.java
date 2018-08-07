@@ -27,13 +27,13 @@ public class ProgressFacade
     manager.add(state);
   }
 
-  public static void remove(String id)
+  public static void remove(String oid)
   {
-    manager.remove(id);
+    manager.remove(oid);
   }
 
-  public static ProgressState get(String id)
+  public static ProgressState get(String oid)
   {
-    return manager.get(id);
+    return manager.get(oid);
   }
 }

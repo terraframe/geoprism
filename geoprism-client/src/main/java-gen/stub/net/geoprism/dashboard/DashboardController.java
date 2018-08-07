@@ -28,7 +28,7 @@ import org.json.JSONObject;
 
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
-public class DashboardController extends DashboardControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardController extends DashboardControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/Dashboard/";
 
@@ -49,7 +49,7 @@ public class DashboardController extends DashboardControllerBase implements com.
 
   public void failCancel(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
 
   public void create(DashboardDTO dto) throws java.io.IOException, javax.servlet.ServletException
@@ -98,18 +98,18 @@ public class DashboardController extends DashboardControllerBase implements com.
     render("editComponent.jsp");
   }
 
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    DashboardDTO dto = DashboardDTO.lock(super.getClientRequest(), id);
+    DashboardDTO dto = DashboardDTO.lock(super.getClientRequest(), oid);
 
     req.setAttribute("dashboard", dto);
 
     render("editComponent.jsp");
   }
 
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
 
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
@@ -131,7 +131,7 @@ public class DashboardController extends DashboardControllerBase implements com.
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch (com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -145,14 +145,14 @@ public class DashboardController extends DashboardControllerBase implements com.
     render("editComponent.jsp");
   }
 
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", DashboardDTO.get(clientRequest, id));
+    req.setAttribute("item", DashboardDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
 
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
@@ -192,7 +192,7 @@ public class DashboardController extends DashboardControllerBase implements com.
 
       JSONObject object = new JSONObject();
       object.put("label", dashboard.getDisplayLabel().getValue());
-      object.put("id", dashboard.getId());
+      object.put("oid", dashboard.getOid());
 
       JSONObject response = new JSONObject();
       response.put("dashboard", object);
@@ -213,7 +213,7 @@ public class DashboardController extends DashboardControllerBase implements com.
       DashboardDTO dashboard = DashboardDTO.clone(this.getClientRequest(), dashboardId, label);
 
       JSONObject response = new JSONObject(dashboard.getDashboardInformation());
-      response.put("id", dashboard.getId());
+      response.put("oid", dashboard.getOid());
       response.put("isLastDashboard", true);
 
       JSONControllerUtil.writeReponse(this.resp, response);

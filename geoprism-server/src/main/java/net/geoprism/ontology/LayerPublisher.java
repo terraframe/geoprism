@@ -215,8 +215,8 @@ public abstract class LayerPublisher
         writer.key("properties");
         writer.value(properties);
 
-        writer.key("id");
-        writer.value(object.getValue(GeoEntity.ID));
+        writer.key("oid");
+        writer.value(object.getValue(GeoEntity.OID));
 
         writer.key("geometry");
         this.writeGeometry(object, writer);
@@ -344,7 +344,7 @@ public abstract class LayerPublisher
       while (resultSet.next())
       {
         Map<String, String> data = new TreeMap<String, String>();
-        data.put(GeoEntity.ID, resultSet.getString("id"));
+        data.put(GeoEntity.OID, resultSet.getString("oid"));
         data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
         data.put("height", "15"); // TODO: This should be set on the GeoEntity

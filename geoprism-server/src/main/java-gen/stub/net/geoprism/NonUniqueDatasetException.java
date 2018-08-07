@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-public class NonUniqueDatasetException extends NonUniqueDatasetExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class NonUniqueDatasetException extends NonUniqueDatasetExceptionBase 
 {
   private static final long serialVersionUID = 64818962;
   

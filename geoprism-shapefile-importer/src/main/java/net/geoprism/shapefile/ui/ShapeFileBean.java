@@ -23,9 +23,9 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.List;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ShapeFileBean implements Reloadable
+
+public class ShapeFileBean 
 {
   /**
    * Shape file
@@ -48,9 +48,9 @@ public class ShapeFileBean implements Reloadable
   private String                name;
 
   /**
-   * Column of the id attribute. Option to auto-generate an id.
+   * Column of the oid attribute. Option to auto-generate an oid.
    */
-  private String                id;
+  private String                oid;
 
   /**
    * Optional column for the located in.
@@ -127,14 +127,14 @@ public class ShapeFileBean implements Reloadable
     propertyChangeSupport.firePropertyChange("name", this.name, this.name = name);
   }
 
-  public String getId()
+  public String getOid()
   {
-    return id;
+    return oid;
   }
 
-  public void setId(String id)
+  public void setId(String oid)
   {
-    propertyChangeSupport.firePropertyChange("id", this.id, this.id = id);
+    propertyChangeSupport.firePropertyChange("oid", this.oid, this.oid = oid);
   }
 
   public String getParent()
@@ -175,6 +175,6 @@ public class ShapeFileBean implements Reloadable
   @Override
   public String toString()
   {
-    return "Universal: " + universal + ", Type: " + type + " Name: " + name + ", Id: " + id + ", Located In: " + parent + ", Located In Type:" + parentType;
+    return "Universal: " + universal + ", Type: " + type + " Name: " + name + ", Id: " + oid + ", Located In: " + parent + ", Located In Type:" + parentType;
   }
 }

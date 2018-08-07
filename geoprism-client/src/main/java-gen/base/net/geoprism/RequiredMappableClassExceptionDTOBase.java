@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 752206714)
-public abstract class RequiredMappableClassExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class RequiredMappableClassExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.RequiredMappableClassException";
   private static final long serialVersionUID = 752206714;
@@ -70,7 +70,7 @@ public abstract class RequiredMappableClassExceptionDTOBase extends com.runwaysd
   }
   
   public static java.lang.String DATASETLABEL = "dataSetLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public String getDataSetLabel()
   {
     return getValue(DATASETLABEL);
@@ -117,7 +117,7 @@ public abstract class RequiredMappableClassExceptionDTOBase extends com.runwaysd
     java.lang.String template = super.getMessage();
     
     template = template.replace("{dataSetLabel}", this.getDataSetLabel().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

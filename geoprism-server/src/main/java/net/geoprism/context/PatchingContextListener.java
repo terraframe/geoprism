@@ -26,7 +26,7 @@ import com.runwaysdk.business.ontology.OntologyStrategyFactory;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
@@ -35,7 +35,7 @@ import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
 
 import net.geoprism.GeoprismPatcher;
 
-public class PatchingContextListener implements Reloadable, ServerContextListener
+public class PatchingContextListener implements ServerContextListener
 {
   protected GeoprismPatcher patcher;
 

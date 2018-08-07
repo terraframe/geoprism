@@ -45,13 +45,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 
-public class ShapeFilePage extends WizardPage implements Reloadable
+public class ShapeFilePage extends WizardPage 
 {
-  class FileSelection extends MouseAdapter implements Reloadable
+  class FileSelection extends MouseAdapter 
   {
     @Override
     public void mouseDown(MouseEvent e)
@@ -60,7 +60,7 @@ public class ShapeFilePage extends WizardPage implements Reloadable
     }
   }
 
-  class FileListener implements Listener, Reloadable
+  class FileListener implements Listener
   {
     @Override
     public void handleEvent(Event arg0)
@@ -159,7 +159,7 @@ public class ShapeFilePage extends WizardPage implements Reloadable
 
   private void processShapefile()
   {
-    class ProcessShapefileRunner implements IRunnableWithProgress, Reloadable
+    class ProcessShapefileRunner implements IRunnableWithProgress
     {
       public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
       {

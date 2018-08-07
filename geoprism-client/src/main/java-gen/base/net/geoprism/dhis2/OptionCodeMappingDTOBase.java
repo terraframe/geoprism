@@ -19,7 +19,7 @@
 package net.geoprism.dhis2;
 
 @com.runwaysdk.business.ClassSignature(hash = -1655381346)
-public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.dhis2.OptionCodeMapping";
   private static final long serialVersionUID = -1655381346;
@@ -49,7 +49,7 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -183,7 +183,7 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -368,7 +368,7 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -479,9 +479,9 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public static net.geoprism.dhis2.OptionCodeMappingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dhis2.OptionCodeMappingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dhis2.OptionCodeMappingDTO) dto;
   }
@@ -499,7 +499,7 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dhis2.OptionCodeMappingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -512,10 +512,10 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dhis2.OptionCodeMappingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dhis2.OptionCodeMappingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dhis2.OptionCodeMappingDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dhis2.OptionCodeMappingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -525,10 +525,10 @@ public abstract class OptionCodeMappingDTOBase extends com.runwaysdk.business.Bu
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dhis2.OptionCodeMappingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dhis2.OptionCodeMappingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dhis2.OptionCodeMappingDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dhis2.OptionCodeMappingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

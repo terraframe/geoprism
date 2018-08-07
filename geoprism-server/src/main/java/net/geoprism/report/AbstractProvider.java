@@ -30,7 +30,7 @@ import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
@@ -65,7 +65,7 @@ import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
 
-public abstract class AbstractProvider implements Reloadable, ReportProviderIF
+public abstract class AbstractProvider implements ReportProviderIF
 {
   public static final String CHILDREN     = "1";
 
@@ -162,7 +162,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
   protected int getDepth(Term dest, Term source, int depth)
   {
 
-    if (dest.getId().equals(source.getId()))
+    if (dest.getOid().equals(source.getOid()))
     {
       return depth;
     }
@@ -452,7 +452,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     parentLocation.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles(suffix + "Label"));
 
     vQuery.SELECT(parentLocation);
-    vQuery.AND(query.getId().EQ(entity.getId()));
+    vQuery.AND(query.getOid().EQ(entity.getOid()));
   }
 
   private void addUniversalLabel(ValueQuery vQuery, String suffix, SelectableReference parent)
@@ -497,7 +497,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       }
       catch (Exception e)
       {
-        // Incoming data is bad, just use the default geo id
+        // Incoming data is bad, just use the default geo oid
       }
     }
 

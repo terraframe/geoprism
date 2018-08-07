@@ -19,7 +19,7 @@
 package net.geoprism;
 
 
-public class SessionEntry extends SessionEntryBase implements com.runwaysdk.generation.loader.Reloadable
+public class SessionEntry extends SessionEntryBase 
 {
   private static final long serialVersionUID = 1835366208;
   

@@ -39,7 +39,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 
-public class UniversalAggregationStrategy extends UniversalAggregationStrategyBase implements com.runwaysdk.generation.loader.Reloadable
+public class UniversalAggregationStrategy extends UniversalAggregationStrategyBase 
 {
   public static final Log   log              = LogFactory.getLog(UniversalAggregationStrategy.class);
 
@@ -122,7 +122,7 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
 
     outerQuery.SELECT(geomAttribute);
 
-    // Join the geometry query to the values query through the geo id
+    // Join the geometry query to the values query through the geo oid
     outerQuery.WHERE(geometryQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS).EQ(valueQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS)));
 
     return outerQuery;
@@ -144,7 +144,7 @@ public class UniversalAggregationStrategy extends UniversalAggregationStrategyBa
       JSONObject object = new JSONObject();
       object.put("type", this.getClass().getSimpleName());
       object.put("value", this.getUniversalId());
-      object.put("id", this.getId());
+      object.put("oid", this.getOid());
 
       return object;
     }

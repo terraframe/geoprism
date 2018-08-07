@@ -19,7 +19,7 @@
 package net.geoprism;
 
 public class ForgotPasswordRequestDTO extends ForgotPasswordRequestDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1282308736;
   
   public ForgotPasswordRequestDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

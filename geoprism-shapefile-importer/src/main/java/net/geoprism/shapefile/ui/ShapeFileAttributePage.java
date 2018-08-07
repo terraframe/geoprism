@@ -32,15 +32,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ShapeFileAttributePage extends ShapeFileBeanPage implements IInitPage, PropertyChangeListener, Reloadable
+
+public class ShapeFileAttributePage extends ShapeFileBeanPage implements IInitPage, PropertyChangeListener
 {
   public static final String PAGE_NAME = "AttributesPage";
 
   private ComboViewer        name;
 
-  private ComboViewer        id;
+  private ComboViewer        oid;
 
   private ComboViewer        locatedIn;
 
@@ -76,10 +76,10 @@ public class ShapeFileAttributePage extends ShapeFileBeanPage implements IInitPa
     name.setLabelProvider(new LabelProvider());
 
     new Label(composite, SWT.NULL).setText(Localizer.getMessage("GEO_ID") + ": ");
-    id = new ComboViewer(composite, SWT.BORDER | SWT.READ_ONLY);
-    id.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    id.setContentProvider(new AttributeContentProvider(false));
-    id.setLabelProvider(new LabelProvider());
+    oid = new ComboViewer(composite, SWT.BORDER | SWT.READ_ONLY);
+    oid.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    oid.setContentProvider(new AttributeContentProvider(false));
+    oid.setLabelProvider(new LabelProvider());
 
     new Label(composite, SWT.NULL).setText(Localizer.getMessage("LOCATED_IN") + ": ");
     locatedIn = new ComboViewer(composite, SWT.BORDER | SWT.READ_ONLY);
@@ -96,7 +96,7 @@ public class ShapeFileAttributePage extends ShapeFileBeanPage implements IInitPa
     setControl(composite);
 
     this.bind(name, "name");
-    this.bind(id, "id");
+    this.bind(oid, "oid");
     this.bind(locatedIn, "parent");
     this.bind(locatedInType, "parentType");
   }
@@ -105,7 +105,7 @@ public class ShapeFileAttributePage extends ShapeFileBeanPage implements IInitPa
   public void init()
   {
     name.setInput(data);
-    id.setInput(data);
+    oid.setInput(data);
     locatedIn.setInput(data);
     locatedInType.setInput(data);
 

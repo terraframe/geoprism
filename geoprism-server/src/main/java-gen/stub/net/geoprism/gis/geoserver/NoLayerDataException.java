@@ -19,7 +19,7 @@
 package net.geoprism.gis.geoserver;
 
 
-public class NoLayerDataException extends NoLayerDataExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class NoLayerDataException extends NoLayerDataExceptionBase 
 {
   private static final long serialVersionUID = -2036004314;
   

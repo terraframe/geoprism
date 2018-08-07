@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class MultipleReportExceptionDTO extends MultipleReportExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 837601299;
   
   public MultipleReportExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

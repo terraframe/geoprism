@@ -42,7 +42,7 @@ public class SourceDefinition implements SourceDefinitionIF
 
   private boolean                        isApplied;
 
-  private String                         id;
+  private String                         oid;
 
   private String                         country;
 
@@ -54,15 +54,15 @@ public class SourceDefinition implements SourceDefinitionIF
     this.isApplied = false;
   }
 
-  public void setId(String id)
+  public void setId(String oid)
   {
-    this.id = id;
+    this.oid = oid;
   }
 
   @Override
-  public String getId()
+  public String getOid()
   {
-    return id;
+    return oid;
   }
 
   @Override
@@ -173,7 +173,7 @@ public class SourceDefinition implements SourceDefinitionIF
       }
 
       this.setApplied(true);      
-      this.setId(source.getId());
+      this.setId(source.getOid());
     }
   }
 }

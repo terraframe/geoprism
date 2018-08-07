@@ -64,7 +64,7 @@ public class TargetFieldClassifier extends TargetFieldBasic implements TargetFie
         this.cache.put(value, classifier);
       }
 
-      return new FieldValue(this.cache.get(value).getId());
+      return new FieldValue(this.cache.get(value).getOid());
     }
 
     return new FieldValue();

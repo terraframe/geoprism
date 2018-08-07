@@ -28,7 +28,7 @@ public interface SourceDefinitionIF
 
   public String getLabel();
 
-  public String getId();
+  public String getOid();
 
   public String getCountry();
 

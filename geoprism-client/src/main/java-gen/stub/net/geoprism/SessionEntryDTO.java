@@ -20,7 +20,7 @@ package net.geoprism;
 
 
 public class SessionEntryDTO extends SessionEntryDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 554629312;
   
   public SessionEntryDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

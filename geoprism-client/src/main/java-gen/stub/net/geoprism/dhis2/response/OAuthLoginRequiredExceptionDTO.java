@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 public class OAuthLoginRequiredExceptionDTO extends OAuthLoginRequiredExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 575017692;
   
   public OAuthLoginRequiredExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

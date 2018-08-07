@@ -28,7 +28,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-public class AttributeWrapper extends AttributeWrapperBase implements com.runwaysdk.generation.loader.Reloadable
+public class AttributeWrapper extends AttributeWrapperBase 
 {
   private static final long serialVersionUID = -1313778104;
 

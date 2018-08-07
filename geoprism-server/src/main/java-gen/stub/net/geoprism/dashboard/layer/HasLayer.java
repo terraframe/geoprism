@@ -19,17 +19,17 @@
 package net.geoprism.dashboard.layer;
 
 
-public class HasLayer extends HasLayerBase implements com.runwaysdk.generation.loader.Reloadable
+public class HasLayer extends HasLayerBase 
 {
   private static final long serialVersionUID = 1044882992;
 
-  public HasLayer(String parentId, String childId)
+  public HasLayer(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
 
   public HasLayer(net.geoprism.dashboard.DashboardMap parent, net.geoprism.dashboard.layer.DashboardLayer child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
 }

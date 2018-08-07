@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = -999267655)
-public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.dashboard.AggregationStrategyDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.dashboard.AggregationStrategyDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.UniversalAggregationStrategy";
   private static final long serialVersionUID = -999267655;
@@ -71,7 +71,7 @@ public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.d
     }
     else
     {
-      setValue(UNIVERSAL, value.getId());
+      setValue(UNIVERSAL, value.getOid());
     }
   }
   
@@ -95,9 +95,9 @@ public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.d
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(UNIVERSAL).getAttributeMdDTO();
   }
   
-  public static net.geoprism.dashboard.UniversalAggregationStrategyDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.UniversalAggregationStrategyDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.UniversalAggregationStrategyDTO) dto;
   }
@@ -115,7 +115,7 @@ public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.d
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.UniversalAggregationStrategyQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -128,10 +128,10 @@ public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.d
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.UniversalAggregationStrategyDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.UniversalAggregationStrategyDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.UniversalAggregationStrategyDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.UniversalAggregationStrategyDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -141,10 +141,10 @@ public abstract class UniversalAggregationStrategyDTOBase extends net.geoprism.d
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.UniversalAggregationStrategyDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.UniversalAggregationStrategyDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.UniversalAggregationStrategyDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.UniversalAggregationStrategyDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

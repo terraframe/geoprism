@@ -36,12 +36,12 @@ import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
-public class ClassifierColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener, Reloadable
+public class ClassifierColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener
 {
   private MdAttributeTermDAOIF mdAttributeTermDAOIF;
 
@@ -83,7 +83,7 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
 
         if (classifier != null)
         {
-          instance.setValue(attributeName, classifier.getId());
+          instance.setValue(attributeName, classifier.getOid());
         }
       }
     }
@@ -108,7 +108,7 @@ public class ClassifierColumnListener extends ExcelAdapter implements ExcelExpor
     QueryFactory factory = new QueryFactory();
 
     ClassifierTermAttributeRootQuery arQuery = new ClassifierTermAttributeRootQuery(factory);
-    arQuery.WHERE(arQuery.parentId().EQ(mdAttributeTerm.getId()));
+    arQuery.WHERE(arQuery.parentOid().EQ(mdAttributeTerm.getOid()));
 
     ClassifierQuery cQuery = new ClassifierQuery(factory);
     cQuery.WHERE(cQuery.classifierTermAttributeRoots(arQuery));

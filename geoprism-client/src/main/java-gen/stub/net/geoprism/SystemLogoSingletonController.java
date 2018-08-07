@@ -20,7 +20,7 @@ package net.geoprism;
 
 import com.runwaysdk.controller.MultipartFileParameter;
 
-public class SystemLogoSingletonController extends SystemLogoSingletonControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class SystemLogoSingletonController extends SystemLogoSingletonControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/SystemLogoSingleton/";
 

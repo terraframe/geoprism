@@ -219,7 +219,7 @@ public class GeoprismDataSetEditorPage extends DataSetWizardPage implements ISel
       this.aggregationCombo.setLabelProvider(new DataSetTypeLabelProvider());
 
       /*
-       * Create a combo viewer to select the default geo id
+       * Create a combo viewer to select the default geo oid
        */
       Label entityLabel = new Label(selectTableGroup, SWT.LEFT);
       entityLabel.setText(GeoprismPlugin.getResourceString("dashboardpage.label.defaultGeoId")); //$NON-NLS-1$

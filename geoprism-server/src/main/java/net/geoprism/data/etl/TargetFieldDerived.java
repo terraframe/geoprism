@@ -77,7 +77,7 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
         {
           GeoEntity entity = it.next();
 
-          return new FieldValue(entity.getId());
+          return new FieldValue(entity.getOid());
         }
       }
       finally
@@ -86,7 +86,7 @@ public class TargetFieldDerived extends TargetFieldCoordinate implements TargetF
       }
     }
 
-    return new FieldValue(this.country.getId(), true);
+    return new FieldValue(this.country.getOid(), true);
   }
 
   @Override

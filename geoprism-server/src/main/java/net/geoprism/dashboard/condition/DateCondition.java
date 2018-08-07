@@ -25,11 +25,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
-public class DateCondition extends DashboardAttributeCondition implements Reloadable
+public class DateCondition extends DashboardAttributeCondition 
 {
   public static final String CONDITION_TYPE = "DATE_CONDITION";
 

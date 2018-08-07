@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ServletMethod;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -35,12 +34,11 @@ import com.runwaysdk.mvc.ViewResponse;
 import com.runwaysdk.system.metadata.MdAttributeIndicatorDTO;
 
 import net.geoprism.GeoprismUserDTO;
-import net.geoprism.JavascriptUtil;
 import net.geoprism.MappableClassDTO;
 import net.geoprism.RoleConstants;
 
 @Controller(url = "prism")
-public class PrismController implements Reloadable
+public class PrismController 
 {
   @Endpoint(method = ServletMethod.GET)
   public ResponseIF home(ClientRequestIF request)
@@ -48,8 +46,6 @@ public class PrismController implements Reloadable
     ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/admin.jsp");
     response.set("appname", "my-app");
     response.set("base", "prism/home");
-
-    JavascriptUtil.loadAdminBundle(request, response);
 
     return response;
   }
@@ -61,8 +57,6 @@ public class PrismController implements Reloadable
     response.set("appname", "my-app");
     response.set("base", "prism/management");
     
-    JavascriptUtil.loadAdminBundle(request, response);
-
     return response;
   }
 
@@ -73,8 +67,6 @@ public class PrismController implements Reloadable
     response.set("appname", "admin-app");
     response.set("base", "prism/admin");
     response.set("admin", GeoprismUserDTO.isRoleMemeber(request, RoleConstants.ADIM_ROLE));
-
-    JavascriptUtil.loadAdminBundle(request, response);
 
     return response;
   }
@@ -88,33 +80,33 @@ public class PrismController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
-    MappableClassDTO.remove(request, id);
+    MappableClassDTO.remove(request, oid);
 
     return new RestResponse();
   }
 
   @Endpoint(url = "edit-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    MappableClassDTO mappableClass = MappableClassDTO.lock(request, id);
+    MappableClassDTO mappableClass = MappableClassDTO.lock(request, oid);
 
     return new RestBodyResponse(new JSONObject(mappableClass.getAsJSON()));
   }
 
   @Endpoint(url = "xport-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF xport(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF xport(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    MappableClassDTO.xport(request, id);
+    MappableClassDTO.xport(request, oid);
 
     return new RestResponse();
   }
 
   @Endpoint(url = "unlock-dataset", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF cancel(ClientRequestIF request, @RequestParamter(name = "id") String id)
+  public ResponseIF cancel(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
   {
-    MappableClassDTO.unlock(request, id);
+    MappableClassDTO.unlock(request, oid);
 
     return new RestResponse();
   }
@@ -123,7 +115,7 @@ public class PrismController implements Reloadable
   public ResponseIF applyDatasetUpdate(ClientRequestIF request, @RequestParamter(name = "dataset") String dataset) throws JSONException
   {
     JSONObject dsJSONObj = new JSONObject(dataset);
-    String dsId = dsJSONObj.getString("id");
+    String dsId = dsJSONObj.getString("oid");
 
     MappableClassDTO ds = MappableClassDTO.lock(request, dsId);
     MappableClassDTO.applyDatasetUpdate(request, dataset);
@@ -141,25 +133,25 @@ public class PrismController implements Reloadable
   }
 
   @Endpoint(url = "edit-attribute", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF editAttribute(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF editAttribute(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    String response = MappableClassDTO.lockIndicator(request, id);
+    String response = MappableClassDTO.lockIndicator(request, oid);
 
     return new RestBodyResponse(new JSONObject(response));
   }
 
   @Endpoint(url = "remove-attribute", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF removeAttribute(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF removeAttribute(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    MappableClassDTO.removeIndicator(request, id);
+    MappableClassDTO.removeIndicator(request, oid);
 
     return new RestResponse();
   }
 
   @Endpoint(url = "unlock-attribute", method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF unlockAttribute(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF unlockAttribute(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    MdAttributeIndicatorDTO.unlock(request, id);
+    MdAttributeIndicatorDTO.unlock(request, oid);
 
     return new RestResponse();
   }

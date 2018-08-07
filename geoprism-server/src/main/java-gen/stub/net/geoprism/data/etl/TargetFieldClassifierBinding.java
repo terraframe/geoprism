@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 
-public class TargetFieldClassifierBinding extends TargetFieldClassifierBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class TargetFieldClassifierBinding extends TargetFieldClassifierBindingBase 
 {
   private static final long serialVersionUID = 30417876;
 

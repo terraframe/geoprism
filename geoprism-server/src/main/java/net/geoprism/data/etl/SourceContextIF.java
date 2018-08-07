@@ -34,5 +34,5 @@ public interface SourceContextIF
 
   public Collection<SourceDefinitionIF> getDefinitions();
 
-  public String getId(String sheetName);
+  public String getOid(String sheetName);
 }

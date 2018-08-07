@@ -21,9 +21,9 @@ package net.geoprism.localization;
 import java.io.File;
 import java.io.FileFilter;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class DirectoryFilter implements Reloadable, FileFilter
+
+public class DirectoryFilter implements FileFilter
 {
   @Override
   public boolean accept(File file)

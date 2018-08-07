@@ -53,7 +53,7 @@ public class DHIS2IdCache
    */
   public void fetchIds()
   {
-    HTTPResponse response = dhis2.httpGet("api/25/system/id.json", new NameValuePair[]{
+    HTTPResponse response = dhis2.httpGet("api/25/system/oid.json", new NameValuePair[]{
         new NameValuePair("limit", FETCH_NUM)
     });
     DHIS2TrackerResponseProcessor.validateStatusCode(response); // TODO : We need better validation than just status code.
@@ -66,8 +66,8 @@ public class DHIS2IdCache
       
       for (int i = 0; i < codes.length(); ++i)
       {
-        String id = codes.getString(i);
-        cache.push(id);
+        String oid = codes.getString(i);
+        cache.push(oid);
       }
     }
     else
@@ -79,7 +79,7 @@ public class DHIS2IdCache
   }
   
   /**
-   * Fetches the next id from the cache. If the cache is empty, this method will fetch more ids and return one when it becomes available, haulting execution in the meantime.
+   * Fetches the next oid from the cache. If the cache is empty, this method will fetch more ids and return one when it becomes available, haulting execution in the meantime.
    */
   public String next()
   {

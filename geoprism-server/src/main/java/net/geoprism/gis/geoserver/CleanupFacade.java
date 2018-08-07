@@ -34,10 +34,10 @@ import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Request;
 
-public class CleanupFacade implements Reloadable
+public class CleanupFacade 
 {
   @Request
   public static void cleanupUnusedLayers()

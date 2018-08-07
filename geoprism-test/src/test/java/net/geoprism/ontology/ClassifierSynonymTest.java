@@ -72,51 +72,51 @@ public class ClassifierSynonymTest
 //  private static void classSetupTransaction()
 //  {    
 //    Classifier a1 = createClassifier("a1");
-//    classifierIdMap.put("a1", a1.getId());
+//    classifierIdMap.put("a1", a1.getOid());
 //    classifierStack.add(a1);
 //    
 //    Classifier b1 = createClassifier("b1");
-//    classifierIdMap.put("b1", b1.getId());
+//    classifierIdMap.put("b1", b1.getOid());
 //    b1.addLink(a1, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b1);
 //    
 //    Classifier b1c1 = createClassifier("b1c1");
-//    classifierIdMap.put("b1c1", b1c1.getId());
+//    classifierIdMap.put("b1c1", b1c1.getOid());
 //    b1c1.addLink(b1, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b1c1);    
 //    
 //    Classifier b1c2 = createClassifier("b1c2");
-//    classifierIdMap.put("b1c2", b1c2.getId());
+//    classifierIdMap.put("b1c2", b1c2.getOid());
 //    b1c2.addLink(b1, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b1c2);  
 //    
 //    Classifier b2 = createClassifier("b2");
-//    classifierIdMap.put("b2", b2.getId());
+//    classifierIdMap.put("b2", b2.getOid());
 //    b2.addLink(a1, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b2);
 //    
 //    Classifier b2c1 = createClassifier("b2c1");
-//    classifierIdMap.put("b2c1", b2c1.getId());
+//    classifierIdMap.put("b2c1", b2c1.getOid());
 //    b2c1.addLink(b2, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b2c1);   
 //
 //    Classifier b2c2 = createClassifier("b2c2");
-//    classifierIdMap.put("b2c2", b2c2.getId());
+//    classifierIdMap.put("b2c2", b2c2.getOid());
 //    b2c2.addLink(b2, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b2c2);  
 //    
 //    Classifier b3 = createClassifier("b3");
-//    classifierIdMap.put("b3", b3.getId());
+//    classifierIdMap.put("b3", b3.getOid());
 //    b3.addLink(a1, ClassifierIsARelationship.CLASS).apply();
 //    classifierStack.add(b3);
 //    
 //    Classifier b3c1 = createClassifier("b3c1");
-//    classifierIdMap.put("b3c1", b3c1.getId());
+//    classifierIdMap.put("b3c1", b3c1.getOid());
 //    b3c1.addLink(b3, ClassifierIsARelationship.CLASS);
 //    classifierStack.add(b3c1); 
 //    
 //    Classifier b3c2 = createClassifier("b3c2");
-//    classifierIdMap.put("b3c2", b3c2.getId());
+//    classifierIdMap.put("b3c2", b3c2.getOid());
 //    b3c2.addLink(b3, ClassifierIsARelationship.CLASS);
 //    classifierStack.add(b3c2);     
 //  }

@@ -19,18 +19,18 @@
 package net.geoprism.dashboard;
 
 
-public class SessionMap extends SessionMapBase implements com.runwaysdk.generation.loader.Reloadable
+public class SessionMap extends SessionMapBase 
 {
   private static final long serialVersionUID = -1714203169;
   
-  public SessionMap(String parentId, String childId)
+  public SessionMap(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public SessionMap(net.geoprism.SessionEntry parent, net.geoprism.dashboard.DashboardMap child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

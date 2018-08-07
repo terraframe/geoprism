@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -485085096)
-public abstract class NonUniqueCategoryExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class NonUniqueCategoryExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.NonUniqueCategoryException";
   private static final long serialVersionUID = -485085096;
@@ -69,7 +69,7 @@ public abstract class NonUniqueCategoryExceptionDTOBase extends com.runwaysdk.bu
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String LABEL = "label";
   public String getLabel()
   {
@@ -116,7 +116,7 @@ public abstract class NonUniqueCategoryExceptionDTOBase extends com.runwaysdk.bu
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{label}", this.getLabel().toString());
     
     return template;

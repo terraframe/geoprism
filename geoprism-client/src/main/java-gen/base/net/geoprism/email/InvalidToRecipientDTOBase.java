@@ -19,7 +19,7 @@
 package net.geoprism.email;
 
 @com.runwaysdk.business.ClassSignature(hash = 579259933)
-public abstract class InvalidToRecipientDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class InvalidToRecipientDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.email.InvalidToRecipient";
   private static final long serialVersionUID = 579259933;
@@ -69,7 +69,7 @@ public abstract class InvalidToRecipientDTOBase extends com.runwaysdk.business.S
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   /**
    * Overrides java.lang.Throwable#getMessage() to retrieve the localized
    * message from the exceptionDTO, instead of from a class variable.
@@ -78,7 +78,7 @@ public abstract class InvalidToRecipientDTOBase extends com.runwaysdk.business.S
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

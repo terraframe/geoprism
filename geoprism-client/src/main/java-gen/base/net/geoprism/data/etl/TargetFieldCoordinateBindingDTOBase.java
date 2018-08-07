@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 @com.runwaysdk.business.ClassSignature(hash = 1115048969)
-public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.data.etl.TargetFieldBindingDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.data.etl.TargetFieldBindingDTO 
 {
   public final static String CLASS = "net.geoprism.data.etl.TargetFieldCoordinateBinding";
   private static final long serialVersionUID = 1115048969;
@@ -72,7 +72,7 @@ public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.d
     }
     else
     {
-      setValue(LATITUDEATTRIBUTE, value.getId());
+      setValue(LATITUDEATTRIBUTE, value.getOid());
     }
   }
   
@@ -121,7 +121,7 @@ public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.d
     }
     else
     {
-      setValue(LONGITUDEATTRIBUTE, value.getId());
+      setValue(LONGITUDEATTRIBUTE, value.getOid());
     }
   }
   
@@ -145,9 +145,9 @@ public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.d
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(LONGITUDEATTRIBUTE).getAttributeMdDTO();
   }
   
-  public static net.geoprism.data.etl.TargetFieldCoordinateBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.data.etl.TargetFieldCoordinateBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.data.etl.TargetFieldCoordinateBindingDTO) dto;
   }
@@ -165,7 +165,7 @@ public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.d
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.data.etl.TargetFieldCoordinateBindingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -178,10 +178,10 @@ public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.d
     getRequest().lock(this);
   }
   
-  public static net.geoprism.data.etl.TargetFieldCoordinateBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.TargetFieldCoordinateBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.TargetFieldCoordinateBindingDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.data.etl.TargetFieldCoordinateBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -191,10 +191,10 @@ public abstract class TargetFieldCoordinateBindingDTOBase extends net.geoprism.d
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.data.etl.TargetFieldCoordinateBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.TargetFieldCoordinateBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.TargetFieldCoordinateBindingDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.data.etl.TargetFieldCoordinateBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

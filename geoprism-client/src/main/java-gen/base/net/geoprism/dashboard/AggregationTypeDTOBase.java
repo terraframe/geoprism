@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = -643124919)
-public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.EnumerationMasterDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.AggregationType";
   private static final long serialVersionUID = -643124919;
@@ -45,9 +45,9 @@ public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.Enumer
     return CLASS;
   }
   
-  public static net.geoprism.dashboard.AggregationTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.AggregationTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.AggregationTypeDTO) dto;
   }
@@ -65,7 +65,7 @@ public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.Enumer
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.AggregationTypeQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -78,10 +78,10 @@ public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.Enumer
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.AggregationTypeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.AggregationTypeDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.AggregationTypeDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.AggregationTypeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -91,10 +91,10 @@ public abstract class AggregationTypeDTOBase extends com.runwaysdk.system.Enumer
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.AggregationTypeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.AggregationTypeDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.AggregationTypeDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.AggregationTypeDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

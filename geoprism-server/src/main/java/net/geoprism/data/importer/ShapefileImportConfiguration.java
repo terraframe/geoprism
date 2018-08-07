@@ -27,10 +27,10 @@ import org.opengis.feature.type.AttributeDescriptor;
 
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class ShapefileImportConfiguration implements Reloadable
+public class ShapefileImportConfiguration 
 {
   /**
    * Type being imported
@@ -58,7 +58,7 @@ public class ShapefileImportConfiguration implements Reloadable
   private Map<String, ShapefileAttributeHandler> handlers;
 
   /**
-   * Custom attribute handler for the shapefile ID column
+   * Custom attribute handler for the shapefile OID column
    */
   private ShapefileAttributeHandler              idHandler;
 
@@ -173,7 +173,7 @@ public class ShapefileImportConfiguration implements Reloadable
     return this.handlers.get(attributeName);
   }
 
-  public ShapefileAttributeHandler getIdHandler()
+  public ShapefileAttributeHandler getOidHandler()
   {
     return this.idHandler;
   }

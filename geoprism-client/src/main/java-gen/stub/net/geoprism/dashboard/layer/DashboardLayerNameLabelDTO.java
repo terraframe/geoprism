@@ -20,7 +20,7 @@ package net.geoprism.dashboard.layer;
 
 
 public class DashboardLayerNameLabelDTO extends DashboardLayerNameLabelDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -124105439;
   
   public DashboardLayerNameLabelDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

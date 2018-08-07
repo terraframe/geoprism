@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 import com.runwaysdk.business.Mutable;
 
-public class LocalPersistenceStrategy extends LocalPersistenceStrategyBase implements com.runwaysdk.generation.loader.Reloadable
+public class LocalPersistenceStrategy extends LocalPersistenceStrategyBase 
 {
   private static final long serialVersionUID = 1545536551;
 

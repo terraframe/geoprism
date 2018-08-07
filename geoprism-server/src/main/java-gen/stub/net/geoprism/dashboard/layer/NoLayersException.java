@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 
-public class NoLayersException extends NoLayersExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class NoLayersException extends NoLayersExceptionBase 
 {
   private static final long serialVersionUID = -1807518585;
   

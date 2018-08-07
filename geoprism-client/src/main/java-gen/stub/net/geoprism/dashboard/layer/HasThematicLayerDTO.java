@@ -20,12 +20,12 @@ package net.geoprism.dashboard.layer;
 
 
 public class HasThematicLayerDTO extends HasThematicLayerDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1534741470;
   
-  public HasThematicLayerDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public HasThematicLayerDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

@@ -20,12 +20,12 @@ package net.geoprism.dashboard.layer;
 
 
 public class HasLayerDTO extends HasLayerDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1261701968;
   
-  public HasLayerDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public HasLayerDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

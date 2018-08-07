@@ -18,7 +18,7 @@
  */
 package net.geoprism;
 
-public class InvalidForgotPasswordToken extends InvalidForgotPasswordTokenBase implements com.runwaysdk.generation.loader.Reloadable
+public class InvalidForgotPasswordToken extends InvalidForgotPasswordTokenBase 
 {
   private static final long serialVersionUID = 697565125;
   

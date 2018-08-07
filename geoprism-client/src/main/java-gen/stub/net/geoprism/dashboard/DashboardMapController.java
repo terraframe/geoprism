@@ -24,18 +24,17 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.controller.ErrorUtility;
+
 import net.geoprism.AccessConstants;
 import net.geoprism.FileDownloadUtil;
 import net.geoprism.GeoprismUserDTO;
-import net.geoprism.JavascriptUtil;
 import net.geoprism.SystemLogoSingletonDTO;
 import net.geoprism.dashboard.layer.DashboardLayerDTO;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 
-import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.controller.ErrorUtility;
-
-public class DashboardMapController extends DashboardMapControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardMapController extends DashboardMapControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardMap/";
 
@@ -49,12 +48,12 @@ public class DashboardMapController extends DashboardMapControllerBase implement
   public void cancel(net.geoprism.dashboard.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
 
   public void failCancel(net.geoprism.dashboard.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
 
   public void create(net.geoprism.dashboard.DashboardMapDTO dto) throws java.io.IOException, javax.servlet.ServletException
@@ -62,7 +61,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch (com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -95,16 +94,16 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     render("editComponent.jsp");
   }
 
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    net.geoprism.dashboard.DashboardMapDTO dto = net.geoprism.dashboard.DashboardMapDTO.lock(super.getClientRequest(), id);
+    net.geoprism.dashboard.DashboardMapDTO dto = net.geoprism.dashboard.DashboardMapDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
 
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
 
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
@@ -125,7 +124,7 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch (com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -139,14 +138,14 @@ public class DashboardMapController extends DashboardMapControllerBase implement
     render("editComponent.jsp");
   }
 
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", net.geoprism.dashboard.DashboardMapDTO.get(clientRequest, id));
+    req.setAttribute("item", net.geoprism.dashboard.DashboardMapDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
 
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
@@ -203,8 +202,6 @@ public class DashboardMapController extends DashboardMapControllerBase implement
       this.req.setAttribute("miniLogoFilePath", miniLogoFile);
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
-
-    JavascriptUtil.loadDynamicMapBundle(this.getClientRequest(), req);
 
     req.getRequestDispatcher("/WEB-INF/net/geoprism/dashboard/DashboardMap/dashboardViewer.jsp").forward(req, resp);
   }

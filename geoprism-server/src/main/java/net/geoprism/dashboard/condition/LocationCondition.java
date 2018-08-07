@@ -39,7 +39,7 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class LocationCondition extends DashboardCondition implements com.runwaysdk.generation.loader.Reloadable
+public class LocationCondition extends DashboardCondition 
 {
 
   /**
@@ -147,7 +147,7 @@ public class LocationCondition extends DashboardCondition implements com.runways
       for (GeoEntity entity : entities)
       {
         JSONObject location = new JSONObject();
-        location.put(VALUE_KEY, entity.getId());
+        location.put(VALUE_KEY, entity.getOid());
         location.put(LABEL_KEY, GeoEntityUtil.getEntityLabel(entity));
 
         locations.put(location);

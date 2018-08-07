@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
-public class DHIS2EmptyDatasetException extends DHIS2EmptyDatasetExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DHIS2EmptyDatasetException extends DHIS2EmptyDatasetExceptionBase 
 {
   private static final long serialVersionUID = -801687972;
   

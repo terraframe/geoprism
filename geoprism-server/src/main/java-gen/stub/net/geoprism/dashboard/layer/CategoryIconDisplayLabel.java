@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-public class CategoryIconDisplayLabel extends CategoryIconDisplayLabelBase implements com.runwaysdk.generation.loader.Reloadable
+public class CategoryIconDisplayLabel extends CategoryIconDisplayLabelBase 
 {
   private static final long serialVersionUID = 1681480743;
   

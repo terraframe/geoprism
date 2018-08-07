@@ -22,11 +22,11 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 
-public interface ReportProviderIF extends Reloadable
+public interface ReportProviderIF 
 {
   /**
    * Dashboard name
@@ -34,12 +34,12 @@ public interface ReportProviderIF extends Reloadable
   public static final String DASHBOARD_NAME = "dashboardName";
 
   /**
-   * Dashboard id
+   * Dashboard oid
    */
   public static final String DASHBOARD_ID   = "dashboardId";
 
   /**
-   * A list of id-label pairing for all of the report queries supported by this provider
+   * A list of oid-label pairing for all of the report queries supported by this provider
    * 
    * @return
    */

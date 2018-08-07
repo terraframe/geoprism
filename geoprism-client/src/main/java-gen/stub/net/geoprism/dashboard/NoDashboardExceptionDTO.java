@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class NoDashboardExceptionDTO extends NoDashboardExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 267267827;
   
   public NoDashboardExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

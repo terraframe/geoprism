@@ -23,13 +23,13 @@ import java.util.List;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class DashboardBuilder implements Reloadable
+public class DashboardBuilder 
 {
 
   private boolean isGeoEntityAttribute(MdAttributeDAOIF mdAttribute)
@@ -65,8 +65,8 @@ public class DashboardBuilder implements Reloadable
     if (mWrapper == null)
     {
       mWrapper = new MetadataWrapper();
-      mWrapper.setValue(MetadataWrapper.DASHBOARD, _dashboard.getId());
-      mWrapper.setValue(MetadataWrapper.WRAPPEDMDCLASS, _mdClass.getId());
+      mWrapper.setValue(MetadataWrapper.DASHBOARD, _dashboard.getOid());
+      mWrapper.setValue(MetadataWrapper.WRAPPEDMDCLASS, _mdClass.getOid());
       mWrapper.setDashboard(_dashboard);
       mWrapper.apply();
     }
@@ -119,7 +119,7 @@ public class DashboardBuilder implements Reloadable
       else
       {
         AttributeWrapper wrapper = new AttributeWrapper();
-        wrapper.setValue(AttributeWrapper.WRAPPEDMDATTRIBUTE, mdAttribute.getId());
+        wrapper.setValue(AttributeWrapper.WRAPPEDMDATTRIBUTE, mdAttribute.getOid());
         wrapper.apply();
 
         return wrapper;

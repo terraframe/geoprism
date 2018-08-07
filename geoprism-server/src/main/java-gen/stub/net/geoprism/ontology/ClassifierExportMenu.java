@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierExportMenu extends ClassifierExportMenuBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierExportMenu extends ClassifierExportMenuBase 
 {
   private static final long serialVersionUID = 1967873618;
   

@@ -27,7 +27,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdClass;
 
-public class MappableAttribute extends MappableAttributeBase implements com.runwaysdk.generation.loader.Reloadable
+public class MappableAttribute extends MappableAttributeBase 
 {
   private static final long serialVersionUID = -333559735;
 
@@ -38,13 +38,13 @@ public class MappableAttribute extends MappableAttributeBase implements com.runw
 
   public static MappableAttribute getMappableAttribute(MdAttributeDAOIF mdAttribute)
   {
-    return getMappableAttribute(mdAttribute.getId());
+    return getMappableAttribute(mdAttribute.getOid());
   }
 
-  public static MappableAttribute getMappableAttribute(String id)
+  public static MappableAttribute getMappableAttribute(String oid)
   {
     MappableAttributeQuery query = new MappableAttributeQuery(new QueryFactory());
-    query.WHERE(query.getWrappedMdAttribute().EQ(id));
+    query.WHERE(query.getWrappedMdAttribute().EQ(oid));
 
     OIterator<? extends MappableAttribute> it = query.getIterator();
 
@@ -74,7 +74,7 @@ public class MappableAttribute extends MappableAttributeBase implements com.runw
       while (mdAttributes.hasNext())
       {
         MdAttribute mdAttribute = mdAttributes.next();
-        MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(mdAttribute.getId());
+        MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(mdAttribute.getOid());
 
         if (mAttribute != null)
         {

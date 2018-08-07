@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class InvalidReportDefinitionExceptionDTO extends InvalidReportDefinitionExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1333910461;
   
   public InvalidReportDefinitionExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

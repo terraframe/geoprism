@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class DashboardHasNoMapExceptionDTO extends DashboardHasNoMapExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -991537487;
   
   public DashboardHasNoMapExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

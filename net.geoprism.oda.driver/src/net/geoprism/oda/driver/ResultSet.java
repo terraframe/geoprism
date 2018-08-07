@@ -363,7 +363,7 @@ public class ResultSet implements IResultSet
     // TODO replace with data source specific implementation
 
     // hard-coded for demo purpose
-    int columnId = 1; // dummy column id
+    int columnId = 1; // dummy column oid
     if (columnName == null || columnName.length() == 0)
     {
       return columnId;
@@ -376,7 +376,7 @@ public class ResultSet implements IResultSet
     }
     catch (NumberFormatException e)
     {
-      // ignore, use dummy column id
+      // ignore, use dummy column oid
     }
     return columnId;
   }

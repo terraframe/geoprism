@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 1011971322)
-public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.RoleView";
   private static final long serialVersionUID = 1011971322;
@@ -37,7 +37,7 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO imp
   public static java.lang.String ASSIGNED = "assigned";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String GROUPNAME = "groupName";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String ROLEID = "roleId";
   public Boolean getAssigned()
   {
@@ -219,9 +219,9 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO imp
     return (net.geoprism.RoleViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static RoleViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static RoleViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (RoleViewDTO) dto;
   }
@@ -239,7 +239,7 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO imp
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

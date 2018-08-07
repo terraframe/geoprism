@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -2015924917)
-public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.TermDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.Classifier";
   private static final long serialVersionUID = -2015924917;
@@ -52,7 +52,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -284,7 +284,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -469,7 +469,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -551,10 +551,10 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ontology.TermAndRelDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentId)
+  public static final com.runwaysdk.business.ontology.TermAndRelDTO create(com.runwaysdk.constants.ClientRequestIF clientRequest, net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentOid)
   {
     String[] _declaredTypes = new String[]{"net.geoprism.ontology.Classifier", "java.lang.String"};
-    Object[] _parameters = new Object[]{dto, parentId};
+    Object[] _parameters = new Object[]{dto, parentOid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "create", _declaredTypes);
     return (com.runwaysdk.business.ontology.TermAndRelDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -575,18 +575,18 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void deleteOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final void deleteOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "deleteOption", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final net.geoprism.ontology.ClassifierDTO editOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final net.geoprism.ontology.ClassifierDTO editOption(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "editOption", _declaredTypes);
     return (net.geoprism.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -647,18 +647,18 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     return (java.lang.String[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void unlockCategory(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final void unlockCategory(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "unlockCategory", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void validateCategoryName(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String name, java.lang.String id)
+  public static final void validateCategoryName(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String name, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{name, id};
+    Object[] _parameters = new Object[]{name, oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "validateCategoryName", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -666,276 +666,276 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO> getAllHasSynonym()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO>) getRequest().getChildren(this.getId(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO>) getRequest().getChildren(this.getOid(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO> getAllHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO> getAllHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO>) clientRequestIF.getChildren(id, net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierSynonymDTO>) clientRequestIF.getChildren(oid, net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO> getAllHasSynonymRelationships()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO>) getRequest().getChildRelationships(this.getId(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO>) getRequest().getChildRelationships(this.getOid(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO> getAllHasSynonymRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO> getAllHasSynonymRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO>) clientRequestIF.getChildRelationships(id, net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierHasSynonymDTO>) clientRequestIF.getChildRelationships(oid, net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   public net.geoprism.ontology.ClassifierHasSynonymDTO addHasSynonym(net.geoprism.ontology.ClassifierSynonymDTO child)
   {
-    return (net.geoprism.ontology.ClassifierHasSynonymDTO) getRequest().addChild(this.getId(), child.getId(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierHasSynonymDTO) getRequest().addChild(this.getOid(), child.getOid(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
-  public static net.geoprism.ontology.ClassifierHasSynonymDTO addHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.ontology.ClassifierSynonymDTO child)
+  public static net.geoprism.ontology.ClassifierHasSynonymDTO addHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.ontology.ClassifierSynonymDTO child)
   {
-    return (net.geoprism.ontology.ClassifierHasSynonymDTO) clientRequestIF.addChild(id, child.getId(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierHasSynonymDTO) clientRequestIF.addChild(oid, child.getOid(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   public void removeHasSynonym(net.geoprism.ontology.ClassifierHasSynonymDTO relationship)
   {
-    getRequest().deleteChild(relationship.getId());
+    getRequest().deleteChild(relationship.getOid());
   }
   
   public static void removeHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.ontology.ClassifierHasSynonymDTO relationship)
   {
-    clientRequestIF.deleteChild(relationship.getId());
+    clientRequestIF.deleteChild(relationship.getOid());
   }
   
   public void removeAllHasSynonym()
   {
-    getRequest().deleteChildren(this.getId(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    getRequest().deleteChildren(this.getOid(), net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
-  public static void removeAllHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllHasSynonym(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteChildren(id, net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
+    clientRequestIF.deleteChildren(oid, net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getAllIsAChild()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) getRequest().getChildren(this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) getRequest().getChildren(this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getAllIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getAllIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) clientRequestIF.getChildren(id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) clientRequestIF.getChildren(oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO> getAllIsAChildRelationships()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) getRequest().getChildRelationships(this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) getRequest().getChildRelationships(this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO> getAllIsAChildRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO> getAllIsAChildRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) clientRequestIF.getChildRelationships(id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) clientRequestIF.getChildRelationships(oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   public net.geoprism.ontology.ClassifierIsARelationshipDTO addIsAChild(net.geoprism.ontology.ClassifierDTO child)
   {
-    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) getRequest().addChild(this.getId(), child.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) getRequest().addChild(this.getOid(), child.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
-  public static net.geoprism.ontology.ClassifierIsARelationshipDTO addIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.ontology.ClassifierDTO child)
+  public static net.geoprism.ontology.ClassifierIsARelationshipDTO addIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.ontology.ClassifierDTO child)
   {
-    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) clientRequestIF.addChild(id, child.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) clientRequestIF.addChild(oid, child.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   public void removeIsAChild(net.geoprism.ontology.ClassifierIsARelationshipDTO relationship)
   {
-    getRequest().deleteChild(relationship.getId());
+    getRequest().deleteChild(relationship.getOid());
   }
   
   public static void removeIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.ontology.ClassifierIsARelationshipDTO relationship)
   {
-    clientRequestIF.deleteChild(relationship.getId());
+    clientRequestIF.deleteChild(relationship.getOid());
   }
   
   public void removeAllIsAChild()
   {
-    getRequest().deleteChildren(this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    getRequest().deleteChildren(this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
-  public static void removeAllIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllIsAChild(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteChildren(id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    clientRequestIF.deleteChildren(oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO> getAllClassifierMultiTermAttributeRoots()
   {
-    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO>) getRequest().getParents(this.getId(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO>) getRequest().getParents(this.getOid(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO> getAllClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO> getAllClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO>) clientRequestIF.getParents(id, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeMultiTermDTO>) clientRequestIF.getParents(oid, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO> getAllClassifierMultiTermAttributeRootsRelationships()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO>) getRequest().getParentRelationships(this.getId(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO>) getRequest().getParentRelationships(this.getOid(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO> getAllClassifierMultiTermAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO> getAllClassifierMultiTermAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO>) clientRequestIF.getParentRelationships(id, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO>) clientRequestIF.getParentRelationships(oid, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   public net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO addClassifierMultiTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeMultiTermDTO parent)
   {
-    return (net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO) getRequest().addParent(parent.getId(), this.getId(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO) getRequest().addParent(parent.getOid(), this.getOid(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
-  public static net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO addClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.metadata.MdAttributeMultiTermDTO parent)
+  public static net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO addClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, com.runwaysdk.system.metadata.MdAttributeMultiTermDTO parent)
   {
-    return (net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO) clientRequestIF.addParent(parent.getId(), id, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO) clientRequestIF.addParent(parent.getOid(), oid, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   public void removeClassifierMultiTermAttributeRoots(net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO relationship)
   {
-    getRequest().deleteParent(relationship.getId());
+    getRequest().deleteParent(relationship.getOid());
   }
   
   public static void removeClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO relationship)
   {
-    clientRequestIF.deleteParent(relationship.getId());
+    clientRequestIF.deleteParent(relationship.getOid());
   }
   
   public void removeAllClassifierMultiTermAttributeRoots()
   {
-    getRequest().deleteParents(this.getId(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    getRequest().deleteParents(this.getOid(), net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
-  public static void removeAllClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllClassifierMultiTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteParents(id, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
+    clientRequestIF.deleteParents(oid, net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierTermAttributeRoots()
   {
-    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) getRequest().getParents(this.getId(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) getRequest().getParents(this.getOid(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO> getAllClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) clientRequestIF.getParents(id, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends com.runwaysdk.system.metadata.MdAttributeTermDTO>) clientRequestIF.getParents(oid, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO> getAllClassifierTermAttributeRootsRelationships()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO>) getRequest().getParentRelationships(this.getId(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO>) getRequest().getParentRelationships(this.getOid(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO> getAllClassifierTermAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO> getAllClassifierTermAttributeRootsRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO>) clientRequestIF.getParentRelationships(id, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierTermAttributeRootDTO>) clientRequestIF.getParentRelationships(oid, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   public net.geoprism.ontology.ClassifierTermAttributeRootDTO addClassifierTermAttributeRoots(com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
   {
-    return (net.geoprism.ontology.ClassifierTermAttributeRootDTO) getRequest().addParent(parent.getId(), this.getId(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierTermAttributeRootDTO) getRequest().addParent(parent.getOid(), this.getOid(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
-  public static net.geoprism.ontology.ClassifierTermAttributeRootDTO addClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
+  public static net.geoprism.ontology.ClassifierTermAttributeRootDTO addClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, com.runwaysdk.system.metadata.MdAttributeTermDTO parent)
   {
-    return (net.geoprism.ontology.ClassifierTermAttributeRootDTO) clientRequestIF.addParent(parent.getId(), id, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierTermAttributeRootDTO) clientRequestIF.addParent(parent.getOid(), oid, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   public void removeClassifierTermAttributeRoots(net.geoprism.ontology.ClassifierTermAttributeRootDTO relationship)
   {
-    getRequest().deleteParent(relationship.getId());
+    getRequest().deleteParent(relationship.getOid());
   }
   
   public static void removeClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.ontology.ClassifierTermAttributeRootDTO relationship)
   {
-    clientRequestIF.deleteParent(relationship.getId());
+    clientRequestIF.deleteParent(relationship.getOid());
   }
   
   public void removeAllClassifierTermAttributeRoots()
   {
-    getRequest().deleteParents(this.getId(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    getRequest().deleteParents(this.getOid(), net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
-  public static void removeAllClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllClassifierTermAttributeRoots(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteParents(id, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
+    clientRequestIF.deleteParents(oid, net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getAllIsAParent()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) getRequest().getParents(this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) getRequest().getParents(this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getAllIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierDTO> getAllIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) clientRequestIF.getParents(id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierDTO>) clientRequestIF.getParents(oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO> getAllIsAParentRelationships()
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) getRequest().getParentRelationships(this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) getRequest().getParentRelationships(this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO> getAllIsAParentRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO> getAllIsAParentRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) clientRequestIF.getParentRelationships(id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.ontology.ClassifierIsARelationshipDTO>) clientRequestIF.getParentRelationships(oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   public net.geoprism.ontology.ClassifierIsARelationshipDTO addIsAParent(net.geoprism.ontology.ClassifierDTO parent)
   {
-    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) getRequest().addParent(parent.getId(), this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) getRequest().addParent(parent.getOid(), this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
-  public static net.geoprism.ontology.ClassifierIsARelationshipDTO addIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.ontology.ClassifierDTO parent)
+  public static net.geoprism.ontology.ClassifierIsARelationshipDTO addIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.ontology.ClassifierDTO parent)
   {
-    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) clientRequestIF.addParent(parent.getId(), id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    return (net.geoprism.ontology.ClassifierIsARelationshipDTO) clientRequestIF.addParent(parent.getOid(), oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
   public void removeIsAParent(net.geoprism.ontology.ClassifierIsARelationshipDTO relationship)
   {
-    getRequest().deleteParent(relationship.getId());
+    getRequest().deleteParent(relationship.getOid());
   }
   
   public static void removeIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.ontology.ClassifierIsARelationshipDTO relationship)
   {
-    clientRequestIF.deleteParent(relationship.getId());
+    clientRequestIF.deleteParent(relationship.getOid());
   }
   
   public void removeAllIsAParent()
   {
-    getRequest().deleteParents(this.getId(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    getRequest().deleteParents(this.getOid(), net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
-  public static void removeAllIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllIsAParent(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteParents(id, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
+    clientRequestIF.deleteParents(oid, net.geoprism.ontology.ClassifierIsARelationshipDTO.CLASS);
   }
   
-  public static net.geoprism.ontology.ClassifierDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.ontology.ClassifierDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.ontology.ClassifierDTO) dto;
   }
@@ -953,7 +953,7 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.ontology.ClassifierQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -966,10 +966,10 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     getRequest().lock(this);
   }
   
-  public static net.geoprism.ontology.ClassifierDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ontology.ClassifierDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -979,10 +979,10 @@ public abstract class ClassifierDTOBase extends com.runwaysdk.business.ontology.
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.ontology.ClassifierDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ontology.ClassifierDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.ontology.ClassifierDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

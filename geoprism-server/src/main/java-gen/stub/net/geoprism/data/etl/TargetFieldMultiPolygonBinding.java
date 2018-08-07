@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-public class TargetFieldMultiPolygonBinding extends TargetFieldMultiPolygonBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class TargetFieldMultiPolygonBinding extends TargetFieldMultiPolygonBindingBase 
 {
   private static final long serialVersionUID = -1318777893;
 

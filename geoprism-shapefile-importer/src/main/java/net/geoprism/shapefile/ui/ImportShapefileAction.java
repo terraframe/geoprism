@@ -25,10 +25,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class ImportShapefileAction extends Action implements Reloadable
+public class ImportShapefileAction extends Action 
 {
   private Universal[] universal;
 

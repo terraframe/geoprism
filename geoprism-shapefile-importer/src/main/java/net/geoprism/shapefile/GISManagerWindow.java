@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Monitor;
 
 import com.runwaysdk.dataaccess.cache.globalcache.ehcache.CacheShutdown;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.query.OIterator;
@@ -53,9 +53,9 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 
-public class GISManagerWindow extends ApplicationWindow implements Reloadable
+public class GISManagerWindow extends ApplicationWindow 
 {
-  private final class ShutdownRunnable implements IRunnableWithProgress, Reloadable
+  private final class ShutdownRunnable implements IRunnableWithProgress
   {
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException

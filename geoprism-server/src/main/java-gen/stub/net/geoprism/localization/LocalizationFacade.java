@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.session.Session;
 
-public class LocalizationFacade extends LocalizationFacadeBase implements com.runwaysdk.generation.loader.Reloadable
+public class LocalizationFacade extends LocalizationFacadeBase 
 {
   private static final long serialVersionUID = -43207120;
 

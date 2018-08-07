@@ -20,12 +20,12 @@ package net.geoprism.ontology;
 
 
 public class ClassifierIsARelationshipDTO extends ClassifierIsARelationshipDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 694687186;
   
-  public ClassifierIsARelationshipDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public ClassifierIsARelationshipDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

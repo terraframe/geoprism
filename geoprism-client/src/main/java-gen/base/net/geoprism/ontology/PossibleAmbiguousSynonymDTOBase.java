@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 82083749)
-public abstract class PossibleAmbiguousSynonymDTOBase extends com.runwaysdk.business.WarningDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class PossibleAmbiguousSynonymDTOBase extends com.runwaysdk.business.WarningDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.PossibleAmbiguousSynonym";
   private static final long serialVersionUID = 82083749;
@@ -35,7 +35,7 @@ public abstract class PossibleAmbiguousSynonymDTOBase extends com.runwaysdk.busi
   }
   
   public static java.lang.String CLASSIFIERLABEL = "classifierLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String SYNONYMLABEL = "synonymLabel";
   public String getClassifierLabel()
   {

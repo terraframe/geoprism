@@ -28,15 +28,15 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 
-import net.geoprism.dashboard.DashboardDTO;
-import net.geoprism.dashboard.DashboardQueryDTO;
-
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.system.RolesDTO;
 import com.runwaysdk.system.SingleActorDTO;
 import com.runwaysdk.util.FileIO;
 
-public class UserMenuController extends UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
+import net.geoprism.dashboard.DashboardDTO;
+import net.geoprism.dashboard.DashboardQueryDTO;
+
+public class UserMenuController extends UserMenuControllerBase 
 {
   public static final String JSP_DIR         = "/WEB-INF/";
 
@@ -56,8 +56,6 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   @Override
   public void dataManagement() throws IOException, ServletException
   {
-    JavascriptUtil.loadDataManagementBundle(this.getClientRequest(), this.req);
-
     req.getRequestDispatcher(JSP_DIR + DATA_MANAGEMENT).forward(req, resp);
   }
 
@@ -69,8 +67,6 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
 
     DashboardQueryDTO dashboardsQ = DashboardDTO.getSortedDashboards(clientRequest);
     List<? extends DashboardDTO> dashboards = dashboardsQ.getResultSet();
-
-    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
 
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
@@ -142,8 +138,6 @@ public class UserMenuController extends UserMenuControllerBase implements com.ru
   @Override
   public void menu() throws IOException, ServletException
   {
-    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-
     String bannerFile = SystemLogoSingletonDTO.getBannerFileFromCache(this.getClientRequest(), this.req);
     if (bannerFile != null)
     {

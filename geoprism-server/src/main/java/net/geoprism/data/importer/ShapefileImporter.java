@@ -49,7 +49,7 @@ import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.gis.dataaccess.MdAttributeMultiPolygonDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributePointDAOIF;
 import com.runwaysdk.gis.geometry.GeometryHelper;
@@ -74,7 +74,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author Justin Smethie
  */
-public class ShapefileImporter implements Reloadable
+public class ShapefileImporter 
 {
   /**
    * Configuration object containing shapefile column to type attribute mapping
@@ -279,7 +279,7 @@ public class ShapefileImporter implements Reloadable
 
               Classifier classifier = Classifier.findClassifierAddIfNotExist(packageString, value.toString(), mdAttributeTerm);
 
-              this.setValue(business, attributeName, classifier.getId());
+              this.setValue(business, attributeName, classifier.getOid());
             }
             else
             {
@@ -294,7 +294,7 @@ public class ShapefileImporter implements Reloadable
 
     if (entity != null)
     {
-      this.setValue(business, entityAttribute, entity.getId());
+      this.setValue(business, entityAttribute, entity.getOid());
     }
 
     if (geometry != null)
@@ -317,13 +317,13 @@ public class ShapefileImporter implements Reloadable
       }
     }
 
-    String id = feature.getID();
+    String oid = feature.getID();
 
-    ShapefileAttributeHandler handler = this.configuration.getIdHandler();
+    ShapefileAttributeHandler handler = this.configuration.getOidHandler();
 
     if (handler != null)
     {
-      handler.handle(business, null, id);
+      handler.handle(business, null, oid);
     }
 
     business.apply();
@@ -421,7 +421,7 @@ public class ShapefileImporter implements Reloadable
     QueryFactory factory = new QueryFactory();
 
     LocatedInQuery lQuery = new LocatedInQuery(factory);
-    lQuery.WHERE(lQuery.parentId().EQ(parent.getId()));
+    lQuery.WHERE(lQuery.parentOid().EQ(parent.getOid()));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);
     synonymQuery.WHERE(synonymQuery.getDisplayLabel().localize().EQ(label));
@@ -456,7 +456,7 @@ public class ShapefileImporter implements Reloadable
   }
 
   /**
-   * Returns the geo id of the
+   * Returns the geo oid of the
    * 
    * @return
    */

@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 public class GeoFieldRequiredExceptionDTO extends GeoFieldRequiredExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 689712197;
   
   public GeoFieldRequiredExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

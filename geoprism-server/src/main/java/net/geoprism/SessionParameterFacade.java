@@ -21,11 +21,11 @@ package net.geoprism;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
 
-public class SessionParameterFacade implements Reloadable
+public class SessionParameterFacade 
 {
   private static Map<String, Map<String, String>> sessions = new HashMap<String, Map<String, String>>();
 
@@ -81,7 +81,7 @@ public class SessionParameterFacade implements Reloadable
 
     if (session != null)
     {
-      return session.getId();
+      return session.getOid();
     }
 
     return "";

@@ -19,7 +19,7 @@
 package net.geoprism.data.etl.excel;
 
 public class ExcelHeaderExceptionDTO extends ExcelHeaderExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 276440241;
   
   public ExcelHeaderExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

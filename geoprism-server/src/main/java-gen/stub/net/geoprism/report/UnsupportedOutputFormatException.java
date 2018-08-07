@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class UnsupportedOutputFormatException extends UnsupportedOutputFormatExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class UnsupportedOutputFormatException extends UnsupportedOutputFormatExceptionBase 
 {
   private static final long serialVersionUID = 701132920;
   

@@ -19,7 +19,7 @@
 package net.geoprism.dhis2;
 
 public class DHIS2ConfigurationDTO extends DHIS2ConfigurationDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 584812281;
   
   public DHIS2ConfigurationDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

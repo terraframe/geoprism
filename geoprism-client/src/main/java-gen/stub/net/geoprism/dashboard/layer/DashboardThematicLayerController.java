@@ -32,7 +32,7 @@ import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
-public class DashboardThematicLayerController extends DashboardThematicLayerControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardThematicLayerController extends DashboardThematicLayerControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/DashboardThematicLayer/";
 
@@ -44,13 +44,13 @@ public class DashboardThematicLayerController extends DashboardThematicLayerCont
   }
 
   @Override
-  public void edit(String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     ClientRequestIF request = this.getClientRequest();
 
     try
     {
-      DashboardThematicLayerDTO layer = DashboardThematicLayerDTO.lock(request, id);
+      DashboardThematicLayerDTO layer = DashboardThematicLayerDTO.lock(request, oid);
       DashboardThematicStyleDTO style = (DashboardThematicStyleDTO) layer.getAllHasStyle().get(0);
 
       DashboardMapDTO map = layer.getDashboardMap();

@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public abstract class TargetFieldBinding extends TargetFieldBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public abstract class TargetFieldBinding extends TargetFieldBindingBase 
 {
   private static final long serialVersionUID = 1647156669;
 

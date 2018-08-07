@@ -18,9 +18,9 @@
  */
 package net.geoprism.context;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface ServerContextListener extends Reloadable
+
+public interface ServerContextListener 
 {
   public void initialize();
   

@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public class ExcelFieldBinding extends ExcelFieldBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelFieldBinding extends ExcelFieldBindingBase 
 {
   private static final long serialVersionUID = 1684656210;
 

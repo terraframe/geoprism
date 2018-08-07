@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 public class ClassifierProblemTypeMasterDescriptionDTO extends ClassifierProblemTypeMasterDescriptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1238021557;
   
   public ClassifierProblemTypeMasterDescriptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

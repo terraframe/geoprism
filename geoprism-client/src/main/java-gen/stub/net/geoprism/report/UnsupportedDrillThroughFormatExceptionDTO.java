@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class UnsupportedDrillThroughFormatExceptionDTO extends UnsupportedDrillThroughFormatExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -2124745809;
   
   public UnsupportedDrillThroughFormatExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

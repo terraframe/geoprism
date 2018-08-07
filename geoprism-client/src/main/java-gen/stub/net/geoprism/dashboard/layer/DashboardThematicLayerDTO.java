@@ -24,7 +24,7 @@ import net.geoprism.dashboard.AggregationTypeDTO;
 import net.geoprism.dashboard.AllAggregationTypeDTO;
 
 public class DashboardThematicLayerDTO extends DashboardThematicLayerDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1877883022;
   
   public DashboardThematicLayerDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

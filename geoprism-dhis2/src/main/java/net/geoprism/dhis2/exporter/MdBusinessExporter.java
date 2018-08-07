@@ -83,9 +83,9 @@ https://github.com/jembi/dhis2-tracker-populator
 
 TODO : 
 
-1. why does CLTS_Village need a attribute id? (hint: it doesn't)
+1. why does CLTS_Village need a attribute oid? (hint: it doesn't)
 2. events
-3. updating an existing option doesn't work, its assuming the code = id (probably a problem with the importer, not the exporter)
+3. updating an existing option doesn't work, its assuming the code = oid (probably a problem with the importer, not the exporter)
 4. [incident date] and [enrollment date] set to [report date]
  */
 
@@ -110,7 +110,7 @@ public class MdBusinessExporter
   
   private String trackedEntityId;
   
-  // Key is runway ID value is dhis2 id
+  // Key is runway OID value is dhis2 oid
   private Map<String, String> trackedEntityAttributeIds;
   
   private DHIS2IdCache idCache;
@@ -149,7 +149,7 @@ public class MdBusinessExporter
     
     QueryFactory qf = new QueryFactory();
     DHIS2IdMappingQuery mapQ = new DHIS2IdMappingQuery(qf);
-    mapQ.WHERE(mapQ.getRunwayId().EQ(mdbiz.getId()));
+    mapQ.WHERE(mapQ.getRunwayId().EQ(mdbiz.getOid()));
     long count = mapQ.getCount();
     
     if (count == 0) // CREATE NEW
@@ -187,7 +187,7 @@ public class MdBusinessExporter
         {
           QueryFactory qf2 = new QueryFactory();
           DHIS2IdMappingQuery mapQ2 = new DHIS2IdMappingQuery(qf2);
-          mapQ2.WHERE(mapQ2.getRunwayId().EQ(mdAttr.getId()));
+          mapQ2.WHERE(mapQ2.getRunwayId().EQ(mdAttr.getOid()));
           OIterator<? extends DHIS2IdMapping> it2 = mapQ2.getIterator();
           
           try
@@ -299,7 +299,7 @@ public class MdBusinessExporter
             {
               JSONObject jAttribute = new JSONObject();
               String attrName = mdAttr.getAttributeName();
-              jAttribute.put("attribute", trackedEntityAttributeIds.get(mdAttr.getId()));
+              jAttribute.put("attribute", trackedEntityAttributeIds.get(mdAttr.getOid()));
               
               if (mdAttr instanceof MdAttributeReference)
               {
@@ -316,8 +316,8 @@ public class MdBusinessExporter
                   {
                     Classifier classy = Classifier.get(refId);
                     
-                     // in 2.25 options were set via their display label here. In 2.27 they specify them via the 'code', which we have a basic id mapping for.
-                    String code = DHIS2Util.getOptionCode(classy.getId());
+                     // in 2.25 options were set via their display label here. In 2.27 they specify them via the 'code', which we have a basic oid mapping for.
+                    String code = DHIS2Util.getOptionCode(classy.getOid());
                     jAttribute.put("value", code);
                   }
                   else if (reference.definesType().equals(ClassifierSynonym.CLASS))
@@ -326,7 +326,7 @@ public class MdBusinessExporter
                   }
                 }
               }
-              else if (trackedEntityAttributeIds.containsKey(mdAttr.getId()))
+              else if (trackedEntityAttributeIds.containsKey(mdAttr.getOid()))
               {
                 jAttribute.put("value", biz.getValue(attrName));
               }
@@ -344,7 +344,7 @@ public class MdBusinessExporter
           {
             // TEIs //
 //            String teiId = this.idCache.next();
-//            trackedEntityInstance.put("id", teiId);
+//            trackedEntityInstance.put("oid", teiId);
             
             trackedEntityInstance.put("attributes", jAttributes);
             
@@ -358,8 +358,8 @@ public class MdBusinessExporter
             enrollments.put(enrollment);
             trackedEntityInstance.put("enrollments", enrollments);
             
-            // TODO : The geoId contains the DHIS2 id, and not the actual geoid. We do this because it has to be referenced when we export and there's no other place to save the DHIS2 id.
-            // If we make this a real product perhaps we need to store a map from runway id to dhis2 id in some table somewhere.
+            // TODO : The geoId contains the DHIS2 oid, and not the actual geoid. We do this because it has to be referenced when we export and there's no other place to save the DHIS2 oid.
+            // If we make this a real product perhaps we need to store a map from runway oid to dhis2 oid in some table somewhere.
             trackedEntityInstance.put("orgUnit", orgUnit.getGeoId());
             
             trackedEntityInstances.put(trackedEntityInstance);
@@ -441,7 +441,7 @@ public class MdBusinessExporter
 //          
 //          if (reference.definesType().equals(Classifier.CLASS))
 //          {
-//            Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getId()));
+//            Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getOid()));
 //            
 //            String pack = root.getClassifierPackage();
 //            
@@ -468,7 +468,7 @@ public class MdBusinessExporter
 //  }
   
   /**
-   * Fetches the id of a category combo with the provided name
+   * Fetches the oid of a category combo with the provided name
    * 
    * Example: http://localhost:8085/api/25/metadata?assumeTrue=false&categoryCombos=true
    */
@@ -494,7 +494,7 @@ public class MdBusinessExporter
         
         if (combo.getString("name").equals("default"))
         {
-          categoryComboId = combo.getString("id");
+          categoryComboId = combo.getString("oid");
           break;
         }
       }
@@ -522,7 +522,7 @@ public class MdBusinessExporter
   
   
   /**
-   * I wrote this code back when I was creating the DHIS2 objects and then fetching their ids. Now we just generate it and tell DHIS2 what the id is.
+   * I wrote this code back when I was creating the DHIS2 objects and then fetching their ids. Now we just generate it and tell DHIS2 what the oid is.
    * I'm keeping it here (for now) because it might be useful later (as a starting point) in case we need to fetch any of these objects for any reason.
    * This code was originally written on 2.25 but I think it also works on 2.27.
    */
@@ -559,7 +559,7 @@ public class MdBusinessExporter
 //          TEA.getString("name").equals(mdAttr.getDisplayLabel().getValue())
 //        )
 //      {
-//        trackedEntityAttributeIds.put(mdAttr.getId(), TEA.getString("id"));
+//        trackedEntityAttributeIds.put(mdAttr.getOid(), TEA.getString("oid"));
 //      }
 //    }
 //  }
@@ -592,7 +592,7 @@ public class MdBusinessExporter
 //        
 //        if (trackedEntity.getString("name").equals(mdbiz.getDisplayLabel().getValue()))
 //        {
-//          trackedEntityId = trackedEntity.getString("id");
+//          trackedEntityId = trackedEntity.getString("oid");
 //          break;
 //        }
 //      }
@@ -619,9 +619,9 @@ public class MdBusinessExporter
 //      {
 //        JSONObject program = programs.getJSONObject(i);
 //        
-//        if (program.getString("name").equals(mdbiz.getDisplayLabel().getValue() + " Program") && program.getJSONObject("trackedEntity").getString("id").equals(trackedEntityId))
+//        if (program.getString("name").equals(mdbiz.getDisplayLabel().getValue() + " Program") && program.getJSONObject("trackedEntity").getString("oid").equals(trackedEntityId))
 //        {
-//          programId = program.getString("id");
+//          programId = program.getString("oid");
 //          break;
 //        }
 //      }

@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 
-public class DashboardLayerNameLabel extends DashboardLayerNameLabelBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardLayerNameLabel extends DashboardLayerNameLabelBase 
 {
   private static final long serialVersionUID = 295083681;
   

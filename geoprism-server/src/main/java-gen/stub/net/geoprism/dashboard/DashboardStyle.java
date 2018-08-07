@@ -50,7 +50,7 @@ import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
 
-public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.generation.loader.Reloadable, Style
+public class DashboardStyle extends DashboardStyleBase implements Style
 {
   private static final long serialVersionUID = 248809785;
 
@@ -77,12 +77,12 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
   @Override
   public String getName()
   {
-    return SessionParameterFacade.get(this.getId());
+    return SessionParameterFacade.get(this.getOid());
   }
 
   public void setName(String value)
   {
-    SessionParameterFacade.put(this.getId(), value);
+    SessionParameterFacade.put(this.getOid(), value);
   }
 
   public String generateSLD()
@@ -122,7 +122,7 @@ public class DashboardStyle extends DashboardStyleBase implements com.runwaysdk.
   public JSONObject toJSON() throws JSONException
   {
     JSONObject json = new JSONObject();
-    json.put("id", this.getId());
+    json.put("oid", this.getOid());
     json.put("basicPointSize", this.getBasicPointSize());
     json.put("enableLabel", this.getEnableLabel());
     json.put("enableValue", this.getEnableValue());

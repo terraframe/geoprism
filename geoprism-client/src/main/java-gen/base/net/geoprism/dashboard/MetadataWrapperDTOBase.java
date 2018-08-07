@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = -334095162)
-public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.MetadataWrapper";
   private static final long serialVersionUID = -334095162;
@@ -49,7 +49,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DASHBOARD = "dashboard";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -146,7 +146,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     }
     else
     {
-      setValue(DASHBOARD, value.getId());
+      setValue(DASHBOARD, value.getOid());
     }
   }
   
@@ -195,7 +195,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -380,7 +380,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -479,7 +479,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     }
     else
     {
-      setValue(WRAPPEDMDCLASS, value.getId());
+      setValue(WRAPPEDMDCLASS, value.getOid());
     }
   }
   
@@ -511,10 +511,10 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     return (net.geoprism.dashboard.MdAttributeViewDTO[]) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final net.geoprism.dashboard.MdAttributeViewDTO[] getSortedAttributes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final net.geoprism.dashboard.MdAttributeViewDTO[] getSortedAttributes(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.MetadataWrapperDTO.CLASS, "getSortedAttributes", _declaredTypes);
     return (net.geoprism.dashboard.MdAttributeViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -522,114 +522,114 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO> getAllAttributeWrapper()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO>) getRequest().getChildren(this.getId(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO>) getRequest().getChildren(this.getOid(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO> getAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO> getAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO>) clientRequestIF.getChildren(id, net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.AttributeWrapperDTO>) clientRequestIF.getChildren(oid, net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO>) getRequest().getChildRelationships(this.getId(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO>) getRequest().getChildRelationships(this.getOid(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO> getAllAttributeWrapperRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO>) clientRequestIF.getChildRelationships(id, net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardAttributesDTO>) clientRequestIF.getChildRelationships(oid, net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
   public net.geoprism.dashboard.DashboardAttributesDTO addAttributeWrapper(net.geoprism.dashboard.AttributeWrapperDTO child)
   {
-    return (net.geoprism.dashboard.DashboardAttributesDTO) getRequest().addChild(this.getId(), child.getId(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    return (net.geoprism.dashboard.DashboardAttributesDTO) getRequest().addChild(this.getOid(), child.getOid(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.DashboardAttributesDTO addAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.AttributeWrapperDTO child)
+  public static net.geoprism.dashboard.DashboardAttributesDTO addAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.dashboard.AttributeWrapperDTO child)
   {
-    return (net.geoprism.dashboard.DashboardAttributesDTO) clientRequestIF.addChild(id, child.getId(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    return (net.geoprism.dashboard.DashboardAttributesDTO) clientRequestIF.addChild(oid, child.getOid(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
   public void removeAttributeWrapper(net.geoprism.dashboard.DashboardAttributesDTO relationship)
   {
-    getRequest().deleteChild(relationship.getId());
+    getRequest().deleteChild(relationship.getOid());
   }
   
   public static void removeAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.dashboard.DashboardAttributesDTO relationship)
   {
-    clientRequestIF.deleteChild(relationship.getId());
+    clientRequestIF.deleteChild(relationship.getOid());
   }
   
   public void removeAllAttributeWrapper()
   {
-    getRequest().deleteChildren(this.getId(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    getRequest().deleteChildren(this.getOid(), net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
-  public static void removeAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllAttributeWrapper(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteChildren(id, net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
+    clientRequestIF.deleteChildren(oid, net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.DashboardDTO> getAllDashboard()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardDTO>) getRequest().getParents(this.getId(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardDTO>) getRequest().getParents(this.getOid(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.DashboardDTO> getAllDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.DashboardDTO> getAllDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardDTO>) clientRequestIF.getParents(id, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardDTO>) clientRequestIF.getParents(oid, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO> getAllDashboardRelationships()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO>) getRequest().getParentRelationships(this.getId(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO>) getRequest().getParentRelationships(this.getOid(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO> getAllDashboardRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO> getAllDashboardRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO>) clientRequestIF.getParentRelationships(id, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.DashboardMetadataDTO>) clientRequestIF.getParentRelationships(oid, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
   public net.geoprism.dashboard.DashboardMetadataDTO addDashboard(net.geoprism.dashboard.DashboardDTO parent)
   {
-    return (net.geoprism.dashboard.DashboardMetadataDTO) getRequest().addParent(parent.getId(), this.getId(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    return (net.geoprism.dashboard.DashboardMetadataDTO) getRequest().addParent(parent.getOid(), this.getOid(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.DashboardMetadataDTO addDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.DashboardDTO parent)
+  public static net.geoprism.dashboard.DashboardMetadataDTO addDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.dashboard.DashboardDTO parent)
   {
-    return (net.geoprism.dashboard.DashboardMetadataDTO) clientRequestIF.addParent(parent.getId(), id, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    return (net.geoprism.dashboard.DashboardMetadataDTO) clientRequestIF.addParent(parent.getOid(), oid, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
   public void removeDashboard(net.geoprism.dashboard.DashboardMetadataDTO relationship)
   {
-    getRequest().deleteParent(relationship.getId());
+    getRequest().deleteParent(relationship.getOid());
   }
   
   public static void removeDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.dashboard.DashboardMetadataDTO relationship)
   {
-    clientRequestIF.deleteParent(relationship.getId());
+    clientRequestIF.deleteParent(relationship.getOid());
   }
   
   public void removeAllDashboard()
   {
-    getRequest().deleteParents(this.getId(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    getRequest().deleteParents(this.getOid(), net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
-  public static void removeAllDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllDashboard(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteParents(id, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
+    clientRequestIF.deleteParents(oid, net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.MetadataWrapperDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.MetadataWrapperDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.MetadataWrapperDTO) dto;
   }
@@ -647,7 +647,7 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.MetadataWrapperQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -660,10 +660,10 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.MetadataWrapperDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.MetadataWrapperDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.MetadataWrapperDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.MetadataWrapperDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -673,10 +673,10 @@ public abstract class MetadataWrapperDTOBase extends com.runwaysdk.business.Busi
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.MetadataWrapperDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.MetadataWrapperDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.MetadataWrapperDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.MetadataWrapperDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

@@ -20,9 +20,9 @@ package net.geoprism.report;
 
 import net.geoprism.dashboard.condition.DashboardCondition;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface ReportConditionHandlerIF extends Reloadable
+
+public interface ReportConditionHandlerIF 
 {
   public void handleCondition(DashboardCondition condition);
 }

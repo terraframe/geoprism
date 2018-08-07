@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-public class ClassifierProblemTypeMasterDescription extends ClassifierProblemTypeMasterDescriptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierProblemTypeMasterDescription extends ClassifierProblemTypeMasterDescriptionBase 
 {
   private static final long serialVersionUID = 2136524597;
   

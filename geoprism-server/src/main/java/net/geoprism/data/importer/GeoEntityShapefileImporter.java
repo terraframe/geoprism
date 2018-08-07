@@ -42,7 +42,7 @@ import com.runwaysdk.ProblemException;
 import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -64,7 +64,7 @@ import net.geoprism.localization.LocalizationFacade;
  * 
  * @author Justin Smethie
  */
-public class GeoEntityShapefileImporter extends TaskObservable implements Reloadable
+public class GeoEntityShapefileImporter extends TaskObservable 
 {
   /**
    * URL of the file being imported
@@ -83,13 +83,13 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
 
   /**
    * Optional name of the shapefile attribute which is used to derive the geo
-   * id. If this value is null then the geo id is auto-generated.
+   * oid. If this value is null then the geo oid is auto-generated.
    */
-  private ShapefileFunction           id;
+  private ShapefileFunction           oid;
 
   /**
    * Optional name of the shapefile attribute which is used to specify the
-   * entity name or geo id of the parent entity for the entity being imported.
+   * entity name or geo oid of the parent entity for the entity being imported.
    * If this value is null than the parent is assumed to be Earth.
    */
   private ShapefileMultivalueFunction parent;
@@ -122,7 +122,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
   private GeoEntity                   root;
 
   /**
-   * Map between a feature id and its geo entity
+   * Map between a feature oid and its geo entity
    */
   private Map<String, String>         entityIdMap;
 
@@ -197,19 +197,19 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
     this.name = name;
   }
 
-  public ShapefileFunction getId()
+  public ShapefileFunction getOid()
   {
-    return id;
+    return oid;
   }
 
-  public void setId(String id)
+  public void setId(String oid)
   {
-    this.setId(new BasicColumnFunction(id));
+    this.setId(new BasicColumnFunction(oid));
   }
 
-  public void setId(ShapefileFunction id)
+  public void setId(ShapefileFunction oid)
   {
-    this.id = id;
+    this.oid = oid;
   }
 
   public ShapefileMultivalueFunction getParent()
@@ -258,7 +258,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
   }
 
   /**
-   * @return Map between Shapefile Feature ID and the imported Entity id.
+   * @return Map between Shapefile Feature OID and the imported Entity oid.
    */
   public Map<String, String> getEntityIdMap()
   {
@@ -354,7 +354,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
 //              }
 //              catch (Exception e)
 //              {
-//                logger.log(feature.getID(), e);
+//                logger.log(feature.getOid(), e);
 //              }
 
               this.fireTaskProgress(1);
@@ -452,7 +452,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
           Synonym syn = new Synonym();
           syn.getDisplayLabel().setDefaultValue(synonymName);
           syn.getDisplayLabel().setValue(synonymName);
-          Synonym.create(syn, entity.getId());
+          Synonym.create(syn, entity.getOid());
         }
       }
       catch (Exception e)
@@ -483,7 +483,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
       }
 
       // The entity was succesfully applied without any problems or exceptions
-      this.entityIdMap.put(feature.getID(), entity.getId());
+      this.entityIdMap.put(feature.getID(), entity.getOid());
     }
   }
 
@@ -573,7 +573,7 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
    * Returns the entity as defined by the 'parent' and 'parentType' attributes
    * of the given feature. If an entity is not found then Earth is returned by
    * default. The 'parent' value of the feature must define an entity name or a
-   * geo id. The 'parentType' value of the feature must define the localized
+   * geo oid. The 'parentType' value of the feature must define the localized
    * display label of the universal.
    * 
    * @param feature
@@ -645,14 +645,14 @@ public class GeoEntityShapefileImporter extends TaskObservable implements Reload
    * @param feature
    *          Shapefile feature
    * 
-   * @return The geoId as defined by the 'id' attribute on the feature. If the
+   * @return The geoId as defined by the 'oid' attribute on the feature. If the
    *         geoId is null then a blank geoId is returned.
    */
   private String getGeoId(SimpleFeature feature)
   {
-    if (this.id != null)
+    if (this.oid != null)
     {
-      Object geoId = this.id.getValue(feature);
+      Object geoId = this.oid.getValue(feature);
 
       if (geoId != null)
       {

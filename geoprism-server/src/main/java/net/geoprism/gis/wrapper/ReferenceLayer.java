@@ -18,10 +18,10 @@
  */
 package net.geoprism.gis.wrapper;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
 
-public interface ReferenceLayer extends Reloadable, Layer
+
+public interface ReferenceLayer extends Layer
 {
   
 

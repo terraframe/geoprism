@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -1602277397)
-public class SessionControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class SessionControllerBase 
 {
   public static final String                       CLASS            = "com.runwaysdk.defaults.SessionController";
 

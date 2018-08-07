@@ -20,9 +20,9 @@ package net.geoprism.util;
 
 import java.util.Map;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class CollectionUtil implements Reloadable
+
+public class CollectionUtil 
 {
   /**
    * Populate the key-value pair of map with the value specified. If the value is null or empty then the default value is used instead.

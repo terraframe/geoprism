@@ -21,9 +21,9 @@ package net.geoprism.gis.geoserver;
 import java.io.File;
 import java.util.List;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface GeoserverService extends Reloadable
+
+public interface GeoserverService 
 {
   public void refresh();
 

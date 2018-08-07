@@ -20,7 +20,7 @@ package net.geoprism.ontology;
 
 
 public class ClassifierDTO extends ClassifierDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1983795185;
   
   public ClassifierDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

@@ -19,7 +19,7 @@
 package net.geoprism;
 
 public class InvalidForgotPasswordTokenDTO extends InvalidForgotPasswordTokenDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 153128517;
   
   public InvalidForgotPasswordTokenDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

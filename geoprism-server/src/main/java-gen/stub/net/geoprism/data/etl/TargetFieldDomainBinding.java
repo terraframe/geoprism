@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl;
 
-public class TargetFieldDomainBinding extends TargetFieldDomainBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class TargetFieldDomainBinding extends TargetFieldDomainBindingBase 
 {
   private static final long serialVersionUID = -148401381;
   

@@ -20,12 +20,12 @@ package net.geoprism.dashboard;
 
 
 public class SessionMapDTO extends SessionMapDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1052911777;
   
-  public SessionMapDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public SessionMapDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

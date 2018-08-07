@@ -33,9 +33,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ServerContextListenerDocumentBuilder implements Reloadable
+
+public class ServerContextListenerDocumentBuilder 
 {
 
   public List<ServerContextListenerInfo> read()

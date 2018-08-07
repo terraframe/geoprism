@@ -298,11 +298,11 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
     private void setViewOnlyAttribute(DashboardTypeInfo info, GeoNode node, String nodeAttribute)
     {
-      String id = node.getValue(nodeAttribute);
+      String oid = node.getValue(nodeAttribute);
 
-      if (id != null && id.length() > 0)
+      if (oid != null && oid.length() > 0)
       {
-        MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(id);
+        MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(oid);
 
         info.addViewOnlyAttribute(mdAttribute.definesAttribute());
       }
@@ -469,7 +469,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
         }
       }
 
-      MdClass mdClass = MdClass.get(_mdClass.getId());
+      MdClass mdClass = MdClass.get(_mdClass.getOid());
 
       MappableClass mClass = new MappableClass();
       mClass.setWrappedMdClass(mdClass);
@@ -705,7 +705,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
         while (iterator.hasNext())
         {
           MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) iterator.next().getBusinessDAO();
-          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
+          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getOid());
           lockedBy.apply();
         }
 
@@ -719,7 +719,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
         if (mdAttributeReference != null)
         {
           MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdAttributeReference.getBusinessDAO();
-          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getId());
+          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdSingleActor.getOid());
           lockedBy.apply();
         }
       }
@@ -758,7 +758,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
           MdBusinessDAOIF mdClass = MdBusinessDAO.getMdBusinessDAO(MdClassInfo.CLASS);
 
           MdAttributeConcreteDAO lockedBy = (MdAttributeConcreteDAO) mdAttributeReference.getBusinessDAO();
-          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdClass.getId());
+          lockedBy.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, mdClass.getOid());
           lockedBy.apply();
         }
 
@@ -779,7 +779,7 @@ public class GeoprismImportPlugin implements ImportPluginIF
 
           Business targetBinding = iterator.next();
           targetBinding.lock();
-          targetBinding.setValue(TargetBinding.STRATEGY, strategy.getId());
+          targetBinding.setValue(TargetBinding.STRATEGY, strategy.getOid());
           targetBinding.apply();
         }
 

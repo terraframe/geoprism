@@ -20,7 +20,7 @@ package net.geoprism.dashboard.layer;
 
 
 
-public class DuplicateLayerException extends DuplicateLayerExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DuplicateLayerException extends DuplicateLayerExceptionBase 
 {
   private static final long serialVersionUID = -800398114;
   

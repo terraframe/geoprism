@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class UnknownReportException extends UnknownReportExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class UnknownReportException extends UnknownReportExceptionBase 
 {
   private static final long serialVersionUID = 1092458469;
   

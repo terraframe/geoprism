@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -49,7 +49,7 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
 
-public class GeoserverRestService implements GeoserverService, Reloadable
+public class GeoserverRestService implements GeoserverService
 {
   public final int    SRS_CODE   = 4326;
 
@@ -68,7 +68,7 @@ public class GeoserverRestService implements GeoserverService, Reloadable
   /**
    * Checks if a given File is a cache directory for the workspace.
    */
-  private class CacheFilter implements FileFilter, Reloadable
+  private class CacheFilter implements FileFilter
   {
     @Override
     public boolean accept(File file)

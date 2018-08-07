@@ -25,12 +25,10 @@ import java.util.ServiceLoader;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.generation.loader.Reloadable
+public class DHIS2IdMapping extends DHIS2IdMappingBase 
 {
   private static final long serialVersionUID = 1512057276;
   
@@ -96,7 +94,7 @@ public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.
   
   public static DHIS2PluginIF getDhis2Plugin()
   {
-    ServiceLoader<DHIS2PluginIF> loader = ServiceLoader.load(DHIS2PluginIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<DHIS2PluginIF> loader = ServiceLoader.load(DHIS2PluginIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {

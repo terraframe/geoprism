@@ -42,12 +42,12 @@ import org.apache.commons.lang.StringUtils;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.controller.ErrorUtility;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
 import com.runwaysdk.web.ServletUtility;
 import com.runwaysdk.web.WebClientSession;
 
-public class SessionFilter implements Filter, Reloadable
+public class SessionFilter implements Filter
 {
   public void init(FilterConfig filterConfig) throws ServletException
   {
@@ -261,11 +261,6 @@ public class SessionFilter implements Filter, Reloadable
     extensions.add(".mp4");
 
     extensions.add(".js");
-
-    // Login/Logout requests for mojax/mojo extensions.
-    extensions.add(SessionController.LOGIN_ACTION);
-    extensions.add(SessionController.LOGOUT_ACTION);
-    extensions.add(SessionController.FORM_ACTION);
 
     for (String extension : extensions)
     {

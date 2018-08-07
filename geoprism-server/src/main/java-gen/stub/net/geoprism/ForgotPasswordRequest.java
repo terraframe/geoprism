@@ -33,7 +33,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements com.runwaysdk.generation.loader.Reloadable
+public class ForgotPasswordRequest extends ForgotPasswordRequestBase 
 {
   private static final long serialVersionUID = 961492736;
   
@@ -167,7 +167,7 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase implements 
   {
     String hashedTime = ServerIDGenerator.hashedId(String.valueOf(System.currentTimeMillis()));
     
-    String hashedUser = ServerIDGenerator.hashedId(user.getId());
+    String hashedUser = ServerIDGenerator.hashedId(user.getOid());
     
     return hashedTime + hashedUser;
   }

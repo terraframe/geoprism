@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class InvalidReportDefinitionException extends InvalidReportDefinitionExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class InvalidReportDefinitionException extends InvalidReportDefinitionExceptionBase 
 {
   private static final long serialVersionUID = 737376829;
   

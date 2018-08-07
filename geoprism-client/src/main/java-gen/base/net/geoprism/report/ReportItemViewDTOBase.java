@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = -716278884)
-public abstract class ReportItemViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ReportItemViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.report.ReportItemView";
   private static final long serialVersionUID = -716278884;
@@ -35,7 +35,7 @@ public abstract class ReportItemViewDTOBase extends com.runwaysdk.business.ViewD
   }
   
   public static java.lang.String DASHBOARDLABEL = "dashboardLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String REPORTID = "reportId";
   public static java.lang.String REPORTLABEL = "reportLabel";
   public static java.lang.String REPORTNAME = "reportName";
@@ -195,17 +195,17 @@ public abstract class ReportItemViewDTOBase extends com.runwaysdk.business.ViewD
     getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final void remove(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final void remove(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemViewDTO.CLASS, "remove", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static ReportItemViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static ReportItemViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (ReportItemViewDTO) dto;
   }
@@ -223,7 +223,7 @@ public abstract class ReportItemViewDTOBase extends com.runwaysdk.business.ViewD
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

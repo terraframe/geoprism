@@ -20,13 +20,13 @@ package net.geoprism.gis.geoserver;
 
 import net.geoprism.util.Predicate;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.util.IDGenerator;
 
-public class SessionPredicate implements Predicate<String>, Reloadable
+public class SessionPredicate implements Predicate<String>
 {
   public static final String PREFIX = "lv_";
 
@@ -50,7 +50,7 @@ public class SessionPredicate implements Predicate<String>, Reloadable
 
     if (session != null)
     {
-      String sessionId = session.getId();
+      String sessionId = session.getOid();
 
       // The max length for a postgres table name is 63 characters, and as a
       // result our metadata is set at max length 63

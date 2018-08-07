@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 public class UnsupportedAggregationExceptionDTO extends UnsupportedAggregationExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -650951172;
   
   public UnsupportedAggregationExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

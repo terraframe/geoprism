@@ -31,7 +31,7 @@ import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.controller.ServletMethod;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -46,7 +46,7 @@ import net.geoprism.util.ProgressFacade;
 import net.geoprism.util.ProgressState;
 
 @Controller(url = "uploader")
-public class DataUploaderController implements Reloadable
+public class DataUploaderController 
 {
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF getAttributeInformation(ClientRequestIF request, @RequestParamter(name = "file") MultipartFileParameter file) throws IOException, JSONException
@@ -73,9 +73,9 @@ public class DataUploaderController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF getErrorFile(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF getErrorFile(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    InputStream stream = DataUploaderDTO.getErrorFile(request, id);
+    InputStream stream = DataUploaderDTO.getErrorFile(request, oid);
 
     return new InputStreamResponse(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", null);
   }
@@ -97,9 +97,9 @@ public class DataUploaderController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF getSavedConfiguration(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "sheetName") String sheetName) throws JSONException
+  public ResponseIF getSavedConfiguration(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "sheetName") String sheetName) throws JSONException
   {
-    String configuration = DataUploaderDTO.getSavedConfiguration(request, id, sheetName);
+    String configuration = DataUploaderDTO.getSavedConfiguration(request, oid, sheetName);
 
     JSONObject object = new JSONObject();
     object.put("datasets", new JSONObject(configuration));
@@ -108,9 +108,9 @@ public class DataUploaderController implements Reloadable
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF createGeoEntity(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "label") String label) throws JSONException
+  public ResponseIF createGeoEntity(ClientRequestIF request, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "label") String label) throws JSONException
   {
-    String entityId = DataUploaderDTO.createGeoEntity(request, parentId, universalId, label);
+    String entityId = DataUploaderDTO.createGeoEntity(request, parentOid, universalId, label);
 
     JSONObject object = new JSONObject();
     object.put("entityId", entityId);
@@ -174,7 +174,7 @@ public class DataUploaderController implements Reloadable
     {
       JSONObject object = new JSONObject();
       object.put("label", result.getValue(ClassifierDTO.DISPLAYLABEL));
-      object.put("value", result.getValue(ClassifierDTO.ID));
+      object.put("value", result.getValue(ClassifierDTO.OID));
 
       response.put(object);
     }
@@ -183,34 +183,34 @@ public class DataUploaderController implements Reloadable
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF validateDatasetName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "id") String id)
+  public ResponseIF validateDatasetName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "oid") String oid)
   {
-    DataUploaderDTO.validateDatasetName(request, name, id);
+    DataUploaderDTO.validateDatasetName(request, name, oid);
 
     return new RestBodyResponse("");
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF validateCategoryName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "id") String id)
+  public ResponseIF validateCategoryName(ClientRequestIF request, @RequestParamter(name = "name") String name, @RequestParamter(name = "oid") String oid)
   {
-    ClassifierDTO.validateCategoryName(request, name, id);
+    ClassifierDTO.validateCategoryName(request, name, oid);
 
     return new RestBodyResponse("");
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF getGeoEntitySuggestions(ClientRequestIF request, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  public ResponseIF getGeoEntitySuggestions(ClientRequestIF request, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
   {
     JSONArray response = new JSONArray();
 
-    ValueQueryDTO query = GeoEntityUtilDTO.getGeoEntitySuggestions(request, parentId, universalId, text, limit);
+    ValueQueryDTO query = GeoEntityUtilDTO.getGeoEntitySuggestions(request, parentOid, universalId, text, limit);
     List<ValueObjectDTO> results = query.getResultSet();
 
     for (ValueObjectDTO result : results)
     {
       JSONObject object = new JSONObject();
       object.put("text", result.getValue(GeoEntityDTO.DISPLAYLABEL));
-      object.put("data", result.getValue(GeoEntityDTO.ID));
+      object.put("data", result.getValue(GeoEntityDTO.OID));
 
       response.put(object);
     }
@@ -219,13 +219,13 @@ public class DataUploaderController implements Reloadable
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF progress(@RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF progress(@RequestParamter(name = "oid") String oid) throws JSONException
   {
-    ProgressState progress = ProgressFacade.get(id);
+    ProgressState progress = ProgressFacade.get(oid);
 
     if (progress == null)
     {
-      progress = new ProgressState(id);
+      progress = new ProgressState(oid);
     }
 
     return new RestBodyResponse(progress.toJSON());

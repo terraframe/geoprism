@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class AggregationType extends AggregationTypeBase implements com.runwaysdk.generation.loader.Reloadable
+public class AggregationType extends AggregationTypeBase 
 {
   private static final long serialVersionUID = -686851606;
   

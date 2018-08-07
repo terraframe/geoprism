@@ -21,11 +21,11 @@ package net.geoprism.data.importer;
 import java.util.LinkedList;
 
 import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.session.Request;
 
-public class ComputeLocatedInRunner implements Runnable, Reloadable
+public class ComputeLocatedInRunner implements Runnable
 {
   private LinkedList<Pair<String, String>> list;
 
@@ -48,10 +48,10 @@ public class ComputeLocatedInRunner implements Runnable, Reloadable
       {
         ValueObject valueObject = it.next();
 
-        String parentId = valueObject.getValue(LocatedInBuilder.PARENT_ID);
-        String childId = valueObject.getValue(LocatedInBuilder.CHILD_ID);
+        String parentOid = valueObject.getValue(LocatedInBuilder.PARENT_ID);
+        String childOid = valueObject.getValue(LocatedInBuilder.CHILD_ID);
 
-        Pair<String, String> pair = new Pair<String, String>(parentId, childId);
+        Pair<String, String> pair = new Pair<String, String>(parentOid, childOid);
 
         list.add(pair);
       }

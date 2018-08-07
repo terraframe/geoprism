@@ -18,9 +18,9 @@
  */
 package net.geoprism;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface AccessConstants extends Reloadable
+
+public interface AccessConstants 
 {
   public static final String EDIT_DASHBOARD = "Edit-Dashboard";
 

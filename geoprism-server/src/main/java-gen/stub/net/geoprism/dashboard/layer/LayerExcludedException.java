@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 
-public class LayerExcludedException extends LayerExcludedExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class LayerExcludedException extends LayerExcludedExceptionBase 
 {
   private static final long serialVersionUID = 875355301;
   

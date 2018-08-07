@@ -20,7 +20,7 @@ package net.geoprism;
 
 
 public class EmailSettingDTO extends EmailSettingDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -453924448;
   
   public EmailSettingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

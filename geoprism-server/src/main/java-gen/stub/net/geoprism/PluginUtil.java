@@ -22,12 +22,9 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
-
 import net.geoprism.dhis2.DHIS2PluginIF;
 
-public class PluginUtil extends PluginUtilBase implements com.runwaysdk.generation.loader.Reloadable
+public class PluginUtil extends PluginUtilBase 
 {
   private static final long serialVersionUID = 682516980;
   
@@ -38,7 +35,7 @@ public class PluginUtil extends PluginUtilBase implements com.runwaysdk.generati
   
   public static java.lang.Boolean isDHIS2Enabled()
   {
-    ServiceLoader<DHIS2PluginIF> loader = ServiceLoader.load(DHIS2PluginIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<DHIS2PluginIF> loader = ServiceLoader.load(DHIS2PluginIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {

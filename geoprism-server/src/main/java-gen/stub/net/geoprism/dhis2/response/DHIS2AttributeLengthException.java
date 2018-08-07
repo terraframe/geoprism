@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
-public class DHIS2AttributeLengthException extends DHIS2AttributeLengthExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DHIS2AttributeLengthException extends DHIS2AttributeLengthExceptionBase 
 {
   private static final long serialVersionUID = -2068285763;
   

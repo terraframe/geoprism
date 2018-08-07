@@ -18,7 +18,7 @@
  */
 package net.geoprism.dashboard.layer;
 
-public class UnsupportedAggregationException extends UnsupportedAggregationExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class UnsupportedAggregationException extends UnsupportedAggregationExceptionBase 
 {
   private static final long serialVersionUID = 1025619836;
   

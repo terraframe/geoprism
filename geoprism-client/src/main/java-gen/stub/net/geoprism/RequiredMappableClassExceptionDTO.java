@@ -19,7 +19,7 @@
 package net.geoprism;
 
 public class RequiredMappableClassExceptionDTO extends RequiredMappableClassExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -521668720;
   
   public RequiredMappableClassExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

@@ -40,7 +40,7 @@ import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.InvalidLoginException;
@@ -48,7 +48,7 @@ import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 
-public class ExternalProfile extends ExternalProfileBase implements Reloadable, GeoprismUserIF
+public class ExternalProfile extends ExternalProfileBase implements GeoprismUserIF
 {
   private static final long serialVersionUID = -377482924;
   

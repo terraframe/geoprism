@@ -97,7 +97,7 @@ public class Sandbox
   private static void one(HashMap<String, Object> req, ClientRequestIF clientRequest)
   {
     DashboardMapDTO map = net.geoprism.SessionEntryDTO.createMapForSession(clientRequest);
-    req.put("mapId", map.getId());
+    req.put("mapId", map.getOid());
 
     // populates the dropdown menu
     DashboardQueryDTO dashboardQ = DashboardDTO.getSortedDashboards(clientRequest);
@@ -198,7 +198,7 @@ public class Sandbox
 
     // String json = map.getMapJSON();
 
-    // String json = DashboardMap.getMapJSON(map.getId());
+    // String json = DashboardMap.getMapJSON(map.getOid());
     // System.out.println(json);
 
     map.delete();

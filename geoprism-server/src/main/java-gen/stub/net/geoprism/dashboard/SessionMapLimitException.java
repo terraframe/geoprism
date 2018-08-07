@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class SessionMapLimitException extends SessionMapLimitExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class SessionMapLimitException extends SessionMapLimitExceptionBase 
 {
   private static final long serialVersionUID = 2100042333;
   

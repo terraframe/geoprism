@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public abstract class TargetFieldCoordinateBinding extends TargetFieldCoordinateBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public abstract class TargetFieldCoordinateBinding extends TargetFieldCoordinateBindingBase 
 {
   private static final long serialVersionUID = 913917673;
 

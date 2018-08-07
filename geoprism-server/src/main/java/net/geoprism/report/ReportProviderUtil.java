@@ -27,10 +27,10 @@ import net.geoprism.DateParseException;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.localization.LocalizationFacade;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.GeneratedComponentQuery;
 
-public class ReportProviderUtil implements Reloadable
+public class ReportProviderUtil 
 {
   private static void parseCondition(DashboardCondition[] conditions, ReportConditionHandlerIF _handler)
   {

@@ -33,10 +33,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class UniversalPage extends ShapeFileBeanPage implements IInitPage, PropertyChangeListener, Reloadable
+public class UniversalPage extends ShapeFileBeanPage implements IInitPage, PropertyChangeListener
 {
   public static final String PAGE_NAME = "UniversalPage";
 

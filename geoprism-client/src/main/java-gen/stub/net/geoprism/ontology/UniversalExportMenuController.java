@@ -25,7 +25,7 @@ import com.runwaysdk.ontology.TermControllerUtil;
 import com.runwaysdk.system.ontology.io.TermFileFormatDTO;
 import com.runwaysdk.system.ontology.io.TermFileFormatMasterDTO;
 
-public class UniversalExportMenuController extends UniversalExportMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class UniversalExportMenuController extends UniversalExportMenuControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/UniversalExportMenu/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";

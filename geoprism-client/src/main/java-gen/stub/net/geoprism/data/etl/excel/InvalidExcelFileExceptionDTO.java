@@ -20,7 +20,7 @@ package net.geoprism.data.etl.excel;
 
 
 public class InvalidExcelFileExceptionDTO extends InvalidExcelFileExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 715836405;
   
   public InvalidExcelFileExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;
@@ -40,9 +40,9 @@ import com.runwaysdk.system.gis.geo.UniversalQuery;
  * 
  * @author Justin Smethie
  */
-public class LocatedInBean implements Reloadable
+public class LocatedInBean 
 {
-  public enum BuildTypes implements Reloadable {
+  public enum BuildTypes  {
 
     REBUILD_ALL(1), ORPHANED_ONLY(2);
 
@@ -133,7 +133,7 @@ public class LocatedInBean implements Reloadable
       // Child-map : Map of nodes which have the key as a child
       Map<String, List<PathOption>> childMap = new LinkedHashMap<String, List<PathOption>>();
 
-      String universalId = universal.getId();
+      String universalId = universal.getOid();
 
       QueryFactory factory = new QueryFactory();
 
@@ -153,25 +153,25 @@ public class LocatedInBean implements Reloadable
 
       for (AllowedIn relationship : relationships)
       {
-        String id = relationship.getId();
-        String key = universalId + "-" + id;
-        String parentId = relationship.getParentId();
-        String childId = relationship.getChildId();
+        String oid = relationship.getOid();
+        String key = universalId + "-" + oid;
+        String parentOid = relationship.getParentOid();
+        String childOid = relationship.getChildOid();
 
         PathOption node = new PathOption(universalId, relationship);
 
         map.putIfAbsent(key, node);
 
-        parentMap.putIfAbsent(parentId, new LinkedList<PathOption>());
-        parentMap.get(parentId).add(node);
+        parentMap.putIfAbsent(parentOid, new LinkedList<PathOption>());
+        parentMap.get(parentOid).add(node);
 
-        childMap.putIfAbsent(childId, new LinkedList<PathOption>());
-        childMap.get(childId).add(node);
+        childMap.putIfAbsent(childOid, new LinkedList<PathOption>());
+        childMap.get(childOid).add(node);
 
         // Link this node to its children
-        if (parentMap.containsKey(childId))
+        if (parentMap.containsKey(childOid))
         {
-          List<PathOption> children = parentMap.get(childId);
+          List<PathOption> children = parentMap.get(childOid);
 
           for (PathOption child : children)
           {
@@ -181,9 +181,9 @@ public class LocatedInBean implements Reloadable
         }
 
         // Link this node to its parents
-        if (childMap.containsKey(parentId))
+        if (childMap.containsKey(parentOid))
         {
-          List<PathOption> parents = childMap.get(parentId);
+          List<PathOption> parents = childMap.get(parentOid);
 
           for (PathOption parent : parents)
           {

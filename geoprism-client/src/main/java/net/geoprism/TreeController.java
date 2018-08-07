@@ -52,7 +52,7 @@ public class TreeController
 
     RestResponse response = new RestResponse();
     response.set("type", GeoEntityDTO.CLASS);
-    response.set("rootId", root.getId());
+    response.set("rootId", root.getOid());
     response.set("relationships", relationships);
 
     return response;
@@ -69,7 +69,7 @@ public class TreeController
 
     RestResponse response = new RestResponse();
     response.set("type", UniversalDTO.CLASS);
-    response.set("rootId", root.getId());
+    response.set("rootId", root.getOid());
     response.set("relationships", relationships);
 
     return response;
@@ -85,7 +85,7 @@ public class TreeController
 
     RestResponse response = new RestResponse();
     response.set("type", ClassifierDTO.CLASS);
-    response.set("rootId", root.getId());
+    response.set("rootId", root.getOid());
     response.set("relationships", relationships);
 
     return response;

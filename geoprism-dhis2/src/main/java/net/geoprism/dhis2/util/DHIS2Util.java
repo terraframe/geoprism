@@ -22,7 +22,7 @@ import java.sql.Savepoint;
 
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdAttribute;
@@ -43,7 +43,7 @@ import net.geoprism.dhis2.OptionCodeMappingQuery;
 /**
  * @author rrowlands
  */
-public class DHIS2Util implements Reloadable
+public class DHIS2Util 
 {
   public static String getOptionCode(String runwayId)
   {
@@ -170,14 +170,14 @@ public class DHIS2Util implements Reloadable
       }
       else
       {
-        String id = idCache.next();
+        String oid = idCache.next();
         
         DHIS2IdMapping map = new DHIS2IdMapping();
         map.setRunwayId(runwayId);
-        map.setDhis2Id(id);
+        map.setDhis2Id(oid);
         map.apply();
         
-        return id;
+        return oid;
       }
     }
     finally

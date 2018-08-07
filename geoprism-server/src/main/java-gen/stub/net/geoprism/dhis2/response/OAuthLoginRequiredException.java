@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2.response;
 
-public class OAuthLoginRequiredException extends OAuthLoginRequiredExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class OAuthLoginRequiredException extends OAuthLoginRequiredExceptionBase 
 {
   private static final long serialVersionUID = 1285981276;
   

@@ -31,9 +31,9 @@ import org.eclipse.birt.report.engine.api.IAction;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.script.IReportContext;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public abstract class AbstractUrlActionHandler extends HTMLActionHandler implements Reloadable
+
+public abstract class AbstractUrlActionHandler extends HTMLActionHandler 
 {
   private static final String RPTDOCUMENT = ".rptdocument";
 
@@ -261,7 +261,7 @@ public abstract class AbstractUrlActionHandler extends HTMLActionHandler impleme
       // DO NOTHING
     }
 
-    // if the system id is the URL, merge the report name with it
+    // if the system oid is the URL, merge the report name with it
     try
     {
       URL root = new URL(systemId);

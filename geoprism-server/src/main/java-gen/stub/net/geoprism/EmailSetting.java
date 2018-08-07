@@ -46,7 +46,7 @@ import net.geoprism.email.InvalidEmailSettings;
 import net.geoprism.email.InvalidToRecipient;
 import net.geoprism.localization.LocalizationFacade;
 
-public class EmailSetting extends EmailSettingBase implements com.runwaysdk.generation.loader.Reloadable
+public class EmailSetting extends EmailSettingBase 
 {
   private static final long serialVersionUID = -1631634656;
   
@@ -219,7 +219,7 @@ public class EmailSetting extends EmailSettingBase implements com.runwaysdk.gene
       }
       catch (MalformedURLException e)
       {
-        throw new AttributeValueException("Server is not url parseable", e, BusinessDAO.get(this.getId()).getAttributeIF(EmailSetting.SERVER), server);
+        throw new AttributeValueException("Server is not url parseable", e, BusinessDAO.get(this.getOid()).getAttributeIF(EmailSetting.SERVER), server);
       }
     }
     

@@ -20,7 +20,7 @@ package net.geoprism.dashboard.layer;
 
 
 public class NoLayersExceptionDTO extends NoLayersExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1922414087;
   
   public NoLayersExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

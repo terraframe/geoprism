@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 
-public class LayerTypeController extends LayerTypeControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class LayerTypeController extends LayerTypeControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/layer/LayerType/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
@@ -32,18 +32,18 @@ public class LayerTypeController extends LayerTypeControllerBase implements com.
   public void cancel(net.geoprism.dashboard.layer.LayerTypeDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
   public void failCancel(net.geoprism.dashboard.layer.LayerTypeDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
   public void create(net.geoprism.dashboard.layer.LayerTypeDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -72,15 +72,15 @@ public class LayerTypeController extends LayerTypeControllerBase implements com.
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    net.geoprism.dashboard.layer.LayerTypeDTO dto = net.geoprism.dashboard.layer.LayerTypeDTO.lock(super.getClientRequest(), id);
+    net.geoprism.dashboard.layer.LayerTypeDTO dto = net.geoprism.dashboard.layer.LayerTypeDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -98,7 +98,7 @@ public class LayerTypeController extends LayerTypeControllerBase implements com.
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -110,13 +110,13 @@ public class LayerTypeController extends LayerTypeControllerBase implements com.
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", net.geoprism.dashboard.layer.LayerTypeDTO.get(clientRequest, id));
+    req.setAttribute("item", net.geoprism.dashboard.layer.LayerTypeDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }

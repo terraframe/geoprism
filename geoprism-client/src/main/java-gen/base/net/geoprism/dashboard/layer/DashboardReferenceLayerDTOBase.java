@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = -1045309281)
-public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashboard.layer.DashboardLayerDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashboard.layer.DashboardLayerDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.DashboardReferenceLayer";
   private static final long serialVersionUID = -1045309281;
@@ -71,7 +71,7 @@ public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashbo
     }
     else
     {
-      setValue(UNIVERSAL, value.getId());
+      setValue(UNIVERSAL, value.getOid());
     }
   }
   
@@ -103,9 +103,9 @@ public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashbo
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.dashboard.layer.DashboardReferenceLayerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.layer.DashboardReferenceLayerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.layer.DashboardReferenceLayerDTO) dto;
   }
@@ -123,7 +123,7 @@ public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashbo
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.layer.DashboardReferenceLayerQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -136,10 +136,10 @@ public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashbo
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.layer.DashboardReferenceLayerDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.DashboardReferenceLayerDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.DashboardReferenceLayerDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.layer.DashboardReferenceLayerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -149,10 +149,10 @@ public abstract class DashboardReferenceLayerDTOBase extends net.geoprism.dashbo
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.layer.DashboardReferenceLayerDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.DashboardReferenceLayerDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.DashboardReferenceLayerDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.layer.DashboardReferenceLayerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

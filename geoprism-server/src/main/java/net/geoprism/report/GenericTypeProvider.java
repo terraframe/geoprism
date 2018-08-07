@@ -34,7 +34,7 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.Coalesce;
@@ -51,7 +51,7 @@ import net.geoprism.QueryUtil;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
 
-public class GenericTypeProvider extends AbstractProvider implements Reloadable, ReportProviderIF
+public class GenericTypeProvider extends AbstractProvider implements ReportProviderIF
 {
   @Override
   public List<PairView> getSupportedQueryDescriptors()
@@ -105,11 +105,11 @@ public class GenericTypeProvider extends AbstractProvider implements Reloadable,
     /*
      * IMPORTANT: All results must be ordered for blocking to work
      */
-    Selectable id = query.get(MdClassInfo.ID);
+    Selectable oid = query.get(MdClassInfo.OID);
 
     ValueQuery vQuery = config.getValueQuery();
-    vQuery.SELECT(id);
-    vQuery.ORDER_BY_ASC(id);
+    vQuery.SELECT(oid);
+    vQuery.ORDER_BY_ASC(oid);
 
     return vQuery;
   }

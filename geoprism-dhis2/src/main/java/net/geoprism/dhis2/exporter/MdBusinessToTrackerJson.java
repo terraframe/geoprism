@@ -107,7 +107,7 @@ public class MdBusinessToTrackerJson
     trackedEntity.put("description", mdbiz.getDescription().getValue());
     
     trackedEntityId = idCache.next();
-    trackedEntity.put("id", trackedEntityId);
+    trackedEntity.put("oid", trackedEntityId);
     
     return trackedEntity;
   }
@@ -197,7 +197,7 @@ public class MdBusinessToTrackerJson
         JSONObject jsonAttr = new JSONObject();
         
         String dhis2Id = idCache.next();
-        jsonAttr.put("id", dhis2Id);
+        jsonAttr.put("oid", dhis2Id);
         
         jsonAttr.put("name", mdAttr.getDisplayLabel().getValue());
         jsonAttr.put("shortName", mdAttr.getDisplayLabel().getValue());
@@ -258,7 +258,7 @@ public class MdBusinessToTrackerJson
             
             JSONObject optionSet = new JSONObject();
             
-            Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getId()));
+            Classifier root = Classifier.findClassifierRoot(MdAttributeTermDAO.get(mdAttr.getOid()));
             
             String pack = root.getClassifierPackage();
             
@@ -268,12 +268,12 @@ public class MdBusinessToTrackerJson
               rootsToExport.add(root);
               
               String rootDhis2Id = idCache.next();
-              rootIdMap.put(root.getId(), rootDhis2Id);
-              optionSet.put("id", rootDhis2Id);
+              rootIdMap.put(root.getOid(), rootDhis2Id);
+              optionSet.put("oid", rootDhis2Id);
             }
             else
             {
-              optionSet.put("id", root.getClassifierId());
+              optionSet.put("oid", root.getClassifierId());
             }
             optionSet.put("valueType", "TEXT");
             jsonAttr.put("optionSet", optionSet);
@@ -291,7 +291,7 @@ public class MdBusinessToTrackerJson
         
         if (valueType != null)
         {
-          trackedEntityAttributeIds.put(mdAttr.getId(), dhis2Id);
+          trackedEntityAttributeIds.put(mdAttr.getOid(), dhis2Id);
           
           jsonAttr.put("valueType", valueType);
           jsonAttrs.put(jsonAttr);
@@ -308,10 +308,10 @@ public class MdBusinessToTrackerJson
     {
       JSONObject optionSet = new JSONObject();
       
-      String rootIdInDHIS2 = rootIdMap.get(root.getId());
+      String rootIdInDHIS2 = rootIdMap.get(root.getOid());
       
       optionSet.put("name", root.getDisplayLabel().getValue());
-      optionSet.put("id", rootIdInDHIS2);
+      optionSet.put("oid", rootIdInDHIS2);
       optionSet.put("valueType", "TEXT");
       optionSet.put("code", idCache.next()); // Required for 2.27 but not 2.25
       
@@ -324,23 +324,23 @@ public class MdBusinessToTrackerJson
         String childIdInDHIS2 = idCache.next();
         
         JSONObject jChild = new JSONObject();
-        jChild.put("id", childIdInDHIS2);
+        jChild.put("oid", childIdInDHIS2);
         optionSetOptions.put(jChild);
         
         
         JSONObject jOption = new JSONObject();
-        jOption.put("id", childIdInDHIS2);
+        jOption.put("oid", childIdInDHIS2);
         jOption.put("name", child.getDisplayLabel().getValue());
         jOption.put("code", childIdInDHIS2); // Required for 2.27 but not 2.25
         
         JSONObject optionSetRef = new JSONObject();
-        optionSetRef.put("id", rootIdInDHIS2);
+        optionSetRef.put("oid", rootIdInDHIS2);
         jOption.put("optionSet", optionSetRef);
         
         allOptions.put(jOption);
         
         
-        // TODO : This should be managed in a table somewhere, rather than storing the DHIS2 id in the "classifierId" attribute.
+        // TODO : This should be managed in a table somewhere, rather than storing the DHIS2 oid in the "classifierId" attribute.
         child.appLock();
         child.setClassifierId(childIdInDHIS2);
         child.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + childIdInDHIS2);
@@ -374,15 +374,15 @@ public class MdBusinessToTrackerJson
 //    {
 //      if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
 //          !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) && 
-//          trackedEntityAttributeIds.containsKey(mdAttr.getId())
+//          trackedEntityAttributeIds.containsKey(mdAttr.getOid())
 //        )
 //      {
 //        JSONObject jsonAttr = new JSONObject();
 //        if (programId != null)
 //        {
-//          jsonAttr.put("program", new JSONObject().put("id", programId));
+//          jsonAttr.put("program", new JSONObject().put("oid", programId));
 //        }
-//        jsonAttr.put("trackedEntityAttribute", new JSONObject().put("id", trackedEntityAttributeIds.get(mdAttr.getId())));
+//        jsonAttr.put("trackedEntityAttribute", new JSONObject().put("oid", trackedEntityAttributeIds.get(mdAttr.getOid())));
 //        jsonAttr.put("displayInList", "true");
 //        jsonAttr.put("mandatory", "false");
 //        jsonAttrs.put(jsonAttr);
@@ -405,21 +405,21 @@ public class MdBusinessToTrackerJson
 //    program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
 //    program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
 //    program.put("programType", "WITH_REGISTRATION");
-//    program.put("trackedEntity", new JSONObject().put("id", mdbiz.getId().substring(0, 11)));
+//    program.put("trackedEntity", new JSONObject().put("oid", mdbiz.getOid().substring(0, 11)));
 //    program.put("incidentDateLabel", "Incident date");
 //    program.put("enrollmentDateLabel", "Enrollment date");
-//    program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
+//    program.put("categoryCombo", new JSONObject().put("oid", categoryComboId));
 //    
 //    JSONArray units = new JSONArray();
-//    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("id", ((GeoEntity) term).getGeoId())));
+//    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("oid", ((GeoEntity) term).getGeoId())));
 //    program.put("organisationUnits", units);
 //    
 //    JSONArray attrs = new JSONArray();
 //    if (attributeIds != null)
 //    {
-//      for (String id : attributeIds)
+//      for (String oid : attributeIds)
 //      {
-//        attrs.put(new JSONObject().put("id", id));
+//        attrs.put(new JSONObject().put("oid", oid));
 //      }
 //    }
 //    program.put("programTrackedEntityAttributes", attrs);
@@ -437,14 +437,14 @@ public class MdBusinessToTrackerJson
     program.put("name", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("shortName", mdbiz.getDisplayLabel().getValue() + " Program");
     program.put("programType", "WITH_REGISTRATION");
-    program.put("id", programId);
-    program.put("trackedEntity", new JSONObject().put("id", trackedEntityId));
+    program.put("oid", programId);
+    program.put("trackedEntity", new JSONObject().put("oid", trackedEntityId));
     program.put("incidentDateLabel", "Incident date");
     program.put("enrollmentDateLabel", "Enrollment date");
-    program.put("categoryCombo", new JSONObject().put("id", categoryComboId));
+    program.put("categoryCombo", new JSONObject().put("oid", categoryComboId));
     
     JSONArray units = new JSONArray();
-    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("id", ((GeoEntity) term).getGeoId())));
+    GeoEntity.getRoot().getAllDescendants(LocatedIn.CLASS).forEach(term -> units.put(new JSONObject().put("oid", ((GeoEntity) term).getGeoId())));
     program.put("organisationUnits", units);
     
     JSONArray attrs = new JSONArray();
@@ -455,13 +455,13 @@ public class MdBusinessToTrackerJson
       {
         if (mdAttr.getValue(MdAttributeConcreteDTO.SYSTEM).equals(MdAttributeBooleanInfo.FALSE) && 
             !ArrayUtils.contains(MdBusinessExporter.skipAttrs, mdAttr.getValue(MdAttributeConcreteDTO.ATTRIBUTENAME)) && 
-            trackedEntityAttributeIds.containsKey(mdAttr.getId())
+            trackedEntityAttributeIds.containsKey(mdAttr.getOid())
           )
         {
           JSONObject jattr = new JSONObject();
           
-          jattr.put("program", new JSONObject().put("id", programId));
-          jattr.put("trackedEntityAttribute", new JSONObject().put("id", trackedEntityAttributeIds.get(mdAttr.getId())));
+          jattr.put("program", new JSONObject().put("oid", programId));
+          jattr.put("trackedEntityAttribute", new JSONObject().put("oid", trackedEntityAttributeIds.get(mdAttr.getOid())));
           jattr.put("displayInList", "true");
           jattr.put("mandatory", "false");
           

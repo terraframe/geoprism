@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import com.runwaysdk.business.ValueObjectDTO;
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -52,21 +52,21 @@ import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
 
 @Controller(url = "location")
-public class LocationController implements Reloadable
+public class LocationController 
 {
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF select(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
+  public ResponseIF select(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
-    GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, id);
+    GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, oid);
 
     return this.getLocationInformation(request, entity, universalId, existingLayers);
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF open(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
+  public ResponseIF open(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
-    GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, id);
-    List<GeoEntityDTO> ancestors = Arrays.asList(GeoEntityUtilDTO.getOrderedAncestors(request, entity.getId()));
+    GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, oid);
+    List<GeoEntityDTO> ancestors = Arrays.asList(GeoEntityUtilDTO.getOrderedAncestors(request, entity.getOid()));
 
     RestResponse response = this.getLocationInformation(request, entity, null, existingLayers);
     response.set("ancestors", new ListSerializable(ancestors), new GeoEntityJsonConfiguration());
@@ -80,16 +80,16 @@ public class LocationController implements Reloadable
 
     if ( ( universalId == null || universalId.length() == 0 ) && universals.size() > 0)
     {
-      universalId = universals.get(0).getId();
+      universalId = universals.get(0).getOid();
     }
 
-    // String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getId(), universalId, existingLayers);
+    // String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getOid(), universalId, existingLayers);
 
-    ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getId(), universalId, 200);
+    ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getOid(), universalId, 200);
 
     RestResponse response = new RestResponse();
     response.set("children", children);
-    response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getId(), universalId) );
+    response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId) );
     response.set("universals", new ListSerializable(universals));
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
@@ -109,7 +109,7 @@ public class LocationController implements Reloadable
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentId") String parentId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
   {
     if (entity.getGeoId() == null || entity.getGeoId().length() == 0)
     {
@@ -118,13 +118,13 @@ public class LocationController implements Reloadable
 
     if (entity.isNewInstance())
     {
-      GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentId, LocatedInDTO.CLASS);
+      GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentOid, LocatedInDTO.CLASS);
 
       GeoEntityUtilDTO.refreshViews(request, existingLayers);
 
       JSONObject object = new JSONObject();
       object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
-      object.put(GeoEntityDTO.ID, dto.getGeoEntityId());
+      object.put(GeoEntityDTO.OID, dto.getGeoEntityId());
       object.put(GeoEntityDTO.DISPLAYLABEL, dto.getGeoEntityDisplayLabel());
       object.put(GeoEntityDTO.GEOID, entity.getGeoId());
       object.put(GeoEntityDTO.UNIVERSAL, dto.getUniversalDisplayLabel());
@@ -133,7 +133,7 @@ public class LocationController implements Reloadable
     }
     else
     {
-      String id = entity.getId();
+      String oid = entity.getOid();
 
       entity.apply();
 
@@ -141,11 +141,11 @@ public class LocationController implements Reloadable
 
       JSONObject object = new JSONObject();
       object.put(GeoEntityDTO.TYPE, ValueObjectDTO.CLASS);
-      object.put(GeoEntityDTO.ID, entity.getId());
+      object.put(GeoEntityDTO.OID, entity.getOid());
       object.put(GeoEntityDTO.DISPLAYLABEL, entity.getDisplayLabel().getValue());
       object.put(GeoEntityDTO.GEOID, entity.getGeoId());
       object.put(GeoEntityDTO.UNIVERSAL, entity.getUniversal().getDisplayLabel().getValue());
-      object.put("oid", id);
+      object.put("oid", oid);
 
       return new RestBodyResponse(object);
     }
@@ -204,10 +204,10 @@ public class LocationController implements Reloadable
     {
       JSONObject synonym = synonyms.getJSONObject(i);
       
-      String id = synonym.getString("id");
-      if (id.length() == 64)
+      String oid = synonym.getString("oid");
+      if (oid.length() == 64)
       {
-        SynonymDTO syn = SynonymDTO.get(request, id);
+        SynonymDTO syn = SynonymDTO.get(request, oid);
         syn.getDisplayLabel().setValue(synonym.getString("displayLabel"));
         syn.apply();
       }

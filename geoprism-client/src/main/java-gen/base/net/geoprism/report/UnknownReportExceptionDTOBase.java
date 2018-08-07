@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = -416260860)
-public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.report.UnknownReportException";
   private static final long serialVersionUID = -416260860;
@@ -69,7 +69,7 @@ public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.busine
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String REPORTNAME = "reportName";
   public String getReportName()
   {
@@ -116,7 +116,7 @@ public abstract class UnknownReportExceptionDTOBase extends com.runwaysdk.busine
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{reportName}", this.getReportName().toString());
     
     return template;

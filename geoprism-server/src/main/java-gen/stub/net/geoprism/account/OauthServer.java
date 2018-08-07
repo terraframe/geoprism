@@ -24,11 +24,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.rbac.Authenticate;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-public class OauthServer extends OauthServerBase implements Reloadable
+public class OauthServer extends OauthServerBase 
 {
   private static final long   serialVersionUID = 654881024;
 
@@ -45,7 +45,7 @@ public class OauthServer extends OauthServerBase implements Reloadable
     {
       if (serverType.equals(DHIS2))
       {
-        return object.getString("id");
+        return object.getString("oid");
       }
       else
       {

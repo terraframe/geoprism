@@ -33,7 +33,7 @@ import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.web.json.JSONController;
 
-public class AdminController extends AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class AdminController extends AdminControllerBase 
 {
   public static final String JSP_DIR   = "/WEB-INF/net/geoprism/admin/";
 
@@ -49,8 +49,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void users() throws IOException, ServletException
   {
-    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-
     render("useraccounts.jsp");
   }
 
@@ -69,9 +67,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
 
     this.req.setAttribute("type", GeoEntityDTO.CLASS);
     this.req.setAttribute("relationshipType", LocatedInDTO.CLASS);
-    this.req.setAttribute("rootId", root.getId());
-
-    JavascriptUtil.loadGeoEntityBundle(request, this.req);
+    this.req.setAttribute("rootId", root.getOid());
 
     render("geoentity.jsp");
   }
@@ -102,9 +98,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     this.req.setAttribute("type", UniversalDTO.CLASS);
     this.req.setAttribute("allowedInType", AllowedInDTO.CLASS);
     this.req.setAttribute("isARelationshipType", IsARelationshipDTO.CLASS);
-    this.req.setAttribute("rootId", root.getId());
-
-    JavascriptUtil.loadUniversalBundle(this.getClientRequest(), this.req);
+    this.req.setAttribute("rootId", root.getOid());
 
     render("universal.jsp");
   }
@@ -118,8 +112,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void scheduler() throws IOException, ServletException
   {
-    JavascriptUtil.loadSchedulerBundle(this.getClientRequest(), req);
-
     render("scheduler.jsp");
   }
 
@@ -139,8 +131,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
     this.req.setAttribute("response", response);
     this.req.setAttribute("editData", GeoprismUserDTO.hasAccess(this.getClientRequest(), AccessConstants.EDIT_DATA));
 
-    JavascriptUtil.loadDatabrowserBundle(this.getClientRequest(), req);
-
     render("databrowser.jsp");
   }
 
@@ -153,8 +143,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void account() throws IOException, ServletException
   {
-    JavascriptUtil.loadUserBundle(this.getClientRequest(), this.req);
-
     render("account.jsp");
   }
 
@@ -171,9 +159,7 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
 
     this.req.setAttribute("type", ClassifierDTO.CLASS);
     this.req.setAttribute("relationshipType", ClassifierIsARelationshipDTO.CLASS);
-    this.req.setAttribute("rootId", root.getId());
-
-    JavascriptUtil.loadOntologyBundle(this.getClientRequest(), this.req);
+    this.req.setAttribute("rootId", root.getOid());
 
     render("ontologies.jsp");
   }
@@ -210,8 +196,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
       this.req.setAttribute("miniLogoFileName", miniLogoFile.replaceFirst(SystemLogoSingletonDTO.getImagesTempDir(this.req), ""));
     }
 
-    JavascriptUtil.loadSystemBundle(this.getClientRequest(), this.req);
-
     render("system.jsp");
   }
 
@@ -224,8 +208,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void datasets() throws IOException, ServletException
   {
-    JavascriptUtil.loadDatasets(this.getClientRequest(), this.req);
-
     render("datasets.jsp");
   }
 
@@ -239,8 +221,6 @@ public class AdminController extends AdminControllerBase implements com.runwaysd
   @Override
   public void icons() throws IOException, ServletException
   {
-    JavascriptUtil.loadIcons(this.getClientRequest(), this.req);
-
     render("icons.jsp");
   }
   

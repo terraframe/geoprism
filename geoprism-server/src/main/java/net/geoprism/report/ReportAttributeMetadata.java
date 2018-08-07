@@ -20,9 +20,9 @@ package net.geoprism.report;
 
 import net.geoprism.dashboard.AllAggregationType;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ReportAttributeMetadata implements Reloadable
+
+public class ReportAttributeMetadata 
 {
   private String             attributeName;
 

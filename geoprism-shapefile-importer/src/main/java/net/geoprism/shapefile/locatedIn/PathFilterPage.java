@@ -40,9 +40,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class PathFilterPage extends WizardPage implements PropertyChangeListener, Reloadable
+
+public class PathFilterPage extends WizardPage implements PropertyChangeListener
 {
   public static String  PAGE_NAME = "LocatedInPage";
 

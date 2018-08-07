@@ -38,9 +38,9 @@ import com.runwaysdk.dataaccess.MdAttributeMomentDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public abstract class DashboardPrimitiveCondition extends DashboardAttributeCondition implements Reloadable
+
+public abstract class DashboardPrimitiveCondition extends DashboardAttributeCondition 
 {
   public static final String COMPARISONVALUE = "value";
 

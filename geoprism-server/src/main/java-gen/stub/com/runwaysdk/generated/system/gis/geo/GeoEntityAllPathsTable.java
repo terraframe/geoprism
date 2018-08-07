@@ -18,7 +18,7 @@
  */
 package com.runwaysdk.generated.system.gis.geo;
 
-public class GeoEntityAllPathsTable extends GeoEntityAllPathsTableBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeoEntityAllPathsTable extends GeoEntityAllPathsTableBase 
 {
   private static final long serialVersionUID = -1051591379;
   

@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 1126241293)
-public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardStyle";
   private static final long serialVersionUID = 1126241293;
@@ -51,7 +51,7 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   public static java.lang.String ENABLELABEL = "enableLabel";
   public static java.lang.String ENABLEVALUE = "enableValue";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LABELCOLOR = "labelColor";
   public static java.lang.String LABELFONT = "labelFont";
@@ -285,7 +285,7 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -840,7 +840,7 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -1559,10 +1559,10 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.lang.String getJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.lang.String getJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardStyleDTO.CLASS, "getJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -1586,60 +1586,60 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllContainingLayer()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) getRequest().getParents(this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) getRequest().getParents(this.getOid(), net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO> getAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) clientRequestIF.getParents(id, net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.layer.DashboardLayerDTO>) clientRequestIF.getParents(oid, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
   public java.util.List<? extends net.geoprism.dashboard.HasStyleDTO> getAllContainingLayerRelationships()
   {
-    return (java.util.List<? extends net.geoprism.dashboard.HasStyleDTO>) getRequest().getParentRelationships(this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.HasStyleDTO>) getRequest().getParentRelationships(this.getOid(), net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   @SuppressWarnings("unchecked")
-  public static java.util.List<? extends net.geoprism.dashboard.HasStyleDTO> getAllContainingLayerRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static java.util.List<? extends net.geoprism.dashboard.HasStyleDTO> getAllContainingLayerRelationships(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    return (java.util.List<? extends net.geoprism.dashboard.HasStyleDTO>) clientRequestIF.getParentRelationships(id, net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (java.util.List<? extends net.geoprism.dashboard.HasStyleDTO>) clientRequestIF.getParentRelationships(oid, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   public net.geoprism.dashboard.HasStyleDTO addContainingLayer(net.geoprism.dashboard.layer.DashboardLayerDTO parent)
   {
-    return (net.geoprism.dashboard.HasStyleDTO) getRequest().addParent(parent.getId(), this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (net.geoprism.dashboard.HasStyleDTO) getRequest().addParent(parent.getOid(), this.getOid(), net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.HasStyleDTO addContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id, net.geoprism.dashboard.layer.DashboardLayerDTO parent)
+  public static net.geoprism.dashboard.HasStyleDTO addContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid, net.geoprism.dashboard.layer.DashboardLayerDTO parent)
   {
-    return (net.geoprism.dashboard.HasStyleDTO) clientRequestIF.addParent(parent.getId(), id, net.geoprism.dashboard.HasStyleDTO.CLASS);
+    return (net.geoprism.dashboard.HasStyleDTO) clientRequestIF.addParent(parent.getOid(), oid, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
   public void removeContainingLayer(net.geoprism.dashboard.HasStyleDTO relationship)
   {
-    getRequest().deleteParent(relationship.getId());
+    getRequest().deleteParent(relationship.getOid());
   }
   
   public static void removeContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, net.geoprism.dashboard.HasStyleDTO relationship)
   {
-    clientRequestIF.deleteParent(relationship.getId());
+    clientRequestIF.deleteParent(relationship.getOid());
   }
   
   public void removeAllContainingLayer()
   {
-    getRequest().deleteParents(this.getId(), net.geoprism.dashboard.HasStyleDTO.CLASS);
+    getRequest().deleteParents(this.getOid(), net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
-  public static void removeAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String id)
+  public static void removeAllContainingLayer(com.runwaysdk.constants.ClientRequestIF clientRequestIF, String oid)
   {
-    clientRequestIF.deleteParents(id, net.geoprism.dashboard.HasStyleDTO.CLASS);
+    clientRequestIF.deleteParents(oid, net.geoprism.dashboard.HasStyleDTO.CLASS);
   }
   
-  public static net.geoprism.dashboard.DashboardStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.DashboardStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.DashboardStyleDTO) dto;
   }
@@ -1657,7 +1657,7 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.DashboardStyleQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -1670,10 +1670,10 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.DashboardStyleDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.DashboardStyleDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardStyleDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.DashboardStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -1683,10 +1683,10 @@ public abstract class DashboardStyleDTOBase extends com.runwaysdk.business.Busin
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.DashboardStyleDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.DashboardStyleDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardStyleDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.DashboardStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

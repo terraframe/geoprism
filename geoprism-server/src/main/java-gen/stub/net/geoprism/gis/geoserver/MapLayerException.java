@@ -19,7 +19,7 @@
 package net.geoprism.gis.geoserver;
 
 
-public class MapLayerException extends MapLayerExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class MapLayerException extends MapLayerExceptionBase 
 {
   private static final long serialVersionUID = -61885803;
   

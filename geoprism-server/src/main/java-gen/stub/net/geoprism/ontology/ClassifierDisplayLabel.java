@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierDisplayLabel extends ClassifierDisplayLabelBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierDisplayLabel extends ClassifierDisplayLabelBase 
 {
   private static final long serialVersionUID = -443455292;
   

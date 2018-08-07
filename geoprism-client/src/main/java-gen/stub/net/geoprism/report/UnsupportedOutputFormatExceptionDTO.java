@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class UnsupportedOutputFormatExceptionDTO extends UnsupportedOutputFormatExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1712615928;
   
   public UnsupportedOutputFormatExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

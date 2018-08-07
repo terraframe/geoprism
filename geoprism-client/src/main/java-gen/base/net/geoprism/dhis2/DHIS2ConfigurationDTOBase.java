@@ -19,7 +19,7 @@
 package net.geoprism.dhis2;
 
 @com.runwaysdk.business.ClassSignature(hash = 2042741532)
-public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.dhis2.DHIS2Configuration";
   private static final long serialVersionUID = 2042741532;
@@ -48,7 +48,7 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -147,7 +147,7 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -332,7 +332,7 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -517,9 +517,9 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(USERNAME).getAttributeMdDTO();
   }
   
-  public static net.geoprism.dhis2.DHIS2ConfigurationDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dhis2.DHIS2ConfigurationDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dhis2.DHIS2ConfigurationDTO) dto;
   }
@@ -537,7 +537,7 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dhis2.DHIS2ConfigurationQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -550,10 +550,10 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dhis2.DHIS2ConfigurationDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dhis2.DHIS2ConfigurationDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dhis2.DHIS2ConfigurationDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dhis2.DHIS2ConfigurationDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -563,10 +563,10 @@ public abstract class DHIS2ConfigurationDTOBase extends com.runwaysdk.business.B
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dhis2.DHIS2ConfigurationDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dhis2.DHIS2ConfigurationDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dhis2.DHIS2ConfigurationDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dhis2.DHIS2ConfigurationDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
