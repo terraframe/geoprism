@@ -159,7 +159,7 @@ public class SpreadsheetImportModifier implements SpreadsheetImporterHeaderModif
         
         try
         {
-          HTTPResponse response = dhis2.httpGet("api/25/metadata.json", new NameValuePair[] {
+          HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
               new NameValuePair("assumeTrue", "false"),
               new NameValuePair("trackedEntityAttributes", "true"),
               new NameValuePair("filter", "id:eq:" + id)

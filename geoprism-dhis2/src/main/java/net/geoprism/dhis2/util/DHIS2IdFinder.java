@@ -32,7 +32,7 @@ public class DHIS2IdFinder
     DHIS2HTTPCredentialConnector dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.readConfigFromDB();
     
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("trackedEntityAttributes", "true")
     });
@@ -55,7 +55,7 @@ public class DHIS2IdFinder
     DHIS2HTTPCredentialConnector dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.readConfigFromDB();
     
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("programs", "true")
     });
@@ -78,7 +78,7 @@ public class DHIS2IdFinder
     DHIS2HTTPCredentialConnector dhis2 = new DHIS2HTTPCredentialConnector();
     dhis2.readConfigFromDB();
     
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("trackedEntities", "true")
     });

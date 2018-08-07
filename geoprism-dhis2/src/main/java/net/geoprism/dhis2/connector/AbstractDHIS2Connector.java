@@ -39,6 +39,8 @@ import net.geoprism.dhis2.response.HTTPResponse;
 
 abstract public class AbstractDHIS2Connector
 {
+  String apiVersion = "26"; // TODO : This should be configurable
+  
   HttpClient client;
   
   Logger logger = LoggerFactory.getLogger(AbstractDHIS2Connector.class);
@@ -53,6 +55,26 @@ abstract public class AbstractDHIS2Connector
   {
     this.username = username;
     this.password = password;
+  }
+  
+  public HTTPResponse apiGet(String url, NameValuePair[] params)
+  {
+    if (!url.contains("?") && !url.endsWith(".json"))
+    {
+      url = url + ".json";
+    }
+    
+    return httpGet("api/" + apiVersion + "/" + url, params);
+  }
+  
+  public HTTPResponse apiPost(String url, String body)
+  {
+    if (!url.contains("?") && !url.endsWith(".json"))
+    {
+      url = url + ".json";
+    }
+    
+    return httpPost("api/" + apiVersion + "/" + url, body);
   }
   
   public String getServerUrl()

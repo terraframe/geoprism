@@ -205,7 +205,7 @@ public class DHIS2DataImporter
   private void importOrgUnitLevels()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnitLevels=true"
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnitLevels", "true")
     });
@@ -236,7 +236,7 @@ public class DHIS2DataImporter
   private void importOrgUnits()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&organisationUnits=true"
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("organisationUnits", "true")
     });
@@ -287,7 +287,7 @@ public class DHIS2DataImporter
   private void importOptionSets()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("optionSets", "true")
     });
@@ -310,7 +310,7 @@ public class DHIS2DataImporter
   private void importOptions()
   {
     // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&options=true"
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("options", "true")
     });
@@ -332,7 +332,7 @@ public class DHIS2DataImporter
   private void importOptionSetRelationships()
   {
  // curl -H "Accept: application/json" -u admin:district "http://localhost:8085/api/metadata.json?assumeTrue=false&categories=true"
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
         new NameValuePair("assumeTrue", "false"),
         new NameValuePair("optionSets", "true")
     });

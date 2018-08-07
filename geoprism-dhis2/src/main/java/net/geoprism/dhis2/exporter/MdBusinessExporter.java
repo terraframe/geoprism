@@ -384,7 +384,7 @@ public class MdBusinessExporter
       }
       
       teiPayload.put("trackedEntityInstances", trackedEntityInstances);
-      HTTPResponse response = dhis2.httpPost("api/25/trackedEntityInstances", teiPayload.toString());
+      HTTPResponse response = dhis2.apiPost("trackedEntityInstances", teiPayload.toString());
       DHIS2TrackerResponseProcessor.validateImportSummaryResponse(response);
       
 //      eventPayload.put("events", events);
@@ -403,7 +403,7 @@ public class MdBusinessExporter
     trackedEntities.put(converter.getTrackedEntityJson());
     jsonMetadata.put("trackedEntities", trackedEntities);
     
-    HTTPResponse response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    HTTPResponse response = dhis2.apiPost("metadata", jsonMetadata.toString());
     DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, false);
     
     this.trackedEntityId = converter.getTrackedEntityId();
@@ -415,7 +415,7 @@ public class MdBusinessExporter
     converter.setTrackedEntityAttributeIds(trackedEntityAttributeIds);
     JSONObject metadata = converter.getTrackedEntityAttributesJSON();
     
-    HTTPResponse response = dhis2.httpPost("api/25/metadata", metadata.toString());
+    HTTPResponse response = dhis2.apiPost("metadata", metadata.toString());
     DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, true);
     
     this.trackedEntityAttributeIds = converter.getTrackedEntityAttributeIds();
@@ -476,7 +476,7 @@ public class MdBusinessExporter
   {
     String categoryComboId = null;
     
-    HTTPResponse response = dhis2.httpGet("api/25/metadata", new NameValuePair[] {
+    HTTPResponse response = dhis2.apiGet("metadata", new NameValuePair[] {
       new NameValuePair("assumeTrue", "false"),
       new NameValuePair("categoryCombos", "true")
     });
@@ -516,7 +516,7 @@ public class MdBusinessExporter
     programs.put(converter.getProgramJson(getCategoryComboId("default"), trackedEntityAttributeIds));
     jsonMetadata.put("programs", programs);
     
-    HTTPResponse response = dhis2.httpPost("api/25/metadata", jsonMetadata.toString());
+    HTTPResponse response = dhis2.apiPost("metadata", jsonMetadata.toString());
     DHIS2TrackerResponseProcessor.validateTypeReportResponse(response, false);
   }
   
