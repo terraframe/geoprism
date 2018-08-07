@@ -95,6 +95,11 @@ public class SourceContentHandler implements SheetHandler
    * Current error row number
    */
   private int                                 errorNum;
+  
+  /**
+   * The index of the column which stores error information
+   */
+  private int                                 errorHeaderColNum;
 
   /**
    * Current view
@@ -289,7 +294,7 @@ public class SourceContentHandler implements SheetHandler
     /*
      * Add exception
      */
-    row.createCell(row.getLastCellNum()).setCellValue(ExceptionUtil.getLocalizedException(e));
+    row.createCell(errorHeaderColNum).setCellValue(ExceptionUtil.getLocalizedException(e));
   }
 
   private Row writeRow(Sheet sheet, int rowNum)
@@ -333,8 +338,10 @@ public class SourceContentHandler implements SheetHandler
     if (rowNum == headerRowNum)
     {
       String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
+      
+      errorHeaderColNum = row.getLastCellNum();
 
-      row.createCell(row.getLastCellNum()).setCellValue(helper.createRichTextString(label));
+      row.createCell(errorHeaderColNum).setCellValue(helper.createRichTextString(label));
     }
 
     return row;

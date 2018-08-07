@@ -5,7 +5,7 @@
       <div class="inline-value error-message">{{problem.label}}</div>
       <div *ngIf="!problem.resolved">      
         <div class="inline-combo">
-          <select class="select-area" [(ngModel)]="problem.synonym" (change)="setSynonym()" name="synonym">
+          <select class="select-area" [(ngModel)]="synonym" (change)="setSynonym()" name="synonym">
             <option value=""></option>          
             <option *ngFor="let opt of options" [value]="opt.id">{{opt.label}}</option>
           </select>

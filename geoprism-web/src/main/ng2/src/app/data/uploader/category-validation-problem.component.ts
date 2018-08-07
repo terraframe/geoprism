@@ -42,13 +42,13 @@ export class CategoryValidationProblemComponent implements OnInit {
   @Output() onProblemChange = new EventEmitter();
   
   show: boolean;
-  hasSynonym: boolean;
+  synonym: string;
   
   constructor(private uploadService: UploadService, private categoryService: CategoryService) {
   }   
   
   ngOnInit(): void {
-    this.problem.synonym = {id :'', value:''};
+    this.synonym = '';
     this.show = false;
   }
   
@@ -59,12 +59,12 @@ export class CategoryValidationProblemComponent implements OnInit {
   }
   
   setSynonym() {
-    
+  
   }
     
   createSynonym(): void {
-    if(this.problem.synonym.id !== ''){      
-      this.uploadService.createClassifierSynonym(this.problem.synonym.id, this.problem.label)
+    if(this.synonym !== ''){      
+      this.uploadService.createClassifierSynonym(this.synonym, this.problem.label)
         .then(response => {
           this.problem.resolved = true;
           this.problem.action = {
@@ -144,7 +144,7 @@ export class CategoryValidationProblemComponent implements OnInit {
         this.uploadService.deleteClassifierSynonym(action.synonymId)
           .then(response => {
           this.problem.resolved = false;
-          this.problem.synonym = {id :'', value:''};
+          this.synonym = '';
           this.problem.action = null;
           
           this.onProblemChange.emit(this.problem);

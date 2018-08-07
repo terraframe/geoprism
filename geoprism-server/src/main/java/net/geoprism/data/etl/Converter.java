@@ -25,6 +25,7 @@ import java.util.TreeSet;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.runwaysdk.ProblemIF;
 import com.runwaysdk.business.Mutable;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
@@ -73,6 +74,11 @@ public class Converter implements ConverterIF
 
         MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) business.getMdAttributeDAO(attributeName);
 
+        if (field instanceof TargetFieldGeoEntity)
+        {
+          ((TargetFieldGeoEntity) field).setLocationExclusions(this.context.getLocationExclusions());
+        }
+        
         // get value can intentionally fail if attempting to get the value of a
         // location that is on the
         // location exclusion list. Note the custom effor after this TRY
@@ -116,7 +122,21 @@ public class Converter implements ConverterIF
     }
     catch (ExclusionException e)
     {
-      this.problems.add(e.getProblem());
+      ImportProblemIF problem = e.getProblem();
+      this.problems.add(problem);
+      
+      if (problem instanceof LocationProblem)
+      {
+        UnknownLocationException ex = new UnknownLocationException();
+        ex.setLocationLabel(((LocationProblem) problem).getLabel());
+        throw ex;
+      }
+      else if (problem instanceof CategoryProblem)
+      {
+        UnknownClassifierException ex = new UnknownClassifierException();
+        ex.setClassifierLabel(((CategoryProblem) problem).getLabel());
+        throw ex;
+      }
     }
   }
   

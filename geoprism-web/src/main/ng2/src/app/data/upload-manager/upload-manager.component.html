@@ -40,7 +40,7 @@
 	        <td class="column-hasSynonyms">
             {{history.termSyns}}
             <br *ngIf="history.termSyns > 0" />
-            <a *ngIf="history.geoSyns > 0" class="fa fa-pencil" [routerLink]="['/data/datasets', history.id, 4]"></a>
+            <a *ngIf="history.termSyns > 0" class="fa fa-pencil" [routerLink]="['/data/datasets', history.id, 4]"></a>
           </td>
 	      </tr>
 	    </tbody>    

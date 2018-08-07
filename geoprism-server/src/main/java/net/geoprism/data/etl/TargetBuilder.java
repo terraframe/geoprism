@@ -125,10 +125,7 @@ public class TargetBuilder
         {
           String bindingId = sheet.getString("existing");
 
-          ExcelSourceBinding sBinding = ExcelSourceBinding.get(bindingId);
-          TargetBinding tBinding = sBinding.getTargetBinding();
-
-          this.target.addDefinition(tBinding.getDefinition());
+          TargetBinding tBinding = TargetBuilder.restoreBindingFromDatabase(bindingId, this.target, this.configuration);
 
           /*
            * Delete the existing data if required
@@ -149,16 +146,26 @@ public class TargetBuilder
           this.target.addDefinition(definition);
         }
       }
-
-      this.setupLocationExclusions();
-      this.setupCategoryExclusions();
     }
     catch (JSONException e)
     {
       throw new ProgrammingErrorException(e);
     }
   }
+  
+  public static TargetBinding restoreBindingFromDatabase(String bindingId, TargetContext target, JSONObject configuration)
+  {
+    ExcelSourceBinding sBinding = ExcelSourceBinding.get(bindingId);
+    TargetBinding tBinding = sBinding.getTargetBinding();
 
+    target.addDefinition(tBinding.getDefinition());
+    
+    setupLocationExclusions(target, configuration);
+    setupCategoryExclusions(target, configuration);
+    
+    return tBinding;
+  }
+  
   private TargetDefinitionIF createMdBusiness(JSONObject cSheet) throws JSONException
   {
     String sheetName = cSheet.getString("name");
@@ -901,15 +908,15 @@ public class TargetBuilder
     return ( query.getCount() == 0 );
   }
 
-  public void setupLocationExclusions()
+  public static void setupLocationExclusions(TargetContext target, JSONObject configuration)
   {
     try
     {
       Map<String, Set<String>> exclusions = new HashMap<String, Set<String>>();
 
-      if (this.configuration.has("locationExclusions"))
+      if (configuration.has("locationExclusions"))
       {
-        JSONArray locationExclusionsArr = this.configuration.getJSONArray("locationExclusions");
+        JSONArray locationExclusionsArr = configuration.getJSONArray("locationExclusions");
 
         // convert to native Java data structure rather than JSON
         for (int i = 0; i < locationExclusionsArr.length(); i++)
@@ -927,7 +934,7 @@ public class TargetBuilder
         }
       }
 
-      this.target.setLocationExclusions(exclusions);
+      target.setLocationExclusions(exclusions);
     }
     catch (JSONException e)
     {
@@ -937,15 +944,15 @@ public class TargetBuilder
   }
 
   @SuppressWarnings("unchecked")
-  public void setupCategoryExclusions()
+  public static void setupCategoryExclusions(TargetContext target, JSONObject configuration)
   {
     try
     {
       Map<String, Set<String>> exclusions = new HashMap<String, Set<String>>();
 
-      if (this.configuration.has("categoryExclusion"))
+      if (configuration.has("categoryExclusion"))
       {
-        JSONObject categoryExclusion = this.configuration.getJSONObject("categoryExclusion");
+        JSONObject categoryExclusion = configuration.getJSONObject("categoryExclusion");
 
         Iterator<String> keys = categoryExclusion.keys();
 
@@ -966,7 +973,7 @@ public class TargetBuilder
         }
       }
 
-      this.target.setCategoryExclusions(exclusions);
+      target.setCategoryExclusions(exclusions);
     }
     catch (JSONException e)
     {

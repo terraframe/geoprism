@@ -63,7 +63,7 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
           Classifier root = Classifier.findClassifierRoot(mdAttributeTerm);
           String attributeLabel = mdAttributeTerm.getDisplayLabel(Session.getCurrentLocale());
           
-          return new CategoryProblem(label, root.getId(), mdAttributeTerm.getId(), attributeLabel);
+          throw new ExclusionException("Unknown category [" + label + "].", new CategoryProblem(label, root.getId(), mdAttributeTerm.getId(), attributeLabel));
         }
         else
         {

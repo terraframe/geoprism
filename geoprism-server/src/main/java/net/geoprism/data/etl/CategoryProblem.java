@@ -69,6 +69,11 @@ public class CategoryProblem extends FieldValue implements ImportProblemIF, Comp
   {
     return this.getKey().compareTo(problem.getKey());
   }
+  
+  public String getLabel()
+  {
+    return label;
+  }
 
   @Override
   public String getType()

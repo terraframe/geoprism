@@ -125,6 +125,8 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   private boolean                       useCoordinatesForLocationAssignment = false;
 
   private JSONObject                    coordinateObject;
+  
+  private Map<String, Set<String>> locationExclusions;
 
   public TargetFieldGeoEntity()
   {
@@ -146,6 +148,14 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   {
     this.root = root;
     this.rootUniversal = root.getUniversal();
+  }
+  
+  public Map<String, Set<String>> getLocationExclusions() {
+    return locationExclusions;
+  }
+
+  public void setLocationExclusions(Map<String, Set<String>> locationExclusions) {
+    this.locationExclusions = locationExclusions;
   }
 
   public void setUseCoordinatesForLocationAssignment(boolean useCoords)
@@ -283,9 +293,16 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     JSONObject coordObj = this.getCoordinates(source);
 
-    String entityId = this.getLocation(this.root, labels, coordObj);
-
-    return new FieldValue(entityId);
+//    try
+//    {
+      String entityId = this.getLocation(this.root, labels, coordObj);
+  
+      return new FieldValue(entityId);
+//    }
+//    catch (ExclusionException e)
+//    {
+//      return (FieldValue) e.getProblem();
+//    }
   }
 
   /**
@@ -317,6 +334,11 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
           if (label != null && label.length() > 0)
           {
             Universal universal = attribute.getUniversal();
+            
+            if (this.isExcluded(locationExclusions, universal, parent, label))
+            {
+              return null;
+            }
 
             if (rootUniversal.getKey().equals(universal.getKey()))
             {
@@ -872,6 +894,8 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
   private boolean isExcluded(Map<String, Set<String>> locationExclusions, Universal universal, GeoEntity parent, String label)
   {
+    if (locationExclusions == null) { return false; }
+    
     String key = universal.getId() + "-" + parent.getId();
 
     if (universal.getId().equals(this.rootUniversal.getId()))

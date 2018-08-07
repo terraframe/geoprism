@@ -221,10 +221,8 @@ public class DataImportRunnable implements Reloadable
   {
     TargetContext tContext = new TargetContext();
 
-    ExcelSourceBinding sBinding = ExcelSourceBinding.get(bindingId);
-    TargetBinding tBinding = sBinding.getTargetBinding();
-
-    tContext.addDefinition(tBinding.getDefinition());
+    TargetBuilder.restoreBindingFromDatabase(bindingId, tContext, new JSONObject(this.configuration));
+    
     return tContext;
   }
 

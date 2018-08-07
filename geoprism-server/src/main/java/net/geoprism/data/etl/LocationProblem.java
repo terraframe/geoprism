@@ -71,6 +71,11 @@ public class LocationProblem extends FieldValue implements ImportProblemIF, Comp
   {
     return this.getKey().compareTo(problem.getKey());
   }
+  
+  public String getLabel()
+  {
+    return label;
+  }
 
   @Override
   public String getType()
