@@ -43,6 +43,7 @@ export class CategoryValidationProblemComponent implements OnInit {
   
   show: boolean;
   synonym: string;
+  hasSynonym: boolean;
   
   constructor(private uploadService: UploadService, private categoryService: CategoryService) {
   }   
@@ -59,7 +60,7 @@ export class CategoryValidationProblemComponent implements OnInit {
   }
   
   setSynonym() {
-  
+    this.hasSynonym = (this.synonym != null && this.synonym.length > 0);
   }
     
   createSynonym(): void {

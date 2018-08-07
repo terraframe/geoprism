@@ -39,6 +39,7 @@ export class GeoValidationProblemComponent implements OnInit {
   @Output() onProblemChange = new EventEmitter();
   
   show: boolean;
+  hasSynonym: boolean;
   
   constructor(private uploadService: UploadService, private idService: IdService) {
   }   
@@ -63,6 +64,8 @@ export class GeoValidationProblemComponent implements OnInit {
     {
       this.problem.synonym = {id :'', geoId:''};
     }
+    
+    this.hasSynonym = (this.problem.synonym.id != null && this.problem.synonym.id.length > 0)
   }
     
   createSynonym(): void {
