@@ -18,15 +18,10 @@
  */
 package net.geoprism.dhis2;
 
-import java.util.Iterator;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
+import net.geoprism.PluginUtil;
 
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
@@ -71,7 +66,7 @@ public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.
    */
   public static java.lang.String findAttributes()
   {
-    return getDhis2Plugin().findAttributes();
+    return PluginUtil.getDhis2Plugin().findAttributes();
   }
   
   /**
@@ -81,7 +76,7 @@ public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.
    */
   public static java.lang.String findPrograms()
   {
-    return getDhis2Plugin().findPrograms();
+    return PluginUtil.getDhis2Plugin().findPrograms();
   }
   
   /**
@@ -91,29 +86,6 @@ public class DHIS2IdMapping extends DHIS2IdMappingBase implements com.runwaysdk.
    */
   public static java.lang.String findTrackedEntityIds()
   {
-    return getDhis2Plugin().findTrackedEntities();
-  }
-  
-  public static DHIS2PluginIF getDhis2Plugin()
-  {
-    ServiceLoader<DHIS2PluginIF> loader = ServiceLoader.load(DHIS2PluginIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
-
-    try
-    {
-      Iterator<DHIS2PluginIF> it = loader.iterator();
-
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-      else
-      {
-        return null;
-      }
-    }
-    catch (ServiceConfigurationError serviceError)
-    {
-      throw new ProgrammingErrorException(serviceError);
-    }
+    return PluginUtil.getDhis2Plugin().findTrackedEntities();
   }
 }

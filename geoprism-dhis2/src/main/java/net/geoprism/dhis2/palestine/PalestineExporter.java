@@ -112,9 +112,9 @@ public class PalestineExporter
       
       JobHistoryProgressMonitor monitor = new JobHistoryProgressMonitor(history);
       
-      PalestineConverter converter = new PalestineConverter(dhis2);
+      PalestineConverter converter = new PalestineConverter(dhis2, monitor);
       
-      PalestineContentHandler handler = new PalestineContentHandler(converter, monitor, DataImportState.DATAIMPORT);
+      PalestineContentHandler handler = new PalestineContentHandler(converter, monitor);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
   
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);

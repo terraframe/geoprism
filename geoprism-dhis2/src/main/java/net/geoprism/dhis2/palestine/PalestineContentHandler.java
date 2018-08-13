@@ -113,7 +113,7 @@ public class PalestineContentHandler implements SheetHandler
   
   private PalestineConverter                  converter;
 
-  public PalestineContentHandler(PalestineConverter converter, ProgressMonitorIF monitor, DataImportState mode)
+  public PalestineContentHandler(PalestineConverter converter, ProgressMonitorIF monitor)
   {
     this.converter = converter;
 
@@ -243,8 +243,6 @@ public class PalestineContentHandler implements SheetHandler
   {
     try
     {
-      this.converter.processRow(this.currentRow, this.currentSheet);
-
       /*
        * Write the header row
        */
@@ -255,6 +253,10 @@ public class PalestineContentHandler implements SheetHandler
         Sheet sheet = this.getWorkbook().getSheet(sheetName);
 
         this.writeRow(sheet, rowNum);
+      }
+      else
+      {
+        this.converter.processRow(this.currentRow, this.currentSheet);
       }
     }
     catch (Exception e)

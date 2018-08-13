@@ -24,21 +24,26 @@ public class CountSheetHandler implements SheetHandler
 {
   private int rowNum;
   
+  private int rowCount;
+  
   private boolean hasCell;
 
   public CountSheetHandler()
   {
     this.rowNum = 0;
+    this.rowCount = 0;
   }
 
   @Override
   public void startSheet(String sheetName)
   {
+    this.rowNum = 0;
   }
 
   @Override
   public void endSheet()
   {
+    this.rowNum = 0;
   }
 
   @Override
@@ -50,10 +55,12 @@ public class CountSheetHandler implements SheetHandler
   @Override
   public void endRow()
   {
-    if (hasCell)
+    if (hasCell && this.rowNum > 0)
     {
-      this.rowNum++;
+      this.rowCount++;
     }
+    
+    this.rowNum++;
   }
 
   @Override
@@ -69,7 +76,7 @@ public class CountSheetHandler implements SheetHandler
 
   public int getRowNum()
   {
-    return rowNum;
+    return rowCount;
   }
   
   @Override

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.DelegatingClassLoader;
 import com.runwaysdk.generation.loader.LoaderDecorator;
 
@@ -49,6 +50,29 @@ public class PluginUtil extends PluginUtilBase implements com.runwaysdk.generati
     catch (ServiceConfigurationError serviceError)
     {
       return false;
+    }
+  }
+  
+  public static DHIS2PluginIF getDhis2Plugin()
+  {
+    ServiceLoader<DHIS2PluginIF> loader = ServiceLoader.load(DHIS2PluginIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+
+    try
+    {
+      Iterator<DHIS2PluginIF> it = loader.iterator();
+
+      if (it.hasNext())
+      {
+        return it.next();
+      }
+      else
+      {
+        return null;
+      }
+    }
+    catch (ServiceConfigurationError serviceError)
+    {
+      throw new ProgrammingErrorException(serviceError);
     }
   }
   

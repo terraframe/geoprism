@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.geoprism.data.etl.ImportResponseIF;
+import net.geoprism.data.etl.ImportRunnable;
+import net.geoprism.data.etl.ProblemResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,10 +16,6 @@ import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.system.scheduler.AllJobStatus;
 import com.runwaysdk.system.scheduler.ExecutionContext;
 import com.runwaysdk.system.scheduler.JobHistory;
-
-import net.geoprism.data.etl.ImportResponseIF;
-import net.geoprism.data.etl.ImportRunnable;
-import net.geoprism.data.etl.SuccessResponse;
 
 public class DataUploaderImportJob extends DataUploaderImportJobBase implements com.runwaysdk.generation.loader.Reloadable
 {
@@ -135,14 +135,10 @@ public class DataUploaderImportJob extends DataUploaderImportJobBase implements 
   {
     JobHistoryProgressMonitor monitor = new JobHistoryProgressMonitor((ExcelImportHistory) context.getJobHistory());
 
-    /*
-     * This can cause a reload, everything after this line needs to be invoked
-     * through reflection
-     */
     ImportRunnable run = new ImportRunnable(this.sharedState.fileName, this.sharedState.configuration, this.sharedState.file, monitor);
     ImportResponseIF response = run.run();
 
-    if (response.hasProblems() || !(response instanceof SuccessResponse))
+    if (response.hasProblems() || (response instanceof ProblemResponse))
     {
       context.setStatus(AllJobStatus.WARNING);
     }

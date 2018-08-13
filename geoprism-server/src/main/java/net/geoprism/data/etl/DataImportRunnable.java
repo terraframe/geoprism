@@ -13,6 +13,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.geoprism.MappableClass;
+import net.geoprism.PluginUtil;
+import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
+import net.geoprism.data.etl.excel.ExcelDataFormatter;
+import net.geoprism.data.etl.excel.ExcelImportHistory;
+import net.geoprism.data.etl.excel.ExcelImportHistoryBase;
+import net.geoprism.data.etl.excel.ExcelSheetReader;
+import net.geoprism.data.etl.excel.JobHistoryProgressMonitor;
+import net.geoprism.data.etl.excel.SourceContentHandler;
+import net.geoprism.dhis2.DHIS2PluginIF;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,18 +40,9 @@ import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.system.VaultFile;
 import com.runwaysdk.system.scheduler.JobHistory;
 
-import net.geoprism.MappableClass;
-import net.geoprism.data.etl.ImportValidator.DecimalAttribute;
-import net.geoprism.data.etl.excel.ExcelDataFormatter;
-import net.geoprism.data.etl.excel.ExcelImportHistory;
-import net.geoprism.data.etl.excel.ExcelImportHistoryBase;
-import net.geoprism.data.etl.excel.ExcelSheetReader;
-import net.geoprism.data.etl.excel.JobHistoryProgressMonitor;
-import net.geoprism.data.etl.excel.SourceContentHandler;
-
 public class DataImportRunnable implements Reloadable
 {
-  static class CopyRunnable implements Runnable, UncaughtExceptionHandler
+  public static class CopyRunnable implements Runnable, UncaughtExceptionHandler
   {
     private PipedInputStream istream;
 
@@ -121,50 +123,14 @@ public class DataImportRunnable implements Reloadable
     this.history = history;
   }
 
-  public ImportResponseIF run(String bindingId, String sheetName) throws FileNotFoundException, Exception, IOException, JSONException
+  public ImportResponseIF run() throws FileNotFoundException, Exception, IOException, JSONException
   {
     this.monitor = new JobHistoryProgressMonitor(history);
-
-    SourceContextIF sContext = this.getSourceContext(bindingId, sheetName);
-    TargetContextIF tContext = this.getTargetContext(bindingId);
-
-    /*
-     * Before importing the data we must validate that the location text
-     * information
-     */
-    this.validateAndConfigure(sContext, tContext);
 
     /*
      * Import the data
      */
-    // monitor.setState(DataImportState.DATAIMPORT);
-
-    SuccessResponse summary = this.importData(file, sContext, tContext);
-
-    /*
-     * Return a JSONArray of the datasets which were created as part of the
-     * import. Do not include datasets which have already been created.
-     */
-    JSONArray datasets = new JSONArray();
-
-    List<TargetDefinitionIF> definitions = tContext.getDefinitions();
-
-    
-    for (TargetDefinitionIF definition : definitions)
-    {
-      String type = definition.getTargetType();
-
-      MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(type);
-      MappableClass mClass = MappableClass.getMappableClass(mdBusiness);
-
-      datasets.put(mClass.toJSON());
-    }
-
-    // monitor.setState(DataImportState.COMPLETE);
-
-    summary.setDatasets(datasets);
-
-    
+    ImportResponseIF summary = this.importData(file);
     
     // Update the history
     history.appLock();
@@ -290,63 +256,17 @@ public class DataImportRunnable implements Reloadable
     }
   }
 
-  private SuccessResponse importData(File file, SourceContextIF sContext, TargetContextIF tContext) throws FileNotFoundException, IOException, Exception
+  private ImportResponseIF importData(File file) throws FileNotFoundException, IOException, Exception
   {
-    Converter converter = new Converter(tContext, this.monitor);
-
-    FileInputStream istream = new FileInputStream(file);
-
-    try
+    DHIS2PluginIF plugin = PluginUtil.getDhis2Plugin();
+    
+    if (plugin != null)
     {
-      SourceContentHandler handler = new SourceContentHandler(converter, sContext, this.monitor, DataImportState.DATAIMPORT);
-      ExcelDataFormatter formatter = new ExcelDataFormatter();
-
-      ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
-      reader.process(istream);
-
-      SuccessResponse summary = new SuccessResponse(sContext, tContext);
-      summary.setTotal(this.monitor.getImportCount());
-      summary.setFailures(handler.getNumberOfErrors());
-
-      Workbook errors = converter.getErrors();
-
-      if (errors != null)
-      {
-        try (PipedInputStream pis = new PipedInputStream())
-        {
-          CopyRunnable runnable = new CopyRunnable(pis, errors);
-          Thread t = new Thread(runnable);
-          t.setUncaughtExceptionHandler(runnable);
-          t.setDaemon(true);
-          t.start();
-
-          VaultFile vf2 = VaultFile.createAndApply(this.filename, pis);
-
-          t.join();
-
-          summary.setFileId(vf2.getId());
-
-          if (runnable.getThrowable() != null)
-          {
-            throw new ProgrammingErrorException(runnable.getThrowable());
-          }
-        }
-      }
-
-      if (converter.getProblems().size() > 0)
-      {
-        summary.setProblems(converter.getProblems());
-        // ProblemResponse response = new
-        // ProblemResponse(converter.getProblems(), sContext, tContext,
-        // current);
-        // summary.put("problems", response.getProblemsJSON());
-      }
-
-      return summary;
+      return plugin.importData(file, filename, monitor);
     }
-    finally
+    else
     {
-      istream.close();
+      return null;
     }
   }
 

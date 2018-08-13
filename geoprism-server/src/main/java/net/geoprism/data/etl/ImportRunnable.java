@@ -100,17 +100,17 @@ public class ImportRunnable
     {
       int total = this.getRowNum(this.file);
       
-      monitor.setTotalProgressUnits(total - 1);
+      monitor.setTotalProgressUnits(total);
       
-      DataSetBuilderIF builder = new DataSetBuilder(configuration);
-      builder.build();
+//      DataSetBuilderIF builder = new DataSetBuilder(configuration);
+//      builder.build();
 
-      String sheetName = builder.getSheetName();
-      String id = builder.getId();
+//      String sheetName = builder.getSheetName();
+//      String id = builder.getId();
       
       DataImportRunnable runnable = new DataImportRunnable(this.configuration, this.filename, this.file, this.monitor.getHistory());
 
-      return runnable.run(id, sheetName);
+      return runnable.run();
     }
     catch (RunwayException | SmartException e)
     {
