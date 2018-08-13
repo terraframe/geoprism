@@ -1,4 +1,4 @@
-package net.geoprism.dhis2.exporter;
+package net.geoprism.dhis2.palestine;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -63,7 +63,11 @@ public class PalestineContentHandler implements SheetHandler
   /**
    * Attribute name to value for the current row
    */
-  private PalestineRow                                 currentRow;
+  private PalestineRow                        currentRow;
+  
+  private PalestineSheet                      currentSheet;
+  
+  private Integer                             sheetNum;
   
   /**
    * Current row number
@@ -95,8 +99,6 @@ public class PalestineContentHandler implements SheetHandler
    */
   private DateFormat                          dateFormat;
 
-  private SpreadsheetImporterHeaderModifierIF headerModifier;
-
   /**
    * Workbook containing error rows
    */
@@ -108,25 +110,44 @@ public class PalestineContentHandler implements SheetHandler
   private CellStyle                           style;
 
   private HashMap<String, Object>             values;
-
-  boolean                                     isFirstSheet;
   
   private PalestineConverter                  converter;
 
   public PalestineContentHandler(PalestineConverter converter, ProgressMonitorIF monitor, DataImportState mode)
   {
     this.converter = converter;
-    this.isFirstSheet = true;
 
-    this.columnNameMap = new HashMap<Integer, String>();
     this.nFormat = new DecimalFormat("###.#");
 
     this.dateTimeFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_TIME_FORMAT);
     this.dateFormat = new SimpleDateFormat(ExcelDataFormatter.DATE_FORMAT);
 
     this.monitor = monitor;
-
-    this.headerModifier = this.getHeaderModifier();
+    
+    this.sheetNum = -1;
+  }
+  
+  public class PalestineSheet
+  {
+    private String sheetName;
+    
+    private Integer sheetNumber;
+    
+    public PalestineSheet(String sheetName, Integer sheetNumber)
+    {
+      this.sheetName = sheetName;
+      this.sheetNumber= sheetNumber;
+    }
+    
+    public String getSheetName()
+    {
+      return this.sheetName;
+    }
+    
+    public Integer getSheetNumber()
+    {
+      return this.sheetNumber;
+    }
   }
   
   public class PalestineRow
@@ -176,36 +197,16 @@ public class PalestineContentHandler implements SheetHandler
     }
   }
 
-  public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
-  {
-    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
-
-    try
-    {
-      Iterator<SpreadsheetImporterHeaderModifierIF> it = loader.iterator();
-
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-      else
-      {
-        return null;
-      }
-    }
-    catch (ServiceConfigurationError serviceError)
-    {
-      throw new ProgrammingErrorException(serviceError);
-    }
-  }
-
   @Override
   public void startSheet(String sheetName)
   {
+    this.columnNameMap = new HashMap<Integer, String>();
     this.sheetName = sheetName;
     this.errorNum = 1;
+    this.sheetNum++;
 
     this.getWorkbook().createSheet(sheetName);
+    this.currentSheet = new PalestineSheet(sheetName, this.sheetNum);
   }
 
   @Override
@@ -215,75 +216,57 @@ public class PalestineContentHandler implements SheetHandler
 
     int headerNum = 0;
 
-    if (this.headerModifier != null)
-    {
-      headerNum = this.headerModifier.getColumnNameRowNum();
-    }
-
     if (sheet.getLastRowNum() > headerNum)
     {
 //      this.converter.setErrors(this.getWorkbook());
     }
-
-    this.isFirstSheet = false;
   }
 
   @Override
   public void startRow(int rowNum)
   {
-    if (this.isFirstSheet)
+    this.rowNum = rowNum;
+    this.values = new HashMap<String, Object>();
+    
+    boolean isHeader = ( rowNum == 0 );
+    
+    if (!isHeader)
     {
-      this.rowNum = rowNum;
-      this.values = new HashMap<String, Object>();
+      this.currentRow = new PalestineRow(rowNum);
       
-      boolean isHeader = ( rowNum == 0 );
-      
-      if (!isHeader)
-      {
-        this.currentRow = new PalestineRow(rowNum);
-        
-        this.monitor.setCurrentProgressUnit(rowNum);
-      }
+      this.monitor.setCurrentProgressUnit(rowNum);
     }
   }
 
   @Override
   public void endRow()
   {
-    if (this.isFirstSheet)
+    try
     {
-      
-      try
+      this.converter.processRow(this.currentRow, this.currentSheet);
+
+      /*
+       * Write the header row
+       */
+      boolean isHeader = ( rowNum == 0 );
+
+      if (isHeader)
       {
-        this.converter.processRow(this.currentRow);
+        Sheet sheet = this.getWorkbook().getSheet(sheetName);
 
-        /*
-         * Write the header row
-         */
-        boolean isHeader = ( rowNum == 0 );
-        if (this.headerModifier != null)
-        {
-          isHeader = this.headerModifier.checkRow(rowNum) == SpreadsheetImporterHeaderModifierIF.HEADER_ROW;
-        }
-
-        if (isHeader)
-        {
-          Sheet sheet = this.getWorkbook().getSheet(sheetName);
-
-          this.writeRow(sheet, rowNum);
-        }
+        this.writeRow(sheet, rowNum);
       }
-      catch (Exception e)
-      {
-        this.writeException(e);
+    }
+    catch (Exception e)
+    {
+      this.writeException(e);
 
-        // // Wrap all exceptions with information about the cell and row
-        // ExcelObjectException exception = new ExcelObjectException(e);
-        // exception.setRow(new Long(this.rowNum));
-        // exception.setMsg(ExceptionUtil.getLocalizedException(e));
-        //
-        // throw exception;
-      }
+      // // Wrap all exceptions with information about the cell and row
+      // ExcelObjectException exception = new ExcelObjectException(e);
+      // exception.setRow(new Long(this.rowNum));
+      // exception.setMsg(ExceptionUtil.getLocalizedException(e));
+      //
+      // throw exception;
     }
   }
 
@@ -292,11 +275,6 @@ public class PalestineContentHandler implements SheetHandler
     Sheet sheet = this.getWorkbook().getSheet(sheetName);
 
     int headerRowNum = 0;
-
-    if (this.headerModifier != null)
-    {
-      headerRowNum = this.headerModifier.getColumnNameRowNum();
-    }
 
     Row row = this.writeRow(sheet, headerRowNum + this.errorNum++);
 
@@ -339,10 +317,6 @@ public class PalestineContentHandler implements SheetHandler
     }
 
     int headerRowNum = 0;
-    if (this.headerModifier != null)
-    {
-      headerRowNum = this.headerModifier.getColumnNameRowNum();
-    }
 
     if (rowNum == headerRowNum)
     {
@@ -375,56 +349,52 @@ public class PalestineContentHandler implements SheetHandler
   @Override
   public void cell(String cellReference, String contentValue, String formattedValue, ColumnType cellType)
   {
-    if (this.isFirstSheet)
+    try
     {
-
-      try
+      if (cellType.equals(ColumnType.FORMULA))
       {
-        if (cellType.equals(ColumnType.FORMULA))
+        throw new ExcelFormulaException();
+      }
+      
+      if ( this.rowNum == 0 )
+      {
+        if (! ( cellType.equals(ColumnType.TEXT) || cellType.equals(ColumnType.INLINE_STRING) ))
         {
-          throw new ExcelFormulaException();
+          throw new InvalidHeaderRowException();
         }
-        
-        if ( this.rowNum == 0 )
+
+        this.setColumnName(cellReference, formattedValue);
+
+        // Store the original value in a temp map in case there is an error
+        String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
+
+        if (!contentValue.equals(label))
         {
-          if (! ( cellType.equals(ColumnType.TEXT) || cellType.equals(ColumnType.INLINE_STRING) ))
-          {
-            throw new InvalidHeaderRowException();
-          }
-
-          this.setColumnName(cellReference, formattedValue);
-
-          // Store the original value in a temp map in case there is an error
-          String label = LocalizationFacade.getFromBundles("dataUploader.causeOfFailure");
-
-          if (!contentValue.equals(label))
-          {
-            this.values.put(cellReference, contentValue);
-          }
-        }
-        else
-        {
-          CellReference reference = new CellReference(cellReference);
-          Integer column = new Integer(reference.getCol());
-          
-          this.currentRow.addHeaderName(this.columnNameMap.get(column));
-          this.currentRow.addValue(formattedValue);
-
-          // Store the original value in a temp map in case there is an error
           this.values.put(cellReference, contentValue);
         }
       }
-      catch (Exception e)
+      else
       {
-        logger.error("An error occurred while importing cell [" + cellReference + "].", e);
+        CellReference reference = new CellReference(cellReference);
+        Integer column = new Integer(reference.getCol());
+        
+        this.currentRow.addHeaderName(this.columnNameMap.get(column));
+        this.currentRow.addValue(formattedValue);
 
-        // Wrap all exceptions with information about the cell and row
-        ExcelValueException exception = new ExcelValueException();
-        exception.setCell(cellReference);
-        exception.setMsg(ExceptionUtil.getLocalizedException(e));
-
-        throw exception;
+        // Store the original value in a temp map in case there is an error
+        this.values.put(cellReference, contentValue);
       }
+    }
+    catch (Exception e)
+    {
+      logger.error("An error occurred while importing cell [" + cellReference + "].", e);
+
+      // Wrap all exceptions with information about the cell and row
+      ExcelValueException exception = new ExcelValueException();
+      exception.setCell(cellReference);
+      exception.setMsg(ExceptionUtil.getLocalizedException(e));
+
+      throw exception;
     }
   }
 

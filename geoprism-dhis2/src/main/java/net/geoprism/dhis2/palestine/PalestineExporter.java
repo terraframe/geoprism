@@ -1,4 +1,4 @@
-package net.geoprism.dhis2.exporter;
+package net.geoprism.dhis2.palestine;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -112,7 +112,7 @@ public class PalestineExporter
       
       JobHistoryProgressMonitor monitor = new JobHistoryProgressMonitor(history);
       
-      PalestineConverter converter = new PalestineConverter();
+      PalestineConverter converter = new PalestineConverter(dhis2);
       
       PalestineContentHandler handler = new PalestineContentHandler(converter, monitor, DataImportState.DATAIMPORT);
       ExcelDataFormatter formatter = new ExcelDataFormatter();
