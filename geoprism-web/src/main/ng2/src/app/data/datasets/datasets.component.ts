@@ -94,7 +94,7 @@ export class DatasetsComponent implements OnInit {
     };    
     this.uploader.onSuccessItem = (item: any, response: string, status: number, headers: any) => {
       this.wizard.initialize(response);
-      this.wizard.setReconstructionJSON(this.reconstructionJSON);
+//      this.wizard.setReconstructionJSON(this.reconstructionJSON);
     };
     this.uploader.onErrorItem = (item: any, response: string, status: number, headers: any) => {
       this.eventService.onError(response);	
@@ -122,8 +122,8 @@ export class DatasetsComponent implements OnInit {
       .then(reconstructionJSON => {
         reconstructionJSON.pageNum = pageNum;
         
-        this.wizard.setReconstructionJSON(reconstructionJSON);
-        this.wizard.afterPersist(reconstructionJSON.importResponse);
+//        this.wizard.setReconstructionJSON(reconstructionJSON);
+//        this.wizard.afterPersist(reconstructionJSON.importResponse);
     })
   };
   
