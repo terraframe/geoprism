@@ -121,26 +121,6 @@
 
       <object type="com.runwaysdk.system.Vault" key="default" />
     </create>
-    <update>
-      <mdController name="net.geoprism.report.ReportItemController">
-        <mdAction name="create">
-          <create>
-            <mdParameter name="design" label="Report design" order="1" type="com.runwaysdk.controller.MultipartFileParameter" />
-          </create>
-        </mdAction>
-        <mdAction name="update">
-          <create>
-            <mdParameter name="design" label="Report design" order="1" type="com.runwaysdk.controller.MultipartFileParameter" />
-          </create>
-        </mdAction>
-        <create>
-          <mdAction name="run" isPost="false" label="Run">
-            <mdParameter name="report" label="report" order="0" type="java.lang.String" />
-            <mdParameter name="configuration" label="configuration" order="1" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
-    </update>
     <permissions>
       <method methodName="render" type="net.geoprism.report.ReportItem">
         <assignedRole roleName="Administrator" />

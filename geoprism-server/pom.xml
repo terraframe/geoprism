@@ -154,6 +154,12 @@
       <artifactId>mapbox-vector-tile</artifactId>
       <version>1.1.1-tf</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.0</version>
+    </dependency>
+    
   </dependencies>
 
   <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->

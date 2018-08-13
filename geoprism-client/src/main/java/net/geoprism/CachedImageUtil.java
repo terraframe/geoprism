@@ -18,12 +18,9 @@
  */
 package net.geoprism;
 
-import java.io.IOException;
 import java.util.Locale;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import com.runwaysdk.ClientSession;
@@ -34,7 +31,7 @@ import com.runwaysdk.constants.CommonProperties;
 
 public class CachedImageUtil 
 {
-  public static void setBannerPath(ServletRequest request, ServletResponse response) throws IOException, ServletException
+  public static void setBannerPath(ServletRequest request)
   {
     if (request instanceof HttpServletRequest)
     {

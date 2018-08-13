@@ -21,14 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="net.geoprism.dashboard.DashboardController">
-        <create>
-          <mdAction name="clone" label="Clone" isPost="true" isQuery="false">
-            <mdParameter name="dashboardId" label="Dashboard Id" order="0" type="java.lang.String"/>
-            <mdParameter name="label" label="label" order="1" type="java.lang.String"/>
-          </mdAction>
-        </create>
-      </mdController>
       <mdBusiness name="net.geoprism.dashboard.Dashboard">
         <create>
           <mdMethod name="getDashboardInformation" label="Get dashboard information" returnType="java.lang.String" static="false" />

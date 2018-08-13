@@ -59,30 +59,6 @@
         </create>
       </mdBusiness>
 
-     <mdController name="net.geoprism.dashboard.DashboardMapController">
-          <mdAction name="exportMap">
-          	<create>
-          		<mdParameter name="activeBaseMap" order="5" type="java.lang.String" label="Map Size" />
-          	</create>
-          </mdAction>
-      </mdController>
-      
-<!--       <mdBusiness name="net.geoprism.dashboard.DashboardMap"> -->
-<!--         <create> -->
-<!--           <attributes> -->
-<!--           	<char name="activeBaseMap" label="Active Base Map" size="255" required="false" /> -->
-<!--           </attributes> -->
-<!--         </create> -->
-<!--       </mdBusiness> -->
-      
-      <mdController name="net.geoprism.UserMenuController">
-      	<create>
-       		<mdAction name="getDashboardMapThumbnail" label="Get dashboard map thumbnail" returnType="void">
-				<mdParameter name="dashboardId" order="0" type="java.lang.String" label="Dashboard Id" />
-		    </mdAction> 
-      	</create>
-      </mdController>
-        
     </update>
   </doIt>
   <undoIt>

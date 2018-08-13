@@ -34,25 +34,7 @@
             <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>
           </mdMethod>          
         </create>
-      </mdBusiness>      
-      
-      <mdController name="net.geoprism.DataSetController">
-        <create>
-          <mdAction name="addIndicator" label="Add indicator" isPost="true">
-            <mdParameter name="datasetId" label="Dataset Id" order="0" type="java.lang.String"/>
-            <mdParameter name="indicator" label="Indicator" order="1" type="java.lang.String"/>
-          </mdAction>
-          <mdAction name="editAttribute" label="Edit attribute" isPost="true" >
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>          
-          </mdAction>
-          <mdAction name="removeAttribute" label="Remove attribute" isPost="true" >
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>          
-          </mdAction>
-          <mdAction name="unlockAttribute" label="Unlock attribute" isPost="true" >
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String"/>          
-          </mdAction>          
-        </create>
-      </mdController>
+      </mdBusiness>            
     </update>
     <permissions>
       <method methodName="addIndicator" type="net.geoprism.MappableClass">

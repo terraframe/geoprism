@@ -51,18 +51,6 @@
         </create>
       </mdBusiness>
       
-      <mdController name="net.geoprism.dashboard.DashboardMapController">
-        <create>
-          <mdAction name="exportMap" static="false" label="Export Map" returnType="void">
-          		<mdParameter name="mapId" order="0" type="java.lang.String" label="Map Id" />
-          		<mdParameter name="outFileName" order="1" type="java.lang.String" label="File Name" />
-          		<mdParameter name="outFileFormat" order="2" type="java.lang.String" label="File Format" />
-          		<mdParameter name="mapBounds" order="3" type="java.lang.String" label="Map Bounds" />
-          		<mdParameter name="mapSize" order="4" type="java.lang.String" label="Map Size" />
-          </mdAction>
-        </create>
-      </mdController>
-    
       <mdBusiness name="net.geoprism.dashboard.DashboardMap">
         <create>
           <mdMethod name="generateMapImageExport" static="false" label="Export Map" returnType="java.io.InputStream">

@@ -20,13 +20,6 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <update>
-      <mdController name="net.geoprism.UserMenuController">
-        <create>
-          <mdAction name="dataManagement" label="Data management" isPost="false" isQuery="false" />
-        </create>
-      </mdController>
-    </update>
     <permissions>
       <role roleName="geoprism.admin.DashboardBuilder">
         <grant>

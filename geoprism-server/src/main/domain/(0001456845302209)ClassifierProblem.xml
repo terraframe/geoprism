@@ -75,22 +75,6 @@
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="net.geoprism.ontology.ClassifierSynonymController">
-        <mdAction name="create">
-          <create>
-            <mdParameter name="classifierId" label="Classifier id" order="2" type="java.lang.String" />
-          </create>
-        </mdAction>
-        <create>
-          <mdAction name="getDirectDescendants" label="Get direct descendants" isPost="true" isQuery="false">
-            <mdParameter name="parentId" label="Parent Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="viewCreate" label="View create" isPost="true" isQuery="false" />
-          <mdAction name="viewUpdate" label="View update" isPost="true" isQuery="false">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
       <mdBusiness name="net.geoprism.ontology.ClassifierSynonym">
         <create>
           <mdMethod name="createSynonym" label="Create" returnType="com.runwaysdk.business.ontology.TermAndRel" static="true">

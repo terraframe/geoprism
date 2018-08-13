@@ -34,11 +34,4 @@
 	    <type>RMI</type>
 	    <address>//localhost:1199/</address>
 	</connection>
-	
-	<connection>
-	    <label>facadeGenerationTest</label>
-	    <type>WebService</type>
-	    <address>http://localhost:8080/webtest/services/</address>
-	</connection>
-	
 </Runway>

@@ -32,15 +32,6 @@
           <mdParameter name="roleIds" label="Role ids" order="0" type="java.lang.String[]" />
         </mdMethod>
       </mdBusiness>
-      <mdController name="net.geoprism.AdminController" label="User controller">
-        <mdAction name="users" label="Users" isPost="false" isQuery="false" />
-        <mdAction name="geoentity" label="Geo entity" isPost="false" isQuery="false" />
-        <mdAction name="roles" label="Roles" isPost="false" isQuery="false" />
-        <mdAction name="universal" label="Universal" isPost="false" isQuery="false" />
-        <mdAction name="scheduler" label="Scheduler" isPost="false" isQuery="false" />
-        <mdAction name="databrowser" label="DataBrowser" isPost="false" isQuery="false" />
-        <mdAction name="ontologies" label="Ontologies" isPost="false" isQuery="false" />
-      </mdController>
       <mdView name="net.geoprism.RoleView" label="Role view">
         <attributes>
           <char name="roleId" label="Role id" size="64" required="true" />

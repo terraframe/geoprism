@@ -42,7 +42,7 @@
         controller.clear();
         
         if(!newInstance) {
-          $scope.$apply();
+//          $scope.$apply();
         }
       };
         
@@ -53,7 +53,7 @@
       $scope.busy = true;
    
       var onSuccess = function(result) {      
-        var layerNames = JSON.parse(result);
+        var layerNames = result.data;
         
         if(layerNames.length > 0) {
           var message = com.runwaysdk.Localize.localize("dashboardViewer", "removeLayers", "This change will remove the following layers: {0}");
@@ -78,30 +78,35 @@
         }
         else {
           $scope.busy = false;            
-          $scope.$apply();
-        	
+//          $scope.$apply();
+          
           controller.applyWithOptions();
         }
       };    
       
-      builderService.getLayersToDelete($scope.dashboard,'#ng-modal-overlay', onSuccess);
+      if(!$scope.dashboard.newInstance) {
+        builderService.getLayersToDelete($scope.dashboard,'#ng-modal-overlay', onSuccess);        
+      }
+      else {
+        controller.applyWithOptions();        
+      }
+          
     };
     
     controller.applyWithOptions = function() {
       var onSuccess = function(result) {      
         controller.clear();
-            
-        $scope.$apply();
 
-        var dashboard = JSON.parse(result);
+        var dashboard = result.data;
 
         $scope.$emit('dashboardChange', {dashboard:dashboard});            
       }
           
-      var onFailure = function(e){
-        $scope.errors.push(e.message);
+      var onFailure = function(response){
+    	var e = response.data;
+        $scope.errors.push(e.localizedMessage);
                        
-        $scope.$apply();
+//        $scope.$apply();
               
         $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
       };             
@@ -126,7 +131,7 @@
         
         controller.init(result);
       
-        $scope.$apply();
+//        $scope.$apply();
       }
                
       builderService.loadDashboard(dashboardId, element, onSuccess);    
@@ -137,7 +142,7 @@
     }
     
     controller.addDatasets = function(datasets) {
-    	
+      
       if($scope.dashboard != null) {
         for(var i = 0; i < datasets.length; i++) {
         }
@@ -146,7 +151,7 @@
     
     controller.addDatasets = function(datasets) {
       if($scope.dashboard != null) {
-    	
+      
         for(var i = 0; i < datasets.length; i++) {
           var dataset = datasets[i];
         
@@ -180,9 +185,9 @@
     });
     
     $rootScope.$on('datasetChange', function(event, data){
-    	
+      
       if(data.datasets != null) {
-        controller.addDatasets(data.datasets);    	  
+        controller.addDatasets(data.datasets);        
       }
       
       if(data.finished) {
@@ -323,25 +328,25 @@
     $scope.$watch('attribute.selected', function() {
       // if an attribute is selected with the parent type not yet checked
       if($scope.attribute.selected && !$scope.type.value){
-    	// set flag property when we know the user selected an attribute
-    	$scope.srcToggledElType = "ATTRIBUTE";
+      // set flag property when we know the user selected an attribute
+      $scope.srcToggledElType = "ATTRIBUTE";
         $scope.type.value = true;       
       }
       // else if an attribute is un-selected and the parent type is checked
       else if(!$scope.attribute.selected && $scope.type.value){
-    	var othersSelected = false;
-    	for(var i=0; i<$scope.type.attributes.length; i++){
-    		var attr = $scope.type.attributes[i];
-    		if(attr.selected){
-    			othersSelected = true;
-    		}
-    	}
-    	
-    	// if no other children attributes are selected un-select the parent type
-    	if(!othersSelected){
-    		$scope.srcToggledElType = "ATTRIBUTE";
-    		$scope.type.value = false;     
-    	}
+      var othersSelected = false;
+      for(var i=0; i<$scope.type.attributes.length; i++){
+        var attr = $scope.type.attributes[i];
+        if(attr.selected){
+          othersSelected = true;
+        }
+      }
+      
+      // if no other children attributes are selected un-select the parent type
+      if(!othersSelected){
+        $scope.srcToggledElType = "ATTRIBUTE";
+        $scope.type.value = false;     
+      }
       }
     }, true);
         
@@ -352,13 +357,13 @@
       //// This will all be re-placed when we re-design the data set/attribute selection widget.
       ////
       ///////
-    	
+      
       // if parent type is un-selected clear the srcToggledElType because we 
       // only want to know if the user toggled an ATTRIBUTE
       if(!$scope.type.value){
-    	  if($scope.srcToggledElType === "ATTRIBUTE"){
-    		  $scope.srcToggledElType = "";
-    	  }
+        if($scope.srcToggledElType === "ATTRIBUTE"){
+          $scope.srcToggledElType = "";
+        }
       }
       
       // if parent type is selected because the user selected one of its child attributes 
@@ -368,40 +373,40 @@
       }
       // else if parent type is selected and the parent type was not triggered by an attribute selection
       else if($scope.type.value && $scope.srcToggledElType !== "ATTRIBUTE"){
-    	// are there any selected attributes under the parent type?
-    	// selected attributes would occur when a parent type is selected after a user selects an attribute
-    	// when no other attributes are selected yet
-    	var selectedAttrId;
-    	var lastAttrId;
-      	for(var i=0; i<$scope.type.attributes.length; i++){
-    		var attr = $scope.type.attributes[i];
-    		if(attr.selected){
-    			selectedAttrId = attr.id;
-    		}
-    		
-    		if(i === $scope.type.attributes.length - 1){
-    			lastAttrId = attr.id;
-    		}
-    	}
-      	
-      	// re-select the previously selected attribute (there must be only one at this point) when the parent 
-      	// type is selected after a user selected a child attribute
-      	if(selectedAttrId && selectedAttrId === $scope.attribute.id){
-      		$scope.attribute.selected = true;   
-      	}
-      	// else if this attribute is the last attribute for the parent type and there is still no
-      	// selected attribute
-      	else if(lastAttrId === $scope.attribute.id && !selectedAttrId){
-      		// select all the attributes under the parent because the parent type must have been 
-      		// selected due to the lack of child attributes being selected up to this point
-          	for(var i=0; i<$scope.type.attributes.length; i++){
-        		var attr = $scope.type.attributes[i];
-        		attr.selected = true;
-        	}
-      	}
+      // are there any selected attributes under the parent type?
+      // selected attributes would occur when a parent type is selected after a user selects an attribute
+      // when no other attributes are selected yet
+      var selectedAttrId;
+      var lastAttrId;
+        for(var i=0; i<$scope.type.attributes.length; i++){
+        var attr = $scope.type.attributes[i];
+        if(attr.selected){
+          selectedAttrId = attr.id;
+        }
+        
+        if(i === $scope.type.attributes.length - 1){
+          lastAttrId = attr.id;
+        }
+      }
+        
+        // re-select the previously selected attribute (there must be only one at this point) when the parent 
+        // type is selected after a user selected a child attribute
+        if(selectedAttrId && selectedAttrId === $scope.attribute.id){
+          $scope.attribute.selected = true;   
+        }
+        // else if this attribute is the last attribute for the parent type and there is still no
+        // selected attribute
+        else if(lastAttrId === $scope.attribute.id && !selectedAttrId){
+          // select all the attributes under the parent because the parent type must have been 
+          // selected due to the lack of child attributes being selected up to this point
+            for(var i=0; i<$scope.type.attributes.length; i++){
+            var attr = $scope.type.attributes[i];
+            attr.selected = true;
+          }
+        }
       }
       else{
-    	  $scope.attribute.selected = false;  
+        $scope.attribute.selected = false;  
       }
     }, true);              
   }

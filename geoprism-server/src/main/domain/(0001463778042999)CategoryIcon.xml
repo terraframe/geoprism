@@ -39,24 +39,7 @@
         </mdMethod>
       </mdBusiness>
 
-      <mdController name="net.geoprism.dashboard.layer.CategoryIconController" label="Category icon controller">
-        <mdAction name="getAll" label="Get all data sets" isPost="true" isQuery="false"></mdAction>
-        <mdAction name="remove" label="Remove" isPost="true" isQuery="false">
-          <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-        </mdAction>
-        <mdAction name="create" label="Create" isPost="true" isQuery="false">
-          <mdParameter name="file" type="com.runwaysdk.controller.MultipartFileParameter" label="File" order="0"/>
-          <mdParameter name="label"  label="Label" type="java.lang.String" order="1"/>
-        </mdAction>
-      </mdController>
     </create>
-    <update>
-      <mdController name="net.geoprism.AdminController">
-        <create>
-          <mdAction name="icons" label="Icons" isPost="false" isQuery="false"></mdAction>
-        </create>
-      </mdController>    
-    </update>
     <permissions>
       <role roleName="geoprism.admin.Administrator">
         <grant>

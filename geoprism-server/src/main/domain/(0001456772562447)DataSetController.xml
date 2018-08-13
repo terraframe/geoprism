@@ -20,14 +20,6 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <create>
-      <mdController name="net.geoprism.DataSetController" label="Data Set Controller">
-        <mdAction name="getAll" label="Get all data sets" isPost="true" isQuery="false"></mdAction>
-        <mdAction name="remove" label="Remove" isPost="true" isQuery="false">
-          <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-        </mdAction>
-      </mdController>
-    </create>
     <update>
       <mdBusiness name="net.geoprism.MappableClass">
         <create>
@@ -37,11 +29,6 @@
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="net.geoprism.AdminController">
-        <create>
-          <mdAction name="datasets" label="Data sets" isPost="false" isQuery="false"></mdAction>
-        </create>
-      </mdController>
     </update>
     <permissions>
       <method methodName="remove" type="net.geoprism.MappableClass">

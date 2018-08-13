@@ -48,22 +48,6 @@
           </mdMethod>
         </create>      
       </mdUtil>
-      <mdController name="net.geoprism.DataUploaderController">
-        <create>
-          <mdAction name="createClassifierSynonym" label="Create classifier synonym" isPost="true">
-            <mdParameter name="classifierId" label="Entity id" order="0" type="java.lang.String"/>
-            <mdParameter name="label" label="Label" order="1" type="java.lang.String"/>
-          </mdAction>        
-          <mdAction name="deleteClassifierSynonym" label="Delete classifier synonym" isPost="true">
-            <mdParameter name="synonymId" label="Synonym Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="getClassifierSuggestions" label="Get classifier suggestions" isPost="false" isQuery="false">
-            <mdParameter name="mdAttributeId" order="0" type="java.lang.String" label="Text" />
-            <mdParameter name="text" order="1" type="java.lang.String" label="Text" />
-            <mdParameter name="limit" order="2" type="java.lang.Integer" label="Limit" />
-          </mdAction>
-        </create>
-      </mdController>      
     </update>
     <permissions>
       <method methodName="createClassifierSynonym" type="net.geoprism.DataUploader">

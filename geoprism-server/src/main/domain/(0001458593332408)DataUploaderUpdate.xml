@@ -31,19 +31,6 @@
           </mdMethod>
         </create>
       </mdUtil>
-      <mdController name="net.geoprism.DataUploaderController">
-        <create>
-          <mdAction name="createGeoEntitySynonym" label="Create geo entity synonym" isPost="true">
-            <mdParameter name="entityId" label="Entity id" order="0" type="java.lang.String"/>
-            <mdParameter name="label" label="Label" order="1" type="java.lang.String"/>
-          </mdAction>
-          <mdAction name="createGeoEntity" label="Create geo entity synonym" isPost="true">
-            <mdParameter name="parentId" label="Parent Id" order="0" type="java.lang.String"/>
-            <mdParameter name="universalId" label="Universal Id" order="1" type="java.lang.String"/>
-            <mdParameter name="label" label="Label" order="2" type="java.lang.String"/>
-          </mdAction>
-        </create>
-      </mdController>      
       <mdUtil name="net.geoprism.DataUploader">
         <create>
           <mdMethod name="createGeoEntitySynonym" label="Create geo entity synonym" returnType="void" static="true">

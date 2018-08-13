@@ -21,17 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="net.geoprism.DataUploaderController">
-        <create>
-          <mdAction name="cancelImport" label="Cancel import" isPost="true">
-            <mdParameter name="configuration" label="configuration" order="1" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="getSavedConfiguration" label="Get saved configuration" isPost="true">
-            <mdParameter name="id" label="id" order="1" type="java.lang.String" />
-            <mdParameter name="sheetName" label="Sheet name" order="2" type="java.lang.String" />            
-          </mdAction>
-        </create>
-      </mdController>
       <mdUtil name="net.geoprism.DataUploader">
         <create>
           <mdMethod name="cancelImport" label="Cancel import" returnType="void" static="true">

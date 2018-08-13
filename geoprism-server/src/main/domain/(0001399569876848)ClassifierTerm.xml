@@ -93,28 +93,6 @@
        </mdWarning>
 	       
     </create>
-    <update>
-      <mdController name="net.geoprism.ontology.ClassifierController" >
-        <mdAction name="create" isPost="true" isQuery="false">
-          <mdParameter order="0" name="dto" type="net.geoprism.ontology.Classifier" />
-          <create>
-            <mdParameter order="1" name="parentId" type="java.lang.String" />
-          </create>
-        </mdAction>
-        <create>
-          <mdAction name="viewCreate" isPost="true" isQuery="false">
-          </mdAction>
-          <mdAction name="viewUpdate" isPost="true" isQuery="false">
-            <mdParameter order="0" name="id" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="getDirectDescendants" isPost="true" isQuery="false">
-            <mdParameter order="0" name="parentId" type="java.lang.String" />
-            <mdParameter order="1" name="pageNum" type="java.lang.Integer" />
-            <mdParameter order="2" name="pageSize" type="java.lang.Integer" />
-          </mdAction>
-        </create>
-      </mdController>
-    </update>
   </doIt>
   <undoIt>
     <delete></delete>

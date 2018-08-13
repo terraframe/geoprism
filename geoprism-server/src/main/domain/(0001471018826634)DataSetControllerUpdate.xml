@@ -20,21 +20,6 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
-    <update>
-      <mdController name="net.geoprism.DataSetController">
-        <create>
-          <mdAction name="edit" label="Edit" isPost="true" isQuery="false">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="apply" label="apply" isPost="true" isQuery="false">
-            <mdParameter name="config" label="Config" order="1" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="cancel" label="Cancel" isPost="true" isQuery="false">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
-    </update>
     <permissions>
       <method methodName="applyDatasetUpdate" type="net.geoprism.MappableClass">
         <assignedRole roleName="Administrator"/>

@@ -26,11 +26,6 @@
           <mdMethod name="getCurrentUser" label="Get current user" returnType="net.geoprism.GeoprismUser" static="true" />
         </create>
       </mdBusiness>
-      <mdController name="net.geoprism.AdminController" >
-        <create>
-          <mdAction name="account" label="account" isPost="false" isQuery="false"  />
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>

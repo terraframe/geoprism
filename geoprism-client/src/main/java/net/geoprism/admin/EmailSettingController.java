@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package net.geoprism.admin;
 
 import org.json.JSONException;
 
@@ -30,6 +30,8 @@ import com.runwaysdk.mvc.ParseType;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+
+import net.geoprism.EmailSettingDTO;
 
 @Controller(url = "email")
 public class EmailSettingController 

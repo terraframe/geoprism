@@ -40,7 +40,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     kaleidoscope.setId("kaleidoscope");
     kaleidoscope.setLabel(LocalizationFacadeDTO.getFromBundles(request, "geoprismLanding.dashboards"));
     kaleidoscope.setSrc("net/geoprism/images/k_icon.svg");
-    kaleidoscope.setUrl("kaleidoscopes");
+    kaleidoscope.setUrl("nav/kaleidoscopes");
 
     GeoprismApplication management = new GeoprismApplication();
     management.setId("management");

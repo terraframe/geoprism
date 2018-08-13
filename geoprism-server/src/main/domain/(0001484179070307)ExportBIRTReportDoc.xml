@@ -21,13 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="net.geoprism.report.ReportItemController">
-        <create>
-          <mdAction name="download" isPost="false" label="Download">
-            <mdParameter name="dashboardId" label="Dashboard id" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>

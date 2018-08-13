@@ -21,13 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="net.geoprism.ontology.ClassifierController">
-        <create>
-          <mdAction name="updateCategory" isPost="true" isQuery="false" label="Edit category">
-            <mdParameter name="category" label="config" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>

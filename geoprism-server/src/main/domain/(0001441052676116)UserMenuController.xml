@@ -21,10 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdController name="net.geoprism.UserMenuController" label="User menu controller">
-        <mdAction name="dashboards" label="Dashboards for a user" />
-        <mdAction name="menu" label="Menu landing page" />
-      </mdController>
     </create>
     <update>
     </update>

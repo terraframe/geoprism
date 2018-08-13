@@ -25,18 +25,6 @@
         <mdMethod name="createGeoEntitySynonym" returnType="java.lang.String" />
         <mdMethod name="createGeoEntity" returnType="java.lang.String" />
       </mdUtil>
-
-      <mdController name="net.geoprism.DataUploaderController">
-        <create>
-          <mdAction name="deleteGeoEntitySynonym" label="Delete geo entity synonym" isPost="true">
-            <mdParameter name="synonymId" label="Synonym Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="deleteGeoEntity" label="Delete Geo Entity" isPost="true">
-            <mdParameter name="entityId" label="Entity Id" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
-
     </update>
   </doIt>
   <undoIt>

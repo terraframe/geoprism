@@ -20,6 +20,16 @@
 
   function RunwayService($http) {
     var service = {};
+
+    service.generateId = function() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    }    
+      
+
+    
     
     service.createRequest = function(onSuccess, onFailure){
       var request = new Mojo.ClientRequest({
@@ -112,13 +122,6 @@
       }
     }
     
-    service.generateId = function() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
-      });
-    }    
-    
     service.isValid = function(attributeMd) {
       if(!attributeMd.isSystem()) {
         var attributeName = attributeMd.getName();
@@ -164,9 +167,9 @@
           }
             
           if(!$.isEmptyObject(field)) {          
-          field.required = attributeMd.isRequired();
-          field.readable = attributeDTO.isReadable();
-          field.writable = attributeDTO.isWritable();
+            field.required = attributeMd.isRequired();
+            field.readable = attributeDTO.isReadable();
+            field.writable = attributeDTO.isWritable();
           
             fields.push(field);
           }
@@ -231,7 +234,7 @@
         }
       }
     }
-    
+        
     service.populateObject = function(object, dto) {
       for(var key in object) {
         var attributeDTO = dto.getAttributeDTO(key);

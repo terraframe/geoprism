@@ -24,14 +24,6 @@
     </create>
     <update>
     
-      <mdController name="net.geoprism.DataSetController">
-        <create>
-        	<mdAction name="applyDatasetUpdate" label="Update dataset" isPost="true" isQuery="false">
-        		<mdParameter name="datasetJSON" label="Dataset JSON object" order="0" type="java.lang.String" />
-        	</mdAction>
-        </create>
-      </mdController>
-      
       <mdBusiness name="net.geoprism.MappableClass">
         <create>
           <mdMethod name="getAsJSON" label="Get as JSON" returnType="java.lang.String" />

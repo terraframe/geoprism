@@ -22,14 +22,6 @@
   <doIt>
     <create></create>
     <update>
-	  <mdController name="net.geoprism.dashboard.layer.CategoryIconController">
-      	<create>
-       		<mdAction name="getCategoryIconImage" label="Get the category icon image" returnType="void">
-				<mdParameter name="iconId" order="0" type="java.lang.String" label="Icon Id" />
-		    </mdAction> 
-      	</create>
-      </mdController>
-      
       <mdBusiness name="net.geoprism.dashboard.layer.CategoryIcon">
       	<create>
        		<mdMethod name="getIcon" label="Get the icon image" returnType="java.io.InputStream">

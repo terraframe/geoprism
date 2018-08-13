@@ -28,6 +28,13 @@
   <gdb:localize var="page_title" key="login.header"/>
   
   <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo">
+  
+  <script>
+    window.com = window.com || {};
+    window.com.runwaysdk = window.com.runwaysdk || {};
+    window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+  </script>
+  
 
     <!-- User account CSS -->
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  

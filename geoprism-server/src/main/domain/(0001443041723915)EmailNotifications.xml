@@ -34,11 +34,6 @@
       </mdBusiness>
     </create>
     <update>
-      <mdController name="net.geoprism.AdminController">
-        <create>
-          <mdAction name="system" label="System Configuration" isPost="false" isQuery="false" />
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>

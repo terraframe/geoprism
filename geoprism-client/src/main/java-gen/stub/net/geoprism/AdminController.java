@@ -22,6 +22,9 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import net.geoprism.AccessConstants;
+import net.geoprism.AdminControllerBase;
+import net.geoprism.CachedImageUtil;
 import net.geoprism.ontology.ClassifierDTO;
 import net.geoprism.ontology.ClassifierIsARelationshipDTO;
 
@@ -233,7 +236,7 @@ public class AdminController extends AdminControllerBase
   @Override
   public void main() throws IOException, ServletException
   {
-    CachedImageUtil.setBannerPath(this.req, this.resp);
+//    CachedImageUtil.setBannerPath(this.req, this.resp);
 
     this.req.getRequestDispatcher("/jsp/mainContent.jsp").forward(this.req, this.resp);
   }

@@ -18,7 +18,7 @@
  */
 (function(){
   
-  function DashboardService(runwayService) {
+  function DashboardService($http, runwayService) {
     var service = {};
     service.edit = false;
     service.editData = false;
@@ -99,8 +99,20 @@
     service.getAvailableDashboardsAsJSON = function(dashboardId, onSuccess, onFailure) {
 //      var request = runwayService.createRequest(onSuccess, onFailure);
       var request = runwayService.createStandbyRequest("#container", onSuccess, onFailure);
-    
-      net.geoprism.dashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
+//    
+//      net.geoprism.dashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
+      
+      $http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/available-dashboards', 
+        method: "GET",
+        params: {dashboardId: dashboardId}
+      })
+      .then(request.onSuccess, request.onFailure)
+      .finally(function(){
+          request._hideStandby();  
+      });
+      
+      request._showStandby();  
     }
     
     service.saveDashboardState = function(dashboardId, state, global, elementId, onSuccess, onFailure) {

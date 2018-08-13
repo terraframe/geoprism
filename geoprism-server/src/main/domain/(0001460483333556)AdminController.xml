@@ -21,11 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="net.geoprism.AdminController">
-        <create>
-          <mdAction name="main" label="Main" isPost="false" isQuery="false"></mdAction>
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>

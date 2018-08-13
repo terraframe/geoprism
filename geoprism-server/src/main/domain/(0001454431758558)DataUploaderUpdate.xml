@@ -29,13 +29,6 @@
         </create>
       </mdUtil>
 
-      <mdController name="net.geoprism.DataUploaderController" label="Data Upload Controller">
-        <create>
-          <mdAction name="importData" label="Import Data" isPost="true" isQuery="false">
-            <mdParameter name="configuration" label="Configuration" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
     </update>
     <permissions>    
       <method methodName="importData" type="net.geoprism.DataUploader">

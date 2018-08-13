@@ -32,18 +32,6 @@
         </create>
       </mdBusiness>
 
-      <mdController name="net.geoprism.dashboard.layer.CategoryIconController">
-        <create>
-          <mdAction name="apply" label="apply" isPost="true" isQuery="false">
-            <mdParameter name="id" label="Id" type="java.lang.String" order="0" />
-            <mdParameter name="file" type="com.runwaysdk.controller.MultipartFileParameter" label="File" order="1" />
-            <mdParameter name="label" label="Label" type="java.lang.String" order="2" />
-          </mdAction>
-          <mdAction name="edit" label="Edit" isPost="true" isQuery="false">
-            <mdParameter name="iconId" label="Icon id" order="0" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>

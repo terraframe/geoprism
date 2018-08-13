@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package net.geoprism.data;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +40,9 @@ import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 
+import net.geoprism.ContentStream;
+import net.geoprism.DataUploaderDTO;
+import net.geoprism.InputStreamResponse;
 import net.geoprism.ontology.ClassifierDTO;
 import net.geoprism.ontology.GeoEntityUtilDTO;
 import net.geoprism.util.ProgressFacade;

@@ -44,21 +44,6 @@
         </mdMethod>
       </mdBusiness>
     </create>
-    <update>
-      <mdController name="net.geoprism.SystemLogoSingletonController" label="Logo Controller">
-        <create>
-	        <mdAction name="uploadBanner" label="uploadBanner" isPost="true" isQuery="false">
-	          <mdParameter name="banner" label="banner" order="0" type="com.runwaysdk.controller.MultipartFileParameter" />
-	        </mdAction>
-	        <mdAction name="viewUploadBanner" label="viewUploadBanner">
-	        </mdAction>
-	        <mdAction name="uploadMiniLogo" label="uploadMiniLogo" isPost="true" isQuery="false">
-	          <mdParameter name="miniLogo" label="miniLogo" order="0" type="com.runwaysdk.controller.MultipartFileParameter" />
-	        </mdAction>
-	        <mdAction name="viewUploadMiniLogo" label="viewUploadMiniLogo" />
-        </create>
-      </mdController>
-    </update>
   </doIt>
   <undoIt>
     <delete>

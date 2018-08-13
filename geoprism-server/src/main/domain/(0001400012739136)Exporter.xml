@@ -55,41 +55,6 @@
         </attributes>
       </mdBusiness>
     </create>
-    <update>
-      <mdController name="net.geoprism.ontology.UniversalExportMenuController" >
-	      <create>
-	        <mdAction name="viewExport" isPost="true" isQuery="false">
-	        </mdAction>
-	        <mdAction name="export" isPost="true" isQuery="false">
-	          <mdParameter order="0" name="dto" type="net.geoprism.ontology.UniversalExportMenu" />
-	          <mdParameter order="1" name="parentTerm" type="java.lang.String" />
-	          <mdParameter order="2" name="downloadToken" type="java.lang.String" />
-	        </mdAction>
-	      </create>
-     </mdController>
-     <mdController name="net.geoprism.ontology.GeoEntityExportMenuController" >
-        <create>
-          <mdAction name="viewExport" isPost="true" isQuery="false">
-          </mdAction>
-          <mdAction name="export" isPost="true" isQuery="false">
-            <mdParameter order="0" name="dto" type="net.geoprism.ontology.GeoEntityExportMenu" />
-            <mdParameter order="1" name="parentTerm" type="java.lang.String" />
-            <mdParameter order="2" name="downloadToken" type="java.lang.String" />
-          </mdAction>
-        </create>
-     </mdController>
-     <mdController name="net.geoprism.ontology.ClassifierExportMenuController" >
-        <create>
-          <mdAction name="viewExport" isPost="true" isQuery="false">
-          </mdAction>
-          <mdAction name="export" isPost="true" isQuery="false">
-            <mdParameter order="0" name="dto" type="net.geoprism.ontology.ClassifierExportMenu" />
-            <mdParameter order="1" name="parentTerm" type="java.lang.String" />
-            <mdParameter order="2" name="downloadToken" type="java.lang.String" />
-          </mdAction>
-        </create>
-     </mdController>
-    </update>
   </doIt>
   <undoIt>
     <delete>

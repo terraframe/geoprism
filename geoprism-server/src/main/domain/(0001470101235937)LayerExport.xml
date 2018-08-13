@@ -29,15 +29,6 @@
           </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="net.geoprism.dashboard.DashboardMapController">
-        <create>
-          <mdAction name="exportLayerData" isPost="false" isQuery="false" label="Export layer data">
-            <mdParameter name="mapId" label="Map id" type="java.lang.String" order="0"/>
-            <mdParameter name="state" label="State" type="java.lang.String" order="1"/>
-            <mdParameter name="layerId" label="Layer Id" type="java.lang.String" order="2"/>            
-          </mdAction>
-        </create>
-      </mdController>      
     </update>
   </doIt>
   <undoIt>

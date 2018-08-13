@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.prism;
 
@@ -38,8 +38,18 @@ import net.geoprism.MappableClassDTO;
 import net.geoprism.RoleConstants;
 
 @Controller(url = "prism")
-public class PrismController 
+public class PrismController
 {
+  public static final String JSP_DIR         = "/WEB-INF/";
+
+  public static final String LAYOUT          = "WEB-INF/templates/basicLayout.jsp";
+
+  public static final String MENU            = "net/geoprism/userMenu/userMenu.jsp";
+
+  public static final String DATA_MANAGEMENT = "net/geoprism/userMenu/data-management.jsp";
+
+  public static final String DASHBOARDS      = "net/geoprism/userMenu/userDashboards.jsp";
+
   @Endpoint(method = ServletMethod.GET)
   public ResponseIF home(ClientRequestIF request)
   {
@@ -49,14 +59,14 @@ public class PrismController
 
     return response;
   }
-  
+
   @Endpoint(method = ServletMethod.GET)
   public ResponseIF management(ClientRequestIF request)
   {
     ViewResponse response = new ViewResponse("/WEB-INF/net/geoprism/prism/prism.jsp");
     response.set("appname", "my-app");
     response.set("base", "prism/management");
-    
+
     return response;
   }
 
@@ -155,5 +165,4 @@ public class PrismController
 
     return new RestResponse();
   }
-
 }

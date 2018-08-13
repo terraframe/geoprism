@@ -1776,6 +1776,7 @@ public class Dashboard extends DashboardBase
       object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
       object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
+      object.put("newInstance", this.isNew());
 
       List<ValueObject> countries = this.getCountries();
 

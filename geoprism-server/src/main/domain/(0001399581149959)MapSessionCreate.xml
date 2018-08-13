@@ -23,13 +23,6 @@
 		<create></create>
 		<update>
 
-			<mdController name="net.geoprism.dashboard.DashboardMapController">
-				<create>
-					<mdAction name="createMapForSession" label="Create Map For Session" isPost="false">
-					</mdAction>
-				</create>
-			</mdController>
-
 		</update>
 	</doIt>
 	<undoIt>

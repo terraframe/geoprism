@@ -21,29 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:geoprism/xsd/version_geoprism.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <update>
-      <mdController name="net.geoprism.ontology.ClassifierController">
-        <create>
-          <mdAction name="getAllCategories" isPost="false" isQuery="false" label="Get all categories" />
-          <mdAction name="editOption" isPost="true" isQuery="false" label="Edit option">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="getCategory" isPost="true" isQuery="false" label="Get category">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="applyOption" isPost="true" isQuery="false" label="Edit category">
-            <mdParameter name="config" label="config" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="unlockCategory" isPost="true" isQuery="false" label="Unlock category">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="createOption" isPost="true" isQuery="false" label="Create option">
-            <mdParameter name="option" label="Option" order="0" type="java.lang.String" />
-          </mdAction>          
-          <mdAction name="deleteOption" isPost="true" isQuery="false" label="Create option">
-            <mdParameter name="id" label="Id" order="0" type="java.lang.String" />
-          </mdAction>          
-        </create>
-      </mdController>
       <mdBusiness name="net.geoprism.ontology.Classifier">
         <create>
           <mdMethod name="createOption" label="Create option" static="true" returnType="net.geoprism.ontology.Classifier">

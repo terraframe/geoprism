@@ -30,24 +30,37 @@
   
   <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
   
+  <script>
+    window.com = window.com || {};
+    window.com.runwaysdk = window.com.runwaysdk || {};
+    window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+  </script>  
+  
   <!-- User account CSS -->
+  <jwr:style src="/bundles/main.css" useRandomParam="false" />
+  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>    
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-  <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/user-dashboards.css" useRandomParam="false"/> 
   
-  <!-- User account Javascript -->
+  <!-- User account Javascript -->  
+  <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
+  <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+  <jwr:script src="/bundles/widget.js" useRandomParam="false"/>	
+  <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
+  
+<!-- 
   <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
   <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
   <jwr:script src="/bundles/account.js" useRandomParam="false"/> 
-  <jwr:script src="/bundles/builder.js" useRandomParam="false"/>
-
+ -->  
+	
+  <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
+  
   <script type="text/javascript">     
     $(document).ready(function(){      
       com.runwaysdk.ui.Manager.setFactory("JQuery");
     });
   </script>
-    
-  <script type="text/javascript">${js}</script>
   
   <jwr:script src="/bundles/builder.js" useRandomParam="false"/>   
 </head>
@@ -78,8 +91,6 @@
 <%-- 	          </c:otherwise> --%>
 <%-- 	        </c:choose> --%>
 	       
-	        <a id="account-btn" ng-click="ctrl.account()" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-	        <i class="user-command-link"> | </i>
 	        <a class="user-command-link" href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a>
 	      </p>
 	    </div>
@@ -218,7 +229,3 @@
     <clone-form></clone-form>
   </div>
 </body>
-
-<script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-</script>

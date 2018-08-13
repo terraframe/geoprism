@@ -21,31 +21,6 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create></create>
-    <update>
-      <mdController name="net.geoprism.dashboard.layer.DashboardThematicLayerController">
-        <create>
-          <mdAction name="newThematicInstance" label="newThematicInstance" isPost="true">
-            <mdParameter name="mdAttribute" label="mdAttribute" order="0" type="java.lang.String" />
-            <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
-
-      <mdController name="net.geoprism.dashboard.layer.DashboardReferenceLayerController">
-        <create>
-          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.layer.DashboardReferenceLayer" />
-            <mdParameter name="style" label="Style" order="1" type="net.geoprism.dashboard.DashboardStyle" />
-            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
-          </mdAction>
-          <mdAction name="newReferenceInstance" label="newReferenceInstance" isPost="true">
-            <mdParameter name="universalId" label="universalId" order="0" type="java.lang.String" />
-            <mdParameter name="mapId" label="mapId" order="1" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
-
-    </update>
   </doIt>
   <undoIt>
     <delete>

@@ -59,17 +59,6 @@
 	        </mdMethod>
         </create>
       </mdBusiness>
-      <mdController name="net.geoprism.dashboard.layer.DashboardThematicLayerController">
-        <create>
-          <mdAction name="applyWithStyle" label="Apply With Style" isPost="true">
-            <mdParameter name="layer" label="Layer" order="0" type="net.geoprism.dashboard.layer.DashboardThematicLayer" />
-            <mdParameter name="style" label="Style" order="1" type="net.geoprism.dashboard.DashboardStyle" />
-            <mdParameter name="mapId" label="Map Id" order="2" type="java.lang.String" />
-            <mdParameter name="strategy" label="Strategy" order="3" type="net.geoprism.dashboard.AggregationStrategy" />
-            <mdParameter name="state" label="State" order="4" type="java.lang.String" />
-          </mdAction>
-        </create>
-      </mdController>
     </update>
   </doIt>
   <undoIt>
