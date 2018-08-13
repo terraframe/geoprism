@@ -87,6 +87,7 @@ export class DatasetsComponent implements OnInit {
     
     this.uploader = new FileUploader(options);
     this.uploader.onBeforeUploadItem = (fileItem: any) => {
+    	console.log("getting")
       this.eventService.start();
     };    
     this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
