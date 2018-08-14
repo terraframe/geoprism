@@ -200,10 +200,10 @@ public class Classifier extends ClassifierBase
     StringBuilder sql = new StringBuilder();
     sql.append("select t.oid AS oid");
     sql.append(" from classifier_term_attribute_root AS br");
-    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_id");
+    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_oid");
     sql.append(" join classifier AS t ON t.oid = apt.child_term");
     sql.append(" LEFT JOIN classifier_display_label AS tdl ON t.display_label = tdl.oid");
-    sql.append(" where br.parent_id = '" + mdAttributeTermDAOIF.getOid() + "'");
+    sql.append(" where br.parent_oid = '" + mdAttributeTermDAOIF.getOid() + "'");
     sql.append(" AND (");
     sql.append("  UPPER(" + localize(mdStruct, "tdl") + ") = UPPER('" + sfTermToMatch + "')");
     sql.append("  OR t.classifier_id = '" + sfTermToMatch + "'");
@@ -211,12 +211,12 @@ public class Classifier extends ClassifierBase
     sql.append(" UNION");
     sql.append(" SELECT DISTINCT t.oid AS oid");
     sql.append(" from classifier_term_attribute_root AS br");
-    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_id");
+    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_oid");
     sql.append(" join classifier AS t ON t.oid = apt.child_term");
-    sql.append(" JOIN classifier_has_synonym AS hs ON hs.parent_id = t.oid");
-    sql.append(" JOIN classifier_synonym AS ts ON hs.child_id = ts.oid");
+    sql.append(" JOIN classifier_has_synonym AS hs ON hs.parent_oid = t.oid");
+    sql.append(" JOIN classifier_synonym AS ts ON hs.child_oid = ts.oid");
     sql.append(" LEFT JOIN classifier_synonym_display_lab AS tdl ON ts.display_label = tdl.oid");
-    sql.append(" where br.parent_id = '" + mdAttributeTermDAOIF.getOid() + "'");
+    sql.append(" where br.parent_oid = '" + mdAttributeTermDAOIF.getOid() + "'");
     sql.append(" AND " + localize(mdStruct, "tdl") + " = '" + sfTermToMatch + "'");
 
     try

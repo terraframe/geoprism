@@ -424,13 +424,13 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
   public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.ontology.ClassifierHasSynonymQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.ontology.ClassifierHasSynonymQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

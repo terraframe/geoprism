@@ -49,14 +49,14 @@ export class AccountService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  edit(id:string): Promise<Account> {
+  edit(oid:string): Promise<Account> {
 
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
   
     return this.ehttp
-      .post(acp + '/account/edit', JSON.stringify({id:id}), {headers: headers})
+      .post(acp + '/account/edit', JSON.stringify({oid:oid}), {headers: headers})
       .toPromise()
       .then((response: any) => {
         return response.json() as Account;
@@ -79,14 +79,14 @@ export class AccountService extends BasicService {
     .catch(this.handleError.bind(this));      
   }
   
-  remove(id:string): Promise<Response> {
+  remove(oid:string): Promise<Response> {
     
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
     
     return this.ehttp
-    .post(acp + '/account/remove', JSON.stringify({id:id}), {headers: headers})
+    .post(acp + '/account/remove', JSON.stringify({oid:oid}), {headers: headers})
     .toPromise()
     .catch(this.handleError.bind(this));      
   }
@@ -106,14 +106,14 @@ export class AccountService extends BasicService {
     .catch(this.handleError.bind(this));      
   }
   
-  unlock(id:string): Promise<Response> {
+  unlock(oid:string): Promise<Response> {
     
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
     
     return this.ehttp
-    .post(acp + '/account/unlock', JSON.stringify({id:id}), {headers: headers})
+    .post(acp + '/account/unlock', JSON.stringify({oid:oid}), {headers: headers})
     .toPromise()
     .catch(this.handleError.bind(this));      
   }

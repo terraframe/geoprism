@@ -26,16 +26,27 @@
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
       });
-    }    
-      
+    }          
 
-    
+    service.http = function(config, request) {
+      $http(config).then(request.onSuccess, request.onFailure)
+        .finally(function(){
+          if(request._hideStandby !== undefined) {
+            request._hideStandby();  
+          }
+        });
+          
+      if(request._showStandby !== undefined) {
+        request._showStandby();
+      }
+    }
     
     service.createRequest = function(onSuccess, onFailure){
       var request = new Mojo.ClientRequest({
         onSuccess : onSuccess,
-        onFailure : function(e) {
-                      
+        onFailure : function(response) {
+          var e = response.data;
+          
           if(onFailure != null) {
             onFailure(e);
           }

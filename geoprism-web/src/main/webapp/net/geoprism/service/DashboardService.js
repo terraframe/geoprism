@@ -56,7 +56,13 @@
       if(service.canEdit()) {
         var request = runwayService.createRequest(onSuccess, onFailure);
                    
-        net.geoprism.dashboard.layer.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);        
+//        net.geoprism.dashboard.layer.DashboardLayer.updateLegend(request, layer.layerId, layer.legendXPosition, layer.legendYPosition, layer.groupedInLegend);        
+        
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-layer/update-legend', 
+          method: "POST",
+          data: {layerId: layer.layerId, legendXPosition: layer.legendXPosition, legendYPosition: layer.legendYPosition, groupedInLegend: layer.groupedInLegend}
+        }, request);                              
       }
     };
     
@@ -64,7 +70,13 @@
       if(service.canEdit()) {      
         var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
           
-        com.runwaysdk.Facade.deleteEntity(request, layerId);
+//        com.runwaysdk.Facade.deleteEntity(request, layerId);
+        
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-layer/remove', 
+          method: "POST",
+          data: {layerId: layer.layerId}
+        }, request);                                      
       }
     };
     
@@ -72,7 +84,13 @@
       if(service.canEdit()) {      
         var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
         
-        net.geoprism.dashboard.DashboardMap.orderLayers(request, mapId, layerIds);
+//        net.geoprism.dashboard.DashboardMap.orderLayers(request, mapId, layerIds);
+        
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-map/order-layers', 
+          method: "POST",
+          data: {mapId: mapId, layerIds:layerIds}
+        }, request);                      
       }
     };
     
@@ -80,20 +98,36 @@
       if(service.canEdit()){
         var request = runwayService.createRequest(onSuccess, onFailure);
       
-        net.geoprism.dashboard.Dashboard.setBaseLayerState(request, dashboardId, baseMap);
+//        net.geoprism.dashboard.Dashboard.setBaseLayerState(request, dashboardId, baseMap);
+        
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/base-layer-state', 
+          method: "POST",
+          data: {dashboardId: dashboardId, baseLayerState:baseMap}
+        }, request);              
       }
     }
     
     service.refreshMap = function(state, elementId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
               
-      net.geoprism.dashboard.DashboardMap.refresh(request, state.mapId, state);
+//      net.geoprism.dashboard.DashboardMap.refresh(request, state.mapId, state);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-map/refresh', 
+        method: "POST",
+        data: {mapId: state.mapId, state:state}
+      }, request);      
     }
     
     service.getDashboardJSON = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
           
-      net.geoprism.dashboard.Dashboard.getJSON(request, dashboardId);
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/get-json', 
+        method: "GET",
+        params: {dashboardId: dashboardId}
+      }, request);      
     }
     
     service.getAvailableDashboardsAsJSON = function(dashboardId, onSuccess, onFailure) {
@@ -102,104 +136,178 @@
 //    
 //      net.geoprism.dashboard.Dashboard.getAvailableDashboardsAsJSON(request, dashboardId);
       
-      $http({
+      runwayService.http({
         url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/available-dashboards', 
         method: "GET",
         params: {dashboardId: dashboardId}
-      })
-      .then(request.onSuccess, request.onFailure)
-      .finally(function(){
-          request._hideStandby();  
-      });
-      
-      request._showStandby();  
+      }, request);      
     }
     
     service.saveDashboardState = function(dashboardId, state, global, elementId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
       
-      net.geoprism.dashboard.Dashboard.saveState(request, dashboardId, state, global);      
+//      net.geoprism.dashboard.Dashboard.saveState(request, dashboardId, state, global);      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/save-state', 
+        method: "POST",
+        data: {dashboardId: dashboardId, state:state, global:global}
+      }, request);      
+      
     }
     
-    service.getGeoEntitySuggestions = function(dashboardId, text, size, onSuccess, onFailure) {
+    service.getGeoEntitySuggestions = function(dashboardId, text, limit, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
     
-      net.geoprism.dashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
+//      net.geoprism.dashboard.Dashboard.getGeoEntitySuggestions(request, dashboardId, text, size);
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/geo-suggestions', 
+        method: "GET",
+        params: {dashboardId: dashboardId, text:text, limit:limit}
+      }, request);            
     }
     
     service.getTextSuggestions = function(mdAttributeId, term, limit, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
 
-      net.geoprism.dashboard.Dashboard.getTextSuggestions(request, mdAttributeId, term, limit);
+//      net.geoprism.dashboard.Dashboard.getTextSuggestions(request, mdAttributeId, term, limit);
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/text-suggestions', 
+        method: "GET",
+        params: {mdAttributeId: mdAttributeId, text:text, limit:limit}
+      }, request);                  
     }
     
     service.getFeatureInformation = function(feature, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
 
       var layerId = feature.layerId;
-      var geoId = feature.geoId;
+      var featureId = feature.geoId;
 
-      net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId); 	
+//      net.geoprism.dashboard.layer.DashboardThematicLayer.getFeatureInformation(request, layerId, geoId); 	
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/thematic-layer/feature-information', 
+        method: "GET",
+        params: {layerId: layerId, featureId:featureId}
+      }, request);                  
     }
     
     service.hasReport = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
       
-      net.geoprism.dashboard.Dashboard.hasReport(request, dashboardId);    	
+//      net.geoprism.dashboard.Dashboard.hasReport(request, dashboardId);    	
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/has-report', 
+        method: "GET",
+        params: {dashboardId: dashboardId}
+      }, request);                  
     }
     
     service.runReport = function(dashboardId, configuration, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
-    	
-      net.geoprism.report.ReportItemController.run(request, dashboardId, configuration);
+//      net.geoprism.report.ReportItemController.run(request, dashboardId, configuration);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-report/run', 
+        method: "POST",
+        data: {dashboardId: dashboardId, configuration:configuration}
+      }, request);      
     }
     
     service.removeDashboard = function(dashboardId, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
             
-      com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
+//      com.runwaysdk.Facade.deleteEntity(request, dashboardId);    	
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/remove', 
+        method: "POST",
+        data: {dashboardId: dashboardId}
+      }, request);            
     }
     
     service.removeReport = function(dashboardId, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
         
-      net.geoprism.report.ReportItemController.remove(request, dashboardId);
+//      net.geoprism.report.ReportItemController.remove(request, dashboardId);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-report/remove', 
+        method: "POST",
+        data: {dashboardId: dashboardId}
+      }, request);            
     }
     
     service.cloneDashboard = function(dashboardId, label, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
     
-      net.geoprism.dashboard.DashboardController.clone(request, dashboardId, label);                    
+//      net.geoprism.dashboard.DashboardController.clone(request, dashboardId, label);                    
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/clone', 
+        method: "POST",
+        data: {dashboardId: dashboardId, label:label}
+      }, request);                  
     }
     
     service.newClone = function(dashboardId, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
       
-      net.geoprism.dashboard.DashboardController.newClone(request, dashboardId);    
+//      net.geoprism.dashboard.DashboardController.newClone(request, dashboardId);    
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/new-clone', 
+        method: "POST",
+        data: {dashboardId: dashboardId}
+      }, request);                        
     }
     
     service.getClassifierTree = function(mdAttributeId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);    
       
-      net.geoprism.dashboard.Dashboard.getClassifierTree(request, mdAttributeId);
+//      net.geoprism.dashboard.Dashboard.getClassifierTree(request, mdAttributeId);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/classifier-tree', 
+        method: "GET",
+        params: {mdAttributeId: mdAttributeId}
+      }, request);                              
     }
     
     service.generateThumbnailImage = function(dashboardId, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);    
       
-      net.geoprism.dashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
+//      net.geoprism.dashboard.Dashboard.generateThumbnailImage(request, dashboardId);      
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/generate-thumbnail', 
+        method: "POST",
+        data: {dashboardId: dashboardId}
+      }, request);                              
     }
     
     service.setDataSetOrder = function(dashboardId, typeIds, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
         
-      net.geoprism.dashboard.Dashboard.setMetadataWrapperOrder(request, dashboardId, typeIds);
+//      net.geoprism.dashboard.Dashboard.setMetadataWrapperOrder(request, dashboardId, typeIds);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/set-dataset-order', 
+        method: "POST",
+        data: {dashboardId: dashboardId, typeIds:typeIds}
+      }, request);                                    
     }
     
     service.setDataSetAttributeOrder = function(dashboardId, typeId, attributeIds, onSuccess, onFailure) {
       var request = runwayService.createRequest(onSuccess, onFailure);
     
-      net.geoprism.dashboard.Dashboard.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
+//      net.geoprism.dashboard.Dashboard.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/set-attribute-order', 
+        method: "POST",
+        data: {dashboardId: dashboardId, typeId: typeId, attributeIds: attributeIds}
+      }, request);                                          
     }
     
     service.isEmptyFilter = function(filter) {

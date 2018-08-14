@@ -462,13 +462,13 @@ public abstract class ClassifierMultiTermAttributeRootDTOBase extends com.runway
   public static net.geoprism.ontology.ClassifierMultiTermAttributeRootQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.ontology.ClassifierMultiTermAttributeRootQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.ontology.ClassifierMultiTermAttributeRootQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierMultiTermAttributeRootDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.ontology.ClassifierMultiTermAttributeRootQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

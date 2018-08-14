@@ -77,7 +77,7 @@ describe('DatasetsComponent', () => {
     tick();    
     this.fixture.detectChanges();   
     
-    expect(navigateSpy).toHaveBeenCalledWith(['/dataset', dataset.id]);    
+    expect(navigateSpy).toHaveBeenCalledWith(['/dataset', dataset.oid]);    
   }));
   
   it('Test onSuccess', fakeAsync(() => {
@@ -92,7 +92,7 @@ describe('DatasetsComponent', () => {
     let dataset = this.fixture.componentInstance.datasets[0];
     
     let dataset2 = new Dataset();
-    dataset2.id = 'test-id-2';
+    dataset2.oid = 'test-oid-2';
     
     this.fixture.componentInstance.onSuccess({datasets: [dataset, dataset2]});
     

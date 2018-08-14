@@ -462,13 +462,13 @@ public abstract class DashboardAttributesDTOBase extends com.runwaysdk.business.
   public static net.geoprism.dashboard.DashboardAttributesQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.dashboard.DashboardAttributesQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.dashboard.DashboardAttributesQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.DashboardAttributesDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.dashboard.DashboardAttributesQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

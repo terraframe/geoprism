@@ -462,13 +462,13 @@ public abstract class DashboardMetadataDTOBase extends com.runwaysdk.business.Re
   public static net.geoprism.dashboard.DashboardMetadataQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.dashboard.DashboardMetadataQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.dashboard.DashboardMetadataQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.DashboardMetadataDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.dashboard.DashboardMetadataQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

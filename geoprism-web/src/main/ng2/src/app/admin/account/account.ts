@@ -18,7 +18,7 @@
 ///
 
 export class User {
-  id: string;
+  oid: string;
   username: string;
   password: string;
   firstName: string;

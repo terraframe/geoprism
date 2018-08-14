@@ -32,6 +32,8 @@ import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
+import net.geoprism.JSONStringImpl;
+import net.geoprism.dashboard.DashboardDTO;
 import net.geoprism.dashboard.DashboardMapDTO;
 import net.geoprism.dashboard.DashboardThematicStyleDTO;
 
@@ -80,4 +82,11 @@ public class DashboardThematicLayerController
     return new RestBodyResponse(response);
   }
 
+  @Endpoint(url = "feature-information", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF getFeatureInformation(ClientRequestIF request, @RequestParamter(name = "layerId") String layerId, @RequestParamter(name = "featureId") String featureId) throws JSONException
+  {
+    String json = DashboardThematicLayerDTO.getFeatureInformation(request, layerId, featureId);
+
+    return new RestBodyResponse(new JSONStringImpl(json));
+  }
 }

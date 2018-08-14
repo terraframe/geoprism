@@ -44,13 +44,13 @@
    			<li class="dropdown navigation-dropdown">      
    				<a href="#" class="fa fa-bars opener-drop dropdown-toggle dropdown-toggle-compact pull-right" ></a>
 	    		<ul class="dropdown-menu navigation-menu pull-right">
-	    			<a href="${pageContext.request.contextPath}/menu">
+	    			<a href="${pageContext.request.contextPath}/prism/home">
 	       				<li>
 	       					<i class="fa fa-home"></i> 
 	       					<p ><gdb:localize key="dashboardViewer.userMenuLinkLabel"/></p>
 	       				</li>
        				</a>
-       				<a href="${pageContext.request.contextPath}/kaleidoscopes">
+       				<a href="${pageContext.request.contextPath}/nav/kaleidoscopes">
 	       				<li>
 	       					<i class="fa fa-th"></i> 
 	       					<p><gdb:localize key="dashboardViewer.userDashboardsLinkLabel"/></p>

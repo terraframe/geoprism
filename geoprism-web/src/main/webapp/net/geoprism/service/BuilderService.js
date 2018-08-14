@@ -29,33 +29,21 @@
         service.dto[key] = object[key];
       }
         
-      $http({
+      runwayService.http({
         url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/apply-with-options', 
         method: "POST",
         data: {dto: service.dto, options:object.options}
-      })
-      .then(request.onSuccess, request.onFailure)
-      .finally(function(){
-         request._hideStandby();  
-      });
-                  
-      request._showStandby();  
+      }, request);      
     }
     
     service.getLayersToDelete = function(object, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
-      $http({
+      runwayService.http({
         url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/layers-to-delete', 
         method: "POST",
         data: {dashboardId: service.dto.oid, options:object.options}
-      })
-      .then(request.onSuccess, request.onFailure)
-      .finally(function(){
-         request._hideStandby();  
-      });
-                
-      request._showStandby();  
+      }, request);      
     }
     
     service.unlock = function(object, onSuccess, onFailure) {
@@ -65,12 +53,11 @@
       else {
         var request = runwayService.createRequest(function(){onSuccess(false)}, onFailure);
         
-        $http({
+        runwayService.http({
           url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/unlock', 
           method: "POST",
           data: {dashboardId: service.dto.oid}
-        })
-        .then(request.onSuccess, request.onFailure);
+        }, request);      
       }
     }    
     
@@ -122,17 +109,11 @@
       }, onFailure);
       
       
-      $http({
+      runwayService.http({
         url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/dashboard-definition', 
         method: "POST",
         data: dashboardId != null ? {dashboardId: dashboardId} : {}
-      })
-      .then(request.onSuccess, request.onFailure)
-      .finally(function(){
-         request._hideStandby();  
-      });
-              
-      request._showStandby();  
+      }, request);      
     }
     
     

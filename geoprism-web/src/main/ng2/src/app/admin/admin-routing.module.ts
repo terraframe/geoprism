@@ -46,7 +46,7 @@ const routes: Routes = [
     data: { title: 'System_Configuration' }                
   },
   {
-    path: 'logo/:id',
+    path: 'logo/:oid',
     component: SystemLogoComponent,
     data: { title: 'System_Configuration' }            
     
@@ -83,7 +83,7 @@ const routes: Routes = [
     data: { title: 'Data_Browser' }                
   },
   {
-    path: 'account/:id',
+    path: 'account/:oid',
     component: AccountComponent,
     resolve: {
       account: AccountResolver

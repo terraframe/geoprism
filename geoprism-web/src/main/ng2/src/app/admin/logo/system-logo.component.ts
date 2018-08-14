@@ -39,7 +39,7 @@ declare var acp: any;
   styles: []
 })
 export class SystemLogoComponent implements OnInit {
-  id: SystemLogo;
+  oid: SystemLogo;
 
   public uploader:FileUploader;
   public dropActive:boolean = false;
@@ -60,7 +60,7 @@ export class SystemLogoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
+    this.oid = this.route.snapshot.params['oid'];
         
     let options:FileUploaderOptions = {
       autoUpload: false,
@@ -83,7 +83,7 @@ export class SystemLogoComponent implements OnInit {
       this.eventService.onError(response);  
     };
     this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
-      form.append('id', this.id);        
+      form.append('oid', this.oid);        
     };        
   }
   

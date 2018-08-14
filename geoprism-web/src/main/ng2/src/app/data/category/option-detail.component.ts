@@ -35,7 +35,7 @@ export class OptionResolver implements Resolve<Category> {
   constructor(@Inject(CategoryService) private categoryService: CategoryService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Category> {
-    return this.categoryService.edit(route.params['parentId'], route.params['id'])
+    return this.categoryService.edit(route.params['parentId'], route.params['oid'])
       .catch((error:any) => {
         this.eventService.onError(error); 
     	  
@@ -92,7 +92,7 @@ export class OptionDetailComponent implements OnInit {
   }
   
   cancel(): void {
-    this.categoryService.unlock(this.category.id)
+    this.categoryService.unlock(this.category.oid)
       .then(response => {
         this.goBack(this.category);
       })
@@ -106,7 +106,7 @@ export class OptionDetailComponent implements OnInit {
   
   restore(synonym: Synonym): void {
 	  
-      this.action.restore.push(synonym.id);
+      this.action.restore.push(synonym.oid);
         	
       this.category.synonyms = this.category.synonyms.filter(h => h !== synonym);            	        	
   } 

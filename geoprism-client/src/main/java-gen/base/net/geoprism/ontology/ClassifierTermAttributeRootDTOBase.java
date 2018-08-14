@@ -462,13 +462,13 @@ public abstract class ClassifierTermAttributeRootDTOBase extends com.runwaysdk.b
   public static net.geoprism.ontology.ClassifierTermAttributeRootQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.ontology.ClassifierTermAttributeRootQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.ontology.ClassifierTermAttributeRootQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierTermAttributeRootDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.ontology.ClassifierTermAttributeRootQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

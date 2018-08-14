@@ -18,7 +18,7 @@
 ///
 
 export class Email {
-  id: string;
+  oid: string;
   server: string;
   username: string;
   password: string;

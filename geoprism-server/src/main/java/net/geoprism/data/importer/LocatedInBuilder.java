@@ -44,9 +44,9 @@ import com.runwaysdk.system.metadata.MdEntity;
 
 public class LocatedInBuilder 
 {
-  public static final String            CHILD_ID                   = "child_id";
+  public static final String            CHILD_ID                   = "child_oid";
 
-  public static final String            PARENT_ID                  = "parent_id";
+  public static final String            PARENT_ID                  = "parent_oid";
 
   public static final String            PROCESSED                  = "processed";
 
@@ -123,13 +123,13 @@ public class LocatedInBuilder
 
       // sql.append("DROP TABLE IF EXISTS " + UNIVERSALS_TABLE + ";\n");
       // sql.append("CREATE TABLE " + UNIVERSALS_TABLE + " AS (\n");
-      // sql.append("  SELECT DISTINCT ai.child_id " + CHILD_CLASS + ",\n");
-      // sql.append("         ai.parent_id " + PARENT_CLASS + ",\n");
-      // sql.append("         root.child_id " + ROOT_CLASS + "\n");
+      // sql.append("  SELECT DISTINCT ai.child_oid " + CHILD_CLASS + ",\n");
+      // sql.append("         ai.parent_oid " + PARENT_CLASS + ",\n");
+      // sql.append("         root.child_oid " + ROOT_CLASS + "\n");
       // sql.append("  FROM " + allowedIn + " AS ai, \n");
       // sql.append("  " + allowedIn + " AS root \n");
-      // sql.append("  JOIN " + uapt + " AS uapt ON root.child_id = uapt.child_term \n");
-      // sql.append("  WHERE ai.child_id = uapt.parent_term \n");
+      // sql.append("  JOIN " + uapt + " AS uapt ON root.child_oid = uapt.child_term \n");
+      // sql.append("  WHERE ai.child_oid = uapt.parent_term \n");
       // sql.append(");\n");
       //
       // sql.append("DELETE from universals \n");
@@ -441,7 +441,7 @@ public class LocatedInBuilder
     ValueQuery liVQ = new ValueQuery(f);
     LocatedInQuery liQ = new LocatedInQuery(liVQ);
 
-    liVQ.SELECT(liVQ.aSQLCharacter("li_child_id", liQ.childOid().getDbQualifiedName()), liVQ.aSQLCharacter("li_parent_id", liQ.parentOid().getDbQualifiedName()));
+    liVQ.SELECT(liVQ.aSQLCharacter("li_child_oid", liQ.childOid().getDbQualifiedName()), liVQ.aSQLCharacter("li_parent_oid", liQ.parentOid().getDbQualifiedName()));
     liVQ.FROM(liQ.getMdClassIF().getTableName(), liQ.getTableAlias());
 
     minus.MINUS(vq, liVQ);

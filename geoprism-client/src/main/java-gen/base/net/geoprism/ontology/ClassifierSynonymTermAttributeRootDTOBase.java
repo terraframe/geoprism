@@ -462,13 +462,13 @@ public abstract class ClassifierSynonymTermAttributeRootDTOBase extends com.runw
   public static net.geoprism.ontology.ClassifierSynonymTermAttributeRootQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRootDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.ontology.ClassifierSynonymTermAttributeRootQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.ontology.ClassifierSynonymTermAttributeRootQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierSynonymTermAttributeRootDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.ontology.ClassifierSynonymTermAttributeRootQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

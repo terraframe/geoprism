@@ -18,6 +18,6 @@
 ///
 
 export class TrackedEntity {
-  id: string;
+  oid: string;
   name: string;
 }

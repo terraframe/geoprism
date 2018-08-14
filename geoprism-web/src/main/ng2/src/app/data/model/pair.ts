@@ -1,4 +1,4 @@
 export class Pair {
-  id: string;
+  oid: string;
   value: string; 
 }

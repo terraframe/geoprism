@@ -1,5 +1,5 @@
 export class Application {
-  id:string;
+  oid:string;
   src:string;
   label:string;
   url:string;

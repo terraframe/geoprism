@@ -18,7 +18,7 @@
 ///
 
 export class TrackedEntityAttribute {
-  id: string;
+  oid: string;
   name: string;
   code: string;
   shortName: string;

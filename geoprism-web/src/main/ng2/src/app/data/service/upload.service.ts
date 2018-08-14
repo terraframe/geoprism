@@ -37,13 +37,13 @@ export class UploadService extends BasicService {
 
   constructor(service: EventService, private ehttp: EventHttpService, private http: Http) { super(service); }
 
-  getSavedConfiguration(id: string, sheetName: string): Promise<any> {
+  getSavedConfiguration(oid: string, sheetName: string): Promise<any> {
     
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
-    let data = JSON.stringify({id:id, sheetName: sheetName});
+    let data = JSON.stringify({oid:oid, sheetName: sheetName});
     
     return this.ehttp
       .post(acp + '/uploader/getSavedConfiguration', data, {headers: headers})
@@ -80,12 +80,12 @@ export class UploadService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  getErrorFile(id:string): Promise<Response> {
+  getErrorFile(oid:string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
-    let data = JSON.stringify({id : id });
+    let data = JSON.stringify({oid : oid });
     
     let options = new RequestOptions({responseType: ResponseContentType.Blob, headers });
     
@@ -215,9 +215,9 @@ export class UploadService extends BasicService {
     .catch(this.handleError.bind(this));    
   }
   
-  progress(id: string): Promise<Progress> {
+  progress(oid: string): Promise<Progress> {
     let params: URLSearchParams = new URLSearchParams();
-    params.set('id', id);
+    params.set('oid', oid);
     
     return this.http
       .get(acp + '/uploader/progress', {search: params})

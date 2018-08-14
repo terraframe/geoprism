@@ -463,13 +463,13 @@ public abstract class HasThematicLayerDTOBase extends com.runwaysdk.business.Rel
   public static net.geoprism.dashboard.layer.HasThematicLayerQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.dashboard.layer.HasThematicLayerQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.dashboard.layer.HasThematicLayerQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.layer.HasThematicLayerDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.dashboard.layer.HasThematicLayerQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

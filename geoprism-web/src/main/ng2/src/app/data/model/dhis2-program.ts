@@ -18,10 +18,10 @@
 ///
 
 export class Program {
-  id: string;
+  oid: string;
   name: string;
   trackedEntity: ProgramTrackedEntityReference;
 }
 export class ProgramTrackedEntityReference {
-  id: string;
+  oid: string;
 }

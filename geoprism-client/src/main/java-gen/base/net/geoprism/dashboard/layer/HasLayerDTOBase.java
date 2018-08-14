@@ -462,13 +462,13 @@ public abstract class HasLayerDTOBase extends com.runwaysdk.business.Relationshi
   public static net.geoprism.dashboard.layer.HasLayerQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.dashboard.layer.HasLayerQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.dashboard.layer.HasLayerQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.dashboard.layer.HasLayerDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.dashboard.layer.HasLayerQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

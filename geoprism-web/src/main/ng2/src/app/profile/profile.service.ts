@@ -67,14 +67,14 @@ export class ProfileService extends BasicService {
     .catch(this.handleError.bind(this));      
   }  
   
-  unlock(id:string): Promise<Response> {
+  unlock(oid:string): Promise<Response> {
     
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
     
     return this.ehttp
-    .post(acp + '/account/unlock', JSON.stringify({id:id}), {headers: headers})
+    .post(acp + '/account/unlock', JSON.stringify({oid:oid}), {headers: headers})
     .toPromise()
     .catch(this.handleError.bind(this));      
   }  

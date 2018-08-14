@@ -953,8 +953,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
     sql.append(" FROM universal, geo_entity, located_in WHERE geo_entity.universal = universal.oid");
-    sql.append(" AND ((located_in.parent_id ='" + entity.getOid() + "'");
-    sql.append(" AND geo_entity.oid = located_in.child_id)");
+    sql.append(" AND ((located_in.parent_oid ='" + entity.getOid() + "'");
+    sql.append(" AND geo_entity.oid = located_in.child_oid)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
     
     ResultSet bboxResult = Database.query(sql.toString());

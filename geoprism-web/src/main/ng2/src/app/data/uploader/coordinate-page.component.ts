@@ -83,7 +83,7 @@ export class CoordinatePageComponent implements OnInit, LocalValidator {
           coordinate.featureLabel = "";
           coordinate.location = "";
           coordinate.featureId = "";
-          coordinate.id = field.label
+          coordinate.oid = field.label
             
           this.sheet.coordinates.push(coordinate);
         }
@@ -114,8 +114,8 @@ export class CoordinatePageComponent implements OnInit, LocalValidator {
       
     if(this.sheet.attributes != null) {
       for(let i = 0; i < this.sheet.attributes.ids.length; i++) {
-        let id = this.sheet.attributes.ids[i];
-        let attribute = this.sheet.attributes.values[id];          
+        let oid = this.sheet.attributes.ids[i];
+        let attribute = this.sheet.attributes.values[oid];          
         
         this.locations.push({
           label : attribute.label,
@@ -166,7 +166,7 @@ export class CoordinatePageComponent implements OnInit, LocalValidator {
     for(let i = 0; i < this.sheet.coordinates.length; i++) {
       let coordinate = this.sheet.coordinates[i];
         
-      if(coordinate.id === field.label) {
+      if(coordinate.oid === field.label) {
         return true;
       }
     }
@@ -200,8 +200,8 @@ export class CoordinatePageComponent implements OnInit, LocalValidator {
         
       if(this.sheet.attributes != null) {
         for(let i = 0; i < this.sheet.attributes.ids.length; i++) {
-          let id = this.sheet.attributes.ids[i];
-          let attribute = this.sheet.attributes.values[id];          
+          let oid = this.sheet.attributes.ids[i];
+          let attribute = this.sheet.attributes.values[oid];          
             
           if(attribute.label == label) {
             count++;

@@ -21,6 +21,7 @@ package net.geoprism.dashboard;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ServletMethod;
 import com.runwaysdk.mvc.Controller;
@@ -138,5 +139,93 @@ public class DashboardController
     DashboardDTO.unlock(request, dashboardId);
 
     return new RestResponse();
+  }
+
+  @Endpoint(url = "base-layer-state", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF setBaseLayerState(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId, @RequestParamter(name = "baseLayerState") String baseLayerState) throws JSONException
+  {
+    DashboardDTO.setBaseLayerState(request, dashboardId, baseLayerState);
+
+    return new RestResponse();
+  }
+
+  @Endpoint(url = "save-state", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF saveState(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId, @RequestParamter(name = "state") String state, @RequestParamter(name = "global") Boolean global) throws JSONException
+  {
+    String json = DashboardDTO.saveState(request, dashboardId, state, global);
+
+    return new RestBodyResponse(new JSONStringImpl(json));
+  }
+
+  @Endpoint(url = "get-json", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF getJSON(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId) throws JSONException
+  {
+    String json = DashboardDTO.getJSON(request, dashboardId);
+
+    return new RestBodyResponse(new JSONStringImpl(json));
+  }
+
+  @Endpoint(url = "has-report", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF hasReport(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId) throws JSONException
+  {
+    Boolean response = DashboardDTO.hasReport(request, dashboardId);
+
+    return new RestBodyResponse(response);
+  }
+
+  @Endpoint(url = "geo-suggestions", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF geoSuggestions(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  {
+    ValueQueryDTO query = DashboardDTO.getGeoEntitySuggestions(request, dashboardId, text, limit);
+
+    return new RestBodyResponse(query);
+  }
+
+  @Endpoint(url = "text-suggestions", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF textSuggestions(ClientRequestIF request, @RequestParamter(name = "mdAttributeId") String mdAttributeId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  {
+    String[] results = DashboardDTO.getTextSuggestions(request, mdAttributeId, text, limit);
+
+    return new RestBodyResponse(results);
+  }
+
+  @Endpoint(url = "remove", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId)
+  {
+    request.delete(dashboardId);
+
+    return new RestResponse();
+  }
+
+  @Endpoint(url = "generate-thumbnail", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF generateThumbnail(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId)
+  {
+    DashboardDTO.generateThumbnailImage(request, dashboardId);
+
+    return new RestResponse();
+  }
+
+  @Endpoint(url = "set-dataset-order", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF setDatasetOrder(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId, @RequestParamter(name = "typeIds") String[] typeIds)
+  {
+    DashboardDTO.setMetadataWrapperOrder(request, dashboardId, typeIds);
+
+    return new RestResponse();
+  }
+
+  @Endpoint(url = "set-attribute-order", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF setAttributeOrder(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId, @RequestParamter(name = "typeId") String typeId, @RequestParamter(name = "attributeIds") String[] attributeIds)
+  {
+    DashboardDTO.setDashboardAttributesOrder(request, dashboardId, typeId, attributeIds);
+
+    return new RestResponse();
+  }
+
+  @Endpoint(url = "classifier-tree", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF getClassifierTree(ClientRequestIF request, @RequestParamter(name = "mdAttributeId") String mdAttributeId) throws JSONException
+  {
+    String json = DashboardDTO.getClassifierTree(request, mdAttributeId);
+
+    return new RestBodyResponse(new JSONStringImpl(json));
   }
 }

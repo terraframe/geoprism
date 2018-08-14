@@ -101,17 +101,17 @@ export class SummaryPageComponent implements OnInit {
     }
     
     for(let i = 0; i < this.sheet.attributes.ids.length; i++) {
-      let id = this.sheet.attributes.ids[i];
-      let attribute = this.sheet.attributes.values[id];
+      let oid = this.sheet.attributes.ids[i];
+      let attribute = this.sheet.attributes.values[oid];
       
-      this.universalMap[id] = [];
+      this.universalMap[oid] = [];
       
       for(let j = 0; j < this.universals.length; j++) {
         let universal = this.universals[j];
         
         if(attribute.fields[universal.value] != null && attribute.fields[universal.value] != 'EXCLUDE') {
           universal.useCoordinatesForLocationAssignment = attribute.useCoordinatesForLocationAssignment;
-          this.universalMap[id].push(universal);
+          this.universalMap[oid].push(universal);
         }
       }
     }
@@ -121,8 +121,8 @@ export class SummaryPageComponent implements OnInit {
     if(c != null && typeof c === 'object' && c.ids != null) {
       let coordinates = new Array<CoordinateAttribute>();
       
-      c.ids.forEach((id:string) => {
-        coordinates.push(c.values[id]);	  
+      c.ids.forEach((oid:string) => {
+        coordinates.push(c.values[oid]);	  
       });
       
       this.sheet.coordinates = coordinates;

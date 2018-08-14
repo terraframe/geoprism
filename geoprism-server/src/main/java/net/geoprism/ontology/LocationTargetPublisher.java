@@ -181,8 +181,8 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     sql.append("SELECT ge.oid, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.oid = ge.display_label\n");
-    sql.append("JOIN located_in AS li ON li.child_id = ge.oid\n");
-    sql.append("WHERE li.parent_id = '" + entityId + "'\n");
+    sql.append("JOIN located_in AS li ON li.child_oid = ge.oid\n");
+    sql.append("WHERE li.parent_oid = '" + entityId + "'\n");
     sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
 
     if (this.universalId != null && this.universalId.length() > 0)

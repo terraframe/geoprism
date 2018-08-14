@@ -424,13 +424,13 @@ public abstract class ClassUniversalDTOBase extends com.runwaysdk.business.Relat
   public static net.geoprism.ClassUniversalQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ClassUniversalDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentOid);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.ClassUniversalQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public static net.geoprism.ClassUniversalQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ClassUniversalDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childOid);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.ClassUniversalQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()

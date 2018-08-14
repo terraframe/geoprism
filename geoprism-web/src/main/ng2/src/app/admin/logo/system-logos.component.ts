@@ -54,11 +54,11 @@ export class SystemLogosComponent implements OnInit {
   }
   
   edit(icon: SystemLogo) : void {
-    this.router.navigate(['/admin/logo', icon.id]);
+    this.router.navigate(['/admin/logo', icon.oid]);
   }  
   
   remove(icon: SystemLogo) : void {
-    this.service.remove(icon.id).then(response => {
+    this.service.remove(icon.oid).then(response => {
       icon.custom = false;
     });
   }  

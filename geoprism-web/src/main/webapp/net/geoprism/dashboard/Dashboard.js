@@ -65,10 +65,10 @@
       
       onSuccess = function(json) {
         $timeout(function() {
-          var response = JSON.parse(json);
+          var response = json.data;
         
           controller.dashboards = response.dashboards;
-          controller.dashboardId = response.state.id;
+          controller.dashboardId = response.state.oid;
         
           controller.setDashboardState(response.state, true);
           
@@ -109,7 +109,7 @@
     
     /* Refresh Map Function */
     controller.refresh = function(buttonId, initialRender) {
-      var onSuccess = function(json, dto, response) {
+      var onSuccess = function(json) {
     	
         if(buttonId){
         	controller.icoSpin = null;
@@ -117,8 +117,10 @@
         }
         
         controller.hideLayers();
+        
+        var response = json.data;
                     
-        var map = Mojo.Util.toObject(json);
+        var map = response.map;
 
         $timeout(function() {
           controller.setMapState(map, false, initialRender);
@@ -126,7 +128,9 @@
           controller.renderReport();
         }, 10);
                   
-        GDB.ExceptionHandler.handleInformation(response.getInformation());            
+        if(response.information.length > 0) {
+          GDB.ExceptionHandler.handleInformation(response.information);                    	
+        }
       };      
       
       if(buttonId){
@@ -663,7 +667,7 @@
         
         if(attributes.length > 0) {
           var type = {
-            id : oType.id,
+            id : oType.oid,
             attributes : attributes
           }
             
@@ -693,12 +697,12 @@
       for(var i = 0; i < controller.model.types.length; i++) {
         var type = controller.model.types[i];
       
-        map[type.id] = {};
+        map[type.oid] = {};
           
         for(var j = 0; j < type.attributes.length; j++) {
           var attribute = type.attributes[j];
             
-          map[type.id][attribute.mdAttributeId] = attribute.filter;
+          map[type.oid][attribute.mdAttributeId] = attribute.filter;
         }        
       }
       
@@ -717,8 +721,8 @@
         for(var j = 0; j < type.attributes.length; j++) {
           var attribute = type.attributes[j];          
           
-          if(filters[type.id] != null) {        	  
-            var filter = filters[type.id][attribute.mdAttributeId];
+          if(filters[type.oid] != null) {        	  
+            var filter = filters[type.oid][attribute.mdAttributeId];
             
             if(filter != null) {
               attribute.filter = filter;
