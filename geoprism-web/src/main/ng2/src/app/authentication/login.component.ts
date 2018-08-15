@@ -20,6 +20,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SessionService } from './session.service';
+import { Server } from '../core/authentication/server';
 
 declare var acp: any;
 
@@ -30,11 +31,27 @@ declare var acp: any;
 })
 export class LoginComponent {
   context:string;
+  oAuthServer:Server;
   username:string = '';
   password:string = '';		  
 
   constructor(private service:SessionService, private router:Router) {
     this.context = acp as string;
+    
+    console.log("login constructor");
+    
+    service.getOAuthInfo().then(server => {
+      console.log("getOAuthInfo returned");
+      console.log(server);
+      
+      this.oAuthServer = server;
+      
+      console.log("this.oAuth equals");
+      console.log(this.oAuthServer);
+      
+      console.log("this equals");
+      console.log(this);
+    })
   }
   
   onSubmit():void {

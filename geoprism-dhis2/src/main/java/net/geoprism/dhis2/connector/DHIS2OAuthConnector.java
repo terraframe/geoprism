@@ -48,7 +48,7 @@ public class DHIS2OAuthConnector extends AbstractDHIS2Connector
   
   public static final String SECRET = "1e6db50c-0fee-11e5-98d0-3c15c2c6caf6"; // TODO : Don't hardcode this
   
-  private String OAUTH_KEY_NAME = "geoprism-dhis2";
+  public static final String OAUTH_KEY_NAME = "geoprism-dhis2";
   
   private String accessToken;
   

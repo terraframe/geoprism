@@ -27,6 +27,7 @@ import { EventHttpService } from '../core/service/event-http.service';
 
 import { AuthService } from '../core/authentication/auth.service';
 import { User } from '../core/authentication/user';
+import { Server } from '../core/authentication/server';
 
 declare var acp: any;
 
@@ -35,6 +36,16 @@ export class SessionService extends BasicService {
   
   constructor(service: EventService, private ehttp: EventHttpService, private http: Http, private authService:AuthService) {
     super(service); 
+  }
+  
+  getOAuthInfo(): Promise<Server> {
+    return this.ehttp
+      .get(acp + '/session/getOAuthServer')
+      .toPromise()
+      .then((response: any) => {
+        return response.json() as Server;
+      })
+      .catch(this.handleError.bind(this));
   }
   
   login(username:string, password:string): Promise<User> {

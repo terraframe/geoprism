@@ -218,6 +218,7 @@ public class SessionFilter implements Filter, Reloadable
     endpoints.add("session/form");
     endpoints.add("session/login");
     endpoints.add("session/ologin");
+    endpoints.add("session/getOAuthServer");
 
     for (String endpoint : endpoints)
     {

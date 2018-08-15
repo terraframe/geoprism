@@ -23,16 +23,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 
+import net.geoprism.account.ExternalProfile;
 import net.geoprism.data.etl.DataImportRunnable;
 import net.geoprism.data.etl.ImportResponseIF;
 import net.geoprism.data.etl.ProgressMonitorIF;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
 import net.geoprism.data.etl.excel.ExcelSheetReader;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
-import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
+import net.geoprism.dhis2.connector.DHIS2OAuthConnector;
 import net.geoprism.dhis2.palestine.PalestineContentHandler;
 import net.geoprism.dhis2.palestine.PalestineConverter;
 import net.geoprism.dhis2.palestine.PalestineResponse;
+import net.geoprism.dhis2.response.OAuthLoginRequiredException;
 import net.geoprism.dhis2.util.DHIS2IdFinder;
 
 import org.apache.poi.ss.usermodel.Workbook;
@@ -70,10 +72,15 @@ public class DHIS2Plugin implements DHIS2PluginIF
     {
       istream = new FileInputStream(file);
       
-      // TODO : Use OAuth instead
-      AbstractDHIS2Connector dhis2 = new DHIS2HTTPCredentialConnector();
-      dhis2.setServerUrl("http://127.0.0.1:8085/");
-      dhis2.setCredentials("admin", "district");
+      AbstractDHIS2Connector dhis2 = null;
+//      AbstractDHIS2Connector dhis2 = new DHIS2OAuthConnector();
+//      dhis2.readConfigFromDB();
+//      
+//      if (ExternalProfile.getAccessToken() == null)
+//      {
+//        OAuthLoginRequiredException ex = new OAuthLoginRequiredException();
+//        throw ex;
+//      }
       
       PalestineConverter converter = new PalestineConverter(dhis2, monitor);
       

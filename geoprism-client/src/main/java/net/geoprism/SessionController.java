@@ -25,6 +25,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import net.geoprism.account.ExternalProfileDTO;
+import net.geoprism.account.LocaleSerializer;
+import net.geoprism.account.OauthServerDTO;
+import net.geoprism.account.OauthServerIF;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,12 +46,11 @@ import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
+import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.mvc.RestResponse;
+import com.runwaysdk.request.RequestDecorator;
 import com.runwaysdk.request.ServletRequestIF;
 import com.runwaysdk.web.WebClientSession;
-
-import net.geoprism.account.ExternalProfileDTO;
-import net.geoprism.account.LocaleSerializer;
-import net.geoprism.account.OauthServerIF;
 
 @Controller(url = "session")
 public class SessionController implements Reloadable
@@ -59,43 +63,39 @@ public class SessionController implements Reloadable
 
   public static final String LOGOUT_ACTION    = SessionController.class.getName() + ".logout" + MdActionInfo.ACTION_SUFFIX;
 
-  //
-  // public ResponseIF form()
-  // {
-  // String errorMessage = this.req.getParameter("errorMessage");
-  //
-  // this.form(errorMessage);
-  // }
-  //
-  // private ResponseIF form(String errorMessage)
-  // {
-  // Locale[] locales = ServletUtility.getLocales(req);
-  //
-  // CachedImageUtil.setBannerPath(this.req, this.resp);
-  //
-  // if (errorMessage != null)
-  // {
-  // req.setAttribute("errorMessage", errorMessage);
-  // }
-  //
-  // WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
-  //
-  // try
-  // {
-  // ClientRequestIF clientRequest = clientSession.getRequest();
-  //
-  // OauthServerDTO[] servers = OauthServerDTO.getAll(clientRequest);
-  //
-  // req.setAttribute("servers", servers);
-  // }
-  // finally
-  // {
-  // clientSession.logout();
-  // }
-  //
-  // req.getRequestDispatcher("/login.jsp").forward(req, resp);
-  // }
-
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF getOAuthServer(ServletRequestIF req) throws JSONException
+  {
+    Locale[] locales = this.getLocales(req);
+    
+    WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
+    try
+    {
+      ClientRequestIF clientRequest = clientSession.getRequest();
+      
+      OauthServerDTO[] servers = OauthServerDTO.getAll(clientRequest);
+      
+      if (servers.length > 0)
+      {
+        OauthServerDTO server = servers[0];
+        
+        JSONObject json = new JSONObject();
+        json.put("url", server.getUrl(((RequestDecorator)req).getRequest()));
+        json.put("displayLabel", server.getDisplayLabel().getValue());
+        
+        return new RestBodyResponse(json);
+      }
+      else
+      {
+        return new RestResponse();
+      }
+    }
+    finally
+    {
+      clientSession.logout();
+    }
+  }
+  
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF login(ServletRequestIF req, @RequestParamter(name = "username") String username, @RequestParamter(name = "password") String password) throws JSONException
   {
@@ -152,7 +152,7 @@ public class SessionController implements Reloadable
     return new CookieResponse("user", 0);
   }
 
-  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF ologin(ServletRequestIF req, @RequestParamter(name = "code") String code, @RequestParamter(name = "state") String state) throws MalformedURLException, JSONException
   {
     URL url = new URL(req.getScheme(), req.getServerName(), req.getServerPort(), req.getContextPath());
