@@ -427,11 +427,11 @@
     controller.renderTree = function(element) {
       
       var onSuccess = function(results){
-        var nodes = JSON.parse(results);
+        var nodes = results.data;
         var rootTerms = [];
               
         for(var i = 0; i < nodes.length; i++) {
-          rootTerms.push({termId : nodes[i].id});
+          rootTerms.push({termId : nodes[i].oid});
         }
               
         var tree = new net.geoprism.ontology.OntologyTree({
@@ -445,7 +445,7 @@
         });
         tree.onCheck(function(node){
           $scope.attribute.filter.value = tree.getCheckedTerms();
-          $scope.$apply();
+          // $scope.$apply();
         });
             
         tree.render(element, nodes);

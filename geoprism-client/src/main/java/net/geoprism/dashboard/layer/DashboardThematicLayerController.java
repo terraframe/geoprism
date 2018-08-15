@@ -26,15 +26,18 @@ import com.runwaysdk.controller.ServletMethod;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
+import com.runwaysdk.mvc.ParseType;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
 import net.geoprism.JSONStringImpl;
-import net.geoprism.dashboard.DashboardDTO;
+import net.geoprism.dashboard.AggregationStrategyDTO;
 import net.geoprism.dashboard.DashboardMapDTO;
+import net.geoprism.dashboard.DashboardStyleDTO;
 import net.geoprism.dashboard.DashboardThematicStyleDTO;
 
 @Controller(url = "thematic-layer")
@@ -50,19 +53,19 @@ public class DashboardThematicLayerController
 
     String options = DashboardThematicLayerDTO.getOptionsJSON(request, layer.getMdAttributeId(), map.getDashboardId());
 
-    JSONObject response = new JSONObject();
-    response.put("layerDTO", BusinessDTOToJSON.getConverter(layer).populate());
-    response.put("styleDTO", BusinessDTOToJSON.getConverter(style).populate());
-    response.put("layer", new JSONObject(layer.getJSON()));
-    response.put("options", new JSONObject(options));
+    RestResponse response = new RestResponse();
+    response.set("layerDTO", layer);
+    response.set("styleDTO", style);
+    response.set("layer", new JSONStringImpl(layer.getJSON()));
+    response.set("options", new JSONStringImpl(options));
 
-    return new RestBodyResponse(response);
+    return response;
   }
 
-  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF newThematicInstance(ClientRequestIF request, @RequestParamter(name = "mdAttribute") String mdAttribute, @RequestParamter(name = "mapId") String mapId) throws JSONException
+  @Endpoint(url = "new-thematic-layer", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF newThematicInstance(ClientRequestIF request, @RequestParamter(name = "mdAttributeId") String mdAttributeId, @RequestParamter(name = "mapId") String mapId) throws JSONException
   {
-    MdAttributeDTO mdAttributeDTO = MdAttributeDTO.get(request, mdAttribute);
+    MdAttributeDTO mdAttributeDTO = MdAttributeDTO.get(request, mdAttributeId);
     DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
 
     DashboardThematicLayerDTO layer = new DashboardThematicLayerDTO(request);
@@ -71,15 +74,23 @@ public class DashboardThematicLayerController
 
     DashboardThematicStyleDTO style = new DashboardThematicStyleDTO(request);
 
-    String options = DashboardThematicLayerDTO.getOptionsJSON(request, mdAttribute, map.getDashboardId());
+    String options = DashboardThematicLayerDTO.getOptionsJSON(request, mdAttributeId, map.getDashboardId());
 
-    JSONObject response = new JSONObject();
-    response.put("layerDTO", BusinessDTOToJSON.getConverter(layer).populate());
-    response.put("styleDTO", BusinessDTOToJSON.getConverter(style).populate());
-    response.put("layer", new JSONObject(layer.getJSON()));
-    response.put("options", new JSONObject(options));
+    RestResponse response = new RestResponse();
+    response.set("layerDTO", layer);
+    response.set("styleDTO", style);
+    response.set("layer", new JSONStringImpl(layer.getJSON()));
+    response.set("options", new JSONStringImpl(options));
 
-    return new RestBodyResponse(response);
+    return response;
+  }
+
+  @Endpoint(url = "apply-style-strategy", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF applyWithStyleAndStrategy(ClientRequestIF request, @RequestParamter(name = "layer", parser = ParseType.BASIC_JSON) DashboardThematicLayerDTO layer, @RequestParamter(name = "style", parser = ParseType.BASIC_JSON) DashboardStyleDTO style, @RequestParamter(name = "mapId") String mapId, @RequestParamter(name = "strategy", parser = ParseType.BASIC_JSON) AggregationStrategyDTO strategy, @RequestParamter(name = "state") String state) throws JSONException
+  {
+    String json = layer.applyWithStyleAndStrategy(style, mapId, strategy, state);
+
+    return new RestBodyResponse(new JSONStringImpl(json));
   }
 
   @Endpoint(url = "feature-information", method = ServletMethod.GET, error = ErrorSerialization.JSON)

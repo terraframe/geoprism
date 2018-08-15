@@ -28,4 +28,11 @@ public class DashboardLayerController
     return new RestResponse();
   }
 
+  @Endpoint(url = "unlock", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "oid") String oid)
+  {
+    DashboardLayerDTO.unlock(request, oid);
+
+    return new RestResponse();
+  }
 }

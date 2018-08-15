@@ -189,6 +189,14 @@ public class DashboardController
     return new RestBodyResponse(results);
   }
 
+  @Endpoint(url = "category-suggestions", method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF classifierSuggestions(ClientRequestIF request, @RequestParamter(name = "mdAttributeId") String mdAttributeId, @RequestParamter(name = "geoNodeId") String geoNodeId, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "aggregationVal") String aggregationVal, @RequestParamter(name = "state") String state, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  {
+    String[] results = DashboardDTO.getCategoryInputSuggestions(request, mdAttributeId, geoNodeId, universalId, aggregationVal, text, limit, state);
+
+    return new RestBodyResponse(results);
+  }
+
   @Endpoint(url = "remove", method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId)
   {

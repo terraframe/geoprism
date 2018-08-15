@@ -286,6 +286,26 @@
       }      
     }
     
+    service.copyObject = function(object, dto) {
+      for(var key in object) {
+        var value = dto[key];
+            
+        if(value != null && value.length > 0) {
+          object[key] = value;
+        }
+      }      
+    }
+    
+    service.copy = function(dto, object) {
+      for(var key in object) {
+        var value = object[key];
+        
+        if(value != null && value.length > 0) {
+          dto[key] = value;
+        }
+      }      
+    }
+    
     service.loadClass = function(type, onSuccess, onFailure) {
       if (!Mojo.Meta.classExists(type)) {
         var request = service.createRequest(onSuccess, onFailure);

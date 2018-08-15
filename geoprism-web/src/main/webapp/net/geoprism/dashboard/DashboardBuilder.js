@@ -42,7 +42,7 @@
         controller.clear();
         
         if(!newInstance) {
-//          $scope.$apply();
+//          // $scope.$apply();
         }
       };
         
@@ -64,21 +64,21 @@
           dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "ok", "Ok"), function() {
             $scope.busy = false;            
             dialog.close();            
-            $scope.$apply();
+            // $scope.$apply();
             
             controller.applyWithOptions(); 
           }, null, {class:'btn btn-primary'});
           dialog.addButton(com.runwaysdk.Localize.localize("dashboardViewer", "cancel", "Cancel"), function() {
             $scope.busy = false;            
             dialog.close();            
-            $scope.$apply();
+            // $scope.$apply();
           }, null, {class:'btn btn-default'});
           dialog.setStyle("z-index", 10001);          
           dialog.render();
         }
         else {
           $scope.busy = false;            
-//          $scope.$apply();
+//          // $scope.$apply();
           
           controller.applyWithOptions();
         }
@@ -106,7 +106,7 @@
     	var e = response.data;
         $scope.errors.push(e.localizedMessage);
                        
-//        $scope.$apply();
+//        // $scope.$apply();
               
         $('#builder-div').parent().parent().animate({ scrollTop: 0 }, 'slow');
       };             
@@ -131,7 +131,7 @@
         
         controller.init(result);
       
-//        $scope.$apply();
+//        // $scope.$apply();
       }
                
       builderService.loadDashboard(dashboardId, element, onSuccess);    
@@ -164,7 +164,7 @@
       
     controller.exists = function(dataset) {
       for(var i = 0; i < $scope.dashboard.options.types.length; i++) {
-        if($scope.dashboard.options.types[i].id == dataset.id) {
+        if($scope.dashboard.options.types[i].oid == dataset.id) {
           return true;
         }
       }
@@ -192,7 +192,7 @@
       
       if(data.finished) {
         $scope.hidden = false;
-        $scope.$apply();        
+        // $scope.$apply();        
       }
     }); 
     

@@ -33,7 +33,7 @@
       if(controller.expanded){
         widgetService.animate("#control-form", {left: "-=281"}, speed, function(){
           controller.expanded = false;
-          $scope.$apply();
+          // $scope.$apply();
         });
         
         widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "-=281"}, speed);
@@ -41,7 +41,7 @@
       else{
         widgetService.animate("#control-form", {left: "+=281"}, speed, function(){
             controller.expanded = true;
-            $scope.$apply();
+            // $scope.$apply();
         });        
         widgetService.animate(".ol-zoom.ol-unselectable.ol-control", {left: "+=281"}, speed);
       }
@@ -115,7 +115,7 @@
           $scope.cache.ids.splice( $.inArray(layerId, $scope.cache.ids), 1 );
         }
             
-        $scope.$apply();
+//        // $scope.$apply();
       };
           
       dashboardService.removeLayer(layerId, '#overlay-container', onSuccess);  
@@ -124,7 +124,7 @@
     controller.setLayerIndexes = function(layerIds) {
       $scope.cache.ids = layerIds;
 
-      $scope.$apply();       
+      // $scope.$apply();       
       
       // // At this point, the cache are already ordered properly in the HTML. All we need to do is inform the map of the new ordering.
       $scope.dashboard.renderMap();                  
@@ -158,7 +158,7 @@
         };
           
         var onFailure = function(e) {
-          $scope.$apply();
+          // $scope.$apply();
         };
           
         /* 
@@ -271,7 +271,7 @@
           $scope.cache.ids.splice( $.inArray(universalId, $scope.cache.ids), 1 );
         }
                 
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       dashboardService.removeLayer(layerId, '#ref-layer-container', onSuccess);

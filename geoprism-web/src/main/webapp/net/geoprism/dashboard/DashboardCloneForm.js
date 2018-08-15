@@ -26,14 +26,14 @@
         
         controller.clear();
         
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       var onFailure = function(e){
         $scope.errors = [];
         $scope.errors.push(e.localizedMessage);
                    
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       $scope.errors = [];
@@ -63,7 +63,7 @@
       var onSuccess = function(response) {        
         controller.load(response.dashboard);
         
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       dashboardService.newClone(dashboardId, elementId, onSuccess);

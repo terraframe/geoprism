@@ -75,7 +75,7 @@
         runwayService.http({
           url: com.runwaysdk.__applicationContextPath + '/dashboard-layer/remove', 
           method: "POST",
-          data: {layerId: layer.layerId}
+          data: {layerId: layerId}
         }, request);                                      
       }
     };

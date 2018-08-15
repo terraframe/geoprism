@@ -47,7 +47,7 @@
             }
           }
             
-          $scope.$apply();
+          // $scope.$apply();
         }, 0);
       };
       
@@ -100,7 +100,7 @@
               controller.toggleCreateDashboardIcon();
             }
                   
-            $scope.$apply();
+            // $scope.$apply();
           };          
                 
           dashboardService.removeDashboard(dashboardId, "#container", onSuccess);
@@ -142,7 +142,7 @@
       
       controller.toggleCreateDashboardIcon();
       
-//      $scope.$apply();
+//      // $scope.$apply();
     }
     
     controller.toggleCreateDashboardIcon = function(){
@@ -174,7 +174,7 @@
         }
       }
         
-//        $scope.$apply();
+//        // $scope.$apply();
     }
     
     $scope.$on('dashboardChange', function(event, data){

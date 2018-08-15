@@ -72,7 +72,7 @@
         
           controller.setDashboardState(response.state, true);
           
-          $scope.$apply();
+          // $scope.$apply();
         }, 0);
       };
           
@@ -113,7 +113,7 @@
     	
         if(buttonId){
         	controller.icoSpin = null;
-        	$scope.$apply();
+        	// $scope.$apply();
         }
         
         controller.hideLayers();
@@ -147,7 +147,7 @@
       var onSuccess = function(json, dto, response) {
           if(buttonId){
         	  controller.icoSpin = null;
-        	  $scope.$apply();
+        	  // $scope.$apply();
           }
       };  
       
@@ -203,7 +203,7 @@
       controller.clearDashboardState();
       
       var onSuccess = function(json){
-        var state = JSON.parse(json);
+        var state = json.data;
           
         controller.setDashboardState(state, true);
       };
@@ -233,7 +233,7 @@
           }
         }            
 
-        $scope.$apply();
+        // $scope.$apply();
               
         controller.refresh(null, true);
       }, 5);
@@ -363,7 +363,7 @@
         }
       }
       
-      $scope.$apply();
+      // $scope.$apply();
       
       controller.renderMap();
     }
@@ -491,7 +491,7 @@
         'activeBaseMap' : activeBaseMapStr
       };
       
-      var url = 'net.geoprism.dashboard.DashboardMapController.exportMap.mojo?' + $.param(params);
+      var url = com.runwaysdk.__applicationContextPath + '/dashboard-map/export-map?' + $.param(params);
               
       window.location.href = url;            
     }
@@ -506,7 +506,7 @@
         'layerId' : layerId
       };
             
-      var url = 'net.geoprism.dashboard.DashboardMapController.exportLayerData.mojo?' + $.param(params);
+      var url = com.runwaysdk.__applicationContextPath + '/dashboard-map/export-layer?' + $.param(params);
                     
       window.location.href = url;             
     }
@@ -557,7 +557,7 @@
 
         controller.geoId = info.geoId;
         
-        $scope.$apply();
+        // $scope.$apply();
         
         controller.renderReport();
       }

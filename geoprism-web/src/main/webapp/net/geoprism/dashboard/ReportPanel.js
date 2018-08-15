@@ -114,7 +114,7 @@
           
           $scope.hasReport = true;
           
-          $scope.$apply();
+          // $scope.$apply();
         },
         onFailure : function(e) {
           GDB.ExceptionHandler.handleException(e);
@@ -145,7 +145,7 @@
       
       var onSuccess = function(){
         $scope.hasReport = false;          
-        $scope.$apply();    	  
+        // $scope.$apply();    	  
       };
       
       dashboardService.removeReport(dashboardId, "#report-viewport", onSuccess);

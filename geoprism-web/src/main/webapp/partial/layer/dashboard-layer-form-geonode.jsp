@@ -28,7 +28,7 @@
   <div class="holder add">
     <div class="box">
       <label for="geonode-select"><gdb:localize key="DashboardThematicLayer.form.geoNode"/></label>
-      <styled-select options="dynamicDataModel.geoNodes" model="layerModel.geoNode" value="id" label="displayLabel"></styled-select>
+      <styled-select options="dynamicDataModel.geoNodes" model="layerModel.geoNode" value="oid" label="displayLabel"></styled-select>
     </div>
   </div>
 </div>

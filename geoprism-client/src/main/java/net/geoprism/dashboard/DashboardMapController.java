@@ -66,7 +66,7 @@ public class DashboardMapController
     return response;
   }
 
-  @Endpoint(url = "export-map", method = ServletMethod.POST)
+  @Endpoint(url = "export-map", method = ServletMethod.GET)
   public ResponseIF exportMap(ClientRequestIF request, @RequestParamter(name = "mapId") String mapId, @RequestParamter(name = "outFileName") String outFileName, @RequestParamter(name = "outFileFormat") String outFileFormat, @RequestParamter(name = "mapBounds") String mapBounds, @RequestParamter(name = "mapSize") String mapSize, @RequestParamter(name = "activeBaseMap") String activeBaseMap)
   {
     DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
@@ -81,7 +81,7 @@ public class DashboardMapController
     return new InputStreamResponse(mapImageInStream, "application/" + outFileFormat, outFileName);
   }
 
-  @Endpoint(url = "export-layer", method = ServletMethod.POST)
+  @Endpoint(url = "export-layer", method = ServletMethod.GET)
   public ResponseIF exportLayerData(ClientRequestIF request, @RequestParamter(name = "mapId") String mapId, @RequestParamter(name = "state") String state, @RequestParamter(name = "layerId") String layerId)
   {
     DashboardMapDTO map = DashboardMapDTO.get(request, mapId);

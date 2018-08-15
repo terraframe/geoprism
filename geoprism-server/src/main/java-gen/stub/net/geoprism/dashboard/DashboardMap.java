@@ -123,6 +123,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableGeometry;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -211,6 +212,7 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
     Thread thread = new Thread(new Runnable()
     {
       @Override
+      @Request
       public void run()
       {
         try

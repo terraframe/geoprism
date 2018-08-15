@@ -28,7 +28,7 @@
       if(controller.expanded){
         widgetService.animate("#dashboardMetadata", {right: "-=300"}, speed, function(){
           controller.expanded = false;
-          $scope.$apply();
+          // $scope.$apply();
         });
 
         // Report Panel background
@@ -40,7 +40,7 @@
       else{    	  
         widgetService.animate("#dashboardMetadata", {right: "+=300"}, speed, function(){
           controller.expanded = true;
-          $scope.$apply();
+          // $scope.$apply();
         });
 
         // Report Panel background

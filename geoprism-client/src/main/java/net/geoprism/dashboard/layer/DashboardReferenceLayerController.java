@@ -26,11 +26,15 @@ import com.runwaysdk.controller.ServletMethod;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
+import com.runwaysdk.mvc.ParseType;
 import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
+import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 
+import net.geoprism.JSONStringImpl;
+import net.geoprism.dashboard.AggregationStrategyDTO;
 import net.geoprism.dashboard.DashboardMapDTO;
 import net.geoprism.dashboard.DashboardStyleDTO;
 
@@ -46,17 +50,17 @@ public class DashboardReferenceLayerController
 
     String options = DashboardReferenceLayerDTO.getOptionsJSON(request, map.getDashboardId());
 
-    JSONObject response = new JSONObject();
-    response.put("layerDTO", BusinessDTOToJSON.getConverter(layer).populate());
-    response.put("styleDTO", BusinessDTOToJSON.getConverter(style).populate());
-    response.put("layer", new JSONObject(layer.getJSON()));
-    response.put("options", new JSONObject(options));
+    RestResponse response = new RestResponse();
+    response.set("layerDTO", layer);
+    response.set("styleDTO", style);
+    response.set("layer", new JSONStringImpl(layer.getJSON()));
+    response.set("options", new JSONStringImpl(options));
 
-    return new RestBodyResponse(response);
+    return response;
   }
 
-  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF newReferenceInstance(ClientRequestIF request, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "mapId") String mapId) throws JSONException
+  @Endpoint(url = "new-reference-layer", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF newReferenceInstance(ClientRequestIF request, @RequestParamter(name = "mapId") String mapId) throws JSONException
   {
     DashboardMapDTO map = DashboardMapDTO.get(request, mapId);
 
@@ -67,12 +71,20 @@ public class DashboardReferenceLayerController
 
     String options = DashboardReferenceLayerDTO.getOptionsJSON(request, map.getDashboardId());
 
-    JSONObject response = new JSONObject();
-    response.put("layerDTO", BusinessDTOToJSON.getConverter(layer).populate());
-    response.put("styleDTO", BusinessDTOToJSON.getConverter(style).populate());
-    response.put("layer", new JSONObject(layer.getJSON()));
-    response.put("options", new JSONObject(options));
+    RestResponse response = new RestResponse();
+    response.set("layerDTO", layer);
+    response.set("styleDTO", style);
+    response.set("layer", new JSONStringImpl(layer.getJSON()));
+    response.set("options", new JSONStringImpl(options));
 
-    return new RestBodyResponse(response);
+    return response;
+  }
+  
+  @Endpoint(url = "apply-style", method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF applyWithStyle(ClientRequestIF request, @RequestParamter(name = "layer", parser = ParseType.BASIC_JSON) DashboardReferenceLayerDTO layer, @RequestParamter(name = "style", parser = ParseType.BASIC_JSON) DashboardStyleDTO style, @RequestParamter(name = "mapId") String mapId, @RequestParamter(name = "state") String state) throws JSONException
+  {
+    String json = layer.applyWithStyle(style, mapId, state);
+
+    return new RestBodyResponse(new JSONStringImpl(json));
   }
 }

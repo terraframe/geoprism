@@ -27,45 +27,6 @@
   function LayerFormService(runwayService) {
     var service = {};
     
-    service.createRequest = function(onSuccess, onFailure){
-      var request = new Mojo.ClientRequest({
-        onSuccess : onSuccess,
-        onFailure : function(e) {
-          if(onFailure != null) {
-            onFailure(e);            	
-          }
-          else {
-            GDB.ExceptionHandler.handleException(e);            	
-          }
-        }
-      });
-        
-      return request;
-    }
-    
-    
-    service.createStandbyRequest = function(elementId, onSuccess, onFailure){
-      var el = $(elementId);
-        
-      if(el.length > 0) {      
-        var request = new GDB.StandbyClientRequest({
-          onSuccess : onSuccess,
-          onFailure : function(e){
-            if(onFailure != null) {
-              onFailure(e);            
-            }
-            else {
-              GDB.ExceptionHandler.handleException(e);            
-            }
-          }
-        }, elementId);
-          
-        return request;        
-      }
-        
-      return service.createRequest(onSuccess, onFailure);
-    }
-    
     service.getCategoryValues = function(categories, categoryType) {
       var array = [];
                              
@@ -73,7 +34,7 @@
         var category = categories.catLiElems[i];
                  
         // Only send back categories which have values
-        if(category.val != null && (typeof category.val !== 'string' || (category.val.length > 0 || category.rangeAllMin))) {        	
+        if(category.val != null && (typeof category.val !== 'string' || (category.val.length > 0 || category.rangeAllMin))) {          
           var object = {};
           angular.copy(category, object);
                  
@@ -92,53 +53,60 @@
     
     service.apply = function(layer, style, dynamicDataModel, categoryWidget, state, element, onSuccess, onFailure) {
       // Populate the layer
-      runwayService.populate(service.layerDTO, layer);      
+      runwayService.copy(service.layerDTO, layer);      
 
       // Populate the style
-      runwayService.populate(service.styleDTO, style);  
+      runwayService.copy(service.styleDTO, style);  
       
       var categoryType = dynamicDataModel.thematicAttributeDataType;
 
       // Update the style model to include the point and polygon category values
-      service.styleDTO.setCategoryPointStyles(JSON.stringify(service.getCategoryValues(categoryWidget.basicPointCatOptionsObj, categoryType)));
-      service.styleDTO.setCategoryPolygonStyles(JSON.stringify(service.getCategoryValues(categoryWidget.polygonCatOptionsObj, categoryType)));
+      service.styleDTO.categoryPointStyles = JSON.stringify(service.getCategoryValues(categoryWidget.basicPointCatOptionsObj, categoryType));
+      service.styleDTO.categoryPolygonStyles = JSON.stringify(service.getCategoryValues(categoryWidget.polygonCatOptionsObj, categoryType));
            
       // Update the secondary attribute values       
-      service.styleDTO.clearSecondaryAggregationType();
+      service.styleDTO.secondaryAggregationType = [];
       
-      if(style.secondaryAggregation.attribute.id != 'NONE'){    	  
-        var secondaryCategoryType = style.secondaryAggregation.attribute.categoryType;    	  
-    	  
-        service.styleDTO.setValue('secondaryAttribute', style.secondaryAggregation.attribute.mdAttributeId);
-        service.styleDTO.addSecondaryAggregationType(style.secondaryAggregation.method.value);          
-        service.styleDTO.setSecondaryCategories(JSON.stringify(service.getCategoryValues(style.secondaryAggregation, secondaryCategoryType).catLiElems));
+      if(style.secondaryAggregation.attribute.id != 'NONE'){        
+        var secondaryCategoryType = style.secondaryAggregation.attribute.categoryType;        
+        
+        service.styleDTO.secondaryAttribute = style.secondaryAggregation.attribute.mdAttributeId;
+        service.styleDTO.secondaryAggregationType.push(style.secondaryAggregation.method.value);          
+        service.styleDTO.secondaryCategories = JSON.stringify(service.getCategoryValues(style.secondaryAggregation, secondaryCategoryType).catLiElems);
       }
       else {
-        service.styleDTO.setValue('secondaryAttribute', '');
-        service.styleDTO.setSecondaryCategories('[]');
+        service.styleDTO.secondaryAttribute = '';
+        service.styleDTO.secondaryCategories = '[]';
       }
       
       // Create a new strategy DTO: It replaces the current DTO
       var strategy = dynamicDataModel.aggregationStrategyMap[dynamicDataModel.aggregationStrategy];
-      var strategyDTO = null;
+      var strategyDTO = {
+//        "oid": strategy.oid, 
+        "universal": strategy.value,
+        "newInstance": true
+      };
       
       if(strategy.type.indexOf("UniversalAggregationStrategy")  > -1){
-        strategyDTO = new net.geoprism.dashboard.UniversalAggregationStrategy();
+        strategyDTO.type = 'net.geoprism.dashboard.UniversalAggregationStrategy';
       }
       else if(strategy.type.indexOf("GeometryAggregationStrategy")  > -1){
-        strategyDTO = new net.geoprism.dashboard.GeometryAggregationStrategy();
+        strategyDTO.type = 'net.geoprism.dashboard.GeometryAggregationStrategy';
       }
         
       // the universal property will be skipped for geometry agg in the populate method because that property
       // doesn't exist on the server object.
-      runwayService.populate(strategyDTO, {
-        "id": strategy.id, 
-        "universal": strategy.value
-      });
         
-      var request = service.createStandbyRequest(element, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
-      service.layerDTO.applyWithStyleAndStrategy(request, service.styleDTO, state.mapId, strategyDTO, state);
+//      service.layerDTO.applyWithStyleAndStrategy(request, service.styleDTO, state.mapId, strategyDTO, state);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/thematic-layer/apply-style-strategy', 
+        method: "POST",
+        data: {mapId:state.mapId, layer:service.layerDTO, style:service.styleDTO, strategy:strategyDTO, state:state}
+      }, request);                              
+      
     }      
       
     service.unlock = function(layer, element, onSuccess, onFailure) {
@@ -149,13 +117,18 @@
         onSuccess();        
       }
 
-      if(service.layerDTO == null || service.layerDTO.isNewInstance()) {
+      if(service.layerDTO == null || service.layerDTO.newInstance) {
         success();
       }
       else {
-        var request = service.createStandbyRequest(element, success, onFailure);
-
-        service.layerDTO.unlock(request);
+        var request = runwayService.createStandbyRequest(element, success, onFailure);
+//        service.layerDTO.unlock(request);
+        
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-layer/unlock', 
+          method: "POST",
+          data: {oid:service.layerDTO.oid}
+        }, request);                                    
       }        
     }
       
@@ -164,8 +137,8 @@
      * the front-end controller is expecting.
      **/
     service.createObjects = function(response, isNew) {
-      service.layerDTO = com.runwaysdk.DTOUtil.convertToType(response.layerDTO);
-      service.styleDTO = com.runwaysdk.DTOUtil.convertToType(response.styleDTO);
+      service.layerDTO = response.layerDTO;
+      service.styleDTO = response.styleDTO;
       
       var options = response.options;
       
@@ -248,7 +221,7 @@
         attributeLabel : '',  // not on the dto
       };
 
-      layer.newInstance = service.layerDTO.isNewInstance();
+      layer.newInstance = service.layerDTO.newInstance;
       layer.nameLabel = response.layer.layerName;
       layer.mdAttribute = response.layer.mdAttributeId;
       layer.attributeLabel = response.layer.attributeLabel;
@@ -259,7 +232,7 @@
       if(isNew){
         layer.aggregationMethod = dynamicDataModel.aggregationMethods[0];
         layer.aggregationType = dynamicDataModel.aggregationMethods[0].method;
-        layer.geoNode = options.geoNodes[0].id;
+        layer.geoNode = options.geoNodes[0].oid;
       } 
       else {
         layer.aggregationMethod = response.layer.aggregationMethod;
@@ -358,7 +331,7 @@
       };
       
       // Populate the values of style from the server DTO
-      runwayService.populateObject(style, service.styleDTO);
+      runwayService.copyObject(style, service.styleDTO);
         
       // WKN values come from the server lower cased
       // but the UI model expects them to be upper cased values
@@ -408,8 +381,8 @@
       };
       
       // Update the point and polygon category model
-      service.loadCategoryValues(categoryWidget.polygonCatOptionsObj, service.styleDTO.getCategoryPolygonStyles(), dynamicDataModel.thematicAttributeDataType);
-      service.loadCategoryValues(categoryWidget.basicPointCatOptionsObj, service.styleDTO.getCategoryPointStyles(), dynamicDataModel.thematicAttributeDataType);
+      service.loadCategoryValues(categoryWidget.polygonCatOptionsObj, service.styleDTO.categoryPolygonStyles, dynamicDataModel.thematicAttributeDataType);
+      service.loadCategoryValues(categoryWidget.basicPointCatOptionsObj, service.styleDTO.categoryPointStyles, dynamicDataModel.thematicAttributeDataType);
       style.secondaryAggregation = service.loadSecondaryAggregation(dynamicDataModel, service.styleDTO);
       
       return {layer:layer, style:style, categoryWidget:categoryWidget, dynamicDataModel:dynamicDataModel};    
@@ -431,7 +404,7 @@
         ]
       };
       
-      var mdAttributeId = styleDTO.getValue('secondaryAttribute');
+      var mdAttributeId = styleDTO.secondaryAttribute;
       
       if(mdAttributeId != null && mdAttributeId != '') {
           
@@ -445,7 +418,7 @@
         }
 
         // Load the method value
-        var aggregationType = styleDTO.getSecondaryAggregationType()[0].name();      
+        var aggregationType = styleDTO.secondaryAggregationType[0].name;      
         var options = dynamicDataModel.aggregationMap[aggregation.attribute.type];
         
         dynamicDataModel.secondaryAggregationMethods = options;
@@ -461,7 +434,7 @@
         var categoryType = aggregation.attribute.categoryType;
         
         // Load the categories
-        service.loadCategoryValues(aggregation, styleDTO.getSecondaryCategories(), categoryType);
+        service.loadCategoryValues(aggregation, styleDTO.secondaryCategories, categoryType);
       }
         
       return aggregation;
@@ -483,16 +456,16 @@
         }
         
         for(var i = 0; i < categories.catLiElems.length; i++) {
-        	 var category = categories.catLiElems[i];
-        	 
+           var category = categories.catLiElems[i];
+           
             // all categories should have the same flag values so a single occurance should describe all
             if(!category.otherEnabled){
-          	  otherEnabledFlag = false;
+              otherEnabledFlag = false;
             }
             
             // all categories should have the same flag values so a single occurance should describe all
             if(category.isRangeCat){
-          	  rangeCategoriesEnabledFlag = true;
+              rangeCategoriesEnabledFlag = true;
             }
         }
             
@@ -500,12 +473,12 @@
           var category = categories.catLiElems[i];
           
           if(!category.isRangeCat && rangeCategoriesEnabledFlag){
-        	  category.isRangeCat = true;
+            category.isRangeCat = true;
           }
               
           if(!category.otherCat) {
-            if(i < model.catLiElems.length ) {            	
-              model.catLiElems[i] = category;                          	
+            if(i < model.catLiElems.length ) {              
+              model.catLiElems[i] = category;                            
             }
             else {
               model.catLiElems.push(category);
@@ -544,26 +517,38 @@
       
     service.edit = function(layerId, element, onSuccess, onFailure) {
       var success = function(response) {
-        var model = service.createObjects(response, false);
+        var model = service.createObjects(response.data, false);
               
         onSuccess(model);
       }
             
-      var request = service.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
             
-      net.geoprism.dashboard.layer.DashboardThematicLayerController.edit(request, layerId);    
+//      net.geoprism.dashboard.layer.DashboardThematicLayerController.edit(request, layerId);    
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/thematic-layer/edit', 
+        method: "POST",
+        data: {oid:layerId}
+      }, request);                                                  
     }
       
     service.newInstance = function(mdAttributeId, mapId, element, onSuccess, onFailure) {
       var success = function(response) {
-        var model = service.createObjects(response, true);
+        var model = service.createObjects(response.data, true);
           
         onSuccess(model);
       }
         
-      var request = service.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
         
-      net.geoprism.dashboard.layer.DashboardThematicLayerController.newThematicInstance(request, mdAttributeId, mapId);
+//      net.geoprism.dashboard.layer.DashboardThematicLayerController.newThematicInstance(request, mdAttributeId, mapId);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/thematic-layer/new-thematic-layer', 
+        method: "POST",
+        data: {mapId:mapId, mdAttributeId:mdAttributeId}
+      }, request);                                            
     }
       
     service.isValidFont = function(font, options) {
@@ -577,9 +562,15 @@
       return false;
     }
     
-    service.categoryAutoCompleteService = function(mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions, onSuccess, onFailure){
-      var request = service.createRequest(onSuccess, onFailure);
-      net.geoprism.dashboard.Dashboard.getCategoryInputSuggestions(request, mdAttribute, geoNodeId, universalId, aggregationVal, text, limit, conditions);
+    service.categoryAutoCompleteService = function(mdAttributeId, geoNodeId, universalId, aggregationVal, text, limit, state, onSuccess, onFailure){
+      var request = runwayService.createRequest(onSuccess, onFailure);
+//      net.geoprism.dashboard.Dashboard.getCategoryInputSuggestions(request, mdAttributeId, geoNodeId, universalId, aggregationVal, text, limit, state);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/category-suggestions', 
+        method: "GET",
+        params: {mdAttributeId: mdAttributeId, geoNodeId:geoNodeId, universalId:universalId, aggregationVal:aggregationVal, state:state, text:text, limit:limit}
+      }, request);                  
     }
     
     return service;
@@ -594,57 +585,24 @@
    */  
   function ReferenceLayerFormService(runwayService) {
     var service = {};
-      
-    service.createRequest = function(onSuccess, onFailure){
-      var request = new Mojo.ClientRequest({
-        onSuccess : onSuccess,
-        onFailure : function(e) {
-          if(onFailure != null) {
-            onFailure(e);              
-          }
-          else {
-            GDB.ExceptionHandler.handleException(e);              
-          }
-        }
-      });
-          
-      return request;
-    }
-      
-      
-    service.createStandbyRequest = function(elementId, onSuccess, onFailure){
-      var el = $(elementId);
-          
-      if(el.length > 0) {        
-        var request = new GDB.StandbyClientRequest({
-          onSuccess : onSuccess,
-          onFailure : function(e){
-            if(onFailure != null) {
-              onFailure(e);              
-            }
-            else {
-              GDB.ExceptionHandler.handleException(e);              
-            }
-          }
-        }, elementId);
-            
-        return request;        
-      }
-          
-      return service.createRequest(onSuccess, onFailure);
-    }
     
     service.apply = function(layer, style, state, element, onSuccess, onFailure) {
       // Populate the layer
-      runwayService.populate(service.layerDTO, layer);      
-      service.layerDTO.setValue('universal', layer.universalId);
+      runwayService.copy(service.layerDTO, layer);      
+      service.layerDTO.universal = layer.universalId;
 
       // Populate the style
-      runwayService.populate(service.styleDTO, style);  
+      runwayService.copy(service.styleDTO, style);  
       
-      var request = service.createStandbyRequest(element, onSuccess, onFailure);
+      var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
       
-      service.layerDTO.applyWithStyle(request, service.styleDTO, state.mapId, state);
+//      service.layerDTO.applyWithStyle(request, service.styleDTO, state.mapId, state);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/reference-layer/apply-style', 
+        method: "POST",
+        data: {mapId:state.mapId, layer:service.layerDTO, style:service.styleDTO, state:state}
+      }, request);                                    
     }      
     
     service.unlock = function(layer, element, onSuccess, onFailure) {
@@ -652,26 +610,32 @@
         service.layerDTO = null;
         service.styleDTO = null;
         
-        onSuccess();      	  
+        onSuccess();          
       }
 
-      if(service.layerDTO == null || service.layerDTO.isNewInstance()) {
-    	success();
+      if(service.layerDTO == null || service.layerDTO.newInstance) {
+        success();
       }
       else {
-        var request = service.createStandbyRequest(element, success, onFailure);
-
-        service.layerDTO.unlock(request);
+        var request = runwayService.createStandbyRequest(element, success, onFailure);
+        
+//        service.layerDTO.unlock(request);
+        
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-layer/unlock', 
+          method: "POST",
+          data: {oid:service.layerDTO.oid}
+        }, request);                                    
       }        
     }
     
     service.createObjects = function(response) {
-      service.layerDTO = com.runwaysdk.DTOUtil.convertToType(response.layerDTO);
-      service.styleDTO = com.runwaysdk.DTOUtil.convertToType(response.styleDTO);
+      service.layerDTO = response.layerDTO;
+      service.styleDTO = response.styleDTO;
         
       var layer = {};
-      layer.newInstance = service.layerDTO.isNewInstance();
-	  layer.nameLabel = response.layer.layerName;
+      layer.newInstance = service.layerDTO.newInstance;
+      layer.nameLabel = response.layer.layerName;
       layer.universalId = response.layer.universalId;
       layer.layerType = response.layer.featureStrategy;
       layer.displayInLegend = response.layer.inLegend;
@@ -697,7 +661,7 @@
       style.polygonStrokeWidth = 5;
       style.polygonStrokeOpacity = 0.65;
         
-      runwayService.populateObject(style, service.styleDTO);
+      runwayService.copyObject(style, service.styleDTO);
       
       // pointWellKnownName values come from the server lower cased
       // but the UI model expects them to be upper cased values
@@ -714,31 +678,41 @@
     
     service.edit = function(layerId, element, onSuccess, onFailure) {
       var success = function(response) {
-        var model = service.createObjects(response);
+        var model = service.createObjects(response.data);
             
         onSuccess(model);
       }
           
-      var request = service.createStandbyRequest(element, success, onFailure);
-          
-      net.geoprism.dashboard.layer.DashboardReferenceLayerController.edit(request, layerId);    	
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
+      
+//    net.geoprism.dashboard.layer.DashboardReferenceLayerController.edit(request, layerId);            
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/reference-layer/edit', 
+        method: "POST",
+        data: {oid:layerId}
+      }, request);                                                                  
     }
     
     service.newInstance = function(mapId, element, onSuccess, onFailure) {
       var success = function(response) {
-    	var model = service.createObjects(response);
-    	
-    	// Ticket #237 - Reference layer should defaut to polygon
-    	model.layer.layerType = 'BASICPOLYGON';
-    	model.layer.universalId = model.dynamicDataModel.universals[0].value;
-    	model.layer.name = model.dynamicDataModel.universals[0].label;
+      var model = service.createObjects(response.data);
+      
+      // Ticket #237 - Reference layer should defaut to polygon
+      model.layer.layerType = 'BASICPOLYGON';
+      model.layer.universalId = model.dynamicDataModel.universals[0].value;
+      model.layer.name = model.dynamicDataModel.universals[0].label;
         
         onSuccess(model);
       }
       
-      var request = service.createStandbyRequest(element, success, onFailure);
+      var request = runwayService.createStandbyRequest(element, success, onFailure);
       
-      net.geoprism.dashboard.layer.DashboardReferenceLayerController.newReferenceInstance(request, '', mapId);
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/reference-layer/new-reference-layer', 
+        method: "POST",
+        data: {mapId:mapId}
+      }, request);                                            
     }
     
     service.isValidFont = function(font, options) {
@@ -754,7 +728,7 @@
       
     return service;
   }
-	  
+    
   
   
   angular.module("layer-form-service", ["runway-service"]);
