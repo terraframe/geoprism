@@ -56,7 +56,7 @@ public class NavigationController
 
   public static final String DASHBOARDS      = "net/geoprism/userMenu/userDashboards.jsp";
 
-  @Endpoint(url = "data-management", method = ServletMethod.GET)
+  @Endpoint(url = "management", method = ServletMethod.GET)
   public ResponseIF dataManagement()
   {
     return new ViewResponse(JSP_DIR, DATA_MANAGEMENT);
