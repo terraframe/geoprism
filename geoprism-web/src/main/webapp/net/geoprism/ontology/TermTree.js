@@ -65,7 +65,7 @@
         /*
          * IMPORTANT : Do not change field names it will break JSON serialization
          */
-        this.id = id;
+        this.oid = id;
         this.label = new net.geoprism.ontology.TermNodeLabel(label);
         this._type = type;
         
@@ -79,7 +79,7 @@
       },
         
       getId : function() {
-        return this.id;
+        return this.oid;
       },
         
       getDisplayLabel : function() {
@@ -677,7 +677,7 @@
         for (var i = 0; i < nodes.length; ++i) {
           var node = nodes[i];
           
-          this._nodeMap.addNodeMapping(newTermId, node.id);
+          this._nodeMap.addNodeMapping(newTermId, node.oid);
           
           this.getImpl().tree("updateNode", node, {label:label, runwayId:term.getId()});
         }
@@ -860,7 +860,7 @@
           for(var i = 0; i < items.length; i++) {
             var item = items[i];
               
-            var menuItem = cm.addItem(item.label, item.id, item.handler);
+            var menuItem = cm.addItem(item.label, item.oid, item.handler);
               
             if (e.node.termBusy || item.enabled === false) {
               menuItem.setEnabled(false);
@@ -1222,7 +1222,7 @@
         
         // Remove the node from the term-node mapping
         if(node.runwayId != null) {
-          this._nodeMap.removeNodeMapping(node.runwayId, node.id);        	
+          this._nodeMap.removeNodeMapping(node.runwayId, node.oid);        	
         }
       },
       
@@ -1428,10 +1428,10 @@
         for(var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
 
-          if(this.__getNodesById(node.id) == null) {
+          if(this.__getNodesById(node.oid) == null) {
             
             // Create the cached term
-            var term = new net.geoprism.ontology.TermNode(node.id, node.label, node.type);
+            var term = new net.geoprism.ontology.TermNode(node.oid, node.label, node.type);
           
             // Populate the caches
             this.termCache[term.getId()] = term;
@@ -1444,7 +1444,7 @@
             }
             
             if(node.parentRecord != null) {              
-              this.parentRelationshipCache.put(node.id, node.parentRecord);
+              this.parentRelationshipCache.put(node.oid, node.parentRecord);
             }
             
             this.__createTreeNode(term.getId(), parentNode, node.fetched, false, true);
@@ -1455,14 +1455,14 @@
             // to this parent.  If not we need to create a new tree ndoe
             // for this relationship.
             
-            if(!this.parentRelationshipCache.contains(node.id, node.parentRecord)) {
-              this.parentRelationshipCache.put(node.id, node.parentRecord);          
+            if(!this.parentRelationshipCache.contains(node.oid, node.parentRecord)) {
+              this.parentRelationshipCache.put(node.oid, node.parentRecord);          
                 
-              this.__createTreeNode(node.id, parentNode, node.fetched, false, true);
+              this.__createTreeNode(node.oid, parentNode, node.fetched, false, true);
             }
           }
                     
-          var treeNodes = this.__getNodesById(node.id);
+          var treeNodes = this.__getNodesById(node.oid);
           
           for(var j = 0; j < treeNodes.length; j++) {
             var treeNode = treeNodes[j];
@@ -1550,7 +1550,7 @@
             
         node.hasFetched = hasFetched;
         
-        this._nodeMap.addNodeMapping(childId, node.id);
+        this._nodeMap.addNodeMapping(childId, node.oid);
         
         return node;
       },

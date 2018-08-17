@@ -144,7 +144,7 @@
           for(var i = 0; i < items.length; i++) {
             var item = items[i];
               
-            if (item.id == 'delete' && this.isRootTermId(parentId)) {
+            if (item.oid == 'delete' && this.isRootTermId(parentId)) {
               item.enabled = false;
             }
           }
@@ -471,7 +471,7 @@
         var createSynonymNode = function(){
           targetNode.dontClobberChildren = true;
             
-          var synId = targetNode.id + "_" + Mojo.Util.generateId();
+          var synId = targetNode.oid + "_" + Mojo.Util.generateId();
             
           // Create a synonyms node under the target node
           var justCreated = that.__createTreeNode(synId, targetNode, true, {label: that.localize("synonymsNode"), data: {isSynonymContainer: true}});
