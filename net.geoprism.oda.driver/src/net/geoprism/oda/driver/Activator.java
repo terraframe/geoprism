@@ -54,8 +54,10 @@ public class Activator extends AbstractUIPlugin
   {
     super.start(context);
     plugin = this;
-
-    LoaderDecorator.setClassLoader(new BundleClassLoader(context.getBundle()));
+    
+//    context.getBundle().l
+    
+//    Thread.currentThread().setContextClassLoader(new BundleClassLoader(context.getBundle()));
   }
 
   /*

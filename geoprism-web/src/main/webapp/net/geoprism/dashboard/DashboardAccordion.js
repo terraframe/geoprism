@@ -23,13 +23,13 @@
     
     controller.source = function( request, response ) {
       var onSuccess = function(query){
-        var resultSet = query.getResultSet()
+        var resultSet = query.data.resultSet;
                                     
         var results = [];
                   
         $.each(resultSet, function( index, result ) {
-          var label = result.getValue('displayLabel');
-          var id = result.getValue('id');
+          var label = result.displayLabel;
+          var id = result.oid;
                     
           results.push({'label':label, 'value':label, 'id':id});
         });
@@ -277,7 +277,7 @@
               
       var onSuccess = function(results){
               
-        response( results );
+        response( results.data );
       };
             
       var onFailure = function(e){
@@ -387,7 +387,7 @@
               
       var onSuccess = function(results){
               
-        response( results );
+        response( results.data );
       };
             
       var onFailure = function(e){

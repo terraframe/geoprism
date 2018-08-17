@@ -17,7 +17,104 @@
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(){
-  function ReportPanelController($scope, dashboardService) {
+  function FileDirective(){
+    return {
+      scope: {
+        file: '&'
+      },
+      link: function (scope, el, attrs) {
+        el.bind('change', function (event) {
+          var file = event.target.files[0];
+          scope.file()(file);
+          scope.$apply();
+        });
+      }
+    };
+  };
+
+  function ReportDialogController($scope, $rootScope, dashboardService) {
+    var controller = this;
+    
+    controller.clear = function() {
+      // Flag indicating if the modal and all of its elements should be destroyed
+      $scope.show = false;      
+      $scope.file = null;      
+      $scope.report = null;
+      $scope.errors = [];
+    };
+    
+    controller.cancel = function() {
+      if(!$scope.report.newInstance) {
+        
+        var onSuccess = function() {      
+          controller.clear();        
+        };
+        
+        var onFailure = function(e){
+          $scope.errors.push(e.localizedMessage);
+        };             
+        
+        $scope.errors = [];
+        
+        dashboardService.unlockReport($scope.report.oid, '#report-form', onSuccess);
+      }
+      else {
+        controller.clear();                
+      }
+    };
+    
+    controller.persist = function() {
+      if($scope.file != null) {      
+        var onSuccess = function(response) {      
+          controller.clear();
+          
+          $scope.$emit('reportUpdate', response.data)
+        };
+        
+        var onFailure = function(e){
+          $scope.errors.push(e.localizedMessage);
+        };             
+        
+        $scope.errors = [];
+            
+        dashboardService.uploadReport($scope.report.dashboardId, $scope.file, '#report-form', onSuccess, onFailure);      
+      }
+    };
+    
+    controller.init = function(report) {
+      controller.clear();
+      
+      $scope.report = report;
+      $scope.show = true;
+    }
+    
+    controller.onFileSelect = function(file) {      
+      $scope.file = file ? file : undefined;
+    }
+    
+    $rootScope.$on('editReport', function($event, data){
+      controller.init(data.report)  
+    });
+    
+    // Initialize an empty controller
+    controller.clear();
+  }
+  
+  function ReportDialog() {
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl: com.runwaysdk.__applicationContextPath + '/partial/dashboard/report-dialog.jsp',
+      scope: {
+      },
+      controller : ReportDialogController,
+      controllerAs : 'ctrl',
+      link: function (scope, element, attrs, ctrl) {
+      }
+    }    
+  }
+  
+  function ReportPanelController($scope, $rootScope, dashboardService) {
     var controller = this;
     controller.state = 'min';
     
@@ -27,9 +124,9 @@
     
     controller.collapse = function() {
       var height = $("#mapDivId").height();
-    	
+      
       if(controller.state === 'split'){
-  	    controller.setReportPanelHeight(0, false);
+        controller.setReportPanelHeight(0, false);
         controller.state = 'min';
       }
       else if(controller.state === 'max'){
@@ -42,7 +139,7 @@
     
     controller.expand = function() {
       var height = $("#mapDivId").height();
-    	
+      
       if(controller.state === 'min'){
         var splitHeight = Math.floor(height / 2);
         
@@ -54,7 +151,7 @@
         
         controller.setReportPanelHeight(height + reportToolbarHeight, true);        
         controller.state = 'max';
-      }    	
+      }      
     }
     
     controller.setReportPanelHeight = function (height, flipButton) {
@@ -102,38 +199,14 @@
     
     controller.upload = function(e) {
       var dashboardId = dashboardService.getDashboard().getDashboardId();
+            
+      var onSuccess = function(response) {      
+        var report = response.data;
       
-      var config = {
-        type: 'net.geoprism.report.ReportItem',
-        action: "update",
-        viewAction: "edit",
-        viewParams: {id: dashboardId},          
-        width: 600,
-        onSuccess : function(dto) {
-          $("#report-export-container").show();
-          
-          $scope.hasReport = true;
-          
-          // $scope.$apply();
-        },
-        onFailure : function(e) {
-          GDB.ExceptionHandler.handleException(e);
-        },
-        onCancel : function(e) {
-          var request = new Mojo.ClientRequest({
-            onSuccess : function () {
-              // Close the dialog ??
-            },
-            onFailure : function(e) {
-              GDB.ExceptionHandler.handleException(e);
-            }
-          });
-            
-          net.geoprism.report.ReportItem.unlockByDashboard(request, dashboardId);
-        }
+        $scope.$emit('editReport', {report:report});      
       };
-            
-      new com.runwaysdk.ui.RunwayControllerFormDialog(config).render();
+          
+      dashboardService.editReport(dashboardId, '#container', onSuccess);      
     }    
     
     controller.exportReport = function(format){
@@ -145,11 +218,15 @@
       
       var onSuccess = function(){
         $scope.hasReport = false;          
-        // $scope.$apply();    	  
+        // $scope.$apply();        
       };
       
       dashboardService.removeReport(dashboardId, "#report-viewport", onSuccess);
     }
+    
+    $rootScope.$on('reportUpdate', function($event, data){
+      $scope.hasReport = true;    	
+    });
   }
   
   function ReportPanel() {
@@ -169,5 +246,7 @@
   
   angular.module("report-panel", ["dashboard-service"]);
   angular.module('report-panel')
+    .directive('file', FileDirective)
+    .directive('reportDialog', ReportDialog)
     .directive('reportPanel', ReportPanel);
 })();

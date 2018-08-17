@@ -18,6 +18,8 @@
  */
 package net.geoprism.report;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ReportItemDTO extends ReportItemDTOBase
  {
@@ -37,6 +39,17 @@ public class ReportItemDTO extends ReportItemDTOBase
   protected ReportItemDTO(com.runwaysdk.business.BusinessDTO businessDTO, com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     super(businessDTO, clientRequest);
+  }
+
+  public JSONObject toJSON() throws JSONException
+  {
+    JSONObject object = new JSONObject();
+    object.put("oid", this.getOid());
+    object.put("newInstance", this.isNewInstance());
+    object.put("dashboardId", this.getDashboardId());
+    object.put("reportName", this.getReportName());
+    
+    return object;
   }
   
 }

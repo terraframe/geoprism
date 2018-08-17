@@ -21,8 +21,8 @@
     var controller = this;
     
     controller.submit = function() {
-      var onSuccess = function(dashboard) {
-        $scope.$emit('dashboardChange', {dashboard : dashboard});
+      var onSuccess = function(response) {
+        $scope.$emit('dashboardChange', {dashboard : response.data});
         
         controller.clear();
         
@@ -61,7 +61,7 @@
     
     controller.newClone = function(dashboardId, elementId) {
       var onSuccess = function(response) {        
-        controller.load(response.dashboard);
+        controller.load(response.data.dashboard);
         
         // $scope.$apply();
       };

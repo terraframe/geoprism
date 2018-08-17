@@ -18,7 +18,7 @@
  */
 (function(){
   
-  function DashboardService($http, runwayService) {
+  function DashboardService(runwayService) {
     var service = {};
     service.edit = false;
     service.editData = false;
@@ -211,7 +211,7 @@
       runwayService.http({
         url: com.runwaysdk.__applicationContextPath + '/dashboard-report/run', 
         method: "POST",
-        data: {dashboardId: dashboardId, configuration:configuration}
+        data: {report: dashboardId, configuration:configuration}
       }, request);      
     }
     
@@ -226,15 +226,56 @@
       }, request);            
     }
     
-    service.removeReport = function(dashboardId, elementId, onSuccess, onFailure) {
+    service.editReport = function(dashboardId, elementId, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
         
 //      net.geoprism.report.ReportItemController.remove(request, dashboardId);
       
       runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-report/edit', 
+        method: "POST",
+        data: {dashboardId: dashboardId}
+      }, request);            
+    }
+    
+    service.unlockReport = function(oid, elementId, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-report/unlock', 
+        method: "POST",
+        data: {oid: oid}
+      }, request);            
+    }
+    
+    service.removeReport = function(dashboardId, elementId, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+      
+      runwayService.http({
         url: com.runwaysdk.__applicationContextPath + '/dashboard-report/remove', 
         method: "POST",
         data: {dashboardId: dashboardId}
+      }, request);            
+    }
+    
+    service.uploadReport = function(dashboardId, file, elementId, onSuccess, onFailure) {
+      var request = runwayService.createStandbyRequest(elementId, onSuccess, onFailure);
+      
+//      net.geoprism.report.ReportItemController.remove(request, dashboardId);
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-report/upload', 
+        method: "POST",
+        headers: {'Content-Type': undefined},
+        data: {dashboardId: dashboardId, file:file},
+        transformRequest: function (data, headersGetter) {
+          var formData = new FormData();
+          angular.forEach(data, function (value, key) {
+            formData.append(key, value);
+          });
+
+          return formData;
+        }        
       }, request);            
     }
     

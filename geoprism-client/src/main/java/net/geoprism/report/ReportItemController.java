@@ -21,6 +21,7 @@ package net.geoprism.report;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
@@ -50,132 +51,48 @@ import net.geoprism.localization.LocalizationFacadeDTO;
 @Controller(url = "dashboard-report")
 public class ReportItemController
 {
-  public static final String JSP_DIR = "/WEB-INF/net/geoprism/report/ReportItem/";
-
-  public static final String LAYOUT  = "/WEB-INF/templates/layout.jsp";
-
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF create(@RequestParamter(name = "dto") ReportItemDTO dto, @RequestParamter(name = "design") MultipartFileParameter design) throws IOException
+  public ResponseIF upload(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId, @RequestParamter(name = "file") MultipartFileParameter file) throws IOException
   {
-    if (design != null)
+    ReportItemDTO report = ReportItemDTO.lockOrCreateReport(request, dashboardId);
+
+    if (report.isNewInstance())
     {
-      dto.setReportName(design.getFilename());
-      dto.applyWithFile(design.getInputStream());
+      report.setValue(ReportItemDTO.DASHBOARD, dashboardId);
+    }
+
+    if (file != null)
+    {
+      report.getReportLabel().setValue(file.getFilename());
+      report.setReportName(file.getFilename());
+      report.applyWithFile(file.getInputStream());
     }
     else
     {
-      dto.applyWithFile(null);
+      report.applyWithFile(null);
     }
 
-    return new RestBodyResponse(dto);
+    return new RestBodyResponse(report);
   }
 
-  // public ResponseIF edit(String dashboardId)
-  // {
-  // try
-  // {
-  // this.edit(dashboardId,
-  // ReportItemDTO.lockOrCreateReport(super.getClientRequest(), dashboardId));
-  // }
-  // catch (Throwable t)
-  // {
-  // boolean redirect = false;
-  // if (!redirect)
-  // {
-  // this.failEdit(dashboardId);
-  // }
-  // }
-  // }
-  //
-  // private ResponseIF edit(String dashboardId, ReportItemDTO dto)
-  // {
-  // try
-  // {
-  // req.setAttribute("item", dto);
-  // req.setAttribute("dashboardId", dashboardId);
-  //
-  // render("editComponent.jsp");
-  // }
-  // catch (Throwable t)
-  // {
-  // boolean redirect = false;
-  //
-  // if (!redirect)
-  // {
-  // this.failEdit(dto.getOid());
-  // }
-  // }
-  // }
-  //
-  // @Endpoint
-  // public ResponseIF update(ReportItemDTO dto, MultipartFileParameter design)
-  // {
-  // try
-  // {
-  // if (design != null)
-  // {
-  // dto.setReportName(design.getFilename());
-  // dto.applyWithFile(design.getInputStream());
-  // }
-  // else
-  // {
-  // dto.applyWithFile(null);
-  // }
-  //
-  // this.resp.getWriter().print(new JSONReturnObject(dto).toString());
-  // }
-  // catch (Throwable t)
-  // {
-  // boolean needsRedirect = ErrorUtility.handleFormError(t, req, resp);
-  //
-  // if (needsRedirect)
-  // {
-  // this.failUpdate(dto, design);
-  // }
-  // }
-  // }
-  //
-  // public ResponseIF view(String oid)
-  // {
-  // try
-  // {
-  // this.view(ReportItemDTO.get(super.getClientRequest(), oid));
-  // }
-  // catch (Throwable t)
-  // {
-  // boolean redirect = false;
-  //
-  // if (!redirect)
-  // {
-  // this.failView(oid);
-  // }
-  // }
-  // }
-  //
-  // private ResponseIF view(ReportItemDTO dto)
-  // {
-  // try
-  // {
-  // req.setAttribute("item", dto);
-  // render("viewComponent.jsp");
-  // }
-  // catch (Throwable t)
-  // {
-  // boolean redirect = false;
-  //
-  // if (!redirect)
-  // {
-  // this.failView(dto.getOid());
-  // }
-  // }
-  // }
-  //
-  // public ResponseIF failView(String oid)
-  // {
-  // this.viewAll();
-  // }
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId) throws JSONException
+  {
+    ReportItemDTO report = ReportItemDTO.lockOrCreateReport(request, dashboardId);
+    report.setValue(ReportItemDTO.DASHBOARD, dashboardId);
+
+    return new RestBodyResponse(report.toJSON());
+  }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
+  {
+    ReportItemDTO.unlock(request, oid);
+    
+    return new RestResponse();
+  }
+  
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF run(ClientRequestIF request, ServletRequestIF req, @RequestParamter(name = "report") String report, @RequestParamter(name = "configuration") String configuration) throws JSONException, IOException
   {
     ReportItemDTO item = ReportItemDTO.getReportItemForDashboard(request, report);
@@ -313,41 +230,22 @@ public class ReportItemController
 
     return new RestResponse();
   }
-  //
-  // // @Endpoint
-  // public ResponseIF download(String dashboardId)
-  // {
-  // ClientRequestIF request = request();
-  // InputStream rStream = null;
-  //
-  // ReportItemDTO report = ReportItemDTO.getReportItemForDashboard(request,
-  // dashboardId);
-  //
-  // if (report != null)
-  // {
-  // String reportId = report.getOid();
-  // String reportName = report.getReportLabel().getValue().replaceAll("\\s",
-  // "_");
-  //
-  // try
-  // {
-  // rStream = ReportItemDTO.getDesignAsStream(request, reportId);
-  //
-  // // Browser dev tools may throw warnings about mime type. This is valid
-  // // for a custom type.
-  // // Verify the standard implementation if you are concerned.
-  // FileDownloadUtil.writeFile(resp, reportName, "rptdesign", rStream,
-  // "application/" + "octet-stream");
-  // }
-  // catch (Exception e)
-  // {
-  // ErrorUtility.prepareThrowable(e, req, resp, false);
-  // this.failDownload(dashboardId);
-  // }
-  // finally
-  // {
-  // rStream.close();
-  // }
-  // }
-  // }
+
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
+  public ResponseIF download(ClientRequestIF request, @RequestParamter(name = "dashboardId") String dashboardId)
+  {
+    ReportItemDTO report = ReportItemDTO.getReportItemForDashboard(request, dashboardId);
+
+    if (report != null)
+    {
+      String reportId = report.getOid();
+      String reportName = report.getReportLabel().getValue().replaceAll("\\s", "_");
+
+      InputStream rrStream = ReportItemDTO.getDesignAsStream(request, reportId);
+
+      return new InputStreamResponse(rrStream, "application/" + "octet-stream", reportName + ".rptdesign");
+    }
+
+    return new RestResponse();
+  }
 }

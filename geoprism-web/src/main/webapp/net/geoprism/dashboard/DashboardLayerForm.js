@@ -574,7 +574,9 @@
       
       var limit = 10;
             
-      var onSuccess = function(results){
+      var onSuccess = function(resp){
+    	var results = resp.data;
+    	
         // We need to localize the results for numbers
         if(categoryType == 'number') {
           for(var i = 0; i < results.length; i++) {

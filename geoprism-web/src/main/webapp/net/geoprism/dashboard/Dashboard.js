@@ -582,7 +582,8 @@
         configuration.parameters.push({'name' : 'category', 'value' : geoId});
         configuration.parameters.push({'name' : 'state', 'value' : JSON.stringify(controller.getCompressedState())});
         
-        var onSuccess = function(html){
+        var onSuccess = function(response){
+          var html = response.data;
           $( "#report-content" ).html(html);
           
           //
@@ -622,10 +623,10 @@
         }
         
         if(format === "rptdesign"){
-        	var url = 'net.geoprism.report.ReportItemController.download.mojo?' + $.param({dashboardId:dashboardId});
+        	var url = com.runwaysdk.__applicationContextPath + '/dashboard-report/download?' + $.param({dashboardId:dashboardId});
         }
         else{
-        	var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
+        	var url = com.runwaysdk.__applicationContextPath + '/dashboard-report/run?' + $.param(params);
         }
                   
         window.location.href = url;    

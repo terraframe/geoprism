@@ -40,10 +40,6 @@
     controller.cancel = function() {
       var onSuccess = function(newInstance) {      
         controller.clear();
-        
-        if(!newInstance) {
-//          // $scope.$apply();
-        }
       };
         
       builderService.unlock($scope.dashboard, onSuccess);
@@ -130,8 +126,6 @@
       var onSuccess = function(result) {
         
         controller.init(result);
-      
-//        // $scope.$apply();
       }
                
       builderService.loadDashboard(dashboardId, element, onSuccess);    
