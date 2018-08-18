@@ -18,9 +18,14 @@
  */
 package net.geoprism.account;
 
-import net.geoprism.DefaultConfiguration;
-import net.geoprism.GeoprismUserIF;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
@@ -48,11 +53,15 @@ import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 
+import net.geoprism.DefaultConfiguration;
+import net.geoprism.GeoprismUserIF;
+
 public class ExternalProfile extends ExternalProfileBase implements Reloadable, GeoprismUserIF
 {
   private static final long serialVersionUID = -377482924;
   
-  private static OAuthJSONAccessTokenResponse accessToken; // TODO this cant be static
+//  private static OAuthJSONAccessTokenResponse accessToken; // TODO this cant be static
+  private static String accessToken;
   
   private static OAuthClient oAuthClient;
 
@@ -82,7 +91,7 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
   {
     if (accessToken == null) { return null;}
     
-    return accessToken.getAccessToken();
+    return accessToken;
   }
   
   public static JSONObject resourceRequest(String url)
@@ -90,7 +99,7 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
     try
     {
       OAuthBearerClientRequest requestBuilder = new OAuthBearerClientRequest(url);
-      requestBuilder.setAccessToken(accessToken.getAccessToken());
+      requestBuilder.setAccessToken(accessToken);
   
       OAuthClientRequest bearerRequest = requestBuilder.buildQueryMessage();
       OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
@@ -120,16 +129,54 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
        */
       TokenRequestBuilder tokenBuilder = OAuthClientRequest.tokenLocation(server.getTokenLocation());
       tokenBuilder.setGrantType(GrantType.AUTHORIZATION_CODE);
+      tokenBuilder.setUsername(server.getClientId());
+      tokenBuilder.setPassword(server.getSecretKey());
       tokenBuilder.setClientId(server.getClientId());
       tokenBuilder.setClientSecret(server.getSecretKey());
       tokenBuilder.setRedirectURI(redirect);
       tokenBuilder.setCode(code);
       
-      OAuthClientRequest tokenRequest = tokenBuilder.buildQueryMessage();
-      tokenRequest.setHeader("Accept", "application/json");
+      String urlParameters  = tokenBuilder.buildBodyMessage().getBody();
+      byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+      int    postDataLength = postData.length;
+      String request        = server.getTokenLocation();
+      URL    url            = new URL( request );
+      String userCredentials = server.getClientId() + ":" + server.getSecretKey();
+      String basicAuth = "Basic " + java.util.Base64.getEncoder().encodeToString(userCredentials.getBytes());
+      HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+      conn.setRequestProperty ("Authorization", basicAuth);
+      conn.setDoOutput( true );
+      conn.setInstanceFollowRedirects( false );
+      conn.setRequestMethod( "POST" );
+      conn.setRequestProperty("Accept", "application/json");
+      conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded"); 
+      conn.setRequestProperty( "charset", "utf-8");
+      conn.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
+      conn.setUseCaches( false );
+      try( DataOutputStream wr = new DataOutputStream( conn.getOutputStream())) {
+         wr.write( postData );
+      }
+      
+      InputStream inputStr = conn.getInputStream();
+      String encoding = conn.getContentEncoding() == null ? "UTF-8"
+              : conn.getContentEncoding();
+      String strResp = IOUtils.toString(inputStr, encoding);
+      
+      int responseCode = conn.getResponseCode();
+      if (responseCode == 200) {
+        JSONObject jsonResp = new JSONObject(strResp);
+        accessToken = jsonResp.getString("access_token");
+      }
+      else
+      {
+        throw new RuntimeException("Expected response code 200, instead got " + responseCode + ". Response = [" + strResp + "].");
+      }
+      
+//      OAuthClientRequest tokenRequest = tokenBuilder.buildQueryMessage();
+//      tokenRequest.setHeader("Accept", "application/json");
       
       oAuthClient = new OAuthClient(new URLConnectionClient());
-      accessToken = oAuthClient.accessToken(tokenRequest);
+//      accessToken = oAuthClient.accessToken(tokenRequest, OAuth.HttpMethod.POST);
       
       /*
        * Request the user information
@@ -140,7 +187,7 @@ public class ExternalProfile extends ExternalProfileBase implements Reloadable, 
 
       return SessionFacade.logIn(profile, LocaleSerializer.deserialize(locales));
     }
-    catch (JSONException | OAuthSystemException | OAuthProblemException e)
+    catch (JSONException | OAuthSystemException | IOException e)
     {
       throw new InvalidLoginException(e);
     }

@@ -164,7 +164,7 @@ public class DHIS2OAuthConnector extends AbstractDHIS2Connector
       
       post.setRequestHeader("Content-Type", "application/json");
       
-      String body = "{ \"name\" : \"Geoprism\", \"cid\" : \"" + CLIENT_ID + "\", \"secret\" : \"" + SECRET + "\", \"grantTypes\" : [ \"password\", \"refresh_token\", \"authorization_code\" ], \"redirectUris\" : [ \"\" ]}";
+      String body = "{ \"name\" : \"Geoprism\", \"cid\" : \"" + CLIENT_ID + "\", \"secret\" : \"" + SECRET + "\", \"grantTypes\" : [ \"password\", \"refresh_token\", \"authorization_code\" ], \"redirectUris\" : [ \"https://localhost:8443/geoprism/session/ologin\" ]}";
       post.setRequestEntity(new StringRequestEntity(body, null, null));
 
       JSONObject response = new JSONObject();

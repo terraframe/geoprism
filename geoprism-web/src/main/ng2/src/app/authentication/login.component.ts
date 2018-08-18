@@ -38,19 +38,8 @@ export class LoginComponent {
   constructor(private service:SessionService, private router:Router) {
     this.context = acp as string;
     
-    console.log("login constructor");
-    
     service.getOAuthInfo().then(server => {
-      console.log("getOAuthInfo returned");
-      console.log(server);
-      
       this.oAuthServer = server;
-      
-      console.log("this.oAuth equals");
-      console.log(this.oAuthServer);
-      
-      console.log("this equals");
-      console.log(this);
     })
   }
   

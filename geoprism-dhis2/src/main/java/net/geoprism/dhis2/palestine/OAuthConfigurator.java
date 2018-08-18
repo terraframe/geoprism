@@ -3,11 +3,6 @@ package net.geoprism.dhis2.palestine;
 import java.io.File;
 import java.sql.Savepoint;
 
-import net.geoprism.account.OauthServer;
-import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.dhis2.DHIS2Configuration;
-import net.geoprism.dhis2.connector.DHIS2OAuthConnector;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -19,7 +14,16 @@ import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
+
+import net.geoprism.account.ExternalProfile;
+import net.geoprism.account.ExternalProfileQuery;
+import net.geoprism.account.OauthServer;
+import net.geoprism.configuration.GeoprismConfigurationResolver;
+import net.geoprism.dhis2.DHIS2Configuration;
+import net.geoprism.dhis2.connector.DHIS2OAuthConnector;
 
 public class OAuthConfigurator
 {
@@ -78,6 +82,13 @@ public class OAuthConfigurator
   @Transaction
   private static void deleteServer()
   {
+    ExternalProfileQuery pq = new ExternalProfileQuery(new QueryFactory());
+    OIterator<? extends ExternalProfile> it = pq.getIterator();
+    while (it.hasNext())
+    {
+      it.next().delete();
+    }
+    
     Savepoint sp = Database.setSavepoint();
     
     try

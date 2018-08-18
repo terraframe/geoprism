@@ -176,10 +176,10 @@ public class SessionController implements Reloadable
 
       JSONArray roles = new JSONArray(RoleViewDTO.getCurrentRoles(clientRequest));
 
-      CookieResponse response = new CookieResponse("user", -1);
+      CookieRedirectResponse response = new CookieRedirectResponse("user", -1, req.getContextPath() + "/");
       response.set("loggedIn", clientRequest.isLoggedIn());
       response.set("roles", roles);
-
+      
       return response;
     }
     finally
