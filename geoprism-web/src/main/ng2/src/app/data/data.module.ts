@@ -41,6 +41,7 @@ import { UploadManagerComponent } from './upload-manager/upload-manager.componen
 // Upload wizard imports
 import { NavigationService } from './uploader/navigation.service';
 import { UploadWizardComponent } from './uploader/upload-wizard.component';
+import { DatasetInputComponent } from './uploader/dataset-input.component';
 import { PagingComponent } from './uploader/paging.component';
 import { MatchInitialPageComponent } from './uploader/match-initial-page.component';
 import { MatchPageComponent } from './uploader/match-page.component';
@@ -78,6 +79,7 @@ import { UploadManagerService } from './upload-manager/upload-manager.service';
     
     // Upload Wizard components
     UploadWizardComponent,
+    DatasetInputComponent,
     PagingComponent,
     MatchInitialPageComponent,
     MatchPageComponent,

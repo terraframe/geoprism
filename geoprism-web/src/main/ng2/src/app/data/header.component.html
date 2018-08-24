@@ -3,8 +3,8 @@
   <nav class="navbar navbar-default">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" routerLink="/" [title]="'userMenu.menuTooltip' | localize"><img [src]="context + '/logo/view?id=logo'" /></a>
-        <a class="navbar-brand" routerLink="/data"><localize key="data.management.title"></localize></a>
+        <a class="navbar-brand" routerLink="/data/uploadmanager" [title]="'userMenu.menuTooltip' | localize"><img [src]="context + '/logo/view?id=logo'" /></a>
+        <a class="navbar-brand" routerLink="/data/uploadmanager"><localize key="data.management.title"></localize></a>
       </div>
           
       <ul class="nav navbar-nav navbar-right">
@@ -13,12 +13,12 @@
             <localize key="Data_Management"></localize><span class="caret"></span>
           </a>            
           <ul *dropdownMenu class="dropdown-menu">
-            <li role="menuitem"><a class="dropdown-item" routerLink="/data/datasets" routerLinkActive="active"><localize key="Data_Sets"></localize></a></li>
+<!--             <li role="menuitem"><a class="dropdown-item" routerLink="/data/datasets" routerLinkActive="active"><localize key="Data_Sets"></localize></a></li> -->
             <li role="menuitem"><a class="dropdown-item" routerLink="/data/uploadmanager" routerLinkActive="active"><i></i><localize key="Upload_Manager"></localize></a></li>
-            <li role="menuitem"><a class="dropdown-item" routerLink="/data/icons" routerLinkActive="active"><i></i><localize key="Icons"></localize></a></li>
-            <li role="menuitem"><a class="dropdown-item" routerLink="/data/categories" routerLinkActive="active"><i></i><localize key="Categories"></localize></a></li>
+<!--             <li role="menuitem"><a class="dropdown-item" routerLink="/data/icons" routerLinkActive="active"><i></i><localize key="Icons"></localize></a></li> -->
+<!--             <li role="menuitem"><a class="dropdown-item" routerLink="/data/categories" routerLinkActive="active"><i></i><localize key="Categories"></localize></a></li> -->
             <li *ngIf="isDhis2Enabled" role="menuitem"><a class="dropdown-item" routerLink="/data/dhis2" routerLinkActive="active"><i></i><localize key="DHIS2IdFinder"></localize></a></li>
-            <li role="menuitem"><a class="dropdown-item" [href]="context + '/management#locations'"><i></i><localize key="location.management.title"></localize></a></li>
+<!--             <li role="menuitem"><a class="dropdown-item" [href]="context + '/management#locations'"><i></i><localize key="location.management.title"></localize></a></li> -->
           </ul>
         </li>
       </ul>

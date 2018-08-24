@@ -96,17 +96,7 @@ export class UploadWizardComponent implements OnDestroy {
   
       this.uploadService.importData(this.info.information)
         .then(result => {
-          window.location.href = acp + '/prism/home#/data/uploadmanager';
-        	
-//          console.log("persist importData return")
-//          if(result.success || (this.reconstructionJSON != null && this.reconstructionJSON != "")) {
-//            this.clear();
-//            console.log("onSuccess emit (importData)")
-//            this.onSuccess.emit({datasets:result.datasets, finished : true});          
-//          }
-//          else {
-//            this.afterPersist(result);
-//          }         
+            this.clear();
         })
         .catch(error => {
           this.hasError = true;
@@ -116,7 +106,7 @@ export class UploadWizardComponent implements OnDestroy {
   afterPersist(result: DatasetResponse): void {
     this.isPersisted = true;
   
-//    this.onSuccess.emit({datasets:result.datasets, finished : false});
+    this.onSuccess.emit({datasets:result.datasets, finished : false});
   }
   
   

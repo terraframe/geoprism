@@ -1,0 +1,17 @@
+<div id="data-import-input-container" class="container">
+
+  <message></message>
+
+  <div class="drop-box-container" ng2FileDrop [ngClass]="{'drop-active': dropActive}" (fileOver)="fileOver($event)" [uploader]="uploader" (click)=fileInput.click()>
+    <div class="drop-box">
+      <div class="inner-drop-box">
+        <i class="fa fa-cloud-upload">
+          <p class="upload-text"><localize key="dashboardbuilder.uploadDataSet"></localize></p>
+        </i>
+      </div>
+    </div>
+    <input type="file" #uploadEl ng2FileSelect #fileInput [uploader]="uploader" id="uploader-input" style="display:none" />
+  </div>
+  
+  <upload-wizard (onSuccess)="onSuccess($event)"></upload-wizard>
+</div>

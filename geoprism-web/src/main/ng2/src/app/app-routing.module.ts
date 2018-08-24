@@ -37,7 +37,7 @@ declare var acp: any;
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/menu',
+    redirectTo: '/data/uploadmanager',
     pathMatch: 'full'
   },
   {

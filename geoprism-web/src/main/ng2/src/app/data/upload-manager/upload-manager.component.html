@@ -6,9 +6,15 @@
   <div *ngIf="histories === null">
     <localize key='uploadmanager.loadingData'></localize>
   </div>
-    <input type="button" [value]="'uploadmanager.clearHistory' | localize" class="btn btn-default btn-primary" (click)="clearHistory()" />
   
-    <div class="list-table-wrapper">
+  
+  <dataset-input></dataset-input>
+  
+  
+  
+<!--     <input type="button" [value]="'uploadmanager.clearHistory' | localize" class="btn btn-default btn-primary" (click)="clearHistory()" /> -->
+  
+  <div class="container list-table-wrapper">
 	  <table id="uploadmanager-table" class="list-table table table-bordered table-striped">        
 	    <thead>
 	      <tr>

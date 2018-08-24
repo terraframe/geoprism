@@ -25,31 +25,22 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { FileSelectDirective, FileDropDirective, FileUploader, FileUploaderOptions } from 'ng2-file-upload/ng2-file-upload';
 
-import { Dataset } from '../model/dataset';
-
 import { EventService } from '../../core/service/core.service';
-import { DatasetService } from '../service/dataset.service';
 
-import { UploadWizardComponent } from '../uploader/upload-wizard.component';
-import { UploadResultComponent } from '../uploader/upload-result.component';
+import { UploadWizardComponent } from './upload-wizard.component';
+import { UploadResultComponent } from './upload-result.component';
 
 declare let acp: string;
 
 @Component({
-  selector: 'datasets',
-  templateUrl: './datasets.component.html',
+  selector: 'dataset-input',
+  templateUrl: 'dataset-input.component.html',
   styleUrls: []
 })
-export class DatasetsComponent implements OnInit {
-  public datasets: Dataset[];
-  
-  public canExport: boolean;
-
+export class DatasetInputComponent implements OnInit {
   public uploader:FileUploader;
   public dropActive:boolean = false;
   
-  public reconstructionJSON: any;
-
   @ViewChild(UploadWizardComponent)
   private wizard: UploadWizardComponent;
   
@@ -61,22 +52,10 @@ export class DatasetsComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private datasetService: DatasetService,
     private eventService: EventService,
     private modalService: BsModalService) { }
 
   ngOnInit(): void {
-    this.getDatasets();
-    
-    let sub = this.route.params.subscribe(params => {
-    	let historyId = params['historyId'];
-    	let pageNum = params['pageNum'];
-    	
-    	if (historyId != null)
-        {
-    	  this.getReconstructionJson(historyId, pageNum);
-        }
-     });
     
     let options:FileUploaderOptions =  {
       autoUpload: true,
@@ -107,79 +86,8 @@ export class DatasetsComponent implements OnInit {
     });
   }
   
-  getDatasets() : void {
-    this.datasetService
-      .getDatasets()
-      .then(datasetCollection => {
-        this.datasets = datasetCollection.datasets;
-        this.canExport = datasetCollection.canExport;
-      })
-  };
-  
-  getReconstructionJson(historyId: string, pageNum: number) : void {
-    this.datasetService
-      .getReconstructionJson(historyId)
-      .then(reconstructionJSON => {
-        reconstructionJSON.pageNum = pageNum;
-        
-//        this.wizard.setReconstructionJSON(reconstructionJSON);
-//        this.wizard.afterPersist(reconstructionJSON.importResponse);
-    })
-  };
-  
-  remove(dataset: Dataset, event: any) : void {
-    this.datasetService
-      .remove(dataset)
-      .then(response => {
-        this.datasets = this.datasets.filter(h => h.id !== dataset.id);    
-      });
-  }
-  
-  edit(dataset: Dataset, event: any) : void {
-    this.router.navigate(['/dataset', dataset.id]);
-  }
-  
-  xport(dataset: Dataset, event: any) : void {
-    this.datasetService.xport(dataset.id);
-  }
-  
   fileOver(e:any):void {
     this.dropActive = e;
   }
   
-  onSuccess(data: any): void {
-    if(data.datasets != null) {
-      this.addDatasets(data.datasets);
-    }
-    
-    if(data.summary != null) {
-      this.bsModalRef = this.modalService.show(UploadResultComponent, {backdrop: 'static', class: 'gray modal-lg'});
-      this.bsModalRef.content.summary = data.summary;              	
-    }
-  }
-  
-  getIndex(dataset: Dataset) {
-    for(var i = 0; i < this.datasets.length; i++) {
-      if(this.datasets[i].id == dataset.id) {
-        return i;
-      }
-    }
-      
-    return -1;
-  }
-  
-  addDatasets(datasets:Dataset[]) {
-    for(let i = 0; i < datasets.length; i++) {
-      let dataset = datasets[i];
-      
-      let index = this.getIndex(dataset)
-        
-      if(index == -1) {
-        this.datasets.push(dataset);        
-      }
-      else {
-        this.datasets[index] = dataset;
-      }
-    }
-  }
 }

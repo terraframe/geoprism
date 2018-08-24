@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 
 import { ExcelImportHistory } from './upload-manager.model';
 
+import { DatasetInputComponent } from '../uploader/dataset-input.component';
+import { UploadWizardComponent } from '../uploader/upload-wizard.component';
+
 import { EventService } from '../../core/service/core.service';
 import { LocalizationService } from '../../core/service/localization.service';
 
