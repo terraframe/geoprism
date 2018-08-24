@@ -4,19 +4,19 @@
     
     
       <!-- Palestine specific errors  [{label}] -->
-<!--       <mdException name="net.geoprism.data.etl.excel.InvalidSpreadsheetNameExcepetion" label="Spreadsheet File Name Exception" description="Thrown when a user tries to upload a spreadsheet with an incorect name." message="The name of the spreadsheet you uploaded does not match an expected name."></mdException> -->
+      <mdException name="net.geoprism.data.etl.excel.InvalidSpreadsheetNameExcepetion" label="Spreadsheet File Name Exception" description="Thrown when a user tries to upload a spreadsheet with an incorect name." message="The name of the spreadsheet you uploaded does not match an expected name."></mdException>
       
-<!--       <mdException name="net.geoprism.data.etl.excel.InvalidSpreadsheetTabNameException" label="Spreadsheet Tab Name Exception" description="Thrown when a user tries to upload a spreadsheet with an incorect name." message="The name of the [{tabLabel}] in the spreadsheet you uploaded does not match an expected tab name."> -->
-<!--         <attributes> -->
-<!--           <text name="tabLabel" label="Tab Label" /> -->
-<!--         </attributes> -->
-<!--       </mdException> -->
+      <mdException name="net.geoprism.data.etl.excel.InvalidSpreadsheetTabNameException" label="Spreadsheet Tab Name Exception" description="Thrown when a user tries to upload a spreadsheet with an incorect name." message="The name of the [{tabLabel}] in the spreadsheet you uploaded does not match an expected tab name.">
+        <attributes>
+          <text name="tabLabel" label="Tab Label" />
+        </attributes>
+      </mdException>
       
-<!--       <mdException name="net.geoprism.data.etl.excel.MissingSpreadsheetTabException" label="Spreadsheet Missing Tabs Exception" description="Thrown when a user tries to upload a spreadsheet that does not have all the expected tabs." message="The uploaded spreadsheet is missing the required tab [{tabLabel}]."> -->
-<!--         <attributes> -->
-<!--           <text name="tabLabel" label="Tab Label" /> -->
-<!--         </attributes> -->
-<!--       </mdException> -->
+      <mdException name="net.geoprism.data.etl.excel.MissingSpreadsheetTabException" label="Spreadsheet Missing Tabs Exception" description="Thrown when a user tries to upload a spreadsheet that does not have all the expected tabs." message="The uploaded spreadsheet is missing the required tab [{tabLabel}].">
+        <attributes>
+          <text name="tabLabel" label="Tab Label" />
+        </attributes>
+      </mdException>
       
       <mdException name="net.geoprism.data.etl.excel.ExtraSpreadsheetTabException" label="Spreadsheet Has Extra Tabs Exception" description="Thrown when a user tries to upload a spreadsheet that has more tabs than expected." message="The uploaded spreadsheet has one or more tabs than expected. Remove [{tabLabel}].">
         <attributes>
