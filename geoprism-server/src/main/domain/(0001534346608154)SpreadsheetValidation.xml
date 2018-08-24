@@ -1,0 +1,57 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+    
+    
+      <!-- Palestine specific errors  [{label}] -->
+<!--       <mdException name="net.geoprism.data.etl.excel.InvalidSpreadsheetNameExcepetion" label="Spreadsheet File Name Exception" description="Thrown when a user tries to upload a spreadsheet with an incorect name." message="The name of the spreadsheet you uploaded does not match an expected name."></mdException> -->
+      
+<!--       <mdException name="net.geoprism.data.etl.excel.InvalidSpreadsheetTabNameException" label="Spreadsheet Tab Name Exception" description="Thrown when a user tries to upload a spreadsheet with an incorect name." message="The name of the [{tabLabel}] in the spreadsheet you uploaded does not match an expected tab name."> -->
+<!--         <attributes> -->
+<!--           <text name="tabLabel" label="Tab Label" /> -->
+<!--         </attributes> -->
+<!--       </mdException> -->
+      
+<!--       <mdException name="net.geoprism.data.etl.excel.MissingSpreadsheetTabException" label="Spreadsheet Missing Tabs Exception" description="Thrown when a user tries to upload a spreadsheet that does not have all the expected tabs." message="The uploaded spreadsheet is missing the required tab [{tabLabel}]."> -->
+<!--         <attributes> -->
+<!--           <text name="tabLabel" label="Tab Label" /> -->
+<!--         </attributes> -->
+<!--       </mdException> -->
+      
+      <mdException name="net.geoprism.data.etl.excel.ExtraSpreadsheetTabException" label="Spreadsheet Has Extra Tabs Exception" description="Thrown when a user tries to upload a spreadsheet that has more tabs than expected." message="The uploaded spreadsheet has one or more tabs than expected. Remove [{tabLabel}].">
+        <attributes>
+          <text name="tabLabel" label="Tab Label" />
+        </attributes>
+      </mdException>
+      
+      <mdException name="net.geoprism.data.etl.excel.ExtraSpreadsheetTabColumnException" label="Spreadsheet Tab Has Extra Columns Exception" description="Thrown when a user tries to upload a spreadsheet that has a tab with more columns than expected." message="The uploaded spreadsheet has a tab [{tabLabel}] with one or more columns than expected. Remove [{columnLabel}].">
+        <attributes>
+          <text name="tabLabel" label="Tab Label" />
+          <text name="columnLabel" label="Column Label" />
+        </attributes>
+      </mdException>
+      
+      <mdException name="net.geoprism.data.etl.excel.MissingSpreadsheetTabColumnException" label="Spreadsheet Tab Missing Columns Exception" description="Thrown when a user tries to upload a spreadsheet that has a tab that does not have all the expected columns." message="The uploaded spreadsheet tab [{tabLabel}] is missing one or more required columns. Add [{columnLabel}].">
+        <attributes>
+          <text name="tabLabel" label="Tab Label" />
+          <text name="columnLabel" label="Column Label" />
+        </attributes>
+      </mdException>
+    
+    
+      <!-- General ETL errors  -->
+<!--       <mdException name="net.geoprism.data.etl.excel.InvalidHeaderRowException" label="Invalid Header Row Exception" message="Header row must contain only text cells with unique values" /> -->
+    
+    
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete>
+        <object key="net.geoprism.data.etl.excel.InvalidSpreadsheetNameExcepetion" type="com.runwaysdk.system.metadata.MdException"/>
+        <object key="net.geoprism.data.etl.excel.InvalidSpreadsheetTabNameException" type="com.runwaysdk.system.metadata.MdException"/>
+        <object key="net.geoprism.data.etl.excel.MissingSpreadsheetTabException" type="com.runwaysdk.system.metadata.MdException"/>
+        <object key="net.geoprism.data.etl.excel.ExtraSpreadsheetTabException" type="com.runwaysdk.system.metadata.MdException"/>
+    </delete>
+  </undoIt>
+</version>
