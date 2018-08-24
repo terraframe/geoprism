@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -61,9 +62,13 @@ import net.geoprism.data.etl.TargetDefinitionIF;
 import net.geoprism.data.etl.excel.DataUploaderImportJob;
 import net.geoprism.data.etl.excel.ExcelDataFormatter;
 import net.geoprism.data.etl.excel.ExcelSheetReader;
+import net.geoprism.data.etl.excel.ExtraSpreadsheetTabException;
 import net.geoprism.data.etl.excel.FieldInfoContentsHandler;
 import net.geoprism.data.etl.excel.InvalidExcelFileException;
+import net.geoprism.data.etl.excel.InvalidSpreadsheetTabNameException;
+import net.geoprism.data.etl.excel.MissingSpreadsheetTabException;
 import net.geoprism.data.importer.SeedKeyGenerator;
+//import net.geoprism.dhis2.palestine.PalestineHardcoded;
 import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
@@ -184,7 +189,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
       ExcelSheetReader reader = new ExcelSheetReader(handler, formatter);
       reader.process(vf.getFileStream());
-
+      
 //      if (handler.getType().equals("ETL"))
 //      {
         JSONObject object = new JSONObject();
@@ -452,7 +457,8 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
     return part;
   }
-
+  
+  
   public static void validateDatasetName(String name, String id)
   {
     QueryFactory factory = new QueryFactory();

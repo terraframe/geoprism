@@ -130,7 +130,7 @@ public class DataImportRunnable implements Reloadable
     /*
      * Import the data
      */
-    ImportResponseIF summary = this.importData(file);
+    ImportResponseIF summary = this.importData(file, this.configuration);
     
     // Update the history
     history.appLock();
@@ -256,13 +256,13 @@ public class DataImportRunnable implements Reloadable
     }
   }
 
-  private ImportResponseIF importData(File file) throws FileNotFoundException, IOException, Exception
+  private ImportResponseIF importData(File file, String configuration) throws FileNotFoundException, IOException, Exception
   {
     DHIS2PluginIF plugin = PluginUtil.getDhis2Plugin();
     
     if (plugin != null)
     {
-      return plugin.importData(file, filename, monitor);
+      return plugin.importData(file, filename, monitor, configuration);
     }
     else
     {

@@ -16,22 +16,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.dhis2;
-
-import java.io.File;
-
-import net.geoprism.data.etl.ImportResponseIF;
-import net.geoprism.data.etl.ProgressMonitorIF;
-
-public interface DHIS2PluginIF
-{
-  public java.lang.String findAttributes();
-  
-  public java.lang.String findPrograms();
-  
-  public java.lang.String findTrackedEntities();
-  
-  public ImportResponseIF importData(File file, String filename, ProgressMonitorIF monitor, String configuration);
-  
-  
-}
+/**
+ * This file is just a placeholder. The actual source exists in : src/main/java/com/runwaysdk/patcher/domain
+ */
