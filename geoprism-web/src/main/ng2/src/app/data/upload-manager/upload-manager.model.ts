@@ -6,7 +6,8 @@ export class ExcelImportHistory {
   totalRecords: number;
   status: string;  
   startTime: string;
-  hasError: boolean;
+  hasErrorSpreadsheet: boolean;
+  errorMsg: string;
   geoSyns: number;
   termSyns: number;
 }

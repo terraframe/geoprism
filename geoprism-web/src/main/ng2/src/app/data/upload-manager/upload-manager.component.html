@@ -23,6 +23,7 @@
 	        <th class="label-column"><localize key='uploadmanager.endTime'></localize></th>
 	        <th class="label-column"><localize key='uploadmanager.status'></localize></th>
 	        <th class="label-column"><localize key='uploadmanager.records'></localize></th>
+          <th class="label-column"><localize key='uploadmanager.errorMsg'></localize></th>
 	        <th class="label-column"><localize key='uploadmanager.hasError'></localize></th>
 	        <th class="label-column"><localize key='uploadmanager.geoSyns'></localize></th>
 	        <th class="label-column"><localize key='uploadmanager.termSyns'></localize></th>
@@ -35,8 +36,11 @@
 	        <td class="column-startTime"> {{history.endTime}} </td>
 	        <td class="column-status"> {{history.status}} </td>
 	        <td class="column-records"> {{history.importCount}} / {{history.totalRecords}} </td>
+          <td class="column-errorMsg">
+            {{history.errorMsg}}
+          </td>
 	        <td class="column-hasError">
-            <a *ngIf="history.hasError" class="fa fa-download" href="../net.geoprism.data.importer.ExcelController.downloadErrorSpreadsheet.mojo?historyId={{history.id}}"></a>
+            <a *ngIf="history.hasErrorSpreadsheet" class="fa fa-download" href="../net.geoprism.data.importer.ExcelController.downloadErrorSpreadsheet.mojo?historyId={{history.id}}"></a>
           </td>
 	        <td class="column-hasSynonyms"> 
             {{history.geoSyns}}

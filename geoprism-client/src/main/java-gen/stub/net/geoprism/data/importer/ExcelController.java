@@ -146,7 +146,9 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
         {
           jHistory.put("endTime", "");
         }
-        jHistory.put("hasError", history.getErrorFile() != null);
+        jHistory.put("hasErrorSpreadsheet", history.getErrorFile() != null);
+        
+        jHistory.put("errorMsg", history.getHistoryInformation().getValue());
         
         jHistory.put("geoSyns", history.getNumberUnknownGeos());
         
