@@ -50,18 +50,18 @@ public class SessionPredicate implements Predicate<String>
 
     if (session != null)
     {
-      String sessionId = session.getOid();
+      String sessionId = session.getOid().replaceAll("-", "");
 
       // The max length for a postgres table name is 63 characters, and as a
       // result our metadata is set at max length 63
       // as well.
 
-      String vn = PREFIX + sessionId + "_" + IDGenerator.nextID().substring(0, 10);
+      String vn = PREFIX + sessionId + "_" + IDGenerator.nextID().replaceAll("-", "").substring(0, 10);
 
       return vn;
     }
 
-    return PREFIX + IDGenerator.nextID().substring(0, 10);
+    return PREFIX + IDGenerator.nextID().substring(0, 10).replaceAll("-", "");
   }
 
   @Override

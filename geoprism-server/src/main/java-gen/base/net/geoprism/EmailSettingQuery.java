@@ -136,21 +136,21 @@ public  class EmailSettingQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.EmailSetting.FROM, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.EmailSetting.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.EmailSetting.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.EmailSetting.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.EmailSetting.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -467,9 +467,9 @@ public  class EmailSettingQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableChar getFrom();
     public com.runwaysdk.query.SelectableChar getFrom(String alias);
     public com.runwaysdk.query.SelectableChar getFrom(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -612,21 +612,21 @@ public  class EmailSettingQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.EmailSetting.FROM, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.EmailSetting.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.EmailSetting.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.EmailSetting.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.EmailSetting.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -902,9 +902,9 @@ public  class EmailSettingQuery extends com.runwaysdk.query.GeneratedBusinessQue
     public com.runwaysdk.query.SelectableChar getFrom();
     public com.runwaysdk.query.SelectableChar getFrom(String alias);
     public com.runwaysdk.query.SelectableChar getFrom(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -1096,21 +1096,21 @@ public  class EmailSettingQuery extends com.runwaysdk.query.GeneratedBusinessQue
     return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.EmailSetting.FROM, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.EmailSetting.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.EmailSetting.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.EmailSetting.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.EmailSetting.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

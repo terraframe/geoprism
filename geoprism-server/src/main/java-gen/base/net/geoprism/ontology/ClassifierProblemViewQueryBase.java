@@ -79,21 +79,21 @@ public  abstract  class ClassifierProblemViewQueryBase extends com.runwaysdk.que
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getSelectable(net.geoprism.ontology.ClassifierProblemView.OID, alias, displayLabel);
 
   }
  

@@ -185,21 +185,21 @@ public  class DashboardMetadataQuery extends com.runwaysdk.query.GeneratedRelati
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardMetadata.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardMetadata.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.dashboard.DashboardMetadata.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardMetadata.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.dashboard.DashboardMetadata.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

@@ -38,6 +38,57 @@ import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.rbac.RoleDAO;
+import com.runwaysdk.business.rbac.SingleActorDAO;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
+import com.runwaysdk.business.rbac.UserDAO;
+import com.runwaysdk.business.rbac.UserDAOIF;
+import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.query.AttributeChar;
+import com.runwaysdk.query.CONCAT;
+import com.runwaysdk.query.Coalesce;
+import com.runwaysdk.query.Condition;
+import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OR;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableUUID;
+import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.ReadPermissionException;
+import com.runwaysdk.session.Request;
+import com.runwaysdk.session.RequestType;
+import com.runwaysdk.session.Session;
+import com.runwaysdk.system.Roles;
+import com.runwaysdk.system.RolesQuery;
+import com.runwaysdk.system.SingleActor;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdClass;
+
 import net.coobird.thumbnailator.Thumbnails;
 import net.geoprism.AccessConstants;
 import net.geoprism.ClassUniversalQuery;
@@ -67,58 +118,6 @@ import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.report.ReportItem;
 import net.geoprism.report.ReportItemQuery;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.runwaysdk.business.BusinessQuery;
-import com.runwaysdk.business.ontology.Term;
-import com.runwaysdk.business.rbac.RoleDAO;
-import com.runwaysdk.business.rbac.SingleActorDAO;
-import com.runwaysdk.business.rbac.SingleActorDAOIF;
-import com.runwaysdk.business.rbac.UserDAO;
-import com.runwaysdk.business.rbac.UserDAOIF;
-import com.runwaysdk.dataaccess.DuplicateDataException;
-import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
-
-import com.runwaysdk.query.AttributeChar;
-import com.runwaysdk.query.CONCAT;
-import com.runwaysdk.query.Coalesce;
-import com.runwaysdk.query.Condition;
-import com.runwaysdk.query.F;
-import com.runwaysdk.query.MAX;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.OR;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.SelectableChar;
-import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.ReadPermissionException;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
-import com.runwaysdk.session.Session;
-import com.runwaysdk.system.Roles;
-import com.runwaysdk.system.RolesQuery;
-import com.runwaysdk.system.SingleActor;
-import com.runwaysdk.system.gis.geo.AllowedIn;
-import com.runwaysdk.system.gis.geo.AllowedInQuery;
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.GeoNode;
-import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
-import com.runwaysdk.system.gis.geo.GeoNodeQuery;
-import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdClass;
 
 public class Dashboard extends DashboardBase 
 {
@@ -926,7 +925,7 @@ public class Dashboard extends DashboardBase
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
     GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
 
-    SelectableChar oid = entityQuery.getOid();
+    SelectableUUID oid = entityQuery.getOid();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
     Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
     SelectableChar geoId = entityQuery.getGeoId();

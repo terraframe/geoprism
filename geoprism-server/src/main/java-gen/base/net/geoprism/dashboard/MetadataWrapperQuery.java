@@ -142,21 +142,21 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.MetadataWrapper.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.MetadataWrapper.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.dashboard.MetadataWrapper.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.MetadataWrapper.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.dashboard.MetadataWrapper.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -651,9 +651,9 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -836,21 +836,21 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.dashboard.MetadataWrapper.ENTITYDOMAIN,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -1298,9 +1298,9 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -1480,21 +1480,21 @@ public  class MetadataWrapperQuery extends com.runwaysdk.query.GeneratedBusiness
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.dashboard.MetadataWrapper.ENTITYDOMAIN,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.MetadataWrapper.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

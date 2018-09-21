@@ -61,6 +61,7 @@ import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -933,7 +934,7 @@ public class Classifier extends ClassifierBase
     ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);
     ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(query);
 
-    SelectableChar oid = classifierQuery.getOid();
+    SelectableUUID oid = classifierQuery.getOid();
 
     Coalesce label = classifierQuery.getDisplayLabel().localize();
     label.setColumnAlias(Classifier.DISPLAYLABEL);

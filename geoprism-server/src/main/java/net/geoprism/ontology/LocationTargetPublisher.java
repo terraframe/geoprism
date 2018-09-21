@@ -32,8 +32,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
-import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableSingle;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -102,7 +102,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
 
     // Id column
-    SelectableChar oid = query.getOid(GeoEntity.OID);
+    SelectableUUID oid = query.getOid(GeoEntity.OID);
     oid.setColumnAlias(GeoEntity.OID);
 
     SelectableSingle label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);

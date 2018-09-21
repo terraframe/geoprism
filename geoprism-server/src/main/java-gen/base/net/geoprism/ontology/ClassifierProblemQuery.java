@@ -142,21 +142,21 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.ontology.ClassifierProblem.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -430,9 +430,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -563,21 +563,21 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -804,9 +804,9 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -986,21 +986,21 @@ public  class ClassifierProblemQuery extends com.runwaysdk.query.GeneratedBusine
     return (com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF)this.get(net.geoprism.ontology.ClassifierProblem.ENTITYDOMAIN,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.ClassifierProblem.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

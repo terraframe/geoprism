@@ -182,21 +182,21 @@ public  class DashboardStateQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.dashboard.DashboardState.GEOPRISMUSER, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardState.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.dashboard.DashboardState.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.dashboard.DashboardState.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.dashboard.DashboardState.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -459,9 +459,9 @@ public  class DashboardStateQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getGeoprismUser();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getGeoprismUser(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getGeoprismUser(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -626,21 +626,21 @@ public  class DashboardStateQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardState.GEOPRISMUSER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardState.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.DashboardState.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardState.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.DashboardState.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()
@@ -862,9 +862,9 @@ public  class DashboardStateQuery extends com.runwaysdk.query.GeneratedBusinessQ
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getGeoprismUser();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getGeoprismUser(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getGeoprismUser(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableChar getKeyName();
     public com.runwaysdk.query.SelectableChar getKeyName(String alias);
     public com.runwaysdk.query.SelectableChar getKeyName(String alias, String displayLabel);
@@ -1078,21 +1078,21 @@ public  class DashboardStateQuery extends com.runwaysdk.query.GeneratedBusinessQ
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.dashboard.DashboardState.GEOPRISMUSER,  alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardState.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.DashboardState.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.dashboard.DashboardState.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.dashboard.DashboardState.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableChar getKeyName()

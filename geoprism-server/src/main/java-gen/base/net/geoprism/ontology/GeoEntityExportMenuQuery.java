@@ -142,21 +142,21 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.ontology.GeoEntityExportMenu.FILEFORMAT, mdAttributeIF, this, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.getComponentQuery().get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.getComponentQuery().get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getIncludeGIS()
@@ -420,9 +420,9 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
   public com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF getFileFormat();
   public com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF getFileFormat(String alias);
   public com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF getFileFormat(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getIncludeGIS();
     public com.runwaysdk.query.SelectableBoolean getIncludeGIS(String alias);
     public com.runwaysdk.query.SelectableBoolean getIncludeGIS(String alias, String displayLabel);
@@ -553,21 +553,21 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF)this.get(net.geoprism.ontology.GeoEntityExportMenu.FILEFORMAT, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getIncludeGIS()
@@ -790,9 +790,9 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
   public com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF getFileFormat();
   public com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF getFileFormat(String alias);
   public com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF getFileFormat(String alias, String displayLabel);
-    public com.runwaysdk.query.SelectableChar getOid();
-    public com.runwaysdk.query.SelectableChar getOid(String alias);
-    public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableUUID getOid();
+    public com.runwaysdk.query.SelectableUUID getOid(String alias);
+    public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel);
     public com.runwaysdk.query.SelectableBoolean getIncludeGIS();
     public com.runwaysdk.query.SelectableBoolean getIncludeGIS(String alias);
     public com.runwaysdk.query.SelectableBoolean getIncludeGIS(String alias, String displayLabel);
@@ -972,21 +972,21 @@ public  class GeoEntityExportMenuQuery extends com.runwaysdk.query.GeneratedBusi
     return (com.runwaysdk.system.ontology.io.TermFileFormatMasterQuery.TermFileFormatQueryIF)this.get(net.geoprism.ontology.GeoEntityExportMenu.FILEFORMAT, alias, displayLabel);
 
   }
-  public com.runwaysdk.query.SelectableChar getOid()
+  public com.runwaysdk.query.SelectableUUID getOid()
   {
     return getOid(null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, null);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, null);
 
   }
  
-  public com.runwaysdk.query.SelectableChar getOid(String alias, String displayLabel)
+  public com.runwaysdk.query.SelectableUUID getOid(String alias, String displayLabel)
   {
-    return (com.runwaysdk.query.SelectableChar)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, displayLabel);
+    return (com.runwaysdk.query.SelectableUUID)this.get(net.geoprism.ontology.GeoEntityExportMenu.OID, alias, displayLabel);
 
   }
   public com.runwaysdk.query.SelectableBoolean getIncludeGIS()

@@ -19,6 +19,7 @@
 package net.geoprism;
 
 import java.util.Date;
+import java.util.UUID;
 
 import net.geoprism.localization.LocalizationFacade;
 
@@ -165,9 +166,9 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase
   
   private String generateEncryptedToken(GeoprismUser user)
   {
-    String hashedTime = ServerIDGenerator.hashedId(String.valueOf(System.currentTimeMillis()));
+    String hashedTime = UUID.nameUUIDFromBytes(String.valueOf(System.currentTimeMillis()).getBytes()).toString();
     
-    String hashedUser = ServerIDGenerator.hashedId(user.getOid());
+    String hashedUser = UUID.nameUUIDFromBytes(user.getOid().getBytes()).toString();
     
     return hashedTime + hashedUser;
   }

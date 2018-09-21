@@ -62,6 +62,7 @@ import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
@@ -816,7 +817,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
 
-    SelectableChar oid = entityQuery.getOid();
+    SelectableUUID oid = entityQuery.getOid();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
     Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
     SelectableChar geoId = entityQuery.getGeoId();
