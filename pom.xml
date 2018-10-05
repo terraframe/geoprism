@@ -23,7 +23,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>1.01.0031-SNAPSHOT</version>
+  <version>1.02.0001-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -39,7 +39,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.0.0-SNAPSHOT</runway.version>
+    <runway.version>3.0.0</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>16.1</geotools.version>
   
