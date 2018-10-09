@@ -19,8 +19,15 @@
 package net.geoprism;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,82 +68,128 @@ import net.geoprism.ontology.ClassifierIsARelationship;
 
 public class GeoprismPatcher
 {
+  private static final String[] DEFAULT_MODULES = new String[]{"geoprism"};
+  
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
   private File          metadataDir;
+  
+  private String[]      runwayArgs;
+  
+  private String[]      modules;
 
   public GeoprismPatcher(File metadataDir)
   {
     this.metadataDir = metadataDir;
+    this.runwayArgs = new String[]{};
+    this.modules = DEFAULT_MODULES;
+  }
+  
+  public GeoprismPatcher(String[] cliArgs)
+  {
+    this.processCLIArgs(cliArgs);
   }
 
   public static void main(String[] args)
   {
-    String metadataPath = null;
-
-    if (args.length > 0)
-    {
-      metadataPath = args[0];
-    }
-    if (args.length > 1 && args[1] != "null")
-    {
-      String externalConfigDir = args[1];
-
-      GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
-      resolver.setExternalConfigDir(new File(externalConfigDir));
-    }
+    GeoprismPatcher patcher = new GeoprismPatcher(args);
+    patcher.run();
+  }
+  
+  protected void processCLIArgs(String[] args)
+  {
+    CommandLineParser parser = new DefaultParser();
+    Options options = new Options();
+    options.addOption(Option.builder("metadataDir").hasArg().argName("metadataDir").longOpt("metadataDir").desc("The path to the location of metadata schema files. Optional").optionalArg(true).build());
+    options.addOption(Option.builder("externalConfigDir").hasArg().argName("externalConfigDir").longOpt("externalConfigDir").desc("The path to the location of an external configuration directory. Optional").optionalArg(true).build());
+    options.addOption(Option.builder("modules").hasArg().argName("modules").longOpt("modules").desc("A list of modules to build. Optional").optionalArg(true).build());
     
-    File fMetadataPath = null;
-    if (metadataPath == null)
-    {
-      metadataPath = DeployProperties.getDeployBin();
-      fMetadataPath = new File(metadataPath, "metadata");
-    }
-    else
-    {
-      fMetadataPath = new File(metadataPath);
-    }
+    // All the runway args
+    options.addOption(Option.builder("mode").hasArg().argName("mode").longOpt("mode").desc("The mode to run the RunwayPatcher in. Can be either bootstrap or standard. If omitted standard is assumed. During standard mode, bootstrapping will be attempted if Runway does not exist.").optionalArg(true).build());
+    options.addOption(Option.builder("rootUser").hasArg().argName("rootUser").longOpt("rootUser").desc("The username of the root database user. Only required when bootstrapping.").optionalArg(true).build());
+    options.addOption(Option.builder("rootPass").hasArg().argName("rootPass").longOpt("rootPass").desc("The password of the root database user. Only required when bootstrapping.").optionalArg(true).build());
+    options.addOption(Option.builder("templateDb").hasArg().argName("templateDb").longOpt("templateDb").desc("The template database to use when creating the application database. Only required when bootstrapping.").optionalArg(true).build());
+    options.addOption(Option.builder("extensions").hasArg().argName("extensions").longOpt("extensions").desc("A comma separated list of extensions denoting which schema files to run. If unspecified we will use all supported.").optionalArg(true).build());
+    options.addOption(Option.builder("clean").hasArg().argName("clean").longOpt("clean").desc("A boolean parameter denoting whether or not to clean the database and delete all data. Default is false.").optionalArg(true).build());
+    options.addOption(Option.builder("path").hasArg().argName("path").longOpt("path").desc("The path (from the root of the classpath) to the location of the metadata files. Defaults to 'domain'").optionalArg(true).build());
+    options.addOption(Option.builder("ignoreErrors").hasArg().argName("ignoreErrors").longOpt("ignoreErrors").desc("Ignore errors if one occurs while importing sql. Not recommended for everyday usage.").optionalArg(true).build());
     
-    
-    // The Runway bootstrapping cannot be done within a request
-    GeoprismPatcher patcher = new GeoprismPatcher(fMetadataPath);
-//    patcher.initialize();
-    
-    if (args.length > 2)
+    try
     {
-      String[] runwayArgs = Arrays.copyOfRange(args, 2, args.length);
+      CommandLine line = parser.parse( options, args );
       
-      RunwayPatcher.main(runwayArgs);
+      String metadataDir = line.getOptionValue("metadataDir");
+      String externalConfigDir = line.getOptionValue("externalConfigDir");
+      String modules = line.getOptionValue("modules");
+      
+      if (externalConfigDir != null)
+      {
+        GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
+        resolver.setExternalConfigDir(new File(externalConfigDir));
+      }
+      
+      if (metadataDir == null)
+      {
+        metadataDir = DeployProperties.getDeployBin();
+        this.metadataDir = new File(metadataDir, "metadata");
+      }
+      else
+      {
+        this.metadataDir = new File(metadataDir);
+      }
+      
+      if (modules == null)
+      {
+        this.modules = DEFAULT_MODULES;
+      }
+      else
+      {
+        this.modules = modules.split(",");
+      }
+      
+      this.setRunwayArgs(args);
     }
-    else
+    catch (ParseException e)
     {
-      RunwayPatcher.main(new String[]{});
+      throw new RuntimeException(e);
     }
-
+  }
+  
+  public void setRunwayArgs(String[] rwArgs)
+  {
+    ArrayList<String> clean = new ArrayList<String>();
     
-    executeWithRequest(fMetadataPath, patcher);
+    for (String rwArg : rwArgs)
+    {
+      if (!(rwArg.contains("metadataDir") || rwArg.contains("externalConfigDir") || rwArg.contains("modules")))
+      {
+        clean.add(rwArg);
+      }
+    }
+    
+    this.runwayArgs = clean.toArray(new String[clean.size()]);
   }
 
   @Request
-  private static void executeWithRequest(File fMetadataPath, GeoprismPatcher patcher)
+  private void runWithRequest()
   {
-    execute(fMetadataPath, patcher);
+    runWithTransaction();
   }
 
   @Transaction
-  public static void execute(File metadataDir, GeoprismPatcher patcher)
+  public void runWithTransaction()
   {
-    patcher.startup();
-    patcher.shutdown();
+    this.startup();
+    this.shutdown();
   }
 
-  public void initialize()
+  public void run()
   {
-    // Heads up : This method is not run if the patcher is run from a main method.
-    
     LocalProperties.setSkipCodeGenAndCompile(true);
 
-    RunwayPatcher.main(new String[]{});
+    RunwayPatcher.main(this.runwayArgs);
+    
+    runWithRequest();
   }
 
   public void startup()
@@ -158,19 +211,12 @@ public class GeoprismPatcher
     this.patchMetadata();
   }
 
-  protected String[] getModules()
-  {
-    return new String[] { "geoprism" };
-  }
-
   @Transaction
   protected boolean patchMetadata()
   {
     LocalProperties.setSkipCodeGenAndCompile(true);
 
-    String[] modules = this.getModules();
-
-    for (String module : modules)
+    for (String module : this.modules)
     {
       File metadata = new File(metadataDir, module);
 
