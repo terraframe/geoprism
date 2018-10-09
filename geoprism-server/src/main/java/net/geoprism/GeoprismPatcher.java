@@ -197,9 +197,16 @@ public class GeoprismPatcher
 
     this.patchMetadata();
   }
+  
+  public void validate()
+  {
+    // TODO : Check their postgres version and make sure its 9.5 +
+  }
 
   public void run()
   {
+    validate();
+    
     RunwayPatcher.main(this.runwayArgs);
     
     runWithRequest();
