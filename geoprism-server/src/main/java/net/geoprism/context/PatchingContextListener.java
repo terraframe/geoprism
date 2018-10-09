@@ -53,12 +53,11 @@ public class PatchingContextListener implements ServerContextListener
       initialize();
     }
 
-    patcher.startup();
+    patcher.run();
   }
 
   @Override
   public void shutdown()
   {
-    patcher.shutdown();
   }
 }

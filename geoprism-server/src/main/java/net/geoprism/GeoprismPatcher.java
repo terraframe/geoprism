@@ -179,21 +179,8 @@ public class GeoprismPatcher
   @Transaction
   public void runWithTransaction()
   {
-    this.startup();
-    this.shutdown();
-  }
-
-  public void run()
-  {
     LocalProperties.setSkipCodeGenAndCompile(true);
-
-    RunwayPatcher.main(this.runwayArgs);
     
-    runWithRequest();
-  }
-
-  public void startup()
-  {
     SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
 
     if (GeoprismProperties.getSolrLookup())
@@ -209,6 +196,13 @@ public class GeoprismPatcher
     }
 
     this.patchMetadata();
+  }
+
+  public void run()
+  {
+    RunwayPatcher.main(this.runwayArgs);
+    
+    runWithRequest();
   }
 
   @Transaction
@@ -266,11 +260,6 @@ public class GeoprismPatcher
     importer.loadProjectData(configuration);
 
     return initialized;
-  }
-
-  public void shutdown()
-  {
-
   }
 
   private XMLEndpoint getEndpoint()
