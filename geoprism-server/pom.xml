@@ -199,76 +199,6 @@
       </build>
     </profile>
     <profile>
-      <id>rebuild-database</id>
-      <activation>
-        <property>
-          <name>rebuild-database</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>rebuild-database</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <executable>java</executable>
-                  <mainClass>com.runwaysdk.dataaccess.InstallerCP</mainClass>
-                  <arguments>
-                    <argument>${root.user}</argument>
-                    <argument>${root.pass}</argument>
-                    <argument>${root.db}</argument>
-                    <argument>com/runwaysdk/resources/xsd/schema.xsd</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>import-schema</id>
-      <activation>
-        <property>
-          <name>import-schema</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <id>import-schema</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <executable>java</executable>
-                  <mainClass>net.geoprism.ImportSchema</mainClass>
-                  <arguments>
-                    <argument>${project.basedir}/src/main/domain</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    
-    <profile>
       <id>update-source-classes</id>
       <activation>
         <property>
@@ -428,8 +358,8 @@
                   <executable>java</executable>
                   <mainClass>net.geoprism.GeoprismPatcher</mainClass>
                   <arguments>
-                    <argument>${project.basedir}/target/classes/metadata</argument>
-                    <argument>${configuration.dir}/${geoprism.app}</argument>
+                    <argument>--metadataDir=${project.basedir}/target/classes/metadata</argument>
+                    <argument>--externalConfigDir=${configuration.dir}/${geoprism.app}</argument>
                     <argument>--rootUser=${root.user}</argument>
                     <argument>--rootPass=${root.pass}</argument>
                     <argument>--templateDb=${root.db}</argument>
