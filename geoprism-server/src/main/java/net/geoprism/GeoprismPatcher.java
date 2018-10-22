@@ -20,7 +20,9 @@ package net.geoprism;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -31,6 +33,7 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.ClasspathResource;
 import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
@@ -77,6 +80,11 @@ public class GeoprismPatcher
   private String[]      runwayArgs;
   
   private String[]      modules;
+  
+  static
+  {
+    checkDuplicateClasspathResources();
+  }
 
   public GeoprismPatcher(File metadataDir)
   {
@@ -280,5 +288,35 @@ public class GeoprismPatcher
 
     return new AmazonEndpoint();
     // return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
+  }
+  
+  /**
+   * Duplicate resources on the classpath may cause issues. This method checks the runwaysdk directory because conflicts there are most common.
+   */
+  public static void checkDuplicateClasspathResources()
+  {
+    Set<ClasspathResource> existingResources = new HashSet<ClasspathResource>();
+    
+    List<ClasspathResource> resources = ClasspathResource.getResourcesInPackage("runwaysdk");
+    for (ClasspathResource resource : resources)
+    {
+      ClasspathResource existingRes = null;
+      
+      for (ClasspathResource existingResource : existingResources)
+      {
+        if (existingResource.getAbsolutePath().equals(resource.getAbsolutePath()))
+        {
+          existingRes = existingResource;
+          break;
+        }
+      }
+      
+      if (existingRes != null)
+      {
+        System.out.println("WARNING : resource path [" + resource.getAbsolutePath() + "] is overloaded.  [" + resource.getPackageURL() + "] conflicts with existing resource [" + existingRes.getPackageURL() + "].");
+      }
+      
+      existingResources.add(resource);
+    }
   }
 }

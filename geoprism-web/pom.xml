@@ -255,11 +255,9 @@
           <warSourceExcludes>**/prism.jsp,**/admin.jsp</warSourceExcludes>
           <packagingExcludes>
             <!-- Source/class project jars must be excluded for reloaded to work -->
-<!-- 
             **/*geoprism-common*.jar,
             **/*geoprism-client*.jar,
             **/*geoprism-server*.jar,
- -->            
             <!-- Exclude all jars provided by tomcat -->
             **/*catalina*.jar,
             **/*servlet-api*.jar,
@@ -278,7 +276,6 @@
           </overlays>
         </configuration>
       </plugin>
-<!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -347,7 +344,6 @@
           </execution>
         </executions>
       </plugin>
--->      
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>2.5</version>
