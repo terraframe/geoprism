@@ -190,7 +190,7 @@ public class DefaultConfiguration implements ConfigurationIF
     {
       if (this.hasLocationData(type))
       {
-        String oid = object.getString("oid");
+        String oid = object.has("oid") ? object.getString("oid") : null;
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
         
         Envelope envelope = PublisherUtil.getEnvelope(object);

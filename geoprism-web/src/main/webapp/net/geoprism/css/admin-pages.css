@@ -319,6 +319,27 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
 	font-size: 12px;
 }
 
+#manage-accounts-table.list-table .label-column {
+  width: 17%;
+}
+#manage-accounts-table.list-table .label-column.username-col {
+  width: 15%;
+}
+#manage-accounts-table.list-table .label-column.firstname-col {
+  width: 20%;
+}
+#manage-accounts-table.list-table .label-column.lastname-col {
+  width: 20%;
+}
+#manage-accounts-table.list-table .label-column.phone-col {
+  width: 10%;
+}
+#manage-accounts-table.list-table .label-column.email-col {
+  width: 20%;
+}
+#manage-accounts-table.list-table .button-column {
+  width: 15%;
+}
 
 #manage-datasets-table.list-table .label-column {
 	width: 35%;

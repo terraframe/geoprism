@@ -28,7 +28,20 @@
                 <input type="text" [(ngModel)]="account.user.lastName" name="lastname" required>
               </span>
             </div>
-          </div>          
+          </div>  
+          <div class="row-holder">
+            <div class="label-holder">
+              <label><localize key="account.phonenumber"></localize></label>
+            </div>          
+            <div class="holder" >
+              <span class="text">
+                <input type="text" [(ngModel)]="account.user.phoneNumber" name="phoneNumber" >
+              </span>
+<!--               <div *ngIf="aphone.errors?.phone" class="inline-error-message"> -->
+<!--                 <localize key="account.phone.validation"></localize> -->
+<!--               </div>                                           -->
+            </div>
+          </div>           
           <div class="row-holder">
             <div class="label-holder">
               <label><localize key="account.email"></localize></label>
