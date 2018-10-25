@@ -359,6 +359,7 @@
           </filesets>
         </configuration>
       </plugin>
+<!--  
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -410,6 +411,7 @@
           </execution>
         </executions>
       </plugin>
+-->      
       
       <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
