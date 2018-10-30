@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -29,8 +29,7 @@ import java.util.TreeSet;
 
 import com.runwaysdk.constants.ClientRequestIF;
 
-
-public class ClientConfigurationService 
+public class ClientConfigurationService
 {
   /**
    * Retrieve all implementations of ConfigurationIF.
@@ -56,7 +55,10 @@ public class ClientConfigurationService
       throw new RuntimeException(serviceError);
     }
 
-    configurations.add(new DefaultClientConfiguration());
+    if (configurations.size() == 0)
+    {
+      configurations.add(new DefaultClientConfiguration());
+    }
 
     return configurations;
   }
