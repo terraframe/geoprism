@@ -110,6 +110,7 @@ public class SessionController
     CookieResponse response = new CookieResponse("user", -1);
     response.set("loggedIn", clientRequest.isLoggedIn());
     response.set("roles", roles);
+    response.set("userName", username);
 
     return response;
   }
