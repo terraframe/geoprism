@@ -47,9 +47,9 @@ public class CookieResponse extends RestResponse implements ResponseIF
 
     String path = manager.getReq().getContextPath();
 
-    if (path.equals("/"))
+    if (path.equals("") || path.length() == 0)
     {
-      path = "//";
+      path = "/";
     }
 
     Cookie cookie = new Cookie(this.name, serialize.toString());
