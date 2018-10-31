@@ -30,12 +30,12 @@
     <div id="geodash-landing-bottom-div">
       <div id="mask"></div>
       <div class="nav-icon-container container-fluid">
-        <div class="row-fluid vertical-center-row">
-          <div class="col-sm-4 hidden-xs"></div>
-          <div class="col-xs-12 col-sm-4">
+        <div *ngIf="applications?.length == 1" class="row-fluid vertical-center-row">
+          <div class="col-md-5 col-sm-4 col-xs-2"></div>
+          <div class="col-md-2 col-sm-4 col-xs-8">
             <div class="row-fluid">
               <div *ngFor="let application of applications" [ngClass]="buckets" class="col-xs-12 text-center" (click)="open(application)">
-                <div [id]="application.id" class="nav-option">
+                <div [id]="application.id" class="nav-option" >
                   <img class="nav-icon-img img-responsive" [src]="context + '/' + application.src" alt="Navigation" />
                   <h3 class="nav-icon-img-label">{{application.label}}</h3>
                 </div>                
@@ -43,7 +43,23 @@
             </div>
             <!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
           </div>
-          <div class="col-sm-4 hidden-xs"></div>
+          <div class="col-md-5 col-sm-4 col-xs-2"></div>
+        </div>
+        
+        <div *ngIf="applications?.length > 1" class="row-fluid vertical-center-row">
+          <div class="col-md-4 col-sm-4 col-xs-2"></div>
+          <div class="col-md-4 col-sm-4 col-xs-8">
+            <div class="row-fluid">
+              <div *ngFor="let application of applications" [ngClass]="buckets" class="col-xs-12 text-center" (click)="open(application)">
+                <div [id]="application.id" class="nav-option" >
+                  <img class="nav-icon-img img-responsive" [src]="context + '/' + application.src" alt="Navigation" />
+                  <h3 class="nav-icon-img-label">{{application.label}}</h3>
+                </div>                
+              </div>
+            </div>
+            <!-- TO ADD MORE NAV OPTIONS SIMPLY ADD ANOTHER ROW-FLUID WITH CONTENTS LIKE ABOVE -->
+          </div>
+          <div class="col-md-4 col-sm-4 col-xs-2"></div>
         </div>
       </div>
             
