@@ -369,7 +369,7 @@ public class ShapefileExporter
 
   private GeoEntity getAncestorOfType(GeoEntity entity, List<Term> terms, Universal universal)
   {
-    if (entity.getUniversalId().equals(universal.getOid()))
+    if (entity.getUniversalOid().equals(universal.getOid()))
     {
       return entity;
     }
@@ -378,7 +378,7 @@ public class ShapefileExporter
     {
       GeoEntity ancestor = (GeoEntity) term;
 
-      if (ancestor.getUniversalId().equals(universal.getOid()))
+      if (ancestor.getUniversalOid().equals(universal.getOid()))
       {
         return ancestor;
       }

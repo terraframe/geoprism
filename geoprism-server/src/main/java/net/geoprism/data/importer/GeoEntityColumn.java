@@ -70,7 +70,7 @@ public class GeoEntityColumn extends ExcelColumn
       {
         GeoEntity parent = (GeoEntity) ancestor;
 
-        if (parent.getUniversalId().equals(universal.getOid()))
+        if (parent.getUniversalOid().equals(universal.getOid()))
         {
           super.setValue(_cell, parent.getDisplayLabel().getValue());
         }

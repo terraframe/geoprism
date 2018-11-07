@@ -783,7 +783,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
             JSONObject coordObj = this.getCoordinates(source);
 
-            if (parent.getUniversalId().equals(entityUniversal.getOid()))
+            if (parent.getUniversalOid().equals(entityUniversal.getOid()))
             {
               GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label, coordObj);
 
