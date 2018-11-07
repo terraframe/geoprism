@@ -616,11 +616,11 @@
                       {
                         if(loopFeat.geometry.type.toLowerCase() === "multipolygon" || loopFeat.geometry.type.toLowerCase() === "polygon")
                         {
-                          map.setFilter(targetLayer.sourceLayer.toLowerCase() + "-multipolygon-hover", ["==", "id", loopFeat.properties.id]);
+                          map.setFilter(targetLayer.sourceLayer.toLowerCase() + "-multipolygon-hover", ["==", "id", loopFeat.properties.oid]);
                         }
                         else if(loopFeat.geometry.type.toLowerCase() === "point")
                         {
-//                        map.setFilter("target-point-hover", ["==", "id", loopFeat.properties.id]);
+//                        map.setFilter("target-point-hover", ["==", "id", loopFeat.properties.oid]);
                         }
                       }
                       selectedFeatures.push(loopFeat);
@@ -909,7 +909,7 @@
             map.on('mousemove', that.throttle(function(e) {
               var features = map.queryRenderedFeatures(e.point, { layers: layerz  });
                 
-              if(features.length){
+              if(features && features.length){
                 var feature = features[0]; // only take the 1st feature
                 
                 var shouldDoDefault = hoverCallback(feature.id);
@@ -943,7 +943,7 @@
                 // control for styling of different geometry types
                 // 'fill' === polygon
                 if(feature.layer.type === "fill"){
-                  map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.id]);
+                  map.setFilter("target-multipolygon-hover", ["==", "id", feature.properties.oid]);
                 }
                 else if(feature.layer.type === "fill-extrusion"){
                   // currently disabled because extruded features over flat features gets covered by highlight
