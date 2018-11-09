@@ -18,6 +18,9 @@
  */
 package net.geoprism;
 
+import net.geoprism.ontology.ClassifierDTO;
+import net.geoprism.ontology.ClassifierIsARelationshipDTO;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,10 +37,6 @@ import com.runwaysdk.system.gis.geo.IsARelationshipDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.web.json.JSONController;
-
-import net.geoprism.data.browser.DataBrowserUtilDTO;
-import net.geoprism.ontology.ClassifierDTO;
-import net.geoprism.ontology.ClassifierIsARelationshipDTO;
 
 @Controller(url = "tree")
 public class TreeController

@@ -22,9 +22,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import net.geoprism.AccessConstants;
-import net.geoprism.AdminControllerBase;
-import net.geoprism.CachedImageUtil;
 import net.geoprism.ontology.ClassifierDTO;
 import net.geoprism.ontology.ClassifierIsARelationshipDTO;
 
