@@ -26,6 +26,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.geoprism.data.etl.TargetBuilder;
+import net.geoprism.ontology.CompositePublisher;
+import net.geoprism.ontology.LocationContextPublisher;
+import net.geoprism.ontology.LocationTargetPublisher;
+import net.geoprism.ontology.PublisherUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,14 +42,9 @@ import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.gis.constants.GISConstants;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.vividsolutions.jts.geom.Envelope;
-
-import net.geoprism.data.etl.TargetBuilder;
-import net.geoprism.ontology.CompositePublisher;
-import net.geoprism.ontology.LocationContextPublisher;
-import net.geoprism.ontology.LocationTargetPublisher;
-import net.geoprism.ontology.PublisherUtil;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -83,8 +84,8 @@ public class DefaultConfiguration implements ConfigurationIF
   public Collection<String> getDatabrowserTypes()
   {
     List<String> types = new LinkedList<String>();
-    types.add("com.runwaysdk.system.gis.geo.Universal");
-    types.add("com.runwaysdk.system.gis.geo.GeoEntity");
+    types.add(GISConstants.GEO_PACKAGE+".Universal");
+    types.add(GISConstants.GEO_PACKAGE+".GeoEntity");
 
     return types;
   }
