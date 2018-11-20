@@ -19,6 +19,7 @@
 package net.geoprism;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +43,6 @@ import org.apache.commons.lang.StringUtils;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.controller.ErrorUtility;
-
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
 import com.runwaysdk.web.ServletUtility;
 import com.runwaysdk.web.WebClientSession;
@@ -150,6 +150,29 @@ public class SessionFilter implements Filter
     }
     else if (pathAllowed(request))
     {
+      chain.doFilter(req, res);
+      return;
+    }
+    else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").length() > 0 && request.getHeader("Authorization").toLowerCase().startsWith("basic "))
+    {
+      // The credentials are provided in the headers of the request (known as 'basic' http authentication). Useful for scripts and RESTful requests.
+      
+      String authHeader = request.getHeader("Authorization");
+      String encodedAuth = authHeader.split(" ")[1];
+      String decodedAuth = new String(Base64.getDecoder().decode(encodedAuth));
+      
+      String username = decodedAuth.split(":")[0];
+      String password = decodedAuth.split(":")[1];
+      
+      Locale[] locales = ServletUtility.getLocales(request);
+
+      clientSession = WebClientSession.createUserSession(username, password, locales);
+
+      request.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+      request.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+
+      req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
+
       chain.doFilter(req, res);
       return;
     }
