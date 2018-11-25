@@ -977,6 +977,7 @@
   <!--A list of all possible attributes -->
   <xs:complexType name="attributes">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="uuid" type="char" />
       <xs:element name="char" type="char" />
       <xs:element name="text" type="text" />
       <xs:element name="clob" type="clob" />

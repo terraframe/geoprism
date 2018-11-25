@@ -88,6 +88,7 @@ public class XMLLocationImporter implements LocationImporter
       /*
        * New locations may have been added: We must re-initialize the all paths tables
        */
+      // Heads up: Hierarchies - make this dynamic
       Universal.getStrategy().reinitialize(AllowedIn.CLASS);
 
       GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
