@@ -82,7 +82,7 @@ public class GeoprismUser extends GeoprismUserBase implements GeoprismUserIF
   {
     this.apply();
 
-    Roles[] roles = RoleView.getGeodashboardRoles();
+    List<Roles> roles = RoleView.getGeoprismRoles();
     Set<String> set = new HashSet<String>(Arrays.asList(roleIds));
 
     List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
