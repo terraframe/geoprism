@@ -1172,6 +1172,8 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	border:none;
 	color:#333;
 	padding:17px 50px 0 0;
+	overflow:auto;
+	height:calc(95vh - 52px);
 }
 .modal-content .heading{
 	padding:0 0 0 268px;
