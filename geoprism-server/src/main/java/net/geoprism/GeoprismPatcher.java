@@ -24,6 +24,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.geoprism.configuration.GeoprismConfigurationResolver;
+import net.geoprism.context.PatchingContextListener;
+import net.geoprism.context.ProjectDataConfiguration;
+import net.geoprism.data.CachedEndpoint;
+import net.geoprism.data.LocalEndpoint;
+import net.geoprism.data.LocationImporter;
+import net.geoprism.data.XMLEndpoint;
+import net.geoprism.data.XMLLocationImporter;
+import net.geoprism.data.aws.AmazonEndpoint;
+import net.geoprism.data.importer.GeoprismImportPlugin;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationship;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -55,19 +69,6 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
-
-import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.context.PatchingContextListener;
-import net.geoprism.context.ProjectDataConfiguration;
-import net.geoprism.data.CachedEndpoint;
-import net.geoprism.data.LocationImporter;
-import net.geoprism.data.XMLEndpoint;
-import net.geoprism.data.XMLLocationImporter;
-import net.geoprism.data.aws.AmazonEndpoint;
-import net.geoprism.data.importer.GeoprismImportPlugin;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
-import net.geoprism.ontology.ClassifierIsARelationship;
 
 public class GeoprismPatcher
 {
@@ -287,7 +288,8 @@ public class GeoprismPatcher
     }
 
     return new AmazonEndpoint();
-    // return new LocalEndpoint(new File("/home/terraframe/Documents/geoprism/DSEDP/cache"));
+    
+ //   return new LocalEndpoint(new File("/Users/nathan/git/geoprism-registry/georegistry-server/cache/deployable_countries"));
   }
   
   /**
