@@ -247,7 +247,7 @@
             <executions>
               <execution>
                 <id>new-schema</id>
-                <phase>verify</phase>
+                <phase>process-resources</phase>
                 <goals>
                   <goal>java</goal>
                 </goals>
@@ -280,7 +280,7 @@
             <executions>
               <execution>
                 <id>unimport-working</id>
-                <phase>verify</phase>
+                <phase>process-resources</phase>
                 <goals>
                   <goal>java</goal>
                 </goals>
@@ -315,7 +315,7 @@
             <executions>
               <execution>
                 <id>import-working</id>
-                <phase>verify</phase>
+                <phase>process-resources</phase>
                 <goals>
                   <goal>java</goal>
                 </goals>
