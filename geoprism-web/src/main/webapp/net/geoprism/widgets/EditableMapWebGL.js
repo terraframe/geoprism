@@ -463,7 +463,7 @@
           if (!controller._isEditing)
           {
             $scope.$emit('locationFocus', {
-              id : feature.properties.id
+              id : feature.properties.oid
             });
             $scope.$apply();
             

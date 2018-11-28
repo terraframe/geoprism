@@ -30,6 +30,7 @@ import { DatasetDetailComponent, DatasetResolver} from './datasets/dataset-detai
 import { IndicatorModalComponent } from './datasets/indicator-modal.component';
 
 import { CategoriesComponent } from './category/categories.component';
+import { HierarchyComponent } from './hierarchy/hierarchy.component';
 import { CategoryDetailComponent, CategoryResolver} from './category/category-detail.component';
 import { OptionDetailComponent, OptionResolver} from './category/option-detail.component';
 
@@ -83,6 +84,11 @@ const routes: Routes = [
     data: { title: 'category.management.title' }                    
   },
   {
+    path: 'hierarchies',
+    component: HierarchyComponent, 
+    data: { title: 'hierarchy.management.title' }                
+  },
+  {
     path: 'icons',
     component: IconsComponent,    
     data: { title: 'category.icon.title' }                    
@@ -100,8 +106,14 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver, OptionResolver, IconResolver]
+  providers: [
+              {provide: LocationStrategy, useClass: HashLocationStrategy}, 
+              DatasetResolver, 
+              CategoryResolver, 
+              OptionResolver, 
+              IconResolver
+             ]
 })
 export class DataRoutingModule { }
 
-export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent, IndicatorModalComponent];
+export const routedComponents = [DatasetsComponent, DatasetDetailComponent, CategoriesComponent, HierarchyComponent, CategoryDetailComponent, OptionDetailComponent, IconsComponent, IconDetailComponent, IndicatorModalComponent];
