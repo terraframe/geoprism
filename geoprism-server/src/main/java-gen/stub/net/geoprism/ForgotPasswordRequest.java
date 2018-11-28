@@ -21,18 +21,17 @@ package net.geoprism;
 import java.util.Date;
 import java.util.UUID;
 
-import net.geoprism.localization.LocalizationFacade;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.dataaccess.database.ServerIDGenerator;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+
+import net.geoprism.localization.LocalizationFacade;
 
 public class ForgotPasswordRequest extends ForgotPasswordRequestBase 
 {
@@ -54,9 +53,13 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase
    * 
    * @param token
    */
-  @Authenticate // TODO : Is there any problem with having both these annotations on the same method?
-  @Transaction
+  @Authenticate
   public static void complete(String token, String newPassword)
+  {
+    completeInTransaction(token, newPassword);
+  }
+  @Transaction
+  public static void completeInTransaction(String token, String newPassword)
   {
     if (newPassword == null || newPassword.equals("")) { return; }
     
@@ -113,9 +116,13 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase
    * 
    * @param username
    */
-  @Authenticate // TODO : Is there any problem with having both these annotations on the same method?
-  @Transaction
+  @Authenticate
   public static void initiate(String username, String serverExternalUrl)
+  {
+    initiateInRequest(username, serverExternalUrl);
+  }
+  @Transaction
+  public static void initiateInRequest(String username, String serverExternalUrl)
   {
     GeoprismUserQuery q = new GeoprismUserQuery(new QueryFactory());
     q.WHERE(q.getUsername().EQ(username));
