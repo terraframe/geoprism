@@ -32,7 +32,6 @@ import { CoreModule } from '../core/core.module';
 
 import { DatasetService } from './service/dataset.service';
 import { CategoryService } from './service/category.service';
-import { HierarchyService } from './service/hierarchy.service';
 import { IconService } from './service/icon.service';
 
 import { DHIS2Service } from './service/dhis2.service';
@@ -101,7 +100,6 @@ import { UploadService } from './service/upload.service';
     DatasetService,
     DHIS2Service,
     CategoryService,
-    HierarchyService,
     IconService,
     UploadService,
     NavigationService
