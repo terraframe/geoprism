@@ -40,7 +40,7 @@
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/open',
         data : {
-          id : id,
+          oid : id,
           existingLayers : existingLayers            
         }
       }      
