@@ -955,7 +955,7 @@
                 
                   selectedFeatures.push(feature);
                   
-                  hoverCallback(feature.properties.id);
+                  hoverCallback(feature.properties.oid);
               }
               else{
                 map.getCanvas().style.cursor = originalCursor;

@@ -332,7 +332,7 @@
         else
         {
           updatedFeatures.push({
-            id: feat.id,
+            oid: feat.properties.oid,
             type: "unlock"
           })
         }
@@ -344,7 +344,7 @@
         var delGeo = deletedGeos[i];
         
         updatedFeatures.push({
-          id: delGeo,
+          oid: delGeo,
           type: "delete"
         });
       }
