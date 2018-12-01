@@ -58,7 +58,7 @@
     <div ng-if="universal.options.length > 1">
       <div><label><gdb:localize key="location.management.filter"/></label></div>
       <div>
-        <select ng-model="universal.value" ng-options="opt.id as opt.displayLabel for opt in universal.options" ng-change="ctrl.setUniversal()">
+        <select ng-model="universal.value" ng-options="opt.oid as opt.displayLabel for opt in universal.options" ng-change="ctrl.setUniversal()">
 <!-- 
           <option value=""><gdb:localize key="location.management.all"/></option>
  -->        
