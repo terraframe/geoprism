@@ -34,15 +34,18 @@ import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
 
 import net.geoprism.GeoprismPatcher;
+import net.geoprism.GeoprismPatcherIF;
+import net.geoprism.PluginUtil;
 
 public class PatchingContextListener implements ServerContextListener
 {
-  protected GeoprismPatcher patcher;
+  protected GeoprismPatcherIF patcher;
 
   @Override
   public void initialize()
   {
-    patcher = new GeoprismPatcher(new File(DeployProperties.getDeployBin(), "metadata"));
+    patcher = PluginUtil.getPatcher();
+    patcher.initialize(new File(DeployProperties.getDeployBin(), "metadata"));
   }
 
   @Override

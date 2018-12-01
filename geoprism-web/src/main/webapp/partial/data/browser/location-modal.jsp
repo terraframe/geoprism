@@ -30,8 +30,8 @@
         <div class="modal-dialog">
           <div class="modal-content" show-on-ready>
             <div class="heading">
-              <h1 ng-show="!entity.id"><gdb:localize key="location.management.newTooltip"/></h1>
-              <h1 ng-show="entity.id"><gdb:localize key="location.management.editTooltip"/></h1>
+              <h1 ng-show="!entity.oid"><gdb:localize key="location.management.newTooltip"/></h1>
+              <h1 ng-show="entity.oid"><gdb:localize key="location.management.editTooltip"/></h1>
             </div>
             <fieldset>
               <div class="row-holder" ng-show="errors.length > 0 && show">
@@ -69,7 +69,7 @@
                 </div>    
                 <div class="holder">
                   <div class="select-box">
-                    <select class="method-select" ng-model="entity.universal" ng-options="opt.id as opt.displayLabel for opt in universals" required="required">
+                    <select class="method-select" ng-model="entity.universal" ng-options="opt.oid as opt.displayLabel for opt in universals" required="required">
                       <option value=""></option>
                     </select>
                   </div>

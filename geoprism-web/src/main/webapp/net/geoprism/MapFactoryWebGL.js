@@ -907,6 +907,10 @@
           //TODO: Do we need to wrap this in 'load' event or should we use a different event
 //          map.on('load', function () {
             map.on('mousemove', that.throttle(function(e) {
+              if(typeof map.getLayer('target-multipolygon-hover') === 'undefined') {
+                return; // This function throws errors if it runs too early.
+              }
+              
               var features = map.queryRenderedFeatures(e.point, { layers: layerz  });
                 
               if(features && features.length){

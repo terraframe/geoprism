@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.geoprism.GeoprismProperties;
+import net.geoprism.PluginUtil;
 import net.geoprism.configuration.GeoprismConfigurationResolver;
 import net.geoprism.context.PatchingContextListener;
 import net.geoprism.context.ProjectDataConfiguration;
@@ -70,7 +72,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
 
-public class GeoprismPatcher
+public class GeoprismPatcher implements GeoprismPatcherIF
 {
   private static final String[] DEFAULT_MODULES = new String[]{"geoprism"};
   
@@ -87,21 +89,27 @@ public class GeoprismPatcher
     checkDuplicateClasspathResources();
   }
 
-  public GeoprismPatcher(File metadataDir)
+  public GeoprismPatcher()
+  {
+    
+  }
+  
+  public void initialize(File metadataDir)
   {
     this.metadataDir = metadataDir;
     this.runwayArgs = new String[]{};
     this.modules = DEFAULT_MODULES;
   }
   
-  public GeoprismPatcher(String[] cliArgs)
+  public void initialize(String[] cliArgs)
   {
     this.processCLIArgs(cliArgs);
   }
 
   public static void main(String[] args)
   {
-    GeoprismPatcher patcher = new GeoprismPatcher(args);
+    GeoprismPatcherIF patcher = PluginUtil.getPatcher();
+    patcher.initialize(args);
     patcher.run();
   }
   
@@ -264,18 +272,20 @@ public class GeoprismPatcher
     {
       Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
     }
+    
+    importLocationData();
 
-    /*
-     * Load location data
-     */
+    return initialized;
+  }
+  
+  protected void importLocationData()
+  {
     ProjectDataConfiguration configuration = new ProjectDataConfiguration();
 
     XMLEndpoint endpoint = this.getEndpoint();
 
     LocationImporter importer = new XMLLocationImporter(endpoint);
     importer.loadProjectData(configuration);
-
-    return initialized;
   }
 
   private XMLEndpoint getEndpoint()

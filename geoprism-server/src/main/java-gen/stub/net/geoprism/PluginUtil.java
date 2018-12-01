@@ -19,6 +19,7 @@
 package net.geoprism;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
@@ -47,6 +48,29 @@ public class PluginUtil extends PluginUtilBase
     {
       return false;
     }
+  }
+  
+  public static GeoprismPatcherIF getPatcher()
+  {
+    ServiceLoader<GeoprismPatcherIF> loader = ServiceLoader.load(GeoprismPatcherIF.class, Thread.currentThread().getContextClassLoader());
+
+    GeoprismPatcherIF patcher;
+    
+    try
+    {
+      Iterator<GeoprismPatcherIF> it = loader.iterator();
+
+      patcher = it.next();
+    }
+    catch (ServiceConfigurationError | NoSuchElementException ex)
+    {
+      ex.printStackTrace();
+      patcher = new GeoprismPatcher();
+    }
+    
+    System.out.println("Patcher resolved to " + patcher.getClass().getName());
+    
+    return patcher;
   }
   
 }

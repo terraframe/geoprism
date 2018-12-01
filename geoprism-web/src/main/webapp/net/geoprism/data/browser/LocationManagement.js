@@ -550,7 +550,7 @@
                               
       $scope.errors = [];
           
-      locationService.apply(connection, $scope.entity, $scope.parent.id, $scope.layers);        
+      locationService.apply(connection, $scope.entity, $scope.parent.oid, $scope.layers);        
     }
       
     $rootScope.$on('locationEdit', function(event, data) {
