@@ -267,6 +267,7 @@
         },
         
         _addVectorLayer : function(source, layers) {
+          console.log("reached _addVectorLayer");
           var map = this.getMap();
           var that = this;
           
@@ -494,9 +495,22 @@
             this._addVectorLayer(source, layers);            
           }
           else {
-            map.on('load', function () {
-              that._addVectorLayer(source, layers);              
-            });            
+//            map.on('load', function () {
+//              that._addVectorLayer(source, layers);              
+//            });            
+        	
+        	// map.loaded() and also the event callback don't work properly
+        	// https://github.com/mapbox/mapbox-gl-directions/issues/111
+        	var that = this;
+    	    function waitMapLoaded() {
+			  if(!that.getMap()._loaded) {
+				console.log(that.getMap());
+			    window.setTimeout(waitMapLoaded, 100);
+			  } else {
+		        that._addVectorLayer(source, layers);
+			  }
+    		}
+    	    waitMapLoaded();
           }
         },        
         
@@ -515,8 +529,6 @@
               type: 'vector', 
               tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
             });
-            
-
           }
           else {
             this.addVectorLayer(source, layers);

@@ -64,7 +64,6 @@ public class PluginUtil extends PluginUtilBase
     }
     catch (ServiceConfigurationError | NoSuchElementException ex)
     {
-      ex.printStackTrace();
       patcher = new GeoprismPatcher();
     }
     
