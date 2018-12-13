@@ -41,21 +41,23 @@
     controller.load = function(data) {
       console.log("LocationController.load");
       
-      $scope.children = data.children.resultSet;
-      $scope.layers = data.layers;
-      
-      $scope.entity = data.entity;
-      $scope.universal = {
-        value : data.universal,
-        options : data.universals
-      };
-      
-      var layers = [
-//        {name:'context-multipolygon', config: {id: data.entity.oid, type:"LM_CONTEXT"}},
-        {name:'target-multipolygon', config: {oid: data.entity.oid, universalId: data.universal, type:"LM"}, bbox:data.bbox}
-      ];
-      
-      $scope.$broadcast('sharedGeoData', layers);
+      if(data.children && data.children.count > 0){
+	      $scope.children = data.children.resultSet;
+	      $scope.layers = data.layers;
+	      
+	      $scope.entity = data.entity;
+	      $scope.universal = {
+	        value : data.universal,
+	        options : data.universals
+	      };
+	      
+	      var layers = [
+	//        {name:'context-multipolygon', config: {id: data.entity.oid, type:"LM_CONTEXT"}},
+	        {name:'target-multipolygon', config: {oid: data.entity.oid, universalId: data.universal, type:"LM"}, bbox:data.bbox}
+	      ];
+	      
+	      $scope.$broadcast('sharedGeoData', layers);
+      }
     }
     
     controller.select = function(entity, event) {
@@ -249,7 +251,7 @@
     
     controller.findIndex = function(entityId) {
       for(var i = 0; i < $scope.children.length; i++) {
-        if($scope.children[i].id == entityId) {
+        if($scope.children[i].oid == entityId) {
           return i;
         };
       }

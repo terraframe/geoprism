@@ -86,17 +86,24 @@ public class LocationController
     // String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getOid(), universalId, existingLayers);
 
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getOid(), universalId, 200);
-
+    
     RestResponse response = new RestResponse();
-    response.set("children", children);
-    response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId) );
-    response.set("universals", new ListSerializable(universals));
-    response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
-    response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
-    response.set("workspace", GeoserverProperties.getWorkspace());
-    // response.set("geometries", new JSONStringImpl(geometries));
-    // response.set("layers", object.get("layers"));
+
+    if(children.getCount() > 0)
+    {
+      response.set("children", children);
+    
+      response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId) );
+      response.set("universals", new ListSerializable(universals));
+      response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
+      response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
+      response.set("workspace", GeoserverProperties.getWorkspace());
+      // response.set("geometries", new JSONStringImpl(geometries));
+      // response.set("layers", object.get("layers"));
     																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													
+      return response;
+    }
+    
     return response;
   }
 
