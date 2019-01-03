@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.controller.ServletMethod;
@@ -92,7 +93,7 @@ public class SystemLogoController
 
       if (path == null)
       {
-        path = LocalProperties.getJspDir() + "/../net/geoprism/images/splash_logo.png";
+        path = DeployProperties.getDeployPath() + "/net/geoprism/images/splash_logo.png";
       }
     }
     else
@@ -101,7 +102,7 @@ public class SystemLogoController
 
       if (path == null)
       {
-        path = LocalProperties.getJspDir() + "/../net/geoprism/images/splash_logo_icon.png";
+        path = DeployProperties.getDeployPath() + "/net/geoprism/images/splash_logo_icon.png";
       }
     }
 
