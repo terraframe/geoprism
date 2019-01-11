@@ -34,7 +34,7 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
 import net.geoprism.account.ExternalProfile;
-import net.geoprism.configuration.GeoprismConfigurationResolver;
+import com.runwaysdk.configuration.EnvironmentConfigurationResolver;
 import net.geoprism.data.GeoprismDatasetExporterIF;
 import net.geoprism.data.etl.TargetBuilder;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
@@ -53,7 +53,6 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
     options.addOption(Option.builder("url").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
-    options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
     options.addOption(Option.builder("dataset").hasArg().argName("dataset").longOpt("dataset").desc("The name of the dataset to export.").required().build());
     
     try {
@@ -62,17 +61,11 @@ public class DHIS2DataExporter implements GeoprismDatasetExporterIF
       String url = line.getOptionValue("url");
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
-      String appcfgPath = line.getOptionValue("appcfgPath");
       String dataset = StringUtils.capitalize(line.getOptionValue("dataset").toLowerCase());
       
       if (url == null)
       {
         url = "http://127.0.0.1:8085/";
-      }
-      if (appcfgPath != null)
-      {
-        GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
-        resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
       MdBusiness mdBiz = MdBusiness.getMdBusiness(TargetBuilder.PACKAGE_NAME + "." + dataset);

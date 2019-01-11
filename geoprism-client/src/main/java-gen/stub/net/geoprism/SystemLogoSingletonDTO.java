@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.util.FileIO;
 
@@ -58,7 +59,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
 
   public static final String getImagesTempDir()
   {
-    return LocalProperties.getJspDir() + "/../" + IMAGES_TEMP_DIR + "/";
+    return DeployProperties.getDeployPath() + "/" + IMAGES_TEMP_DIR + "/";
   }
 
   final static Logger logger = LoggerFactory.getLogger(SystemLogoSingletonDTO.class);
@@ -91,7 +92,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
    */
   public static void uploadBannerAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
+    String tempDir = DeployProperties.getDeployPath() + "/uploaded_images";
     new File(tempDir).mkdir();
     bannerCache = new File(tempDir, fileName);
 
@@ -126,7 +127,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
    */
   public static void uploadMiniLogoAndCache(com.runwaysdk.constants.ClientRequestIF clientRequest, java.io.InputStream fileStream, java.lang.String fileName)
   {
-    String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
+    String tempDir = DeployProperties.getDeployPath() + "/uploaded_images";
     new File(tempDir).mkdir();
     miniLogoCache = new File(tempDir, fileName);
 
@@ -211,7 +212,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
     }
 
     // Write the file to our temp dir
-    String tempDir = LocalProperties.getJspDir() + "/../" + IMAGES_TEMP_DIR;
+    String tempDir = DeployProperties.getDeployPath() + "/" + IMAGES_TEMP_DIR;
     new File(tempDir).mkdir();
     bannerCache = new File(tempDir, fileName);
 
@@ -263,7 +264,7 @@ public class SystemLogoSingletonDTO extends SystemLogoSingletonDTOBase
     }
 
     // Write the file to our temp dir
-    String tempDir = LocalProperties.getJspDir() + "/../uploaded_images";
+    String tempDir = DeployProperties.getDeployPath() + "/uploaded_images";
     new File(tempDir).mkdir();
     miniLogoCache = new File(tempDir, fileName);
 

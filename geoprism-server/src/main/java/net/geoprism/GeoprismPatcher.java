@@ -19,26 +19,11 @@
 package net.geoprism;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import net.geoprism.GeoprismProperties;
-import net.geoprism.PluginUtil;
-import net.geoprism.configuration.GeoprismConfigurationResolver;
-import net.geoprism.context.PatchingContextListener;
-import net.geoprism.context.ProjectDataConfiguration;
-import net.geoprism.data.CachedEndpoint;
-import net.geoprism.data.LocalEndpoint;
-import net.geoprism.data.LocationImporter;
-import net.geoprism.data.XMLEndpoint;
-import net.geoprism.data.XMLLocationImporter;
-import net.geoprism.data.aws.AmazonEndpoint;
-import net.geoprism.data.importer.GeoprismImportPlugin;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
-import net.geoprism.ontology.ClassifierIsARelationship;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -55,9 +40,12 @@ import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.configuration.ConfigurationManager;
+import com.runwaysdk.configuration.ConfigurationManager.ConfigGroup;
+import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.dataaccess.io.Versioning;
+import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
@@ -72,17 +60,25 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
 
+import net.geoprism.context.PatchingContextListener;
+import net.geoprism.context.ProjectDataConfiguration;
+import net.geoprism.data.CachedEndpoint;
+import net.geoprism.data.LocationImporter;
+import net.geoprism.data.XMLEndpoint;
+import net.geoprism.data.XMLLocationImporter;
+import net.geoprism.data.aws.AmazonEndpoint;
+import net.geoprism.data.importer.GeoprismImportPlugin;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationship;
+
 public class GeoprismPatcher implements GeoprismPatcherIF
 {
-  private static final String[] DEFAULT_MODULES = new String[]{"geoprism"};
-  
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
   private File          metadataDir;
   
   private String[]      runwayArgs;
-  
-  private String[]      modules;
   
   static
   {
@@ -98,7 +94,6 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   {
     this.metadataDir = metadataDir;
     this.runwayArgs = new String[]{};
-    this.modules = DEFAULT_MODULES;
   }
   
   public void initialize(String[] cliArgs)
@@ -118,8 +113,6 @@ public class GeoprismPatcher implements GeoprismPatcherIF
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
     options.addOption(Option.builder("metadataDir").hasArg().argName("metadataDir").longOpt("metadataDir").desc("The path to the location of metadata schema files. Optional").optionalArg(true).build());
-    options.addOption(Option.builder("externalConfigDir").hasArg().argName("externalConfigDir").longOpt("externalConfigDir").desc("The path to the location of an external configuration directory. Optional").optionalArg(true).build());
-    options.addOption(Option.builder("modules").hasArg().argName("modules").longOpt("modules").desc("A list of modules to build. Optional").optionalArg(true).build());
     
     // All the runway args
     options.addOption(Option.builder("mode").hasArg().argName("mode").longOpt("mode").desc("The mode to run the RunwayPatcher in. Can be either bootstrap or standard. If omitted standard is assumed. During standard mode, bootstrapping will be attempted if Runway does not exist.").optionalArg(true).build());
@@ -136,14 +129,6 @@ public class GeoprismPatcher implements GeoprismPatcherIF
       CommandLine line = parser.parse( options, args );
       
       String metadataDir = line.getOptionValue("metadataDir");
-      String externalConfigDir = line.getOptionValue("externalConfigDir");
-      String modules = line.getOptionValue("modules");
-      
-      if (externalConfigDir != null)
-      {
-        GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
-        resolver.setExternalConfigDir(new File(externalConfigDir));
-      }
       
       if (metadataDir == null)
       {
@@ -155,21 +140,36 @@ public class GeoprismPatcher implements GeoprismPatcherIF
         this.metadataDir = new File(metadataDir);
       }
       
-      if (modules == null)
-      {
-        this.modules = DEFAULT_MODULES;
-      }
-      else
-      {
-        this.modules = modules.split(",");
-      }
-      
       this.setRunwayArgs(args);
     }
     catch (ParseException e)
     {
       throw new RuntimeException(e);
     }
+  }
+  
+  private String[] getRunwayBootstrapArgs(Boolean isBootstrap)
+  {
+    ArrayList<String> clean = new ArrayList<String>();
+    
+    for (String rwArg : this.runwayArgs)
+    {
+      if (!rwArg.contains("mode") && (!rwArg.contains("clean") || isBootstrap))
+      {
+        clean.add(rwArg);
+      }
+    }
+    
+    if (isBootstrap)
+    {
+      clean.add("--mode=" + RunwayPatcher.MODE_BOOTSTRAP);
+    }
+    else
+    {
+      clean.add("--mode=" + RunwayPatcher.MODE_STANDARD);
+    }
+    
+    return clean.toArray(new String[clean.size()]);
   }
   
   public void setRunwayArgs(String[] rwArgs)
@@ -198,8 +198,6 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   {
     LocalProperties.setSkipCodeGenAndCompile(true);
     
-    SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
-
     if (GeoprismProperties.getSolrLookup())
     {
       OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
@@ -212,48 +210,9 @@ public class GeoprismPatcher implements GeoprismPatcherIF
       });
     }
 
-    this.patchMetadata();
-  }
-  
-  public void validate()
-  {
-    // TODO : Check their postgres version and make sure its 9.5 +
-  }
-
-  public void run()
-  {
-    validate();
-    
-    RunwayPatcher.main(this.runwayArgs);
-    
-    runWithRequest();
-  }
-
-  @Transaction
-  protected boolean patchMetadata()
-  {
-    LocalProperties.setSkipCodeGenAndCompile(true);
-
-    for (String module : this.modules)
-    {
-      File metadata = new File(metadataDir, module);
-
-      if (metadata.exists() && metadata.isDirectory())
-      {
-        logger.info("Importing metadata schema files from [" + metadata.getAbsolutePath() + "].");
-        Versioning.main(new String[] { metadata.getAbsolutePath() });
-      }
-      else
-      {
-        logger.error("Metadata schema files were not found at [" + metadata.getAbsolutePath() + "]! Unable to import schemas.");
-      }
-    }
-
     /*
      * Rebuild the all path tables if required
      */
-    boolean initialized = Classifier.getStrategy().isInitialized();
-
     Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
     Universal.getStrategy().initialize(AllowedIn.CLASS);
     GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
@@ -274,8 +233,25 @@ public class GeoprismPatcher implements GeoprismPatcherIF
     }
     
     importLocationData();
+  }
+  
+  public void validate()
+  {
+    // TODO : Check their postgres version and make sure its 9.5 +
+  }
 
-    return initialized;
+  public void run()
+  {
+    validate();
+    
+    RunwayPatcher.main(getRunwayBootstrapArgs(true));
+    
+    SAXSourceParser.registerPlugin(new GISImportPlugin());
+    SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
+    
+    RunwayPatcher.main(getRunwayBootstrapArgs(false));
+    
+    runWithRequest();
   }
   
   protected void importLocationData()

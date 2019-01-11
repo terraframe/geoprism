@@ -45,7 +45,7 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-import net.geoprism.configuration.GeoprismConfigurationResolver;
+import com.runwaysdk.configuration.EnvironmentConfigurationResolver;
 import net.geoprism.dhis2.DHIS2Configuration;
 import net.geoprism.dhis2.connector.AbstractDHIS2Connector;
 import net.geoprism.dhis2.connector.DHIS2HTTPCredentialConnector;
@@ -81,7 +81,6 @@ public class DHIS2DataImporter
     options.addOption(Option.builder("url").hasArg().argName("url").longOpt("url").desc("URL of the DHIS2 server to connect to, including the port. Defaults to: http://127.0.0.1:8085/").optionalArg(true).build());
     options.addOption(Option.builder("username").hasArg().argName("username").longOpt("username").desc("The username of the root (admin) DHIS2 user.").required().build());
     options.addOption(Option.builder("password").hasArg().argName("password").longOpt("password").desc("The password for the root (admin) DHIS2 user.").required().build());
-    options.addOption(Option.builder("appcfgPath").hasArg().argName("appcfgPath").longOpt("appcfgPath").desc("An absolute path to the external configuration directory for this geoprism app.").optionalArg(true).build());
     options.addOption(Option.builder("countryOrgUnitId").hasArg().argName("countryOrgUnitId").longOpt("countryOrgUnitId").desc("DHIS2 does not support multiple countries. However, some systems are misconfigured and have multiple countries. Our importer does not support this. You must hardcode the real country org unit to get this importer to work.").optionalArg(true).build());
     
     try {
@@ -90,17 +89,11 @@ public class DHIS2DataImporter
       String url = line.getOptionValue("url");
       String username = line.getOptionValue("username");
       String password = line.getOptionValue("password");
-      String appcfgPath = line.getOptionValue("appcfgPath");
       String countryOrgUnitId = line.getOptionValue("countryOrgUnitId");
       
       if (url == null)
       {
         url = "http://127.0.0.1:8085/";
-      }
-      if (appcfgPath != null)
-      {
-        GeoprismConfigurationResolver resolver = (GeoprismConfigurationResolver) ConfigurationManager.Singleton.INSTANCE.getConfigResolver();
-        resolver.setExternalConfigDir(new File(appcfgPath));
       }
       
       doImportInRequest(url, username, password, countryOrgUnitId);

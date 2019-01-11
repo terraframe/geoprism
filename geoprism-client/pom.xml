@@ -62,40 +62,6 @@
 	</dependencies>
 
   <profiles>
-    <profile>
-      <id>package-deployable</id>
-      <activation>
-        <property>
-          <name>package-deployable</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>package-deployable-filemerge</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <configuration>
-                  <mainClass>net.geoprism.configuration.MergeUtility</mainClass>
-                  <arguments>
-                    <argument>--base=${project.build.directory}/classes</argument>
-                    <argument>--override=${project.basedir}/src/deployed/resources</argument>
-                    <argument>--export=${project.build.directory}/classes</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
 
 	<build>
@@ -118,68 +84,6 @@
                     <complianceLevel>${maven.compiler.target}</complianceLevel>
 				</configuration>
 			</plugin>
-<!-- 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.8</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>/home/jsmethie/workspace/ide/net.geoprism.oda.driver/lib</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>
-              <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>      			
- -->			
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>add-resource</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>add-resource</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>src/main/java</directory>
-									<targetPath>source/client/stub</targetPath>
-									<includes>
-										<include>**/*.java</include>
-									</includes>
-								</resource>
-								<resource>
-									<directory>src/main/java-gen/stub</directory>
-									<targetPath>source/client/stub</targetPath>
-									<includes>
-										<include>**/*.java</include>
-									</includes>
-								</resource>
-								<resource>
-									<directory>src/main/java-gen/base</directory>
-									<targetPath>source/client/base</targetPath>
-									<includes>
-										<include>**/*.java</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 </project>

@@ -151,7 +151,7 @@
                     -Djava.rmi.server.hostname=127.0.0.1
                     -Dbirt-server=true
                     -Dendpoint.cache=/${project.basedir}/cache
-                    -Dgeoprism.config.dir=${configuration.dir}
+                    -Denvcfg=${project.basedir}/../envcfg
                   </cargo.jvmargs>
                 </properties>
               </configuration>
@@ -192,6 +192,25 @@
   <build>
     <!-- Just for convenience, this stops us from having to add the version when we hit our webapp. -->
     <finalName>geoprism</finalName>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.xlsx</exclude>
+          <exclude>**/*.zip</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.xlsx</include>
+          <include>**/*.zip</include>
+        </includes>
+      </resource>
+    </resources>
 
     <plugins>
       <!-- Weave Aspects -->
@@ -254,10 +273,6 @@
         <configuration>
           <warSourceExcludes>**/prism.jsp,**/admin.jsp</warSourceExcludes>
           <packagingExcludes>
-            <!-- Source/class project jars must be excluded for reloaded to work -->
-            **/*geoprism-common*.jar,
-            **/*geoprism-client*.jar,
-            **/*geoprism-server*.jar,
             <!-- Exclude all jars provided by tomcat -->
             **/*catalina*.jar,
             **/*servlet-api*.jar,
@@ -275,74 +290,6 @@
             </overlay>
           </overlays>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.8</version>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-common</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <excludes>**/*.java</excludes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-client</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <excludes>**/*.java</excludes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-server</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <excludes>src/main/java/**/*.java, src/main/java-gen/**/*.java</excludes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-common</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-                  <includes>**/*.java</includes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-client</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-                  <includes>**/*.java</includes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-server</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-                  <includes>**/*.java</includes>
-                </artifactItem>
-              </artifactItems>
-              <includes>**/*</includes>
-              <excludes />
-              <outputDirectory>${project.build.directory}/classes</outputDirectory>
-              <overWriteReleases>true</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
