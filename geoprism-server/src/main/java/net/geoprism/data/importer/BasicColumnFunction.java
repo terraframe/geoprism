@@ -1,9 +1,5 @@
 package net.geoprism.data.importer;
 
-import org.opengis.feature.simple.SimpleFeature;
-
-
-
 public class BasicColumnFunction implements ShapefileFunction
 {
 
@@ -15,9 +11,9 @@ public class BasicColumnFunction implements ShapefileFunction
   }
 
   @Override
-  public String getValue(SimpleFeature feature)
+  public Object getValue(FeatureRow feature)
   {
-    Object value = feature.getAttribute(this.attributeName);
+    Object value = feature.getValue(this.attributeName);
 
     if (value != null)
     {
@@ -25,5 +21,11 @@ public class BasicColumnFunction implements ShapefileFunction
     }
 
     return null;
+  }
+
+  @Override
+  public String toJson()
+  {
+    return this.attributeName;
   }
 }

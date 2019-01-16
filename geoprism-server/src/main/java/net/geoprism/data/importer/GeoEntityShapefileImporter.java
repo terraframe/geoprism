@@ -42,7 +42,6 @@ import com.runwaysdk.ProblemException;
 import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -64,7 +63,7 @@ import net.geoprism.localization.LocalizationFacade;
  * 
  * @author Justin Smethie
  */
-public class GeoEntityShapefileImporter extends TaskObservable 
+public class GeoEntityShapefileImporter extends TaskObservable
 {
   /**
    * URL of the file being imported
@@ -348,14 +347,14 @@ public class GeoEntityShapefileImporter extends TaskObservable
             {
               SimpleFeature feature = iterator.next();
 
-//              try
-//              {
-                importEntity(feature);
-//              }
-//              catch (Exception e)
-//              {
-//                logger.log(feature.getOid(), e);
-//              }
+              // try
+              // {
+              importEntity(feature);
+              // }
+              // catch (Exception e)
+              // {
+              // logger.log(feature.getOid(), e);
+              // }
 
               this.fireTaskProgress(1);
             }
@@ -390,7 +389,9 @@ public class GeoEntityShapefileImporter extends TaskObservable
    */
   private void importEntity(SimpleFeature feature) throws Exception
   {
-    String geoId = this.getGeoId(feature);
+    SimpleFeatureRow row = new SimpleFeatureRow(feature);
+    
+    String geoId = this.getGeoId(row);
 
     GeoEntity entity;
     boolean isNew = false;
@@ -418,11 +419,11 @@ public class GeoEntityShapefileImporter extends TaskObservable
     }
 
     Geometry geometry = (Geometry) feature.getDefaultGeometry();
-    String entityName = this.getName(feature);
+    String entityName = this.getName(row);
 
     if (entityName != null)
     {
-      Universal universal = this.getUniversal(feature);
+      Universal universal = this.getUniversal(row);
 
       entity.setWkt(geometry.toText());
       entity.setGeoPoint(helper.getGeoPoint(geometry));
@@ -439,7 +440,7 @@ public class GeoEntityShapefileImporter extends TaskObservable
 
         for (ShapefileFunction synonym : this.synonyms)
         {
-          String value = synonym.getValue(feature);
+          String value = (String) synonym.getValue(row);
 
           if (value != null && value.length() > 0)
           {
@@ -462,7 +463,7 @@ public class GeoEntityShapefileImporter extends TaskObservable
 
       if (isNew)
       {
-        List<GeoEntity> parents = this.getParent(feature);
+        List<GeoEntity> parents = this.getParent(row);
 
         for (GeoEntity parent : parents)
         {
@@ -540,11 +541,11 @@ public class GeoEntityShapefileImporter extends TaskObservable
   }
 
   @Request
-  private Universal getUniversal(SimpleFeature feature)
+  private Universal getUniversal(FeatureRow feature)
   {
     if (this.type != null)
     {
-      String label = this.type.getValue(feature);
+      String label = (String) this.type.getValue(feature);
 
       if (label != null && label.trim().length() > 0)
       {
@@ -580,14 +581,14 @@ public class GeoEntityShapefileImporter extends TaskObservable
    *          Shapefile feature used to determine the parent
    * @return Parent entity
    */
-  private List<GeoEntity> getParent(SimpleFeature feature)
+  private List<GeoEntity> getParent(FeatureRow feature)
   {
     List<GeoEntity> parents = new LinkedList<GeoEntity>();
 
     if (this.parent != null && this.parentType != null)
     {
       List<String> _entityNames = this.parent.getValue(feature);
-      String _type = this.parentType.getValue(feature);
+      String _type = (String) this.parentType.getValue(feature);
 
       if (_type != null)
       {
@@ -648,7 +649,7 @@ public class GeoEntityShapefileImporter extends TaskObservable
    * @return The geoId as defined by the 'oid' attribute on the feature. If the
    *         geoId is null then a blank geoId is returned.
    */
-  private String getGeoId(SimpleFeature feature)
+  private String getGeoId(FeatureRow feature)
   {
     if (this.oid != null)
     {
@@ -667,7 +668,7 @@ public class GeoEntityShapefileImporter extends TaskObservable
    * @param feature
    * @return The entityName as defined by the 'name' attribute of the feature
    */
-  private String getName(SimpleFeature feature)
+  private String getName(FeatureRow feature)
   {
     Object attribute = this.name.getValue(feature);
 

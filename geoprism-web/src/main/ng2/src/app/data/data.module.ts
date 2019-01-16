@@ -68,7 +68,7 @@ import { UploadService } from './service/upload.service';
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),    
     DataRoutingModule,
-    TreeModule.forRoot()
+    TreeModule.forRoot(),
   ],
   declarations: [
 	// Global components

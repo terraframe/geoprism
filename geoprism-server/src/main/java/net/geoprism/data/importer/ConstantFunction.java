@@ -1,9 +1,5 @@
 package net.geoprism.data.importer;
 
-import org.opengis.feature.simple.SimpleFeature;
-
-
-
 public class ConstantFunction implements ShapefileFunction
 {
   private String constant;
@@ -13,11 +9,17 @@ public class ConstantFunction implements ShapefileFunction
     super();
     this.constant = constant;
   }
+  
 
   @Override
-  public String getValue(SimpleFeature feature)
+  public Object getValue(FeatureRow feature)
   {
     return this.constant;
   }
 
+  @Override
+  public String toJson()
+  {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -1,9 +1,5 @@
 package net.geoprism.data.importer;
 
-import org.opengis.feature.simple.SimpleFeature;
-
-
-
 public class ConcatenateFunction implements ShapefileFunction
 {
   private ShapefileFunction f1;
@@ -17,11 +13,12 @@ public class ConcatenateFunction implements ShapefileFunction
     this.f2 = f2;
   }
 
+
   @Override
-  public String getValue(SimpleFeature feature)
+  public Object getValue(FeatureRow feature)
   {
-    String v1 = this.f1.getValue(feature);
-    String v2 = this.f2.getValue(feature);
+    String v1 = (String) this.f1.getValue(feature);
+    String v2 = (String) this.f2.getValue(feature);
 
     if (v1 != null && v2 != null)
     {
@@ -35,4 +32,9 @@ public class ConcatenateFunction implements ShapefileFunction
     return v2;
   }
 
+  @Override
+  public String toJson()
+  {
+    throw new UnsupportedOperationException();
+  }
 }
