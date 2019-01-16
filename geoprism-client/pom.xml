@@ -39,6 +39,11 @@
 			<version>${runway.version}</version>
 		</dependency>
 		<dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>runwaysdk-localization-client</artifactId>
+      <version>${runway.version}</version>
+    </dependency>
+		<dependency>
 			<groupId>net.geoprism</groupId>
 			<artifactId>geoprism-common</artifactId>
 			<version>${project.version}</version>
