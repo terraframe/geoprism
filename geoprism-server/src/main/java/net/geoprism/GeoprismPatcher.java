@@ -19,7 +19,6 @@
 package net.geoprism;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,17 +33,13 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.ClasspathResource;
+import com.runwaysdk.util.ClasspathResource;
 import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
-import com.runwaysdk.configuration.ConfigurationManager;
-import com.runwaysdk.configuration.ConfigurationManager.ConfigGroup;
-import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
-import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -301,7 +296,7 @@ public class GeoprismPatcher implements GeoprismPatcherIF
       
       if (existingRes != null)
       {
-        System.out.println("WARNING : resource path [" + resource.getAbsolutePath() + "] is overloaded.  [" + resource.getPackageURL() + "] conflicts with existing resource [" + existingRes.getPackageURL() + "].");
+        System.out.println("WARNING : resource path [" + resource.getAbsolutePath() + "] is overloaded.  [" + resource.getURL() + "] conflicts with existing resource [" + existingRes.getURL() + "].");
       }
       
       existingResources.add(resource);

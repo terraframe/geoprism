@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.localization.LocalizedValueStore;
 import com.runwaysdk.session.Session;
 
 public class LocalizationFacade extends LocalizationFacadeBase 
@@ -41,12 +42,21 @@ public class LocalizationFacade extends LocalizationFacadeBase
 
   public static String getFromBundles(String key)
   {
-    return MultiBundle.get(key);
+    String localized = LocalizedValueStore.localize(key);
+    
+    if (localized == null)
+    {
+      return "???_" + key + "_???";
+    }
+    else
+    {
+      return localized;
+    }
   }
 
   public static String getJSON()
   {
-    Map<String, String> properties = MultiBundle.getAll();
+    Map<String, String> properties = LocalizedValueStore.getAll();
 
     try
     {

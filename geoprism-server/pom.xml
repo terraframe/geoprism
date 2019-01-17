@@ -49,6 +49,11 @@
 			<version>${runway.version}</version>
 		</dependency>
 		<dependency>
+      <groupId>com.runwaysdk</groupId>
+      <artifactId>runwaysdk-localization-server</artifactId>
+      <version>${runway.version}</version>
+    </dependency>
+		<dependency>
 			<groupId>com.runwaysdk</groupId>
 			<artifactId>runwaysdk-gis-server</artifactId>
 			<version>${runway.version}</version>
@@ -131,7 +136,6 @@
 			<artifactId>opencsv</artifactId>
 			<version>3.7</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.oltu.oauth2</groupId>
 			<artifactId>org.apache.oltu.oauth2.client</artifactId>
