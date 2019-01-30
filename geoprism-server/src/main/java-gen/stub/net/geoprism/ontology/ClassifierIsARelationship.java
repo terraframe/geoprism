@@ -33,10 +33,14 @@ public class ClassifierIsARelationship extends ClassifierIsARelationshipBase
     this(parent.getOid(), child.getOid());
   }
   
-  @Override
-  public String buildKey()
+  /**
+   * Call this method to properly set the key. 
+   * 
+   * @param parentKey
+   * @param childKey
+   */
+  public void setKey(String parentKey, String childKey)
   {
-    return this.getParentOid() + this.getChildOid();
+	  this.setKeyName(parentKey+"_"+childKey);
   }
-  
 }
