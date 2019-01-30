@@ -18,11 +18,11 @@
  */
 package com.runwaysdk.generated.system.gis.geo;
 
-public class GeoEntityAllPathsTable extends GeoEntityAllPathsTableBase 
+public class LocatedInAllPathsTable extends LocatedInAllPathsTableBase 
 {
   private static final long serialVersionUID = -1051591379;
   
-  public GeoEntityAllPathsTable()
+  public LocatedInAllPathsTable()
   {
     super();
   }

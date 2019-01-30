@@ -40,7 +40,7 @@ import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -193,7 +193,7 @@ public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExport
   {
     QueryFactory factory = new QueryFactory();
 
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(factory);
+    LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(_parent));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);

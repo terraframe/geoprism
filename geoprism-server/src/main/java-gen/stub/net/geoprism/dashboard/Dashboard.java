@@ -58,8 +58,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.query.AttributeChar;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
@@ -110,7 +110,7 @@ import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierQuery;
 import net.geoprism.ontology.ClassifierTermAttributeRoot;
@@ -713,7 +713,7 @@ public class Dashboard extends DashboardBase
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getOid()));
 
-    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(factory);
+    ClassifierIsARelationshipAllPathsTableQuery aptQuery = new ClassifierIsARelationshipAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(rootQuery.getChild()));
 
     return aptQuery.getCount();
@@ -726,7 +726,7 @@ public class Dashboard extends DashboardBase
     QueryFactory factory = new QueryFactory();
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
-    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+    ClassifierIsARelationshipAllPathsTableQuery allPathQuery = new ClassifierIsARelationshipAllPathsTableQuery(factory);
 
     rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getOid()));
     allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
@@ -813,7 +813,7 @@ public class Dashboard extends DashboardBase
   {
     QueryFactory factory = new QueryFactory();
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(country.getUniversal()));
 
     ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
@@ -858,7 +858,7 @@ public class Dashboard extends DashboardBase
     // AllowedInQuery aiQuery = new AllowedInQuery(factory);
     // aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
     //
-    // UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    // AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     // aptQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
     // aptQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
     //
@@ -893,7 +893,7 @@ public class Dashboard extends DashboardBase
     AllowedInQuery aiQuery = new AllowedInQuery(vQuery);
     vQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(vQuery);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(vQuery);
     vQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
     vQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
@@ -923,7 +923,7 @@ public class Dashboard extends DashboardBase
     List<ValueObject> countries = this.getCountries();
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+    LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
 
     SelectableUUID oid = entityQuery.getOid();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();

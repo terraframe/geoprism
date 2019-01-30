@@ -43,8 +43,8 @@ import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.patcher.RunwayPatcher;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -64,7 +64,7 @@ import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
 import net.geoprism.data.importer.GeoprismImportPlugin;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 import net.geoprism.ontology.ClassifierIsARelationship;
 
 public class GeoprismPatcher implements GeoprismPatcherIF
@@ -193,6 +193,35 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   {
     LocalProperties.setSkipCodeGenAndCompile(true);
     
+    this.configureStrategies();
+
+    /*
+     * Rebuild the all path tables if required
+     */
+    Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
+    Universal.getStrategy().initialize(AllowedIn.CLASS);
+    GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
+
+    if (new AllowedInAllPathsTableQuery(new QueryFactory()).getCount() == 0)
+    {
+      Universal.getStrategy().reinitialize(AllowedIn.CLASS);
+    }
+
+    if (new LocatedInAllPathsTableQuery(new QueryFactory()).getCount() == 0)
+    {
+      GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
+    }
+
+    if (new ClassifierIsARelationshipAllPathsTableQuery(new QueryFactory()).getCount() == 0)
+    {
+      Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
+    }
+    
+    importLocationData();
+  }
+
+  protected void configureStrategies()
+  {
     if (GeoprismProperties.getSolrLookup())
     {
       OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
@@ -204,30 +233,6 @@ public class GeoprismPatcher implements GeoprismPatcherIF
         }
       });
     }
-
-    /*
-     * Rebuild the all path tables if required
-     */
-    Classifier.getStrategy().initialize(ClassifierIsARelationship.CLASS);
-    Universal.getStrategy().initialize(AllowedIn.CLASS);
-    GeoEntity.getStrategy().initialize(LocatedIn.CLASS);
-
-    if (new UniversalAllPathsTableQuery(new QueryFactory()).getCount() == 0)
-    {
-      Universal.getStrategy().reinitialize(AllowedIn.CLASS);
-    }
-
-    if (new GeoEntityAllPathsTableQuery(new QueryFactory()).getCount() == 0)
-    {
-      GeoEntity.getStrategy().reinitialize(LocatedIn.CLASS);
-    }
-
-    if (new ClassifierAllPathsTableQuery(new QueryFactory()).getCount() == 0)
-    {
-      Classifier.getStrategy().reinitialize(ClassifierIsARelationship.CLASS);
-    }
-    
-    importLocationData();
   }
   
   public void validate()

@@ -47,7 +47,7 @@
             <operation name="WRITE_ALL_ATTRIBUTES"/>
             <operation name="DELETE"/>
           </mdRelationshipPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTable">
             <operation name="CREATE"/>
             <operation name="WRITE"/>
             <operation name="WRITE_ALL_ATTRIBUTES"/>

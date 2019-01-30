@@ -79,7 +79,7 @@ public class ClassifierSynonym extends ClassifierSynonymBase
 
     ClassifierQuery classifier1Q = new ClassifierQuery(qf);
     ClassifierQuery classifier2Q = new ClassifierQuery(qf);
-    ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
+    ClassifierIsARelationshipAllPathsTableQuery allPathsQ = new ClassifierIsARelationshipAllPathsTableQuery(qf);
     ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
 
     synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(_synonym.getDisplayLabel().getValue()));

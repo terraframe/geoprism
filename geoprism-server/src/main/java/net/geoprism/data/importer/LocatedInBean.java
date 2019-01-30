@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
@@ -137,12 +137,12 @@ public class LocatedInBean
 
       QueryFactory factory = new QueryFactory();
 
-      UniversalAllPathsTableQuery parentQuery = new UniversalAllPathsTableQuery(factory);
+      AllowedInAllPathsTableQuery parentQuery = new AllowedInAllPathsTableQuery(factory);
       parentQuery.WHERE(parentQuery.getChildTerm().EQ(universal));
       parentQuery.AND(parentQuery.getParentTerm().NE(root));
       parentQuery.AND(parentQuery.getParentTerm().NE(universal));
 
-      UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+      AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
       aptQuery.WHERE(aptQuery.getChildTerm().EQ(universal));
 
       AllowedInQuery aiQuery = new AllowedInQuery(factory);

@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
@@ -124,7 +124,7 @@ public class LocationCondition extends DashboardCondition
     {
       AttributeReference attributeReference = (AttributeReference) _attribute;
 
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(_vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(_vQuery);
 
       for (GeoEntity entity : entities)
       {

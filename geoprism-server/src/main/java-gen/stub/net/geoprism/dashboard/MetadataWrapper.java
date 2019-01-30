@@ -36,7 +36,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
@@ -101,11 +101,11 @@ public class MetadataWrapper extends MetadataWrapperBase
     AllowedInQuery aiQuery = new AllowedInQuery(factory);
     aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery uAptQuery = new AllowedInAllPathsTableQuery(factory);
     uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
     uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
 
     DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
@@ -339,11 +339,11 @@ public class MetadataWrapper extends MetadataWrapperBase
     AllowedInQuery aiQuery = new AllowedInQuery(factory);
     aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery uAptQuery = new AllowedInAllPathsTableQuery(factory);
     uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
     uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
 
     DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);

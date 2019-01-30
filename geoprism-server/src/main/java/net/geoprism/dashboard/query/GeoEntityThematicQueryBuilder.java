@@ -24,7 +24,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.GeneratedComponentQuery;
@@ -116,7 +116,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder
     Attribute geoAttr = (Attribute) this.getGeoEntityAttribute(componentQuery);
 
     // the entity's GeoEntity should match the all path's child
-    GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(vQuery);
+    LocatedInAllPathsTableQuery geAllPathsQ = new LocatedInAllPathsTableQuery(vQuery);
     vQuery.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
 
     // the displayed GeoEntity should match the all path's parent

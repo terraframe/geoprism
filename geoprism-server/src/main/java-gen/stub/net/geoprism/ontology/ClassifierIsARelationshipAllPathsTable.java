@@ -19,11 +19,11 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierAllPathsTable extends ClassifierAllPathsTableBase 
+public class ClassifierIsARelationshipAllPathsTable extends ClassifierIsARelationshipAllPathsTableBase 
 {
   private static final long serialVersionUID = 943154652;
   
-  public ClassifierAllPathsTable()
+  public ClassifierIsARelationshipAllPathsTable()
   {
     super();
   }

@@ -58,7 +58,7 @@ public class LocatedInManager extends TaskObservable implements UncaughtExceptio
     {
       this.fireStart();
 
-      // MdBusiness mdBusiness = MdBusiness.getMdBusiness(GeoEntityAllPathsTable.CLASS);
+      // MdBusiness mdBusiness = MdBusiness.getMdBusiness(LocatedInAllPathsTable.CLASS);
       // mdBusiness.deleteAllTableRecords();
 
       if (bean.getOption().equals(BuildTypes.REBUILD_ALL))

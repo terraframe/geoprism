@@ -53,7 +53,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.CONCAT;
@@ -837,7 +837,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
     if (parentOid != null && parentOid.length() > 0)
     {
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
 
       query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
       query.AND(aptQuery.getParentTerm().EQ(parentOid));

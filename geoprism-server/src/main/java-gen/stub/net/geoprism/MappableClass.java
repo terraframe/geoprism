@@ -60,7 +60,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeIndicatorDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -899,7 +899,7 @@ public class MappableClass extends MappableClassBase
     ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
     cuQuery.WHERE(cuQuery.getParent().EQ(this));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
     AllowedInQuery aiQuery = new AllowedInQuery(factory);

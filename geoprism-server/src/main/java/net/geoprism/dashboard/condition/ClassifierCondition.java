@@ -39,7 +39,7 @@ import com.runwaysdk.query.ValueQuery;
 
 import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 
 public class ClassifierCondition extends DashboardPrimitiveCondition 
 {
@@ -69,7 +69,7 @@ public class ClassifierCondition extends DashboardPrimitiveCondition
     {
       try
       {
-        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(vQuery);
+        ClassifierIsARelationshipAllPathsTableQuery allPathQuery = new ClassifierIsARelationshipAllPathsTableQuery(vQuery);
 
         JSONArray array = new JSONArray(this.getComparisonValue());
 

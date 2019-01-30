@@ -165,7 +165,7 @@ public class Classifier extends ClassifierBase
     // ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
     // ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
     // ClassifierQuery classifierQ = new ClassifierQuery(qf);
-    // ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
+    // ClassifierIsARelationshipAllPathsTableQuery allPathsQ = new ClassifierIsARelationshipAllPathsTableQuery(qf);
     // ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
     //
     // carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
@@ -932,7 +932,7 @@ public class Classifier extends ClassifierBase
     ClassifierQuery classifierQuery = new ClassifierQuery(query);
     ClassifierIsARelationshipQuery isAQ = new ClassifierIsARelationshipQuery(query);
     ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);
-    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(query);
+    ClassifierIsARelationshipAllPathsTableQuery aptQuery = new ClassifierIsARelationshipAllPathsTableQuery(query);
 
     SelectableUUID oid = classifierQuery.getOid();
 

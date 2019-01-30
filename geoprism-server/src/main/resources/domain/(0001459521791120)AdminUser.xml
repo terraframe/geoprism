@@ -403,7 +403,7 @@
           <mdBusinessPermission type="com.runwaysdk.system.gis.geo.GeoEntity">
             <operation name="ALL" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTable">
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdRelationshipPermission type="com.runwaysdk.system.gis.geo.GeoEntityTermAttributeRoot">
@@ -448,7 +448,7 @@
           <mdRelationshipPermission type="com.runwaysdk.system.gis.geo.AllowedIn">
             <operation name="ALL" />
           </mdRelationshipPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTable">
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdRelationshipPermission type="com.runwaysdk.system.gis.geo.UniversalTermAttributeRoot">
@@ -482,7 +482,7 @@
           <mdBusinessPermission type="net.geoprism.ontology.Classifier">
             <operation name="ALL" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.ontology.ClassifierAllPathsTable">
+          <mdBusinessPermission type="net.geoprism.ontology.ClassifierIsARelationshipAllPathsTable">
             <operation name="ALL" />
           </mdBusinessPermission>
           <mdRelationshipPermission type="net.geoprism.ontology.ClassifierTermAttributeRoot">
@@ -869,7 +869,7 @@
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTable">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
@@ -939,7 +939,7 @@
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTable">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
@@ -985,7 +985,7 @@
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.ontology.ClassifierAllPathsTable">
+          <mdBusinessPermission type="net.geoprism.ontology.ClassifierIsARelationshipAllPathsTable">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
@@ -1429,7 +1429,7 @@
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTable">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
@@ -1499,7 +1499,7 @@
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTable">
+          <mdBusinessPermission type="com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTable">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
@@ -1544,7 +1544,7 @@
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>
-          <mdBusinessPermission type="net.geoprism.ontology.ClassifierAllPathsTable">
+          <mdBusinessPermission type="net.geoprism.ontology.ClassifierIsARelationshipAllPathsTable">
             <operation name="READ" />
             <operation name="READ_ALL_ATTRIBUTES" />
           </mdBusinessPermission>

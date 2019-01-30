@@ -51,7 +51,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.database.DatabaseException;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -426,7 +426,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   {
     QueryFactory factory = new QueryFactory();
 
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(factory);
+    LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(parent));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);

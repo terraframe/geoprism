@@ -70,7 +70,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
@@ -429,7 +429,7 @@ public class TargetBuilder
   {
     Universal universal = Universal.get(universalId);
 
-    UniversalAllPathsTableQuery query = new UniversalAllPathsTableQuery(new QueryFactory());
+    AllowedInAllPathsTableQuery query = new AllowedInAllPathsTableQuery(new QueryFactory());
     query.WHERE(query.getParentTerm().EQ(current));
     query.AND(query.getChildTerm().EQ(universal));
 
