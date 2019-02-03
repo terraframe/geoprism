@@ -638,7 +638,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
           StringBuffer sql = new StringBuffer();
           sql.append("SELECT g.oid, apt.child_term ");
-          sql.append("FROM geo_entity g, geo_entity_all_paths_table apt ");
+          sql.append("FROM geo_entity g, located_in_all_paths_table apt ");
           sql.append("WHERE ST_Within(ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326)").concat(", g.geo_multi_polygon) "));
           sql.append("AND g.universal = '" + parentUniversal.getOid() + "' ");
           sql.append("AND apt.parent_term=g.oid ");
