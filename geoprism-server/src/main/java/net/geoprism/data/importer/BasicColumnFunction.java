@@ -17,7 +17,7 @@ public class BasicColumnFunction implements ShapefileFunction
 
     if (value != null)
     {
-      return value.toString();
+      return value;
     }
 
     return null;
