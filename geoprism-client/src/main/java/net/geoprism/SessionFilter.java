@@ -173,7 +173,17 @@ public class SessionFilter implements Filter
 
       req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
 
-      chain.doFilter(req, res);
+      try
+      {
+        chain.doFilter(req, res);
+      }
+      finally
+      {
+        clientSession.logout();
+        req.removeAttribute(ClientConstants.CLIENTREQUEST);
+        req.removeAttribute(ClientConstants.CLIENTSESSION);
+        request.logout();
+      }
       return;
     }
     else
