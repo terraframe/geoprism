@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
@@ -120,8 +120,9 @@ public class GeoserverRestService implements GeoserverService
     try
     {
       GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
-      
-      // IMPORTANT: The URI must match the namespace of the store or rendering doesn't work
+
+      // IMPORTANT: The URI must match the namespace of the store or rendering
+      // doesn't work
       if (publisher.createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getWorkspace())))
       {
         log.info("Created the workspace [" + GeoserverProperties.getWorkspace() + "].");
@@ -182,7 +183,7 @@ public class GeoserverRestService implements GeoserverService
     encoder.setExposePrimaryKeys(true);
 
     GeoServerRESTStoreManager manager = GeoserverProperties.getManager();
-    
+
     if (manager.create(workspace, encoder))
     {
       log.info("Published the store [" + GeoserverProperties.getStore() + "].");
@@ -192,7 +193,7 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to publish the store [" + GeoserverProperties.getStore() + "].");
     }
   }
-  
+
   /**
    * Checks if the given workspace exists.
    * 
@@ -219,7 +220,8 @@ public class GeoserverRestService implements GeoserverService
   }
 
   /**
-   * Checks if the cache directory exists. This method does not check what tiles or zoom levels have been cached.
+   * Checks if the cache directory exists. This method does not check what tiles
+   * or zoom levels have been cached.
    * 
    * @param cacheName
    * @return
@@ -252,7 +254,8 @@ public class GeoserverRestService implements GeoserverService
   }
 
   /**
-   * Removes the style defined in Geoserver, including the .sld and .xml file artifacts.
+   * Removes the style defined in Geoserver, including the .sld and .xml file
+   * artifacts.
    * 
    * @param styleName
    *          The name of the style to delete.
@@ -409,8 +412,8 @@ public class GeoserverRestService implements GeoserverService
     }
 
     GSLayerEncoder le = new GSLayerEncoder();
-    
-    if(styleName != null && styleName.length() > 0)
+
+    if (styleName != null && styleName.length() > 0)
     {
       le.setDefaultStyle(styleName);
       le.setEnabled(true);
@@ -449,6 +452,27 @@ public class GeoserverRestService implements GeoserverService
       {
         log.warn("Failed to remove the layer for [" + layer + "].");
       }
+    }
+  }
+
+  /**
+   * Removes the layer from geoserver.
+   * 
+   * @param layer
+   * @return
+   */
+  public void forceRemoveLayer(String layer)
+  {
+    String workspace = GeoserverProperties.getWorkspace();
+    GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
+
+    if (publisher.removeLayer(workspace, layer))
+    {
+      log.info("Removed the layer for [" + layer + "].");
+    }
+    else
+    {
+      log.warn("Failed to remove the layer for [" + layer + "].");
     }
   }
 

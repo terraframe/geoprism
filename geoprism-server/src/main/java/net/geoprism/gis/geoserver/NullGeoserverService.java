@@ -128,6 +128,12 @@ public class NullGeoserverService implements GeoserverService
   {
 
   }
+  
+  @Override
+  public void forceRemoveLayer(String layer)
+  {
+    
+  }
 
   @Override
   public void publishCache(String layer)

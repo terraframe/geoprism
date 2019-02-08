@@ -3,27 +3,25 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
 import java.io.File;
 import java.util.List;
 
-
-
-public interface GeoserverService 
+public interface GeoserverService
 {
   public void refresh();
 
@@ -46,7 +44,8 @@ public interface GeoserverService
   public boolean styleExists(String styleName);
 
   /**
-   * Checks if the cache directory exists. This method does not check what tiles or zoom levels have been cached.
+   * Checks if the cache directory exists. This method does not check what tiles
+   * or zoom levels have been cached.
    * 
    * @param cacheName
    * @return
@@ -66,7 +65,8 @@ public interface GeoserverService
   public List<String> getStyles();
 
   /**
-   * Removes the style defined in Geoserver, including the .sld and .xml file artifacts.
+   * Removes the style defined in Geoserver, including the .sld and .xml file
+   * artifacts.
    * 
    * @param styleName
    *          The name of the style to delete.
@@ -99,6 +99,8 @@ public interface GeoserverService
    * @return
    */
   public void removeLayer(String layer);
+
+  public void forceRemoveLayer(String layer);
 
   public void publishCache(String layer);
 
@@ -133,7 +135,7 @@ public interface GeoserverService
    * @return
    */
   public boolean viewExists(String viewName);
-  
+
   /**
    * Calculates the bounding box of all the layers.
    * 
@@ -145,10 +147,11 @@ public interface GeoserverService
   /**
    * Calculates the expanded bounding box of all the database views.
    * 
-   * @param views List of view names
+   * @param views
+   *          List of view names
    * @return double[] {minx, miny, maxx, maxy}
    */
   public double[] getExpandedBBOX(List<String> views, double expandVal);
-  
+
   public boolean workspaceExists();
 }
