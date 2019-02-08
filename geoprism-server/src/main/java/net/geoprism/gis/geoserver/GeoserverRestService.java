@@ -409,8 +409,12 @@ public class GeoserverRestService implements GeoserverService
     }
 
     GSLayerEncoder le = new GSLayerEncoder();
-    le.setDefaultStyle(styleName);
-    le.setEnabled(true);
+    
+    if(styleName != null && styleName.length() > 0)
+    {
+      le.setDefaultStyle(styleName);
+      le.setEnabled(true);
+    }
 
     if (GeoserverProperties.getPublisher().publishDBLayer(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), fte, le))
     {
