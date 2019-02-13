@@ -444,7 +444,7 @@ public class GeoserverRestService implements GeoserverService
       String workspace = GeoserverProperties.getWorkspace();
       GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
 
-      if (publisher.removeLayer(workspace, layer))
+      if (publisher.unpublishFeatureType(workspace, GeoserverProperties.getStore(), layer))
       {
         log.info("Removed the layer for [" + layer + "].");
       }
@@ -466,7 +466,7 @@ public class GeoserverRestService implements GeoserverService
     String workspace = GeoserverProperties.getWorkspace();
     GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
 
-    if (publisher.removeLayer(workspace, layer))
+    if (publisher.unpublishFeatureType(workspace, GeoserverProperties.getStore(), layer))
     {
       log.info("Removed the layer for [" + layer + "].");
     }
