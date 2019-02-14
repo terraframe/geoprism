@@ -11,6 +11,11 @@ public class SimpleFeatureRow implements FeatureRow
     this.feature = feature;
   }
 
+  public SimpleFeature getFeature()
+  {
+    return feature;
+  }
+
   @Override
   public Object getValue(String attributeName)
   {
