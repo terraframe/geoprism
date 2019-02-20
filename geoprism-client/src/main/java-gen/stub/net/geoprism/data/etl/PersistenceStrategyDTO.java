@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 public abstract class PersistenceStrategyDTO extends PersistenceStrategyDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -129366136;
   
   public PersistenceStrategyDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

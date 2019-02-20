@@ -87,7 +87,7 @@ import com.runwaysdk.util.FileIO;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
 
-public class ReportItem extends ReportItemBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportItem extends ReportItemBase 
 {
   private static final long   serialVersionUID      = -935561311;
 
@@ -254,7 +254,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
             entity.apply();
             file.putFile(fileStream);
 
-            this.setDesign(entity.getId());
+            this.setDesign(entity.getOid());
           }
           else
           {
@@ -333,7 +333,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
     if (session != null)
     {
-      String sessionId = session.getId();
+      String sessionId = session.getOid();
       boolean access = SessionFacade.checkAccess(sessionId, operation, entity);
 
       if (!access)
@@ -348,7 +348,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   @Override
   public String getURL()
   {
-    return BASE_URL + this.getId();
+    return BASE_URL + this.getOid();
   }
 
   @Override
@@ -591,7 +591,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
         entity.apply();
         fileDao.putFile(new FileInputStream(file));
 
-        this.setDocument(entity.getId());
+        this.setDocument(entity.getOid());
         this.apply();
       }
       else
@@ -649,7 +649,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
 
     if (session != null)
     {
-      contextMap.put(IClientSession.SESSION_ID, session.getId());
+      contextMap.put(IClientSession.SESSION_ID, session.getOid());
     }
 
     IReportRunnable design = engine.openReportDesign(stream);
@@ -834,7 +834,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   private String getCacheFolderName()
   {
     SessionIF session = Session.getCurrentSession();
-    String sessionId = session.getId();
+    String sessionId = session.getOid();
 
     return Base64.encode(sessionId.getBytes());
   }
@@ -1003,7 +1003,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
       {
         GeoEntity entity = iterator.next();
 
-        list.add(PairView.createWithLabel(entity.getId(), entity.getDisplayLabel().getValue()));
+        list.add(PairView.createWithLabel(entity.getOid(), entity.getDisplayLabel().getValue()));
       }
 
       return list.toArray(new PairView[list.size()]);
@@ -1021,7 +1021,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   //
   // GeoEntityQuery entityQuery = new GeoEntityQuery(query);
   //
-  // SelectableChar id = entityQuery.getId();
+  // SelectableChar oid = entityQuery.getOid();
   // Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
   // Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
   // SelectableChar geoId = entityQuery.getGeoId();
@@ -1031,7 +1031,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   // label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
   // label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
   //
-  // query.SELECT(id, label);
+  // query.SELECT(oid, label);
   // query.WHERE(label.LIKEi("%" + text + "%"));
   //
   // query.ORDER_BY_ASC(geoLabel);
@@ -1047,7 +1047,7 @@ public class ReportItem extends ReportItemBase implements com.runwaysdk.generati
   // while (iterator.hasNext())
   // {
   // ValueObject vObject = iterator.next();
-  // String vId = vObject.getValue(GeoEntity.ID);
+  // String vId = vObject.getValue(GeoEntity.OID);
   // String vLabel = vObject.getValue(GeoEntity.DISPLAYLABEL);
   //
   // list.add(PairView.createWithLabel(vId, vLabel));

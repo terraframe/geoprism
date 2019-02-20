@@ -20,7 +20,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = -1808034317)
-public class CategoryIconControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class CategoryIconControllerBase 
 {
   public static final String CLASS = "net.geoprism.dashboard.layer.CategoryIconController";
   protected javax.servlet.http.HttpServletRequest req;
@@ -84,15 +84,15 @@ public class CategoryIconControllerBase implements com.runwaysdk.generation.load
     return (com.runwaysdk.ClientSession) req.getSession().getAttribute(com.runwaysdk.constants.ClientConstants.CLIENTSESSION);
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, com.runwaysdk.controller.MultipartFileParameter:file, java.lang.String:label", post=true)
-  public void apply(java.lang.String id, com.runwaysdk.controller.MultipartFileParameter file, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid, com.runwaysdk.controller.MultipartFileParameter:file, java.lang.String:label", post=true)
+  public void apply(java.lang.String oid, com.runwaysdk.controller.MultipartFileParameter file, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIconController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.CategoryIconController.apply");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, com.runwaysdk.controller.MultipartFileParameter:file, java.lang.String:label", post=true)
-  public void failApply(java.lang.String id, com.runwaysdk.controller.MultipartFileParameter file, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid, com.runwaysdk.controller.MultipartFileParameter:file, java.lang.String:label", post=true)
+  public void failApply(java.lang.String oid, com.runwaysdk.controller.MultipartFileParameter file, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIconController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.CategoryIconController.failApply");
@@ -154,15 +154,15 @@ public class CategoryIconControllerBase implements com.runwaysdk.generation.load
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.CategoryIconController.failGetCategoryIconImage");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void remove(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void remove(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIconController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.CategoryIconController.remove");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void failRemove(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void failRemove(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.dashboard.layer.CategoryIconController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.dashboard.layer.CategoryIconController.failRemove");

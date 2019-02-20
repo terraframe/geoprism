@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 803228435)
-public abstract class NonUniqueEntityResultExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class NonUniqueEntityResultExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.NonUniqueEntityResultException";
   private static final long serialVersionUID = 803228435;
@@ -69,7 +69,7 @@ public abstract class NonUniqueEntityResultExceptionDTOBase extends com.runwaysd
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String LABEL = "label";
   public static java.lang.String PARENT = "parent";
   public static java.lang.String UNIVERSAL = "universal";
@@ -192,7 +192,7 @@ public abstract class NonUniqueEntityResultExceptionDTOBase extends com.runwaysd
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{label}", this.getLabel().toString());
     template = template.replace("{parent}", this.getParent().toString());
     template = template.replace("{universal}", this.getUniversal().toString());

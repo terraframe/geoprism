@@ -30,7 +30,7 @@ import com.runwaysdk.generation.loader.LoaderDecorator;
 public class Activator extends AbstractUIPlugin
 {
 
-  // The plug-in ID
+  // The plug-in OID
   public static final String PLUGIN_ID = "net.geoprism.oda.driver"; //$NON-NLS-1$
 
   // The shared instance
@@ -54,8 +54,10 @@ public class Activator extends AbstractUIPlugin
   {
     super.start(context);
     plugin = this;
-
-    LoaderDecorator.setClassLoader(new BundleClassLoader(context.getBundle()));
+    
+//    context.getBundle().l
+    
+//    Thread.currentThread().setContextClassLoader(new BundleClassLoader(context.getBundle()));
   }
 
   /*

@@ -123,6 +123,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.SelectableGeometry;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -130,7 +131,7 @@ import com.runwaysdk.system.metadata.MdBusiness;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
-public class DashboardMap extends DashboardMapBase implements com.runwaysdk.generation.loader.Reloadable, net.geoprism.gis.wrapper.Map
+public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.wrapper.Map
 {
   private static Log        log              = LogFactory.getLog(DashboardMap.class);
 
@@ -141,13 +142,11 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     super();
   }
 
-  @Override
   public void accepts(MapVisitor visitor)
   {
     visitor.visit(this);
   }
 
-  @Override
   public List<? extends DashboardLayer> getLayers()
   {
     return this.getAllHasLayer().getAll();
@@ -213,6 +212,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     Thread thread = new Thread(new Runnable()
     {
       @Override
+      @Request
       public void run()
       {
         try
@@ -294,8 +294,8 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     }
 
     HasLayerQuery q = new HasLayerQuery(new QueryFactory());
-    q.WHERE(q.parentId().EQ(this.getId()));
-    q.AND(q.childId().IN(layerIds));
+    q.WHERE(q.parentOid().EQ(this.getOid()));
+    q.AND(q.childOid().IN(layerIds));
 
     OIterator<? extends HasLayer> iter = q.getIterator();
 
@@ -305,7 +305,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         HasLayer rel = iter.next();
         rel.appLock();
-        rel.setLayerIndex(ArrayUtils.indexOf(layerIds, rel.getChildId()) + 1);
+        rel.setLayerIndex(ArrayUtils.indexOf(layerIds, rel.getChildOid()) + 1);
         rel.apply();
       }
     }
@@ -329,7 +329,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
     QueryFactory f = new QueryFactory();
 
     HasLayerQuery hsQ = new HasLayerQuery(f);
-    hsQ.WHERE(hsQ.parentId().EQ(this.getId()));
+    hsQ.WHERE(hsQ.parentOid().EQ(this.getOid()));
     hsQ.ORDER_BY_ASC(hsQ.getLayerIndex());
 
     OIterator<? extends HasLayer> iter = hsQ.getIterator();
@@ -512,7 +512,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
       MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
       MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
-      MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
+      MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.OID);
 
       String tableName = mdClass.getTableName();
       String geoColumnName = mdAttributeGeom.getColumnName();
@@ -528,13 +528,13 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         if (first)
         {
-          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
+          sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getValue("oid") + "'");
 
           first = false;
         }
         else
         {
-          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
+          sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getValue("oid") + "'");
         }
       }
 
@@ -566,7 +566,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
         MdBusinessDAOIF mdClass = (MdBusinessDAOIF) MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS);
         MdAttributeDAOIF mdAttributeGeom = mdClass.definesAttribute(GeoEntity.GEOMULTIPOLYGON);
-        MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.ID);
+        MdAttributeDAOIF mdAttributeId = mdClass.definesAttribute(GeoEntity.OID);
 
         String tableName = mdClass.getTableName();
         String geoColumnName = mdAttributeGeom.getColumnName();
@@ -582,13 +582,13 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
         {
           if (first)
           {
-            sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
+            sql.append(" WHERE " + tableName + "." + idColumnName + "= '" + country.getValue("oid") + "'");
 
             first = false;
           }
           else
           {
-            sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getValue("id") + "'");
+            sql.append(" OR " + tableName + "." + idColumnName + "= '" + country.getValue("oid") + "'");
           }
         }
 
@@ -775,7 +775,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         MetadataWrapper wrapper = iterator.next();
 
-        if (mdClass.getId().equals(wrapper.getWrappedMdClassId()))
+        if (mdClass.getOid().equals(wrapper.getWrappedMdClassId()))
         {
           List<MdAttributeView> attributes = new LinkedList<MdAttributeView>(Arrays.asList(wrapper.getSortedAttributes()));
 
@@ -1648,13 +1648,13 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
       {
         DashboardReferenceLayer referenceLayer = (DashboardReferenceLayer) layer;
 
-        Integer universalIndex = uIndexes.get(referenceLayer.getUniversal().getId());
+        Integer universalIndex = uIndexes.get(referenceLayer.getUniversal().getOid());
 
-        indices.put(layer.getId(), universalIndex);
+        indices.put(layer.getOid(), universalIndex);
       }
       else
       {
-        indices.put(layer.getId(), index++);
+        indices.put(layer.getOid(), index++);
       }
     }
 
@@ -1706,7 +1706,7 @@ public class DashboardMap extends DashboardMapBase implements com.runwaysdk.gene
 
     for (HasLayer relationship : relationships)
     {
-      Integer index = indices.get(relationship.getChildId());
+      Integer index = indices.get(relationship.getChildOid());
 
       relationship.appLock();
       relationship.setLayerIndex(index);

@@ -21,7 +21,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { FileSelectDirective, FileDropDirective, FileUploader, FileUploaderOptions } from 'ng2-file-upload/ng2-file-upload';
 
@@ -106,16 +106,16 @@ export class DatasetsComponent implements OnInit {
     this.datasetService
       .remove(dataset)
       .then(response => {
-        this.datasets = this.datasets.filter(h => h.id !== dataset.id);    
+        this.datasets = this.datasets.filter(h => h.oid !== dataset.oid);    
       });
   }
   
   edit(dataset: Dataset, event: any) : void {
-    this.router.navigate(['/data/dataset', dataset.id]);
+    this.router.navigate(['/dataset', dataset.oid]);
   }
   
   xport(dataset: Dataset, event: any) : void {
-    this.datasetService.xport(dataset.id);
+    this.datasetService.xport(dataset.oid);
   }
   
   fileOver(e:any):void {
@@ -135,7 +135,7 @@ export class DatasetsComponent implements OnInit {
   
   getIndex(dataset: Dataset) {
     for(var i = 0; i < this.datasets.length; i++) {
-      if(this.datasets[i].id == dataset.id) {
+      if(this.datasets[i].oid == dataset.oid) {
         return i;
       }
     }

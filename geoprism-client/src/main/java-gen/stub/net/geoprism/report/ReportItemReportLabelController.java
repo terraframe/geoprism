@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class ReportItemReportLabelController extends ReportItemReportLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportItemReportLabelController extends ReportItemReportLabelControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/report/ReportItemReportLabel/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
@@ -31,18 +31,18 @@ public class ReportItemReportLabelController extends ReportItemReportLabelContro
   
   public void cancel(net.geoprism.report.ReportItemReportLabelDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
   public void failCancel(net.geoprism.report.ReportItemReportLabelDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
   public void create(net.geoprism.report.ReportItemReportLabelDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -71,15 +71,15 @@ public class ReportItemReportLabelController extends ReportItemReportLabelContro
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    net.geoprism.report.ReportItemReportLabelDTO dto = net.geoprism.report.ReportItemReportLabelDTO.get(super.getClientRequest(), id);
+    net.geoprism.report.ReportItemReportLabelDTO dto = net.geoprism.report.ReportItemReportLabelDTO.get(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
   public void newInstance() throws java.io.IOException, javax.servlet.ServletException
   {
@@ -97,7 +97,7 @@ public class ReportItemReportLabelController extends ReportItemReportLabelContro
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -109,13 +109,13 @@ public class ReportItemReportLabelController extends ReportItemReportLabelContro
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", net.geoprism.report.ReportItemReportLabelDTO.get(clientRequest, id));
+    req.setAttribute("item", net.geoprism.report.ReportItemReportLabelDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }

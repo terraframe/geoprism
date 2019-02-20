@@ -34,14 +34,14 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class ShapeFileWizard extends Wizard implements Reloadable
+public class ShapeFileWizard extends Wizard 
 {
-  class ShapefileImportRunner implements IRunnableWithProgress, Reloadable
+  class ShapefileImportRunner implements IRunnableWithProgress
   {
     private GeoEntityShapefileImporter importer;
 
@@ -61,7 +61,7 @@ public class ShapeFileWizard extends Wizard implements Reloadable
       importer.setUniversalId(data.getUniversal());
       importer.setType(data.getType());
       importer.setName(data.getName());
-      importer.setId(data.getId());
+      importer.setId(data.getOid());
       importer.setParent(data.getParent());
       importer.setParentType(data.getParentType());
       importer.run(logger);

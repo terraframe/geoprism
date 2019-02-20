@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2;
 
-public class DHIS2Configuration extends DHIS2ConfigurationBase implements com.runwaysdk.generation.loader.Reloadable
+public class DHIS2Configuration extends DHIS2ConfigurationBase 
 {
   private static final long serialVersionUID = -1298818951;
   

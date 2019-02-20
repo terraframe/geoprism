@@ -24,7 +24,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.AggregateFunction;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeChar;
@@ -55,7 +55,7 @@ import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
 
-public abstract class ThematicQueryBuilder implements Reloadable
+public abstract class ThematicQueryBuilder 
 {
   public static final String       LOCATION_ALIAS = "geo_id_00";
 
@@ -91,7 +91,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
   protected abstract SelectableSingle getLabelSelectable(GeneratedComponentQuery query);
 
-  protected abstract Selectable getIdentifierSelectable(GeneratedComponentQuery query);
+  protected abstract Selectable getOidentifierSelectable(GeneratedComponentQuery query);
 
   protected abstract void initialize(ValueQuery vQuery);
 
@@ -130,7 +130,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
         ValueQuery innerQuery = new ValueQuery(factory);
         innerQuery.SELECT(thematicGeoId, thematicLabel, thematicAttribute);
 
-        if (!secondaryMdAttribute.getId().equals(thematicMdAttribute.getId()))
+        if (!secondaryMdAttribute.getOid().equals(thematicMdAttribute.getOid()))
         {
           AllAggregationType secondaryAggregation = tStyle.getSecondaryAttributeAggregationMethod();
 
@@ -185,7 +185,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
     Selectable thematicSel = thematicAttr;
 
     SelectableSingle label = this.getLabelSelectable(query);
-    Selectable id = this.getIdentifierSelectable(query);
+    Selectable oid = this.getOidentifierSelectable(query);
 
     if (thematicSel instanceof SelectableNumber || thematicSel instanceof SelectableMoment || thematicSel instanceof SelectableBoolean || thematicSel instanceof SelectableIndicator)
     {
@@ -244,7 +244,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
 
       this.setCriteriaOnInnerQuery(vQuery, query);
 
-      vQuery.SELECT(thematicSel, label, id);
+      vQuery.SELECT(thematicSel, label, oid);
     }
     else
     {
@@ -284,17 +284,17 @@ public abstract class ThematicQueryBuilder implements Reloadable
         thematicSel = F.COUNT(thematicAttr, "COUNT");
         thematicSel.setColumnAlias(attributeName.toLowerCase());
         
-        AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), id));
+        AggregateFunction stringAgg = F.STRING_AGG(thematicAttr, ", ", "AGG").OVER(F.PARTITION_BY(F.COUNT(thematicAttr), oid));
         stringAgg.setUserDefinedDisplayLabel(thematicAttr.getUserDefinedDisplayLabel());
 
-        AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(id), new OrderBy(F.COUNT(thematicAttr), sortOrder));
+        AggregateFunction rank = query.RANK("RANK").OVER(F.PARTITION_BY(oid), new OrderBy(F.COUNT(thematicAttr), sortOrder));
 
         winFuncQuery.SELECT_DISTINCT(thematicSel);
         winFuncQuery.SELECT_DISTINCT(stringAgg);
         winFuncQuery.SELECT_DISTINCT(rank);
         winFuncQuery.SELECT_DISTINCT(label);
-        winFuncQuery.SELECT_DISTINCT(id);
-        winFuncQuery.GROUP_BY((SelectableSingle) thematicAttr, (SelectableSingle) id);
+        winFuncQuery.SELECT_DISTINCT(oid);
+        winFuncQuery.GROUP_BY((SelectableSingle) thematicAttr, (SelectableSingle) oid);
         winFuncQuery.ORDER_BY(thematicSel, sortOrder);
 
         this.setCriteriaOnInnerQuery(winFuncQuery, query);
@@ -342,7 +342,7 @@ public abstract class ThematicQueryBuilder implements Reloadable
           MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(mdAttributeId);
           MdClassDAOIF definedByClass = mdAttribute.definedByClass();
 
-          if (definedByClass.getId().equals(mdClass.getId()))
+          if (definedByClass.getOid().equals(mdClass.getOid()))
           {
             Selectable attr = componentQuery.getS(mdAttribute.definesAttribute());
 

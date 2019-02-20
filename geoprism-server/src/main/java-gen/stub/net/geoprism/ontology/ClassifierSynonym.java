@@ -30,7 +30,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
 
-public class ClassifierSynonym extends ClassifierSynonymBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierSynonym extends ClassifierSynonymBase 
 {
   private static final long   serialVersionUID = -1215181333;
 
@@ -79,12 +79,12 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
 
     ClassifierQuery classifier1Q = new ClassifierQuery(qf);
     ClassifierQuery classifier2Q = new ClassifierQuery(qf);
-    ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
+    ClassifierIsARelationshipAllPathsTableQuery allPathsQ = new ClassifierIsARelationshipAllPathsTableQuery(qf);
     ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
 
     synonymQ.WHERE(synonymQ.getDisplayLabel().localize().EQ(_synonym.getDisplayLabel().getValue()));
 
-    classifier1Q.WHERE(classifier1Q.getId().EQ(_classifier.getId()));
+    classifier1Q.WHERE(classifier1Q.getOid().EQ(_classifier.getOid()));
 
     allPathsQ.WHERE(OR.get(allPathsQ.getParentTerm().EQ(classifier1Q), allPathsQ.getChildTerm().EQ(classifier1Q)));
 
@@ -122,7 +122,7 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
 
     ClassifierHasSynonym relationship = synonym.getAllIsSynonymForRel().getAll().get(0);
 
-    return new TermAndRel(synonym, ClassifierHasSynonym.CLASS, relationship.getId());
+    return new TermAndRel(synonym, ClassifierHasSynonym.CLASS, relationship.getOid());
   }
 
   public static Term getRoot()
@@ -159,7 +159,7 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
       /*
        * Restore the original value in the data records in case of a role back
        */
-      TermSynonymRelationship.restoreSynonymData(classifier, this.getId(), Classifier.CLASS);
+      TermSynonymRelationship.restoreSynonymData(classifier, this.getOid(), Classifier.CLASS);
     }
 
     this.delete();
@@ -172,7 +172,7 @@ public class ClassifierSynonym extends ClassifierSynonymBase implements com.runw
     QueryFactory factory = new QueryFactory();
 
     ClassifierHasSynonymQuery rQuery = new ClassifierHasSynonymQuery(factory);
-    rQuery.WHERE(rQuery.parentId().EQ(destination.getId()));
+    rQuery.WHERE(rQuery.parentOid().EQ(destination.getOid()));
 
     ClassifierSynonymQuery sQuery = new ClassifierSynonymQuery(factory);
     sQuery.WHERE(sQuery.isSynonymFor(rQuery));

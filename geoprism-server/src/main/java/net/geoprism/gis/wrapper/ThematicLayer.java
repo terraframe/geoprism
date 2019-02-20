@@ -20,9 +20,9 @@ package net.geoprism.gis.wrapper;
 
 import java.util.HashMap;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface ThematicLayer extends Reloadable, Layer
+
+public interface ThematicLayer extends Layer
 {
   public AttributeType getAttributeType();
 

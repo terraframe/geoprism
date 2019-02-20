@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class UnsupportedComparisonException extends UnsupportedComparisonExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class UnsupportedComparisonException extends UnsupportedComparisonExceptionBase 
 {
   private static final long serialVersionUID = -1579851838;
   

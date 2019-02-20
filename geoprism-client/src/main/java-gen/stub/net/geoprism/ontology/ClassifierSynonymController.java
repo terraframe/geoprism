@@ -29,7 +29,7 @@ import com.runwaysdk.system.ontology.TermUtilDTO;
 import com.runwaysdk.transport.conversion.json.BusinessDTOToJSON;
 import com.runwaysdk.transport.conversion.json.JSONReturnObject;
 
-public class ClassifierSynonymController extends ClassifierSynonymControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierSynonymController extends ClassifierSynonymControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/ontology/ClassifierSynonym/";
 
@@ -43,12 +43,12 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
   public void cancel(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
 
   public void failCancel(ClassifierSynonymDTO dto) throws IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
 
   public void create(ClassifierSynonymDTO dto, String classifierId) throws IOException, javax.servlet.ServletException
@@ -96,16 +96,16 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
     render("editComponent.jsp");
   }
 
-  public void edit(String id) throws IOException, javax.servlet.ServletException
+  public void edit(String oid) throws IOException, javax.servlet.ServletException
   {
-    ClassifierSynonymDTO dto = ClassifierSynonymDTO.lock(super.getClientRequest(), id);
+    ClassifierSynonymDTO dto = ClassifierSynonymDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
 
-  public void failEdit(String id) throws IOException, javax.servlet.ServletException
+  public void failEdit(String oid) throws IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
 
   public void newInstance() throws IOException, javax.servlet.ServletException
@@ -137,7 +137,7 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
 
       if (needsRedirect)
       {
-        this.viewUpdate(dto.getId());
+        this.viewUpdate(dto.getOid());
       }
     }
   }
@@ -148,14 +148,14 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
     render("editComponent.jsp");
   }
 
-  public void view(String id) throws IOException, javax.servlet.ServletException
+  public void view(String oid) throws IOException, javax.servlet.ServletException
   {
     ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", ClassifierSynonymDTO.get(clientRequest, id));
+    req.setAttribute("item", ClassifierSynonymDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
 
-  public void failView(String id) throws IOException, javax.servlet.ServletException
+  public void failView(String oid) throws IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
@@ -186,13 +186,13 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
     resp.sendError(500);
   }
 
-  public void getDirectDescendants(String parentId) throws IOException, javax.servlet.ServletException
+  public void getDirectDescendants(String parentOid) throws IOException, javax.servlet.ServletException
   {
     try
     {
       JSONArray array = new JSONArray();
 
-      TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentId, new String[] { ClassifierHasSynonymDTO.CLASS });
+      TermAndRelDTO[] tnrs = TermUtilDTO.getDirectDescendants(getClientRequest(), parentOid, new String[] { ClassifierHasSynonymDTO.CLASS });
 
       for (TermAndRelDTO tnr : tnrs)
       {
@@ -207,7 +207,7 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
     }
   }
 
-  public void failGetDirectDescendants(String parentId) throws IOException, javax.servlet.ServletException
+  public void failGetDirectDescendants(String parentOid) throws IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -225,14 +225,14 @@ public class ClassifierSynonymController extends ClassifierSynonymControllerBase
     resp.sendError(500);
   }
 
-  public void viewUpdate(String id) throws IOException, javax.servlet.ServletException
+  public void viewUpdate(String oid) throws IOException, javax.servlet.ServletException
   {
-    ClassifierSynonymDTO dto = ClassifierSynonymDTO.lock(super.getClientRequest(), id);
+    ClassifierSynonymDTO dto = ClassifierSynonymDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
 
-  public void failViewUpdate(String id) throws IOException, javax.servlet.ServletException
+  public void failViewUpdate(String oid) throws IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }

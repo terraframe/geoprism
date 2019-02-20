@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class DuplicateMapDataExceptionDTO extends DuplicateMapDataExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 406282473;
   
   public DuplicateMapDataExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

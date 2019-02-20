@@ -18,6 +18,9 @@
  */
 package net.geoprism;
 
+import net.geoprism.ontology.ClassifierDTO;
+import net.geoprism.ontology.ClassifierIsARelationshipDTO;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,10 +38,6 @@ import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
 import com.runwaysdk.web.json.JSONController;
 
-import net.geoprism.data.browser.DataBrowserUtilDTO;
-import net.geoprism.ontology.ClassifierDTO;
-import net.geoprism.ontology.ClassifierIsARelationshipDTO;
-
 @Controller(url = "tree")
 public class TreeController
 {
@@ -52,7 +51,7 @@ public class TreeController
 
     RestResponse response = new RestResponse();
     response.set("type", GeoEntityDTO.CLASS);
-    response.set("rootId", root.getId());
+    response.set("rootId", root.getOid());
     response.set("relationships", relationships);
 
     return response;
@@ -69,7 +68,7 @@ public class TreeController
 
     RestResponse response = new RestResponse();
     response.set("type", UniversalDTO.CLASS);
-    response.set("rootId", root.getId());
+    response.set("rootId", root.getOid());
     response.set("relationships", relationships);
 
     return response;
@@ -85,7 +84,7 @@ public class TreeController
 
     RestResponse response = new RestResponse();
     response.set("type", ClassifierDTO.CLASS);
-    response.set("rootId", root.getId());
+    response.set("rootId", root.getOid());
     response.set("relationships", relationships);
 
     return response;

@@ -129,6 +129,8 @@
     
     <uploader-dialog></uploader-dialog>
     
+    <report-dialog></report-dialog>
+    
     <!-- Dialog for cloning a dashboard  -->
     <div id="clone-container"></div>  
     <div id="dashboard-edit-container"></div>      

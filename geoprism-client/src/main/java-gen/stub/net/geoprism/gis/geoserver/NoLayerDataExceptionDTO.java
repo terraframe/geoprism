@@ -20,7 +20,7 @@ package net.geoprism.gis.geoserver;
 
 
 public class NoLayerDataExceptionDTO extends NoLayerDataExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1862289242;
   
   public NoLayerDataExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

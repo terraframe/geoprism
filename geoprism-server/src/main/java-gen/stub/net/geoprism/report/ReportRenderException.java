@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class ReportRenderException extends ReportRenderExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportRenderException extends ReportRenderExceptionBase 
 {
   private static final long serialVersionUID = 2136988180;
   

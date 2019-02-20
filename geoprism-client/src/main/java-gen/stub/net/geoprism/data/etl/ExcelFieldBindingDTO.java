@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 
 public class ExcelFieldBindingDTO extends ExcelFieldBindingDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1966358226;
   
   public ExcelFieldBindingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

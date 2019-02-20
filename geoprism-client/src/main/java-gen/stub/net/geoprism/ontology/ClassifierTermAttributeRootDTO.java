@@ -20,12 +20,12 @@ package net.geoprism.ontology;
 
 
 public class ClassifierTermAttributeRootDTO extends ClassifierTermAttributeRootDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 2035571158;
   
-  public ClassifierTermAttributeRootDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public ClassifierTermAttributeRootDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

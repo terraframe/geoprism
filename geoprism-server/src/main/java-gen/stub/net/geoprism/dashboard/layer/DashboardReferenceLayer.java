@@ -50,7 +50,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 
-public class DashboardReferenceLayer extends DashboardReferenceLayerBase implements com.runwaysdk.generation.loader.Reloadable, ReferenceLayer
+public class DashboardReferenceLayer extends DashboardReferenceLayerBase implements ReferenceLayer
 {
   private static final long serialVersionUID = -1393835330;
 
@@ -118,7 +118,7 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
           label.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
           label.setUserDefinedAlias(ThematicQueryBuilder.LABEL_ALIAS);
 
-          // geo id (for uniqueness)
+          // geo oid (for uniqueness)
           Selectable geoId1 = geQ1.getGeoId(GeoEntity.GEOID);
           geoId1.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
           geoId1.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
@@ -254,13 +254,13 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
 
         for (Term child : children)
         {
-          if (!child.getId().equals(root.getId()))
+          if (!child.getOid().equals(root.getOid()))
           {
             JSONObject object = new JSONObject();
-            object.put("value", child.getId());
+            object.put("value", child.getOid());
             object.put("label", displayLabel + " (" + child.getDisplayLabel().getValue() + ")");
 
-            options.put(child.getId(), object);
+            options.put(child.getOid(), object);
           }
         }
       }
@@ -301,7 +301,7 @@ public class DashboardReferenceLayer extends DashboardReferenceLayerBase impleme
       json.put("viewName", getViewName());
       json.put("sldName", getSLDName());
       json.put("layerName", getName());
-      json.put("layerId", getId());
+      json.put("layerId", getOid());
       json.put("inLegend", this.getDisplayInLegend());
       json.put("legendXPosition", this.getDashboardLegend().getLegendXPosition());
       json.put("legendYPosition", this.getDashboardLegend().getLegendYPosition());

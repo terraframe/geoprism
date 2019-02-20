@@ -24,9 +24,9 @@ import java.util.List;
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.layer.DashboardLayer;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class GeoserverBatch implements Reloadable
+
+public class GeoserverBatch 
 {
   /**
    * These are for storing mass publish/deletes which can be pushArrayList<E> once for maximum efficiency.

@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class DashboardLegendDTO extends DashboardLegendDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 976577944;
   
   public DashboardLegendDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-public class NonUniqueCategoryException extends NonUniqueCategoryExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class NonUniqueCategoryException extends NonUniqueCategoryExceptionBase 
 {
   private static final long serialVersionUID = 1199849589;
   

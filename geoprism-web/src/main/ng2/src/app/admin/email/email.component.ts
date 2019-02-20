@@ -33,7 +33,7 @@ import { EmailService } from './email.service';
 })
 export class EmailComponent implements OnInit {
   public email: Email = {
-    id:'',
+    oid:'',
     server:'',
     username:'',
     password:'',

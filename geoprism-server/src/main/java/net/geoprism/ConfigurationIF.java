@@ -25,7 +25,7 @@ import java.util.Set;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 /**
@@ -34,7 +34,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
  * @author terraframe
  *
  */
-public interface ConfigurationIF extends Reloadable
+public interface ConfigurationIF 
 {
 
   /**

@@ -66,7 +66,7 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
         }
       }
 
-      return new FieldValue(this.cache.get(value).getId());
+      return new FieldValue(this.cache.get(value).getOid());
     }
 
     return new FieldValue();
@@ -107,7 +107,7 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
           Classifier root = Classifier.findClassifierRoot(mdAttributeTerm);
           String attributeLabel = mdAttributeTerm.getDisplayLabel(Session.getCurrentLocale());
 
-          return new CategoryProblem(value.trim(), root.getId(), mdAttributeTerm.getId(), attributeLabel);
+          return new CategoryProblem(value.trim(), root.getOid(), mdAttributeTerm.getOid(), attributeLabel);
         }
       }
     }
@@ -117,9 +117,9 @@ public class TargetFieldDomain extends TargetFieldBasic implements TargetFieldIF
 
   private boolean isExcluded(Map<String, Set<String>> exclusions, MdAttributeTermDAOIF mdAttributeTerm, String label)
   {
-    if (exclusions.containsKey(mdAttributeTerm.getId()))
+    if (exclusions.containsKey(mdAttributeTerm.getOid()))
     {
-      Set<String> labels = exclusions.get(mdAttributeTerm.getId());
+      Set<String> labels = exclusions.get(mdAttributeTerm.getOid());
 
       return labels.contains(label);
     }

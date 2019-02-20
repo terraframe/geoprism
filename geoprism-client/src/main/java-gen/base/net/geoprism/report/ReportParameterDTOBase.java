@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = -345867699)
-public abstract class ReportParameterDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ReportParameterDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.report.ReportParameter";
   private static final long serialVersionUID = -345867699;
@@ -34,7 +34,7 @@ public abstract class ReportParameterDTOBase extends com.runwaysdk.business.View
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String PARAMETERNAME = "parameterName";
   public static java.lang.String PARAMETERVALUE = "parameterValue";
   public String getParameterName()
@@ -111,9 +111,9 @@ public abstract class ReportParameterDTOBase extends com.runwaysdk.business.View
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(PARAMETERVALUE).getAttributeMdDTO();
   }
   
-  public static ReportParameterDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static ReportParameterDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (ReportParameterDTO) dto;
   }
@@ -131,7 +131,7 @@ public abstract class ReportParameterDTOBase extends com.runwaysdk.business.View
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

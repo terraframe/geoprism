@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class DashboardAttributesController extends DashboardAttributesControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardAttributesController extends DashboardAttributesControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/DashboardAttributes/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
@@ -32,20 +32,20 @@ public class DashboardAttributesController extends DashboardAttributesController
   public void cancel(net.geoprism.dashboard.DashboardAttributesDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
   public void failCancel(net.geoprism.dashboard.DashboardAttributesDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
-  public void childQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void childQuery(java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.DashboardAttributesQueryDTO query = net.geoprism.dashboard.DashboardAttributesDTO.childQuery(clientRequest, childId);
+    net.geoprism.dashboard.DashboardAttributesQueryDTO query = net.geoprism.dashboard.DashboardAttributesDTO.childQuery(clientRequest, childOid);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failChildQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void failChildQuery(java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -54,7 +54,7 @@ public class DashboardAttributesController extends DashboardAttributesController
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -83,24 +83,24 @@ public class DashboardAttributesController extends DashboardAttributesController
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    net.geoprism.dashboard.DashboardAttributesDTO dto = net.geoprism.dashboard.DashboardAttributesDTO.lock(super.getClientRequest(), id);
+    net.geoprism.dashboard.DashboardAttributesDTO dto = net.geoprism.dashboard.DashboardAttributesDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
-  public void newInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void newInstance(java.lang.String parentOid, java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.DashboardAttributesDTO dto = new net.geoprism.dashboard.DashboardAttributesDTO(clientRequest, parentId, childId);
+    net.geoprism.dashboard.DashboardAttributesDTO dto = new net.geoprism.dashboard.DashboardAttributesDTO(clientRequest, parentOid, childOid);
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
-  public void failNewInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void failNewInstance(java.lang.String parentOid, java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
@@ -114,14 +114,14 @@ public class DashboardAttributesController extends DashboardAttributesController
   {
     resp.sendError(500);
   }
-  public void parentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  public void parentQuery(java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.DashboardAttributesQueryDTO query = net.geoprism.dashboard.DashboardAttributesDTO.parentQuery(clientRequest, parentId);
+    net.geoprism.dashboard.DashboardAttributesQueryDTO query = net.geoprism.dashboard.DashboardAttributesDTO.parentQuery(clientRequest, parentOid);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failParentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  public void failParentQuery(java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -130,7 +130,7 @@ public class DashboardAttributesController extends DashboardAttributesController
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -142,13 +142,13 @@ public class DashboardAttributesController extends DashboardAttributesController
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", net.geoprism.dashboard.DashboardAttributesDTO.get(clientRequest, id));
+    req.setAttribute("item", net.geoprism.dashboard.DashboardAttributesDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }

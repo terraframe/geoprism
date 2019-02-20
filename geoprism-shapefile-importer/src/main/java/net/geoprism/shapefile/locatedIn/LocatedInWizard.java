@@ -35,14 +35,14 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 
-public class LocatedInWizard extends Wizard implements Reloadable
+public class LocatedInWizard extends Wizard 
 {
 
-  class LocatedInRunner implements IRunnableWithProgress, Reloadable
+  class LocatedInRunner implements IRunnableWithProgress
   {
     private GISImportLoggerIF logger;
 

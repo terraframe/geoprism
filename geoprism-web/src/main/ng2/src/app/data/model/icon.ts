@@ -19,6 +19,6 @@
 
 export class Icon {
   label: string;
-  id: string;
+  oid: string;
   filePath: string;
 }

@@ -23,13 +23,13 @@ import java.util.List;
 
 import net.geoprism.util.Predicate;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.metadata.MdAttributeConcreteDTO;
 import com.runwaysdk.system.metadata.MdAttributeDTO;
 import com.runwaysdk.system.metadata.MdAttributeMomentDTO;
 import com.runwaysdk.system.metadata.MdAttributeVirtualDTO;
 
-public class AggregationPredicate implements Predicate<AggregationTypeDTO>, Reloadable
+public class AggregationPredicate implements Predicate<AggregationTypeDTO>
 {
   private List<AllAggregationTypeDTO> filters;
 

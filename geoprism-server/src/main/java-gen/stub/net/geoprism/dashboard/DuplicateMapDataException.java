@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class DuplicateMapDataException extends DuplicateMapDataExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DuplicateMapDataException extends DuplicateMapDataExceptionBase 
 {
   private static final long serialVersionUID = 971317097;
   

@@ -19,7 +19,7 @@
 package net.geoprism.account;
 
 @com.runwaysdk.business.ClassSignature(hash = -837290465)
-public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.SingleActorDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.SingleActorDTO 
 {
   public final static String CLASS = "net.geoprism.account.ExternalProfile";
   private static final long serialVersionUID = -837290465;
@@ -148,7 +148,7 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
     }
     else
     {
-      setValue(SERVER, value.getId());
+      setValue(SERVER, value.getOid());
     }
   }
   
@@ -217,9 +217,9 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.account.ExternalProfileDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.account.ExternalProfileDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.account.ExternalProfileDTO) dto;
   }
@@ -237,7 +237,7 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.account.ExternalProfileQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -250,10 +250,10 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
     getRequest().lock(this);
   }
   
-  public static net.geoprism.account.ExternalProfileDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.account.ExternalProfileDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.account.ExternalProfileDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.account.ExternalProfileDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -263,10 +263,10 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.account.ExternalProfileDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.account.ExternalProfileDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.account.ExternalProfileDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.account.ExternalProfileDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

@@ -64,7 +64,7 @@ export class LocationAttribute {
   name: string;
   universal: string;
   fields: { [key:string]:string};
-  id: string;
+  oid: string;
   editing: boolean;
   useCoordinatesForLocationAssignment: boolean; 
   coordinatesForLocationAssignmentOptions: Field[];
@@ -84,7 +84,7 @@ export class CoordinateAttribute {
   featureLabel : string;
   location : string;
   featureId : string;
-  id : string;  
+  oid : string;  
   universal: string;
 }
 
@@ -113,7 +113,7 @@ export class Sheet {
 }
 
 export class LocationExclusion {
-  constructor(public id: string, public universal: string, public locationLabel: string, public parentId: string) {}
+  constructor(public oid: string, public universal: string, public locationLabel: string, public parentId: string) {}
 }
 
 export class Workbook {

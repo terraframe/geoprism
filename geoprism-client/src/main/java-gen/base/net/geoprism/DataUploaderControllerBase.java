@@ -20,7 +20,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 65312103)
-public class DataUploaderControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class DataUploaderControllerBase 
 {
   public static final String CLASS = "net.geoprism.DataUploaderController";
   protected javax.servlet.http.HttpServletRequest req;
@@ -112,15 +112,15 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCreateClassifierSynonym");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:universalId, java.lang.String:label", post=true)
-  public void createGeoEntity(java.lang.String parentId, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid, java.lang.String:universalId, java.lang.String:label", post=true)
+  public void createGeoEntity(java.lang.String parentOid, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.createGeoEntity");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:universalId, java.lang.String:label", post=true)
-  public void failCreateGeoEntity(java.lang.String parentId, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid, java.lang.String:universalId, java.lang.String:label", post=true)
+  public void failCreateGeoEntity(java.lang.String parentOid, java.lang.String universalId, java.lang.String label) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failCreateGeoEntity");
@@ -210,15 +210,15 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failGetClassifierSuggestions");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, java.lang.String:sheetName", post=true)
-  public void getSavedConfiguration(java.lang.String id, java.lang.String sheetName) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid, java.lang.String:sheetName", post=true)
+  public void getSavedConfiguration(java.lang.String oid, java.lang.String sheetName) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.getSavedConfiguration");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id, java.lang.String:sheetName", post=true)
-  public void failGetSavedConfiguration(java.lang.String id, java.lang.String sheetName) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid, java.lang.String:sheetName", post=true)
+  public void failGetSavedConfiguration(java.lang.String oid, java.lang.String sheetName) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failGetSavedConfiguration");
@@ -238,29 +238,29 @@ public class DataUploaderControllerBase implements com.runwaysdk.generation.load
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failImportData");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void validateCategoryName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:oid", post=false)
+  public void validateCategoryName(java.lang.String name, java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.validateCategoryName");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void failValidateCategoryName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:oid", post=false)
+  public void failValidateCategoryName(java.lang.String name, java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failValidateCategoryName");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void validateDatasetName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:oid", post=false)
+  public void validateDatasetName(java.lang.String name, java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.validateDatasetName");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void failValidateDatasetName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:oid", post=false)
+  public void failValidateDatasetName(java.lang.String name, java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.DataUploaderController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.DataUploaderController.failValidateDatasetName");

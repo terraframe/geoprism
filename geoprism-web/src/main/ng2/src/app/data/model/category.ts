@@ -20,7 +20,7 @@
 import { Synonym } from './synonym';
 
 export class BasicCategory {
-  id: string;
+  oid: string;
   label: string; 
 }
 

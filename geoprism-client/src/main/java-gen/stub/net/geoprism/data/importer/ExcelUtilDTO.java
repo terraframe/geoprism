@@ -20,7 +20,7 @@ package net.geoprism.data.importer;
 
 
 public class ExcelUtilDTO extends ExcelUtilDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -94420870;
   
   public ExcelUtilDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

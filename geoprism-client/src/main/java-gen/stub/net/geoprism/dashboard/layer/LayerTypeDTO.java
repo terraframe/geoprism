@@ -20,7 +20,7 @@ package net.geoprism.dashboard.layer;
 
 
 public class LayerTypeDTO extends LayerTypeDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 200394622;
   
   public LayerTypeDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

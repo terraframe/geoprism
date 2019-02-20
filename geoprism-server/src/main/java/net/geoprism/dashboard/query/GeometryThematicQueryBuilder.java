@@ -25,7 +25,7 @@ import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.QueryFactory;
@@ -41,7 +41,7 @@ import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
-public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implements Reloadable
+public class GeometryThematicQueryBuilder extends ThematicQueryBuilder 
 {
   private GeoNode geoNode;
 
@@ -67,7 +67,7 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
   @Override
   protected SelectableSingle getLabelSelectable(GeneratedComponentQuery query)
   {
-    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getDisplayLabelAttribute().getId());
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getDisplayLabelAttribute().getOid());
     String attributeName = mdAttribute.definesAttribute();
 
     Selectable attribute = query.get(attributeName, GeoEntity.DISPLAYLABEL);
@@ -93,9 +93,9 @@ public class GeometryThematicQueryBuilder extends ThematicQueryBuilder implement
   }
 
   @Override
-  protected Selectable getIdentifierSelectable(GeneratedComponentQuery query)
+  protected Selectable getOidentifierSelectable(GeneratedComponentQuery query)
   {
-    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getIdentifierAttribute().getId());
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getIdentifierAttribute().getOid());
     String attributeName = mdAttribute.definesAttribute();
 
     Selectable attribute = query.get(attributeName, GeoEntity.GEOID);

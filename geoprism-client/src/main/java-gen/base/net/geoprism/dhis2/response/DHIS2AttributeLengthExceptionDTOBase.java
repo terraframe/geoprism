@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 @com.runwaysdk.business.ClassSignature(hash = -80985952)
-public abstract class DHIS2AttributeLengthExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DHIS2AttributeLengthExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.dhis2.response.DHIS2AttributeLengthException";
   private static final long serialVersionUID = -80985952;
@@ -70,7 +70,7 @@ public abstract class DHIS2AttributeLengthExceptionDTOBase extends com.runwaysdk
   }
   
   public static java.lang.String ATTRLEN = "attrLen";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public String getAttrLen()
   {
     return getValue(ATTRLEN);
@@ -117,7 +117,7 @@ public abstract class DHIS2AttributeLengthExceptionDTOBase extends com.runwaysdk
     java.lang.String template = super.getMessage();
     
     template = template.replace("{attrLen}", this.getAttrLen().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 1022940544)
-public abstract class CategoryInUseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class CategoryInUseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.CategoryInUseException";
   private static final long serialVersionUID = 1022940544;
@@ -69,7 +69,7 @@ public abstract class CategoryInUseExceptionDTOBase extends com.runwaysdk.busine
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String LABEL = "label";
   public String getLabel()
   {
@@ -116,7 +116,7 @@ public abstract class CategoryInUseExceptionDTOBase extends com.runwaysdk.busine
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{label}", this.getLabel().toString());
     
     return template;

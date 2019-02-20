@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = 907338588)
-public abstract class CategoryIconDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class CategoryIconDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.CategoryIcon";
   private static final long serialVersionUID = 907338588;
@@ -49,7 +49,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String IMAGE = "image";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -171,7 +171,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -220,7 +220,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(IMAGE, value.getId());
+      setValue(IMAGE, value.getOid());
     }
   }
   
@@ -405,7 +405,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -487,10 +487,10 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.lang.String applyWithFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String fileName, java.io.InputStream fileStream)
+  public static final java.lang.String applyWithFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid, java.lang.String fileName, java.io.InputStream fileStream)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.io.InputStream"};
-    Object[] _parameters = new Object[]{id, fileName, fileStream};
+    Object[] _parameters = new Object[]{oid, fileName, fileStream};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "applyWithFile", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -519,10 +519,10 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.lang.String getAsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.lang.String getAsJSON(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "getAsJSON", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -535,25 +535,25 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     return (java.io.InputStream) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.io.InputStream getIcon(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.io.InputStream getIcon(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "getIcon", _declaredTypes);
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void remove(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final void remove(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "remove", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.dashboard.layer.CategoryIconDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.layer.CategoryIconDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.layer.CategoryIconDTO) dto;
   }
@@ -571,7 +571,7 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.layer.CategoryIconQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -584,10 +584,10 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.layer.CategoryIconDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.CategoryIconDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.layer.CategoryIconDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -597,10 +597,10 @@ public abstract class CategoryIconDTOBase extends com.runwaysdk.business.Busines
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.layer.CategoryIconDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.layer.CategoryIconDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.layer.CategoryIconDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.layer.CategoryIconDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

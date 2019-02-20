@@ -55,14 +55,14 @@ export class IconsComponent implements OnInit {
   
   remove(icon: Icon) : void {
     this.iconService
-      .remove(icon.id)
+      .remove(icon.oid)
       .then((response: any) => {
-        this.icons = this.icons.filter(h => h.id !== icon.id);    
+        this.icons = this.icons.filter(h => h.oid !== icon.oid);    
       });
   }
   
   edit(icon: Icon) : void {
-    this.router.navigate(['/data/icon', icon.id]);
+    this.router.navigate(['/data/icon', icon.oid]);
   }  
   
   add() : void {

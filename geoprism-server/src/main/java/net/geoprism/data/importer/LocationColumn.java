@@ -18,9 +18,9 @@
  */
 package net.geoprism.data.importer;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class LocationColumn implements Reloadable, Comparable<LocationColumn>
+
+public class LocationColumn implements Comparable<LocationColumn>
 {
   private String  name;
 

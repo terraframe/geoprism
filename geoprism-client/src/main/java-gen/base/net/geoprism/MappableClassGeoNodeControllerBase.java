@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -997489575)
-public class MappableClassGeoNodeControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class MappableClassGeoNodeControllerBase 
 {
   public static final String CLASS = "net.geoprism.MappableClassGeoNodeController";
   protected javax.servlet.http.HttpServletRequest req;
@@ -97,15 +97,15 @@ public class MappableClassGeoNodeControllerBase implements com.runwaysdk.generat
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failCancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:childId", post=false)
-  public void childQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:childOid", post=false)
+  public void childQuery(java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.childQuery");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:childId", post=false)
-  public void failChildQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:childOid", post=false)
+  public void failChildQuery(java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failChildQuery");
@@ -139,29 +139,29 @@ public class MappableClassGeoNodeControllerBase implements com.runwaysdk.generat
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failDelete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.edit");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failEdit");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:childId", post=true)
-  public void newInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid, java.lang.String:childOid", post=true)
+  public void newInstance(java.lang.String parentOid, java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.newInstance");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:childId", post=true)
-  public void failNewInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid, java.lang.String:childOid", post=true)
+  public void failNewInstance(java.lang.String parentOid, java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failNewInstance");
@@ -181,15 +181,15 @@ public class MappableClassGeoNodeControllerBase implements com.runwaysdk.generat
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failNewRelationship");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId", post=false)
-  public void parentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid", post=false)
+  public void parentQuery(java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.parentQuery");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId", post=false)
-  public void failParentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid", post=false)
+  public void failParentQuery(java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failParentQuery");
@@ -209,15 +209,15 @@ public class MappableClassGeoNodeControllerBase implements com.runwaysdk.generat
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failUpdate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.view");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.MappableClassGeoNodeController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.MappableClassGeoNodeController.failView");

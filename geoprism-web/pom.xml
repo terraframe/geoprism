@@ -24,7 +24,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.01.0031-SNAPSHOT</version>
+    <version>1.02.0001-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-web</artifactId>
   <packaging>war</packaging>
@@ -151,7 +151,7 @@
                     -Djava.rmi.server.hostname=127.0.0.1
                     -Dbirt-server=true
                     -Dendpoint.cache=/${project.basedir}/cache
-                    -Dgeoprism.config.dir=${configuration.dir}
+                    -Denvcfg=${project.basedir}/../envcfg
                   </cargo.jvmargs>
                 </properties>
               </configuration>
@@ -192,6 +192,25 @@
   <build>
     <!-- Just for convenience, this stops us from having to add the version when we hit our webapp. -->
     <finalName>geoprism</finalName>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.xlsx</exclude>
+          <exclude>**/*.zip</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.xlsx</include>
+          <include>**/*.zip</include>
+        </includes>
+      </resource>
+    </resources>
 
     <plugins>
       <!-- Weave Aspects -->
@@ -254,10 +273,6 @@
         <configuration>
           <warSourceExcludes>**/prism.jsp,**/admin.jsp</warSourceExcludes>
           <packagingExcludes>
-            <!-- Source/class project jars must be excluded for reloaded to work -->
-            **/*geoprism-common*.jar,
-            **/*geoprism-client*.jar,
-            **/*geoprism-server*.jar,
             <!-- Exclude all jars provided by tomcat -->
             **/*catalina*.jar,
             **/*servlet-api*.jar,
@@ -277,74 +292,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.8</version>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-common</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <excludes>**/*.java</excludes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-client</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <excludes>**/*.java</excludes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-server</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <excludes>src/main/java/**/*.java, src/main/java-gen/**/*.java</excludes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-common</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-                  <includes>**/*.java</includes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-client</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-                  <includes>**/*.java</includes>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-server</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-                  <includes>**/*.java</includes>
-                </artifactItem>
-              </artifactItems>
-              <includes>**/*</includes>
-              <excludes />
-              <outputDirectory>${project.build.directory}/classes</outputDirectory>
-              <overWriteReleases>true</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>2.5</version>
         <configuration>
@@ -359,6 +306,7 @@
           </filesets>
         </configuration>
       </plugin>
+<!--  
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -410,6 +358,8 @@
           </execution>
         </executions>
       </plugin>
+-->      
+      
       <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
         <artifactId>maven-replacer-plugin</artifactId>
@@ -448,5 +398,34 @@
         </executions>
       </plugin>
     </plugins>
+    <pluginManagement>
+     <plugins>
+      <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+      <plugin>
+       <groupId>org.eclipse.m2e</groupId>
+       <artifactId>lifecycle-mapping</artifactId>
+       <version>1.0.0</version>
+       <configuration>
+        <lifecycleMappingMetadata>
+         <pluginExecutions>
+          <pluginExecution>
+           <pluginExecutionFilter>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <versionRange>[1.6.0,)</versionRange>
+            <goals>
+             <goal>exec</goal>
+            </goals>
+           </pluginExecutionFilter>
+           <action>
+            <ignore></ignore>
+           </action>
+          </pluginExecution>
+         </pluginExecutions>
+        </lifecycleMappingMetadata>
+       </configuration>
+      </plugin>
+     </plugins>
+    </pluginManagement>
   </build>
 </project>

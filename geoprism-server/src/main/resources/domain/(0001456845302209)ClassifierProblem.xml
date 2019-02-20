@@ -1,0 +1,91 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdLocalStruct name="net.geoprism.ontology.ClassifierProblemTypeMasterDescription" label="Description" description="Description" />
+
+      <enumerationMaster name="net.geoprism.ontology.ClassifierProblemTypeMaster" label="Geo entity problem type" generateController="false">
+        <attributes>
+          <localChar removable="true" label="Description" description="Description" name="description" immutable="false" required="false" size="255" type="net.geoprism.ontology.ClassifierProblemTypeMasterDescription" />
+        </attributes>
+      </enumerationMaster>
+
+      <object key="UNMATCHED" type="net.geoprism.ontology.ClassifierProblemTypeMaster">
+        <attribute name="enumName" value="UNMATCHED" />
+        <attributeStruct name="displayLabel">
+          <attribute name="defaultLocale" value="Unmatched" />
+        </attributeStruct>
+        <attributeStruct name="description">
+          <attribute name="defaultLocale" value="[{0}]: Unmatched classifier" />
+        </attributeStruct>
+      </object>
+
+      <mdEnumeration name="net.geoprism.ontology.ClassifierProblemType" type="net.geoprism.ontology.ClassifierProblemTypeMaster">
+        <includeAll />
+      </mdEnumeration>
+
+      <mdBusiness name="net.geoprism.ontology.ClassifierProblem" table="classifier_problem" label="Classifier problem" generateController="false">
+        <attributes>
+          <reference name="classifier" label="Classifier" type="net.geoprism.ontology.Classifier" required="true" indexType="non-unique index" />
+          <enumeration name="problemType" label="Problem type" type="net.geoprism.ontology.ClassifierProblemType" selectMultiple="false" />
+        </attributes>
+      </mdBusiness>
+
+      <mdView name="net.geoprism.ontology.ClassifierProblemView" label="Classifier problem" generateController="false">
+        <attributes>
+          <char name="classifierId" label="Classifier id" size="255" />
+          <char name="concreteId" label="Concrete id" size="255" />
+          <text name="problem" label="Problem" />
+          <text name="problemName" label="Problem name" />
+        </attributes>
+      </mdView>
+    </create>
+    <update>
+      <mdBusiness name="net.geoprism.ontology.Classifier">
+        <create>
+          <mdMethod name="makeSynonym" returnType="java.lang.String[]" label="Make synonym" static="true">
+            <mdParameter name="sourceId" label="Source id" order="0" type="java.lang.String" />
+            <mdParameter name="destinationId" label="Destination id" order="1" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="getClassifierTree" returnType="java.lang.String" label="Get classifier tree" static="true">
+            <mdParameter name="classifierId" label="Classifier id" order="0" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="getAllProblems" label="Get all problems" static="true" returnType="net.geoprism.ontology.ClassifierProblemView[]" />
+          <mdMethod name="deleteClassifierProblem" returnType="void" label="Delete classifier problem" static="true">
+            <mdParameter name="problemId" label="Problem id" order="0" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+      <mdBusiness name="net.geoprism.ontology.ClassifierSynonym">
+        <create>
+          <mdMethod name="createSynonym" label="Create" returnType="com.runwaysdk.business.ontology.TermAndRel" static="true">
+            <mdParameter name="synonym" order="0" type="net.geoprism.ontology.ClassifierSynonym" />
+            <mdParameter name="classifierId" order="1" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete></delete>
+  </undoIt>
+</version>

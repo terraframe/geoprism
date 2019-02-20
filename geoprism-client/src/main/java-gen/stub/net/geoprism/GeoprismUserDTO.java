@@ -20,7 +20,7 @@ package net.geoprism;
 
 
 public class GeoprismUserDTO extends GeoprismUserDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1688177328;
   
   public GeoprismUserDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

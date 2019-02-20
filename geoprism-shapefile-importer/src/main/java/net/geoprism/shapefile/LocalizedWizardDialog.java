@@ -420,7 +420,7 @@ public class LocalizedWizardDialog extends TitleAreaDialog implements IWizardCon
               // This listener should fire only
               // after the UI state is restored (which by definition means all
               // jobs are done.
-              // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=287887
+              // See https://bugs.eclipse.org/bugs/show_bug.cgi?oid=287887
               if (timeWhenLastJobFinished != 0 && System.currentTimeMillis() - timeWhenLastJobFinished < RESTORE_ENTER_DELAY)
               {
                 e.doit = false;
@@ -640,19 +640,19 @@ public class LocalizedWizardDialog extends TitleAreaDialog implements IWizardCon
   }
 
   /**
-   * Return the cancel button if the id is a the cancel id.
+   * Return the cancel button if the oid is a the cancel oid.
    * 
-   * @param id
-   *          the button id
-   * @return the button corresponding to the button id
+   * @param oid
+   *          the button oid
+   * @return the button corresponding to the button oid
    */
-  protected Button getButton(int id)
+  protected Button getButton(int oid)
   {
-    if (id == IDialogConstants.CANCEL_ID)
+    if (oid == IDialogConstants.CANCEL_ID)
     {
       return cancelButton;
     }
-    return super.getButton(id);
+    return super.getButton(oid);
   }
 
   /**
@@ -959,7 +959,7 @@ public class LocalizedWizardDialog extends TitleAreaDialog implements IWizardCon
       // dispose code
       createdWizard.setContainer(null);
     }
-    // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=202534
+    // see https://bugs.eclipse.org/bugs/show_bug.cgi?oid=202534
     // disposing the wizards could cause the image currently set in
     // this dialog to be disposed. A subsequent repaint event during
     // close would then fail. To prevent this case, we null out the image.

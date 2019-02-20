@@ -587,6 +587,7 @@
       <xs:extension base="mdClass">
         <xs:attribute name="extendable" type="xs:boolean" use="optional" />
         <xs:attribute name="isAbstract" type="xs:boolean" use="optional" />
+        <xs:attribute name="generateSource" type="xs:boolean" use="optional" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -700,6 +701,7 @@
         <xs:attribute name="extendable" type="xs:boolean" />
         <!--abstract: If the mdBusiness is abstract -->
         <xs:attribute name="isAbstract" type="xs:boolean" />
+        <xs:attribute name="generateSource" type="xs:boolean" use="optional" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -774,6 +776,7 @@
     <xs:attribute name="extendable" type="xs:boolean" />
     <!--abstract: If the mdBusiness is abstract -->
     <xs:attribute name="isAbstract" type="xs:boolean" />
+    <xs:attribute name="generateSource" type="xs:boolean" use="optional" />
     <xs:attribute name="table" type="xs:string" use="optional" />
     <xs:attribute name="generateController" type="xs:boolean" use="optional" />
     <xs:attribute name="enforceSiteMaster" type="xs:boolean" use="optional" />
@@ -977,6 +980,7 @@
   <!--A list of all possible attributes -->
   <xs:complexType name="attributes">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="uuid" type="char" />
       <xs:element name="char" type="char" />
       <xs:element name="text" type="text" />
       <xs:element name="clob" type="clob" />

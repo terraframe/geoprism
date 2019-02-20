@@ -29,7 +29,7 @@ import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -39,7 +39,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.SingleActor;
 import com.runwaysdk.system.Users;
 
-public class GeoprismUser extends GeoprismUserBase implements Reloadable, GeoprismUserIF
+public class GeoprismUser extends GeoprismUserBase implements GeoprismUserIF
 {
   private static final long serialVersionUID = 394889520;
 
@@ -82,7 +82,7 @@ public class GeoprismUser extends GeoprismUserBase implements Reloadable, Geopri
   {
     this.apply();
 
-    Roles[] roles = RoleView.getGeodashboardRoles();
+    List<Roles> roles = RoleView.getGeoprismRoles();
     Set<String> set = new HashSet<String>(Arrays.asList(roleIds));
 
     List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
@@ -92,16 +92,16 @@ public class GeoprismUser extends GeoprismUserBase implements Reloadable, Geopri
       configuration.configureUserRoles(set);
     }
 
-    UserDAOIF user = UserDAO.get(this.getId());
+    UserDAOIF user = UserDAO.get(this.getOid());
 
     /*
      * Assign roles
      */
     for (Roles role : roles)
     {
-      RoleDAO roleDAO = RoleDAO.get(role.getId()).getBusinessDAO();
+      RoleDAO roleDAO = RoleDAO.get(role.getOid()).getBusinessDAO();
 
-      if (set.contains(role.getId()))
+      if (set.contains(role.getOid()))
       {
         roleDAO.assignMember(user);
       }
@@ -157,7 +157,7 @@ public class GeoprismUser extends GeoprismUserBase implements Reloadable, Geopri
     {
       SingleActorDAOIF user = session.getUser();
       
-      return SingleActor.get(user.getId());
+      return SingleActor.get(user.getOid());
     }
 
     return null;

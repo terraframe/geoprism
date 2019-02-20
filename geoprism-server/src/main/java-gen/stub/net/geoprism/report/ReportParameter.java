@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class ReportParameter extends ReportParameterBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportParameter extends ReportParameterBase 
 {
   private static final long serialVersionUID = 2007168119;
   

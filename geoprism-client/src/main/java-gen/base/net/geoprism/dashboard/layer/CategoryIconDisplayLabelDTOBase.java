@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = 1079495076)
-public abstract class CategoryIconDisplayLabelDTOBase extends com.runwaysdk.business.LocalStructDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class CategoryIconDisplayLabelDTOBase extends com.runwaysdk.business.LocalStructDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.CategoryIconDisplayLabel";
   private static final long serialVersionUID = 1079495076;
@@ -46,7 +46,7 @@ public abstract class CategoryIconDisplayLabelDTOBase extends com.runwaysdk.busi
   }
   
   public static java.lang.String DEFAULTLOCALE = "defaultLocale";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String SITEMASTER = "siteMaster";
   public String getKeyName()
@@ -111,9 +111,9 @@ public abstract class CategoryIconDisplayLabelDTOBase extends com.runwaysdk.busi
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(SITEMASTER).getAttributeMdDTO();
   }
   
-  public static CategoryIconDisplayLabelDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static CategoryIconDisplayLabelDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (CategoryIconDisplayLabelDTO) dto;
   }
@@ -131,7 +131,7 @@ public abstract class CategoryIconDisplayLabelDTOBase extends com.runwaysdk.busi
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.layer.CategoryIconDisplayLabelQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)

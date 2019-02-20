@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 @com.runwaysdk.business.ClassSignature(hash = 1712396787)
-public abstract class DHIS2UnexpectedResponseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DHIS2UnexpectedResponseExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.dhis2.response.DHIS2UnexpectedResponseException";
   private static final long serialVersionUID = 1712396787;
@@ -70,7 +70,7 @@ public abstract class DHIS2UnexpectedResponseExceptionDTOBase extends com.runway
   }
   
   public static java.lang.String DHIS2RESPONSE = "dhis2Response";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public String getDhis2Response()
   {
     return getValue(DHIS2RESPONSE);
@@ -117,7 +117,7 @@ public abstract class DHIS2UnexpectedResponseExceptionDTOBase extends com.runway
     java.lang.String template = super.getMessage();
     
     template = template.replace("{dhis2Response}", this.getDhis2Response().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

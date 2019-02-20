@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.constants.ClientRequestIF;
+import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.controller.MultipartFileParameter;
 import com.runwaysdk.controller.ServletMethod;
@@ -44,9 +45,9 @@ import com.runwaysdk.mvc.RestResponse;
 public class SystemLogoController
 {
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "id") String id, @RequestParamter(name = "file") MultipartFileParameter file) throws IOException
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "file") MultipartFileParameter file) throws IOException
   {
-    if (id != null && id.equals("banner"))
+    if (oid != null && oid.equals("banner"))
     {
       SystemLogoSingletonDTO.uploadBannerAndCache(request, file.getInputStream(), file.getFilename());
     }
@@ -62,12 +63,12 @@ public class SystemLogoController
   public ResponseIF getAll(ClientRequestIF request) throws JSONException
   {
     JSONObject banner = new JSONObject();
-    banner.put("id", "banner");
+    banner.put("oid", "banner");
     banner.put("label", "Banner");
     banner.put("custom", SystemLogoSingletonDTO.getBannerFileFromCache(request, null) != null);
 
     JSONObject logo = new JSONObject();
-    logo.put("id", "logo");
+    logo.put("oid", "logo");
     logo.put("label", "Logo");
     logo.put("custom", SystemLogoSingletonDTO.getMiniLogoFileFromCache(request, null) != null);
 
@@ -82,17 +83,17 @@ public class SystemLogoController
   }
 
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
-  public ResponseIF view(ClientRequestIF request, @RequestParamter(name = "id") String id) throws IOException
+  public ResponseIF view(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws IOException
   {
     String path = null;
 
-    if (id != null && id.equals("banner"))
+    if (oid != null && oid.equals("banner"))
     {
       path = SystemLogoSingletonDTO.getBannerFileFromCache(request, null);
 
       if (path == null)
       {
-        path = LocalProperties.getJspDir() + "/../net/geoprism/images/splash_logo.png";
+        path = DeployProperties.getDeployPath() + "/net/geoprism/images/splash_logo.png";
       }
     }
     else
@@ -101,7 +102,7 @@ public class SystemLogoController
 
       if (path == null)
       {
-        path = LocalProperties.getJspDir() + "/../net/geoprism/images/splash_logo_icon.png";
+        path = DeployProperties.getDeployPath() + "/net/geoprism/images/splash_logo_icon.png";
       }
     }
 
@@ -114,9 +115,9 @@ public class SystemLogoController
   }
 
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
-  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id) throws IOException
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws IOException
   {
-    if (id != null && id.equals("banner"))
+    if (oid != null && oid.equals("banner"))
     {
       SystemLogoSingletonDTO.removeBannerFileFromCache(request, null);
     }

@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 1267452787)
-public class ClassifierControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierControllerBase 
 {
   public static final String CLASS = "net.geoprism.ontology.ClassifierController";
   protected javax.servlet.http.HttpServletRequest req;
@@ -111,15 +111,15 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failCancel");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierDTO:dto, java.lang.String:parentId", post=true)
-  public void create(net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierDTO:dto, java.lang.String:parentOid", post=true)
+  public void create(net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.create");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierDTO:dto, java.lang.String:parentId", post=true)
-  public void failCreate(net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="net.geoprism.ontology.ClassifierDTO:dto, java.lang.String:parentOid", post=true)
+  public void failCreate(net.geoprism.ontology.ClassifierDTO dto, java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failCreate");
@@ -153,43 +153,43 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failDelete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void deleteOption(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void deleteOption(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.deleteOption");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void failDeleteOption(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void failDeleteOption(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failDeleteOption");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.edit");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failEdit");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void editOption(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void editOption(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.editOption");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void failEditOption(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void failEditOption(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failEditOption");
@@ -209,29 +209,29 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failGetAllCategories");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void getCategory(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void getCategory(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.getCategory");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void failGetCategory(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void failGetCategory(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failGetCategory");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.Integer:pageNum, java.lang.Integer:pageSize", post=true)
-  public void getDirectDescendants(java.lang.String parentId, java.lang.Integer pageNum, java.lang.Integer pageSize) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid, java.lang.Integer:pageNum, java.lang.Integer:pageSize", post=true)
+  public void getDirectDescendants(java.lang.String parentOid, java.lang.Integer pageNum, java.lang.Integer pageSize) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.getDirectDescendants");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentId, java.lang.String:pageNum, java.lang.String:pageSize", post=true)
-  public void failGetDirectDescendants(java.lang.String parentId, java.lang.String pageNum, java.lang.String pageSize) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:parentOid, java.lang.String:pageNum, java.lang.String:pageSize", post=true)
+  public void failGetDirectDescendants(java.lang.String parentOid, java.lang.String pageNum, java.lang.String pageSize) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failGetDirectDescendants");
@@ -251,15 +251,15 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failNewInstance");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void unlockCategory(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void unlockCategory(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.unlockCategory");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void failUnlockCategory(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void failUnlockCategory(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failUnlockCategory");
@@ -293,29 +293,29 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failUpdateCategory");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void validateCategoryName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:oid", post=false)
+  public void validateCategoryName(java.lang.String name, java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.validateCategoryName");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:id", post=false)
-  public void failValidateCategoryName(java.lang.String name, java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:name, java.lang.String:oid", post=false)
+  public void failValidateCategoryName(java.lang.String name, java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failValidateCategoryName");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.view");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failView");
@@ -363,15 +363,15 @@ public class ClassifierControllerBase implements com.runwaysdk.generation.loader
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failViewPage");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void viewUpdate(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void viewUpdate(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.viewUpdate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=true)
-  public void failViewUpdate(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=true)
+  public void failViewUpdate(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.ClassifierController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.ontology.ClassifierController.failViewUpdate");

@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -167123278)
-public abstract class GeometrySynonymExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class GeometrySynonymExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.GeometrySynonymException";
   private static final long serialVersionUID = -167123278;
@@ -70,7 +70,7 @@ public abstract class GeometrySynonymExceptionDTOBase extends com.runwaysdk.busi
   }
   
   public static java.lang.String ENTITYLABEL = "entityLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public String getEntityLabel()
   {
     return getValue(ENTITYLABEL);
@@ -117,7 +117,7 @@ public abstract class GeometrySynonymExceptionDTOBase extends com.runwaysdk.busi
     java.lang.String template = super.getMessage();
     
     template = template.replace("{entityLabel}", this.getEntityLabel().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

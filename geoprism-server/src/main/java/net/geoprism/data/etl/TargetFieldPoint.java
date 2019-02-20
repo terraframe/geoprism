@@ -35,11 +35,11 @@ import com.vividsolutions.jts.geom.Point;
 
 public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFieldPointIF
 {
-  private String id;
+  private String oid;
 
   public TargetFieldPoint()
   {
-    this.id = IDGenerator.nextID();
+    this.oid = IDGenerator.nextID();
   }
 
   @Override
@@ -74,9 +74,9 @@ public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFie
   }
 
   @Override
-  public String getId()
+  public String getOid()
   {
-    return this.id;
+    return this.oid;
   }
 
   public GeoNodeGeometry getNode()
@@ -131,7 +131,7 @@ public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFie
     MdAttributeReference geoEntityAttribute = node.getGeoEntityAttribute();
 
     JSONObject object = new JSONObject();
-    object.put("id", this.id);
+    object.put("oid", this.oid);
     object.put("label", this.getLabel());
     object.put("latitude", this.getLatitudeLabel());
     object.put("longitude", this.getLongitudeLabel());

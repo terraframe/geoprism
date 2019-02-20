@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 
 public class UniversalAttributeBindingDTO extends UniversalAttributeBindingDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1357804560;
   
   public UniversalAttributeBindingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

@@ -26,7 +26,7 @@
     controller.getDashboards = function() {
       var onSuccess = function(json) {
         $timeout(function() {
-          var response = JSON.parse(json);
+          var response = json.data;
           
           controller.ids = [];
           controller.dashboards = {};
@@ -40,34 +40,22 @@
             controller.dashboards[dashboard.dashboardId] = dashboard;  
             
             if(i === response.dashboards.length - 1){
-            	controller.dashboards[dashboard.dashboardId].isLastDashboard = true;
-            	if((i+1) % 3 === 0){
-            		controller.isInExistingRow = false;
-            	}
+              controller.dashboards[dashboard.dashboardId].isLastDashboard = true;
+              if((i+1) % 3 === 0){
+                controller.isInExistingRow = false;
+              }
             }
           }
             
-          $scope.$apply();
+          // $scope.$apply();
         }, 0);
       };
       
       var onFailure = function(json) {
-    	  console.log("Err: Could not get available dashboards");
+        console.log("Err: Could not get available dashboards");
       };
               
       dashboardService.getAvailableDashboardsAsJSON('', onSuccess, onFailure);          
-    }
-    
-    controller.account = function() {
-      var dialog = com.runwaysdk.ui.Manager.getFactory().newDialog(com.runwaysdk.Localize.get("accountSettings", "Account Settings"), {modal: true, width: 600});
-      dialog.addButton(com.runwaysdk.Localize.get("rOk", "Ok"), function(){
-        dialog.close();
-      }, null, {primary: true});
-      dialog.setStyle("z-index", 2001);
-      dialog.render();    
-        
-      var ut = new com.runwaysdk.ui.userstable.UserForm();  
-      ut.render("#"+dialog.getContentEl().getId());
     }
     
     controller.newDashboard = function() {
@@ -79,7 +67,7 @@
     }
     
     controller.cloneDashboard = function(dashboardId) {
-      $scope.$emit('cloneDashboard', {dashboardId : dashboardId, element : '#container'});    	
+      $scope.$emit('cloneDashboard', {dashboardId : dashboardId, element : '#container'});      
     }
     
     controller.remove = function(dashboardId) {
@@ -112,7 +100,7 @@
               controller.toggleCreateDashboardIcon();
             }
                   
-            $scope.$apply();
+            // $scope.$apply();
           };          
                 
           dashboardService.removeDashboard(dashboardId, "#container", onSuccess);
@@ -127,66 +115,66 @@
     }
     
     controller.refreshDashboard = function(dashboard) {
-    	for(var key in controller.dashboards){
-    		if (controller.dashboards.hasOwnProperty(key)) {
-    			var db = controller.dashboards[key];
-    			if(db.isLastDashboard){
-    				db.isLastDashboard = false;
-    			}
-    		}
-    	}
+      for(var key in controller.dashboards){
+        if (controller.dashboards.hasOwnProperty(key)) {
+          var db = controller.dashboards[key];
+          if(db.isLastDashboard){
+            db.isLastDashboard = false;
+          }
+        }
+      }
       
       var newDashboard = {
-    		  dashboardId:dashboard.id, 
-    		  label:dashboard.label, 
-    		  description:dashboard.description, 
-//    		  focusAreasAsString:dashboard.focusAreas.toString(),
-    		  isLastDashboard:true};
-      var oldDashboard = controller.dashboards[dashboard.id];
+          dashboardId:dashboard.oid, 
+          label:dashboard.label, 
+          description:dashboard.description, 
+//          focusAreasAsString:dashboard.focusAreas.toString(),
+          isLastDashboard:true};
+      var oldDashboard = controller.dashboards[dashboard.oid];
       
-      if(oldDashboard != null) {    	
-        angular.copy(newDashboard, oldDashboard);                	  
+      if(oldDashboard != null) {      
+        angular.copy(newDashboard, oldDashboard);                    
       }
       else {
-        controller.dashboards[dashboard.id] = newDashboard;  
-        controller.ids.push(dashboard.id);        
+        controller.dashboards[dashboard.oid] = newDashboard;  
+        controller.ids.push(dashboard.oid);        
       }     
       
       controller.toggleCreateDashboardIcon();
       
-      $scope.$apply();
+//      // $scope.$apply();
     }
     
     controller.toggleCreateDashboardIcon = function(){
         // handling the toggle of create new dashboard icon when outside of an existing row
         if(controller.ids.length % 3 === 0){
-      	  controller.isInExistingRow = false;
+          controller.isInExistingRow = false;
         }
         else if((controller.ids.length - 1) % 3 === 0){
-     		  controller.isInExistingRow = true;
-  	  	}
+           controller.isInExistingRow = true;
+        }
         else if((controller.ids.length + 1) % 3 === 0){
-   		  controller.isInExistingRow = true;
-	  	}
+         controller.isInExistingRow = true;
+      }
         
         // maintain the last dashboard status flag
         var i = 0;
         for(var key in controller.dashboards){
-    		if (controller.dashboards.hasOwnProperty(key)) {
-    			var db = controller.dashboards[key];
-    			if(db.isLastDashboard){
-    				db.isLastDashboard = false;
-    			}
-    			
-    			if(i === Object.keys(controller.dashboards).length -1){
-    				db.isLastDashboard = true;
-    			}
-    			
-    			i++;
-    		}
-    	}
+        if (controller.dashboards.hasOwnProperty(key)) {
+          var db = controller.dashboards[key];
+          if(db.isLastDashboard){
+            db.isLastDashboard = false;
+          }
+          
+          if(i === Object.keys(controller.dashboards).length -1){
+            db.isLastDashboard = true;
+          }
+          
+          i++;
+        }
+      }
         
-        $scope.$apply();
+//        // $scope.$apply();
     }
     
     $scope.$on('dashboardChange', function(event, data){
@@ -195,7 +183,7 @@
       event.stopPropagation();            
     });
     
-    controller.getDashboards();	
+    controller.getDashboards();  
   }
 
   angular.module("dashboard-menu", ["dashboard-service", "widget-service", "localization-service", "dashboard-builder", "data-uploader", "dashboard-clone-form"]);

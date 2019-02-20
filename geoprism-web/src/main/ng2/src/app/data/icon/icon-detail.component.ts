@@ -35,10 +35,10 @@ export class IconResolver implements Resolve<Icon> {
   constructor(@Inject(IconService) private iconService: IconService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Icon> {
-    let id = route.params['id'];
+    let oid = route.params['oid'];
   
-    if(id !== "-1") {
-      return this.iconService.edit(id)
+    if(oid !== "-1") {
+      return this.iconService.edit(oid)
         .catch((error:any) => {
           this.eventService.onError(error); 
         
@@ -87,7 +87,7 @@ export class IconDetailComponent implements OnInit {
     
     let url = acp + '/iconimage/create';
     
-    if(this.icon.id != null) {
+    if(this.icon.oid != null) {
       url = acp + '/iconimage/apply';      
     }
         
@@ -114,8 +114,8 @@ export class IconDetailComponent implements OnInit {
     this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
       form.append('label', this.icon.label);
       
-      if(this.icon.id != null) {
-        form.append('id', this.icon.id);        
+      if(this.icon.oid != null) {
+        form.append('oid', this.icon.oid);        
       }
     };        
   }
@@ -143,8 +143,8 @@ export class IconDetailComponent implements OnInit {
   }  
   
   cancel(): void {
-    if(this.icon.id != null) {
-      this.iconService.unlock(this.icon.id)
+    if(this.icon.oid != null) {
+      this.iconService.unlock(this.icon.oid)
         .then((response:any) => {
           this.location.back();
         })      
@@ -156,7 +156,7 @@ export class IconDetailComponent implements OnInit {
   
   onSubmit(): void {
     if(this.file == null) {
-      this.iconService.apply(this.icon.id, this.icon.label)
+      this.iconService.apply(this.icon.oid, this.icon.label)
         .then(icon => {
           this.location.back();
         });

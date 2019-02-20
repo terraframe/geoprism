@@ -44,14 +44,14 @@ export class DatasetService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  edit(id : string): Promise<Dataset> {
+  edit(oid : string): Promise<Dataset> {
 
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
   
     return this.ehttp
-      .post(acp + '/prism/edit-dataset', JSON.stringify({id:id}), {headers: headers})
+      .post(acp + '/prism/edit-dataset', JSON.stringify({oid:oid}), {headers: headers})
       .toPromise()
       .then((response: any) => {
         return response.json() as Dataset;
@@ -65,7 +65,7 @@ export class DatasetService extends BasicService {
     });    
     
     return this.ehttp
-      .post(acp + '/prism/unlock-dataset', JSON.stringify({id:dataset.id}), {headers: headers})
+      .post(acp + '/prism/unlock-dataset', JSON.stringify({oid:dataset.oid}), {headers: headers})
       .toPromise()
       .catch(this.handleError.bind(this));
   }
@@ -90,30 +90,30 @@ export class DatasetService extends BasicService {
     });  
   
     return this.ehttp
-      .post(acp + '/prism/remove', JSON.stringify({id:dataset.id}), {headers: headers})
+      .post(acp + '/prism/remove', JSON.stringify({oid:dataset.oid}), {headers: headers})
       .toPromise()
       .catch(this.handleError.bind(this));
   }
   
       
-  validateDatasetName(name: string, id: string): Promise<Response> {
+  validateDatasetName(name: string, oid: string): Promise<Response> {
 	let params: URLSearchParams = new URLSearchParams();
     params.set('name', name);
-    params.set('id', id);	  
+    params.set('oid', oid);	  
 	  
     return this.http
       .get(acp + '/uploader/validateDatasetName', {search: params})
       .toPromise();
   }  
   
-  xport(id : string): void {
+  xport(oid : string): void {
     
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
   
     this.ehttp
-      .post(acp + '/prism/xport-dataset', JSON.stringify({id:id}), {headers: headers})
+      .post(acp + '/prism/xport-dataset', JSON.stringify({oid:oid}), {headers: headers})
       .toPromise()
       .then((response: any) => {
         this.handleMessage('Export success.');
@@ -143,18 +143,18 @@ export class DatasetService extends BasicService {
     });  
     
     return this.ehttp
-      .post(acp + '/prism/remove-attribute', JSON.stringify({id:attribute.id}), {headers: headers})
+      .post(acp + '/prism/remove-attribute', JSON.stringify({oid:attribute.oid}), {headers: headers})
       .toPromise()
       .catch(this.handleError.bind(this));
   }
   
-  unlockAttribute(id:string): Promise<Response> {
+  unlockAttribute(oid:string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });  
     
     return this.ehttp
-     .post(acp + '/prism/unlock-attribute', JSON.stringify({id:id}), {headers: headers})
+     .post(acp + '/prism/unlock-attribute', JSON.stringify({oid:oid}), {headers: headers})
      .toPromise()
      .catch(this.handleError.bind(this));
   }
@@ -165,7 +165,7 @@ export class DatasetService extends BasicService {
     });  
     
     return this.ehttp
-      .post(acp + '/prism/edit-attribute', JSON.stringify({id:attribute.id}), {headers: headers})
+      .post(acp + '/prism/edit-attribute', JSON.stringify({oid:attribute.oid}), {headers: headers})
       .toPromise()
       .then((response: any) => {
         return response.json() as IndicatorField;

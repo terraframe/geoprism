@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-public class CategoryInUseException extends CategoryInUseExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class CategoryInUseException extends CategoryInUseExceptionBase 
 {
   private static final long serialVersionUID = -1685750755;
   

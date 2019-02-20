@@ -60,7 +60,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeIndicatorDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdElementDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
@@ -90,7 +90,7 @@ import net.geoprism.data.GeoprismDatasetExporterService;
 import net.geoprism.data.etl.TargetBinding;
 import net.geoprism.ontology.Classifier;
 
-public class MappableClass extends MappableClassBase implements com.runwaysdk.generation.loader.Reloadable
+public class MappableClass extends MappableClassBase 
 {
   private static class LabelComparator implements Comparator<MdAttributeDAOIF>
   {
@@ -251,7 +251,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
   public static MappableClass getMappableClass(MdClassDAOIF _mdClass)
   {
-    MdClass mdClass = MdClass.get(_mdClass.getId());
+    MdClass mdClass = MdClass.get(_mdClass.getOid());
 
     MappableClassQuery query = new MappableClassQuery(new QueryFactory());
     query.WHERE(query.getWrappedMdClass().EQ(mdClass));
@@ -316,7 +316,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     JSONObject object = new JSONObject();
     object.put("label", label);
     object.put("description", description);
-    object.put("id", this.getId());
+    object.put("oid", this.getOid());
     object.put("type", mdClass.getKey());
     object.put("value", value);
     object.put("source", this.getDataSource());
@@ -352,7 +352,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     JSONObject aggregation = new JSONObject();
     aggregation.put("value", func.getDisplayLabel());
-    aggregation.put("id", func.getEnumName());
+    aggregation.put("oid", func.getEnumName());
 
     return aggregation;
   }
@@ -414,10 +414,10 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       for (int i = 0; i < types.length(); i++)
       {
         JSONObject type = types.getJSONObject(i);
-        String id = type.getString("id");
+        String oid = type.getString("oid");
         boolean checked = type.getBoolean("value");
 
-        MappableClass mClass = MappableClass.get(id);
+        MappableClass mClass = MappableClass.get(oid);
         MdClass mdClass = mClass.getWrappedMdClass();
 
         MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
@@ -499,15 +499,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       for (int i = 0; i < attributes.length(); i++)
       {
         JSONObject type = attributes.getJSONObject(i);
-        String id = type.getString("id");
+        String oid = type.getString("oid");
         boolean checked = type.getBoolean("selected");
 
-        MdAttribute mdAttribute = MdAttribute.get(id);
+        MdAttribute mdAttribute = MdAttribute.get(oid);
 
         QueryFactory factory = new QueryFactory();
 
         MetadataWrapperQuery wQuery = new MetadataWrapperQuery(factory);
-        wQuery.WHERE(wQuery.getId().EQ(wrapper.getId()));
+        wQuery.WHERE(wQuery.getOid().EQ(wrapper.getOid()));
 
         AttributeWrapperQuery query = new AttributeWrapperQuery(factory);
         query.WHERE(query.dashboardMetadata(wQuery));
@@ -577,7 +577,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
     JSONObject object = new JSONObject();
     object.put("label", mdAttribute.getDisplayLabel(Session.getCurrentLocale()));
-    object.put("id", mdAttribute.getId());
+    object.put("oid", mdAttribute.getOid());
     object.put("selected", selected);
     object.put("type", mdAttribute.getMdBusinessDAO().getTypeName());
     object.put("numeric", ( mdAttribute instanceof MdAttributeNumberDAOIF || mdAttribute instanceof MdAttributeBooleanDAOIF ));
@@ -594,7 +594,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
         if (classifier != null)
         {
           JSONObject root = new JSONObject();
-          root.put("id", classifier.getId());
+          root.put("oid", classifier.getOid());
           root.put("label", classifier.getDisplayLabel().getValue());
 
           object.put("type", "Category");
@@ -664,14 +664,14 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       return true;
     }
 
-    return !mdAttributeConcrete.isSystem() && !mdAttributeConcrete.definesAttribute().equals(BusinessInfo.KEY) && ( mdAttributeConcrete instanceof MdAttributePrimitiveDAOIF ) && !ids.contains(mdAttributeConcrete.getId());
+    return !mdAttributeConcrete.isSystem() && !mdAttributeConcrete.definesAttribute().equals(BusinessInfo.KEY) && ( mdAttributeConcrete instanceof MdAttributePrimitiveDAOIF ) && !ids.contains(mdAttributeConcrete.getOid());
   }
 
   private static boolean isSelected(MdAttributeDAOIF mdAttribute, List<? extends AttributeWrapper> attributes)
   {
     for (AttributeWrapper attribute : attributes)
     {
-      if (mdAttribute.getId().equals(attribute.getWrappedMdAttributeId()))
+      if (mdAttribute.getOid().equals(attribute.getWrappedMdAttributeId()))
       {
         return true;
       }
@@ -689,10 +689,10 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       for (int i = 0; i < types.length(); i++)
       {
         JSONObject type = types.getJSONObject(i);
-        String id = type.getString("id");
+        String oid = type.getString("oid");
         boolean checked = type.getBoolean("value");
 
-        MappableClass mClass = MappableClass.get(id);
+        MappableClass mClass = MappableClass.get(oid);
         MdClass mdClass = mClass.getWrappedMdClass();
 
         MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
@@ -755,15 +755,15 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       for (int i = 0; i < attributes.length(); i++)
       {
         JSONObject type = attributes.getJSONObject(i);
-        String id = type.getString("id");
+        String oid = type.getString("oid");
         boolean checked = type.getBoolean("selected");
 
-        MdAttribute mdAttribute = MdAttribute.get(id);
+        MdAttribute mdAttribute = MdAttribute.get(oid);
 
         QueryFactory factory = new QueryFactory();
 
         MetadataWrapperQuery wQuery = new MetadataWrapperQuery(factory);
-        wQuery.WHERE(wQuery.getId().EQ(wrapper.getId()));
+        wQuery.WHERE(wQuery.getOid().EQ(wrapper.getOid()));
 
         AttributeWrapperQuery query = new AttributeWrapperQuery(factory);
         query.WHERE(query.dashboardMetadata(wQuery));
@@ -847,11 +847,11 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     {
       JSONObject object = new JSONObject(dataset);
       String label = object.getString("label");
-      String id = object.getString("id");
+      String oid = object.getString("oid");
       String description = object.getString("description");
       String source = object.getString("source");
 
-      MappableClass ds = MappableClass.get(id);
+      MappableClass ds = MappableClass.get(oid);
       ds.lock();
       ds.setDataSource(source);
       ds.apply();
@@ -869,7 +869,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
         for (int i = 0; i < attributes.length(); i++)
         {
           JSONObject attribute = attributes.getJSONObject(i);
-          String attributeId = attribute.getString("id");
+          String attributeId = attribute.getString("oid");
           String attributeLabel = attribute.getString("label");
 
           MdAttributeConcrete mdAttribute = MdAttributeConcrete.lock(attributeId);
@@ -886,9 +886,9 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
 
   @Transaction
   @Authenticate
-  public static void remove(String id)
+  public static void remove(String oid)
   {
-    MappableClass mClass = MappableClass.get(id);
+    MappableClass mClass = MappableClass.get(oid);
     mClass.delete();
   }
 
@@ -899,7 +899,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
     cuQuery.WHERE(cuQuery.getParent().EQ(this));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
     AllowedInQuery aiQuery = new AllowedInQuery(factory);
@@ -959,11 +959,11 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     String displayLabel = indicator.getString("label");
     String name = DataUploader.getSystemName(displayLabel, "Attribute", false);
     String percentage = indicator.has("percentage") ? indicator.getString("percentage") : "false";
-    String id = indicator.has("id") ? indicator.getString("id") : "";
+    String oid = indicator.has("oid") ? indicator.getString("oid") : "";
 
-    if (id.length() > 0)
+    if (oid.length() > 0)
     {
-      MdAttributeIndicatorDAO mdAttributeIndicator = (MdAttributeIndicatorDAO) MdAttributeIndicatorDAO.get(id).getBusinessDAO();
+      MdAttributeIndicatorDAO mdAttributeIndicator = (MdAttributeIndicatorDAO) MdAttributeIndicatorDAO.get(oid).getBusinessDAO();
       IndicatorCompositeDAO composite = (IndicatorCompositeDAO) mdAttributeIndicator.getIndicator().getBusinessDAO();
 
       IndicatorPrimitiveDAO left = MappableClass.createIndicator(indicator.getJSONObject("left"), (IndicatorPrimitiveDAO) composite.getLeftOperand().getBusinessDAO());
@@ -986,17 +986,17 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
       right.apply();
 
       IndicatorCompositeDAO composite = IndicatorCompositeDAO.newInstance();
-      composite.setValue(IndicatorCompositeInfo.LEFT_OPERAND, left.getId());
-      composite.setValue(IndicatorCompositeInfo.OPERATOR, IndicatorOperator.DIV.getId());
-      composite.setValue(IndicatorCompositeInfo.RIGHT_OPERAND, right.getId());
+      composite.setValue(IndicatorCompositeInfo.LEFT_OPERAND, left.getOid());
+      composite.setValue(IndicatorCompositeInfo.OPERATOR, IndicatorOperator.DIV.getOid());
+      composite.setValue(IndicatorCompositeInfo.RIGHT_OPERAND, right.getOid());
       composite.setValue(IndicatorCompositeInfo.PERCENTAGE, percentage);
       composite.apply();
 
       MdAttributeIndicatorDAO mdAttributeDAO = MdAttributeIndicatorDAO.newInstance();
       mdAttributeDAO.setValue(MdAttributeIndicatorInfo.NAME, name);
       mdAttributeDAO.setStructValue(MdAttributeIndicatorInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, displayLabel);
-      mdAttributeDAO.setValue(MdAttributeIndicatorInfo.INDICATOR_ELEMENT, composite.getId());
-      mdAttributeDAO.setValue(MdAttributeIndicatorInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttributeDAO.setValue(MdAttributeIndicatorInfo.INDICATOR_ELEMENT, composite.getOid());
+      mdAttributeDAO.setValue(MdAttributeIndicatorInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttributeDAO.apply();
 
       MdAttribute mdAttribute = (MdAttribute) BusinessFacade.get(mdAttributeDAO);
@@ -1016,19 +1016,19 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     String attributeId = indicator.getString("attribute");
 
     primitive.setValue(IndicatorPrimitiveInfo.MD_ATTRIBUTE_PRIMITIVE, attributeId);
-    primitive.setValue(IndicatorPrimitiveInfo.INDICATOR_FUNCTION, IndicatorAggregateFunction.valueOf(aggregation).getId());
+    primitive.setValue(IndicatorPrimitiveInfo.INDICATOR_FUNCTION, IndicatorAggregateFunction.valueOf(aggregation).getOid());
 
     return primitive;
   }
 
   @Transaction
-  public static void removeIndicator(String id)
+  public static void removeIndicator(String oid)
   {
 
     /*
      * Delete the corresponding MappableAttributes
      */
-    MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(id);
+    MappableAttribute mAttribute = MappableAttribute.getMappableAttribute(oid);
 
     if (mAttribute != null)
     {
@@ -1036,20 +1036,20 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
     }
 
     // Get and delete a new instance of the indicator because it might be stale if the web indicator is deleted
-    MdAttributeIndicatorDAO.get(id).getBusinessDAO().delete();
+    MdAttributeIndicatorDAO.get(oid).getBusinessDAO().delete();
   }
 
   @Transaction
-  public static String lockIndicator(String id)
+  public static String lockIndicator(String oid)
   {
     try
     {
-      MdAttributeIndicator mdAttributeIndicator = MdAttributeIndicator.lock(id);
-      MdAttributeIndicatorDAOIF mdAttribute = (MdAttributeIndicatorDAOIF) MdAttributeIndicatorDAO.get(id);
+      MdAttributeIndicator mdAttributeIndicator = MdAttributeIndicator.lock(oid);
+      MdAttributeIndicatorDAOIF mdAttribute = (MdAttributeIndicatorDAOIF) MdAttributeIndicatorDAO.get(oid);
 
       IndicatorCompositeDAOIF composite = (IndicatorCompositeDAOIF) mdAttribute.getIndicator();
       JSONObject response = new JSONObject();
-      response.put("id", mdAttributeIndicator.getId());
+      response.put("oid", mdAttributeIndicator.getOid());
       response.put("label", mdAttributeIndicator.getDisplayLabel().getValue());
       response.put("percentage", composite.isPercentage());
       response.put("left", MappableClass.serializeIndicator((IndicatorPrimitiveDAOIF) composite.getLeftOperand()));
@@ -1067,7 +1067,7 @@ public class MappableClass extends MappableClassBase implements com.runwaysdk.ge
   {
     JSONObject indicator = new JSONObject();
     indicator.put("aggregation", element.getAggregateFunction().getName());
-    indicator.put("attribute", element.getMdAttributePrimitive().getId());
+    indicator.put("attribute", element.getMdAttributePrimitive().getOid());
 
     return indicator;
   }

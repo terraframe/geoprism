@@ -19,7 +19,7 @@
 package net.geoprism.data.etl.excel;
 
 @com.runwaysdk.business.ClassSignature(hash = 157246384)
-public abstract class ExcelHeaderExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ExcelHeaderExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.data.etl.excel.ExcelHeaderException";
   private static final long serialVersionUID = 157246384;
@@ -70,7 +70,7 @@ public abstract class ExcelHeaderExceptionDTOBase extends com.runwaysdk.business
   }
   
   public static java.lang.String COLUMN = "column";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String MSG = "msg";
   public static java.lang.String ROW = "row";
   public String getColumn()
@@ -193,7 +193,7 @@ public abstract class ExcelHeaderExceptionDTOBase extends com.runwaysdk.business
     java.lang.String template = super.getMessage();
     
     template = template.replace("{column}", this.getColumn().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{msg}", this.getMsg().toString());
     template = template.replace("{row}", this.getRow().toString());
     

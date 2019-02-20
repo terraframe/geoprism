@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = 1128798450)
-public class ReportItemReportLabelControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ReportItemReportLabelControllerBase 
 {
   public static final String CLASS = "net.geoprism.report.ReportItemReportLabelController";
   protected javax.servlet.http.HttpServletRequest req;
@@ -125,15 +125,15 @@ public class ReportItemReportLabelControllerBase implements com.runwaysdk.genera
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemReportLabelController.failDelete");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemReportLabelController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemReportLabelController.edit");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemReportLabelController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemReportLabelController.failEdit");
@@ -167,15 +167,15 @@ public class ReportItemReportLabelControllerBase implements com.runwaysdk.genera
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemReportLabelController.failUpdate");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemReportLabelController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemReportLabelController.view");
   }
   
-  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:id", post=false)
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  @com.runwaysdk.controller.ActionParameters(parameters="java.lang.String:oid", post=false)
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.report.ReportItemReportLabelController.java";
     throw new com.runwaysdk.controller.UndefinedControllerActionException(msg, req.getLocale(), "net.geoprism.report.ReportItemReportLabelController.failView");

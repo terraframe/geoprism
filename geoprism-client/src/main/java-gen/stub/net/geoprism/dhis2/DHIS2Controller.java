@@ -23,7 +23,7 @@ import org.json.JSONException;
 
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.controller.ServletMethod;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -33,7 +33,7 @@ import com.runwaysdk.mvc.RestBodyResponse;
 import net.geoprism.PluginUtilDTO;
 
 @Controller(url = "dhis2")
-public class DHIS2Controller implements Reloadable
+public class DHIS2Controller 
 {
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF isEnabled(ClientRequestIF request) throws java.io.IOException, javax.servlet.ServletException, JSONException

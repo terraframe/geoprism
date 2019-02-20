@@ -36,7 +36,7 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
@@ -50,7 +50,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdClassQuery;
 
-public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysdk.generation.loader.Reloadable
+public class MetadataWrapper extends MetadataWrapperBase 
 {
   private static final long serialVersionUID = -1121470685;
 
@@ -90,7 +90,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
     mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
-    mwQuery.AND(mwQuery.getId().NE(this.getId()));
+    mwQuery.AND(mwQuery.getOid().NE(this.getOid()));
 
     MappableClassQuery mcQuery = new MappableClassQuery(factory);
     mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
@@ -101,11 +101,11 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     AllowedInQuery aiQuery = new AllowedInQuery(factory);
     aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery uAptQuery = new AllowedInAllPathsTableQuery(factory);
     uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
     uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
 
     DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);
@@ -139,7 +139,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     DashboardAttributesQuery daQ = new DashboardAttributesQuery(f);
 
-    daQ.WHERE(daQ.parentId().EQ(this.getId()));
+    daQ.WHERE(daQ.parentOid().EQ(this.getOid()));
     daQ.ORDER_BY_ASC(daQ.getListOrder());
 
     OIterator<? extends DashboardAttributes> iter = daQ.getIterator();
@@ -153,7 +153,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
         MdAttributeDAOIF attr = MdAttributeDAO.get(aWrapper.getWrappedMdAttributeId());
         MdAttributeConcreteDAOIF mdAttributeConcrete = attr.getMdAttributeConcrete();
 
-        String attrId = attr.getId();
+        String attrId = attr.getOid();
         String attrType = mdAttributeConcrete.getType();
 
 
@@ -328,7 +328,7 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
 
     MetadataWrapperQuery mwQuery = new MetadataWrapperQuery(factory);
     mwQuery.WHERE(mwQuery.getDashboard().EQ(dashboard));
-    mwQuery.AND(mwQuery.getId().NE(this.getId()));
+    mwQuery.AND(mwQuery.getOid().NE(this.getOid()));
 
     MappableClassQuery mcQuery = new MappableClassQuery(factory);
     mcQuery.WHERE(mcQuery.getWrappedMdClass().EQ(mwQuery.getWrappedMdClass()));
@@ -339,11 +339,11 @@ public class MetadataWrapper extends MetadataWrapperBase implements com.runwaysd
     AllowedInQuery aiQuery = new AllowedInQuery(factory);
     aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    UniversalAllPathsTableQuery uAptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery uAptQuery = new AllowedInAllPathsTableQuery(factory);
     uAptQuery.WHERE(uAptQuery.getParentTerm().EQ(aiQuery.getChild()));
     uAptQuery.AND(uAptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(uAptQuery.getParentTerm()));
 
     DashboardReferenceLayerQuery query = new DashboardReferenceLayerQuery(factory);

@@ -72,7 +72,7 @@ import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierSynonym;
 import net.geoprism.ontology.GeoEntityUtil;
 
-public class DataUploader extends DataUploaderBase implements com.runwaysdk.generation.loader.Reloadable
+public class DataUploader extends DataUploaderBase 
 {
   private static final KeyGeneratorIF GENERATOR        = new SeedKeyGenerator();
 
@@ -85,10 +85,10 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
   @Transaction
   @Authenticate
-  public static String createGeoEntity(String parentId, String universalId, String label)
+  public static String createGeoEntity(String parentOid, String universalId, String label)
   {
     Universal universal = Universal.get(universalId);
-    GeoEntity parent = GeoEntity.get(parentId);
+    GeoEntity parent = GeoEntity.get(parentOid);
 
     GeoEntity entity = new GeoEntity();
     entity.setUniversal(universal);
@@ -98,7 +98,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
     entity.addLink(parent, LocatedIn.CLASS);
 
-    return entity.getId();
+    return entity.getOid();
   }
 
   @Transaction
@@ -122,7 +122,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       TermAndRel tr = Synonym.create(synonym, entityId);
 
       JSONObject object = new JSONObject();
-      object.put("synonymId", tr.getTerm().getId());
+      object.put("synonymId", tr.getTerm().getOid());
       object.put("label", entity.getDisplayLabel().getValue());
       object.put("ancestors", new JSONArray(GeoEntityUtil.getAncestorsAsJSON(entityId)));
 
@@ -156,7 +156,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
       TermAndRel tr = ClassifierSynonym.createSynonym(synonym, classifierId);
 
       JSONObject object = new JSONObject();
-      object.put("synonymId", tr.getTerm().getId());
+      object.put("synonymId", tr.getTerm().getOid());
       object.put("label", classifier.getDisplayLabel().getValue());
 
       return object.toString();
@@ -248,14 +248,14 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
           JSONArray options = new JSONArray();
 
           JSONObject root = new JSONObject();
-          root.put("value", universal.getId());
+          root.put("value", universal.getOid());
           root.put("label", LocalizationFacade.getFromBundles("country"));
           options.put(root);
 
           for (Term child : children)
           {
             JSONObject option = new JSONObject();
-            option.put("value", child.getId());
+            option.put("value", child.getOid());
             option.put("label", child.getDisplayLabel().getValue());
 
             options.put(option);
@@ -263,7 +263,7 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
 
           JSONObject country = new JSONObject();
           country.put("label", universal.getDisplayLabel().getValue());
-          country.put("value", universal.getId());
+          country.put("value", universal.getOid());
           country.put("options", options);
 
           countries.put(country);
@@ -348,11 +348,11 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
   }
 
-  public static String getSavedConfiguration(String id, String sheetName)
+  public static String getSavedConfiguration(String oid, String sheetName)
   {
     try
     {
-      ExcelSourceBinding binding = ExcelSourceBinding.get(id);
+      ExcelSourceBinding binding = ExcelSourceBinding.get(oid);
 
       SourceDefinitionIF sDefinition = binding.getDefinition(sheetName);
       TargetDefinitionIF tDefinition = binding.getTargetBinding().getDefinition();
@@ -476,15 +476,15 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     return part;
   }
 
-  public static void validateDatasetName(String name, String id)
+  public static void validateDatasetName(String name, String oid)
   {
     QueryFactory factory = new QueryFactory();
 
     MappableClassQuery mClassQuery = new MappableClassQuery(factory);
 
-    if (id != null && id.length() > 0)
+    if (oid != null && oid.length() > 0)
     {
-      mClassQuery.AND(mClassQuery.getId().NE(id));
+      mClassQuery.AND(mClassQuery.getOid().NE(oid));
     }
 
     MdClassQuery mdClassQuery = new MdClassQuery(factory);
@@ -503,9 +503,9 @@ public class DataUploader extends DataUploaderBase implements com.runwaysdk.gene
     }
   }
 
-  public static InputStream getErrorFile(String id)
+  public static InputStream getErrorFile(String oid)
   {
-    File file = new File(new File(VaultProperties.getPath("vault.default"), "files"), id);
+    File file = new File(new File(VaultProperties.getPath("vault.default"), "files"), oid);
 
     try
     {

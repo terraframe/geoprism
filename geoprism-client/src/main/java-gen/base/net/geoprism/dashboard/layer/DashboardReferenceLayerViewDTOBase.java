@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = 306136116)
-public abstract class DashboardReferenceLayerViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardReferenceLayerViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.DashboardReferenceLayerView";
   private static final long serialVersionUID = 306136116;
@@ -38,7 +38,7 @@ public abstract class DashboardReferenceLayerViewDTOBase extends com.runwaysdk.b
   public static java.lang.String DISPLAYINLEGEND = "displayInLegend";
   public static java.lang.String FEATURESTRATEGY = "featureStrategy";
   public static java.lang.String GROUPEDINLEGEND = "groupedInLegend";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String LAYERID = "layerId";
   public static java.lang.String LAYERISACTIVE = "layerIsActive";
   public static java.lang.String LAYERNAME = "layerName";
@@ -453,9 +453,9 @@ public abstract class DashboardReferenceLayerViewDTOBase extends com.runwaysdk.b
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(VIEWNAME).getAttributeMdDTO();
   }
   
-  public static DashboardReferenceLayerViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static DashboardReferenceLayerViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (DashboardReferenceLayerViewDTO) dto;
   }
@@ -473,7 +473,7 @@ public abstract class DashboardReferenceLayerViewDTOBase extends com.runwaysdk.b
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

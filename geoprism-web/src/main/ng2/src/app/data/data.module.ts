@@ -37,6 +37,8 @@ import { IconService } from './service/icon.service';
 import { DHIS2Service } from './service/dhis2.service';
 import { DHIS2IdFinderComponent } from './dhis2/dhis2-id-finder.component';
 
+import { TreeModule } from 'angular-tree-component';
+
 // Upload wizard imports
 import { NavigationService } from './uploader/navigation.service';
 import { UploadWizardComponent } from './uploader/upload-wizard.component';
@@ -65,7 +67,8 @@ import { UploadService } from './service/upload.service';
     FileUploadModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),    
-    DataRoutingModule
+    DataRoutingModule,
+    TreeModule.forRoot(),
   ],
   declarations: [
 	// Global components

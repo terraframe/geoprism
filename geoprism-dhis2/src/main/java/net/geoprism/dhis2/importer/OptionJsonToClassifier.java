@@ -36,12 +36,12 @@ public class OptionJsonToClassifier
   {
     Classifier classy = new Classifier();
     classy.getDisplayLabel().setValue(json.getString("name"));
-    classy.setClassifierId(json.getString("id"));
-    classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
+    classy.setClassifierId(json.getString("oid"));
+    classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("oid"));
     classy.setCategory(false);
     classy.apply();
     
-    DHIS2Util.mapIds(classy.getId(), json.getString("id"));
-    DHIS2Util.mapOptionCode(classy.getId(), json.getString("code"));
+    DHIS2Util.mapIds(classy.getOid(), json.getString("oid"));
+    DHIS2Util.mapOptionCode(classy.getOid(), json.getString("code"));
   }
 }

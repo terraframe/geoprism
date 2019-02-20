@@ -19,6 +19,6 @@
 
 export class SystemLogo {
   label:string;
-  id:string;
+  oid:string;
   custom:boolean;
 }

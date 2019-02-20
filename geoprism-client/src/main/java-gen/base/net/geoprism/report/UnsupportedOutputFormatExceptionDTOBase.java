@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = -1130599090)
-public abstract class UnsupportedOutputFormatExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class UnsupportedOutputFormatExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.report.UnsupportedOutputFormatException";
   private static final long serialVersionUID = -1130599090;
@@ -69,7 +69,7 @@ public abstract class UnsupportedOutputFormatExceptionDTOBase extends com.runway
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String OUTPUTFORMAT = "outputFormat";
   public String getOutputFormat()
   {
@@ -116,7 +116,7 @@ public abstract class UnsupportedOutputFormatExceptionDTOBase extends com.runway
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{outputFormat}", this.getOutputFormat().toString());
     
     return template;

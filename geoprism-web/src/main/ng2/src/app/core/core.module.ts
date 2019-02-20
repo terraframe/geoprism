@@ -26,6 +26,7 @@ import { MessageComponent } from './message/message.component';
 import { AsyncValidator } from './async-validator.directive';
 import { FunctionValidator } from './function-validator.directive';
 import { KeysPipe } from './keys.pipe';
+import { PhonePipe } from './phone.pipe';
 
 import { BooleanFieldComponent } from './boolean-field/boolean-field.component';
 
@@ -59,6 +60,7 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
     FunctionValidator,
     KeysPipe,
     LocalizePipe,
+    PhonePipe,
     
     BooleanFieldComponent
   ],
@@ -78,6 +80,7 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
     FunctionValidator,
     KeysPipe,
     LocalizePipe,
+    PhonePipe,
     
     BooleanFieldComponent
   ],

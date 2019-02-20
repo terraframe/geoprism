@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 
 public class TargetFieldMultiPolygonBindingDTO extends TargetFieldMultiPolygonBindingDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1681313115;
   
   public TargetFieldMultiPolygonBindingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

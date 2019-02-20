@@ -46,12 +46,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Scale;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
 
-public class LocatedInPage extends WizardPage implements PropertyChangeListener, Reloadable
+
+public class LocatedInPage extends WizardPage implements PropertyChangeListener
 {
-  class OverlapListener implements Listener, Reloadable
+  class OverlapListener implements Listener
   {
     public void handleEvent(Event event)
     {
@@ -119,7 +119,7 @@ public class LocatedInPage extends WizardPage implements PropertyChangeListener,
 
   private void bind(ComboViewer viewer, String attribute)
   {
-    class TargetToModel extends UpdateValueStrategy implements Reloadable
+    class TargetToModel extends UpdateValueStrategy 
     {
       @Override
       protected IStatus doSet(IObservableValue observableValue, Object value)
@@ -142,7 +142,7 @@ public class LocatedInPage extends WizardPage implements PropertyChangeListener,
       }
     }
 
-    class ModelToTarget extends UpdateValueStrategy implements Reloadable
+    class ModelToTarget extends UpdateValueStrategy 
     {
       @Override
       protected IStatus doSet(IObservableValue observableValue, Object value)

@@ -31,9 +31,9 @@ import org.json.JSONObject;
 
 import com.runwaysdk.business.BusinessDTO;
 import com.runwaysdk.constants.ClientRequestIF;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class OauthServerDTO extends OauthServerDTOBase implements Reloadable
+
+public class OauthServerDTO extends OauthServerDTOBase 
 {
   private static final long serialVersionUID = -431820160;
 
@@ -64,7 +64,7 @@ public class OauthServerDTO extends OauthServerDTOBase implements Reloadable
       String redirect = url.toString() + "/session/ologin";
 
       JSONObject state = new JSONObject();
-      state.put(OauthServerIF.SERVER_ID, this.getId());
+      state.put(OauthServerIF.SERVER_ID, this.getOid());
 
       AuthenticationRequestBuilder builder = OAuthClientRequest.authorizationLocation(this.getAuthorizationLocation());
       builder.setClientId(this.getClientId());

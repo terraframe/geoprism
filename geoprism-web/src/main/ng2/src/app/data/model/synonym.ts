@@ -1,4 +1,4 @@
 export class Synonym {
-  id: string;
+  oid: string;
   label: string; 
 }

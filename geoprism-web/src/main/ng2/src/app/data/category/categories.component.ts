@@ -57,14 +57,14 @@ export class CategoriesComponent implements OnInit {
   
   remove(category: BasicCategory) : void {    
     this.categoryService
-      .remove(category.id)
+      .remove(category.oid)
       .then(response => {
         this.categories = this.categories.filter(h => h !== category);    
       });
   }
   
   edit(category: BasicCategory) : void {
-    this.router.navigate(['/data/category', category.id]);
+    this.router.navigate(['/data/category', category.oid]);
   }
   
   newInstance() : void {

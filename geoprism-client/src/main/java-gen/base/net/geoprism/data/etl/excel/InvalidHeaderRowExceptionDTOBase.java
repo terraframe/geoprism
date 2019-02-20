@@ -19,7 +19,7 @@
 package net.geoprism.data.etl.excel;
 
 @com.runwaysdk.business.ClassSignature(hash = 443068913)
-public abstract class InvalidHeaderRowExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class InvalidHeaderRowExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.data.etl.excel.InvalidHeaderRowException";
   private static final long serialVersionUID = 443068913;
@@ -69,7 +69,7 @@ public abstract class InvalidHeaderRowExceptionDTOBase extends com.runwaysdk.bus
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   /**
    * Overrides java.lang.Throwable#getMessage() to retrieve the localized
    * message from the exceptionDTO, instead of from a class variable.
@@ -78,7 +78,7 @@ public abstract class InvalidHeaderRowExceptionDTOBase extends com.runwaysdk.bus
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

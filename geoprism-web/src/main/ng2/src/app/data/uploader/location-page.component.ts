@@ -216,9 +216,9 @@ export class LocationPageComponent implements OnInit, LocalValidator {
     
   edit(attribute: LocationAttribute): void {
     // This should only be hit if trying to edit when an existing edit session is in place. 
-    if(this.attribute && this.sheet.attributes.values[this.attribute.id]){
-      if(this.sheet.attributes.values[this.attribute.id].editing){
-        this.sheet.attributes.values[this.attribute.id].editing = false;
+    if(this.attribute && this.sheet.attributes.values[this.attribute.oid]){
+      if(this.sheet.attributes.values[this.attribute.oid].editing){
+        this.sheet.attributes.values[this.attribute.oid].editing = false;
       }
         
       // all fields that are in the current attribute (ui widget) should be set back to assigned
@@ -232,7 +232,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
       
     Object.assign(this.attribute, attribute);
       
-    this.sheet.attributes.values[this.attribute.id].editing = true;
+    this.sheet.attributes.values[this.attribute.oid].editing = true;
       
     this.unassignLocationFields();
       
@@ -337,10 +337,10 @@ export class LocationPageComponent implements OnInit, LocalValidator {
    * @attribute - attribute to remove
    */
   remove(attribute: LocationAttribute): void {
-    if(this.sheet.attributes.values[attribute.id]) {
+    if(this.sheet.attributes.values[attribute.oid]) {
               
-      delete this.sheet.attributes.values[attribute.id];        
-      this.sheet.attributes.ids.splice( this.sheet.attributes.ids.indexOf(attribute.id), 1 );
+      delete this.sheet.attributes.values[attribute.oid];        
+      this.sheet.attributes.ids.splice( this.sheet.attributes.ids.indexOf(attribute.oid), 1 );
         
       this.setFieldAssigned();
         
@@ -358,7 +358,7 @@ export class LocationPageComponent implements OnInit, LocalValidator {
     attribute.label = '';
     attribute.name = '';
     attribute.universal = '';
-    attribute.id = '';	  
+    attribute.oid = '';	  
     attribute.fields = {};
     attribute.useCoordinatesForLocationAssignment = false;
     attribute.coordinatesForLocationAssignmentOptions = this.getCoordinateFieldsFromSource();
@@ -377,14 +377,14 @@ export class LocationPageComponent implements OnInit, LocalValidator {
   newAttribute(): void {
       
     if(this.attribute) {      
-      if(this.attribute.id === '') {
-        this.attribute.id = this.idService.generateId();
+      if(this.attribute.oid === '') {
+        this.attribute.oid = this.idService.generateId();
         
-        this.sheet.attributes.ids.push(this.attribute.id);
-        this.sheet.attributes.values[this.attribute.id] = new LocationAttribute();              
+        this.sheet.attributes.ids.push(this.attribute.oid);
+        this.sheet.attributes.values[this.attribute.oid] = new LocationAttribute();              
       }     
           
-      let attributeInSheet = this.sheet.attributes.values[this.attribute.id];    
+      let attributeInSheet = this.sheet.attributes.values[this.attribute.oid];    
       attributeInSheet.editing = false;
           
       // copy the properties from the attribute (cofigurable widget in the ui) to sheet.attributes
@@ -576,8 +576,8 @@ export class LocationPageComponent implements OnInit, LocalValidator {
    */
   isAssigned(field: Field): boolean {
     for(let i = 0; i < this.sheet.attributes.ids.length; i++) {
-      let id = this.sheet.attributes.ids[i];
-      let attribute = this.sheet.attributes.values[id];
+      let oid = this.sheet.attributes.ids[i];
+      let attribute = this.sheet.attributes.values[oid];
                   
       for (let key in attribute.fields) {
         if (attribute.fields.hasOwnProperty(key)) {
@@ -626,8 +626,8 @@ export class LocationPageComponent implements OnInit, LocalValidator {
       }
           
       for(let i = 0; i < this.sheet.attributes.ids.length; i++) {
-        let id = this.sheet.attributes.ids[i];
-        let attribute = this.sheet.attributes.values[id];          
+        let oid = this.sheet.attributes.ids[i];
+        let attribute = this.sheet.attributes.values[oid];          
             
         if(attribute.label === label && !attribute.editing) {
           count++;

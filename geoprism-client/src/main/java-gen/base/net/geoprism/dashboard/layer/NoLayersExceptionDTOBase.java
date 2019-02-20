@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 @com.runwaysdk.business.ClassSignature(hash = -1994505300)
-public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.layer.NoLayersException";
   private static final long serialVersionUID = -1994505300;
@@ -69,7 +69,7 @@ public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.Sm
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String MAPNAME = "mapName";
   public String getMapName()
   {
@@ -116,7 +116,7 @@ public abstract class NoLayersExceptionDTOBase extends com.runwaysdk.business.Sm
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{mapName}", this.getMapName().toString());
     
     return template;

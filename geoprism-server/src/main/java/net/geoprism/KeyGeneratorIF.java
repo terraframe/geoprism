@@ -18,9 +18,9 @@
  */
 package net.geoprism;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface KeyGeneratorIF extends Reloadable
+
+public interface KeyGeneratorIF 
 {
   public Long next();
 

@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = -1197382218)
-public abstract class MultipleReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class MultipleReportExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.report.MultipleReportException";
   private static final long serialVersionUID = -1197382218;
@@ -70,7 +70,7 @@ public abstract class MultipleReportExceptionDTOBase extends com.runwaysdk.busin
   }
   
   public static java.lang.String FORMAT = "format";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String REPORTNAME = "reportName";
   public String getFormat()
   {
@@ -155,7 +155,7 @@ public abstract class MultipleReportExceptionDTOBase extends com.runwaysdk.busin
     java.lang.String template = super.getMessage();
     
     template = template.replace("{format}", this.getFormat().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{reportName}", this.getReportName().toString());
     
     return template;

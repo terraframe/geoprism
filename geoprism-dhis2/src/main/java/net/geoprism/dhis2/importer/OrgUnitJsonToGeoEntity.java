@@ -77,9 +77,9 @@ public class OrgUnitJsonToGeoEntity
   
   public void apply()
   {
-    String id = json.getString("id");
+    String oid = json.getString("oid");
     
-    geo.setGeoId(id);
+    geo.setGeoId(oid);
     
     if (!setUniversal())
     {
@@ -95,14 +95,14 @@ public class OrgUnitJsonToGeoEntity
     
     geo.apply();
     
-    // Create a synonym that is the geo id and also the code
+    // Create a synonym that is the geo oid and also the code
 //    Synonym synonym = new Synonym();
 //    synonym.getDisplayLabel().setValue(json.getString("code"));
-//    Synonym.create(synonym, geo.getId());
+//    Synonym.create(synonym, geo.getOid());
     
     Synonym synonym2 = new Synonym();
-    synonym2.getDisplayLabel().setValue(json.getString("id"));
-    Synonym.create(synonym2, geo.getId());
+    synonym2.getDisplayLabel().setValue(json.getString("oid"));
+    Synonym.create(synonym2, geo.getOid());
     
     
     // Akros has some weird naming conventions. We're matching here based on like 'vil Mulala SCHOOL'. In this case we'll extract 'Mulala'.
@@ -115,7 +115,7 @@ public class OrgUnitJsonToGeoEntity
       
       Synonym synonym = new Synonym();
       synonym.getDisplayLabel().setValue(synonymText);
-      Synonym.create(synonym, geo.getId());
+      Synonym.create(synonym, geo.getOid());
     }
   }
   
@@ -130,15 +130,15 @@ public class OrgUnitJsonToGeoEntity
   {
     if (skipMe) { return; }
     
-    String id = json.getString("id");
+    String oid = json.getString("oid");
     
     GeoEntity parent;
     try
     {
       if (json.has("parent"))
       {
-        // DHIS2 woes: Kinda dumb to have a JSONObject that will always only have an id in it.
-        parent = GeoEntity.getByKey(json.getJSONObject("parent").getString("id"));
+        // DHIS2 woes: Kinda dumb to have a JSONObject that will always only have an oid in it.
+        parent = GeoEntity.getByKey(json.getJSONObject("parent").getString("oid"));
       }
       else
       {
@@ -171,7 +171,7 @@ public class OrgUnitJsonToGeoEntity
     
     int level = StringUtils.countMatches(path, "/") - 1;
     
-    if (level == 0 && countryOrgUnitId != null && !json.getString("id").equals(countryOrgUnitId))
+    if (level == 0 && countryOrgUnitId != null && !json.getString("oid").equals(countryOrgUnitId))
     {
       return false;
     }

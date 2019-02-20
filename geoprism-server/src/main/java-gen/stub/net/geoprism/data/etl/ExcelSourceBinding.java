@@ -29,7 +29,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdView;
 
-public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelSourceBinding extends ExcelSourceBindingBase 
 {
   private static final long serialVersionUID = 1190316606;
 
@@ -113,10 +113,10 @@ public class ExcelSourceBinding extends ExcelSourceBindingBase implements com.ru
     definition.setType(mdView.definesType());
     definition.setLabel(mdView.getDisplayLabel().getValue());
     definition.setSheetName(sheetName);
-    definition.setCountry(country.getId());
+    definition.setCountry(country.getOid());
     definition.setNew(false);
     definition.setApplied(true);
-    definition.setId(this.getId());
+    definition.setId(this.getOid());
 
     List<ExcelFieldBinding> fields = this.getFields();
 

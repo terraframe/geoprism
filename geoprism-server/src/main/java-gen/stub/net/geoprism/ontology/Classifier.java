@@ -60,7 +60,7 @@ import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -69,7 +69,7 @@ import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.TermSynonymRelationship;
 
-public class Classifier extends ClassifierBase implements com.runwaysdk.generation.loader.Reloadable
+public class Classifier extends ClassifierBase 
 {
   private static final long  serialVersionUID = 1158111601;
 
@@ -109,9 +109,9 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
   }
 
-  public static String buildKey(String pkg, String id)
+  public static String buildKey(String pkg, String oid)
   {
-    return pkg + KEY_CONCATENATOR + id;
+    return pkg + KEY_CONCATENATOR + oid;
   }
 
   @Override
@@ -129,7 +129,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       @Override
       public int compare(Classifier o1, Classifier o2)
       {
-        return o1.getId().compareTo(o2.getId());
+        return o1.getOid().compareTo(o2.getOid());
       }
     }));
   }
@@ -164,7 +164,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     // ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
     // ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
     // ClassifierQuery classifierQ = new ClassifierQuery(qf);
-    // ClassifierAllPathsTableQuery allPathsQ = new ClassifierAllPathsTableQuery(qf);
+    // ClassifierIsARelationshipAllPathsTableQuery allPathsQ = new ClassifierIsARelationshipAllPathsTableQuery(qf);
     // ClassifierSynonymQuery synonymQ = new ClassifierSynonymQuery(qf);
     //
     // carQ.WHERE(carQ.getParent().EQ(mdAttributeTermDAOIF));
@@ -198,25 +198,25 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     MdLocalStructDAOIF mdStruct = mdAttributeLocal.getMdStructDAOIF();
 
     StringBuilder sql = new StringBuilder();
-    sql.append("select t.id AS id");
+    sql.append("select t.oid AS oid");
     sql.append(" from classifier_term_attribute_root AS br");
-    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_id");
-    sql.append(" join classifier AS t ON t.id = apt.child_term");
-    sql.append(" LEFT JOIN classifier_display_label AS tdl ON t.display_label = tdl.id");
-    sql.append(" where br.parent_id = '" + mdAttributeTermDAOIF.getId() + "'");
+    sql.append(" join classifier_is_ar_elationship_a AS apt ON apt.parent_term = br.child_oid");
+    sql.append(" join classifier AS t ON t.oid = apt.child_term");
+    sql.append(" LEFT JOIN classifier_display_label AS tdl ON t.display_label = tdl.oid");
+    sql.append(" where br.parent_oid = '" + mdAttributeTermDAOIF.getOid() + "'");
     sql.append(" AND (");
     sql.append("  UPPER(" + localize(mdStruct, "tdl") + ") = UPPER('" + sfTermToMatch + "')");
     sql.append("  OR t.classifier_id = '" + sfTermToMatch + "'");
     sql.append(" )");
     sql.append(" UNION");
-    sql.append(" SELECT DISTINCT t.id AS id");
+    sql.append(" SELECT DISTINCT t.oid AS oid");
     sql.append(" from classifier_term_attribute_root AS br");
-    sql.append(" join classifier_all_paths_table AS apt ON apt.parent_term = br.child_id");
-    sql.append(" join classifier AS t ON t.id = apt.child_term");
-    sql.append(" JOIN classifier_has_synonym AS hs ON hs.parent_id = t.id");
-    sql.append(" JOIN classifier_synonym AS ts ON hs.child_id = ts.id");
-    sql.append(" LEFT JOIN classifier_synonym_display_lab AS tdl ON ts.display_label = tdl.id");
-    sql.append(" where br.parent_id = '" + mdAttributeTermDAOIF.getId() + "'");
+    sql.append(" join classifier_is_ar_elationship_a AS apt ON apt.parent_term = br.child_oid");
+    sql.append(" join classifier AS t ON t.oid = apt.child_term");
+    sql.append(" JOIN classifier_has_synonym AS hs ON hs.parent_oid = t.oid");
+    sql.append(" JOIN classifier_synonym AS ts ON hs.child_oid = ts.oid");
+    sql.append(" LEFT JOIN classifier_synonym_display_lab AS tdl ON ts.display_label = tdl.oid");
+    sql.append(" where br.parent_oid = '" + mdAttributeTermDAOIF.getOid() + "'");
     sql.append(" AND " + localize(mdStruct, "tdl") + " = '" + sfTermToMatch + "'");
 
     try
@@ -227,7 +227,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       {
         if (results.next())
         {
-          termId = results.getString("id");
+          termId = results.getString("oid");
         }
       }
       finally
@@ -352,9 +352,9 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
    * @return
    */
   @Transaction
-  public static TermAndRel create(Classifier dto, String parentId)
+  public static TermAndRel create(Classifier dto, String parentOid)
   {
-    Classifier parent = Classifier.get(parentId);
+    Classifier parent = Classifier.get(parentOid);
 
     // If they didn't specify a package we can attempt to figure one out for them.
     if (dto.getClassifierPackage() == null || dto.getClassifierPackage().length() == 0)
@@ -375,7 +375,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
     Relationship rel = dto.addLink(parent, ClassifierIsARelationship.CLASS);
 
-    return new TermAndRel(dto, ClassifierIsARelationship.CLASS, rel.getId());
+    return new TermAndRel(dto, ClassifierIsARelationship.CLASS, rel.getOid());
   }
 
   public static OntologyStrategyIF createStrategy()
@@ -424,7 +424,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
       JSONObject object = new JSONObject();
       object.put("label", this.getDisplayLabel().getValue());
-      object.put("id", this.getId());
+      object.put("oid", this.getOid());
       object.put("type", this.getType());
       object.put("children", children);
       object.put("fetched", true);
@@ -487,7 +487,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       ClassifierQuery classifierRootQ = new ClassifierQuery(qf);
       ClassifierTermAttributeRootQuery carQ = new ClassifierTermAttributeRootQuery(qf);
 
-      carQ.WHERE(carQ.parentId().EQ(mdAttributeTermDAO.getId()));
+      carQ.WHERE(carQ.parentOid().EQ(mdAttributeTermDAO.getOid()));
 
       classifierRootQ.WHERE(classifierRootQ.classifierTermAttributeRoots(carQ));
 
@@ -518,7 +518,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
     for (Classifier classifier : classifiers)
     {
-      ids.add(classifier.getId());
+      ids.add(classifier.getOid());
     }
 
     return ids.toArray(new String[ids.size()]);
@@ -543,7 +543,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       {
         ClassifierIsARelationship locatedIn = iterator.next();
 
-        ids.add(locatedIn.getParentId());
+        ids.add(locatedIn.getParentOid());
       }
     }
     finally
@@ -591,7 +591,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
      */
     if (synonym != null)
     {
-      TermSynonymRelationship.logSynonymData(source, synonym.getId(), Classifier.CLASS);
+      TermSynonymRelationship.logSynonymData(source, synonym.getOid(), Classifier.CLASS);
     }
     else
     {
@@ -601,7 +601,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
       for (ClassifierSynonym existingSynonym : synonyms)
       {
-        TermSynonymRelationship.logSynonymData(source, existingSynonym.getId(), GeoEntity.CLASS);
+        TermSynonymRelationship.logSynonymData(source, existingSynonym.getOid(), GeoEntity.CLASS);
       }
     }
 
@@ -620,7 +620,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     }
     Classifier.getStrategy().removeTerm(source, ClassifierIsARelationship.CLASS);
 
-    BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
+    BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getOid(), destination.getOid(), true);
 
     source.delete();
 
@@ -664,7 +664,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       ClassifierSynonym synonym = new ClassifierSynonym();
       synonym.getDisplayLabel().setValue(synonymName);
 
-      ClassifierSynonym.createSynonym(synonym, destination.getId());
+      ClassifierSynonym.createSynonym(synonym, destination.getOid());
 
       return synonym;
     }
@@ -701,9 +701,9 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       {
         Classifier ancestor = (Classifier) anscestorIt.next();
 
-        if (!ancestor.getId().equals(root.getId()))
+        if (!ancestor.getOid().equals(root.getOid()))
         {
-          ids.add(ancestor.getId());
+          ids.add(ancestor.getOid());
         }
       }
     }
@@ -718,7 +718,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
     ClassifierIsARelationshipQuery isAQuery = new ClassifierIsARelationshipQuery(factory);
     isAQuery.WHERE(isAQuery.getParent().EQ(root));
-    isAQuery.AND(isAQuery.childId().IN(ids.toArray(new String[ids.size()])));
+    isAQuery.AND(isAQuery.childOid().IN(ids.toArray(new String[ids.size()])));
 
     ClassifierQuery query = new ClassifierQuery(factory);
     query.WHERE(query.isAParent(isAQuery));
@@ -760,7 +760,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     {
       JSONArray children = new JSONArray();
 
-      if (_ids.contains(_classifier.getId()))
+      if (_ids.contains(_classifier.getOid()))
       {
         OIterator<? extends ClassifierIsARelationship> iterator = null;
 
@@ -780,8 +780,8 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
             Classifier child = relationship.getChild();
 
             JSONObject parentRecord = new JSONObject();
-            parentRecord.put("parentId", relationship.getParentId());
-            parentRecord.put("relId", relationship.getId());
+            parentRecord.put("parentOid", relationship.getParentOid());
+            parentRecord.put("relId", relationship.getOid());
             parentRecord.put("relType", ClassifierIsARelationship.CLASS);
 
             JSONObject object = Classifier.getJSONObject(child, _ids, false);
@@ -804,7 +804,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
       JSONObject object = new JSONObject();
       object.put("label", label);
-      object.put("id", _classifier.getId());
+      object.put("oid", _classifier.getOid());
       object.put("type", _classifier.getType());
       object.put("children", children);
       object.put("fetched", ( children.length() > 0 ));
@@ -902,7 +902,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
           Classifier classifier = it.next();
 
           JSONObject object = new JSONObject();
-          object.put("value", classifier.getId());
+          object.put("value", classifier.getOid());
           object.put("label", classifier.getDisplayLabel().getValue());
 
           array.put(object);
@@ -931,18 +931,18 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     ClassifierQuery classifierQuery = new ClassifierQuery(query);
     ClassifierIsARelationshipQuery isAQ = new ClassifierIsARelationshipQuery(query);
     ClassifierTermAttributeRootQuery rootQ = new ClassifierTermAttributeRootQuery(query);
-    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(query);
+    ClassifierIsARelationshipAllPathsTableQuery aptQuery = new ClassifierIsARelationshipAllPathsTableQuery(query);
 
-    SelectableChar id = classifierQuery.getId();
+    SelectableUUID oid = classifierQuery.getOid();
 
     Coalesce label = classifierQuery.getDisplayLabel().localize();
     label.setColumnAlias(Classifier.DISPLAYLABEL);
     label.setUserDefinedAlias(Classifier.DISPLAYLABEL);
     label.setUserDefinedDisplayLabel(Classifier.DISPLAYLABEL);
 
-    query.SELECT(id, label);
+    query.SELECT(oid, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
-    query.AND(rootQ.parentId().EQ(mdAttributeId));
+    query.AND(rootQ.parentOid().EQ(mdAttributeId));
     query.AND(isAQ.getParent().EQ(rootQ.getChild()));
     query.AND(aptQuery.getParentTerm().EQ(isAQ.getChild()));
     query.AND(classifierQuery.EQ(aptQuery.getChildTerm()));
@@ -964,7 +964,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
       JSONObject object = new JSONObject(config);
 
       JSONObject option = object.getJSONObject("option");
-      String optionId = option.getString("id");
+      String optionId = option.getString("oid");
       String label = option.getString("label");
 
       /*
@@ -1016,18 +1016,18 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
         Classifier.validateCategoryName(label, null);
       }
 
-      if (object.has("parentId") && object.getString("parentId").length() > 0)
+      if (object.has("parentOid") && object.getString("parentOid").length() > 0)
       {
-        String parentId = object.getString("parentId");
+        String parentOid = object.getString("parentOid");
 
-        Classifier parent = Classifier.get(parentId);
+        Classifier parent = Classifier.get(parentOid);
 
         Classifier classifier = new Classifier();
         classifier.setClassifierPackage(parent.getClassifierPackage());
         classifier.setClassifierId(IDGenerator.nextID());
         classifier.getDisplayLabel().setValue(label);
 
-        Classifier.create(classifier, parentId);
+        Classifier.create(classifier, parentOid);
 
         return classifier;
       }
@@ -1041,7 +1041,7 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
         classifier.getDisplayLabel().setValue(label);
         classifier.setCategory(true);
 
-        Classifier.create(classifier, parent.getId());
+        Classifier.create(classifier, parent.getOid());
 
         return classifier;
       }
@@ -1054,9 +1054,9 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
 
   @Authenticate
   @Transaction
-  public static void deleteOption(String id)
+  public static void deleteOption(String oid)
   {
-    Classifier classifier = Classifier.get(id);
+    Classifier classifier = Classifier.get(oid);
 
     Boolean category = classifier.getCategory();
 
@@ -1079,18 +1079,18 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
   }
 
   @Authenticate
-  public static Classifier editOption(String id)
+  public static Classifier editOption(String oid)
   {
-    return Classifier.lock(id);
+    return Classifier.lock(oid);
   }
 
   @Authenticate
-  public static void unlockCategory(String id)
+  public static void unlockCategory(String oid)
   {
-    Classifier.unlock(id);
+    Classifier.unlock(oid);
   }
 
-  public static void validateCategoryName(String name, String id)
+  public static void validateCategoryName(String name, String oid)
   {
     QueryFactory factory = new QueryFactory();
 
@@ -1098,9 +1098,9 @@ public class Classifier extends ClassifierBase implements com.runwaysdk.generati
     classifierQuery.WHERE(classifierQuery.getCategory().EQ(true));
     classifierQuery.AND(classifierQuery.getDisplayLabel().localize().EQ(name.trim()));
 
-    if (id != null && id.length() > 0)
+    if (oid != null && oid.length() > 0)
     {
-      classifierQuery.AND(classifierQuery.getId().NE(id));
+      classifierQuery.AND(classifierQuery.getOid().NE(oid));
     }
 
     long count = classifierQuery.getCount();

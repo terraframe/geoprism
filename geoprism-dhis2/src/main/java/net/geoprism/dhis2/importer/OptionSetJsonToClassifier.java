@@ -33,7 +33,7 @@ public class OptionSetJsonToClassifier
   
   /**
    * This is a hack we're doing for the beta release. If a classifier package contains this prefix then we know it exists in DHIS2. Otherwise
-   *   we know it needs to be exported. In the future we'll likely have a table that maps from runway id to DHIS2 id.
+   *   we know it needs to be exported. In the future we'll likely have a table that maps from runway oid to DHIS2 oid.
    */
   public static final String DHIS2_CLASSIFIER_PACKAGE_PREFIX = "DHIS2-";
   
@@ -46,12 +46,12 @@ public class OptionSetJsonToClassifier
   {
     this.classy = new Classifier();
     this.classy.getDisplayLabel().setValue(json.getString("name"));
-    this.classy.setClassifierId(json.getString("id"));
-    this.classy.setClassifierPackage(DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
+    this.classy.setClassifierId(json.getString("oid"));
+    this.classy.setClassifierPackage(DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("oid"));
     this.classy.setCategory(true);
     this.classy.apply();
     
-    DHIS2Util.mapIds(classy.getId(), json.getString("id"));
+    DHIS2Util.mapIds(classy.getOid(), json.getString("oid"));
     
     Classifier parent = Classifier.getRoot();
     this.classy.addLink(parent, ClassifierIsARelationship.CLASS);
@@ -59,13 +59,13 @@ public class OptionSetJsonToClassifier
   
   public void applyCategoryRelationships()
   {
-    this.classy = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(json.getString("id")));
+    this.classy = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(json.getString("oid")));
     
     JSONArray options = json.getJSONArray("options");
     for (int i = 0; i < options.length(); ++i)
     {
       JSONObject jsonOption = options.getJSONObject(i);
-      Classifier option = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(jsonOption.getString("id")));
+      Classifier option = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(jsonOption.getString("oid")));
       
       option.addLink(classy, ClassifierIsARelationship.CLASS);
     }

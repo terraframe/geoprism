@@ -19,24 +19,28 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierIsARelationship extends ClassifierIsARelationshipBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierIsARelationship extends ClassifierIsARelationshipBase 
 {
   private static final long serialVersionUID = -985779118;
   
-  public ClassifierIsARelationship(String parentId, String childId)
+  public ClassifierIsARelationship(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public ClassifierIsARelationship(net.geoprism.ontology.Classifier parent, net.geoprism.ontology.Classifier child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
-  @Override
-  public String buildKey()
+  /**
+   * Call this method to properly set the key. 
+   * 
+   * @param parentKey
+   * @param childKey
+   */
+  public void setKey(String parentKey, String childKey)
   {
-    return this.getParentId() + this.getChildId();
+	  this.setKeyName(parentKey+"_"+childKey);
   }
-  
 }

@@ -35,18 +35,18 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 
-public class TermSynonymRelationship extends TermSynonymRelationshipBase implements com.runwaysdk.generation.loader.Reloadable
+public class TermSynonymRelationship extends TermSynonymRelationshipBase 
 {
   private static final long serialVersionUID = 798149257;
 
-  public TermSynonymRelationship(String parentId, String childId)
+  public TermSynonymRelationship(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
 
   public TermSynonymRelationship(com.runwaysdk.system.metadata.MdAttributeReference parent, com.runwaysdk.system.metadata.MdAttributeReference child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
 
   public PreparedStatement buildSynonymUpdateStatement(MdBusiness mdBusiness, Term term, String synonymId)
@@ -65,7 +65,7 @@ public class TermSynonymRelationship extends TermSynonymRelationshipBase impleme
     {
       PreparedStatement statement = conn.prepareStatement(sql);
       statement.setString(1, synonymId);
-      statement.setString(2, term.getId());
+      statement.setString(2, term.getOid());
 
       return statement;
     }
@@ -89,7 +89,7 @@ public class TermSynonymRelationship extends TermSynonymRelationshipBase impleme
     try
     {
       PreparedStatement statement = conn.prepareStatement(sql);
-      statement.setString(1, term.getId());
+      statement.setString(1, term.getOid());
       statement.setString(2, synonymId);
 
       return statement;
@@ -110,7 +110,7 @@ public class TermSynonymRelationship extends TermSynonymRelationshipBase impleme
     termSynonymQuery.WHERE(termSynonymQuery.getParent().aReference(MdAttributeReferenceInfo.REF_MD_ENTITY).EQ(mdBusiness));
 
     ClassAttributeQuery classAttributeQuery = new ClassAttributeQuery(factory);
-    classAttributeQuery.WHERE(classAttributeQuery.childId().EQ(termSynonymQuery.parentId()));
+    classAttributeQuery.WHERE(classAttributeQuery.childOid().EQ(termSynonymQuery.parentOid()));
 
     MdBusinessQuery mdBusinessQuery = new MdBusinessQuery(factory);
     mdBusinessQuery.WHERE(mdBusinessQuery.attribute(classAttributeQuery));
@@ -139,11 +139,11 @@ public class TermSynonymRelationship extends TermSynonymRelationshipBase impleme
     QueryFactory factory = new QueryFactory();
 
     ClassAttributeQuery classAttributeQuery = new ClassAttributeQuery(factory);
-    classAttributeQuery.WHERE(classAttributeQuery.parentId().EQ(mdBusiness.getId()));
+    classAttributeQuery.WHERE(classAttributeQuery.parentOid().EQ(mdBusiness.getOid()));
 
     TermSynonymRelationshipQuery termSynonymQuery = new TermSynonymRelationshipQuery(factory);
     termSynonymQuery.WHERE(termSynonymQuery.getParent().aReference(MdAttributeReferenceInfo.REF_MD_ENTITY).EQ(referenceBusiness));
-    termSynonymQuery.AND(termSynonymQuery.parentId().EQ(classAttributeQuery.childId()));
+    termSynonymQuery.AND(termSynonymQuery.parentOid().EQ(classAttributeQuery.childOid()));
 
     OIterator<? extends TermSynonymRelationship> iterator = null;
 

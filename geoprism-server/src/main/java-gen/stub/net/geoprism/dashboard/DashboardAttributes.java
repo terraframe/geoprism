@@ -19,18 +19,18 @@
 package net.geoprism.dashboard;
 
 
-public class DashboardAttributes extends DashboardAttributesBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardAttributes extends DashboardAttributesBase 
 {
   private static final long serialVersionUID = 1378379249;
   
-  public DashboardAttributes(String parentId, String childId)
+  public DashboardAttributes(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public DashboardAttributes(net.geoprism.dashboard.MetadataWrapper parent, net.geoprism.dashboard.AttributeWrapper child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

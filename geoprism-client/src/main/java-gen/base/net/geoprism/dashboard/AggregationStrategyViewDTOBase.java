@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 2141257367)
-public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.AggregationStrategyView";
   private static final long serialVersionUID = 2141257367;
@@ -37,7 +37,7 @@ public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.busin
   public static java.lang.String AGGREGATIONTYPE = "aggregationType";
   public static java.lang.String AVAILABLEGEOMETRYTYPES = "availableGeometryTypes";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String VALUE = "value";
   public String getAggregationType()
   {
@@ -195,9 +195,9 @@ public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.busin
     return (net.geoprism.dashboard.AggregationStrategyViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static AggregationStrategyViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static AggregationStrategyViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (AggregationStrategyViewDTO) dto;
   }
@@ -215,7 +215,7 @@ public abstract class AggregationStrategyViewDTOBase extends com.runwaysdk.busin
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

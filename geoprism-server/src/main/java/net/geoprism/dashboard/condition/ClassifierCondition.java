@@ -32,16 +32,16 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
 import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 
-public class ClassifierCondition extends DashboardPrimitiveCondition implements Reloadable
+public class ClassifierCondition extends DashboardPrimitiveCondition 
 {
   /**
    * Equal comparison
@@ -69,7 +69,7 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
     {
       try
       {
-        ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(vQuery);
+        ClassifierIsARelationshipAllPathsTableQuery allPathQuery = new ClassifierIsARelationshipAllPathsTableQuery(vQuery);
 
         JSONArray array = new JSONArray(this.getComparisonValue());
 
@@ -153,7 +153,7 @@ public class ClassifierCondition extends DashboardPrimitiveCondition implements 
         }
         catch (DataNotFoundException e)
         {
-          // Do nothing. There was criteria specified on a classifier which no longer exists or the id of the
+          // Do nothing. There was criteria specified on a classifier which no longer exists or the oid of the
           // classifier was changed.
         }
       }

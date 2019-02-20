@@ -24,9 +24,9 @@ import net.geoprism.dashboard.condition.DashboardCondition;
 
 import org.json.JSONArray;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class ConditionInformationHandler implements Reloadable, ReportConditionHandlerIF
+
+public class ConditionInformationHandler implements ReportConditionHandlerIF
 {
   private JSONArray array;
 

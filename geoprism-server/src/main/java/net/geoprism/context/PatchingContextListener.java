@@ -26,7 +26,7 @@ import com.runwaysdk.business.ontology.OntologyStrategyFactory;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
@@ -34,15 +34,18 @@ import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
 
 import net.geoprism.GeoprismPatcher;
+import net.geoprism.GeoprismPatcherIF;
+import net.geoprism.PluginUtil;
 
-public class PatchingContextListener implements Reloadable, ServerContextListener
+public class PatchingContextListener implements ServerContextListener
 {
-  protected GeoprismPatcher patcher;
+  protected GeoprismPatcherIF patcher;
 
   @Override
   public void initialize()
   {
-    patcher = new GeoprismPatcher(new File(DeployProperties.getDeployBin(), "metadata"));
+    patcher = PluginUtil.getPatcher();
+    patcher.initialize(new File(DeployProperties.getDeployBin(), "metadata"));
   }
 
   @Override
@@ -53,12 +56,11 @@ public class PatchingContextListener implements Reloadable, ServerContextListene
       initialize();
     }
 
-    patcher.startup();
+    patcher.run();
   }
 
   @Override
   public void shutdown()
   {
-    patcher.shutdown();
   }
 }

@@ -29,8 +29,8 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
+
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;
@@ -65,7 +65,7 @@ import net.geoprism.localization.LocalizationFacade;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierQuery;
 
-public abstract class AbstractProvider implements Reloadable, ReportProviderIF
+public abstract class AbstractProvider implements ReportProviderIF
 {
   public static final String CHILDREN     = "1";
 
@@ -162,7 +162,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
   protected int getDepth(Term dest, Term source, int depth)
   {
 
-    if (dest.getId().equals(source.getId()))
+    if (dest.getOid().equals(source.getOid()))
     {
       return depth;
     }
@@ -326,7 +326,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       LocatedInQuery grandParentQuery = new LocatedInQuery(vQuery);
       LocatedInQuery uncleQuery = new LocatedInQuery(vQuery);
       LocatedInQuery cuzQuery = new LocatedInQuery(vQuery);
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(parentQuery.getChild().EQ(geoEntity));
       vQuery.AND(grandParentQuery.getChild().EQ(parentQuery.getParent()));
@@ -344,7 +344,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       // Siblings
       LocatedInQuery parentQuery = new LocatedInQuery(vQuery);
       LocatedInQuery siblingQuery = new LocatedInQuery(vQuery);
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(parentQuery.getChild().EQ(geoEntity));
       vQuery.AND(siblingQuery.getParent().EQ(parentQuery.getParent()));
@@ -358,7 +358,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     {
       // Kids
       LocatedInQuery kidsQuery = new LocatedInQuery(vQuery);
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(kidsQuery.getParent().EQ(geoEntity));
       vQuery.AND(aptQuery.getParentTerm().EQ(kidsQuery.getChild()));
@@ -370,7 +370,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       // Kids
       LocatedInQuery kidsQuery = new LocatedInQuery(vQuery);
       LocatedInQuery grandKidQuery = new LocatedInQuery(vQuery);
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(kidsQuery.getParent().EQ(geoEntity));
       vQuery.WHERE(grandKidQuery.getParent().EQ(kidsQuery.getChild()));
@@ -381,7 +381,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     else if (aggregation != null && aggregation.equals(PARENTS) && this.hasDepth(geoEntity, 1))
     {
       LocatedInQuery lQuery = new LocatedInQuery(vQuery);
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(lQuery.getChild().EQ(geoEntity));
       vQuery.AND(aptQuery.getParentTerm().EQ(lQuery.getParent()));
@@ -392,7 +392,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     {
       LocatedInQuery lQuery1 = new LocatedInQuery(vQuery);
       LocatedInQuery lQuery2 = new LocatedInQuery(vQuery);
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(lQuery1.getChild().EQ(geoEntity));
       vQuery.AND(lQuery2.getChild().EQ(lQuery1.getParent()));
@@ -404,7 +404,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     {
       GeoEntityQuery gQuery = new GeoEntityQuery(vQuery);
 
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(gQuery.getUniversal().EQ(geoEntity.getUniversal()));
       vQuery.AND(aptQuery.getParentTerm().EQ(gQuery));
@@ -416,7 +416,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     else
     {
       // Direct
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(vQuery);
 
       vQuery.WHERE(aptQuery.getParentTerm().EQ(geoEntity));
       vQuery.AND(entityQuery.EQ(aptQuery.getParentTerm()));
@@ -452,7 +452,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
     parentLocation.setUserDefinedDisplayLabel(LocalizationFacade.getFromBundles(suffix + "Label"));
 
     vQuery.SELECT(parentLocation);
-    vQuery.AND(query.getId().EQ(entity.getId()));
+    vQuery.AND(query.getOid().EQ(entity.getOid()));
   }
 
   private void addUniversalLabel(ValueQuery vQuery, String suffix, SelectableReference parent)
@@ -497,7 +497,7 @@ public abstract class AbstractProvider implements Reloadable, ReportProviderIF
       }
       catch (Exception e)
       {
-        // Incoming data is bad, just use the default geo id
+        // Incoming data is bad, just use the default geo oid
       }
     }
 

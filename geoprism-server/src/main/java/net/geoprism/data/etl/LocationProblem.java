@@ -49,7 +49,7 @@ public class LocationProblem implements ImportProblemIF, Comparable<ImportProble
 
   public String getKey()
   {
-    return this.parent.getId() + "-" + this.label;
+    return this.parent.getOid() + "-" + this.label;
   }
 
   @Override
@@ -58,8 +58,8 @@ public class LocationProblem implements ImportProblemIF, Comparable<ImportProble
     JSONObject object = new JSONObject();
     object.put("type", "LOCATION");
     object.put("label", label);
-    object.put("parentId", parent.getId());
-    object.put("universalId", universal.getId());
+    object.put("parentOid", parent.getOid());
+    object.put("universalId", universal.getOid());
     object.put("universalLabel", universal.getDisplayLabel().getValue());
     object.put("context", new JSONArray(context));
 

@@ -20,9 +20,9 @@ package net.geoprism.ontology;
 
 import net.geoprism.context.ServerContextListener;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class StrategyContextListener implements ServerContextListener, Reloadable
+
+public class StrategyContextListener implements ServerContextListener
 {
   @Override
   public void initialize()

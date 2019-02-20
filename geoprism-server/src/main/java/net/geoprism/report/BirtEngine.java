@@ -26,11 +26,11 @@ import org.eclipse.birt.report.engine.api.EngineConfig;
 import org.eclipse.birt.report.engine.api.IReportEngine;
 import org.eclipse.birt.report.engine.api.IReportEngineFactory;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class BirtEngine implements Reloadable
+
+public class BirtEngine 
 {
-  private enum LogLevel implements Reloadable {
+  private enum LogLevel  {
     SEVERE(Level.SEVERE), WARNING(Level.WARNING), INFO(Level.INFO), CONFIG(Level.CONFIG), FINE(Level.FINE), FINER(Level.FINER), FINEST(Level.FINEST), OFF(Level.OFF);
 
     private Level level;

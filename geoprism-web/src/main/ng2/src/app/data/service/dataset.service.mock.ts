@@ -28,7 +28,7 @@ export class MockDatasetService {
 
   getMockDataset(): Dataset {
     let dataset = new Dataset();
-    dataset.id = 'test-id';
+    dataset.oid = 'test-oid';
     dataset.label = 'Test Label';
     dataset.description = 'Test Description';
     dataset.source = 'Test Source';
@@ -45,7 +45,7 @@ export class MockDatasetService {
     });  
   }
   
-  edit(id : string): Promise<Dataset> {
+  edit(oid : string): Promise<Dataset> {
     return new Promise((resolve, reject) => {     
       resolve(this.getMockDataset());  
     });  
@@ -69,13 +69,13 @@ export class MockDatasetService {
     });  
   }  
       
-  validateDatasetName(name: string, id: string): Promise<Response> {
+  validateDatasetName(name: string, oid: string): Promise<Response> {
     return new Promise((resolve, reject) => {     
       resolve(null);  
     });  
   }  
   
-  xport(id : string): Promise<Dataset> {
+  xport(oid : string): Promise<Dataset> {
     return new Promise((resolve, reject) => {     
       resolve(this.getMockDataset());  
     });  

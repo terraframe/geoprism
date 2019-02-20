@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2;
 
-public class OptionCodeMapping extends OptionCodeMappingBase implements com.runwaysdk.generation.loader.Reloadable
+public class OptionCodeMapping extends OptionCodeMappingBase 
 {
   private static final long serialVersionUID = -123292063;
   

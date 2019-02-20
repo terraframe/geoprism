@@ -1,0 +1,45 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="net.geoprism.EmailSetting">
+        <attributes>
+          <char name="server" label="server" size="255"/>
+          <char name="username" label="username" size="255"/>
+          <char name="password" column="pword" label="password" size="255"/>
+          <integer name="port" label="port" rejectNegative="true"/>
+          <char name="from" column="emailFrom" label="from" size="255"/>
+          <char name="to" column="emailTo" label="to" size="255"/>
+        </attributes>
+        <mdMethod name="getDefault" returnType="net.geoprism.EmailSetting" static="true" label="getDefault"></mdMethod>
+      </mdBusiness>
+    </create>
+    <update>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object type="com.runwaysdk.system.metadata.MdBusiness" key="net.geoprism.EmailSetting" />
+      <object type="com.runwaysdk.system.metadata.MdAction" key="net.geoprism.AdminController.system" />
+    </delete>
+  </undoIt>
+</version>

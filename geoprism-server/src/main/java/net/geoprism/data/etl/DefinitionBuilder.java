@@ -50,7 +50,7 @@ public class DefinitionBuilder
 
     if (!source.isNew() || source.isApplied())
     {
-      object.put("existing", source.getId());
+      object.put("existing", source.getOid());
     }
 
     return object;
@@ -69,9 +69,9 @@ public class DefinitionBuilder
       {
         TargetFieldGeoEntityIF eField = (TargetFieldGeoEntityIF) field;
 
-        ids.put(eField.getId());
+        ids.put(eField.getOid());
 
-        values.put(eField.getId(), eField.toJSON());
+        values.put(eField.getOid(), eField.toJSON());
       }
     }
 
@@ -95,9 +95,9 @@ public class DefinitionBuilder
       {
         TargetFieldPointIF pField = (TargetFieldPointIF) field;
 
-        ids.put(pField.getId());
+        ids.put(pField.getOid());
 
-        values.put(pField.getId(), pField.toJSON());
+        values.put(pField.getOid(), pField.toJSON());
       }
     }
 

@@ -53,9 +53,9 @@ public class AccountController
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    GeoprismUserDTO user = GeoprismUserDTO.lock(request, id);
+    GeoprismUserDTO user = GeoprismUserDTO.lock(request, oid);
     RoleViewDTO[] roles = RoleViewDTO.getRoles(request, user);
 
     JSONArray groups = this.createRoleMap(roles);
@@ -92,9 +92,9 @@ public class AccountController
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    GeoprismUserDTO user = GeoprismUserDTO.lock(request, id);
+    GeoprismUserDTO user = GeoprismUserDTO.lock(request, oid);
     user.delete();
 
     return new RestResponse();
@@ -135,9 +135,9 @@ public class AccountController
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
-  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "id") String id) throws JSONException
+  public ResponseIF unlock(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
   {
-    GeoprismUserDTO.unlock(request, id);
+    GeoprismUserDTO.unlock(request, oid);
 
     return new RestBodyResponse("");
   }

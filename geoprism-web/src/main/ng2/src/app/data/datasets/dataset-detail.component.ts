@@ -37,7 +37,7 @@ export class DatasetResolver implements Resolve<Dataset> {
   constructor(@Inject(DatasetService) private datasetService: DatasetService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Dataset> {
-    return this.datasetService.edit(route.params['id'])
+    return this.datasetService.edit(route.params['oid'])
       .catch((error:any) => {
         this.eventService.onError(error); 
     	  
@@ -73,7 +73,7 @@ export class DatasetDetailComponent implements OnInit {
   }
   
   validateName(name: string) {
-    this.datasetService.validateDatasetName(name, this.dataset.id)
+    this.datasetService.validateDatasetName(name, this.dataset.oid)
       .then((response:any) => {
         this.validName = true;
       })
@@ -97,7 +97,7 @@ export class DatasetDetailComponent implements OnInit {
   }
   
   open(category: BasicCategory, event: any) : void {
-    this.router.navigate(['/data/category', category.id]);
+    this.router.navigate(['/data/category', category.oid]);
   }
   
   goBack(dataset : Dataset): void {
@@ -121,7 +121,7 @@ export class DatasetDetailComponent implements OnInit {
   }
   
   addIndicator() : void {
-    this.modal.initialize(this.dataset.id, this.dataset.aggregations, this.getNumericAttributes(), undefined);
+    this.modal.initialize(this.dataset.oid, this.dataset.aggregations, this.getNumericAttributes(), undefined);
   }
   
   onIndicatorSuccess(attribute:DatasetAttribute): void {
@@ -129,7 +129,7 @@ export class DatasetDetailComponent implements OnInit {
       this.dataset.attributes = [];
     }    
     
-    this.dataset.attributes = this.dataset.attributes.filter(attr => attr.id !== attribute.id);
+    this.dataset.attributes = this.dataset.attributes.filter(attr => attr.oid !== attribute.oid);
     
     this.dataset.attributes.push(attribute);    
   }
@@ -137,7 +137,7 @@ export class DatasetDetailComponent implements OnInit {
   editAttribute(attribute:DatasetAttribute): void{
     this.datasetService.editAttribute(attribute)
       .then(indicator => {      
-        this.modal.initialize(this.dataset.id, this.dataset.aggregations, this.getNumericAttributes(), indicator);          
+        this.modal.initialize(this.dataset.oid, this.dataset.aggregations, this.getNumericAttributes(), indicator);          
       });
   
   }
@@ -145,7 +145,7 @@ export class DatasetDetailComponent implements OnInit {
   removeAttribute(attribute:DatasetAttribute): void {
     this.datasetService.removeAttribute(attribute)
       .then(response => {
-        this.dataset.attributes = this.dataset.attributes.filter(attr => attr.id !== attribute.id);
+        this.dataset.attributes = this.dataset.attributes.filter(attr => attr.oid !== attribute.oid);
       });
   }  
 }

@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 332534159)
-public class AdminControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class AdminControllerBase 
 {
   public static final String CLASS = "net.geoprism.AdminController";
   protected javax.servlet.http.HttpServletRequest req;

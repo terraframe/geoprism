@@ -19,7 +19,7 @@
 package net.geoprism.gis.geoserver;
 
 @com.runwaysdk.business.ClassSignature(hash = 383429136)
-public abstract class NoLayerDataExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class NoLayerDataExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.gis.geoserver.NoLayerDataException";
   private static final long serialVersionUID = 383429136;
@@ -69,7 +69,7 @@ public abstract class NoLayerDataExceptionDTOBase extends com.runwaysdk.business
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   /**
    * Overrides java.lang.Throwable#getMessage() to retrieve the localized
    * message from the exceptionDTO, instead of from a class variable.
@@ -78,7 +78,7 @@ public abstract class NoLayerDataExceptionDTOBase extends com.runwaysdk.business
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

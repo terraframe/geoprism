@@ -18,7 +18,7 @@
  */
 package net.geoprism.ontology;
 
-public class NonUniqueEntityResultException extends NonUniqueEntityResultExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class NonUniqueEntityResultException extends NonUniqueEntityResultExceptionBase 
 {
   private static final long serialVersionUID = -1142523050;
   

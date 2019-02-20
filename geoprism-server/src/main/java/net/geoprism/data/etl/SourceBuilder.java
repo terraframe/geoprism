@@ -65,10 +65,10 @@ public class SourceBuilder
 
         if (sheet.has("existing"))
         {
-          String id = sheet.getString("existing");
+          String oid = sheet.getString("existing");
           String sheetName = sheet.getString("name");
 
-          ExcelSourceBinding sBinding = ExcelSourceBinding.get(id);
+          ExcelSourceBinding sBinding = ExcelSourceBinding.get(oid);
 
           this.source.addSheetDefinition(sBinding.getDefinition(sheetName));
         }
@@ -142,7 +142,7 @@ public class SourceBuilder
     
     MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
     mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
-    mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getOid());
     mdAttribute.setStructValue(MdAttributeTextInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdAttribute.apply();
 

@@ -51,7 +51,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.database.DatabaseException;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
@@ -115,7 +115,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
   private ArrayList<UniversalAttribute> attributes;
 
-  private String                        id;
+  private String                        oid;
 
   private GeoEntity                     root;
 
@@ -128,12 +128,12 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   public TargetFieldGeoEntity()
   {
     this.attributes = new ArrayList<UniversalAttribute>();
-    this.id = IDGenerator.nextID();
+    this.oid = IDGenerator.nextID();
   }
 
-  public String getId()
+  public String getOid()
   {
-    return id;
+    return oid;
   }
 
   public GeoEntity getRoot()
@@ -264,7 +264,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     for (UniversalAttribute attribute : this.attributes)
     {
-      map.put(attribute.getAttributeName(), attribute.getUniversal().getId());
+      map.put(attribute.getAttributeName(), attribute.getUniversal().getOid());
     }
 
     return map;
@@ -334,7 +334,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
           }
         }
 
-        return parent.getId();
+        return parent.getOid();
       }
       else
       {
@@ -371,7 +371,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       {
         Universal universal = attribute.getUniversal();
 
-        conditions.add(universal.getId() + "%%%" + label);
+        conditions.add(universal.getOid() + "%%%" + label);
 
         uni = universal;
       }
@@ -379,7 +379,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     Collections.reverse(conditions);
 
-    String qText = SolrOntolgyStrategy.QUALIFIER + ":(" + uni.getId() + ")";
+    String qText = SolrOntolgyStrategy.QUALIFIER + ":(" + uni.getOid() + ")";
 
     for (int i = 0; i < conditions.size(); i++)
     {
@@ -426,7 +426,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
   {
     QueryFactory factory = new QueryFactory();
 
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(factory);
+    LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(parent));
 
     SynonymQuery synonymQuery = new SynonymQuery(factory);
@@ -434,7 +434,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.getUniversal().EQ(universal));
-    query.AND(query.getId().EQ(aptQuery.getChildTerm().getId()));
+    query.AND(query.getOid().EQ(aptQuery.getChildTerm().getOid()));
     query.AND(OR.get(F.TRIM(query.getDisplayLabel().localize()).EQi(label), query.synonym(synonymQuery)));
 
     OIterator<? extends GeoEntity> iterator = query.getIterator();
@@ -560,7 +560,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
       if (geoIdString != null && geoIdString.length() > 0)
       {
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT g.id, ST_Distance(g.".concat(comparativeTargetGeomColumnName).concat(", ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")));
+        sql.append("SELECT g.oid, ST_Distance(g.".concat(comparativeTargetGeomColumnName).concat(", ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326))")));
         sql.append(" FROM geo_entity g");
         sql.append(" WHERE g.geo_id IN (".concat(geoIdString.toString()).concat(")"));
         sql.append(" ORDER BY 2 ASC");
@@ -633,15 +633,15 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
           ArrayList<String> childIds = new ArrayList<String>();
           for (GeoEntity geo : geoEntities)
           {
-            childIds.add(geo.getId());
+            childIds.add(geo.getOid());
           }
 
           StringBuffer sql = new StringBuffer();
-          sql.append("SELECT g.id, apt.child_term ");
-          sql.append("FROM geo_entity g, geo_entity_all_paths_table apt ");
+          sql.append("SELECT g.oid, apt.child_term ");
+          sql.append("FROM geo_entity g, located_in_all_paths_table apt ");
           sql.append("WHERE ST_Within(ST_SetSRID(st_pointfromtext('POINT(".concat(sourceLong).concat(" ").concat(sourceLat).concat(")'), 4326)").concat(", g.geo_multi_polygon) "));
-          sql.append("AND g.universal = '" + parentUniversal.getId() + "' ");
-          sql.append("AND apt.parent_term=g.id ");
+          sql.append("AND g.universal = '" + parentUniversal.getOid() + "' ");
+          sql.append("AND apt.parent_term=g.oid ");
           sql.append("AND apt.child_term = ANY('{" + StringUtils.join(childIds, ",") + "}')");
           ResultSet resultSet = Database.query(sql.toString());
 
@@ -725,16 +725,16 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
     for (UniversalAttribute attribute : this.attributes)
     {
-      fields.put(attribute.getUniversal().getId(), attribute.getLabel());
+      fields.put(attribute.getUniversal().getOid(), attribute.getLabel());
     }
 
     UniversalAttribute attribute = this.attributes.get(this.attributes.size() - 1);
 
     JSONObject object = new JSONObject();
     object.put("label", this.getLabel());
-    object.put("universal", attribute.getUniversal().getId());
+    object.put("universal", attribute.getUniversal().getOid());
     object.put("fields", fields);
-    object.put("id", this.id);
+    object.put("oid", this.oid);
     object.put("useCoordinatesForLocationAssignment", this.getUseCoordinatesForLocationAssignment());
 
     return object;
@@ -783,7 +783,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
             JSONObject coordObj = this.getCoordinates(source);
 
-            if (parent.getUniversalId().equals(entityUniversal.getId()))
+            if (parent.getUniversalOid().equals(entityUniversal.getOid()))
             {
               GeoEntity entity = this.findGeoEntity(GeoEntity.getRoot(), entityUniversal, label, coordObj);
 
@@ -857,11 +857,11 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
   private boolean isExcluded(Map<String, Set<String>> locationExclusions, Universal universal, GeoEntity parent, String label)
   {
-    String key = universal.getId() + "-" + parent.getId();
+    String key = universal.getOid() + "-" + parent.getOid();
 
-    if (universal.getId().equals(this.rootUniversal.getId()))
+    if (universal.getOid().equals(this.rootUniversal.getOid()))
     {
-      key = universal.getId() + "-" + GeoEntity.getRoot().getId();
+      key = universal.getOid() + "-" + GeoEntity.getRoot().getOid();
     }
 
     if (locationExclusions.containsKey(key))

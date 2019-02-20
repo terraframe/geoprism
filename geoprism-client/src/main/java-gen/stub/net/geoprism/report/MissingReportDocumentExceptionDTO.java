@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class MissingReportDocumentExceptionDTO extends MissingReportDocumentExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1438049062;
   
   public MissingReportDocumentExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

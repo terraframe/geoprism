@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 import net.geoprism.localization.LocalizationFacade;
 
-public class PairView extends PairViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class PairView extends PairViewBase 
 {
   private static final long serialVersionUID = 1900255208;
 

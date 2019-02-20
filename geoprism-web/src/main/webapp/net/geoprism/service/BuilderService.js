@@ -18,32 +18,46 @@
  */
 (function(){
 
-  function BuilderService(runwayService) {
+  function BuilderService($http, runwayService, localizationService) {
     var service = {};
-    service.dto = new net.geoprism.dashboard.Dashboard();
+//    service.dto = new net.geoprism.dashboard.Dashboard();
     
     service.applyWithOptions = function(object, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
-
-      runwayService.populate(service.dto, object);
-     
-      service.dto.applyWithOptions(request, object.options);
+      
+      for(var key in object) {      
+        service.dto[key] = object[key];
+      }
+        
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/apply-with-options', 
+        method: "POST",
+        data: {dto: service.dto, options:object.options}
+      }, request);      
     }
     
     service.getLayersToDelete = function(object, element, onSuccess, onFailure) {
       var request = runwayService.createStandbyRequest(element, onSuccess, onFailure);
-       
-      service.dto.getLayersToDelete(request, object.options);    
+      
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/layers-to-delete', 
+        method: "POST",
+        data: {dashboardId: service.dto.oid, options:object.options}
+      }, request);      
     }
     
     service.unlock = function(object, onSuccess, onFailure) {
-      if(service.dto == null || service.dto.isNewInstance()) {
+      if(service.dto == null || service.dto.newInstance) {
         onSuccess(true);  
       }
       else {
         var request = runwayService.createRequest(function(){onSuccess(false)}, onFailure);
         
-        service.dto.unlock(request);  
+        runwayService.http({
+          url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/unlock', 
+          method: "POST",
+          data: {dashboardId: service.dto.oid}
+        }, request);      
       }
     }    
     
@@ -52,25 +66,40 @@
       /*
        * Second: Get all options
        */
-      var request = runwayService.createStandbyRequest(element, function(json, dto) {    	  
-        service.dto = dto;
-    	  
-        var object = JSON.parse(json);
+      var request = runwayService.createStandbyRequest(element, function(response) {        
+        var object = response.data.definition;
+        service.dto = response.data.dto;
         
-        var result = {};
+        var result = {
+          fields : []            
+        };        
+        
         // Populate the list of country options  
         // ORDER MATTERS for this array of field names. Fields will be added to the form in order.
         var attributeNames = ['displayLabel', 'description', 'name'];
             
-        if(dto.isNewInstance()) {
+        if(service.dto.newInstance) {
           attributeNames = ['displayLabel', 'description'];
-        }        
+        }
+        
+        attributeNames.forEach(function(attributeName) {
+          var field = {};
+          field.name = attributeName;
+          field.type = 'text';
+          field.message = '';
+          field.label = localizationService.localize("net.geoprism.dashboard.Dashboard", attributeName);          
+          field.required = attributeName === "description" ? false : true;
+          field.readable = true;
+          field.writable = true;
+        
+          result.fields.push(field);          
+        });
             
-        result.fields = runwayService.getFields(service.dto, attributeNames);      
+//        result.fields = runwayService.getFields(service.dto, attributeNames);      
             
         // Overwrite name field options       
-        if(!dto.isNewInstance()) {
-          result.fields[2].writable = dto.isNewInstance();              
+        if(!service.dto.newInstance) {
+          result.fields[2].writable = true;              
         }
             
         result.object = object;
@@ -80,28 +109,18 @@
       }, onFailure);
       
       
-      if(dashboardId != null) {
-          
-        /*
-         * First: Lock the dashboard object
-         */
-        var lockRequest = runwayService.createStandbyRequest(element, function(dto){          
-          dto.getDashboardDefinition(request);
-        });
-                
-        net.geoprism.dashboard.Dashboard.lock(lockRequest, dashboardId);
-      }
-      else {
-        var dto = new net.geoprism.dashboard.Dashboard();
-        dto.getDashboardDefinition(request);
-      }
+      runwayService.http({
+        url: com.runwaysdk.__applicationContextPath + '/dashboard-controller/dashboard-definition', 
+        method: "POST",
+        data: dashboardId != null ? {dashboardId: dashboardId} : {}
+      }, request);      
     }
     
     
     return service;  
   }
   
-  angular.module("builder-service", ["runway-service"]);
+  angular.module("builder-service", ["runway-service", "localization-service"]);
   angular.module("builder-service")
     .factory('builderService', BuilderService)
 })();

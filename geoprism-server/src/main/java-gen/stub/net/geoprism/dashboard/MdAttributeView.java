@@ -30,7 +30,7 @@ import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeNumberDAO;
 
-public class MdAttributeView extends MdAttributeViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class MdAttributeView extends MdAttributeViewBase 
 {
   private static final long serialVersionUID = 1311378616;
 

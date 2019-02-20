@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = 27473816)
-public abstract class UnsupportedComparisonExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class UnsupportedComparisonExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.report.UnsupportedComparisonException";
   private static final long serialVersionUID = 27473816;
@@ -70,7 +70,7 @@ public abstract class UnsupportedComparisonExceptionDTOBase extends com.runwaysd
   }
   
   public static java.lang.String COMPARISON = "comparison";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public String getComparison()
   {
     return getValue(COMPARISON);
@@ -117,7 +117,7 @@ public abstract class UnsupportedComparisonExceptionDTOBase extends com.runwaysd
     java.lang.String template = super.getMessage();
     
     template = template.replace("{comparison}", this.getComparison().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

@@ -19,18 +19,18 @@
 package net.geoprism;
 
 
-public class ClassUniversal extends ClassUniversalBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassUniversal extends ClassUniversalBase 
 {
   private static final long serialVersionUID = 538122561;
   
-  public ClassUniversal(String parentId, String childId)
+  public ClassUniversal(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public ClassUniversal(net.geoprism.MappableClass parent, com.runwaysdk.system.gis.geo.Universal child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

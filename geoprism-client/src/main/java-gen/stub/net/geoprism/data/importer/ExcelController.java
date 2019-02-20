@@ -33,7 +33,7 @@ import org.apache.commons.io.IOUtils;
 import com.runwaysdk.controller.ErrorUtility;
 import com.runwaysdk.controller.MultipartFileParameter;
 
-public class ExcelController extends ExcelControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelController extends ExcelControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/data/importer/Excel/";
 
@@ -156,7 +156,7 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
         }
         else
         {
-          this.resp.getWriter().print("<p id=\"upload_result\" class=\"success\"></p>");
+          this.resp.getWriter().print("<p oid=\"upload_result\" class=\"success\"></p>");
         }
         
         this.resp.flushBuffer();
@@ -168,7 +168,7 @@ public class ExcelController extends ExcelControllerBase implements com.runwaysd
     }
     catch (Throwable t)
     {
-      this.resp.getWriter().print("<p id=\"upload_result\" class=\"error\">" + t.getLocalizedMessage() + "</p>");
+      this.resp.getWriter().print("<p oid=\"upload_result\" class=\"error\">" + t.getLocalizedMessage() + "</p>");
     }
   }
 }

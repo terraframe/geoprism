@@ -161,7 +161,7 @@
           ExceptionHandler.handleErrorMessage(e);
         }
         else {
-          ExceptionHandler.handleErrorMessage(e.getLocalizedMessage());
+          ExceptionHandler.handleErrorMessage(e.localizedMessage);
         }
       },
       handleErrorMessage : function(message) {

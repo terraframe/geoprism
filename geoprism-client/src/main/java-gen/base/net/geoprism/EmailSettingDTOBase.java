@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 223467588)
-public abstract class EmailSettingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class EmailSettingDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.EmailSetting";
   private static final long serialVersionUID = 223467588;
@@ -49,7 +49,7 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
   public static java.lang.String FROM = "from";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -150,7 +150,7 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -372,7 +372,7 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -655,9 +655,9 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.EmailSettingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.EmailSettingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.EmailSettingDTO) dto;
   }
@@ -675,7 +675,7 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.EmailSettingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -688,10 +688,10 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     getRequest().lock(this);
   }
   
-  public static net.geoprism.EmailSettingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.EmailSettingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -701,10 +701,10 @@ public abstract class EmailSettingDTOBase extends com.runwaysdk.business.Busines
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.EmailSettingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.EmailSettingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.EmailSettingDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.EmailSettingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

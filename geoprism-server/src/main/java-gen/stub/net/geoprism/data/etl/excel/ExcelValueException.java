@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl.excel;
 
-public class ExcelValueException extends ExcelValueExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelValueException extends ExcelValueExceptionBase 
 {
   private static final long serialVersionUID = -1681040395;
   

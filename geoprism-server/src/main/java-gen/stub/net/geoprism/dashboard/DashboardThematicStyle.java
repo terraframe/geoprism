@@ -31,9 +31,9 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class DashboardThematicStyle extends DashboardThematicStyleBase implements Reloadable, ThematicStyle
+
+public class DashboardThematicStyle extends DashboardThematicStyleBase implements ThematicStyle
 {
   private static final long serialVersionUID = -1178596850;
 

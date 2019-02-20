@@ -19,18 +19,18 @@
 package net.geoprism.dashboard;
 
 
-public class HasStyle extends HasStyleBase implements com.runwaysdk.generation.loader.Reloadable
+public class HasStyle extends HasStyleBase 
 {
   private static final long serialVersionUID = 560741115;
   
-  public HasStyle(String parentId, String childId)
+  public HasStyle(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public HasStyle(net.geoprism.dashboard.layer.DashboardLayer parent, net.geoprism.dashboard.DashboardStyle child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

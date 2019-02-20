@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = 2129247925)
-public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
 {
   public final static String CLASS = "net.geoprism.GeoprismUser";
   private static final long serialVersionUID = 2129247925;
@@ -205,10 +205,10 @@ public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
     getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final void applyWithRoles(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String[] roleIds)
+  public static final void applyWithRoles(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid, java.lang.String[] roleIds)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "[Ljava.lang.String;"};
-    Object[] _parameters = new Object[]{id, roleIds};
+    Object[] _parameters = new Object[]{oid, roleIds};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "applyWithRoles", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -245,9 +245,9 @@ public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
     return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.GeoprismUserDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.GeoprismUserDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.GeoprismUserDTO) dto;
   }
@@ -265,7 +265,7 @@ public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.GeoprismUserQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -278,10 +278,10 @@ public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
     getRequest().lock(this);
   }
   
-  public static net.geoprism.GeoprismUserDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.GeoprismUserDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.GeoprismUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -291,10 +291,10 @@ public abstract class GeoprismUserDTOBase extends com.runwaysdk.system.UsersDTO 
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.GeoprismUserDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.GeoprismUserDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.GeoprismUserDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.GeoprismUserDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

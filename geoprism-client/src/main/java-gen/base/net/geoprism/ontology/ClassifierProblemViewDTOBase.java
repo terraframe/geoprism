@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = 912924407)
-public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.ClassifierProblemView";
   private static final long serialVersionUID = 912924407;
@@ -36,7 +36,7 @@ public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.busines
   
   public static java.lang.String CLASSIFIERID = "classifierId";
   public static java.lang.String CONCRETEID = "concreteId";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String PROBLEM = "problem";
   public static java.lang.String PROBLEMNAME = "problemName";
   public String getClassifierId()
@@ -187,9 +187,9 @@ public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.busines
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(PROBLEMNAME).getAttributeMdDTO();
   }
   
-  public static ClassifierProblemViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static ClassifierProblemViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (ClassifierProblemViewDTO) dto;
   }
@@ -207,7 +207,7 @@ public abstract class ClassifierProblemViewDTOBase extends com.runwaysdk.busines
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

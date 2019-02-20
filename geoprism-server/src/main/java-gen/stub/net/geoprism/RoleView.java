@@ -18,7 +18,6 @@
  */
 package net.geoprism;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +34,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.SingleActor;
 
-public class RoleView extends RoleViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class RoleView extends RoleViewBase 
 {
   private static final long  serialVersionUID    = -875685428;
 
@@ -54,8 +53,8 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
   {
     RoleView view = new RoleView();
     view.setDisplayLabel(role.getDisplayLabel().getValue());
-    view.setRoleId(role.getId());
-    view.setAssigned(roles.contains(role.getId()));
+    view.setRoleId(role.getOid());
+    view.setAssigned(roles.contains(role.getOid()));
     view.setGroupName(groupName);
 
     return view;
@@ -65,8 +64,9 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
   public static RoleView[] getRoles(GeoprismUser user)
   {
     List<RoleView> list = new LinkedList<RoleView>();
-    list.addAll(Arrays.asList(RoleView.getAdminRoles(user)));
-    list.addAll(Arrays.asList(RoleView.getDashboardRoles(user)));
+//    list.addAll(Arrays.asList(RoleView.getAdminRoles(user)));
+//    list.addAll(Arrays.asList(RoleView.getDashboardRoles(user)));
+    list.addAll(RoleView.getGeoprismRoleViews(user));
 
     return list.toArray(new RoleView[list.size()]);
   }
@@ -79,7 +79,7 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 
     if (user.isAppliedToDB())
     {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getId()).authorizedRoles();
+      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
 
       for (RoleDAOIF role : roles)
       {
@@ -89,71 +89,39 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
 
     return array.toString();
   }
-
+  
   @Transaction
-  public static RoleView[] getAdminRoles(GeoprismUser user)
+  public static List<RoleView> getGeoprismRoleViews(GeoprismUser user)
   {
-    return RoleView.getRolesViews(user, RoleView.ADMIN_NAMESPACE, "adminRoles");
-  }
-
-  @Transaction
-  public static RoleView[] getDashboardRoles(GeoprismUser user)
-  {
-    return RoleView.getRolesViews(user, RoleView.DASHBOARD_NAMESPACE, "dashboardRoles");
-  }
-
-  private static RoleView[] getRolesViews(GeoprismUser user, String namespace, String groupName)
-  {
-    Set<String> roles = RoleView.getAuthorizedRoles(user);
     List<RoleView> list = new LinkedList<RoleView>();
-
-    RolesQuery query = new RolesQuery(new QueryFactory());
-    query.WHERE(query.getRoleName().LIKE(namespace + "%"));
-    query.ORDER_BY_ASC(query.getRoleName());
-
-    OIterator<? extends Roles> it = query.getIterator();
-
-    try
+    List<Roles> roles = RoleView.getGeoprismRoles();
+    Set<String> authorizedRoles = RoleView.getAuthorizedRoles(user);
+    
+    for (Roles role : roles)
     {
-      while (it.hasNext())
-      {
-        Roles role = it.next();
-        RoleView view = RoleView.getView(role, roles, groupName);
+      RoleView view = RoleView.getView(role, authorizedRoles, "adminRoles");
 
-        list.add(view);
-      }
-
-      return list.toArray(new RoleView[list.size()]);
+      list.add(view);
     }
-    finally
-    {
-      it.close();
-    }
+    
+    return list;
   }
 
-  public static Set<String> getAuthorizedRoles(GeoprismUser user)
+  @Transaction
+  public static List<Roles> getGeoprismRoles()
   {
-    TreeSet<String> set = new TreeSet<String>();
-
-    if (user.isAppliedToDB())
-    {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getId()).authorizedRoles();
-
-      for (RoleDAOIF role : roles)
-      {
-        set.add(role.getId());
-      }
-    }
-
-    return set;
-  }
-
-  public static Roles[] getGeodashboardRoles()
-  {
+    String[] excludedRoles = new String[]{
+        "AdminScreenAccess", "Administrator", "Developer", "OWNER", "PUBLIC",
+        "RoleAdministrator", "geoprism.DecisionMaker"
+    };
+    
     List<Roles> list = new LinkedList<Roles>();
 
     RolesQuery query = new RolesQuery(new QueryFactory());
-    query.WHERE(query.getRoleName().LIKE(GEOPRISM_NAMESPACE + "%"));
+    for (String excludedRole : excludedRoles)
+    {
+      query.WHERE(query.getRoleName().NLIKE(excludedRole + "%"));
+    }
     query.ORDER_BY_ASC(query.getRoleName());
 
     OIterator<? extends Roles> it = query.getIterator();
@@ -167,11 +135,108 @@ public class RoleView extends RoleViewBase implements com.runwaysdk.generation.l
         list.add(role);
       }
 
-      return list.toArray(new Roles[list.size()]);
+      return list;
     }
     finally
     {
       it.close();
     }
   }
+  
+  /**
+   * Deprecated in favour of getGeoprismRoleViews
+   */
+//  @Transaction
+//  public static RoleView[] getAdminRoles(GeoprismUser user)
+//  {
+//    return RoleView.getRolesViews(user, RoleView.ADMIN_NAMESPACE, "adminRoles");
+//  }
+
+  /**
+   * Deprecated in favour of getGeoprismRoleViews
+   */
+//  @Transaction
+//  public static RoleView[] getDashboardRoles(GeoprismUser user)
+//  {
+//    return RoleView.getRolesViews(user, RoleView.DASHBOARD_NAMESPACE, "dashboardRoles");
+//  }
+
+  /**
+   * Deprecated in favour of getGeoprismRoleViews
+   */
+//  private static RoleView[] getRolesViews(GeoprismUser user, String namespace, String groupName)
+//  {
+//    Set<String> roles = RoleView.getAuthorizedRoles(user);
+//    List<RoleView> list = new LinkedList<RoleView>();
+//
+//    RolesQuery query = new RolesQuery(new QueryFactory());
+//    query.WHERE(query.getRoleName().LIKE(namespace + "%"));
+//    query.ORDER_BY_ASC(query.getRoleName());
+//
+//    OIterator<? extends Roles> it = query.getIterator();
+//
+//    try
+//    {
+//      while (it.hasNext())
+//      {
+//        Roles role = it.next();
+//        RoleView view = RoleView.getView(role, roles, groupName);
+//
+//        list.add(view);
+//      }
+//
+//      return list.toArray(new RoleView[list.size()]);
+//    }
+//    finally
+//    {
+//      it.close();
+//    }
+//  }
+
+  public static Set<String> getAuthorizedRoles(GeoprismUser user)
+  {
+    TreeSet<String> set = new TreeSet<String>();
+
+    if (user.isAppliedToDB())
+    {
+      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
+
+      for (RoleDAOIF role : roles)
+      {
+        set.add(role.getOid());
+      }
+    }
+
+    return set;
+  }
+
+  /**
+   * Deperecated in favour of geoGeoprismRoles
+   */
+//  public static Roles[] getGeodashboardRoles()
+//  {
+//    List<Roles> list = new LinkedList<Roles>();
+//
+//    RolesQuery query = new RolesQuery(new QueryFactory());
+//    query.WHERE(query.getRoleName().LIKE(GEOPRISM_NAMESPACE + "%"));
+//    query.ORDER_BY_ASC(query.getRoleName());
+//
+//    OIterator<? extends Roles> it = query.getIterator();
+//
+//    try
+//    {
+//      while (it.hasNext())
+//      {
+//        Roles role = it.next();
+//
+//        list.add(role);
+//      }
+//
+//      return list.toArray(new Roles[list.size()]);
+//    }
+//    finally
+//    {
+//      it.close();
+//    }
+//  }
 }

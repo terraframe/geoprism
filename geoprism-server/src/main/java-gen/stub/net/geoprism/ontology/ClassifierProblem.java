@@ -24,7 +24,7 @@ import java.util.List;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 
-public class ClassifierProblem extends ClassifierProblemBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierProblem extends ClassifierProblemBase 
 {
   private static final long serialVersionUID = 274326646;
 
@@ -48,7 +48,7 @@ public class ClassifierProblem extends ClassifierProblemBase implements com.runw
       String problemText = type.getDescription().getValue().replace("{0}", label);
 
       ClassifierProblemView view = new ClassifierProblemView();
-      view.setConcreteId(this.getId());
+      view.setConcreteId(this.getOid());
       view.setClassifierId(this.getClassifierId());
       view.setProblem(problemText);
       view.setProblemName(type.getEnumName());

@@ -26,9 +26,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadable
+
+public class GeoserverInitializer implements UncaughtExceptionHandler
 {
   private static boolean               initialized = false;
 
@@ -40,7 +40,7 @@ public class GeoserverInitializer implements UncaughtExceptionHandler, Reloadabl
 
   // private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-  public static class CheckThread implements Runnable, Reloadable
+  public static class CheckThread implements Runnable
   {
 
     private static final Log log = LogFactory.getLog(CheckThread.class);

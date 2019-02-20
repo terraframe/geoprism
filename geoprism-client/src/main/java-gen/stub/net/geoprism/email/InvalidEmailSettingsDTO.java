@@ -19,7 +19,7 @@
 package net.geoprism.email;
 
 public class InvalidEmailSettingsDTO extends InvalidEmailSettingsDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1762988869;
   
   public InvalidEmailSettingsDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

@@ -18,7 +18,7 @@
  */
 package net.geoprism.email;
 
-public class EmailSendException extends EmailSendExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class EmailSendException extends EmailSendExceptionBase 
 {
   private static final long serialVersionUID = 682713854;
   

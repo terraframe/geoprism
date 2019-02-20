@@ -36,7 +36,7 @@ import com.runwaysdk.vault.VaultDAOIF;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
 
-public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.generation.loader.Reloadable
+public class CategoryIcon extends CategoryIconBase 
 {
   private static final long serialVersionUID = -1118361586;
 
@@ -65,7 +65,7 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
     {
       JSONObject object = new JSONObject();
       object.put("label", this.getDisplayLabel().getValue());
-      object.put("id", this.getId());
+      object.put("oid", this.getOid());
       object.put("filePath", this.getFilePath());
 
       return object;
@@ -152,9 +152,9 @@ public class CategoryIcon extends CategoryIconBase implements com.runwaysdk.gene
   }
 
   @Transaction
-  public static void remove(String id)
+  public static void remove(String oid)
   {
-    CategoryIcon icon = CategoryIcon.get(id);
+    CategoryIcon icon = CategoryIcon.get(oid);
     icon.delete();
 
     VaultFile image = icon.getImage();

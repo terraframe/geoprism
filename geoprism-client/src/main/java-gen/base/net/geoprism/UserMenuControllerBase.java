@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -1431809263)
-public class UserMenuControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class UserMenuControllerBase 
 {
   public static final String CLASS = "net.geoprism.UserMenuController";
   protected javax.servlet.http.HttpServletRequest req;

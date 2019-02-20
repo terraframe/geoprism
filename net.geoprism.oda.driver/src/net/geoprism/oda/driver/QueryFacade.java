@@ -250,7 +250,7 @@ public class QueryFacade
         return queryId;
       }
 
-      throw new OdaException("Unable to determine the query id from the query JSON [" + query + "]");
+      throw new OdaException("Unable to determine the query oid from the query JSON [" + query + "]");
     }
     catch (JSONException e)
     {
@@ -277,7 +277,7 @@ public class QueryFacade
         return null;
       }
 
-      throw new OdaException("Unable to determine the query id from the query JSON [" + query + "]");
+      throw new OdaException("Unable to determine the query oid from the query JSON [" + query + "]");
     }
     catch (JSONException e)
     {

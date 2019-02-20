@@ -34,9 +34,9 @@ export class AccountResolver implements Resolve<Account> {
   constructor(@Inject(AccountService) private accountService:AccountService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Account> {
-	let id = route.params['id'];
+	let oid = route.params['oid'];
 	
-	if(id === 'NEW') {
+	if(oid === 'NEW') {
       return this.accountService.newInstance().catch((error:any) => {
         this.eventService.onError(error); 
         
@@ -44,7 +44,7 @@ export class AccountResolver implements Resolve<Account> {
       });    				
 	}
 	else {	
-      return this.accountService.edit(id).catch((error:any) => {
+      return this.accountService.edit(oid).catch((error:any) => {
         this.eventService.onError(error); 
         
         return Promise.reject(error);
@@ -76,7 +76,7 @@ export class AccountComponent implements OnInit {
       this.location.back();		
 	}
 	else {
-      this.service.unlock(this.account.user.id).then(response => {
+      this.service.unlock(this.account.user.oid).then(response => {
         this.location.back();
       });		
 	}

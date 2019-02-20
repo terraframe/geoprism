@@ -23,13 +23,13 @@
     
     controller.source = function( request, response ) {
       var onSuccess = function(query){
-        var resultSet = query.getResultSet()
+        var resultSet = query.data.resultSet;
                                     
         var results = [];
                   
         $.each(resultSet, function( index, result ) {
-          var label = result.getValue('displayLabel');
-          var id = result.getValue('id');
+          var label = result.displayLabel;
+          var id = result.oid;
                     
           results.push({'label':label, 'value':label, 'id':id});
         });
@@ -277,7 +277,7 @@
               
       var onSuccess = function(results){
               
-        response( results );
+        response( results.data );
       };
             
       var onFailure = function(e){
@@ -387,7 +387,7 @@
               
       var onSuccess = function(results){
               
-        response( results );
+        response( results.data );
       };
             
       var onFailure = function(e){
@@ -427,11 +427,11 @@
     controller.renderTree = function(element) {
       
       var onSuccess = function(results){
-        var nodes = JSON.parse(results);
+        var nodes = results.data;
         var rootTerms = [];
               
         for(var i = 0; i < nodes.length; i++) {
-          rootTerms.push({termId : nodes[i].id});
+          rootTerms.push({termId : nodes[i].oid});
         }
               
         var tree = new net.geoprism.ontology.OntologyTree({
@@ -445,7 +445,7 @@
         });
         tree.onCheck(function(node){
           $scope.attribute.filter.value = tree.getCheckedTerms();
-          $scope.$apply();
+          // $scope.$apply();
         });
             
         tree.render(element, nodes);

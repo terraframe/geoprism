@@ -27,9 +27,9 @@ import com.runwaysdk.AttributeNotificationDTO;
 import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.business.ProblemDTOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorExceptionDTO;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class GDBErrorUtility implements Reloadable
+
+public class GDBErrorUtility 
 {
   public static final String ERROR_MESSAGE_ARRAY = "errorMessageArray";
 

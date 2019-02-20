@@ -21,7 +21,7 @@ package net.geoprism.dashboard.layer;
 
 
 public class DuplicateLayerExceptionDTO extends DuplicateLayerExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 423593566;
   
   public DuplicateLayerExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

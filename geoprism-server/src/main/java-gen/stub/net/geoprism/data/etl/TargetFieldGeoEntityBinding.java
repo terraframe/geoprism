@@ -37,7 +37,7 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
 
-public class TargetFieldGeoEntityBinding extends TargetFieldGeoEntityBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class TargetFieldGeoEntityBinding extends TargetFieldGeoEntityBindingBase 
 {
   private static class UniversalAttributeBindingComparator implements Comparator<UniversalAttributeBinding>
   {
@@ -51,7 +51,7 @@ public class TargetFieldGeoEntityBinding extends TargetFieldGeoEntityBindingBase
 
       for (Term term : terms)
       {
-        this.indices.put(term.getId(), index++);
+        this.indices.put(term.getOid(), index++);
       }
     }
 

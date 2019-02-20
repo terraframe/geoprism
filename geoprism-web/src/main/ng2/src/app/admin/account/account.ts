@@ -18,12 +18,13 @@
 ///
 
 export class User {
-  id: string;
+  oid: string;
   username: string;
   password: string;
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber: string;
   inactive: boolean;
   newInstance: boolean;
 }

@@ -20,7 +20,7 @@ package net.geoprism.data.etl.excel;
 
 
 public class InvalidHeaderRowExceptionDTO extends InvalidHeaderRowExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -2077864268;
   
   public InvalidHeaderRowExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

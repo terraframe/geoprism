@@ -19,7 +19,7 @@
 package net.geoprism.dhis2.response;
 
 @com.runwaysdk.business.ClassSignature(hash = 1600047307)
-public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.dhis2.response.DHIS2DuplicateDataException";
   private static final long serialVersionUID = 1600047307;
@@ -70,7 +70,7 @@ public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.b
   }
   
   public static java.lang.String DATATYPE = "dataType";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String PROPERTYNAME = "propertyName";
   public static java.lang.String PROPERTYVALUE = "propertyValue";
   public String getDataType()
@@ -193,7 +193,7 @@ public abstract class DHIS2DuplicateDataExceptionDTOBase extends com.runwaysdk.b
     java.lang.String template = super.getMessage();
     
     template = template.replace("{dataType}", this.getDataType().toString());
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{propertyName}", this.getPropertyName().toString());
     template = template.replace("{propertyValue}", this.getPropertyValue().toString());
     

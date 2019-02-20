@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = -1963610247)
-public abstract class MissingReportDesignExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class MissingReportDesignExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.report.MissingReportDesignException";
   private static final long serialVersionUID = -1963610247;
@@ -69,7 +69,7 @@ public abstract class MissingReportDesignExceptionDTOBase extends com.runwaysdk.
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   /**
    * Overrides java.lang.Throwable#getMessage() to retrieve the localized
    * message from the exceptionDTO, instead of from a class variable.
@@ -78,7 +78,7 @@ public abstract class MissingReportDesignExceptionDTOBase extends com.runwaysdk.
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     
     return template;
   }

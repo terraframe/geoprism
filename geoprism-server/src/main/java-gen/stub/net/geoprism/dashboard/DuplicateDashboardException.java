@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class DuplicateDashboardException extends DuplicateDashboardExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class DuplicateDashboardException extends DuplicateDashboardExceptionBase 
 {
   private static final long serialVersionUID = 331048123;
   

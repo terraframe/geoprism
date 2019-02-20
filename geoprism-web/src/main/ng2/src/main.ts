@@ -17,6 +17,8 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 
+/// <reference types="node" />
+
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 

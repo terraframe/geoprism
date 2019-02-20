@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 @com.runwaysdk.business.ClassSignature(hash = 1406128878)
-public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.data.etl.ExcelFieldBinding";
   private static final long serialVersionUID = 1406128878;
@@ -51,7 +51,7 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -260,7 +260,7 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -445,7 +445,7 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      setValue(MDATTRIBUTE, value.getId());
+      setValue(MDATTRIBUTE, value.getOid());
     }
   }
   
@@ -494,7 +494,7 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -593,7 +593,7 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     }
     else
     {
-      setValue(SOURCEDEFINITION, value.getId());
+      setValue(SOURCEDEFINITION, value.getOid());
     }
   }
   
@@ -617,9 +617,9 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(SOURCEDEFINITION).getAttributeMdDTO();
   }
   
-  public static net.geoprism.data.etl.ExcelFieldBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.data.etl.ExcelFieldBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.data.etl.ExcelFieldBindingDTO) dto;
   }
@@ -637,7 +637,7 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.data.etl.ExcelFieldBindingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -650,10 +650,10 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     getRequest().lock(this);
   }
   
-  public static net.geoprism.data.etl.ExcelFieldBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.ExcelFieldBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.ExcelFieldBindingDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.data.etl.ExcelFieldBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -663,10 +663,10 @@ public abstract class ExcelFieldBindingDTOBase extends com.runwaysdk.business.Bu
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.data.etl.ExcelFieldBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.ExcelFieldBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.ExcelFieldBindingDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.data.etl.ExcelFieldBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

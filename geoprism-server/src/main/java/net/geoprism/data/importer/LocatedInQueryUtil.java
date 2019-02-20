@@ -24,14 +24,14 @@ import com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.RelationshipDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeVirtualDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.metadata.MdClass;
 
-public class LocatedInQueryUtil implements Reloadable
+public class LocatedInQueryUtil 
 {
-  public static String getIdColumn()
+  public static String getOidColumn()
   {
-    return getColumnName(MdClass.getIdMd());
+    return getColumnName(MdClass.getOidMd());
   }
 
   /**
@@ -43,13 +43,13 @@ public class LocatedInQueryUtil implements Reloadable
    */
   public static String getColumnName(MdEntityDAOIF md, String attribute)
   {
-    if (attribute.equals("childId"))
+    if (attribute.equals("childOid"))
     {
-      return RelationshipDAOIF.CHILD_ID_COLUMN;
+      return RelationshipDAOIF.CHILD_OID_COLUMN;
     }
-    else if (attribute.equals("parentId"))
+    else if (attribute.equals("parentOid"))
     {
-      return RelationshipDAOIF.PARENT_ID_COLUMN;
+      return RelationshipDAOIF.PARENT_OID_COLUMN;
     }
     else
     {

@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 361572)
-public abstract class DashboardDeleteExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardDeleteExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardDeleteException";
   private static final long serialVersionUID = 361572;
@@ -69,7 +69,7 @@ public abstract class DashboardDeleteExceptionDTOBase extends com.runwaysdk.busi
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String LABEL = "label";
   public String getLabel()
   {
@@ -116,7 +116,7 @@ public abstract class DashboardDeleteExceptionDTOBase extends com.runwaysdk.busi
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{label}", this.getLabel().toString());
     
     return template;

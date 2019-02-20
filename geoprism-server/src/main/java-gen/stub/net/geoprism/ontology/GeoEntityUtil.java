@@ -53,7 +53,7 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.CONCAT;
@@ -62,6 +62,7 @@ import com.runwaysdk.query.F;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
@@ -88,7 +89,7 @@ import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.GeometrySerializationUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
 
-public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeoEntityUtil extends GeoEntityUtilBase 
 {
   private static final KeyGeneratorIF generator        = new SeedKeyGenerator();
 
@@ -111,7 +112,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     JSONObject jObj = new JSONObject(config);
 
     String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
-    String parentId = jObj.getString("id");
+    String parentOid = jObj.getString("oid");
 
     QueryFactory qf = new QueryFactory();
     GeoEntityQuery geq = new GeoEntityQuery(qf);
@@ -122,7 +123,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       geq.WHERE(geq.getUniversal().EQ(universalId));
     }
 
-    liq.WHERE(liq.getParent().EQ(parentId));
+    liq.WHERE(liq.getParent().EQ(parentOid));
     geq.AND(geq.locatedIn(liq));
 
     return geq.getIterator();
@@ -149,10 +150,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     // return GeoEntityUtil.getData(config);
 
     JSONObject jObj = new JSONObject(config);
-    String id = jObj.getString("id");
+    String oid = jObj.getString("oid");
     String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
 
-    LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, "");
+    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "");
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
@@ -227,7 +228,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
           String featureType = geometry.getString("type").toLowerCase();
 
           JSONObject properties = feature.getJSONObject("properties");
-          String geoEntId = properties.getString("id");
+          String geoEntId = properties.getString("oid");
           JSONArray coordinates = geometry.getJSONArray("coordinates");
 
           if (!multiPolyMap.containsKey(geoEntId))
@@ -260,11 +261,11 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
         }
         else if (type.equals("unlock"))
         {
-          GeoEntity.get(feature.getString("id")).unlock();
+          GeoEntity.get(feature.getString("oid")).unlock();
         }
         else if (type.equals("delete"))
         {
-          GeoEntity.get(feature.getString("id")).delete();
+          GeoEntity.get(feature.getString("oid")).delete();
         }
       }
     }
@@ -274,9 +275,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     }
 
     Set<String> ids = multiPolyMap.keySet();
-    for (String id : ids)
+    for (String oid : ids)
     {
-      List<Polygon> listPoly = multiPolyMap.get(id);
+      List<Polygon> listPoly = multiPolyMap.get(oid);
 
       MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
 
@@ -294,7 +295,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       // throw new RuntimeException(e);
       // }
 
-      GeoEntity geo = GeoEntity.lock(id);
+      GeoEntity geo = GeoEntity.lock(oid);
       geo.setGeoPoint(geometryHelper.getGeoPoint(geom));
       geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(geom));
       geo.setWkt(geom.toText());
@@ -330,7 +331,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       {
         LocatedIn locatedIn = iterator.next();
 
-        ids.add(locatedIn.getParentId());
+        ids.add(locatedIn.getParentOid());
       }
     }
     finally
@@ -385,7 +386,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
      */
     if (synonym != null)
     {
-      TermSynonymRelationship.logSynonymData(source, synonym.getId(), GeoEntity.CLASS);
+      TermSynonymRelationship.logSynonymData(source, synonym.getOid(), GeoEntity.CLASS);
     }
     else
     {
@@ -395,7 +396,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       for (Synonym existingSynonym : synonyms)
       {
-        TermSynonymRelationship.logSynonymData(source, existingSynonym.getId(), GeoEntity.CLASS);
+        TermSynonymRelationship.logSynonymData(source, existingSynonym.getOid(), GeoEntity.CLASS);
       }
     }
 
@@ -412,7 +413,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     }
     GeoEntity.getStrategy().removeTerm(source, LocatedIn.CLASS);
 
-    BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getId(), destination.getId(), true);
+    BusinessDAOFactory.floatObjectIdReferencesDatabase(sourceDAO.getBusinessDAO(), source.getOid(), destination.getOid(), true);
 
     source.delete();
 
@@ -471,13 +472,13 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       {
         entity.addLink(parent, LocatedIn.CLASS);
 
-        ids.add(parent.getId());
+        ids.add(parent.getOid());
       }
 
       /*
        * Restore the original value in the data records in case of a role back
        */
-      TermSynonymRelationship.restoreSynonymData(entity, synonym.getId(), GeoEntity.CLASS);
+      TermSynonymRelationship.restoreSynonymData(entity, synonym.getOid(), GeoEntity.CLASS);
     }
 
     synonym.delete();
@@ -494,7 +495,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       Synonym synonym = new Synonym();
       synonym.getDisplayLabel().setValue(synonymName);
 
-      Synonym.create(synonym, destination.getId());
+      Synonym.create(synonym, destination.getOid());
 
       return synonym;
     }
@@ -531,9 +532,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       {
         GeoEntity ancestor = (GeoEntity) anscestorIt.next();
 
-        if (!ancestor.getId().equals(root.getId()))
+        if (!ancestor.getOid().equals(root.getOid()))
         {
-          ids.add(ancestor.getId());
+          ids.add(ancestor.getOid());
         }
       }
     }
@@ -548,7 +549,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     LocatedInQuery lQuery = new LocatedInQuery(factory);
     lQuery.WHERE(lQuery.getParent().EQ(root));
-    lQuery.AND(lQuery.childId().IN(ids.toArray(new String[ids.size()])));
+    lQuery.AND(lQuery.childOid().IN(ids.toArray(new String[ids.size()])));
 
     GeoEntityQuery query = new GeoEntityQuery(factory);
     query.WHERE(query.locatedIn(lQuery));
@@ -590,7 +591,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     {
       JSONArray children = new JSONArray();
 
-      if (_ids.contains(_entity.getId()))
+      if (_ids.contains(_entity.getOid()))
       {
         OIterator<? extends LocatedIn> iterator = null;
 
@@ -610,8 +611,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
             GeoEntity child = relationship.getChild();
 
             JSONObject parentRecord = new JSONObject();
-            parentRecord.put("parentId", relationship.getParentId());
-            parentRecord.put("relId", relationship.getId());
+            parentRecord.put("parentOid", relationship.getParentOid());
+            parentRecord.put("relId", relationship.getOid());
             parentRecord.put("relType", LocatedIn.CLASS);
 
             JSONObject object = GeoEntityUtil.getJSONObject(child, _ids, false);
@@ -639,7 +640,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       JSONObject object = new JSONObject();
       object.put("label", label);
-      object.put("id", _entity.getId());
+      object.put("oid", _entity.getOid());
       object.put("type", _entity.getType());
       object.put("children", children);
       object.put("fetched", ( children.length() > 0 ));
@@ -686,10 +687,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     problem.delete();
   }
 
-  public static GeoEntity[] getOrderedAncestors(String id)
+  public static GeoEntity[] getOrderedAncestors(String oid)
   {
     GeoEntity root = GeoEntity.getRoot();
-    GeoEntity entity = GeoEntity.get(id);
+    GeoEntity entity = GeoEntity.get(oid);
 
     Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, entity, LocatedIn.CLASS);
 
@@ -707,21 +708,21 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       for (Term parent : parents)
       {
-        if (!parent.getId().equals(root.getId()))
+        if (!parent.getOid().equals(root.getOid()))
         {
           Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, parent, relationship);
 
           for (Term ancestor : ancestors)
           {
-            if (!map.containsKey(ancestor.getId()))
+            if (!map.containsKey(ancestor.getOid()))
             {
-              map.put(ancestor.getId(), ancestor);
+              map.put(ancestor.getOid(), ancestor);
             }
           }
         }
       }
 
-      map.put(term.getId(), term);
+      map.put(term.getOid(), term);
     }
     finally
     {
@@ -739,7 +740,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     try
     {
-      map.put(term.getId(), term);
+      map.put(term.getOid(), term);
 
       List<Term> parents = iterator.getAll();
 
@@ -749,9 +750,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
         for (Term descendant : descendants)
         {
-          if (!map.containsKey(descendant.getId()))
+          if (!map.containsKey(descendant.getOid()))
           {
-            map.put(descendant.getId(), descendant);
+            map.put(descendant.getOid(), descendant);
           }
         }
       }
@@ -810,13 +811,13 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     throw new ProgrammingErrorException("Country universal has more than one corresponding geo entity");
   }
 
-  public static ValueQuery getGeoEntitySuggestions(String parentId, String universalId, String text, Integer limit)
+  public static ValueQuery getGeoEntitySuggestions(String parentOid, String universalId, String text, Integer limit)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
 
-    SelectableChar id = entityQuery.getId();
+    SelectableUUID oid = entityQuery.getOid();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
     Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
     SelectableChar geoId = entityQuery.getGeoId();
@@ -826,7 +827,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
     label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
 
-    query.SELECT(id, label);
+    query.SELECT(oid, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
 
     if (universalId != null && universalId.length() > 0)
@@ -834,12 +835,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       query.AND(entityQuery.getUniversal().EQ(universalId));
     }
 
-    if (parentId != null && parentId.length() > 0)
+    if (parentOid != null && parentOid.length() > 0)
     {
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
 
       query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
-      query.AND(aptQuery.getParentTerm().EQ(parentId));
+      query.AND(aptQuery.getParentTerm().EQ(parentOid));
     }
 
     query.ORDER_BY_ASC(geoLabel);
@@ -854,7 +855,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     QueryFactory factory = new QueryFactory();
 
     SynonymRelationshipQuery rQuery = new SynonymRelationshipQuery(factory);
-    rQuery.WHERE(rQuery.parentId().EQ(destination.getId()));
+    rQuery.WHERE(rQuery.parentOid().EQ(destination.getOid()));
 
     SynonymQuery sQuery = new SynonymQuery(factory);
     sQuery.WHERE(sQuery.geoEntity(rQuery));
@@ -892,7 +893,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
       for (Term ancestor : ancestors)
       {
-        if (!ancestor.getId().equals(root.getId()))
+        if (!ancestor.getOid().equals(root.getOid()))
         {
           JSONObject object = new JSONObject();
           object.put("label", ancestor.getDisplayLabel().getValue());
@@ -916,12 +917,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 		  StringBuffer geoIdsStr = new StringBuffer();
 		  for(int i=0; i<ids.length; i++)
 		  {
-			  String id = ids[i];
+			  String oid = ids[i];
 			  
 			  if(i > 0){
 				  geoIdsStr.append(",");
 			  }
-			  geoIdsStr.append("'").append(id).append("'");
+			  geoIdsStr.append("'").append(oid).append("'");
 		  }
 		  
 		  
@@ -930,7 +931,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 	
 		  StringBuffer sql = new StringBuffer();
 		  sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
-		  sql.append(" FROM geo_entity WHERE geo_entity.id = any (array["+geoIdsStr+"]);");
+		  sql.append(" FROM geo_entity WHERE geo_entity.oid = any (array["+geoIdsStr+"]);");
 		  
 		    	
 		  ResultSet bboxResult = Database.query(sql.toString());
@@ -942,9 +943,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   }
   
   
-  public static String getChildrenBBOX(String id, String universalId)
+  public static String getChildrenBBOX(String oid, String universalId)
   {
-    GeoEntity entity = GeoEntity.get(id);
+    GeoEntity entity = GeoEntity.get(oid);
 
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
     LocatedInQuery liQuery = new LocatedInQuery(vQuery);
@@ -952,9 +953,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
-    sql.append(" FROM universal, geo_entity, located_in WHERE geo_entity.universal = universal.id");
-    sql.append(" AND ((located_in.parent_id ='" + entity.getId() + "'");
-    sql.append(" AND geo_entity.id = located_in.child_id)");
+    sql.append(" FROM universal, geo_entity, located_in WHERE geo_entity.universal = universal.oid");
+    sql.append(" AND ((located_in.parent_oid ='" + entity.getOid() + "'");
+    sql.append(" AND geo_entity.oid = located_in.child_oid)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
     
     ResultSet bboxResult = Database.query(sql.toString());
@@ -1042,9 +1043,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
   }
   
 
-  public static ValueQuery getChildren(String id, String universalId, Integer limit)
+  public static ValueQuery getChildren(String oid, String universalId, Integer limit)
   {
-    GeoEntity entity = GeoEntity.get(id);
+    GeoEntity entity = GeoEntity.get(oid);
 
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
     LocatedInQuery liQuery = new LocatedInQuery(vQuery);
@@ -1052,11 +1053,11 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
     Coalesce label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
 
-    vQuery.SELECT(query.id());
+    vQuery.SELECT(query.oid());
     vQuery.SELECT(label);
     vQuery.SELECT(query.getGeoId());
     vQuery.SELECT(query.getUniversal().getDisplayLabel().localize(GeoEntity.UNIVERSAL));
-    vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
+    vQuery.WHERE(liQuery.parentOid().EQ(entity.getOid()));
     vQuery.AND(query.locatedIn(liQuery));
 
     if (universalId != null)
@@ -1074,9 +1075,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
     return vQuery;
   }
 
-  public static GeoEntity getEntity(String id)
+  public static GeoEntity getEntity(String oid)
   {
-    if (id == null)
+    if (oid == null)
     {
       try
       {
@@ -1117,12 +1118,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
       }
     }
 
-    return GeoEntity.get(id);
+    return GeoEntity.get(oid);
   }
 
-  public static String publishLayers(String id, String universalId, String existingLayerNames)
+  public static String publishLayers(String oid, String universalId, String existingLayerNames)
   {
-    LocationTargetPublisher publisher = new LocationTargetPublisher(id, universalId, existingLayerNames);
+    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, existingLayerNames);
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
@@ -1198,9 +1199,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase implements com.runwaysdk.ge
 
   @Transaction
   @Authenticate
-  public static void deleteGeoEntity(String id)
+  public static void deleteGeoEntity(String oid)
   {
-    GeoEntity entity = GeoEntity.get(id);
+    GeoEntity entity = GeoEntity.get(oid);
 
     List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
 

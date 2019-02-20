@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -1067296111)
-public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO 
 {
   public final static String CLASS = "net.geoprism.DataUploader";
   private static final long serialVersionUID = -1067296111;
@@ -34,7 +34,7 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static final void cancelImport(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String configuration)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
@@ -51,10 +51,10 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final java.lang.String createGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String universalId, java.lang.String label)
+  public static final java.lang.String createGeoEntity(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentOid, java.lang.String universalId, java.lang.String label)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{parentId, universalId, label};
+    Object[] _parameters = new Object[]{parentOid, universalId, label};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "createGeoEntity", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -99,10 +99,10 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final java.io.InputStream getErrorFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.io.InputStream getErrorFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "getErrorFile", _declaredTypes);
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -115,10 +115,10 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final java.lang.String getSavedConfiguration(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.lang.String sheetName)
+  public static final java.lang.String getSavedConfiguration(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid, java.lang.String sheetName)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, sheetName};
+    Object[] _parameters = new Object[]{oid, sheetName};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "getSavedConfiguration", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -131,17 +131,17 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final void validateDatasetName(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String name, java.lang.String id)
+  public static final void validateDatasetName(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String name, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{name, id};
+    Object[] _parameters = new Object[]{name, oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.DataUploaderDTO.CLASS, "validateDatasetName", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static DataUploaderDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static DataUploaderDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(id);
+    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(oid);
     
     return (DataUploaderDTO) dto;
   }
@@ -159,7 +159,7 @@ public abstract class DataUploaderDTOBase extends com.runwaysdk.business.UtilDTO
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

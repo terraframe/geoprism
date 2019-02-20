@@ -19,7 +19,7 @@
 package net.geoprism.data.browser;
 
 @com.runwaysdk.business.ClassSignature(hash = 1211704731)
-public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.UtilDTO 
 {
   public final static String CLASS = "net.geoprism.data.browser.DataBrowserUtil";
   private static final long serialVersionUID = 1211704731;
@@ -34,7 +34,7 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static final void deleteData(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
@@ -59,9 +59,9 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
     return (net.geoprism.data.browser.MetadataTypeQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static DataBrowserUtilDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static DataBrowserUtilDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(id);
+    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(oid);
     
     return (DataBrowserUtilDTO) dto;
   }
@@ -79,7 +79,7 @@ public abstract class DataBrowserUtilDTOBase extends com.runwaysdk.business.Util
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

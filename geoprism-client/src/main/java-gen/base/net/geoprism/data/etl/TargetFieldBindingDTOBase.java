@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 @com.runwaysdk.business.ClassSignature(hash = 1179406885)
-public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.data.etl.TargetFieldBinding";
   private static final long serialVersionUID = 1179406885;
@@ -49,7 +49,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -184,7 +184,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -369,7 +369,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -455,7 +455,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     }
   }
   
-  public String getTargetId()
+  public String getTargetOid()
   {
     return getValue(TARGET);
   }
@@ -468,7 +468,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     }
     else
     {
-      setValue(TARGET, value.getId());
+      setValue(TARGET, value.getOid());
     }
   }
   
@@ -517,7 +517,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     }
     else
     {
-      setValue(TARGETATTRIBUTE, value.getId());
+      setValue(TARGETATTRIBUTE, value.getOid());
     }
   }
   
@@ -541,9 +541,9 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     return (com.runwaysdk.transport.metadata.AttributeReferenceMdDTO) getAttributeDTO(TARGETATTRIBUTE).getAttributeMdDTO();
   }
   
-  public static net.geoprism.data.etl.TargetFieldBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.data.etl.TargetFieldBindingDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.data.etl.TargetFieldBindingDTO) dto;
   }
@@ -561,7 +561,7 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.data.etl.TargetFieldBindingQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -574,10 +574,10 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     getRequest().lock(this);
   }
   
-  public static net.geoprism.data.etl.TargetFieldBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.TargetFieldBindingDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.TargetFieldBindingDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.data.etl.TargetFieldBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -587,10 +587,10 @@ public abstract class TargetFieldBindingDTOBase extends com.runwaysdk.business.B
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.data.etl.TargetFieldBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.TargetFieldBindingDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.TargetFieldBindingDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.data.etl.TargetFieldBindingDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

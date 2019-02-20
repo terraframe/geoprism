@@ -19,9 +19,9 @@
 package net.geoprism.data.importer;
 
 import com.runwaysdk.business.Business;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public interface ShapefileAttributeHandler extends Reloadable
+
+public interface ShapefileAttributeHandler 
 {
   public Object transform(Object value);
 

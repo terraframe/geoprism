@@ -19,7 +19,7 @@
 package net.geoprism.data.etl;
 
 @com.runwaysdk.business.ClassSignature(hash = 1938947087)
-public abstract class LocalPersistenceStrategyDTOBase extends net.geoprism.data.etl.PersistenceStrategyDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class LocalPersistenceStrategyDTOBase extends net.geoprism.data.etl.PersistenceStrategyDTO 
 {
   public final static String CLASS = "net.geoprism.data.etl.LocalPersistenceStrategy";
   private static final long serialVersionUID = 1938947087;
@@ -45,9 +45,9 @@ public abstract class LocalPersistenceStrategyDTOBase extends net.geoprism.data.
     return CLASS;
   }
   
-  public static net.geoprism.data.etl.LocalPersistenceStrategyDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.data.etl.LocalPersistenceStrategyDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.data.etl.LocalPersistenceStrategyDTO) dto;
   }
@@ -65,7 +65,7 @@ public abstract class LocalPersistenceStrategyDTOBase extends net.geoprism.data.
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.data.etl.LocalPersistenceStrategyQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -78,10 +78,10 @@ public abstract class LocalPersistenceStrategyDTOBase extends net.geoprism.data.
     getRequest().lock(this);
   }
   
-  public static net.geoprism.data.etl.LocalPersistenceStrategyDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.LocalPersistenceStrategyDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.LocalPersistenceStrategyDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.data.etl.LocalPersistenceStrategyDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -91,10 +91,10 @@ public abstract class LocalPersistenceStrategyDTOBase extends net.geoprism.data.
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.data.etl.LocalPersistenceStrategyDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.data.etl.LocalPersistenceStrategyDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.data.etl.LocalPersistenceStrategyDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.data.etl.LocalPersistenceStrategyDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

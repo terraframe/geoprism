@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = 2028627814)
-public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.report.ReportItem";
   private static final long serialVersionUID = 2028627814;
@@ -52,7 +52,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   public static java.lang.String DESIGN = "design";
   public static java.lang.String DOCUMENT = "document";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -187,7 +187,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     }
     else
     {
-      setValue(DASHBOARD, value.getId());
+      setValue(DASHBOARD, value.getOid());
     }
   }
   
@@ -310,7 +310,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -495,7 +495,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -639,10 +639,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final void applyWithFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.io.InputStream fileStream)
+  public static final void applyWithFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid, java.io.InputStream fileStream)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.io.InputStream"};
-    Object[] _parameters = new Object[]{id, fileStream};
+    Object[] _parameters = new Object[]{oid, fileStream};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "applyWithFile", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -655,10 +655,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.io.InputStream) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.io.InputStream getDesignAsStream(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.io.InputStream getDesignAsStream(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "getDesignAsStream", _declaredTypes);
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -671,10 +671,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.io.InputStream) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.io.InputStream getDocumentAsStream(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.io.InputStream getDocumentAsStream(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "getDocumentAsStream", _declaredTypes);
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -711,10 +711,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.lang.String getParameterDefinitions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.lang.String getParameterDefinitions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "getParameterDefinitions", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -759,10 +759,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.lang.String) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.lang.String getURL(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final java.lang.String getURL(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "getURL", _declaredTypes);
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -791,10 +791,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     return (java.lang.Long) getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final java.lang.Long render(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id, java.io.OutputStream outputStream, net.geoprism.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)
+  public static final java.lang.Long render(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid, java.io.OutputStream outputStream, net.geoprism.report.ReportParameterDTO[] parameters, java.lang.String baseURL, java.lang.String reportURL)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.io.OutputStream", "[Lnet.geoprism.report.ReportParameter;", "java.lang.String", "java.lang.String"};
-    Object[] _parameters = new Object[]{id, outputStream, parameters, baseURL, reportURL};
+    Object[] _parameters = new Object[]{oid, outputStream, parameters, baseURL, reportURL};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "render", _declaredTypes);
     return (java.lang.Long) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -815,17 +815,17 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     getRequest().invokeMethod(_metadata, this, _parameters);
   }
   
-  public static final void validatePermissions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static final void validatePermissions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "validatePermissions", _declaredTypes);
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.report.ReportItemDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.report.ReportItemDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.report.ReportItemDTO) dto;
   }
@@ -843,7 +843,7 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.report.ReportItemQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -856,10 +856,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     getRequest().lock(this);
   }
   
-  public static net.geoprism.report.ReportItemDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.report.ReportItemDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.report.ReportItemDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -869,10 +869,10 @@ public abstract class ReportItemDTOBase extends com.runwaysdk.business.BusinessD
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.report.ReportItemDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.report.ReportItemDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.report.ReportItemDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.report.ReportItemDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

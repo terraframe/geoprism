@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class MetadataWrapperDTO extends MetadataWrapperDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1401743197;
   
   public MetadataWrapperDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

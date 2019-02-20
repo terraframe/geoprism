@@ -65,6 +65,6 @@ public class ProgressStateMonitor extends AbstractProgressMonitor
   {
     super.finished();
     
-    ProgressFacade.remove(this.progress.getId());
+    ProgressFacade.remove(this.progress.getOid());
   }
 }

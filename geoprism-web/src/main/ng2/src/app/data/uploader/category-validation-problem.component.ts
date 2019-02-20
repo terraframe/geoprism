@@ -85,7 +85,7 @@ export class CategoryValidationProblemComponent implements OnInit {
         this.problem.resolved = true;
         this.problem.action = {
           name : 'OPTION',
-          optionId : response.id
+          optionId : response.oid
         };
         
         this.onProblemChange.emit(this.problem);

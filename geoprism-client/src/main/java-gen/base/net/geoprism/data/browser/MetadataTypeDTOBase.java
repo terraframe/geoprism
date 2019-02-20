@@ -19,7 +19,7 @@
 package net.geoprism.data.browser;
 
 @com.runwaysdk.business.ClassSignature(hash = -1447059302)
-public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.data.browser.MetadataType";
   private static final long serialVersionUID = -1447059302;
@@ -35,7 +35,7 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
   }
   
   public static java.lang.String DISPLAYLABEL = "displayLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String PARENTTYPEID = "parentTypeId";
   public static java.lang.String TYPEID = "typeId";
   public static java.lang.String TYPENAME = "typeName";
@@ -225,9 +225,9 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(TYPEPACKAGE).getAttributeMdDTO();
   }
   
-  public static MetadataTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static MetadataTypeDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (MetadataTypeDTO) dto;
   }
@@ -245,7 +245,7 @@ public abstract class MetadataTypeDTOBase extends com.runwaysdk.business.ViewDTO
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

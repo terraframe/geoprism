@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 public interface TargetFieldPointIF extends TargetFieldIF
 {
-  public String getId();
+  public String getOid();
 
   public JSONObject toJSON() throws JSONException;
 }

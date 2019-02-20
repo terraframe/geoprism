@@ -19,9 +19,9 @@
 package net.geoprism.data.importer;
 
 import com.runwaysdk.business.Business;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public abstract class ShapefileAttributeAdapter implements ShapefileAttributeHandler, Reloadable
+
+public abstract class ShapefileAttributeAdapter implements ShapefileAttributeHandler
 {
 
   @Override

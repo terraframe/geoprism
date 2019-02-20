@@ -46,9 +46,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class LocaleManager implements Reloadable
+
+public class LocaleManager 
 {
   private static LocaleManager    instance = new LocaleManager();
 

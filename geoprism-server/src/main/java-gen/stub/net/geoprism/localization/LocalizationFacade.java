@@ -18,7 +18,11 @@
  */
 package net.geoprism.localization;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +34,7 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.session.Session;
 
-public class LocalizationFacade extends LocalizationFacadeBase implements com.runwaysdk.generation.loader.Reloadable
+public class LocalizationFacade extends LocalizationFacadeBase 
 {
   private static final long serialVersionUID = -43207120;
 
@@ -41,12 +45,21 @@ public class LocalizationFacade extends LocalizationFacadeBase implements com.ru
 
   public static String getFromBundles(String key)
   {
-    return MultiBundle.get(key);
+    String localized = com.runwaysdk.LocalizationFacade.localize(key);
+    
+    if (localized == null)
+    {
+      return "???_" + key + "_???";
+    }
+    else
+    {
+      return localized;
+    }
   }
 
   public static String getJSON()
   {
-    Map<String, String> properties = MultiBundle.getAll();
+    Map<String, String> properties = com.runwaysdk.LocalizationFacade.getAll();
 
     try
     {
@@ -98,6 +111,50 @@ public class LocalizationFacade extends LocalizationFacadeBase implements com.ru
   public static Locale getLocale()
   {
     return Session.getCurrentSession() != null ? Session.getCurrentLocale() : Locale.US;
+  }
+  
+  public static List<Locale> getAvailableLanguagesSorted()
+  {
+    List<Locale> languages = new LinkedList<Locale>();
+    
+    for (String s : Locale.getISOLanguages())
+    {
+      languages.add(new Locale(s));
+    }
+
+    Collections.sort(languages, new LocaleLanguageComparator());
+    
+    return languages;
+  }
+  
+  public static List<Locale> getAvailableCountriesSorted()
+  {
+    List<Locale> countries = new LinkedList<Locale>();
+
+    for (String s : Locale.getISOCountries())
+    {
+      countries.add(new Locale("en", s));
+    }
+
+    Collections.sort(countries, new LocaleCountryComparator());
+    
+    return countries;
+  }
+  
+  public static class LocaleLanguageComparator implements Comparator<Locale>
+  {
+    public int compare(Locale o1, Locale o2)
+    {
+      return o1.getDisplayLanguage().compareTo(o2.getDisplayLanguage());
+    }
+  }
+  
+  public static class LocaleCountryComparator implements Comparator<Locale>
+  {
+    public int compare(Locale o1, Locale o2)
+    {
+      return o1.getDisplayCountry().compareTo(o2.getDisplayCountry());
+    }
   }
 
   public static String getConfigurationJSON()

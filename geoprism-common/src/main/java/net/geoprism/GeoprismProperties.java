@@ -22,13 +22,13 @@ import net.geoprism.configuration.GeoprismConfigGroup;
 
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.configuration.ConfigurationReaderIF;
-import com.runwaysdk.generation.loader.Reloadable;
+
 
 public class GeoprismProperties
 {
   private ConfigurationReaderIF props;
 
-  private static class Singleton implements Reloadable
+  private static class Singleton 
   {
     private static GeoprismProperties INSTANCE = new GeoprismProperties();
   }

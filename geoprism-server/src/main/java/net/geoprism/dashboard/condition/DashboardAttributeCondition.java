@@ -20,12 +20,12 @@ package net.geoprism.dashboard.condition;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
-public abstract class DashboardAttributeCondition extends DashboardCondition implements Reloadable
+public abstract class DashboardAttributeCondition extends DashboardCondition 
 {
 
   /**
@@ -34,7 +34,7 @@ public abstract class DashboardAttributeCondition extends DashboardCondition imp
   public static final String CONDITION_TYPE   = "ATTRIBUTE_CONDITION";
 
   /**
-   * Magic value for the json attribute name which specifies the id of the MdAttribute
+   * Magic value for the json attribute name which specifies the oid of the MdAttribute
    */
   public static final String MD_ATTRIBUTE_KEY = "mdAttribute";
 

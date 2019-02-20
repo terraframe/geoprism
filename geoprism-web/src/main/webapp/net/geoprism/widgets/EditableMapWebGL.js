@@ -289,7 +289,7 @@
       {
         var feat = feats[i];
         
-        controller._deletedGeos[feat.id] = true;
+        controller._deletedGeos[feat.properties.oid] = true;
       }
     };
     
@@ -300,7 +300,7 @@
       {
         var feat = feats[i];
         
-        controller._updatedGeos[feat.id] = true;
+        controller._updatedGeos[feat.properties.oid] = true;
       }
     };
     
@@ -320,19 +320,19 @@
       {
         var feat = feats[i];
         
-        if (controller._deletedGeos.hasOwnProperty(feat.id))
+        if (controller._deletedGeos.hasOwnProperty(feat.properties.oid))
         {
-          delete controller._deletedGeos[feat.id];
+          delete controller._deletedGeos[feat.properties.oid];
         }
         
-        if (controller._updatedGeos.hasOwnProperty(feat.id))
+        if (controller._updatedGeos.hasOwnProperty(feat.properties.oid))
         {
           updatedFeatures.push(feat);
         }
         else
         {
           updatedFeatures.push({
-            id: feat.id,
+            oid: feat.properties.oid,
             type: "unlock"
           })
         }
@@ -344,7 +344,7 @@
         var delGeo = deletedGeos[i];
         
         updatedFeatures.push({
-          id: delGeo,
+          oid: delGeo,
           type: "delete"
         });
       }
@@ -463,7 +463,7 @@
           if (!controller._isEditing)
           {
             $scope.$emit('locationFocus', {
-              id : feature.properties.id
+              id : feature.properties.oid
             });
             $scope.$apply();
             

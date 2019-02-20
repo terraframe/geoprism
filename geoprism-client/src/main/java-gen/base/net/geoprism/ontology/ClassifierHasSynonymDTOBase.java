@@ -19,14 +19,14 @@
 package net.geoprism.ontology;
 
 @com.runwaysdk.business.ClassSignature(hash = -1839415208)
-public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business.ontology.TermRelationshipDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business.ontology.TermRelationshipDTO 
 {
   public final static String CLASS = "net.geoprism.ontology.ClassifierHasSynonym";
   private static final long serialVersionUID = -1839415208;
   
-  public ClassifierHasSynonymDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String childId)
+  public ClassifierHasSynonymDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentOid, java.lang.String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   
@@ -49,7 +49,7 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -145,7 +145,7 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -330,7 +330,7 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -406,31 +406,31 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
   
   public net.geoprism.ontology.ClassifierDTO getParent()
   {
-    return net.geoprism.ontology.ClassifierDTO.get(getRequest(), super.getParentId());
+    return net.geoprism.ontology.ClassifierDTO.get(getRequest(), super.getParentOid());
   }
   
     public net.geoprism.ontology.ClassifierSynonymDTO getChild()
   {
-    return net.geoprism.ontology.ClassifierSynonymDTO.get(getRequest(), super.getChildId());
+    return net.geoprism.ontology.ClassifierSynonymDTO.get(getRequest(), super.getChildOid());
   }
   
-  public static net.geoprism.ontology.ClassifierHasSynonymDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.ontology.ClassifierHasSynonymDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(id);
+    com.runwaysdk.business.RelationshipDTO dto = (com.runwaysdk.business.RelationshipDTO) clientRequest.get(oid);
     
     return (net.geoprism.ontology.ClassifierHasSynonymDTO) dto;
   }
   
-  public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId)
+  public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO parentQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
-    queryDTO.addCondition("parent_id", "EQ", parentId);
+    queryDTO.addCondition("parent_oid", "EQ", parentOid);
     return (net.geoprism.ontology.ClassifierHasSynonymQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
-  public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childId)
+  public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO childQuery(com.runwaysdk.constants.ClientRequestIF clientRequest, String childOid)
   {
     com.runwaysdk.business.RelationshipQueryDTO queryDTO = (com.runwaysdk.business.RelationshipQueryDTO) clientRequest.getQuery(net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS);
-    queryDTO.addCondition("child_id", "EQ", childId);
+    queryDTO.addCondition("child_oid", "EQ", childOid);
     return (net.geoprism.ontology.ClassifierHasSynonymQueryDTO) clientRequest.queryRelationships(queryDTO);
   }
   public void apply()
@@ -446,7 +446,7 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.ontology.ClassifierHasSynonymQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -459,10 +459,10 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
     getRequest().lock(this);
   }
   
-  public static net.geoprism.ontology.ClassifierHasSynonymDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ontology.ClassifierHasSynonymDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.ontology.ClassifierHasSynonymDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -472,10 +472,10 @@ public abstract class ClassifierHasSynonymDTOBase extends com.runwaysdk.business
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.ontology.ClassifierHasSynonymDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ontology.ClassifierHasSynonymDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.ClassifierHasSynonymDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.ontology.ClassifierHasSynonymDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

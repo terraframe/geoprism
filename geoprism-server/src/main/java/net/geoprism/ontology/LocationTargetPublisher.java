@@ -32,8 +32,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
-import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableSingle;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -53,15 +53,15 @@ import net.geoprism.gis.geoserver.SessionPredicate;
 
 public class LocationTargetPublisher extends LayerPublisher implements VectorLayerPublisherIF
 {
-  private String id;
+  private String oid;
 
   private String universalId;
 
-  public LocationTargetPublisher(String id, String universalId, String layers)
+  public LocationTargetPublisher(String oid, String universalId, String layers)
   {
     super(layers);
 
-    this.id = id;
+    this.oid = oid;
     this.universalId = universalId;
   }
 
@@ -69,7 +69,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
   protected List<GeoserverLayerIF> buildLayers()
   {
 
-    GeoEntity entity = GeoEntity.get(this.id);
+    GeoEntity entity = GeoEntity.get(this.oid);
     Universal universal = entity.getUniversal();
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
@@ -102,8 +102,8 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
 
     // Id column
-    SelectableChar id = query.getId(GeoEntity.ID);
-    id.setColumnAlias(GeoEntity.ID);
+    SelectableUUID oid = query.getOid(GeoEntity.OID);
+    oid.setColumnAlias(GeoEntity.OID);
 
     SelectableSingle label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
     label.setColumnAlias(GeoEntity.DISPLAYLABEL);
@@ -115,8 +115,8 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
-    vQuery.SELECT(id, label, geoId, geom);
-    vQuery.WHERE(liQuery.parentId().EQ(entity.getId()));
+    vQuery.SELECT(oid, label, geoId, geom);
+    vQuery.WHERE(liQuery.parentOid().EQ(entity.getOid()));
     vQuery.AND(query.locatedIn(liQuery));
 
     if (this.universalId != null && this.universalId.length() > 0)
@@ -137,7 +137,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
 
   public void writeGeojson(JSONWriter writer)
   {
-    GeoEntity entity = GeoEntity.get(this.id);
+    GeoEntity entity = GeoEntity.get(this.oid);
     Universal universal = entity.getUniversal();
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
@@ -178,11 +178,11 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
   private ResultSet getResultSet(String entityId, LayerType type)
   {
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("SELECT ge.oid, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
-    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
-    sql.append("JOIN located_in AS li ON li.child_id = ge.id\n");
-    sql.append("WHERE li.parent_id = '" + entityId + "'\n");
+    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.oid = ge.display_label\n");
+    sql.append("JOIN located_in AS li ON li.child_oid = ge.oid\n");
+    sql.append("WHERE li.parent_oid::text = '" + entityId + "'\n");
     sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
 
     if (this.universalId != null && this.universalId.length() > 0)
@@ -203,7 +203,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
   {
     try
     {
-      ResultSet resultSet = this.getResultSet(this.id, LayerType.POLYGON);
+      ResultSet resultSet = this.getResultSet(this.oid, LayerType.POLYGON);
 
       try
       {

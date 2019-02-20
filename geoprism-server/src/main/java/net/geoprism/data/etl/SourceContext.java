@@ -85,11 +85,11 @@ public class SourceContext implements SourceContextIF
   }
 
   @Override
-  public String getId(String sheetName)
+  public String getOid(String sheetName)
   {
     SourceDefinitionIF sheet = this.getSheet(sheetName);
     
-    return sheet.getId();
+    return sheet.getOid();
   }
   
   public void persist()

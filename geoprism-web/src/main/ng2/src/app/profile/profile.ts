@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 export class Profile {
-  id: string;
+  oid: string;
   username: string;
   password: string;
   firstName: string;

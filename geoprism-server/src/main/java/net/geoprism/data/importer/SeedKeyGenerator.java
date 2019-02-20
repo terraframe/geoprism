@@ -22,10 +22,10 @@ import java.util.Random;
 
 import net.geoprism.KeyGeneratorIF;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class SeedKeyGenerator implements KeyGeneratorIF, Reloadable
+public class SeedKeyGenerator implements KeyGeneratorIF
 {
   private Random random;
 

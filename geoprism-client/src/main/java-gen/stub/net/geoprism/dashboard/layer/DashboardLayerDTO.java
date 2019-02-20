@@ -22,7 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DashboardLayerDTO extends DashboardLayerDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -410301370;
   
   public DashboardLayerDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)
@@ -45,7 +45,7 @@ public class DashboardLayerDTO extends DashboardLayerDTOBase
     JSONObject json = new JSONObject();
     
     try {
-      json.put("id", this.getId());
+      json.put("oid", this.getOid());
 //      json.put("name", this.getNameLabel().getValue());
     }
     catch (JSONException e) {

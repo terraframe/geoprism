@@ -55,7 +55,7 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
@@ -97,7 +97,7 @@ import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.util.CollectionUtil;
 
-public class DashboardThematicLayer extends DashboardThematicLayerBase implements Reloadable, ThematicLayer
+public class DashboardThematicLayer extends DashboardThematicLayerBase implements ThematicLayer
 {
   private static final long serialVersionUID = -810007054;
 
@@ -256,13 +256,13 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     // Determine if the attribute is an ontology attribute
     if (mdAttributeConcrete instanceof MdAttributeTerm)
     {
-      MdAttributeTermDAOIF mdAttributeTerm = MdAttributeTermDAO.get(mdAttributeConcrete.getId());
+      MdAttributeTermDAOIF mdAttributeTerm = MdAttributeTermDAO.get(mdAttributeConcrete.getOid());
 
       if (mdAttributeTerm.getReferenceMdBusinessDAO().definesType().equals(Classifier.CLASS))
       {
         try
         {
-          boolean dynamic = ! ( Dashboard.getOptionCount(mdAttribute.getId()) < LIMIT );
+          boolean dynamic = ! ( Dashboard.getOptionCount(mdAttribute.getOid()) < LIMIT );
 
           attrObj.put("isOntologyAttribute", true);
           attrObj.put("isTextAttribute", false);
@@ -272,7 +272,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
           if (!dynamic)
           {
-            attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getId()));
+            attrObj.put("nodes", Dashboard.getClassifierTreeJSON(mdAttribute.getOid()));
           }
         }
         catch (JSONException e)
@@ -328,7 +328,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
 
       for (GeoNode geoNode : geoNodes)
       {
-        String nodeId = geoNode.getId();
+        String nodeId = geoNode.getOid();
         String nodeType = geoNode.getType();
         String nodeLabel = geoNode.getDisplayLabelAttribute().getDisplayLabel().getValue();
 
@@ -433,7 +433,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
     {
       JSONObject object = new JSONObject();
       object.put("label", "None");
-      object.put("id", "NONE");
+      object.put("oid", "NONE");
 
       secAttrs.put(object);
     }
@@ -449,7 +449,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       {
         MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(secAttr.getMdAttributeId()).getMdAttributeConcrete();
 
-        secAttrObj.put("id", secAttr.getId());
+        secAttrObj.put("oid", secAttr.getOid());
         secAttrObj.put("mdAttributeId", secAttr.getMdAttributeId());
         secAttrObj.put("type", secAttr.getAttributeType());
         secAttrObj.put("label", secAttr.getDisplayLabel());
@@ -493,7 +493,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       json.put("viewName", getViewName());
       json.put("sldName", getSLDName());
       json.put("layerName", getName());
-      json.put("layerId", getId());
+      json.put("layerId", getOid());
       json.put("inLegend", this.getDisplayInLegend());
       json.put("legendXPosition", legend.getLegendXPosition());
       json.put("legendYPosition", legend.getLegendYPosition());
@@ -712,12 +712,12 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
       geoId.setUserDefinedAlias(GeoEntity.GEOID);
       geoId.setUserDefinedDisplayLabel(GeoEntity.getGeoIdMd().getDisplayLabel(Session.getCurrentLocale()));
 
-      Selectable id = query.get(ComponentInfo.ID);
-      id.setColumnAlias(ComponentInfo.ID);
-      id.setUserDefinedAlias(ComponentInfo.ID);
-      id.setUserDefinedDisplayLabel(GeoEntity.getIdMd().getDisplayLabel(Session.getCurrentLocale()));
+      Selectable oid = query.get(ComponentInfo.OID);
+      oid.setColumnAlias(ComponentInfo.OID);
+      oid.setUserDefinedAlias(ComponentInfo.OID);
+      oid.setUserDefinedDisplayLabel(GeoEntity.getOidMd().getDisplayLabel(Session.getCurrentLocale()));
 
-      vQuery.SELECT(id, geoId);
+      vQuery.SELECT(oid, geoId);
       vQuery.WHERE(geoId.EQ(featureId));
 
       OIterator<ValueObject> iterator = null;
@@ -731,7 +731,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
           ValueObject vObject = iterator.next();
 
           JSONObject json = new JSONObject();
-          json.put(ComponentInfo.ID, vObject.getValue(ComponentInfo.ID));
+          json.put(ComponentInfo.OID, vObject.getValue(ComponentInfo.OID));
           json.put(ComponentInfo.TYPE, mdClass.definesType());
           json.put(GeoEntity.GEOID, vObject.getValue(GeoEntity.GEOID));
 
@@ -739,7 +739,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         }
         else
         {
-          throw new ProgrammingErrorException("Unable to find a feature with the feature id of [" + featureId + "] for layer [" + this.getId() + "]");
+          throw new ProgrammingErrorException("Unable to find a feature with the feature oid of [" + featureId + "] for layer [" + this.getOid() + "]");
         }
       }
       catch (JSONException e)
@@ -806,7 +806,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
             JSONObject aggMethodObj = new JSONObject();
             aggMethodObj.put("method", formattedAggMethod);
             aggMethodObj.put("label", aggMethod.getDisplayLabel());
-            aggMethodObj.put("id", aggMethod.getId());
+            aggMethodObj.put("oid", aggMethod.getOid());
 
             methods.put(aggMethodObj);
           }
@@ -821,7 +821,7 @@ public class DashboardThematicLayer extends DashboardThematicLayerBase implement
         JSONObject method = new JSONObject();
         method.put("method", AllAggregationType.NONE.name());
         method.put("label", AllAggregationType.NONE.getDisplayLabel());
-        method.put("id", AllAggregationType.NONE.getId());
+        method.put("oid", AllAggregationType.NONE.getOid());
 
         methods.put(method);
       }

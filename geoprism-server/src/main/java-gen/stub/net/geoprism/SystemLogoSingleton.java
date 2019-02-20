@@ -43,7 +43,7 @@ import com.runwaysdk.vault.VaultFileDAOIF;
  * 
  * @author rrowlands
  */
-public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.runwaysdk.generation.loader.Reloadable
+public class SystemLogoSingleton extends SystemLogoSingletonBase 
 {
   private static Logger              logger           = LoggerFactory.getLogger(SystemLogoSingleton.class);
 
@@ -159,7 +159,7 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
 
     if (session != null)
     {
-      String sessionId = session.getId();
+      String sessionId = session.getOid();
       boolean access = SessionFacade.checkAccess(sessionId, operation, entity);
 
       if (!access)
@@ -265,7 +265,7 @@ public class SystemLogoSingleton extends SystemLogoSingletonBase implements com.
     vaultFile.apply();
     vaultFileDAO.putFile(fileStream); // putFile will call apply for us
 
-    return vaultFile.getId();
+    return vaultFile.getOid();
   }
 
 }

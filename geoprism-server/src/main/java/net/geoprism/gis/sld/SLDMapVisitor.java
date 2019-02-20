@@ -88,9 +88,9 @@ import net.geoprism.localization.LocalizationFacade;
 /**
  * Traverses an object graph of map Component objects and creates an SLD document.
  */
-public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loader.Reloadable
+public class SLDMapVisitor implements MapVisitor
 {
-  private static class Provider implements com.runwaysdk.generation.loader.Reloadable
+  private static class Provider 
   {
     protected SLDMapVisitor visitor;
 
@@ -120,7 +120,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     }
   }
 
-  private static abstract class Symbolizer extends Provider implements com.runwaysdk.generation.loader.Reloadable
+  private static abstract class Symbolizer extends Provider 
   {
     protected Layer layer;
 
@@ -312,7 +312,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   }
 
-  private static class PointSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
+  private static class PointSymbolizer extends Symbolizer 
   {
     private PointSymbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
@@ -1229,7 +1229,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
    * used for rendering features
    * 
    */
-  private static class PolygonSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
+  private static class PolygonSymbolizer extends Symbolizer 
   {
     private PolygonSymbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
@@ -1535,7 +1535,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   }
 
-  private static class LineSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
+  private static class LineSymbolizer extends Symbolizer 
   {
     private LineSymbolizer(SLDMapVisitor visitor, Layer layer, Style style)
     {
@@ -1557,7 +1557,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     }
   }
 
-  private static class TextSymbolizer extends Symbolizer implements com.runwaysdk.generation.loader.Reloadable
+  private static class TextSymbolizer extends Symbolizer 
   {
     private Node[]  nodes;
 
@@ -1623,7 +1623,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
   /**
    * Builder class to simplify node creation.
    */
-  private static class NodeBuilder implements com.runwaysdk.generation.loader.Reloadable
+  private static class NodeBuilder 
   {
     private Document doc;
 
@@ -1804,7 +1804,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
 
   public String getSLD(Layer layer)
   {
-    Node layerNode = this.layerToNodeMap.get(layer.getId());
+    Node layerNode = this.layerToNodeMap.get(layer.getOid());
 
     Node sld = this.root.cloneNode(true);
 
@@ -1883,7 +1883,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     parents.push(userStyle);
 
     this.currentLayer = layer;
-    layerToNodeMap.put(layer.getId(), layerNode);
+    layerToNodeMap.put(layer.getOid(), layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
 
     for (Style style : layer.getStyles())
@@ -1911,7 +1911,7 @@ public class SLDMapVisitor implements MapVisitor, com.runwaysdk.generation.loade
     parents.push(userStyle);
 
     this.currentLayer = layer;
-    layerToNodeMap.put(layer.getId(), layerNode);
+    layerToNodeMap.put(layer.getOid(), layerNode);
     this.layers.put(layerNode, new LinkedList<DocumentFragment>());
 
     for (Style style : layer.getStyles())

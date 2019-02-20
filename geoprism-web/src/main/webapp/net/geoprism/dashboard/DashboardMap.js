@@ -40,7 +40,7 @@
     controller.editData = function() {
               
       var onSuccess = function(json) {
-        var information = JSON.parse(json);
+        var information = json.data;
         var dashboard = dashboardService.getDashboard();
           
         var form = new net.geoprism.FeatureForm(dashboard, information);

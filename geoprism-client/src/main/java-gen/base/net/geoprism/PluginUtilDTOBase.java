@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -1264570153)
-public abstract class PluginUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class PluginUtilDTOBase extends com.runwaysdk.business.UtilDTO 
 {
   public final static String CLASS = "net.geoprism.PluginUtil";
   private static final long serialVersionUID = -1264570153;
@@ -34,7 +34,7 @@ public abstract class PluginUtilDTOBase extends com.runwaysdk.business.UtilDTO i
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static final java.lang.Boolean isDHIS2Enabled(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
     String[] _declaredTypes = new String[]{};
@@ -43,9 +43,9 @@ public abstract class PluginUtilDTOBase extends com.runwaysdk.business.UtilDTO i
     return (java.lang.Boolean) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static PluginUtilDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static PluginUtilDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(id);
+    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(oid);
     
     return (PluginUtilDTO) dto;
   }
@@ -63,7 +63,7 @@ public abstract class PluginUtilDTOBase extends com.runwaysdk.business.UtilDTO i
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

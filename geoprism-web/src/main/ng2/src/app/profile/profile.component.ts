@@ -19,7 +19,7 @@
 
 import { Component} from '@angular/core';
 
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { Profile } from './profile';
 import { ProfileService } from './profile.service';
@@ -32,7 +32,7 @@ import { ProfileService } from './profile.service';
 })
 export class ProfileComponent {
   public profile:Profile = {
-    id: '',
+    oid: '',
     username: '',
     password: '',
     firstName: '',
@@ -54,7 +54,7 @@ export class ProfileComponent {
   }  
   
   cancel():void {
-    this.service.unlock(this.profile.id).then(profile => {
+    this.service.unlock(this.profile.oid).then(profile => {
       this.bsModalRef.hide();
     });
   }  

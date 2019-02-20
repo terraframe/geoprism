@@ -18,14 +18,14 @@
  */
 package net.geoprism.dashboard.condition;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;
 import com.runwaysdk.query.AttributeNumber;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
-public class DashboardLessThanCondition extends DashboardPrimitiveCondition implements Reloadable
+public class DashboardLessThanCondition extends DashboardPrimitiveCondition 
 {
   /**
    * Less than comparison

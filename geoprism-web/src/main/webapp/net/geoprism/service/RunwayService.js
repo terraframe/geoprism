@@ -20,12 +20,33 @@
 
   function RunwayService($http) {
     var service = {};
+
+    service.generateId = function() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    }          
+
+    service.http = function(config, request) {
+      $http(config).then(request.onSuccess, request.onFailure)
+        .finally(function(){
+          if(request._hideStandby !== undefined) {
+            request._hideStandby();  
+          }
+        });
+          
+      if(request._showStandby !== undefined) {
+        request._showStandby();
+      }
+    }
     
     service.createRequest = function(onSuccess, onFailure){
       var request = new Mojo.ClientRequest({
         onSuccess : onSuccess,
-        onFailure : function(e) {
-                      
+        onFailure : function(response) {
+          var e = response.data;
+          
           if(onFailure != null) {
             onFailure(e);
           }
@@ -112,13 +133,6 @@
       }
     }
     
-    service.generateId = function() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
-      });
-    }    
-    
     service.isValid = function(attributeMd) {
       if(!attributeMd.isSystem()) {
         var attributeName = attributeMd.getName();
@@ -164,9 +178,9 @@
           }
             
           if(!$.isEmptyObject(field)) {          
-          field.required = attributeMd.isRequired();
-          field.readable = attributeDTO.isReadable();
-          field.writable = attributeDTO.isWritable();
+            field.required = attributeMd.isRequired();
+            field.readable = attributeDTO.isReadable();
+            field.writable = attributeDTO.isWritable();
           
             fields.push(field);
           }
@@ -231,7 +245,7 @@
         }
       }
     }
-    
+        
     service.populateObject = function(object, dto) {
       for(var key in object) {
         var attributeDTO = dto.getAttributeDTO(key);
@@ -269,6 +283,26 @@
             }
           }
         }        
+      }      
+    }
+    
+    service.copyObject = function(object, dto) {
+      for(var key in object) {
+        var value = dto[key];
+            
+        if(value != null && value.length > 0) {
+          object[key] = value;
+        }
+      }      
+    }
+    
+    service.copy = function(dto, object) {
+      for(var key in object) {
+        var value = object[key];
+        
+        if(value != null && value.length > 0) {
+          dto[key] = value;
+        }
       }      
     }
     

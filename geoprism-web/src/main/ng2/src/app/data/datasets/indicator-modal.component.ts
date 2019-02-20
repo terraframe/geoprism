@@ -17,12 +17,12 @@ export class IndicatorModalComponent {
   indicator: IndicatorField;
   
   show: boolean;
-  aggregations: {id:string; value:string}[];
+  aggregations: {oid:string; value:string}[];
   attributes: DatasetAttribute[];
   
   constructor(private datasetService: DatasetService) {}
   
-  initialize(datasetId:string, aggregations:{id:string; value:string}[], attributes:DatasetAttribute[], indicator:IndicatorField): void {
+  initialize(datasetId:string, aggregations:{oid:string; value:string}[], attributes:DatasetAttribute[], indicator:IndicatorField): void {
 	
     if(indicator === undefined) {
       this.indicator = {
@@ -35,7 +35,7 @@ export class IndicatorModalComponent {
           aggregation: '',
           attribute: ''         
         },
-        id: undefined,
+        oid: undefined,
         percentage : false
       };     
     }
@@ -60,11 +60,11 @@ export class IndicatorModalComponent {
   }
   
   cancel(): void{
-    if(this.indicator.id === undefined) {
+    if(this.indicator.oid === undefined) {
       this.clear();	
     }
     else {
-      this.datasetService.unlockAttribute(this.indicator.id)
+      this.datasetService.unlockAttribute(this.indicator.oid)
         .then(response => {
           this.clear();
         });

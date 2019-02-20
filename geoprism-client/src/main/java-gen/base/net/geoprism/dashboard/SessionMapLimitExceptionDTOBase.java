@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 2080360694)
-public abstract class SessionMapLimitExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class SessionMapLimitExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.SessionMapLimitException";
   private static final long serialVersionUID = 2080360694;
@@ -69,7 +69,7 @@ public abstract class SessionMapLimitExceptionDTOBase extends com.runwaysdk.busi
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String MAPLIMIT = "mapLimit";
   public Integer getMapLimit()
   {
@@ -116,7 +116,7 @@ public abstract class SessionMapLimitExceptionDTOBase extends com.runwaysdk.busi
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{mapLimit}", this.getMapLimit().toString());
     
     return template;

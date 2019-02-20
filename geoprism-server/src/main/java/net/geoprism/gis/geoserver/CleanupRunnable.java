@@ -21,9 +21,9 @@ package net.geoprism.gis.geoserver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class CleanupRunnable implements Runnable, Reloadable
+
+public class CleanupRunnable implements Runnable
 {
   /**
    * Delay in milliseconds. Set to 5 minutes

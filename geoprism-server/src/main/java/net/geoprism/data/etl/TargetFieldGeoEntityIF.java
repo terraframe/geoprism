@@ -27,7 +27,7 @@ public interface TargetFieldGeoEntityIF extends TargetFieldIF
 {
   public Map<String, String> getUniversalAttributes();
 
-  public String getId();
+  public String getOid();
 
   public JSONObject toJSON() throws JSONException;
 }

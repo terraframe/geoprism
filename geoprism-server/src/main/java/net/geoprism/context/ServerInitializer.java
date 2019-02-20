@@ -26,10 +26,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.LoaderDecorator;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.session.Request;
 
-public class ServerInitializer implements Reloadable
+public class ServerInitializer 
 {
 
   private static final Log log = LogFactory.getLog(ServerInitializer.class);

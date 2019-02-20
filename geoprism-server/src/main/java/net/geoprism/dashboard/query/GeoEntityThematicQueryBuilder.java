@@ -24,8 +24,8 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeReferenceDAO;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
+
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.QueryFactory;
@@ -43,7 +43,7 @@ import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.dashboard.condition.LocationCondition;
 import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
-public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implements Reloadable
+public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder 
 {
   private GeoEntityQuery geoEntityQuery;
 
@@ -76,7 +76,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
   @Override
   protected SelectableSingle getLabelSelectable(GeneratedComponentQuery query)
   {
-    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getDisplayLabelAttribute().getId());
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getDisplayLabelAttribute().getOid());
 
     SelectableSingle label = this.geoEntityQuery.getDisplayLabel().localize(mdAttribute.definesAttribute());
     label.setColumnAlias(ThematicQueryBuilder.LABEL_ALIAS);
@@ -87,11 +87,11 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
   }
 
   @Override
-  protected Selectable getIdentifierSelectable(GeneratedComponentQuery query)
+  protected Selectable getOidentifierSelectable(GeneratedComponentQuery query)
   {
-    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getIdentifierAttribute().getId());
+    MdAttributeDAOIF mdAttribute = MdAttributeDAO.get(this.geoNode.getIdentifierAttribute().getOid());
 
-    // geo id (for uniqueness)
+    // geo oid (for uniqueness)
     Selectable geoId = this.geoEntityQuery.getGeoId(mdAttribute.definesAttribute());
     geoId.setUserDefinedAlias(ThematicQueryBuilder.LOCATION_ALIAS);
     geoId.setColumnAlias(ThematicQueryBuilder.LOCATION_ALIAS);
@@ -116,7 +116,7 @@ public class GeoEntityThematicQueryBuilder extends ThematicQueryBuilder implemen
     Attribute geoAttr = (Attribute) this.getGeoEntityAttribute(componentQuery);
 
     // the entity's GeoEntity should match the all path's child
-    GeoEntityAllPathsTableQuery geAllPathsQ = new GeoEntityAllPathsTableQuery(vQuery);
+    LocatedInAllPathsTableQuery geAllPathsQ = new LocatedInAllPathsTableQuery(vQuery);
     vQuery.WHERE(geoAttr.LEFT_JOIN_EQ(geAllPathsQ.getChildTerm()));
 
     // the displayed GeoEntity should match the all path's parent

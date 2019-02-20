@@ -38,6 +38,57 @@ import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.business.rbac.RoleDAO;
+import com.runwaysdk.business.rbac.SingleActorDAO;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
+import com.runwaysdk.business.rbac.UserDAO;
+import com.runwaysdk.business.rbac.UserDAOIF;
+import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
+import com.runwaysdk.query.AttributeChar;
+import com.runwaysdk.query.CONCAT;
+import com.runwaysdk.query.Coalesce;
+import com.runwaysdk.query.Condition;
+import com.runwaysdk.query.F;
+import com.runwaysdk.query.MAX;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OR;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.SelectableChar;
+import com.runwaysdk.query.SelectableUUID;
+import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.ReadPermissionException;
+import com.runwaysdk.session.Request;
+import com.runwaysdk.session.RequestType;
+import com.runwaysdk.session.Session;
+import com.runwaysdk.system.Roles;
+import com.runwaysdk.system.RolesQuery;
+import com.runwaysdk.system.SingleActor;
+import com.runwaysdk.system.gis.geo.AllowedIn;
+import com.runwaysdk.system.gis.geo.AllowedInQuery;
+import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeoNode;
+import com.runwaysdk.system.gis.geo.GeoNodeQuery;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdAttribute;
+import com.runwaysdk.system.metadata.MdClass;
+
 import net.coobird.thumbnailator.Thumbnails;
 import net.geoprism.AccessConstants;
 import net.geoprism.ClassUniversalQuery;
@@ -59,7 +110,7 @@ import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
 import net.geoprism.dashboard.query.ThematicQueryBuilder;
 import net.geoprism.data.importer.SeedKeyGenerator;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierAllPathsTableQuery;
+import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierQuery;
 import net.geoprism.ontology.ClassifierTermAttributeRoot;
@@ -68,62 +119,10 @@ import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.report.ReportItem;
 import net.geoprism.report.ReportItemQuery;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.runwaysdk.business.BusinessQuery;
-import com.runwaysdk.business.ontology.Term;
-import com.runwaysdk.business.rbac.RoleDAO;
-import com.runwaysdk.business.rbac.SingleActorDAO;
-import com.runwaysdk.business.rbac.SingleActorDAOIF;
-import com.runwaysdk.business.rbac.UserDAO;
-import com.runwaysdk.business.rbac.UserDAOIF;
-import com.runwaysdk.dataaccess.DuplicateDataException;
-import com.runwaysdk.dataaccess.MdAttributeCharacterDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.ValueObject;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
-import com.runwaysdk.generation.loader.Reloadable;
-import com.runwaysdk.query.AttributeChar;
-import com.runwaysdk.query.CONCAT;
-import com.runwaysdk.query.Coalesce;
-import com.runwaysdk.query.Condition;
-import com.runwaysdk.query.F;
-import com.runwaysdk.query.MAX;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.OR;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.SelectableChar;
-import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.session.ReadPermissionException;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
-import com.runwaysdk.session.Session;
-import com.runwaysdk.system.Roles;
-import com.runwaysdk.system.RolesQuery;
-import com.runwaysdk.system.SingleActor;
-import com.runwaysdk.system.gis.geo.AllowedIn;
-import com.runwaysdk.system.gis.geo.AllowedInQuery;
-import com.runwaysdk.system.gis.geo.GeoEntity;
-import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.GeoNode;
-import com.runwaysdk.system.gis.geo.GeoNodeGeometry;
-import com.runwaysdk.system.gis.geo.GeoNodeQuery;
-import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.MdClass;
-
-public class Dashboard extends DashboardBase implements com.runwaysdk.generation.loader.Reloadable
+public class Dashboard extends DashboardBase 
 {
 
-  private static class ThumbnailTask implements Runnable, Reloadable
+  private static class ThumbnailTask implements Runnable
   {
     private Dashboard     dashboard;
 
@@ -176,7 +175,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       QueryFactory f = new QueryFactory();
 
       GeoprismUserQuery userQuery = new GeoprismUserQuery(f);
-      userQuery.WHERE(userQuery.getId().EQ(currentUser.getId()));
+      userQuery.WHERE(userQuery.getOid().EQ(currentUser.getOid()));
 
       RolesQuery rolesQuery = new RolesQuery(f);
       rolesQuery.WHERE(rolesQuery.singleActor(userQuery));
@@ -250,7 +249,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     }
 
     // Delete the corresponding report item
-    ReportItem report = ReportItem.getByDashboard(this.getId());
+    ReportItem report = ReportItem.getByDashboard(this.getOid());
 
     if (report != null)
     {
@@ -294,7 +293,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     if (map != null)
     {
-      return map.getId();
+      return map.getOid();
     }
 
     return null;
@@ -417,7 +416,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         JSONArray users = object.getJSONArray("users");
 
-        assignUsers(this.getId(), users);
+        assignUsers(this.getOid(), users);
       }
 
       if (object.has("types"))
@@ -528,13 +527,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     if (user != null)
     {
       RoleDAO roleDAO = RoleDAO.get(clone.getDashboardRoleId()).getBusinessDAO();
-      roleDAO.assignMember((SingleActorDAOIF) SingleActorDAO.get(user.getId()));
+      roleDAO.assignMember((SingleActorDAOIF) SingleActorDAO.get(user.getOid()));
     }
 
     // Clone the report
     if (this.hasReport())
     {
-      ReportItem item = ReportItem.getByDashboard(this.getId());
+      ReportItem item = ReportItem.getByDashboard(this.getOid());
       item.clone(clone);
     }
 
@@ -616,7 +615,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     QueryFactory factory = new QueryFactory();
 
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
-    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getOid()));
 
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
     classifierQuery.WHERE(classifierQuery.EQ(rootQuery.getChild()));
@@ -646,7 +645,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     MdAttributeConcreteDAOIF mdAttributeConcrete = MdAttributeDAO.get(mdAttributeId).getMdAttributeConcrete();
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(new QueryFactory());
 
-    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getOid()));
 
     OIterator<? extends ClassifierTermAttributeRoot> iterator = null;
 
@@ -712,9 +711,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     QueryFactory factory = new QueryFactory();
 
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
-    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getOid()));
 
-    ClassifierAllPathsTableQuery aptQuery = new ClassifierAllPathsTableQuery(factory);
+    ClassifierIsARelationshipAllPathsTableQuery aptQuery = new ClassifierIsARelationshipAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(rootQuery.getChild()));
 
     return aptQuery.getCount();
@@ -727,9 +726,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     QueryFactory factory = new QueryFactory();
     ClassifierTermAttributeRootQuery rootQuery = new ClassifierTermAttributeRootQuery(factory);
     ClassifierQuery classifierQuery = new ClassifierQuery(factory);
-    ClassifierAllPathsTableQuery allPathQuery = new ClassifierAllPathsTableQuery(factory);
+    ClassifierIsARelationshipAllPathsTableQuery allPathQuery = new ClassifierIsARelationshipAllPathsTableQuery(factory);
 
-    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getId()));
+    rootQuery.WHERE(rootQuery.getParent().EQ(mdAttributeConcrete.getOid()));
     allPathQuery.WHERE(allPathQuery.getParentTerm().EQ(rootQuery.getChild()));
 
     classifierQuery.WHERE(classifierQuery.EQ(allPathQuery.getChildTerm()));
@@ -814,7 +813,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     QueryFactory factory = new QueryFactory();
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     aptQuery.WHERE(aptQuery.getParentTerm().EQ(country.getUniversal()));
 
     ClassUniversalQuery cuQuery = new ClassUniversalQuery(factory);
@@ -859,7 +858,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     // AllowedInQuery aiQuery = new AllowedInQuery(factory);
     // aiQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
     //
-    // UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(factory);
+    // AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(factory);
     // aptQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
     // aptQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
     //
@@ -894,7 +893,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     AllowedInQuery aiQuery = new AllowedInQuery(vQuery);
     vQuery.WHERE(aiQuery.getParent().EQ(Universal.getRoot()));
 
-    UniversalAllPathsTableQuery aptQuery = new UniversalAllPathsTableQuery(vQuery);
+    AllowedInAllPathsTableQuery aptQuery = new AllowedInAllPathsTableQuery(vQuery);
     vQuery.WHERE(aptQuery.getParentTerm().EQ(aiQuery.getChild()));
     vQuery.AND(aptQuery.getChildTerm().EQ(cuQuery.getChild()));
 
@@ -902,7 +901,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     vQuery.WHERE(geQuery.getUniversal().EQ(aptQuery.getParentTerm()));
     vQuery.ORDER_BY_ASC(geQuery.getDisplayLabel().localize());
 
-    vQuery.SELECT(geQuery.getId(), geQuery.getDisplayLabel().localize("displayLabel"), geQuery.getUniversal("universalId"));
+    vQuery.SELECT(geQuery.getOid(), geQuery.getDisplayLabel().localize("displayLabel"), geQuery.getUniversal("universalId"));
 
     OIterator<ValueObject> iterator = vQuery.getIterator();
 
@@ -924,9 +923,9 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     List<ValueObject> countries = this.getCountries();
 
     GeoEntityQuery entityQuery = new GeoEntityQuery(query);
-    GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(query);
+    LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
 
-    SelectableChar id = entityQuery.getId();
+    SelectableUUID oid = entityQuery.getOid();
     Coalesce universalLabel = entityQuery.getUniversal().getDisplayLabel().localize();
     Coalesce geoLabel = entityQuery.getDisplayLabel().localize();
     SelectableChar geoId = entityQuery.getGeoId();
@@ -940,7 +939,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     for (ValueObject country : countries)
     {
-      String countryId = country.getValue("id");
+      String countryId = country.getValue("oid");
 
       if (cCondition == null)
       {
@@ -952,7 +951,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       }
     }
 
-    query.SELECT(id, label);
+    query.SELECT(oid, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
     query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
     query.AND(cCondition);
@@ -1107,7 +1106,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         {
           userObj.put("firstName", user.getFirstName());
           userObj.put("lastName", user.getLastName());
-          userObj.put("id", user.getId());
+          userObj.put("oid", user.getOid());
           userObj.put("hasAccess", hasAccess);
           usersArr.put(userObj);
         }
@@ -1133,7 +1132,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       {
         JSONObject userObj = users.getJSONObject(i);
 
-        String userId = userObj.getString(GeoprismUser.ID);
+        String userId = userObj.getString(GeoprismUser.OID);
         boolean assignToDashboard = (Boolean) userObj.get("hasAccess");
 
         UserDAOIF user = UserDAO.get(userId);
@@ -1186,7 +1185,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
       for (Term child : children)
       {
-        indices.put(child.getId(), count++);
+        indices.put(child.getOid(), count++);
       }
 
     }
@@ -1196,7 +1195,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   public GeoNode[] getGeoNodes(MdAttribute thematicAttribute)
   {
-    MdAttributeDAOIF thematicAttributeDAO = MdAttributeDAO.get(thematicAttribute.getId());
+    MdAttributeDAOIF thematicAttributeDAO = MdAttributeDAO.get(thematicAttribute.getOid());
 
     return this.getGeoNodes(thematicAttributeDAO);
   }
@@ -1216,7 +1215,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       try
       {
         JSONObject nodeJSON = new JSONObject();
-        nodeJSON.put("id", node.getId());
+        nodeJSON.put("oid", node.getOid());
         nodeJSON.put("type", node.getType());
         nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
         nodesArr.put(nodeJSON);
@@ -1295,13 +1294,13 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
         // Geo entity node
         String geoEntityAttributeId = geoNode.getGeoEntityAttributeId();
 
-        if (geoEntityAttributeId.equals(mdAttribute.getId()) || geoEntityAttributeId.equals(mdAttributeConcrete.getId()))
+        if (geoEntityAttributeId.equals(mdAttribute.getOid()) || geoEntityAttributeId.equals(mdAttributeConcrete.getOid()))
         {
           return geoNode;
         }
       }
 
-      throw new ProgrammingErrorException("Unable to find a Geo Node for the Dashboard [" + this.getId() + "] and Attribute [" + mdAttribute.getId() + "]");
+      throw new ProgrammingErrorException("Unable to find a Geo Node for the Dashboard [" + this.getOid() + "] and Attribute [" + mdAttribute.getOid() + "]");
     }
     finally
     {
@@ -1366,7 +1365,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
   private void executeThumbnailThread(SingleActor... users)
   {
-    String sessionId = Session.getCurrentSession().getId();
+    String sessionId = Session.getCurrentSession().getOid();
 
     // Write the thumbnail
     TaskExecutor.addTask(new ThumbnailTask(sessionId, this, users));
@@ -1596,7 +1595,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     DashboardMap map = this.getMap();
 
     JSONObject object = new JSONObject();
-    object.put("id", this.getId());
+    object.put("oid", this.getOid());
     object.put("name", this.getName());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("description", this.getDescription().getValue());
@@ -1618,7 +1617,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     if (map != null)
     {
-      object.put("mapId", map.getId());
+      object.put("mapId", map.getOid());
     }
 
     String activeBaseMap = map.getActiveBaseMap();
@@ -1667,7 +1666,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
     JSONObject object = new JSONObject();
     object.put("label", mdClass.getDisplayLabel().getValue());
-    object.put("id", mdClass.getId());
+    object.put("oid", mdClass.getOid());
     object.put("description", this.getDescription().getValue());
     object.put("attributes", attributes);
 
@@ -1712,7 +1711,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   public JSONObject getDashboardInformationJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
-    object.put("dashboardId", this.getId());
+    object.put("dashboardId", this.getOid());
     object.put("label", this.getDisplayLabel().getValue());
     object.put("description", this.getDescription().getValue());
 
@@ -1723,7 +1722,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
   {
     MetadataWrapperQuery query = new MetadataWrapperQuery(new QueryFactory());
     query.WHERE(query.getDashboard().EQ(this));
-    query.AND(query.getWrappedMdClass().EQ(mdClass.getId()));
+    query.AND(query.getWrappedMdClass().EQ(mdClass.getOid()));
 
     OIterator<? extends MetadataWrapper> iterator = query.getIterator();
 
@@ -1776,6 +1775,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
       object.put(Dashboard.DISPLAYLABEL, this.getDisplayLabel().getValue());
       object.put(Dashboard.DESCRIPTION, this.getDescription().getValue());
       object.put(Dashboard.REMOVABLE, this.getRemovable());
+      object.put("newInstance", this.isNew());
 
       List<ValueObject> countries = this.getCountries();
 
@@ -1934,7 +1934,7 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
 
         dashboards.put(object);
 
-        if (first || dashboard.getId().equals(dashboardId))
+        if (first || dashboard.getOid().equals(dashboardId))
         {
           response.put("state", dashboard.toJSON());
 

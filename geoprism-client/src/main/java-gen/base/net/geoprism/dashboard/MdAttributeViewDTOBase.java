@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 909903717)
-public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.ViewDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.ViewDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.MdAttributeView";
   private static final long serialVersionUID = 909903717;
@@ -37,7 +37,7 @@ public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.View
   public static java.lang.String ATTRIBUTENAME = "attributeName";
   public static java.lang.String ATTRIBUTETYPE = "attributeType";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String MDATTRIBUTEID = "mdAttributeId";
   public static java.lang.String MDCLASSID = "mdClassId";
   public String getAttributeName()
@@ -225,9 +225,9 @@ public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.View
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(MDCLASSID).getAttributeMdDTO();
   }
   
-  public static MdAttributeViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static MdAttributeViewDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(id);
+    com.runwaysdk.business.ViewDTO dto = (com.runwaysdk.business.ViewDTO)clientRequest.get(oid);
     
     return (MdAttributeViewDTO) dto;
   }
@@ -245,7 +245,7 @@ public abstract class MdAttributeViewDTOBase extends com.runwaysdk.business.View
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

@@ -56,7 +56,7 @@ public class OrgUnitLevelJsonToUniversal
     {
       // Create new
       universal.getDisplayLabel().setValue(json.getString("name"));
-      universal.setUniversalId(json.getString("id"));
+      universal.setUniversalId(json.getString("oid"));
       universal.apply();
     }
     catch (DuplicateDataException ex)
@@ -64,7 +64,7 @@ public class OrgUnitLevelJsonToUniversal
       // Update existing
       Database.rollbackSavepoint(sp);
       
-      universal = Universal.getByKey(json.getString("id"));
+      universal = Universal.getByKey(json.getString("oid"));
       
       if (!universal.getDisplayLabel().getValue().equals(json.getString("name")))
       {

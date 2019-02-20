@@ -28,10 +28,10 @@ import net.geoprism.shapefile.Localizer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
 
-public class AttributeContentProvider implements IStructuredContentProvider, Reloadable
+
+public class AttributeContentProvider implements IStructuredContentProvider
 {
   private boolean required;
 

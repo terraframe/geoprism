@@ -18,7 +18,7 @@
  */
 package net.geoprism.email;
 
-public class InvalidToRecipient extends InvalidToRecipientBase implements com.runwaysdk.generation.loader.Reloadable
+public class InvalidToRecipient extends InvalidToRecipientBase 
 {
   private static final long serialVersionUID = -299199494;
   

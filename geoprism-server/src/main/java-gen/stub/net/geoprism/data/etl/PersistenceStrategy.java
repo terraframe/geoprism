@@ -18,9 +18,9 @@
  */
 package net.geoprism.data.etl;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public abstract class PersistenceStrategy extends PersistenceStrategyBase implements Reloadable, PersistenceStrategyIF
+
+public abstract class PersistenceStrategy extends PersistenceStrategyBase implements PersistenceStrategyIF
 {
   private static final long serialVersionUID = 769267976;
   

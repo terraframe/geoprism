@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 public class CategoryIconDisplayLabelDTO extends CategoryIconDisplayLabelDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1373676121;
   
   public CategoryIconDisplayLabelDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

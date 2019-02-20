@@ -19,7 +19,7 @@
 package net.geoprism.data.etl.excel;
 
 
-public class ExcelFormulaException extends ExcelFormulaExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelFormulaException extends ExcelFormulaExceptionBase 
 {
   private static final long serialVersionUID = 1209888059;
   

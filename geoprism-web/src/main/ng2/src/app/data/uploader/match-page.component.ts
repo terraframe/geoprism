@@ -39,7 +39,7 @@ export class MatchPageComponent {
   
   select(match:any, overwrite:boolean) : void {
    
-    this.service.getSavedConfiguration(match.id, this.sheet.name)
+    this.service.getSavedConfiguration(match.oid, this.sheet.name)
       .then(response => {
     	let sheet = response.datasets;
         sheet.replaceExisting = overwrite;          

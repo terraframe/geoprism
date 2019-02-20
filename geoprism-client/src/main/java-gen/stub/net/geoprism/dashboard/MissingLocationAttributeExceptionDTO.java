@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class MissingLocationAttributeExceptionDTO extends MissingLocationAttributeExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -2058421751;
   
   public MissingLocationAttributeExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

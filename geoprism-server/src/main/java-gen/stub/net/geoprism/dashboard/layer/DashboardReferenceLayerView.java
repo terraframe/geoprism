@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.layer;
 
 
-public class DashboardReferenceLayerView extends DashboardReferenceLayerViewBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardReferenceLayerView extends DashboardReferenceLayerViewBase 
 {
   private static final long serialVersionUID = -476222070;
   

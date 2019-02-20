@@ -20,9 +20,9 @@ package net.geoprism.report;
 
 import net.geoprism.context.ServerContextListener;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class CacheDocumentManagerContextListener implements Reloadable, ServerContextListener
+
+public class CacheDocumentManagerContextListener implements ServerContextListener
 {
   @Override
   public void initialize()

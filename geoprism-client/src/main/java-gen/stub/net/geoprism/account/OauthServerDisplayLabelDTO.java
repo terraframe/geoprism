@@ -19,7 +19,7 @@
 package net.geoprism.account;
 
 public class OauthServerDisplayLabelDTO extends OauthServerDisplayLabelDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 2087873746;
   
   public OauthServerDisplayLabelDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

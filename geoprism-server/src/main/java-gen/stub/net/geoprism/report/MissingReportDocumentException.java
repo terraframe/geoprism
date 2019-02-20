@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class MissingReportDocumentException extends MissingReportDocumentExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class MissingReportDocumentException extends MissingReportDocumentExceptionBase 
 {
   private static final long serialVersionUID = 1727930790;
   

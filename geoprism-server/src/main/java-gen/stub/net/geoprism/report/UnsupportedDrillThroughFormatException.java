@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 
-public class UnsupportedDrillThroughFormatException extends UnsupportedDrillThroughFormatExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class UnsupportedDrillThroughFormatException extends UnsupportedDrillThroughFormatExceptionBase 
 {
   private static final long serialVersionUID = -885517777;
   

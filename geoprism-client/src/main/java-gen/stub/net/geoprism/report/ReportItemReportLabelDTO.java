@@ -20,7 +20,7 @@ package net.geoprism.report;
 
 
 public class ReportItemReportLabelDTO extends ReportItemReportLabelDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 1302705935;
   
   public ReportItemReportLabelDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

@@ -20,7 +20,7 @@ package net.geoprism.ontology;
 
 
 public class UniversalExportMenuDTO extends UniversalExportMenuDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 965462954;
   
   public UniversalExportMenuDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

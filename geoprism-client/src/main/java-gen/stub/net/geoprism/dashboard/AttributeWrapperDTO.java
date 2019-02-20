@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 public class AttributeWrapperDTO extends AttributeWrapperDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1274996792;
   
   public AttributeWrapperDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

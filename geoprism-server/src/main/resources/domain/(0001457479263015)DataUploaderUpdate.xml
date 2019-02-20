@@ -1,0 +1,45 @@
+<!--
+
+    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Runway SDK(tm).
+
+    Runway SDK(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Runway SDK(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdUtil name="net.geoprism.DataUploader">
+        <create>
+          <mdMethod name="cancelImport" label="Cancel import" returnType="void" static="true">
+            <mdParameter name="configuration" label="configuration" order="1" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="getSavedConfiguration" label="Get saved configuration" returnType="java.lang.String" static="true">
+            <mdParameter name="id" label="id" order="1" type="java.lang.String" />
+            <mdParameter name="sheetName" label="Sheet name" order="2" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdUtil>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.DataUploaderController.getSavedConfiguration" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.DataUploader.getSavedConfiguration" type="com.runwaysdk.system.metadata.MdMethod"/>
+      <object key="net.geoprism.DataUploaderController.cancelImport" type="com.runwaysdk.system.metadata.MdAction"/>
+      <object key="net.geoprism.DataUploader.cancelImport" type="com.runwaysdk.system.metadata.MdMethod"/>
+    </delete>
+  </undoIt>
+</version>

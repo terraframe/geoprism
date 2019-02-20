@@ -95,24 +95,24 @@ export class GeoValidationProblemComponent implements OnInit {
   removeLocationExclusion(exclusionId: string): void {
 
     if(this.workbook.locationExclusions){         
-      this.workbook.locationExclusions = this.workbook.locationExclusions.filter(h => h.id !== exclusionId);
+      this.workbook.locationExclusions = this.workbook.locationExclusions.filter(h => h.oid !== exclusionId);
     }
   }
     
   ignoreDataAtLocation(): void {
     let locationLabel = this.problem.label;
     let universal = this.problem.universalId;
-    let id = this.idService.generateId();
+    let oid = this.idService.generateId();
       
     this.problem.resolved = true;
       
     this.problem.action = {
       name : 'IGNOREATLOCATION',
       label : locationLabel,
-      id : id
+      oid : oid
     };
       
-    let exclusion = new LocationExclusion(id, universal, locationLabel, this.problem.parentId);
+    let exclusion = new LocationExclusion(oid, universal, locationLabel, this.problem.parentId);
       
     if(this.workbook.locationExclusions){
       this.workbook.locationExclusions.push(exclusion);
@@ -147,7 +147,7 @@ export class GeoValidationProblemComponent implements OnInit {
         this.problem.resolved = false;
         this.problem.action = null;
         
-        this.removeLocationExclusion(action.id);
+        this.removeLocationExclusion(action.oid);
         
         this.onProblemChange.emit(this.problem);
       }      

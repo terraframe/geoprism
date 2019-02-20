@@ -33,7 +33,7 @@ export class CategoryResolver implements Resolve<Category> {
   constructor(@Inject(CategoryService) private categoryService: CategoryService, @Inject(EventService) private eventService: EventService) {}
   
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<Category> {
-    return this.categoryService.get(route.params['id'])
+    return this.categoryService.get(route.params['oid'])
       .catch((error:any) => {
         this.eventService.onError(error); 
         
@@ -93,7 +93,7 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   create() : void {
-    this.categoryService.create(this.instance.label, this.category.id, false)
+    this.categoryService.create(this.instance.label, this.category.oid, false)
       .then((category:BasicCategory) => {
         this.category.descendants.push(category);
         
@@ -103,14 +103,14 @@ export class CategoryDetailComponent implements OnInit {
   }
   
   cancel(): void {
-    this.categoryService.unlock(this.category.id)
+    this.categoryService.unlock(this.category.oid)
       .then(response => {  
         this.goBack(this.category);
       });
   }
   
   remove(descendant: BasicCategory) {
-      this.categoryService.remove(descendant.id)
+      this.categoryService.remove(descendant.oid)
        .then((response:any) => {
          this.category.descendants = this.category.descendants.filter(h => h !== descendant);        
        });
@@ -118,11 +118,11 @@ export class CategoryDetailComponent implements OnInit {
   
   
   edit(descendant: BasicCategory) : void {
-    this.router.navigate(['/data/category-option', this.category.id, descendant.id]);
+    this.router.navigate(['/data/category-option', this.category.oid, descendant.oid]);
   }
   
   validateName(name: string) {
-    this.categoryService.validate(name, this.category.id)
+    this.categoryService.validate(name, this.category.oid)
       .then((response:any) => {
         this.validName = true;
       })

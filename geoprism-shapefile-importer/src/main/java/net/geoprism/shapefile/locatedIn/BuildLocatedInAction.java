@@ -25,9 +25,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class BuildLocatedInAction extends Action implements Reloadable
+
+public class BuildLocatedInAction extends Action 
 {
   public BuildLocatedInAction()
   {

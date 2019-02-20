@@ -230,7 +230,7 @@
         var rootTerms = [];
         
         for(var i = 0; i < nodes.length; i++) {
-          var id = nodes[i].id;              
+          var id = nodes[i].oid;              
           rootTerms.push({termId : id});
         }
         
@@ -574,7 +574,9 @@
       
       var limit = 10;
             
-      var onSuccess = function(results){
+      var onSuccess = function(resp){
+    	var results = resp.data;
+    	
         // We need to localize the results for numbers
         if(categoryType == 'number') {
           for(var i = 0; i < results.length; i++) {
@@ -794,7 +796,7 @@
            $timeout(function(){
              // Re-sets the options property on the model           
              $scope.setAggregationStrategyOptions(aggregations);
-             $scope.$apply();             
+             // // $scope.$apply();             
            }, 1);
          };
          
@@ -863,11 +865,11 @@
     controller.persist = function() {
       var onSuccess = function(layer) {
         controller.clear();    
-        $scope.$apply();
+        // // $scope.$apply();
 
         if(layer != null) {
           var map = {};
-          map["layers"] = [JSON.parse(layer)];
+          map["layers"] = [layer.data];
                   
           $scope.$emit('layerChange', {map:map});    
         }
@@ -877,7 +879,7 @@
         $scope.errors = [];
         $scope.errors.push(e.localizedMessage);
                  
-        $scope.$apply();
+//        // // $scope.$apply();
       };             
                
       // Clear all the errors
@@ -892,7 +894,7 @@
     controller.cancel = function() {
       var onSuccess = function() {  
         controller.clear();            
-        $scope.$apply();
+//        // // $scope.$apply();
       }
                  
       layerFormService.unlock($scope.layerModel, '#layer-modal', onSuccess);
@@ -910,7 +912,7 @@
         controller.load(response);
                   
         $scope.show = true;
-        $scope.$apply();
+//        // // $scope.$apply();
       }
                  
       layerFormService.newInstance(mdAttributeId, mapId, '#mapDivId', onSuccess);
@@ -922,7 +924,7 @@
         controller.load(response);
                    
         $scope.show = true;
-        $scope.$apply();
+        // // $scope.$apply();
       }
              
       layerFormService.edit(layerId, '#mapDivId', onSuccess);
@@ -1024,11 +1026,11 @@
     controller.apply = function() {
       var onSuccess = function(layer) {        
         controller.clear();            
-        $scope.$apply();
+        // // $scope.$apply();
         
         if(layer != null) {
           var map = {};
-          map.refLayers = [JSON.parse(layer)];
+          map.refLayers = [layer.data];
           
           $scope.$emit('layerChange', {map:map});
         }
@@ -1038,7 +1040,7 @@
         $scope.errors = [];
         $scope.errors.push(e.message);
                  
-        $scope.$apply();
+        // // $scope.$apply();
       };
       
       // Clear all the errors
@@ -1052,7 +1054,7 @@
     controller.cancel = function() {
       var onSuccess = function(response) {
         controller.clear();            
-        $scope.$apply();
+        // // $scope.$apply();
       }
       
       referenceLayerFormService.unlock($scope.layer, '#layer-modal', onSuccess);      
@@ -1079,7 +1081,7 @@
         controller.load(response);
             
         $scope.show = true;
-        $scope.$apply();
+        // // $scope.$apply();
       }
           
       referenceLayerFormService.newInstance(mapId, '#mapDivId', onSuccess);
@@ -1090,7 +1092,7 @@
         controller.load(response);
             
         $scope.show = true;
-        $scope.$apply();
+        // // $scope.$apply();
       }
       
       referenceLayerFormService.edit(layerId, '#mapDivId', onSuccess);
@@ -1147,7 +1149,7 @@
         onSuccess : function(response) {
           $scope.icons = response.icons;
                     
-          $scope.$apply();
+          // // $scope.$apply();
         } 
       };      
               

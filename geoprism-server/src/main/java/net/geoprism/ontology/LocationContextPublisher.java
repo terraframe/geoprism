@@ -32,8 +32,8 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.Selectable;
-import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableSingle;
+import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -52,20 +52,20 @@ import net.geoprism.gis.geoserver.SessionPredicate;
 
 public class LocationContextPublisher extends LayerPublisher implements VectorLayerPublisherIF
 {
-  private String id;
+  private String oid;
 
-  public LocationContextPublisher(String id, String layers)
+  public LocationContextPublisher(String oid, String layers)
   {
     super(layers);
 
-    this.id = id;
+    this.oid = oid;
   }
 
   @Override
   protected List<GeoserverLayerIF> buildLayers()
   {
 
-    GeoEntity entity = GeoEntity.get(this.id);
+    GeoEntity entity = GeoEntity.get(this.oid);
     Universal universal = entity.getUniversal();
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
@@ -99,14 +99,14 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     GeoEntityQuery geQ1 = new GeoEntityQuery(query);
 
     // Id column
-    SelectableChar id = geQ1.getId(GeoEntity.ID);
-    id.setColumnAlias(GeoEntity.ID);
+    SelectableUUID oid = geQ1.getOid(GeoEntity.OID);
+    oid.setColumnAlias(GeoEntity.OID);
 
     // geoentity label
     SelectableSingle label = geQ1.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
     label.setColumnAlias(GeoEntity.DISPLAYLABEL);
 
-    // geo id (for uniqueness)
+    // geo oid (for uniqueness)
     Selectable geoId = geQ1.getGeoId(GeoEntity.GEOID);
     geoId.setColumnAlias(GeoEntity.GEOID);
 
@@ -114,8 +114,8 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
-    query.SELECT(id, label, geoId, geom);
-    query.WHERE(geQ1.getId().EQ(entity.getId()));
+    query.SELECT(oid, label, geoId, geom);
+    query.WHERE(geQ1.getOid().EQ(entity.getOid()));
 
     return query;
   }
@@ -127,7 +127,7 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
 
   public void writeGeojson(JSONWriter writer)
   {
-    GeoEntity entity = GeoEntity.get(this.id);
+    GeoEntity entity = GeoEntity.get(this.oid);
     Universal universal = entity.getUniversal();
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
 
@@ -173,10 +173,10 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
   private ResultSet getResultSet(String entityId, LayerType type)
   {
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.id, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("SELECT ge.oid, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
-    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.id = ge.display_label\n");
-    sql.append("WHERE ge.id = '" + entityId + "'\n");
+    sql.append("JOIN geo_entity_display_label AS gdl ON gdl.oid = ge.display_label\n");
+    sql.append("WHERE ge.oid::text = '" + entityId + "'\n");
     sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
 
     return Database.query(sql.toString());
@@ -187,7 +187,7 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
   {
     try
     {
-      ResultSet resultSet = this.getResultSet(this.id, LayerType.POLYGON);
+      ResultSet resultSet = this.getResultSet(this.oid, LayerType.POLYGON);
 
       try
       {

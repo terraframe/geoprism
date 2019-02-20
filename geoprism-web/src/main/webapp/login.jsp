@@ -75,7 +75,7 @@
 		</div>    
 		<div id="geoprism-landing-bottom-div">
 		    <img id="logo_gp" src="${pageContext.request.contextPath}/net/geoprism/images/geoprism_banner.png" alt="logo" />
-		    <img id="background-img" src="${pageContext.request.contextPath}/net/geoprism/images/theme_background.png" alt="background" />
+<%-- 		    <img id="background-img" src="${pageContext.request.contextPath}/net/geoprism/images/theme_background.png" alt="background" /> --%>
 		
 			<div id="geoprism-landing-footer">
 				<h4><gdb:localize key="login.footerMessage"/></h4>

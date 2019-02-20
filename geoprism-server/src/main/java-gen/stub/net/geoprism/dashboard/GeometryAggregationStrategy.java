@@ -48,7 +48,7 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
 
-public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase implements com.runwaysdk.generation.loader.Reloadable
+public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase 
 {
   private static final long  serialVersionUID = 178551989;
 
@@ -147,7 +147,7 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
 
     outerQuery.SELECT(geomAttribute);
 
-    // Join the geometry query to the values query through the geo id
+    // Join the geometry query to the values query through the geo oid
     AttributeCharacter geometrySelectable = geometryQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS);
 
     outerQuery.WHERE(geometrySelectable.EQ(valueQuery.aCharacter(ThematicQueryBuilder.LOCATION_ALIAS)));
@@ -171,7 +171,7 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
       JSONObject object = new JSONObject();
       object.put("type", this.getClass().getSimpleName());
       object.put("value", VALUE);
-      object.put("id", this.getId());
+      object.put("oid", this.getOid());
 
       return object;
     }
@@ -184,8 +184,8 @@ public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase
   @Override
   public String getCategoryLabel(GeoNode geoNode, String categoryId)
   {
-    MdAttributeDAOIF identifierAttribute = MdAttributeDAO.get(geoNode.getIdentifierAttribute().getId());
-    MdAttributeDAOIF displayLabelAttribute = MdAttributeDAO.get(geoNode.getDisplayLabelAttribute().getId());
+    MdAttributeDAOIF identifierAttribute = MdAttributeDAO.get(geoNode.getIdentifierAttribute().getOid());
+    MdAttributeDAOIF displayLabelAttribute = MdAttributeDAO.get(geoNode.getDisplayLabelAttribute().getOid());
     String attributeName = displayLabelAttribute.definesAttribute();
 
     MdClassDAOIF mdClass = identifierAttribute.definedByClass();

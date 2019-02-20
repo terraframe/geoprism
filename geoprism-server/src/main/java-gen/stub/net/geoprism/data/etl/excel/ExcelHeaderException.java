@@ -18,7 +18,7 @@
  */
 package net.geoprism.data.etl.excel;
 
-public class ExcelHeaderException extends ExcelHeaderExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelHeaderException extends ExcelHeaderExceptionBase 
 {
   private static final long serialVersionUID = 478041649;
   

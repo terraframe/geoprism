@@ -19,7 +19,7 @@
 package net.geoprism.dashboard.condition;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;
@@ -28,7 +28,7 @@ import com.runwaysdk.query.AttributeText;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 
-public class DashboardEqualCondition extends DashboardPrimitiveCondition implements Reloadable
+public class DashboardEqualCondition extends DashboardPrimitiveCondition 
 {
 
   /**

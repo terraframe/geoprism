@@ -18,7 +18,7 @@
  */
 package net.geoprism.dhis2;
 
-public class BasicIdMapping extends BasicIdMappingBase implements com.runwaysdk.generation.loader.Reloadable
+public class BasicIdMapping extends BasicIdMappingBase 
 {
   private static final long serialVersionUID = 135445638;
   

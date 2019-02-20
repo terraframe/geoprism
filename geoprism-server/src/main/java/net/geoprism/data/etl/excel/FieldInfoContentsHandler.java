@@ -35,8 +35,6 @@ import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdView;
@@ -130,9 +128,9 @@ public class FieldInfoContentsHandler implements SheetHandler
       }
     }
     
-    public void setCategoryId(String id)
+    public void setCategoryId(String oid)
     {
-      this.categoryId = id;
+      this.categoryId = oid;
     }
     
     public void setRealType(ColumnType realType)
@@ -255,7 +253,7 @@ public class FieldInfoContentsHandler implements SheetHandler
 
   public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
   {
-    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {
@@ -511,7 +509,7 @@ public class FieldInfoContentsHandler implements SheetHandler
     MdView mdView = binding.getMdView();
 
     JSONObject option = new JSONObject();
-    option.put("id", binding.getId());
+    option.put("oid", binding.getOid());
     option.put("label", mdView.getDisplayLabel().getValue());
 
     return option;

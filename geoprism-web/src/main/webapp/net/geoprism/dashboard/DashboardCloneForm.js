@@ -21,19 +21,19 @@
     var controller = this;
     
     controller.submit = function() {
-      var onSuccess = function(dashboard) {
-        $scope.$emit('dashboardChange', {dashboard : dashboard});
+      var onSuccess = function(response) {
+        $scope.$emit('dashboardChange', {dashboard : response.data});
         
         controller.clear();
         
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       var onFailure = function(e){
         $scope.errors = [];
         $scope.errors.push(e.localizedMessage);
                    
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       $scope.errors = [];
@@ -61,9 +61,9 @@
     
     controller.newClone = function(dashboardId, elementId) {
       var onSuccess = function(response) {        
-        controller.load(response.dashboard);
+        controller.load(response.data.dashboard);
         
-        $scope.$apply();
+        // $scope.$apply();
       };
       
       dashboardService.newClone(dashboardId, elementId, onSuccess);

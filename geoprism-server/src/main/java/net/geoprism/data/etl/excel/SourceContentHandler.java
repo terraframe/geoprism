@@ -45,8 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generation.loader.DelegatingClassLoader;
-import com.runwaysdk.generation.loader.LoaderDecorator;
 
 import net.geoprism.ExceptionUtil;
 import net.geoprism.data.etl.ColumnType;
@@ -155,7 +153,7 @@ public class SourceContentHandler implements SheetHandler
 
   public SpreadsheetImporterHeaderModifierIF getHeaderModifier()
   {
-    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, ( (DelegatingClassLoader) LoaderDecorator.instance() ));
+    ServiceLoader<SpreadsheetImporterHeaderModifierIF> loader = ServiceLoader.load(SpreadsheetImporterHeaderModifierIF.class, Thread.currentThread().getContextClassLoader());
 
     try
     {
@@ -493,7 +491,7 @@ public class SourceContentHandler implements SheetHandler
       POIXMLProperties props = wb.getProperties();
 
       POIXMLProperties.CustomProperties custProp = props.getCustomProperties();
-      custProp.addProperty("dataset", this.context.getId(this.sheetName));
+      custProp.addProperty("dataset", this.context.getOid(this.sheetName));
     }
 
     return this.workbook;

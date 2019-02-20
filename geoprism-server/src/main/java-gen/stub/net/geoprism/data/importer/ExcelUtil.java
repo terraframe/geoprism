@@ -31,7 +31,7 @@ import com.runwaysdk.dataaccess.io.ExcelImporter;
 import com.runwaysdk.dataaccess.io.ExcelImporter.ImportContext;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class ExcelUtil extends ExcelUtilBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelUtil extends ExcelUtilBase 
 {
   private static final long serialVersionUID = -410766854;
 

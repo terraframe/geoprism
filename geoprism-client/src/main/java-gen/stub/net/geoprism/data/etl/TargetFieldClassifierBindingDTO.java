@@ -20,7 +20,7 @@ package net.geoprism.data.etl;
 
 
 public class TargetFieldClassifierBindingDTO extends TargetFieldClassifierBindingDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 2038793556;
   
   public TargetFieldClassifierBindingDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

@@ -19,18 +19,18 @@
 package net.geoprism.dashboard.layer;
 
 
-public class HasThematicLayer extends HasThematicLayerBase implements com.runwaysdk.generation.loader.Reloadable
+public class HasThematicLayer extends HasThematicLayerBase 
 {
   private static final long serialVersionUID = 1449327966;
   
-  public HasThematicLayer(String parentId, String childId)
+  public HasThematicLayer(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public HasThematicLayer(net.geoprism.dashboard.DashboardMap parent, net.geoprism.dashboard.layer.DashboardThematicLayer child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

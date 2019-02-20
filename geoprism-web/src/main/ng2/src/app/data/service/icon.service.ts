@@ -46,24 +46,24 @@ export class IconService extends BasicService {
       .catch(this.handleError.bind(this));
   }
   
-  remove(id:string): Promise<Response> {
+  remove(oid:string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
     
     return this.ehttp
-      .post(acp + '/iconimage/remove', JSON.stringify({id:id}), { headers: headers })
+      .post(acp + '/iconimage/remove', JSON.stringify({oid:oid}), { headers: headers })
       .toPromise()
       .catch(this.handleError.bind(this));	  
   }
   
-  edit(id : string): Promise<Icon> {
+  edit(oid : string): Promise<Icon> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
     return this.ehttp
-      .post(acp + '/iconimage/edit', JSON.stringify({id:id}), { headers: headers })
+      .post(acp + '/iconimage/edit', JSON.stringify({oid:oid}), { headers: headers })
       .toPromise()
       .then(response => {
         return response.json() as Icon;
@@ -71,22 +71,22 @@ export class IconService extends BasicService {
       .catch(this.handleError.bind(this));
   }  
   
-  unlock(id: string): Promise<Response> {
+  unlock(oid: string): Promise<Response> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });    
     
     return this.ehttp
-      .post(acp + '/iconimage/unlock', JSON.stringify({id:id}), { headers: headers })
+      .post(acp + '/iconimage/unlock', JSON.stringify({oid:oid}), { headers: headers })
       .toPromise()
       .catch(this.handleError.bind(this));
   }
   
     
-  apply(id: string, label: string): Promise<Icon> {
+  apply(oid: string, label: string): Promise<Icon> {
       
     let data = new FormData();
-    data.append('id', id);
+    data.append('oid', oid);
     data.append('label', label)
     
     return this.ehttp

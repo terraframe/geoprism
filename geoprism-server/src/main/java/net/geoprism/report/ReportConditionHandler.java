@@ -20,11 +20,11 @@ package net.geoprism.report;
 
 import net.geoprism.dashboard.condition.DashboardCondition;
 
-import com.runwaysdk.generation.loader.Reloadable;
+
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.ValueQuery;
 
-public class ReportConditionHandler implements ReportConditionHandlerIF, Reloadable
+public class ReportConditionHandler implements ReportConditionHandlerIF
 {
   private String                  type;
 

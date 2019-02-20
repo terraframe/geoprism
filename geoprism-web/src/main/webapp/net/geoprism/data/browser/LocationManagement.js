@@ -41,27 +41,29 @@
     controller.load = function(data) {
       console.log("LocationController.load");
       
-      $scope.children = data.children.resultSet;
-      $scope.layers = data.layers;
-      
-      $scope.entity = data.entity;
-      $scope.universal = {
-        value : data.universal,
-        options : data.universals
-      };
-      
-      var layers = [
-//        {name:'context-multipolygon', config: {id: data.entity.id, type:"LM_CONTEXT"}},
-        {name:'target-multipolygon', config: {id: data.entity.id, universalId: data.universal, type:"LM"}, bbox:data.bbox}
-      ];
-      
-      $scope.$broadcast('sharedGeoData', layers);
+      if(data.children && data.children.count > 0){
+	      $scope.children = data.children.resultSet;
+	      $scope.layers = data.layers;
+	      
+	      $scope.entity = data.entity;
+	      $scope.universal = {
+	        value : data.universal,
+	        options : data.universals
+	      };
+	      
+	      var layers = [
+	//        {name:'context-multipolygon', config: {id: data.entity.oid, type:"LM_CONTEXT"}},
+	        {name:'target-multipolygon', config: {oid: data.entity.oid, universalId: data.universal, type:"LM"}, bbox:data.bbox}
+	      ];
+	      
+	      $scope.$broadcast('sharedGeoData', layers);
+      }
     }
     
     controller.select = function(entity, event) {
       if(!$(event.target).hasClass('inner-action')) {
         $scope.$broadcast('cancelEditLocation', {
-          id : entity.id
+          id : entity.oid
         });
         
         var connection = {
@@ -73,7 +75,7 @@
           }
         };    
         
-        locationService.select(connection, entity.id, "", $scope.layers );        
+        locationService.select(connection, entity.oid, "", $scope.layers );        
       }
     }
     
@@ -123,14 +125,14 @@
           $scope.layers = data.layers;
       
           var layers = [
-            {name:'target-multipolygon', config: {id: $scope.entity.id, universalId: $scope.universal.value, type:"LM"}, bbox:'[]'}
+            {name:'target-multipolygon', config: {oid: $scope.entity.oid, universalId: $scope.universal.value, type:"LM"}, bbox:'[]'}
           ];
       
           $scope.$broadcast('sharedGeoData', layers);
         }
       };
       
-      locationService.select(connection, $scope.entity.id, $scope.universal.value, $scope.layers);      
+      locationService.select(connection, $scope.entity.oid, $scope.universal.value, $scope.layers);      
     }
     
     controller.getGeoEntitySuggestions = function( request, response ) {
@@ -172,13 +174,13 @@
           });
         }      
       };      
-      
-      locationService.edit(connection, entity.id);
+      console.log("edit")
+      locationService.edit(connection, entity.oid);
     }
     
     controller.editGeometry = function(entity) {
       $scope.$broadcast('editLocation', {
-        id : entity.id
+        id : entity.oid
       });
     }
     
@@ -195,7 +197,7 @@
           }      
         };      
         
-      locationService.viewSynonyms(connection, entity.id);
+      locationService.viewSynonyms(connection, entity.oid);
     }
     
     controller.remove = function(entity) {
@@ -225,7 +227,7 @@
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(response) {
-          var index = controller.findIndex(entity.id);
+          var index = controller.findIndex(entity.oid);
           
           if(index != -1){
             $scope.children.splice(index, 1);
@@ -235,7 +237,7 @@
         }
       };
       
-      locationService.remove(connection, entity.id, $scope.layers);
+      locationService.remove(connection, entity.oid, $scope.layers);
     }    
     
     controller.newInstance = function(_wkt) {
@@ -249,7 +251,7 @@
     
     controller.findIndex = function(entityId) {
       for(var i = 0; i < $scope.children.length; i++) {
-        if($scope.children[i].id == entityId) {
+        if($scope.children[i].oid == entityId) {
           return i;
         };
       }
@@ -301,7 +303,7 @@
     });
     
     $rootScope.$on('locationChange', function(event, data) {
-      var id = (data.entity.oid !== undefined) ? data.entity.oid : data.entity.id;
+      var id = (data.entity.oid !== undefined) ? data.entity.oid : data.entity.oid;
       
       var index = controller.findIndex(id);
       
@@ -460,7 +462,7 @@
       
       $scope.errors = [];
       
-      locationService.applySynonyms(connection, { "parent" : $scope.entity.id, "synonyms" : $scope.synonyms, "deleted" : controller.deletedSyns });        
+      locationService.applySynonyms(connection, { "parent" : $scope.entity.oid, "synonyms" : $scope.synonyms, "deleted" : controller.deletedSyns });        
     }
       
     $rootScope.$on('locationSynonymEdit', function(event, data) {
@@ -502,7 +504,7 @@
     }
     
     controller.cancel = function() {
-      if($scope.entity.id !== undefined) {
+      if($scope.entity.oid !== undefined) {
         var connection = {
           elementId : '#innerFrameHtml',
           onSuccess : function(entity) {
@@ -517,7 +519,7 @@
                                         
         $scope.errors = [];
                     
-        locationService.unlock(connection, $scope.entity.id);                      
+        locationService.unlock(connection, $scope.entity.oid);                      
       }
       else {
         controller.clear();
@@ -550,7 +552,7 @@
                               
       $scope.errors = [];
           
-      locationService.apply(connection, $scope.entity, $scope.parent.id, $scope.layers);        
+      locationService.apply(connection, $scope.entity, $scope.parent.oid, $scope.layers);        
     }
       
     $rootScope.$on('locationEdit', function(event, data) {

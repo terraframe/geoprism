@@ -20,7 +20,7 @@ package net.geoprism.gis.geoserver;
 
 
 public class MapLayerExceptionDTO extends MapLayerExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1894280171;
   
   public MapLayerExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

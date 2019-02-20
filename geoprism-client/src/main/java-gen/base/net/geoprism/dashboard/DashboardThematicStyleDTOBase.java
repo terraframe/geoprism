@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 @com.runwaysdk.business.ClassSignature(hash = 2115883788)
-public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboard.DashboardStyleDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboard.DashboardStyleDTO 
 {
   public final static String CLASS = "net.geoprism.dashboard.DashboardThematicStyle";
   private static final long serialVersionUID = 2115883788;
@@ -1639,7 +1639,7 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
     }
     else
     {
-      setValue(SECONDARYATTRIBUTE, value.getId());
+      setValue(SECONDARYATTRIBUTE, value.getOid());
     }
   }
   
@@ -1700,9 +1700,9 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
     return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(SECONDARYCATEGORIES).getAttributeMdDTO();
   }
   
-  public static net.geoprism.dashboard.DashboardThematicStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.dashboard.DashboardThematicStyleDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.dashboard.DashboardThematicStyleDTO) dto;
   }
@@ -1720,7 +1720,7 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.dashboard.DashboardThematicStyleQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -1733,10 +1733,10 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
     getRequest().lock(this);
   }
   
-  public static net.geoprism.dashboard.DashboardThematicStyleDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.DashboardThematicStyleDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardThematicStyleDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.dashboard.DashboardThematicStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -1746,10 +1746,10 @@ public abstract class DashboardThematicStyleDTOBase extends net.geoprism.dashboa
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.dashboard.DashboardThematicStyleDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.dashboard.DashboardThematicStyleDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.dashboard.DashboardThematicStyleDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.dashboard.DashboardThematicStyleDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

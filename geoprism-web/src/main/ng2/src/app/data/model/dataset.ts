@@ -20,7 +20,7 @@
 import { BasicCategory } from '../model/category';
 
 export class DatasetAttribute { 
-  id: string;
+  oid: string;
   label: string;
   type: string
   numeric: boolean;  
@@ -29,14 +29,14 @@ export class DatasetAttribute {
 }
 
 export class Dataset {
-  id: string;
+  oid: string;
   label: string;
   description: string;
   type: string;
   value: string;
   source: string;
   attributes : DatasetAttribute[];
-  aggregations: {id: string;value: string;}[];
+  aggregations: {oid: string;value: string;}[];
   indicators: IndicatorField[];
 }
 
@@ -54,6 +54,6 @@ export class IndicatorField {
   label: string; 
   left: Indicator;
   right: Indicator;
-  id: string;
+  oid: string;
   percentage: boolean;
 }

@@ -20,9 +20,9 @@ package net.geoprism.gis.geoserver;
 
 import net.geoprism.context.ServerContextListener;
 
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class GeoserverContextListener implements Reloadable, ServerContextListener
+
+public class GeoserverContextListener implements ServerContextListener
 {
   @Override
   public void initialize()

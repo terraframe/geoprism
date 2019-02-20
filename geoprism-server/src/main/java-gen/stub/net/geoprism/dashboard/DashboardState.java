@@ -22,7 +22,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.SingleActor;
 
-public class DashboardState extends DashboardStateBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardState extends DashboardStateBase 
 {
   private static final long serialVersionUID = 1598060270;
 

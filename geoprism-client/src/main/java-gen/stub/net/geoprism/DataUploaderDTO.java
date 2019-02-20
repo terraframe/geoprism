@@ -20,7 +20,7 @@ package net.geoprism;
 
 
 public class DataUploaderDTO extends DataUploaderDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -669315121;
   
   public DataUploaderDTO(com.runwaysdk.constants.ClientRequestIF clientRequest)

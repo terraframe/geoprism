@@ -19,18 +19,18 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierHasSynonym extends ClassifierHasSynonymBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierHasSynonym extends ClassifierHasSynonymBase 
 {
   private static final long serialVersionUID = 969760007;
   
-  public ClassifierHasSynonym(String parentId, String childId)
+  public ClassifierHasSynonym(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public ClassifierHasSynonym(net.geoprism.ontology.Classifier parent, net.geoprism.ontology.ClassifierSynonym child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

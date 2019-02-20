@@ -46,7 +46,7 @@ const routes: Routes = [
   {
     path: 'dhis2',
     component: DHIS2IdFinderComponent,    
-    data: { title: 'dhis2.id.finder.title' }            
+    data: { title: 'dhis2.oid.finder.title' }            
   },
   {
     path: 'datasets',
@@ -54,7 +54,7 @@ const routes: Routes = [
     data: { title: 'dataset.title' }            
   },
   {
-    path: 'dataset/:id',
+    path: 'dataset/:oid',
     component: DatasetDetailComponent,
     resolve: {
       dataset: DatasetResolver
@@ -67,7 +67,7 @@ const routes: Routes = [
     data: { title: 'category.management.title' }                
   },
   {
-    path: 'category/:id',
+    path: 'category/:oid',
     component: CategoryDetailComponent,
     resolve: {
       category: CategoryResolver
@@ -75,7 +75,7 @@ const routes: Routes = [
     data: { title: 'category.management.title' }                    
   },  
   {
-    path: 'category-option/:parentId/:id',
+    path: 'category-option/:parentId/:oid',
     component: OptionDetailComponent,
     resolve: {
       category: OptionResolver
@@ -88,7 +88,7 @@ const routes: Routes = [
     data: { title: 'category.icon.title' }                    
   },
   {
-    path: 'icon/:id',
+    path: 'icon/:oid',
     component: IconDetailComponent,
     resolve: {
       icon: IconResolver
@@ -100,7 +100,13 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, DatasetResolver, CategoryResolver, OptionResolver, IconResolver]
+  providers: [
+              {provide: LocationStrategy, useClass: HashLocationStrategy}, 
+              DatasetResolver, 
+              CategoryResolver, 
+              OptionResolver, 
+              IconResolver
+             ]
 })
 export class DataRoutingModule { }
 

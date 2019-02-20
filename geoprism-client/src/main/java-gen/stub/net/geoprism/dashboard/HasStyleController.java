@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class HasStyleController extends HasStyleControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class HasStyleController extends HasStyleControllerBase 
 {
   public static final String JSP_DIR = "/WEB-INF/net/geoprism/dashboard/HasStyle/";
   public static final String LAYOUT = "WEB-INF/templates/layout.jsp";
@@ -32,20 +32,20 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
   public void cancel(net.geoprism.dashboard.HasStyleDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
     dto.unlock();
-    this.view(dto.getId());
+    this.view(dto.getOid());
   }
   public void failCancel(net.geoprism.dashboard.HasStyleDTO dto) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.edit(dto.getId());
+    this.edit(dto.getOid());
   }
-  public void childQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void childQuery(java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasStyleQueryDTO query = net.geoprism.dashboard.HasStyleDTO.childQuery(clientRequest, childId);
+    net.geoprism.dashboard.HasStyleQueryDTO query = net.geoprism.dashboard.HasStyleDTO.childQuery(clientRequest, childOid);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failChildQuery(java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void failChildQuery(java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -54,7 +54,7 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -83,24 +83,24 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void edit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void edit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    net.geoprism.dashboard.HasStyleDTO dto = net.geoprism.dashboard.HasStyleDTO.lock(super.getClientRequest(), id);
+    net.geoprism.dashboard.HasStyleDTO dto = net.geoprism.dashboard.HasStyleDTO.lock(super.getClientRequest(), oid);
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void failEdit(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failEdit(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
-    this.view(id);
+    this.view(oid);
   }
-  public void newInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void newInstance(java.lang.String parentOid, java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasStyleDTO dto = new net.geoprism.dashboard.HasStyleDTO(clientRequest, parentId, childId);
+    net.geoprism.dashboard.HasStyleDTO dto = new net.geoprism.dashboard.HasStyleDTO(clientRequest, parentOid, childOid);
     req.setAttribute("item", dto);
     render("createComponent.jsp");
   }
-  public void failNewInstance(java.lang.String parentId, java.lang.String childId) throws java.io.IOException, javax.servlet.ServletException
+  public void failNewInstance(java.lang.String parentOid, java.lang.String childOid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }
@@ -113,14 +113,14 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
   {
     resp.sendError(500);
   }
-  public void parentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  public void parentQuery(java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    net.geoprism.dashboard.HasStyleQueryDTO query = net.geoprism.dashboard.HasStyleDTO.parentQuery(clientRequest, parentId);
+    net.geoprism.dashboard.HasStyleQueryDTO query = net.geoprism.dashboard.HasStyleDTO.parentQuery(clientRequest, parentOid);
     req.setAttribute("query", query);
     render("viewAllComponent.jsp");
   }
-  public void failParentQuery(java.lang.String parentId) throws java.io.IOException, javax.servlet.ServletException
+  public void failParentQuery(java.lang.String parentOid) throws java.io.IOException, javax.servlet.ServletException
   {
     resp.sendError(500);
   }
@@ -129,7 +129,7 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
     try
     {
       dto.apply();
-      this.view(dto.getId());
+      this.view(dto.getOid());
     }
     catch(com.runwaysdk.ProblemExceptionDTO e)
     {
@@ -141,13 +141,13 @@ public class HasStyleController extends HasStyleControllerBase implements com.ru
     req.setAttribute("item", dto);
     render("editComponent.jsp");
   }
-  public void view(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void view(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     com.runwaysdk.constants.ClientRequestIF clientRequest = super.getClientRequest();
-    req.setAttribute("item", net.geoprism.dashboard.HasStyleDTO.get(clientRequest, id));
+    req.setAttribute("item", net.geoprism.dashboard.HasStyleDTO.get(clientRequest, oid));
     render("viewComponent.jsp");
   }
-  public void failView(java.lang.String id) throws java.io.IOException, javax.servlet.ServletException
+  public void failView(java.lang.String oid) throws java.io.IOException, javax.servlet.ServletException
   {
     this.viewAll();
   }

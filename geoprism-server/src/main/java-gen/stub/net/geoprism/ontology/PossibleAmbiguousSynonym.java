@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 
-public class PossibleAmbiguousSynonym extends PossibleAmbiguousSynonymBase implements com.runwaysdk.generation.loader.Reloadable
+public class PossibleAmbiguousSynonym extends PossibleAmbiguousSynonymBase 
 {
   private static final long serialVersionUID = 1837425595;
   

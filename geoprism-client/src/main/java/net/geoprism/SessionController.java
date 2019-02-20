@@ -33,9 +33,7 @@ import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.CommonProperties;
-import com.runwaysdk.constants.MdActionInfo;
 import com.runwaysdk.controller.ServletMethod;
-import com.runwaysdk.generation.loader.Reloadable;
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -49,15 +47,9 @@ import net.geoprism.account.LocaleSerializer;
 import net.geoprism.account.OauthServerIF;
 
 @Controller(url = "session")
-public class SessionController implements Reloadable
+public class SessionController 
 {
   public static final long   serialVersionUID = 1234283350799L;
-
-  public static final String FORM_ACTION      = SessionController.class.getName() + ".form" + MdActionInfo.ACTION_SUFFIX;
-
-  public static final String LOGIN_ACTION     = SessionController.class.getName() + ".login" + MdActionInfo.ACTION_SUFFIX;
-
-  public static final String LOGOUT_ACTION    = SessionController.class.getName() + ".logout" + MdActionInfo.ACTION_SUFFIX;
 
   //
   // public ResponseIF form()
@@ -118,6 +110,7 @@ public class SessionController implements Reloadable
     CookieResponse response = new CookieResponse("user", -1);
     response.set("loggedIn", clientRequest.isLoggedIn());
     response.set("roles", roles);
+    response.set("userName", username);
 
     return response;
   }

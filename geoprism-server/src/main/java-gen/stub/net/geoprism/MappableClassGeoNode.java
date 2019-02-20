@@ -19,18 +19,18 @@
 package net.geoprism;
 
 
-public class MappableClassGeoNode extends MappableClassGeoNodeBase implements com.runwaysdk.generation.loader.Reloadable
+public class MappableClassGeoNode extends MappableClassGeoNodeBase 
 {
   private static final long serialVersionUID = -737027213;
   
-  public MappableClassGeoNode(String parentId, String childId)
+  public MappableClassGeoNode(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public MappableClassGeoNode(net.geoprism.MappableClass parent, com.runwaysdk.system.gis.geo.GeoNode child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

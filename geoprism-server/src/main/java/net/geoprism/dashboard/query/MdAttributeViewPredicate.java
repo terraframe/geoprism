@@ -24,9 +24,9 @@ import net.geoprism.util.Predicate;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMomentDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.generation.loader.Reloadable;
 
-public class MdAttributeViewPredicate implements Predicate<MdAttributeView>, Reloadable
+
+public class MdAttributeViewPredicate implements Predicate<MdAttributeView>
 {
   private MdAttributeDAOIF mdAttribute;
 
@@ -45,7 +45,7 @@ public class MdAttributeViewPredicate implements Predicate<MdAttributeView>, Rel
       return true;
     }
 
-    return comparisonAttribute.getId().equals(mdAttribute.getId());
+    return comparisonAttribute.getOid().equals(mdAttribute.getOid());
   }
 
 }

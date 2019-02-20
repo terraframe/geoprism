@@ -19,7 +19,7 @@
 package net.geoprism.ontology;
 
 public class NonUniqueCategoryExceptionDTO extends NonUniqueCategoryExceptionDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = -1164472587;
   
   public NonUniqueCategoryExceptionDTO(com.runwaysdk.constants.ClientRequestIF clientRequestIF)

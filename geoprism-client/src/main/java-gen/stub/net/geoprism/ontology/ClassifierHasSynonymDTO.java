@@ -20,12 +20,12 @@ package net.geoprism.ontology;
 
 
 public class ClassifierHasSynonymDTO extends ClassifierHasSynonymDTOBase
- implements com.runwaysdk.generation.loader.Reloadable{
+ {
   private static final long serialVersionUID = 990174855;
   
-  public ClassifierHasSynonymDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentId, String childId)
+  public ClassifierHasSynonymDTO(com.runwaysdk.constants.ClientRequestIF clientRequest, String parentOid, String childOid)
   {
-    super(clientRequest, parentId, childId);
+    super(clientRequest, parentOid, childOid);
     
   }
   

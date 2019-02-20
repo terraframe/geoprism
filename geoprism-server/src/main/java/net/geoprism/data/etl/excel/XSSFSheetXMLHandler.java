@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.etl.excel;
 
@@ -32,8 +32,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This class handles the processing of a sheet#.xml sheet part of a XSSF .xlsx file, and generates row and cell events
- * for it.
+ * This class handles the processing of a sheet#.xml sheet part of a XSSF .xlsx
+ * file, and generates row and cell events for it.
  */
 public class XSSFSheetXMLHandler extends DefaultHandler
 {
@@ -76,7 +76,8 @@ public class XSSFSheetXMLHandler extends DefaultHandler
   private final DataFormatter        cellFormatter;
 
   /**
-   * Formatter for getting DATE and NUMBER values in a specific format for further parsing
+   * Formatter for getting DATE and NUMBER values in a specific format for
+   * further parsing
    */
   private final DataFormatter        contentFormatter;
 
@@ -176,7 +177,6 @@ public class XSSFSheetXMLHandler extends DefaultHandler
       {
         // Is it the one that defines the shared, or uses it?
         String ref = attributes.getValue("ref");
-        String si = attributes.getValue("si");
 
         if (ref != null)
         {
@@ -270,14 +270,14 @@ public class XSSFSheetXMLHandler extends DefaultHandler
 
         case ERROR:
           thisStr = "ERROR:" + value.toString();
-          thisData = new String(thisStr);          
+          thisData = new String(thisStr);
           break;
 
         case FORMULA:
           if (formulasNotResults)
           {
             thisStr = formula.toString();
-            thisData = new String(thisStr);            
+            thisData = new String(thisStr);
           }
           else
           {
@@ -296,14 +296,14 @@ public class XSSFSheetXMLHandler extends DefaultHandler
               {
                 // Formula is a String result not a Numeric one
                 thisStr = fv;
-                thisData = new String(thisStr);                
+                thisData = new String(thisStr);
               }
             }
             else
             {
               // No formating applied, just do raw value in all cases
               thisStr = fv;
-              thisData = new String(thisStr);              
+              thisData = new String(thisStr);
             }
           }
           break;
@@ -312,7 +312,7 @@ public class XSSFSheetXMLHandler extends DefaultHandler
           // TODO: Can these ever have formatting on them?
           XSSFRichTextString rtsi = new XSSFRichTextString(value.toString());
           thisStr = rtsi.toString();
-          thisData = new String(thisStr);          
+          thisData = new String(thisStr);
           break;
 
         case TEXT:
@@ -335,18 +335,18 @@ public class XSSFSheetXMLHandler extends DefaultHandler
           if (this.formatString != null)
           {
             thisStr = cellFormatter.formatRawCellContents(Double.parseDouble(n), this.formatIndex, this.formatString);
-            thisData = this.contentFormatter.formatRawCellContents(Double.parseDouble(n), this.formatIndex, this.formatString);            
+            thisData = this.contentFormatter.formatRawCellContents(Double.parseDouble(n), this.formatIndex, this.formatString);
           }
           else
           {
             thisStr = n;
-            thisData = new String(thisStr);          
+            thisData = new String(thisStr);
           }
           break;
 
         default:
           thisStr = "(TODO: Unexpected type: " + nextDataType + ")";
-          thisData = new String(thisStr);          
+          thisData = new String(thisStr);
           break;
       }
 
@@ -384,7 +384,8 @@ public class XSSFSheetXMLHandler extends DefaultHandler
   }
 
   /**
-   * Captures characters only if a suitable element is open. Originally was just "v"; extended for inlineStr also.
+   * Captures characters only if a suitable element is open. Originally was just
+   * "v"; extended for inlineStr also.
    */
   public void characters(char[] ch, int start, int length) throws SAXException
   {

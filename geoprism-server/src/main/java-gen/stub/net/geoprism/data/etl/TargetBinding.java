@@ -27,7 +27,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdView;
 
-public class TargetBinding extends TargetBindingBase implements com.runwaysdk.generation.loader.Reloadable
+public class TargetBinding extends TargetBindingBase 
 {
   private static final long serialVersionUID = 2043607150;
 

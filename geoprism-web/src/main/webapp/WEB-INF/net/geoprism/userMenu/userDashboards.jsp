@@ -30,24 +30,37 @@
   
   <link rel="icon" href="${pageContext.request.contextPath}/logo/view?id=logo"/>
   
+  <script>
+    window.com = window.com || {};
+    window.com.runwaysdk = window.com.runwaysdk || {};
+    window.com.runwaysdk.__applicationContextPath = "<%=request.getContextPath()%>";
+  </script>  
+  
   <!-- User account CSS -->
+  <jwr:style src="/bundles/main.css" useRandomParam="false" />
+  <jwr:style src="/bundles/widget.css" useRandomParam="false"/>    
   <jwr:style src="/bundles/datatable.css" useRandomParam="false"/>  
-  <jwr:style src="/net/geoprism/userstable/UsersTable.css" useRandomParam="false"/>  
   <jwr:style src="/bundles/user-dashboards.css" useRandomParam="false"/> 
   
-  <!-- User account Javascript -->
+  <!-- User account Javascript -->  
+  <jwr:script src="/bundles/runway.js" useRandomParam="false"/> 
+  <jwr:script src="/bundles/main.js" useRandomParam="false"/>  
+  <jwr:script src="/bundles/widget.js" useRandomParam="false"/>	
+  <jwr:script src="/bundles/localization.js" useRandomParam="false"/>
+  
+<!-- 
   <jwr:script src="/bundles/datatablejquery.js" useRandomParam="false"/>
   <jwr:script src="/bundles/datatable.js" useRandomParam="false"/>
   <jwr:script src="/bundles/account.js" useRandomParam="false"/> 
-  <jwr:script src="/bundles/builder.js" useRandomParam="false"/>
-
+ -->  
+	
+  <script type="text/javascript" src="${pageContext.request.contextPath}/net/geoprism/Localized.js.jsp"></script>
+  
   <script type="text/javascript">     
     $(document).ready(function(){      
       com.runwaysdk.ui.Manager.setFactory("JQuery");
     });
   </script>
-    
-  <script type="text/javascript">${js}</script>
   
   <jwr:script src="/bundles/builder.js" useRandomParam="false"/>   
 </head>
@@ -63,23 +76,9 @@
     <header id="header">
     	<div id="header-link-container" class="text-right">
 	      <a href="${pageContext.request.contextPath}/prism/home" title="<gdb:localize key="userDashboards.menuTooltip"/>">
-<%-- 	        <c:if test="${not empty miniLogoFilePath}" > --%>
-<%--             <img id="logo-icon" class="img-responsive" src="${miniLogoFilePath}" alt="logo"/> --%>
-<%--           </c:if> --%>
 	        <img id="logo-icon" class="img-responsive" src="${pageContext.request.contextPath}/logo/view?id=logo" alt="logo"/>
 	      </a>
 	      <p id="user-link-container" class="text-right">
-<%-- 	        <c:choose> --%>
-<%-- 	          <c:when test="${isAdmin}"> --%>
-<%-- 	            <a class="user-command-link" href="${pageContext.request.contextPath}/" class="link-active"><gdb:localize key="userDashboards.admin"/></a> --%>
-<!-- 	            <i class="user-command-link"> | </i> -->
-<%-- 	          </c:when> --%>
-<%-- 	          <c:otherwise> --%>
-<%-- 	          </c:otherwise> --%>
-<%-- 	        </c:choose> --%>
-	       
-	        <a id="account-btn" ng-click="ctrl.account()" class="user-command-link" href="#" class="link-active"><gdb:localize key="userDashboards.account"/></a>
-	        <i class="user-command-link"> | </i>
 	        <a class="user-command-link" href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a>
 	      </p>
 	    </div>
@@ -95,10 +94,10 @@
 		        	 Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
-		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" class="" >
+		            <a ng-href="${pageContext.request.contextPath}/dashboard-map/view?dashboard={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" class="" >
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="${pageContext.request.contextPath}/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" 
-		              		onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" 
+		              <img ng-src="${pageContext.request.contextPath}/nav/dashboard-thumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index]].dashboardId}}" 
+		              		onerror="if (this.src != '${pageContext.request.contextPath}/net/geoprism/images/dashboard_icon_small.png') this.src = '${pageContext.request.contextPath}/net/geoprism/images/dashboard_icon_small.png';" 
 		              		alt="Dashboard">
 		              
 		              <div class="caption">
@@ -126,10 +125,10 @@
 		        	Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW. -->
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index + 1]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
-		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" class="" >
+		            <a ng-href="${pageContext.request.contextPath}/dashboard-map/view?dashboard={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" class="" >
 		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="${pageContext.request.contextPath}/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="${pageContext.request.contextPath}/nav/dashboard-thumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 1]].dashboardId}}" onerror="if (this.src != '${pageContext.request.contextPath}/net/geoprism/images/dashboard_icon_small.png') this.src = '${pageContext.request.contextPath}/net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 1]].label}}</h3>
@@ -150,10 +149,10 @@
 		        	Why 3 semi-redundant blocks you might ask? To wrap groups of 3 in a bootstrap ROW.-->
 		        <div ng-if="ctrl.dashboards[ctrl.ids[$index + 2]]" class="col-sm-6 col-md-4">
 		          <div  class="thumbnail text-center">
-		            <a ng-href="DashboardViewer?dashboard={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" class="" >
+		            <a ng-href="${pageContext.request.contextPath}/dashboard-map/view?dashboard={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" class="" >
 		              
 		              <!-- NOTE: the onerror method that sets the default icon if now saved dashboard exists -->
-		              <img ng-src="${pageContext.request.contextPath}/mapthumb/getDashboardMapThumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != 'net/geoprism/images/dashboard_icon_small.png') this.src = 'net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
+		              <img ng-src="${pageContext.request.contextPath}/nav/dashboard-thumbnail?dashboardId={{ctrl.dashboards[ctrl.ids[$index + 2]].dashboardId}}" onerror="if (this.src != '${pageContext.request.contextPath}/net/geoprism/images/dashboard_icon_small.png') this.src = '${pageContext.request.contextPath}/net/geoprism/images/dashboard_icon_small.png';" alt="Dashboard">
 		              
 		              <div class="caption">
 		                <h3>{{ctrl.dashboards[ctrl.ids[$index + 2]].label}}</h3>
@@ -218,7 +217,3 @@
     <clone-form></clone-form>
   </div>
 </body>
-
-<script type="text/javascript">
-  com.runwaysdk.ui.Manager.setFactory("JQuery");
-</script>

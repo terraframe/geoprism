@@ -19,7 +19,7 @@
 package net.geoprism.data.importer;
 
 @com.runwaysdk.business.ClassSignature(hash = 731120122)
-public class ExcelControllerBase implements com.runwaysdk.generation.loader.Reloadable
+public class ExcelControllerBase 
 {
   public static final String CLASS = "net.geoprism.data.importer.ExcelController";
   protected javax.servlet.http.HttpServletRequest req;

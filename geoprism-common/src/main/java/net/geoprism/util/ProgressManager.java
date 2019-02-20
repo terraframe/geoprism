@@ -32,16 +32,16 @@ public class ProgressManager
 
   public void add(ProgressState state)
   {
-    this.cache.put(state.getId(), state);
+    this.cache.put(state.getOid(), state);
   }
 
-  public void remove(String id)
+  public void remove(String oid)
   {
-    this.cache.remove(id);
+    this.cache.remove(oid);
   }
 
-  public ProgressState get(String id)
+  public ProgressState get(String oid)
   {
-    return this.cache.get(id);
+    return this.cache.get(oid);
   }
 }

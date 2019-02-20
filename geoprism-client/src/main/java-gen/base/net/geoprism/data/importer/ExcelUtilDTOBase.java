@@ -19,7 +19,7 @@
 package net.geoprism.data.importer;
 
 @com.runwaysdk.business.ClassSignature(hash = 942722440)
-public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO 
 {
   public final static String CLASS = "net.geoprism.data.importer.ExcelUtil";
   private static final long serialVersionUID = 942722440;
@@ -34,7 +34,7 @@ public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO im
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static final java.io.InputStream exportExcelFile(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String type, java.lang.String country)
   {
     String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String"};
@@ -51,9 +51,9 @@ public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO im
     return (java.io.InputStream) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static ExcelUtilDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static ExcelUtilDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(id);
+    com.runwaysdk.business.UtilDTO dto = (com.runwaysdk.business.UtilDTO)clientRequest.get(oid);
     
     return (ExcelUtilDTO) dto;
   }
@@ -71,7 +71,7 @@ public abstract class ExcelUtilDTOBase extends com.runwaysdk.business.UtilDTO im
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
 }

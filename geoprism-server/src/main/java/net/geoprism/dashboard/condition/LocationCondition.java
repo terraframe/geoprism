@@ -32,14 +32,14 @@ import org.json.JSONObject;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.generated.system.gis.geo.GeoEntityAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
-public class LocationCondition extends DashboardCondition implements com.runwaysdk.generation.loader.Reloadable
+public class LocationCondition extends DashboardCondition 
 {
 
   /**
@@ -124,7 +124,7 @@ public class LocationCondition extends DashboardCondition implements com.runways
     {
       AttributeReference attributeReference = (AttributeReference) _attribute;
 
-      GeoEntityAllPathsTableQuery aptQuery = new GeoEntityAllPathsTableQuery(_vQuery);
+      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(_vQuery);
 
       for (GeoEntity entity : entities)
       {
@@ -147,7 +147,7 @@ public class LocationCondition extends DashboardCondition implements com.runways
       for (GeoEntity entity : entities)
       {
         JSONObject location = new JSONObject();
-        location.put(VALUE_KEY, entity.getId());
+        location.put(VALUE_KEY, entity.getOid());
         location.put(LABEL_KEY, GeoEntityUtil.getEntityLabel(entity));
 
         locations.put(location);

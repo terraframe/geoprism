@@ -20,7 +20,7 @@ package net.geoprism.dashboard;
 
 
 
-public class DashboardThematicStyleDTO extends DashboardThematicStyleDTOBase implements com.runwaysdk.generation.loader.Reloadable
+public class DashboardThematicStyleDTO extends DashboardThematicStyleDTOBase 
 {
   private static final long serialVersionUID = 1553979534;
 

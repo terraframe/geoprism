@@ -19,7 +19,7 @@
 package net.geoprism.report;
 
 @com.runwaysdk.business.ClassSignature(hash = 403871365)
-public abstract class UnsupportedDrillThroughFormatExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class UnsupportedDrillThroughFormatExceptionDTOBase extends com.runwaysdk.business.SmartExceptionDTO 
 {
   public final static String CLASS = "net.geoprism.report.UnsupportedDrillThroughFormatException";
   private static final long serialVersionUID = 403871365;
@@ -69,7 +69,7 @@ public abstract class UnsupportedDrillThroughFormatExceptionDTOBase extends com.
     return CLASS;
   }
   
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String OUTPUTFORMAT = "outputFormat";
   public String getOutputFormat()
   {
@@ -116,7 +116,7 @@ public abstract class UnsupportedDrillThroughFormatExceptionDTOBase extends com.
   {
     java.lang.String template = super.getMessage();
     
-    template = template.replace("{id}", this.getId().toString());
+    template = template.replace("{oid}", this.getOid().toString());
     template = template.replace("{outputFormat}", this.getOutputFormat().toString());
     
     return template;

@@ -19,7 +19,7 @@
 package net.geoprism.account;
 
 @com.runwaysdk.business.ClassSignature(hash = -263944971)
-public abstract class OauthServerDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class OauthServerDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.account.OauthServer";
   private static final long serialVersionUID = -263944971;
@@ -51,7 +51,7 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String DISPLAYLABEL = "displayLabel";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -250,7 +250,7 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -435,7 +435,7 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -665,9 +665,9 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
     return (net.geoprism.account.OauthServerDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.account.OauthServerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.account.OauthServerDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.account.OauthServerDTO) dto;
   }
@@ -685,7 +685,7 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.account.OauthServerQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -698,10 +698,10 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
     getRequest().lock(this);
   }
   
-  public static net.geoprism.account.OauthServerDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.account.OauthServerDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.account.OauthServerDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.account.OauthServerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -711,10 +711,10 @@ public abstract class OauthServerDTOBase extends com.runwaysdk.business.Business
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.account.OauthServerDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.account.OauthServerDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.account.OauthServerDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.account.OauthServerDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

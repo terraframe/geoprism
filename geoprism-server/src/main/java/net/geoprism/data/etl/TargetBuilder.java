@@ -70,7 +70,7 @@ import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTextDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.generated.system.gis.geo.UniversalAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.gis.constants.MdAttributeMultiPolygonInfo;
 import com.runwaysdk.gis.constants.MdAttributePointInfo;
 import com.runwaysdk.gis.dataaccess.metadata.MdAttributeMultiPolygonDAO;
@@ -239,8 +239,8 @@ public class TargetBuilder
 
       for (int i = 0; i < ids.length(); i++)
       {
-        String id = ids.getString(i);
-        JSONObject cField = values.getJSONObject(id);
+        String oid = ids.getString(i);
+        JSONObject cField = values.getJSONObject(oid);
         String universalId = cField.getString("universal");
 
         lowest = this.setLowest(lowest, universalId);
@@ -279,8 +279,8 @@ public class TargetBuilder
 
         for (int i = 0; i < ids.length(); i++)
         {
-          String id = ids.getString(i);
-          JSONObject cField = values.getJSONObject(id);
+          String oid = ids.getString(i);
+          JSONObject cField = values.getJSONObject(oid);
           
           lowest = this.createGeoNodeGeometry(sheetName, nodes, country, lowest, definition, mdBusiness, cField);
         }
@@ -401,8 +401,8 @@ public class TargetBuilder
 
         for (int i = 0; i < ids.length(); i++)
         {
-          String id = ids.getString(i);
-          JSONObject cField = values.getJSONObject(id);
+          String oid = ids.getString(i);
+          JSONObject cField = values.getJSONObject(oid);
           String location = cField.getString("location");
 
           locations.add(location);
@@ -429,7 +429,7 @@ public class TargetBuilder
   {
     Universal universal = Universal.get(universalId);
 
-    UniversalAllPathsTableQuery query = new UniversalAllPathsTableQuery(new QueryFactory());
+    AllowedInAllPathsTableQuery query = new AllowedInAllPathsTableQuery(new QueryFactory());
     query.WHERE(query.getParentTerm().EQ(current));
     query.AND(query.getChildTerm().EQ(universal));
 
@@ -457,9 +457,9 @@ public class TargetBuilder
 
       MdAttributeReferenceDAO mdAttribute = MdAttributeReferenceDAO.newInstance();
       mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-      mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS).getId());
+      mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS).getOid());
       mdAttribute.apply();
 
       TargetFieldDerived field = new TargetFieldDerived();
@@ -477,12 +477,12 @@ public class TargetBuilder
        */
       MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
       synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
-      synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+      synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getOid());
       synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
-      synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+      synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getOid());
       synonymAttribute.apply();
 
-      RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+      RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getOid(), synonymAttribute.getOid(), TermSynonymRelationship.CLASS);
       synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
       synonymRelationship.apply();
 
@@ -569,7 +569,7 @@ public class TargetBuilder
          */
         String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
 
-        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getOid(), classifier.getOid(), relationshipType);
         relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
         relationship.apply();
 
@@ -596,7 +596,7 @@ public class TargetBuilder
          */
         String relationshipType = ( (TermAttributeDAOIF) mdAttribute ).getAttributeRootRelationshipType();
 
-        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getId(), classifier.getId(), relationshipType);
+        RelationshipDAO relationship = RelationshipDAO.newInstance(mdAttribute.getOid(), classifier.getOid(), relationshipType);
         relationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + classifier.getKey());
         relationship.apply();
 
@@ -614,7 +614,7 @@ public class TargetBuilder
     {
       MdAttributeBooleanDAO mdAttribute = MdAttributeBooleanDAO.newInstance();
       mdAttribute.setValue(MdAttributeBooleanInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeBooleanInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setValue(MdAttributeBooleanInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttribute.setStructValue(MdAttributeBooleanInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.setStructValue(MdAttributeBooleanInfo.NEGATIVE_DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "False");
       mdAttribute.setStructValue(MdAttributeBooleanInfo.POSITIVE_DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, "True");
@@ -624,7 +624,7 @@ public class TargetBuilder
     {
       MdAttributeDateDAO mdAttribute = MdAttributeDateDAO.newInstance();
       mdAttribute.setValue(MdAttributeDateInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeDateInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setValue(MdAttributeDateInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttribute.setStructValue(MdAttributeDateInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.apply();
     }
@@ -635,7 +635,7 @@ public class TargetBuilder
 
       MdAttributeDoubleDAO mdAttribute = MdAttributeDoubleDAO.newInstance();
       mdAttribute.setValue(MdAttributeDoubleInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeDoubleInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setValue(MdAttributeDoubleInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttribute.setStructValue(MdAttributeDoubleInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.setValue(MdAttributeDoubleInfo.LENGTH, new Integer(length).toString());
       mdAttribute.setValue(MdAttributeDoubleInfo.DECIMAL, new Integer(decimal).toString());
@@ -645,7 +645,7 @@ public class TargetBuilder
     {
       MdAttributeLongDAO mdAttribute = MdAttributeLongDAO.newInstance();
       mdAttribute.setValue(MdAttributeLongInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeLongInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setValue(MdAttributeLongInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttribute.setStructValue(MdAttributeLongInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       mdAttribute.apply();
     }
@@ -653,7 +653,7 @@ public class TargetBuilder
     {
       MdAttributeTextDAO mdAttribute = MdAttributeTextDAO.newInstance();
       mdAttribute.setValue(MdAttributeTextInfo.NAME, attributeName);
-      mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getId());
+      mdAttribute.setValue(MdAttributeTextInfo.DEFINING_MD_CLASS, mdClass.getOid());
       mdAttribute.setStructValue(MdAttributeTextInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
       // mdAttribute.setValue(MdAttributeTextInfo.SIZE, "6000");
       mdAttribute.apply();
@@ -676,9 +676,9 @@ public class TargetBuilder
 
     MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
     mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
-    mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getOid());
     mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
-    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getId());
+    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, referenceMdBusiness.getOid());
     mdAttribute.apply();
 
     /*
@@ -686,12 +686,12 @@ public class TargetBuilder
      */
     MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
     synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
-    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getOid());
     synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
-    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getOid());
     synonymAttribute.apply();
 
-    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getOid(), synonymAttribute.getOid(), TermSynonymRelationship.CLASS);
     synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
     synonymRelationship.apply();
     return mdAttribute;
@@ -717,8 +717,8 @@ public class TargetBuilder
 
     MdAttributeTermDAO mdAttribute = MdAttributeTermDAO.newInstance();
     mdAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName);
-    mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
-    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS).getId());
+    mdAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getOid());
+    mdAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdBusinessDAO.getMdBusinessDAO(GeoEntity.CLASS).getOid());
     mdAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdAttribute.apply();
 
@@ -748,9 +748,9 @@ public class TargetBuilder
 
     for (Term universal : universals)
     {
-      if (fields.has(universal.getId()))
+      if (fields.has(universal.getOid()))
       {
-        String sLabel = fields.getString(universal.getId());
+        String sLabel = fields.getString(universal.getOid());
 
         if (!sLabel.equals(EXLUDE))
         {
@@ -766,12 +766,12 @@ public class TargetBuilder
      */
     MdAttributeReferenceDAO synonymAttribute = MdAttributeReferenceDAO.newInstance();
     synonymAttribute.setValue(MdAttributeReferenceInfo.NAME, attributeName + "Synonym");
-    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getId());
+    synonymAttribute.setValue(MdAttributeReferenceInfo.DEFINING_MD_CLASS, mdClass.getOid());
     synonymAttribute.setStructValue(MdAttributeReferenceInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label + " Synonym");
-    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getId());
+    synonymAttribute.setValue(MdAttributeReferenceInfo.REF_MD_ENTITY, MdClassDAO.getMdTypeDAO(ClassifierSynonym.CLASS).getOid());
     synonymAttribute.apply();
 
-    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getId(), synonymAttribute.getId(), TermSynonymRelationship.CLASS);
+    RelationshipDAO synonymRelationship = RelationshipDAO.newInstance(mdAttribute.getOid(), synonymAttribute.getOid(), TermSynonymRelationship.CLASS);
     synonymRelationship.setValue(RelationshipInfo.KEY, mdAttribute.getKey() + "-" + synonymAttribute.getKey());
     synonymRelationship.apply();
 
@@ -789,7 +789,7 @@ public class TargetBuilder
 
     MdAttributeMultiPolygonDAO mdAttribute = MdAttributeMultiPolygonDAO.newInstance();
     mdAttribute.setValue(MdAttributeMultiPolygonInfo.NAME, attributeName);
-    mdAttribute.setValue(MdAttributeMultiPolygonInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setValue(MdAttributeMultiPolygonInfo.DEFINING_MD_CLASS, mdClass.getOid());
     mdAttribute.setStructValue(MdAttributeMultiPolygonInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdAttribute.setValue(MdAttributeMultiPolygonInfo.DIMENSION, "2");
     mdAttribute.setValue(MdAttributeMultiPolygonInfo.SRID, "4326");
@@ -817,7 +817,7 @@ public class TargetBuilder
 
     MdAttributePointDAO mdAttribute = MdAttributePointDAO.newInstance();
     mdAttribute.setValue(MdAttributePointInfo.NAME, attributeName);
-    mdAttribute.setValue(MdAttributePointInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setValue(MdAttributePointInfo.DEFINING_MD_CLASS, mdClass.getOid());
     mdAttribute.setStructValue(MdAttributePointInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdAttribute.setValue(MdAttributePointInfo.DIMENSION, "2");
     mdAttribute.setValue(MdAttributePointInfo.SRID, "4326");
@@ -847,7 +847,7 @@ public class TargetBuilder
 
     MdAttributeCharacterDAO mdAttribute = MdAttributeCharacterDAO.newInstance();
     mdAttribute.setValue(MdAttributeCharacterInfo.NAME, attributeName);
-    mdAttribute.setValue(MdAttributeCharacterInfo.DEFINING_MD_CLASS, mdClass.getId());
+    mdAttribute.setValue(MdAttributeCharacterInfo.DEFINING_MD_CLASS, mdClass.getOid());
     mdAttribute.setValue(MdAttributeCharacterInfo.SIZE, "64");
     mdAttribute.setStructValue(MdAttributeCharacterInfo.DISPLAY_LABEL, MdAttributeLocalInfo.DEFAULT_LOCALE, label);
     mdAttribute.apply();
@@ -917,10 +917,10 @@ public class TargetBuilder
           JSONObject object = locationExclusionsArr.getJSONObject(i);
 
           String universal = object.getString("universal");
-          String parentId = object.getString("parentId");
+          String parentOid = object.getString("parentOid");
           String label = object.getString("locationLabel");
 
-          String key = universal + "-" + parentId;
+          String key = universal + "-" + parentOid;
 
           exclusions.putIfAbsent(key, new HashSet<String>());
           exclusions.get(key).add(label);

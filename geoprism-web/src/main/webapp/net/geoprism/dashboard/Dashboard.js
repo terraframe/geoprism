@@ -65,14 +65,14 @@
       
       onSuccess = function(json) {
         $timeout(function() {
-          var response = JSON.parse(json);
+          var response = json.data;
         
           controller.dashboards = response.dashboards;
-          controller.dashboardId = response.state.id;
+          controller.dashboardId = response.state.oid;
         
           controller.setDashboardState(response.state, true);
           
-          $scope.$apply();
+          // $scope.$apply();
         }, 0);
       };
           
@@ -109,16 +109,18 @@
     
     /* Refresh Map Function */
     controller.refresh = function(buttonId, initialRender) {
-      var onSuccess = function(json, dto, response) {
+      var onSuccess = function(json) {
     	
         if(buttonId){
         	controller.icoSpin = null;
-        	$scope.$apply();
+        	// $scope.$apply();
         }
         
         controller.hideLayers();
+        
+        var response = json.data;
                     
-        var map = Mojo.Util.toObject(json);
+        var map = response.map;
 
         $timeout(function() {
           controller.setMapState(map, false, initialRender);
@@ -126,7 +128,9 @@
           controller.renderReport();
         }, 10);
                   
-        GDB.ExceptionHandler.handleInformation(response.getInformation());            
+        if(response.information.length > 0) {
+          GDB.ExceptionHandler.handleInformation(response.information);                    	
+        }
       };      
       
       if(buttonId){
@@ -143,7 +147,7 @@
       var onSuccess = function(json, dto, response) {
           if(buttonId){
         	  controller.icoSpin = null;
-        	  $scope.$apply();
+        	  // $scope.$apply();
           }
       };  
       
@@ -199,7 +203,7 @@
       controller.clearDashboardState();
       
       var onSuccess = function(json){
-        var state = JSON.parse(json);
+        var state = json.data;
           
         controller.setDashboardState(state, true);
       };
@@ -229,7 +233,7 @@
           }
         }            
 
-        $scope.$apply();
+        // $scope.$apply();
               
         controller.refresh(null, true);
       }, 5);
@@ -359,7 +363,7 @@
         }
       }
       
-      $scope.$apply();
+      // $scope.$apply();
       
       controller.renderMap();
     }
@@ -487,7 +491,7 @@
         'activeBaseMap' : activeBaseMapStr
       };
       
-      var url = 'net.geoprism.dashboard.DashboardMapController.exportMap.mojo?' + $.param(params);
+      var url = com.runwaysdk.__applicationContextPath + '/dashboard-map/export-map?' + $.param(params);
               
       window.location.href = url;            
     }
@@ -502,7 +506,7 @@
         'layerId' : layerId
       };
             
-      var url = 'net.geoprism.dashboard.DashboardMapController.exportLayerData.mojo?' + $.param(params);
+      var url = com.runwaysdk.__applicationContextPath + '/dashboard-map/export-layer?' + $.param(params);
                     
       window.location.href = url;             
     }
@@ -553,7 +557,7 @@
 
         controller.geoId = info.geoId;
         
-        $scope.$apply();
+        // $scope.$apply();
         
         controller.renderReport();
       }
@@ -578,7 +582,8 @@
         configuration.parameters.push({'name' : 'category', 'value' : geoId});
         configuration.parameters.push({'name' : 'state', 'value' : JSON.stringify(controller.getCompressedState())});
         
-        var onSuccess = function(html){
+        var onSuccess = function(response){
+          var html = response.data;
           $( "#report-content" ).html(html);
           
           //
@@ -618,10 +623,10 @@
         }
         
         if(format === "rptdesign"){
-        	var url = 'net.geoprism.report.ReportItemController.download.mojo?' + $.param({dashboardId:dashboardId});
+        	var url = com.runwaysdk.__applicationContextPath + '/dashboard-report/download?' + $.param({dashboardId:dashboardId});
         }
         else{
-        	var url = 'net.geoprism.report.ReportItemController.run.mojo?' + $.param(params);
+        	var url = com.runwaysdk.__applicationContextPath + '/dashboard-report/run?' + $.param(params);
         }
                   
         window.location.href = url;    
@@ -663,7 +668,7 @@
         
         if(attributes.length > 0) {
           var type = {
-            id : oType.id,
+            id : oType.oid,
             attributes : attributes
           }
             
@@ -693,12 +698,12 @@
       for(var i = 0; i < controller.model.types.length; i++) {
         var type = controller.model.types[i];
       
-        map[type.id] = {};
+        map[type.oid] = {};
           
         for(var j = 0; j < type.attributes.length; j++) {
           var attribute = type.attributes[j];
             
-          map[type.id][attribute.mdAttributeId] = attribute.filter;
+          map[type.oid][attribute.mdAttributeId] = attribute.filter;
         }        
       }
       
@@ -717,8 +722,8 @@
         for(var j = 0; j < type.attributes.length; j++) {
           var attribute = type.attributes[j];          
           
-          if(filters[type.id] != null) {        	  
-            var filter = filters[type.id][attribute.mdAttributeId];
+          if(filters[type.oid] != null) {        	  
+            var filter = filters[type.oid][attribute.mdAttributeId];
             
             if(filter != null) {
               attribute.filter = filter;

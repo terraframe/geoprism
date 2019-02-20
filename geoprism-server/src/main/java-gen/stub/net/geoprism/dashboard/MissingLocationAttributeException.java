@@ -19,7 +19,7 @@
 package net.geoprism.dashboard;
 
 
-public class MissingLocationAttributeException extends MissingLocationAttributeExceptionBase implements com.runwaysdk.generation.loader.Reloadable
+public class MissingLocationAttributeException extends MissingLocationAttributeExceptionBase 
 {
   private static final long serialVersionUID = 347060361;
   

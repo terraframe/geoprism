@@ -19,18 +19,18 @@
 package net.geoprism.ontology;
 
 
-public class ClassifierSynonymMultiTermAttributeRoot extends ClassifierSynonymMultiTermAttributeRootBase implements com.runwaysdk.generation.loader.Reloadable
+public class ClassifierSynonymMultiTermAttributeRoot extends ClassifierSynonymMultiTermAttributeRootBase 
 {
   private static final long serialVersionUID = -402938720;
   
-  public ClassifierSynonymMultiTermAttributeRoot(String parentId, String childId)
+  public ClassifierSynonymMultiTermAttributeRoot(String parentOid, String childOid)
   {
-    super(parentId, childId);
+    super(parentOid, childOid);
   }
   
   public ClassifierSynonymMultiTermAttributeRoot(com.runwaysdk.system.metadata.MdAttributeMultiTerm parent, net.geoprism.ontology.ClassifierSynonym child)
   {
-    this(parent.getId(), child.getId());
+    this(parent.getOid(), child.getOid());
   }
   
 }

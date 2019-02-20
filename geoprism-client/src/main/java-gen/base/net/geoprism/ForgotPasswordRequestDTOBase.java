@@ -19,7 +19,7 @@
 package net.geoprism;
 
 @com.runwaysdk.business.ClassSignature(hash = -350874859)
-public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.business.BusinessDTO implements com.runwaysdk.generation.loader.Reloadable
+public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.business.BusinessDTO 
 {
   public final static String CLASS = "net.geoprism.ForgotPasswordRequest";
   private static final long serialVersionUID = -350874859;
@@ -48,7 +48,7 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
   public static java.lang.String CREATEDATE = "createDate";
   public static java.lang.String CREATEDBY = "createdBy";
   public static java.lang.String ENTITYDOMAIN = "entityDomain";
-  public static java.lang.String ID = "id";
+  public static java.lang.String OID = "oid";
   public static java.lang.String KEYNAME = "keyName";
   public static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
   public static java.lang.String LASTUPDATEDBY = "lastUpdatedBy";
@@ -147,7 +147,7 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     }
     else
     {
-      setValue(ENTITYDOMAIN, value.getId());
+      setValue(ENTITYDOMAIN, value.getOid());
     }
   }
   
@@ -332,7 +332,7 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     }
     else
     {
-      setValue(OWNER, value.getId());
+      setValue(OWNER, value.getOid());
     }
   }
   
@@ -505,7 +505,7 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     }
     else
     {
-      setValue(USERREF, value.getId());
+      setValue(USERREF, value.getOid());
     }
   }
   
@@ -545,9 +545,9 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static net.geoprism.ForgotPasswordRequestDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String id)
+  public static net.geoprism.ForgotPasswordRequestDTO get(com.runwaysdk.constants.ClientRequestIF clientRequest, String oid)
   {
-    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(id);
+    com.runwaysdk.business.EntityDTO dto = (com.runwaysdk.business.EntityDTO)clientRequest.get(oid);
     
     return (net.geoprism.ForgotPasswordRequestDTO) dto;
   }
@@ -565,7 +565,7 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
   }
   public void delete()
   {
-    getRequest().delete(this.getId());
+    getRequest().delete(this.getOid());
   }
   
   public static net.geoprism.ForgotPasswordRequestQueryDTO getAllInstances(com.runwaysdk.constants.ClientRequestIF clientRequest, String sortAttribute, Boolean ascending, Integer pageSize, Integer pageNumber)
@@ -578,10 +578,10 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     getRequest().lock(this);
   }
   
-  public static net.geoprism.ForgotPasswordRequestDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ForgotPasswordRequestDTO lock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "lock", _declaredTypes);
     return (net.geoprism.ForgotPasswordRequestDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
@@ -591,10 +591,10 @@ public abstract class ForgotPasswordRequestDTOBase extends com.runwaysdk.busines
     getRequest().unlock(this);
   }
   
-  public static net.geoprism.ForgotPasswordRequestDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String id)
+  public static net.geoprism.ForgotPasswordRequestDTO unlock(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String oid)
   {
     String[] _declaredTypes = new String[]{"java.lang.String"};
-    Object[] _parameters = new Object[]{id};
+    Object[] _parameters = new Object[]{oid};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ForgotPasswordRequestDTO.CLASS, "unlock", _declaredTypes);
     return (net.geoprism.ForgotPasswordRequestDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

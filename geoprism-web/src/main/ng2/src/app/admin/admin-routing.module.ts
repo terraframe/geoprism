@@ -46,7 +46,7 @@ const routes: Routes = [
     data: { title: 'System_Configuration' }                
   },
   {
-    path: 'logo/:id',
+    path: 'logo/:oid',
     component: SystemLogoComponent,
     data: { title: 'System_Configuration' }            
     
@@ -62,28 +62,28 @@ const routes: Routes = [
     component: AccountsComponent,    
     data: { title: 'useraccounts.title' }                
   },
+//  {
+//    path: 'geotree',
+//    component: GeoTreeComponent,
+//    data: { title: 'geoEntity.title' }                
+//  },
+//  {
+//    path: 'universaltree',
+//    component: UniversalTreeComponent,
+//    data: { title: 'universal.title' }                
+//  },
+//  {
+//    path: 'classifiertree',
+//    component: ClassifierTreeComponent,
+//    data: { title: 'Term_Ontology_Admin' }                
+//  },
+//  {
+//    path: 'browser',
+//    component: BrowserComponent,
+//    data: { title: 'Data_Browser' }                
+//  },
   {
-    path: 'geotree',
-    component: GeoTreeComponent,
-    data: { title: 'geoEntity.title' }                
-  },
-  {
-    path: 'universaltree',
-    component: UniversalTreeComponent,
-    data: { title: 'universal.title' }                
-  },
-  {
-    path: 'classifiertree',
-    component: ClassifierTreeComponent,
-    data: { title: 'Term_Ontology_Admin' }                
-  },
-  {
-    path: 'browser',
-    component: BrowserComponent,
-    data: { title: 'Data_Browser' }                
-  },
-  {
-    path: 'account/:id',
+    path: 'account/:oid',
     component: AccountComponent,
     resolve: {
       account: AccountResolver
