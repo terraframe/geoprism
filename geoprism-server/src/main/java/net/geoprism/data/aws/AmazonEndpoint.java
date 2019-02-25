@@ -84,7 +84,7 @@ public class AmazonEndpoint implements XMLEndpoint
     {
       List<File> files = new LinkedList<File>();
 
-      AmazonS3 client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+      AmazonS3 client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider("src/main/resources/AwsCredentialsForOpenData.properties"));
 
       for (String key : keys)
       {
@@ -135,7 +135,7 @@ public class AmazonEndpoint implements XMLEndpoint
 
     try
     {
-      AmazonS3 s3Client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+      AmazonS3 s3Client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider("src/main/resources/AwsCredentialsForOpenData.properties"));
 
       ListObjectsRequest request = new ListObjectsRequest();
       request = request.withBucketName("geodashboarddata");
