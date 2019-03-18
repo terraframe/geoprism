@@ -45,6 +45,10 @@ import { ForgotPasswordCompleteService } from './forgotpassword-complete/forgotp
 import { AuthGuard } from './authentication/auth.guard';
 import { AdminGuard } from './authentication/admin.guard';
 
+import { HubHeaderComponent } from './hub/hub-header.component';
+import { LoginHeaderComponent } from './authentication/login-header.component';
+
+
 @NgModule({
   imports: [
 	BrowserModule,
@@ -63,7 +67,9 @@ import { AdminGuard } from './authentication/admin.guard';
 	// Global components
     AppComponent,
     ProfileComponent,
-    
+    HubHeaderComponent,
+    LoginHeaderComponent,
+
     // Routing components
     routedComponents
   ],
@@ -78,7 +84,9 @@ import { AdminGuard } from './authentication/admin.guard';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    ProfileComponent
+    ProfileComponent,
+    HubHeaderComponent,
+    LoginHeaderComponent
   ],      
 })
 export class AppModule { }

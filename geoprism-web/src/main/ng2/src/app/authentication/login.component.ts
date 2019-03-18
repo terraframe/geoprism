@@ -20,6 +20,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SessionService } from './session.service';
+import { LoginHeaderComponent } from './login-header.component';
+
 
 declare var acp: any;
 

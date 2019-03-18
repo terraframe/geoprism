@@ -1,30 +1,37 @@
-<div id="container">
-  <message></message>
-  <div id="geoprism-landing-top-div">
-    <header id="header">
-      <form id="login-form" class="login" #form="ngForm" (ngSubmit)="form.valid && onSubmit()">
-          
-        <div id="login-input-container">
-          <div>
-            <input [(ngModel)]="username" name="username" type="text" [placeholder]="'login.username' | localize" id="login" required />
-            <input [(ngModel)]="password" name="password" type="password" [placeholder]="'login.password' | localize" id="password"  required />
-            <a routerLink="/forgotpassword" class="forgot-password"><localize key="login.forgotPassword"></localize></a>
-          </div>
-          <p class="login-submit">
-            <button type="submit" class="login-button" [disabled]="!(form.valid)"><i class="fa fa-sign-in"></i><localize key="login.button"></localize></button>
-          </p>
-        </div>        
-      </form>
-    </header>
-    <img id="logo" [src]="context + '/logo/view?id=banner'" alt="banner" />
-  </div>    
-  <div id="geoprism-landing-bottom-div">
-<!--     <img id="logo_gp" [src]="context + '/net/geoprism/images/geoprism_banner.png'" alt="logo" /> -->
-    <img id="background-img" [src]="context + '/net/geoprism/images/theme_background.png'" alt="background" />
-    
-    <div id="geoprism-landing-footer">
-      <h4><localize key="login.footerMessage"></localize></h4>
+<div id="login-page" class="new-admin-design-main">
+    <login-header></login-header>
+
+    <message></message>
+    <div id="app-container" class="container">
+ 
+        <div class="col-md-4 col-sm-4 col-xs-2"></div>
+        <div class="col-md-4 col-sm-4 col-xs-8">
+            <div class="row-fluid">
+
+                <form id="login-form" class="login" #form="ngForm" (ngSubmit)="form.valid && onSubmit()">
+                    <div id="login-input-container">
+                        <div class="row">
+                            <input [(ngModel)]="username" name="username" type="text" [placeholder]="'login.username' | localize"
+                                id="login" required />
+                            <input [(ngModel)]="password" name="password" type="password" [placeholder]="'login.password' | localize"
+                                id="password" required />
+                            <a routerLink="/forgotpassword" class="forgot-password">
+                                <localize key="login.forgotPassword"></localize>
+                            </a>
+                        </div>
+                        <!-- <p class="login-submit"> -->
+                        <div class="row">
+                          <button type="submit" id="login-btn" class="btn btn-primary" [disabled]="!(form.valid)">
+                            <localize key="login.button"></localize>
+                          </button>
+                        </div>
+                        <!-- </p> -->
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-2"></div>
     </div>
-  </div>  
 </div>
 

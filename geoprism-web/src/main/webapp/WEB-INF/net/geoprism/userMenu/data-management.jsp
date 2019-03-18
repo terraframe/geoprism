@@ -74,27 +74,28 @@
     <!-- HEADER AND NAVBAR -->
     <header>
       <nav class="navbar navbar-default">
-        <div class="container">
+        <div class="container-fluid">
           <div class="navbar-header">
             <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management#/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="${pageContext.request.contextPath}/logo/view?id=logo" /></a>
             <a class="navbar-brand" href="${pageContext.request.contextPath}/prism/management#/data"><gdb:localize key="data.management.title"/></a>
-<%-- 			<h3 class="navbar-brand"><gdb:localize key="data.management.title"/></h3> --%>
           </div>
 
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><gdb:localize key="Location_Configurations"/><span class="caret"></span></a>
+            	<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
             	<ul class="dropdown-menu">
             		<li><a href="#locations"><i></i><gdb:localize key="Location_Management"/></a></li>
+            		<li role="menuitem"><a class="dropdown-item" href="#locations"><gdb:localize key="Location_Management"/></a></li> 
+            		
             	</ul>
             </li>
 
-<%--             <li><a href="${pageContext.request.contextPath}/menu" title="<gdb:localize key="userMenu.menuTooltip"/>"><img src="net/geoprism/images/splash_logo_icon.png" /></a></li> --%>
-<%--             <li><a href="${pageContext.request.contextPath}/session/logout"><gdb:localize key="userDashboards.logout"/></a></li>             --%>
           </ul>
         </div>
       </nav>
     </header>
+    
+    
         
     <!-- MAIN CONTENT AND INJECTED VIEWS -->
     <div id="main" class="new-admin-design-main">

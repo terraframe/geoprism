@@ -25,6 +25,15 @@ body{
 	overflow: hidden;
 }
 
+*{
+  font-family: "Roboto"; /* IE fallback */
+  font-family: var(--font-family-default);
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+  font-family: "Roboto"; /* IE fallback */
+  font-family: var(--font-family-default);
+}
+
 #main-content-frame {
 	float: right;
 	position: relative;
@@ -85,7 +94,7 @@ form legend{
 * Button styles 
 *
 */
-.btn,
+/* .btn,
 button.btn.ui-button.ui-widget{
   display:inline-block;
   vertical-align:top;
@@ -138,8 +147,8 @@ button.btn.btn-primary.ui-button.ui-widget:hover{
 }
 button.btn-primary:hover > i {
 	margin-left: 5px;
-}
-.btn-primary:focus,
+} */
+/* .btn-primary:focus,
 .btn-primary:active,
 .btn.btn-primary.ui-button.ui-widget:focus,
 .btn.btn-primary.ui-button.ui-widget:active{
@@ -153,7 +162,7 @@ button.btn-primary:hover > i {
 
 .btn-primary .fa {
 	color: white;
-}
+} */
 
 
 a:hover > .fa.fa-caret-right{
@@ -1262,7 +1271,7 @@ input :focus::-moz-placeholder{opacity:0 !important;}
 	position:relative;
 	width:100%;
 }
-.modal-form .text input[type="text"]{
+/* .modal-form .text input[type="text"]{
 	background:#eee;
 	border:1px solid #aaa;
 	width:100%;
@@ -1317,7 +1326,7 @@ input :focus::-moz-placeholder{opacity:0 !important;}
 .modal-form .text input[type="textarea"]:focus{border-color:#01b1ec;}
 .modal-form .text input[type="textarea"]:disabled {
     color: #999;
-}
+} */
 
 .modal-form .text textarea{
 	background:#eee;
@@ -2411,6 +2420,10 @@ li.list-group-item a{
     min-width: 100%;
 }
 
+.nav.navbar-nav.navbar-right .dropdown .dropdown-toggle .glyphicon.glyphicon-menu-hamburger {
+    line-height: 144px;
+}
+
 	
 /*
 * Scroll bar styling
@@ -2431,3 +2444,12 @@ li.list-group-item a{
 /* } */
 
 
+
+
+
+
+/* NEW */
+
+ /* 
+ * Theme Config 
+ */

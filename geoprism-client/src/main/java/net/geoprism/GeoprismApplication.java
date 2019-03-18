@@ -31,6 +31,8 @@ public class GeoprismApplication
   private String      src;
 
   private String      label;
+  
+  private String      description;
 
   private String      url;
 
@@ -69,6 +71,16 @@ public class GeoprismApplication
   public void setLabel(String label)
   {
     this.label = label;
+  }
+  
+  public String getDescription()
+  {
+    return description;
+  }
+
+  public void setDescription(String description)
+  {
+    this.description = description;
   }
 
   public void addRole(String roleName)
@@ -111,6 +123,7 @@ public class GeoprismApplication
     object.put("src", this.src);
     object.put("label", this.label);
     object.put("url", this.url);
+    object.put("description", this.description);
 
     return object;
   }

@@ -1,7 +1,7 @@
     <!-- HEADER AND NAVBAR -->
     <header>
       <nav class="navbar navbar-default">
-        <div class="container">
+        <div class="container-fluid">
           <div class="navbar-header">
             <a class="navbar-brand" routerLink="/" [title]="'userMenu.menuTooltip' | localize"><img [src]="context + '/logo/view?id=logo'" /></a>
             <a class="navbar-brand" routerLink="/admin"><localize key="admin.link"></localize></a>
@@ -9,9 +9,12 @@
           
           <ul class="nav navbar-nav navbar-right">
             <li dropdown>
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+              <!-- <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
                 <localize key="admin.title"></localize><span class="caret"></span>
-              </a>            
+              </a>             -->
+              <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle> 
+               <span class="glyphicon glyphicon-menu-hamburger"></span> 
+             </a>   
               <ul *dropdownMenu class="dropdown-menu">
                 <li role="menuitem"><a class="dropdown-item" routerLink="/admin/logos" routerLinkActive="active"><i></i><localize key="Icons"></localize></a></li>
                 <li role="menuitem"><a class="dropdown-item" routerLink="/admin/email" routerLinkActive="active"><i></i><localize key="email.link"></localize></a></li>

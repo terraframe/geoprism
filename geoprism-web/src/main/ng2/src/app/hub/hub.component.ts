@@ -26,6 +26,7 @@ import { AuthService } from '../core/authentication/auth.service';
 import { SessionService } from '../authentication/session.service';
 import { Application } from './application';
 import { HubService } from './hub.service';
+import { HubHeaderComponent } from './hub-header.component'
 
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
@@ -57,35 +58,25 @@ export class HubComponent implements OnInit {
   ngOnInit():void {
     this.service.applications().then(applications => {
       this.applications = applications;
-      
-      if(this.applications.length > 3 || this.applications.length % 3 === 0) {
-        this.buckets = 'col-sm-4';
-      }
-      else if(this.applications.length === 2) {
-        this.buckets = 'col-sm-6';
-      }
-      else {
-        this.buckets = 'col-sm-12';
-      }
     }); 	  
     
     this.isAdmin = this.authService.isAdmin();
   }
   
-  logout():void {
-    this.sessionService.logout().then(response => {
-      this.router.navigate(['/login']);	  
-    }); 	  
-  }
+//   logout():void {
+//     this.sessionService.logout().then(response => {
+//       this.router.navigate(['/login']);	  
+//     }); 	  
+//   }
   
   open(application:Application):void { 
     window.location.href = this.context + '/' + application.url;	  
   }
   
-  account():void{
-    this.profileService.get().then(profile => {
-      this.bsModalRef = this.modalService.show(ProfileComponent, {backdrop: 'static', class: 'gray modal-lg'});
-      this.bsModalRef.content.profile = profile;
-    });
-  }
+//   account():void{
+//     this.profileService.get().then(profile => {
+//       this.bsModalRef = this.modalService.show(ProfileComponent, {backdrop: 'static', class: 'gray modal-lg'});
+//       this.bsModalRef.content.profile = profile;
+//     });
+//   }
 }

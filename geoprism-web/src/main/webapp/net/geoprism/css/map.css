@@ -296,10 +296,10 @@ button.cancel-edits-btn.active{
 span.fa {
 	font-size: 18px;
 }
-span.fa:hover,
+/* span.fa:hover,
 span.fa:focus{
 	color: #00bfff
-}
+} */
 
 #base-layer-switcher-wrapper {
 	position: absolute;
