@@ -41,8 +41,7 @@
     controller.load = function(data) {
       console.log("LocationController.load");
       
-      if(data.children && data.children.count > 0){
-	      $scope.children = data.children.resultSet;
+	      $scope.children = data.children != null ? data.children.resultSet : [];
 	      $scope.layers = data.layers;
 	      
 	      $scope.entity = data.entity;
@@ -57,7 +56,6 @@
 	      ];
 	      
 	      $scope.$broadcast('sharedGeoData', layers);
-      }
     }
     
     controller.select = function(entity, event) {
@@ -121,7 +119,7 @@
       var connection = {
         elementId : '#innerFrameHtml',
         onSuccess : function(data) {          
-          $scope.children = data.children.resultSet;
+          $scope.children = data.children != null ? data.children.resultSet : [];
           $scope.layers = data.layers;
       
           var layers = [
