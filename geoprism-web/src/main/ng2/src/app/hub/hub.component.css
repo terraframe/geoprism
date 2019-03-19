@@ -23,6 +23,11 @@
   min-width: 100%;
 }
 
+.new-admin-design-main {
+    height: 100%;
+    overflow-y: auto;
+}
+
 .body, #container {
   height: 100vh; 
   overflow: hidden;
