@@ -55,10 +55,10 @@
       var map = controller.getWebGLMap();
       controller._editingControl = new MapboxDraw({
         controls : {
-          point : false,
+          point : true,
           line_string : false,
           polygon : true,
-          trash : true,
+          trash : false,
           combine_features : false,
           uncombine_features : false
         }
@@ -616,8 +616,9 @@
           });
           this._container.append(this._bCancel);
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").prop('title', localizationService.localize("location.management.editing", "trash"));
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").prop('title', localizationService.localize("location.management.editing", "trash"));
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").prop('title', localizationService.localize("location.management.editing", "polygon"));
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").prop('title', localizationService.localize("location.management.editing", "point"));
           
           this.stopEditing();
           
@@ -657,9 +658,10 @@
           this._bSave.css("display", "block");
           this._bCancel.css("display", "block");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").removeAttr("style");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").removeAttr("style");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").removeAttr("style");
           
@@ -672,9 +674,10 @@
           this._bSave.css("display", "none");
           this._bCancel.css("display", "none");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
           
@@ -687,9 +690,10 @@
           this._bSave.css("display", "block");
           this._bCancel.css("display", "block");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
         },
@@ -700,9 +704,10 @@
           this._bSave.css("display", "none");
           this._bCancel.css("display", "none");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
         }
