@@ -433,7 +433,8 @@
           layer: "context",
           type: "CONTEXT",
           index: 1,
-          is3d: false          
+          is3d: false,
+          geomType: data.config.contextGeom
         },{
           name: "target-multipolygon",
           style: $scope.targetStyle,
@@ -441,6 +442,7 @@
           type: "TARGET",
           index: 2,
           is3d: false,
+          geomType: data.config.targetGeom,
           bbox: bboxObj
         }];
         
