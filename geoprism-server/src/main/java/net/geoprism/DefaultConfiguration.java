@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -44,6 +44,7 @@ import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.gis.constants.GISConstants;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class DefaultConfiguration implements ConfigurationIF
@@ -84,8 +85,8 @@ public class DefaultConfiguration implements ConfigurationIF
   public Collection<String> getDatabrowserTypes()
   {
     List<String> types = new LinkedList<String>();
-    types.add(GISConstants.GEO_PACKAGE+".Universal");
-    types.add(GISConstants.GEO_PACKAGE+".GeoEntity");
+    types.add(GISConstants.GEO_PACKAGE + ".Universal");
+    types.add(GISConstants.GEO_PACKAGE + ".GeoEntity");
 
     return types;
   }
@@ -193,27 +194,32 @@ public class DefaultConfiguration implements ConfigurationIF
       {
         String oid = object.has("oid") ? object.getString("oid") : null;
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
-        
+
         Envelope envelope = PublisherUtil.getEnvelope(object);
         Envelope bounds = PublisherUtil.getTileBounds(envelope);
 
         if (type.equals(LM_CONTEXT))
         {
-          LocationContextPublisher publisher = new LocationContextPublisher(oid, "");
+          GeometryType geometryType = object.has("geometryType") ? GeometryType.valueOf(object.getString("geometryType")) : GeometryType.MULTIPOLYGON;
+          LocationContextPublisher publisher = new LocationContextPublisher(oid, "", geometryType);
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM_TARGET))
         {
-          LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "");
+          GeometryType geometryType = object.has("geometryType") ? GeometryType.valueOf(object.getString("geometryType")) : GeometryType.MULTIPOLYGON;
+          LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "", geometryType);
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM))
         {
-          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(oid, universalId, ""), new LocationContextPublisher(oid, ""));
+          GeometryType contextGeom = object.has("contextGeom") ? GeometryType.valueOf(object.getString("contextGeom")) : GeometryType.MULTIPOLYGON;
+          GeometryType targetGeom = object.has("targetGeom") ? GeometryType.valueOf(object.getString("targetGeom")) : GeometryType.MULTIPOLYGON;
+
+          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(oid, universalId, "", targetGeom), new LocationContextPublisher(oid, "", contextGeom));
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
@@ -227,13 +233,13 @@ public class DefaultConfiguration implements ConfigurationIF
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   @Override
   public void onEntityDelete(GeoEntity entity)
   {
     // Do nothing
   }
-  
+
   @Override
   public void onMappableClassDelete(MappableClass mClass)
   {

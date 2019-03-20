@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -38,6 +38,7 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.mapping.GeoserverFacade;
 import com.vividsolutions.jts.geom.Envelope;
@@ -54,9 +55,9 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
 {
   private String oid;
 
-  public LocationContextPublisher(String oid, String layers)
+  public LocationContextPublisher(String oid, String layers, GeometryType geometryType)
   {
-    super(layers);
+    super(layers, geometryType);
 
     this.oid = oid;
   }
@@ -172,12 +173,14 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
 
   private ResultSet getResultSet(String entityId, LayerType type)
   {
+    String column = this.getGeometryColumn();
+
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.oid, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("SELECT ge.oid, gdl.default_locale, ge.geo_id, ST_Transform(ge." + column + ", 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.oid = ge.display_label\n");
     sql.append("WHERE ge.oid::text = '" + entityId + "'\n");
-    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
+    sql.append("AND ge." + column + " IS NOT NULL\n");
 
     return Database.query(sql.toString());
   }

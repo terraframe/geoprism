@@ -50,9 +50,18 @@
 	        options : data.universals
 	      };
 	      
+	      var config = {
+	        oid: data.entity.oid, 
+	        universalId: data.universal,
+	    	type:"LM",
+  	    	targetGeom:data.childType,
+  	    	contextGeom:data.geometryType	    		
+	      };
+	      
 	      var layers = [
 	//        {name:'context-multipolygon', config: {id: data.entity.oid, type:"LM_CONTEXT"}},
-	        {name:'target-multipolygon', config: {oid: data.entity.oid, universalId: data.universal, type:"LM"}, bbox:data.bbox}
+	    	  
+	        {name:'target-multipolygon', config:config, bbox:data.bbox}
 	      ];
 	      
 	      $scope.$broadcast('sharedGeoData', layers);
@@ -121,9 +130,18 @@
         onSuccess : function(data) {          
           $scope.children = data.children != null ? data.children.resultSet : [];
           $scope.layers = data.layers;
+          
+	      var config = {
+  	        oid: data.entity.oid, 
+  	        universalId: data.universal,
+  	    	type:"LM",
+  	    	targetGeom:data.childType,
+  	    	contextGeom:data.geometryType	    		
+ 	      };
+
       
           var layers = [
-            {name:'target-multipolygon', config: {oid: $scope.entity.oid, universalId: $scope.universal.value, type:"LM"}, bbox:'[]'}
+            {name:'target-multipolygon', config: config, bbox:'[]'}
           ];
       
           $scope.$broadcast('sharedGeoData', layers);

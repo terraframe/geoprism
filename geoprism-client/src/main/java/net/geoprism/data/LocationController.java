@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data;
 
@@ -52,7 +52,7 @@ import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
 
 @Controller(url = "location")
-public class LocationController 
+public class LocationController
 {
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF select(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
@@ -76,34 +76,40 @@ public class LocationController
 
   private RestResponse getLocationInformation(ClientRequestIF request, GeoEntityDTO entity, String universalId, String existingLayers) throws JSONException
   {
-    List<? extends UniversalDTO> universals = entity.getUniversal().getAllContains();
+    UniversalDTO universal = entity.getUniversal();
+    List<? extends UniversalDTO> universals = universal.getAllContains();
 
     if ( ( universalId == null || universalId.length() == 0 ) && universals.size() > 0)
     {
       universalId = universals.get(0).getOid();
     }
 
-    // String geometries = GeoEntityUtilDTO.publishLayers(request, entity.getOid(), universalId, existingLayers);
+    // String geometries = GeoEntityUtilDTO.publishLayers(request,
+    // entity.getOid(), universalId, existingLayers);
 
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getOid(), universalId, 200);
-    
-    RestResponse response = new RestResponse();
 
-    if(children.getCount() > 0)
+    RestResponse response = new RestResponse();
+    UniversalDTO childUniversal = UniversalDTO.get(request, universalId);
+
+    if (children.getCount() > 0)
     {
       response.set("children", children);
-    
-      response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId) );
+
+      response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId));
       response.set("universals", new ListSerializable(universals));
       response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
       response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
       response.set("workspace", GeoserverProperties.getWorkspace());
+      response.set("workspace", GeoserverProperties.getWorkspace());
+      response.set("geometryType", universal.getGeometryType().get(0).getName());
+      response.set("childType", childUniversal.getGeometryType().get(0).getName());
       // response.set("geometries", new JSONStringImpl(geometries));
       // response.set("layers", object.get("layers"));
-    																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													
+
       return response;
     }
-    
+
     return response;
   }
 
@@ -161,11 +167,11 @@ public class LocationController
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF applyGeometries(ClientRequestIF request, @RequestParamter(name = "featureCollection") String featureCollection)
   {
-     GeoEntityUtilDTO.applyGeometries(request, featureCollection);
+    GeoEntityUtilDTO.applyGeometries(request, featureCollection);
 
     return new RestBodyResponse("");
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF openEditingSession(ClientRequestIF request, @RequestParamter(name = "config") String config)
   {
@@ -173,7 +179,7 @@ public class LocationController
 
     return new InputStreamResponse(istream, "application/x-protobuf", null);
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF cancelEditingSession(ClientRequestIF request, @RequestParamter(name = "config") String config)
   {
@@ -186,31 +192,31 @@ public class LocationController
   public ResponseIF viewSynonyms(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityDTO.get(request, entityId);
-    
+
     List<? extends SynonymDTO> synonyms = entity.getAllSynonym();
     for (SynonymDTO syn : synonyms)
     {
       syn.lock();
     }
-    
+
     ListSerializable list = new ListSerializable(synonyms);
-    
+
     return new RestBodyResponse(list);
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF applyEditSynonyms(ClientRequestIF request, @RequestParamter(name = "synonyms") String sjsonSynonyms) throws JSONException
   {
     JSONObject jobjSynonyms = new JSONObject(sjsonSynonyms);
-    
+
     String sParent = jobjSynonyms.getString("parent");
-    
+
     JSONArray synonyms = jobjSynonyms.getJSONArray("synonyms");
-    
+
     for (int i = 0; i < synonyms.length(); ++i)
     {
       JSONObject synonym = synonyms.getJSONObject(i);
-      
+
       String oid = synonym.getString("oid");
       if (oid.length() == 64)
       {
@@ -222,36 +228,36 @@ public class LocationController
       {
         SynonymDTO syn = new SynonymDTO(request);
         syn.getDisplayLabel().setValue(synonym.getString("displayLabel"));
-        
+
         SynonymDTO.create(request, syn, sParent);
       }
     }
-    
+
     JSONArray deleted = jobjSynonyms.getJSONArray("deleted");
-    
+
     for (int i = 0; i < deleted.length(); ++i)
     {
       String delId = deleted.getString(i);
-      
+
       SynonymDTO.get(request, delId).delete();
     }
-    
+
     return new RestBodyResponse("");
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF cancelEditSynonyms(ClientRequestIF request, @RequestParamter(name = "synonyms") String synonymsJSONArray) throws JSONException
   {
     JSONArray synonyms = new JSONArray(synonymsJSONArray);
-    
+
     for (int i = 0; i < synonyms.length(); ++i)
     {
       SynonymDTO.get(request, synonyms.getString(i)).unlock();
     }
-    
+
     return new RestBodyResponse("");
   }
-  
+
   @Endpoint(error = ErrorSerialization.JSON)
   public ResponseIF edit(ClientRequestIF request, @RequestParamter(name = "entityId") String entityId) throws JSONException
   {

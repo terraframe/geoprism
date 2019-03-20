@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -40,8 +40,11 @@ import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.dataaccess.AttributeGeometryIF;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -68,12 +71,72 @@ public abstract class LayerPublisher
 
   private String       layers;
 
+  private GeometryType geometryType;
+
   private GeometryJSON gjson;
 
-  public LayerPublisher(String layers)
+  public LayerPublisher(String layers, GeometryType geometryType)
   {
     this.layers = layers;
+    this.geometryType = geometryType;
     this.gjson = new GeometryJSON(8);
+  }
+
+  public GeometryType getGeometryType()
+  {
+    return geometryType;
+  }
+
+  protected String getGeometryColumn()
+  {
+    if (this.geometryType.equals(GeometryType.POINT))
+    {
+      return "geo_point";
+    }
+    else if (this.geometryType.equals(GeometryType.MULTIPOINT))
+    {
+      return "geo_multi_point";
+    }
+    else if (this.geometryType.equals(GeometryType.LINE))
+    {
+      return "geo_line";
+    }
+    else if (this.geometryType.equals(GeometryType.MULTILINE))
+    {
+      return "geo_multi_line";
+    }
+    else if (this.geometryType.equals(GeometryType.POLYGON))
+    {
+      return "geo_polygon";
+    }
+
+    return "geo_multi_polygon";
+  }
+
+  protected Selectable getGeometrySelectable(GeoEntityQuery query)
+  {
+    if (this.geometryType.equals(GeometryType.POINT))
+    {
+      return query.get(GeoEntity.GEOPOINT);
+    }
+    else if (this.geometryType.equals(GeometryType.MULTIPOINT))
+    {
+      return query.get(GeoEntity.GEOMULTIPOINT);
+    }
+    else if (this.geometryType.equals(GeometryType.LINE))
+    {
+      return query.get(GeoEntity.GEOLINE);
+    }
+    else if (this.geometryType.equals(GeometryType.MULTILINE))
+    {
+      return query.get(GeoEntity.GEOMULTILINE);
+    }
+    else if (this.geometryType.equals(GeometryType.POLYGON))
+    {
+      return query.get(GeoEntity.GEOPOLYGON);
+    }
+
+    return query.get(GeoEntity.GEOMULTIPOLYGON);
   }
 
   protected void removeGeoserverLayers() throws JSONException
@@ -224,9 +287,9 @@ public abstract class LayerPublisher
         writer.endObject();
       }
     }
-    catch(JSONException e)
+    catch (JSONException e)
     {
-    	throw new ProgrammingErrorException(e);
+      throw new ProgrammingErrorException(e);
     }
     finally
     {
@@ -282,7 +345,6 @@ public abstract class LayerPublisher
 
         geometries.add(geometry);
       }
-
 
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;

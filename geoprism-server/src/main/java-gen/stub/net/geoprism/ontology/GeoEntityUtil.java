@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.ontology;
 
@@ -25,7 +25,6 @@ import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,6 +68,7 @@ import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemView;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
@@ -79,6 +79,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 import net.geoprism.ConfigurationIF;
@@ -89,7 +90,7 @@ import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.GeometrySerializationUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
 
-public class GeoEntityUtil extends GeoEntityUtilBase 
+public class GeoEntityUtil extends GeoEntityUtilBase
 {
   private static final KeyGeneratorIF generator        = new SeedKeyGenerator();
 
@@ -132,7 +133,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   /**
    * MdMethod
    * 
-   * Accepts a JSON configuration object (Similar to getData) and locks all geoentities to be edited.
+   * Accepts a JSON configuration object (Similar to getData) and locks all
+   * geoentities to be edited.
    * 
    * @param config
    * @return VectorTile data
@@ -152,8 +154,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     JSONObject jObj = new JSONObject(config);
     String oid = jObj.getString("oid");
     String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
+    GeometryType geometryType = jObj.has("targetGeom") ? GeometryType.valueOf(jObj.getString("targetGeom")) : GeometryType.MULTIPOLYGON;
 
-    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "");
+    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "", geometryType);
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
@@ -181,7 +184,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   /**
    * MdMethod
    * 
-   * Cancels an editing session by unlocking all GeoEntities at a given universal level.
+   * Cancels an editing session by unlocking all GeoEntities at a given
+   * universal level.
    * 
    * @param config
    * @return VectorTile data
@@ -208,7 +212,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     GeometryHelper geometryHelper = new GeometryHelper();
     GeometrySerializationUtil serializer = new GeometrySerializationUtil(geometryFactory);
 
-    HashMap<String, List<Polygon>> multiPolyMap = new HashMap<String, List<Polygon>>();
+    HashMap<String, Geometry> geometryMap = new HashMap<String, Geometry>();
 
     try
     {
@@ -231,21 +235,22 @@ public class GeoEntityUtil extends GeoEntityUtilBase
           String geoEntId = properties.getString("oid");
           JSONArray coordinates = geometry.getJSONArray("coordinates");
 
-          if (!multiPolyMap.containsKey(geoEntId))
-          {
-            multiPolyMap.put(geoEntId, new ArrayList<Polygon>());
-          }
-          List<Polygon> polygons = multiPolyMap.get(geoEntId);
-
           if (featureType.equals("polygon"))
           {
             coordinates = coordinates.getJSONArray(0);
 
             Polygon polygon = serializer.jsonToPolygon(coordinates);
-            polygons.add(polygon);
+            geometryMap.put(geoEntId, polygon);
+          }
+          else if (featureType.equals("point"))
+          {
+            Point point = serializer.jsonToPoint(coordinates);
+            geometryMap.put(geoEntId, point);
           }
           else if (featureType.equals("multipolygon"))
           {
+            List<Polygon> polygons = new LinkedList<>();;
+
             for (int p = 0; p < coordinates.length(); ++p)
             {
               JSONArray jsonP = coordinates.getJSONArray(p).getJSONArray(0);
@@ -253,6 +258,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase
               Polygon polygon = serializer.jsonToPolygon(jsonP);
               polygons.add(polygon);
             }
+            
+            MultiPolygon geom = geometryFactory.createMultiPolygon(polygons.toArray(new Polygon[polygons.size()]));
+            
+            geometryMap.put(geoEntId, geom);
           }
           else
           {
@@ -274,15 +283,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       e.printStackTrace();
     }
 
-    Set<String> ids = multiPolyMap.keySet();
+    Set<String> ids = geometryMap.keySet();
+    
     for (String oid : ids)
     {
-      List<Polygon> listPoly = multiPolyMap.get(oid);
+      Geometry geom = geometryMap.get(oid);
 
-      MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
-
-      // Make sure we're in 4326 projection
-      Geometry geom = multiPoly;
       // try
       // {
       // CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:3857", true);
@@ -296,21 +302,20 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       // }
 
       GeoEntity geo = GeoEntity.lock(oid);
-      geo.setGeoPoint(geometryHelper.getGeoPoint(geom));
-      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(geom));
       geo.setWkt(geom.toText());
       geo.apply();
     }
   }
 
   /**
-   * Merges the source geo entity into the destination geo entity and creates a new synonym with the name of the source
-   * geo entity.
+   * Merges the source geo entity into the destination geo entity and creates a
+   * new synonym with the name of the source geo entity.
    * 
    * @param sourceId
    * @param destinationId
    * 
-   * @return Returns a list of all geo entity ids which may need to be refreshed in the browser
+   * @return Returns a list of all geo entity ids which may need to be refreshed
+   *         in the browser
    */
   @Transaction
   public static String[] makeSynonym(String sourceId, String destinationId)
@@ -360,7 +365,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       throw exception;
     }
 
-    // Delete all problems for the source geo entity so that they aren't transfered over to the destination entity
+    // Delete all problems for the source geo entity so that they aren't
+    // transfered over to the destination entity
     GeoEntityProblemQuery problemQuery = new GeoEntityProblemQuery(new QueryFactory());
     problemQuery.WHERE(problemQuery.getGeoEntity().EQ(source));
 
@@ -404,7 +410,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
     /*
-     * Remove the source from the allpaths table so we don't violate allpaths uniqueness constraints
+     * Remove the source from the allpaths table so we don't violate allpaths
+     * uniqueness constraints
      */
     List<? extends Business> parents = source.getParents(LocatedIn.CLASS).getAll();
     for (Business parent : parents)
@@ -575,12 +582,14 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   }
 
   /**
-   * Returns the JSONObject representation of the node and all of its children nodes
+   * Returns the JSONObject representation of the node and all of its children
+   * nodes
    * 
    * @param _entity
    *          Entity to serialize into a JSONObject
    * @param _ids
-   *          List of entity ids in which to include the children in the serialization
+   *          List of entity ids in which to include the children in the
+   *          serialization
    * @param _isRoot
    *          Flag indicating if the entity represents a root node of the tree
    * @return
@@ -909,46 +918,43 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   public static String getEntitiesBBOX(String[] ids)
   {
-	  if(ids.length > 0)
-	  {
-		  StringBuffer geoIdsStr = new StringBuffer();
-		  for(int i=0; i<ids.length; i++)
-		  {
-			  String oid = ids[i];
-			  
-			  if(i > 0){
-				  geoIdsStr.append(",");
-			  }
-			  geoIdsStr.append("'").append(oid).append("'");
-		  }
-		  
-		  
-		  ValueQuery vQuery = new ValueQuery(new QueryFactory());
-		  GeoEntityQuery query = new GeoEntityQuery(vQuery);
-	
-		  StringBuffer sql = new StringBuffer();
-		  sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
-		  sql.append(" FROM geo_entity WHERE geo_entity.oid = any (array["+geoIdsStr+"]);");
-		  
-		    	
-		  ResultSet bboxResult = Database.query(sql.toString());
-	
-		  return formatBBox(bboxResult).toString();
-	  }
-	  
-	  return null;
+    if (ids.length > 0)
+    {
+      StringBuffer geoIdsStr = new StringBuffer();
+      for (int i = 0; i < ids.length; i++)
+      {
+        String oid = ids[i];
+
+        if (i > 0)
+        {
+          geoIdsStr.append(",");
+        }
+        geoIdsStr.append("'").append(oid).append("'");
+      }
+
+      ValueQuery vQuery = new ValueQuery(new QueryFactory());
+      GeoEntityQuery query = new GeoEntityQuery(vQuery);
+
+      StringBuffer sql = new StringBuffer();
+      sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
+      sql.append(" FROM geo_entity WHERE geo_entity.oid = any (array[" + geoIdsStr + "]);");
+
+      ResultSet bboxResult = Database.query(sql.toString());
+
+      return formatBBox(bboxResult).toString();
+    }
+
+    return null;
   }
-  
-  
+
   public static String getChildrenBBOX(String oid, String universalId)
   {
     GeoEntity entity = GeoEntity.get(oid);
 
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
-    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
 
     StringBuffer sql = new StringBuffer();
@@ -957,13 +963,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     sql.append(" AND ((located_in.parent_oid ='" + entity.getOid() + "'");
     sql.append(" AND geo_entity.oid = located_in.child_oid)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
-    
+
     ResultSet bboxResult = Database.query(sql.toString());
 
     return formatBBox(bboxResult).toString();
   }
-  
-  
+
   /**
    * Format the bounding box result set returned from a PostGIS database query
    * 
@@ -1041,7 +1046,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
     return bboxArr;
   }
-  
 
   public static ValueQuery getChildren(String oid, String universalId, Integer limit)
   {
@@ -1071,7 +1075,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     {
       vQuery.restrictRows(limit, 1);
     }
-    
+
     return vQuery;
   }
 
@@ -1123,7 +1127,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
   public static String publishLayers(String oid, String universalId, String existingLayerNames)
   {
-    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, existingLayerNames);
+    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, existingLayerNames, GeometryType.MULTIPOLYGON);
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
