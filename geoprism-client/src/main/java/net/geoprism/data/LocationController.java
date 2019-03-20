@@ -40,6 +40,7 @@ import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.system.gis.geo.GeoEntityDTO;
 import com.runwaysdk.system.gis.geo.GeoEntityViewDTO;
+import com.runwaysdk.system.gis.geo.GeometryTypeDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
@@ -90,27 +91,43 @@ public class LocationController
     ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getOid(), universalId, 200);
 
     RestResponse response = new RestResponse();
-    UniversalDTO childUniversal = UniversalDTO.get(request, universalId);
+
+    // if (children.getCount() > 0)
+    // {
+    response.set("children", children);
+
+    response.set("universals", new ListSerializable(universals));
+    response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
+    response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
+    response.set("workspace", GeoserverProperties.getWorkspace());
+    response.set("geometryType", universal.getGeometryType().get(0).getName());
 
     if (children.getCount() > 0)
     {
-      response.set("children", children);
-
       response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId));
-      response.set("universals", new ListSerializable(universals));
-      response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
-      response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
-      response.set("workspace", GeoserverProperties.getWorkspace());
-      response.set("workspace", GeoserverProperties.getWorkspace());
-      response.set("geometryType", universal.getGeometryType().get(0).getName());
-      response.set("childType", childUniversal.getGeometryType().get(0).getName());
-      // response.set("geometries", new JSONStringImpl(geometries));
-      // response.set("layers", object.get("layers"));
-
-      return response;
+    }
+    else
+    {
+      response.set("bbox", GeoEntityUtilDTO.getEntitiesBBOX(request, new String[] { entity.getOid() }));
     }
 
+    if (universalId != null)
+    {
+      UniversalDTO childUniversal = UniversalDTO.get(request, universalId);
+      response.set("childType", childUniversal.getGeometryType().get(0).getName());
+    }
+    else
+    {
+      response.set("childType", GeometryTypeDTO.MULTIPOLYGON);
+    }
+
+    // response.set("geometries", new JSONStringImpl(geometries));
+    // response.set("layers", object.get("layers"));
+
     return response;
+    // }
+    //
+    // return response;
   }
 
   @Endpoint(error = ErrorSerialization.JSON)

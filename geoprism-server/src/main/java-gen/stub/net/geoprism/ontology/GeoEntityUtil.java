@@ -940,7 +940,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
       StringBuffer sql = new StringBuffer();
       sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
-      sql.append(" FROM geo_entity WHERE geo_entity.oid = any (array[" + geoIdsStr + "]);");
+      sql.append(" FROM geo_entity WHERE geo_entity.oid::text = any (array[" + geoIdsStr + "]);");
 
       ResultSet bboxResult = Database.query(sql.toString());
 
