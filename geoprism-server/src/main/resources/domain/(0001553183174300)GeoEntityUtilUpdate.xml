@@ -1,0 +1,41 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <update>
+      <mdUtil name="net.geoprism.ontology.GeoEntityUtil">
+        <mdMethod name="getChildren">
+          <create>
+            <mdParameter name="mdRelationshipId" label="mdRelationshipId" order="4" type="java.lang.String" />
+          </create>
+        </mdMethod>
+        <mdMethod name="getOrderedAncestors">
+          <create>
+            <mdParameter name="mdRelationshipId" label="mdRelationshipId" order="2" type="java.lang.String" />
+          </create>
+        </mdMethod>
+        <create>
+          <mdMethod name="getHierarchies" label="Get Universal Relationships" static="true" returnType="com.runwaysdk.system.metadata.MdRelationship[]">
+            <mdParameter name="oid" label="oid" order="0" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="getUniversals" label="Get Universal Relationships" static="true" returnType="com.runwaysdk.system.gis.geo.Universal[]">
+            <mdParameter name="parentId" label="Parent Id" order="0" type="java.lang.String" />
+            <mdParameter name="mdRelationshipId" label="mdRelationshipId" order="1" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="getGeoEntityRelationship" label="Get Geo Entity Relationship" static="true" returnType="java.lang.String">
+            <mdParameter name="universalRelationshipId" label="universalRelationshipId" order="1" type="java.lang.String" />
+          </mdMethod>
+          <mdMethod name="findValidMdRelationship" label="Find valid MdRelationship" static="true" returnType="java.lang.String">
+            <mdParameter name="entityId" label="entityId" order="0" type="java.lang.String" />
+          </mdMethod>
+        </create>
+      </mdUtil>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+          <object key="net.geoprism.ontology.GeoEntityUtil.getGeoEntityRelationship" type="com.runwaysdk.system.metadata.MdMethod"/>
+          <object key="net.geoprism.ontology.GeoEntityUtil.getHierarchies" type="com.runwaysdk.system.metadata.MdMethod"/>
+          <object key="net.geoprism.ontology.GeoEntityUtil.getUniversals" type="com.runwaysdk.system.metadata.MdMethod"/>
+    
+    </delete>
+  </undoIt>
+</version>

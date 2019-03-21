@@ -41,11 +41,19 @@
 
 	<div class="row">
 		<div class="col-md-3 lw-inner-col" id="location-explorer-list">
+      
 			<div class="location-management-widget-section">
 				<input type="text"
 					placeholder="<gdb:localize key="location.management.autocomplete"/>"
 					autocomplete="on" callback-auto-complete
 					source="ctrl.getGeoEntitySuggestions" setter="ctrl.open"></input>
+			</div>
+      
+			<div class="location-management-widget-section">
+					<select ng-model="hierarchy.value"
+						ng-options="opt.oid as opt.displayLabel for opt in hierarchy.options"
+						ng-change="ctrl.setHierarchy()">
+					</select>
 			</div>
 
 			<div class="location-management-widget-section">

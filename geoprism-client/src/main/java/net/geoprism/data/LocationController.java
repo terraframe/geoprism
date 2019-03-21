@@ -44,6 +44,7 @@ import com.runwaysdk.system.gis.geo.GeometryTypeDTO;
 import com.runwaysdk.system.gis.geo.LocatedInDTO;
 import com.runwaysdk.system.gis.geo.SynonymDTO;
 import com.runwaysdk.system.gis.geo.UniversalDTO;
+import com.runwaysdk.system.metadata.MdRelationshipDTO;
 import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.ExcludeConfiguration;
@@ -56,39 +57,60 @@ import net.geoprism.ontology.GeoEntityUtilDTO;
 public class LocationController
 {
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF select(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
+  public ResponseIF select(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "existingLayers") String existingLayers, @RequestParamter(name = "mdRelationshipId") String mdRelationshipId) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, oid);
 
-    return this.getLocationInformation(request, entity, universalId, existingLayers);
+    return this.getLocationInformation(request, entity, universalId, existingLayers, mdRelationshipId);
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF open(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
+  public ResponseIF open(ClientRequestIF request, @RequestParamter(name = "oid") String oid, @RequestParamter(name = "existingLayers") String existingLayers, @RequestParamter(name = "mdRelationshipId") String mdRelationshipId) throws JSONException
   {
     GeoEntityDTO entity = GeoEntityUtilDTO.getEntity(request, oid);
-    List<GeoEntityDTO> ancestors = Arrays.asList(GeoEntityUtilDTO.getOrderedAncestors(request, entity.getOid()));
 
-    RestResponse response = this.getLocationInformation(request, entity, null, existingLayers);
+    if (mdRelationshipId == null || mdRelationshipId.length() == 0)
+    {
+      mdRelationshipId = GeoEntityUtilDTO.findValidMdRelationship(request, entity.getOid());
+    }
+
+    List<GeoEntityDTO> ancestors = Arrays.asList(GeoEntityUtilDTO.getOrderedAncestors(request, entity.getOid(), mdRelationshipId));
+
+    RestResponse response = this.getLocationInformation(request, entity, null, existingLayers, mdRelationshipId);
     response.set("ancestors", new ListSerializable(ancestors), new GeoEntityJsonConfiguration());
 
     return response;
   }
 
-  private RestResponse getLocationInformation(ClientRequestIF request, GeoEntityDTO entity, String universalId, String existingLayers) throws JSONException
+  private RestResponse getLocationInformation(ClientRequestIF request, GeoEntityDTO entity, String universalId, String existingLayers, String mdRelationshipId) throws JSONException
   {
     UniversalDTO universal = entity.getUniversal();
-    List<? extends UniversalDTO> universals = universal.getAllContains();
+    MdRelationshipDTO[] hierarchies = GeoEntityUtilDTO.getHierarchies(request, universal.getOid());
 
-    if ( ( universalId == null || universalId.length() == 0 ) && universals.size() > 0)
+    MdRelationshipDTO mdRelationshipDTO = null;
+
+    if (mdRelationshipId == null || mdRelationshipId.length() == 0)
     {
-      universalId = universals.get(0).getOid();
+      mdRelationshipDTO = hierarchies[0];
+    }
+    else
+    {
+      mdRelationshipDTO = MdRelationshipDTO.get(request, mdRelationshipId);
+    }
+
+    String entityRelationshipId = GeoEntityUtilDTO.getGeoEntityRelationship(request, mdRelationshipDTO.getOid());
+
+    UniversalDTO[] universals = GeoEntityUtilDTO.getUniversals(request, universal.getOid(), mdRelationshipDTO.getOid());
+
+    if ( ( universalId == null || universalId.length() == 0 ) && universals.length > 0)
+    {
+      universalId = universals[0].getOid();
     }
 
     // String geometries = GeoEntityUtilDTO.publishLayers(request,
     // entity.getOid(), universalId, existingLayers);
 
-    ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getOid(), universalId, 200);
+    ValueQueryDTO children = GeoEntityUtilDTO.getChildren(request, entity.getOid(), universalId, 200, entityRelationshipId);
 
     RestResponse response = new RestResponse();
 
@@ -96,7 +118,10 @@ public class LocationController
     // {
     response.set("children", children);
 
-    response.set("universals", new ListSerializable(universals));
+    response.set("universals", new ListSerializable(Arrays.asList(universals)));
+    response.set("hierarchies", new ListSerializable(Arrays.asList(hierarchies)));
+    response.set("hierarchy", mdRelationshipDTO.getOid());
+    response.set("entityRelationship", entityRelationshipId);
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
     response.set("workspace", GeoserverProperties.getWorkspace());

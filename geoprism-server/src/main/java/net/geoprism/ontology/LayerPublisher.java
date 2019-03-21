@@ -35,6 +35,7 @@ import org.json.JSONWriter;
 import org.postgis.jts.JtsGeometry;
 
 import com.runwaysdk.dataaccess.AttributeIF;
+import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -69,17 +70,25 @@ public abstract class LayerPublisher
     POINT, POLYGON
   }
 
-  private String       layers;
+  private String              layers;
 
-  private GeometryType geometryType;
+  private GeometryType        geometryType;
 
-  private GeometryJSON gjson;
+  private GeometryJSON        gjson;
 
-  public LayerPublisher(String layers, GeometryType geometryType)
+  private MdRelationshipDAOIF mdRelationship;
+
+  public LayerPublisher(MdRelationshipDAOIF mdRelationship, String layers, GeometryType geometryType)
   {
+    this.mdRelationship = mdRelationship;
     this.layers = layers;
     this.geometryType = geometryType;
     this.gjson = new GeometryJSON(8);
+  }
+  
+  public MdRelationshipDAOIF getMdRelationship()
+  {
+    return mdRelationship;
   }
 
   public GeometryType getGeometryType()

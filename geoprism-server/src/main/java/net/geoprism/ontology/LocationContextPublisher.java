@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONWriter;
 
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.query.QueryFactory;
@@ -55,9 +56,9 @@ public class LocationContextPublisher extends LayerPublisher implements VectorLa
 {
   private String oid;
 
-  public LocationContextPublisher(String oid, String layers, GeometryType geometryType)
+  public LocationContextPublisher(MdRelationshipDAOIF mdRelationship, String oid, String layers, GeometryType geometryType)
   {
-    super(layers, geometryType);
+    super(mdRelationship, layers, geometryType);
 
     this.oid = oid;
   }
