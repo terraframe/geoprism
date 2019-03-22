@@ -32,6 +32,14 @@
        controllerAs : 'ctrl'
      })
      
+     .when('/locations/:oid', {
+    	 bundle : 'location.management',
+    	 key : 'title',       
+    	 templateUrl: com.runwaysdk.__applicationContextPath + '/partial/data/browser/location-management.jsp',
+    	 controller : 'LocationController',
+    	 controllerAs : 'ctrl'
+     })
+     
      // route for the dataset page and default page
      .otherwise({
        bundle : 'location.management',

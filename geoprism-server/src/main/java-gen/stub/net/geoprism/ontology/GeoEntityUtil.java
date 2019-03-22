@@ -48,6 +48,7 @@ import com.runwaysdk.business.RelationshipQuery;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
+import com.runwaysdk.dataaccess.CannotDeleteReferencedObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
@@ -220,7 +221,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   public static void applyGeometries(java.lang.String featureCollection)
   {
     GeometryFactory geometryFactory = new GeometryFactory();
-    GeometryHelper geometryHelper = new GeometryHelper();
     GeometrySerializationUtil serializer = new GeometrySerializationUtil(geometryFactory);
 
     HashMap<String, Geometry> geometryMap = new HashMap<String, Geometry>();
@@ -1226,6 +1226,28 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   public static void deleteGeoEntity(String oid)
   {
     GeoEntity entity = GeoEntity.get(oid);
+
+    /*
+     * Dont allow geo entities to be deleted if they have children
+     */
+    MdRelationship[] hierarchies = getHierarchies(null);
+
+    for (MdRelationship hierarchy : hierarchies)
+    {
+      String relationshipId = getGeoEntityRelationship(hierarchy.getOid());
+      MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(relationshipId);
+
+      RelationshipQuery query = new QueryFactory().relationshipQuery(mdRelationship.definesType());
+      query.WHERE(query.parentOid().EQ(entity.getOid()));
+
+      long count = query.getCount();
+
+      if (count > 0)
+      {
+        throw new CannotDeleteEntityExcepiton();
+      }
+
+    }
 
     List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
 
