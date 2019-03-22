@@ -164,7 +164,7 @@ public class LocationController
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "existingLayers") String existingLayers) throws JSONException
+  public ResponseIF apply(ClientRequestIF request, @RequestParamter(name = "entity", parser = ParseType.BASIC_JSON) GeoEntityDTO entity, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "existingLayers") String existingLayers, @RequestParamter(name = "mdRelationshipId") String mdRelationshipId) throws JSONException
   {
     if (entity.getGeoId() == null || entity.getGeoId().length() == 0)
     {
@@ -173,7 +173,17 @@ public class LocationController
 
     if (entity.isNewInstance())
     {
-      GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentOid, LocatedInDTO.CLASS);
+      String relationshipType = LocatedInDTO.CLASS;
+
+      if (mdRelationshipId != null && mdRelationshipId.length() > 0)
+      {
+        String geoEntityRelationship = GeoEntityUtilDTO.getGeoEntityRelationship(request, mdRelationshipId);
+        MdRelationshipDTO mdRelationship = MdRelationshipDTO.get(request, geoEntityRelationship);
+
+        relationshipType = mdRelationship.getKeyName();
+      }
+
+      GeoEntityViewDTO dto = GeoEntityDTO.create(request, entity, parentOid, relationshipType);
 
       GeoEntityUtilDTO.refreshViews(request, existingLayers);
 

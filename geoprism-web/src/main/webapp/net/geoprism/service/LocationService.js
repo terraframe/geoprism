@@ -62,14 +62,15 @@
       runwayService.execute(req, connection);      
     }
     
-    service.apply = function(connection, entity, parentOid, existingLayers) {
+    service.apply = function(connection, entity, parentOid, existingLayers, mdRelationshipId) {
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/apply',
         data : {
           entity : entity,
           parentOid : parentOid,          
-          existingLayers : existingLayers
+          existingLayers : existingLayers,
+          mdRelationshipId : mdRelationshipId
         }
       }      
       
