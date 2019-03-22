@@ -48,7 +48,6 @@ import com.runwaysdk.business.RelationshipQuery;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
-import com.runwaysdk.dataaccess.CannotDeleteReferencedObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
@@ -60,7 +59,6 @@ import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdRelationshipDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
-import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
@@ -70,6 +68,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
@@ -1291,7 +1290,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   {
     Universal universal = Universal.get(parentId);
     MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(mdRelationshipId);
-
+    
     List<Term> children = (List<Term>) universal.getDirectDescendants(mdRelationship.definesType()).getAll();
 
     return children.toArray(new Universal[children.size()]);
@@ -1336,6 +1335,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       }
     }
 
-    return MdRelationshipDAO.getMdRelationshipDAO(LocatedIn.CLASS).getOid();
+    return MdRelationshipDAO.getMdRelationshipDAO(AllowedIn.CLASS).getOid();
   }
 }
