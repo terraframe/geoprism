@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -36,14 +37,18 @@ import org.postgis.jts.JtsGeometry;
 
 import com.runwaysdk.dataaccess.AttributeIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
+import com.runwaysdk.dataaccess.MdStructDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.metadata.MdStructDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.dataaccess.AttributeGeometryIF;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabel;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeometryType;
 import com.vividsolutions.jts.geom.Envelope;
@@ -85,7 +90,7 @@ public abstract class LayerPublisher
     this.geometryType = geometryType;
     this.gjson = new GeometryJSON(8);
   }
-  
+
   public MdRelationshipDAOIF getMdRelationship()
   {
     return mdRelationship;
@@ -94,6 +99,25 @@ public abstract class LayerPublisher
   public GeometryType getGeometryType()
   {
     return geometryType;
+  }
+
+  protected String getLabelColumn()
+  {
+    String labelColumn = "default_locale";
+
+    Locale locale = Session.getCurrentLocale();
+
+    if (locale != null)
+    {
+      MdStructDAOIF mdStruct = MdStructDAO.getMdStructDAO(GeoEntityDisplayLabel.CLASS);
+
+      if (mdStruct.definesAttribute(locale.toString()) != null)
+      {
+        labelColumn = locale.toString();
+      }
+    }
+
+    return labelColumn;
   }
 
   protected String getGeometryColumn()
