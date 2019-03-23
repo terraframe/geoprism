@@ -23,9 +23,13 @@
  }	
 
  #login-page {
-    background-image: url(../images/login-background.jpg);
+    background: url(../images/login-background.jpg) no-repeat center center fixed;
     background-size: 100%;
     background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
  }
  
  

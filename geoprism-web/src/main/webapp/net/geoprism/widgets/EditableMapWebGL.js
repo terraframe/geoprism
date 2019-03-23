@@ -272,6 +272,7 @@
       
       $scope.$emit('locationEditNew', {
         wkt: _wkt,
+        geojson: geojson,
         afterApply: function(){
           controller._isEditing = false;
           
