@@ -113,7 +113,7 @@ public abstract class LayerPublisher
 
       if (mdStruct.definesAttribute(locale.toString()) != null)
       {
-        labelColumn = locale.toString();
+        labelColumn = locale.toString().toLowerCase();
       }
     }
 

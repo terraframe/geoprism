@@ -70,6 +70,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
@@ -1336,6 +1337,6 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       }
     }
 
-    return MdRelationshipDAO.getMdRelationshipDAO(LocatedIn.CLASS).getOid();
+    return MdRelationshipDAO.getMdRelationshipDAO(AllowedIn.CLASS).getOid();
   }
 }

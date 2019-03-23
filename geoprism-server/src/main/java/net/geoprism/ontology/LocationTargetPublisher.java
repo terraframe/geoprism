@@ -182,7 +182,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     String labelColumn = this.getLabelColumn();
 
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.oid, gdl." + labelColumn + ", ge.geo_id, ST_Transform(ge." + column + ", 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("SELECT ge.oid, gdl." + labelColumn + " AS default_locale, ge.geo_id, ST_Transform(ge." + column + ", 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.oid = ge.display_label\n");
     sql.append("JOIN " + this.getMdRelationship().getTableName() + " AS li ON li.child_oid = ge.oid\n");
