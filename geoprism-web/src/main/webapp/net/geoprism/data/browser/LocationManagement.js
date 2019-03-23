@@ -21,6 +21,7 @@
     var controller = this;
 
     controller.init = function() {
+    	
       var connection = {
         elementId: '#innerFrameHtml',
         onSuccess: function(data) {
