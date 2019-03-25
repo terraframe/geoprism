@@ -29,12 +29,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.geotools.geojson.geom.GeometryJSON;
+import org.hsqldb.lib.StringInputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 import org.postgis.jts.JtsGeometry;
 
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import com.runwaysdk.dataaccess.AttributeIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.MdStructDAOIF;
@@ -105,17 +108,17 @@ public abstract class LayerPublisher
   {
     String labelColumn = "default_locale";
 
-    Locale locale = Session.getCurrentLocale();
-
-    if (locale != null)
-    {
-      MdStructDAOIF mdStruct = MdStructDAO.getMdStructDAO(GeoEntityDisplayLabel.CLASS);
-
-      if (mdStruct.definesAttribute(locale.toString()) != null)
-      {
-        labelColumn = locale.toString().toLowerCase();
-      }
-    }
+//    Locale locale = Session.getCurrentLocale();
+//
+//    if (locale != null)
+//    {
+//      MdStructDAOIF mdStruct = MdStructDAO.getMdStructDAO(GeoEntityDisplayLabel.CLASS);
+//
+//      if (mdStruct.definesAttribute(locale.toString()) != null)
+//      {
+//        labelColumn = locale.toString().toLowerCase();
+//      }
+//    }
 
     return labelColumn;
   }
@@ -438,9 +441,11 @@ public abstract class LayerPublisher
 
       while (resultSet.next())
       {
+        String label = resultSet.getString("default_locale");
+        
         Map<String, String> data = new TreeMap<String, String>();
         data.put(GeoEntity.OID, resultSet.getString("oid"));
-        data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
+        data.put(GeoEntity.DISPLAYLABEL, label);
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
         data.put("height", "15"); // TODO: This should be set on the GeoEntity
         data.put("base", "0"); // TODO: This should be set on the GeoEntity
