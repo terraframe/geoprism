@@ -270,7 +270,7 @@ public class LocationController
       JSONObject synonym = synonyms.getJSONObject(i);
 
       String oid = synonym.getString("oid");
-      if (oid.length() == 64)
+      if (oid.length() == 36)
       {
         SynonymDTO syn = SynonymDTO.get(request, oid);
         syn.getDisplayLabel().setValue(synonym.getString("displayLabel"));
