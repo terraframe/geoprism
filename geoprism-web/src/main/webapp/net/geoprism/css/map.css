@@ -159,7 +159,9 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	}
 	
 	
-	
+.warning-text{
+  color: orange;
+}
 	
 	
 button.enable-edit-mode-btn {
