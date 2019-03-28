@@ -478,8 +478,8 @@
         
         controller.updateVectorLayer(data, layers);
         
-        controller.addVectorHoverEvents(hoverCallback, ["target-multipolygon"]);
-        controller.addVectorClickEvents(featureClickCallback, ["target-multipolygon"]);
+        controller.addVectorHoverEvents(hoverCallback, ["target-multipolygon", "target-multipolygon-point"]);
+        controller.addVectorClickEvents(featureClickCallback, ["target-multipolygon", "target-multipolygon-point"]);
         
         if (bboxObj != null)
         {
