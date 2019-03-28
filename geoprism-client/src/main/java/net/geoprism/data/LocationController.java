@@ -29,7 +29,6 @@ import org.json.JSONObject;
 import com.runwaysdk.business.ValueObjectDTO;
 import com.runwaysdk.business.ValueQueryDTO;
 import com.runwaysdk.constants.ClientRequestIF;
-
 import com.runwaysdk.mvc.Controller;
 import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
@@ -48,8 +47,10 @@ import com.runwaysdk.system.metadata.MdRelationshipDTO;
 import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.ExcludeConfiguration;
+import net.geoprism.GeoprismUserDTO;
 import net.geoprism.InputStreamResponse;
 import net.geoprism.ListSerializable;
+import net.geoprism.RoleViewDTO;
 import net.geoprism.gis.geoserver.GeoserverProperties;
 import net.geoprism.ontology.GeoEntityUtilDTO;
 
@@ -116,6 +117,17 @@ public class LocationController
 
     // if (children.getCount() > 0)
     // {
+//    JSONArray jaRoles = new JSONArray();
+//    RoleViewDTO[] roles = RoleViewDTO.getRoles(request, (GeoprismUserDTO) net.geoprism.GeoprismUserDTO.getCurrentUser(request));
+//    for (RoleViewDTO role : roles)
+//    {
+//      JSONObject jo = new JSONObject();
+//      jo.put("assigned", role.getAssigned());
+//      jo.put("label", role.getDisplayLabel());
+//      jaRoles.put(jo);
+//    }
+    response.set("roles", new JSONArray(RoleViewDTO.getCurrentRoles(request)));
+    
     response.set("children", children);
 
     response.set("universals", new ListSerializable(Arrays.asList(universals)));

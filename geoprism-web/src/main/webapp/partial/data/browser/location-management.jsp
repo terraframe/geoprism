@@ -117,13 +117,13 @@
 									<!-- Disabled feature (due to lack of resources): The ability to edit a feature by clicking in the dropdown list
 	              <span class="inner-action fa fa-globe ico-edit-geometry" ng-click="ctrl.editGeometry(child)"></span>
 	              -->
-									<span class="inner-action fa fa-pencil ico-edit"
+									<span ng-if="ctrl.isMaintainer()" class="inner-action fa fa-pencil ico-edit"
 										ng-click="ctrl.edit(child)"
 										title="<gdb:localize key="location.management.editTooltip"/>"></span>
-									<span class="inner-action fa fa-link ico-synonym"
+									<span ng-if="ctrl.isMaintainer()" class="inner-action fa fa-link ico-synonym"
 										ng-click="ctrl.viewSynonyms(child)"
 										title="<gdb:localize key="location.management.synonymsTooltip"/>"></span>
-									<span class="inner-action fa fa-trash-o ico-remove"
+									<span ng-if="ctrl.isMaintainer()" class="inner-action fa fa-trash-o ico-remove"
 										ng-click="ctrl.remove(child)"
 										title="<gdb:localize key="location.management.removeTooltip"/>"></span>
 								</div>

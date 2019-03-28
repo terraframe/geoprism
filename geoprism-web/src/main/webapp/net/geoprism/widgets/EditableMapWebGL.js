@@ -544,6 +544,13 @@
         controller.refreshWithContextLayer('sharedGeoData');
       }
     });
+    
+    $scope.$on("roleUpdate", function(event, data) {
+      if (!data.isMaintainer)
+      {
+  	    controller._geoprismEditingControl.onRemove();
+      }
+    });
 
     $scope.$on("layerChange", function(event, data) {
       $scope.sharedGeoData = data;
@@ -629,7 +636,8 @@
         },
         
         onRemove : function() {
-          this._container.parentNode.removeChild(this._container);
+//          this._container.parentNode.removeChild(this._container);
+          this._container.remove();
           this._map = undefined;
         },
         
