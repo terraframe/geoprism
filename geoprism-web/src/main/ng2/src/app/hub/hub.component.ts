@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -50,14 +50,16 @@ export class HubComponent implements OnInit {
 	private authService:AuthService,
 	private profileService:ProfileService,
 	private modalService: BsModalService,
-	private router:Router) {
+	private router:Router,
+	private route:ActivatedRoute
+	) {
 	  
     this.context = acp as string;
   }
   
   ngOnInit():void {
     this.service.applications().then(applications => {
-      this.applications = applications;
+      this.applications = applications;      
     }); 	  
     
     this.isAdmin = this.authService.isAdmin();
