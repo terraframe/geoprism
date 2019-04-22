@@ -2,36 +2,58 @@
     <login-header></login-header>
 
     <message></message>
-    <div id="app-container" class="container">
- 
-        <div class="col-md-4 col-sm-4 col-xs-2"></div>
-        <div class="col-md-4 col-sm-4 col-xs-8">
-            <div class="row-fluid">
+    <div class="vertical-center">
+        <div id="app-container" class="container">
 
-                <form id="login-form" class="login" #form="ngForm" (ngSubmit)="form.valid && onSubmit()">
-                    <div id="login-input-container">
-                        <div class="row">
-                            <input [(ngModel)]="username" name="username" type="text" [placeholder]="'login.username' | localize"
-                                id="login" required />
-                            <input [(ngModel)]="password" name="password" type="password" [placeholder]="'login.password' | localize"
-                                id="password" required />
-                            <a routerLink="/forgotpassword" class="forgot-password">
-                                <localize key="login.forgotPassword"></localize>
-                            </a>
+            <div class="row">
+                <div class="col-md-3 col-sm-4 col-xs-2"></div>
+                <div class="col-md-6 col-sm-4 col-xs-8">
+                    <div class="row" style="margin-bottom: 25px;">
+                        <div class="col-md-12">
+
+                            <div class="heading text-center">
+                                <h2>
+                                    <localize key="login.page.title"></localize>
+                                </h2>
+                                <!-- <p class="lead">
+                                    <localize key="login.page.description"></localize>
+                                </p> -->
+                            </div>
+
                         </div>
-                        <!-- <p class="login-submit"> -->
-                        <div class="row">
-                          <button type="submit" id="login-btn" class="btn btn-primary" [disabled]="!(form.valid)">
-                            <localize key="login.button"></localize>
-                          </button>
-                        </div>
-                        <!-- </p> -->
                     </div>
-                </form>
 
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form id="login-form" class="login" #form="ngForm" (ngSubmit)="form.valid && onSubmit()">
+                                <div id="login-input-container">
+                                    <div class="row">
+                                        <input [(ngModel)]="username" name="username" type="text"
+                                            [placeholder]="'login.username' | localize" id="login" required />
+                                        <input [(ngModel)]="password" name="password" type="password"
+                                            [placeholder]="'login.password' | localize" id="password" required />
+                                        <a routerLink="/forgotpassword" class="forgot-password">
+                                            <localize key="login.forgotPassword"></localize>
+                                        </a>
+                                    </div>
+                                    <!-- <p class="login-submit"> -->
+                                    <div class="row">
+                                        <button type="submit" id="login-btn" class="btn btn-primary"
+                                            [disabled]="!(form.valid)">
+                                            <localize key="login.button"></localize>
+                                        </button>
+                                    </div>
+                                    <!-- </p> -->
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-2"></div>
             </div>
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-2"></div>
     </div>
 </div>
 
