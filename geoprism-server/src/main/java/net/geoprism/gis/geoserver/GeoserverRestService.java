@@ -90,6 +90,31 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to reload geoserver.");
     }
   }
+  
+  @Override
+  public void publishS3GeoTIFF(String storeName, String url)
+  {
+    if (GeoserverProperties.getPublisher().)
+    {
+      log.info("Removed the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+    else
+    {
+      log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+  }
+  
+  public void removeCoverageStore(String storeName)
+  {
+    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
+    {
+      log.info("Removed the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+    else
+    {
+      log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+  }
 
   public void removeStore()
   {
@@ -724,5 +749,4 @@ public class GeoserverRestService implements GeoserverService
       iter.close();
     }
   }
-
 }

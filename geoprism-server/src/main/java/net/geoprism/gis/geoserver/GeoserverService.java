@@ -26,6 +26,8 @@ public interface GeoserverService
   public void refresh();
 
   public void removeStore();
+  
+  public void removeCoverageStore(String storeName);
 
   public void removeWorkspace();
 
@@ -154,4 +156,6 @@ public interface GeoserverService
   public double[] getExpandedBBOX(List<String> views, double expandVal);
 
   public boolean workspaceExists();
+
+  public void publishS3GeoTIFF(String storeName, String url);
 }

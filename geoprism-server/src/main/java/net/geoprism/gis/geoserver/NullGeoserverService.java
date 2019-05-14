@@ -192,4 +192,16 @@ public class NullGeoserverService implements GeoserverService
     return new double[] { 0, 0, 0, 0 };
   }
 
+  @Override
+  public void removeCoverageStore(String storeName)
+  {
+    
+  }
+
+  @Override
+  public void publishS3GeoTIFF(String storeName, String url)
+  {
+    
+  }
+
 }

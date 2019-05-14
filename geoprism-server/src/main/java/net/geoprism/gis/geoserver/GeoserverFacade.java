@@ -264,5 +264,20 @@ public class GeoserverFacade
   {
     return getService().getExpandedBBOX(views, expandVal);
   }
+
+  public static void forceRemoveLayer(String storeName)
+  {
+    getService().forceRemoveLayer(storeName);
+  }
+
+  public static void removeCoverageStore(String storeName)
+  {
+    getService().removeCoverageStore(storeName);
+  }
+
+  public static void publishS3GeoTIFF(String storeName, String url)
+  {
+    getService().publishS3GeoTIFF(storeName, url);
+  }
   
 }
