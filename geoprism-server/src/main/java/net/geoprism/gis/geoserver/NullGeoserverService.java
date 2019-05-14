@@ -198,9 +198,16 @@ public class NullGeoserverService implements GeoserverService
     
   }
 
+//  @Override
+//  public void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    
+//  }
+
   @Override
-  public void publishS3GeoTIFF(String storeName, String url)
+  public void publishGeoTiff(String storeName, File geoTiff)
   {
+    // TODO Auto-generated method stub
     
   }
 

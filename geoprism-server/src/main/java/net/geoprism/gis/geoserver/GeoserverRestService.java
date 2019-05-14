@@ -18,36 +18,41 @@
  */
 package net.geoprism.gis.geoserver;
 
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
-import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
-import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
-
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.layer.DashboardLayer;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.dataaccess.ValueObject;
-
 import com.runwaysdk.gis.mapping.gwc.SeedRequest;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
+
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
+import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
+import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
+import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.layer.DashboardLayer;
 
 public class GeoserverRestService implements GeoserverService
 {
@@ -91,18 +96,93 @@ public class GeoserverRestService implements GeoserverService
     }
   }
   
-  @Override
-  public void publishS3GeoTIFF(String storeName, String url)
+//  public S3Object download(String key)
+//  {
+////  AmazonS3 client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+//    AmazonS3 client = new AmazonS3Client();
+//    
+////    String bucketName = AppProperties.getBucketName();
+//    String bucketName = "";
+//
+//    GetObjectRequest request = new GetObjectRequest(bucketName, key);
+//
+//    return client.getObject(request);
+//  }
+  
+  public void publishGeoTiff(String storeName, File geoTiff)
   {
-    if (GeoserverProperties.getPublisher().)
+    try
     {
-      log.info("Removed the coverage store [" + GeoserverProperties.getStore() + "].");
+      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, geoTiff))
+      {
+        GeoserverProperties.getPublisher().publishStyle("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+            "<StyledLayerDescriptor version=\"1.0.0\" \n" + 
+            " xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" \n" + 
+            " xmlns=\"http://www.opengis.net/sld\" \n" + 
+            " xmlns:ogc=\"http://www.opengis.net/ogc\" \n" + 
+            " xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n" + 
+            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
+            "  <!-- a Named Layer is the basic building block of an SLD document -->\n" + 
+            "  <NamedLayer>\n" + 
+            "    <Name>default_raster</Name>\n" + 
+            "    <UserStyle>\n" + 
+            "    <!-- Styles can have names, titles and abstracts -->\n" + 
+            "      <Title>Default Raster</Title>\n" + 
+            "      <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>\n" + 
+            "      <!-- FeatureTypeStyles describe how to render different features -->\n" + 
+            "      <!-- A FeatureTypeStyle for rendering rasters -->\n" + 
+            "      <FeatureTypeStyle>\n" + 
+            "        <Rule>\n" + 
+            "          <Name>rule1</Name>\n" + 
+            "          <Title>Opaque Raster</Title>\n" + 
+            "          <Abstract>A raster with 100% opacity</Abstract>\n" + 
+            "          <RasterSymbolizer>\n" + 
+            "            <Opacity>1.0</Opacity>\n" + 
+            "          </RasterSymbolizer>\n" + 
+            "        </Rule>\n" + 
+            "      </FeatureTypeStyle>\n" + 
+            "    </UserStyle>\n" + 
+            "  </NamedLayer>\n" + 
+            "</StyledLayerDescriptor>\n" + 
+            "", storeName);
+        
+        log.info("Published geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
+      }
+      else
+      {
+        log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
+      }
     }
-    else
+    catch (Throwable t)
     {
-      log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+      log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].", t);
     }
   }
+  
+//  @Override
+//  public void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    try
+//    {
+//      S3Object s3Obj = download(url);
+//      
+//      File temp = Files.createTempFile("geotiff-" + storeName, ".tif").toFile();
+//      IOUtils.copy(s3Obj.getObjectContent(), new FileOutputStream(temp));
+//      
+//      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, temp))
+//      {
+//        log.info("Published s3 geo tiff [" + storeName + "], [" + url + "].");
+//      }
+//      else
+//      {
+//        log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].");
+//      }
+//    }
+//    catch (Throwable t)
+//    {
+//      log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].", t);
+//    }
+//  }
   
   public void removeCoverageStore(String storeName)
   {

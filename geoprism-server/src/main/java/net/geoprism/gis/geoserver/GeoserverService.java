@@ -157,5 +157,7 @@ public interface GeoserverService
 
   public boolean workspaceExists();
 
-  public void publishS3GeoTIFF(String storeName, String url);
+//  public void publishS3GeoTIFF(String storeName, String url);
+  
+  public void publishGeoTiff(String storeName, File geoTiff);
 }
