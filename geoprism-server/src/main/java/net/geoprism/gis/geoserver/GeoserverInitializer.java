@@ -18,34 +18,42 @@
  */
 package net.geoprism.gis.geoserver;
 
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Collection;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.session.Request;
 
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import net.geoprism.PluginUtil;
 
+/**
+ * Maintains an initialization thread, which exits upon initial server setup, and a general cleanup thread
+ * which runs indefinitely.
+ * 
+ * @author rrowlands
+ */
 public class GeoserverInitializer implements UncaughtExceptionHandler
 {
   private static boolean               initialized = false;
 
   private static final ReentrantLock   lock        = new ReentrantLock();
 
-  private static final Log             initLog     = LogFactory.getLog(GeoserverInitializer.class);
+  private static final Logger          initLogger     = LoggerFactory.getLogger(GeoserverInitializer.class);
 
-  private static final CleanupRunnable cleanup     = new CleanupRunnable();
+  private static CleanupThread cleanupThread;
 
-  // private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+  private static InitializerThread initializerThread;
 
-  public static class CheckThread implements Runnable
+  public static class InitializerThread extends Thread
   {
 
-    private static final Log log = LogFactory.getLog(CheckThread.class);
+    private static final Logger logger = LoggerFactory.getLogger(InitializerThread.class);
 
-    public CheckThread()
+    public InitializerThread()
     {
       super();
     }
@@ -55,44 +63,34 @@ public class GeoserverInitializer implements UncaughtExceptionHandler
     {
       GeoServerRESTReader reader = GeoserverProperties.getReader();
 
-      while (true)
+      while (!Thread.interrupted())
       {
         try
         {
           lock.lock();
 
-          log.debug("Attempting to check existence of geoserver");
+          logger.debug("Attempting to check existence of geoserver");
 
           if (reader.existGeoserver())
           {
-            log.debug("Geoserver available.");
+            logger.debug("Geoserver available.");
 
-            // To prevent a problem if the database connection information of the
-            // datastore ever changes we must delete and recreate the store and workspace.
-            if (GeoserverFacade.workspaceExists())
-            {
-              GeoserverFacade.removeWorkspace();
-              GeoserverFacade.removeStore();
-            }
-
-            GeoserverFacade.publishWorkspace();
-            GeoserverFacade.publishStore();
+            runInRequest();
 
             initialized = true;
-            log.debug("Geoserver initialized.");
+            logger.debug("Geoserver initialized.");
             return; // we are done here
           }
           else
           {
             try
             {
-              log.debug("Waiting for Geoserver to start.");
+              logger.debug("Waiting for Geoserver to start.");
               Thread.sleep(1000);
             }
             catch (InterruptedException e)
             {
-              // allow another try
-              log.warn(e);
+              return;
             }
           }
         }
@@ -100,13 +98,36 @@ public class GeoserverInitializer implements UncaughtExceptionHandler
         {
           // we couldn't hit the application correctly, so log the error
           // and quit the loop to avoid excessive logging
-          log.error("Unable to start the application.", t);
+          logger.error("Unable to start the application.", t);
           return;
         }
         finally
         {
           lock.unlock();
         }
+      }
+    }
+    
+    @Request
+    private void runInRequest()
+    {
+      logger.info("Deleting ALL geoserver data and republshing workspace and store.");
+      
+      // To prevent a problem if the database connection information of the
+      // datastore ever changes we must delete and recreate the store and workspace.
+      if (GeoserverFacade.workspaceExists())
+      {
+        GeoserverFacade.removeWorkspace();
+        GeoserverFacade.removeStore();
+      }
+
+      GeoserverFacade.publishWorkspace();
+      GeoserverFacade.publishStore();
+      
+      Collection<GeoserverInitializerIF> initializers = PluginUtil.getGeoserverInitializers();
+      for (GeoserverInitializerIF initializer : initializers)
+      {
+        initializer.initialize();
       }
     }
 
@@ -126,34 +147,32 @@ public class GeoserverInitializer implements UncaughtExceptionHandler
     }
   }
 
-  public static void setup()
+  public static void startup()
   {
     GeoserverInitializer init = new GeoserverInitializer();
 
     try
     {
-      initLog.debug("Attempting to initialize context.");
+      initLogger.debug("Attempting to initialize context.");
 
       // create another thread to avoid blocking the one starting the webapps.
-      Thread t = new Thread(new CheckThread());
-      t.setUncaughtExceptionHandler(init);
-      t.setDaemon(true);
-      t.start();
+      initializerThread = new InitializerThread();
+      initializerThread.setUncaughtExceptionHandler(init);
+      initializerThread.setDaemon(true);
+      initializerThread.start();
 
-      initLog.debug("Context initialized...[" + GeoserverInitializer.class + "] started.");
+      initLogger.debug("Context initialized...[" + GeoserverInitializer.class + "] started.");
     }
     catch (Throwable t)
     {
-      initLog.error("Could not initialize context.", t);
+      initLogger.error("Could not initialize context.", t);
     }
 
     // Start the mapping database view cleanup thread
-    Thread t = new Thread(cleanup);
-    t.setUncaughtExceptionHandler(init);
-    t.setDaemon(true);
-    t.start();
-
-    // scheduler.scheduleWithFixedDelay(new CleanupRunnable(), 1, 5, TimeUnit.MINUTES);
+    cleanupThread = new CleanupThread();
+    cleanupThread.setUncaughtExceptionHandler(init);
+    cleanupThread.setDaemon(true);
+    cleanupThread.start();
   }
 
   /**
@@ -162,13 +181,20 @@ public class GeoserverInitializer implements UncaughtExceptionHandler
   @Override
   public void uncaughtException(Thread t, Throwable e)
   {
-    initLog.error(t, e);
+    initLogger.error("Exception occurred in thread [" + t.getName() + "].", e);
   }
 
   public static void shutdown()
   {
-    // Shutdown the mapping database view cleanup thread
-    cleanup.shutdown();
+    if (initializerThread != null)
+    {
+      initializerThread.interrupt();
+    }
+    
+    if (cleanupThread != null)
+    {
+      cleanupThread.interrupt();
+    }
   }
 
 }
