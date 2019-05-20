@@ -67,7 +67,7 @@
             </div>          
             <div class="holder" >
               <span class="text">
-                <input type="text" [(ngModel)]="account.user.username" name="username" required>
+                <input type="text" [disabled]="!account.user.newInstance && account.user.username === 'admin'" [(ngModel)]="account.user.username" name="username" required>
               </span>
             </div>
           </div>
@@ -106,6 +106,16 @@
                 </div>                                                       
               </div>
             </div>  
+          </div>
+          <div *ngIf="!(!account.user.newInstance && account.user.username === 'admin')">
+            <div class="row-holder">
+              <div class="label-holder">
+                <label><localize [key]="account.inactive"></localize></label>
+              </div>
+              <div class="holder">
+                <boolean-field [(value)]="account.user.inactive"></boolean-field>
+              </div>
+            </div>
           </div>
           <div *ngFor="let group of account.groups">
             <div class="heading">
