@@ -154,4 +154,8 @@ public interface GeoserverService
   public double[] getExpandedBBOX(List<String> views, double expandVal);
 
   public boolean workspaceExists();
+
+  public boolean publishS3GeoTIFF(String storeName, String url);
+
+  public void removeCoverageStore(String storeName);
 }
