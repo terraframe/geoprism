@@ -18,12 +18,15 @@
  */
 package net.geoprism;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import net.geoprism.dhis2.DHIS2PluginIF;
+import net.geoprism.gis.geoserver.GeoserverInitializerIF;
 
 public class PluginUtil extends PluginUtilBase 
 {
@@ -70,6 +73,28 @@ public class PluginUtil extends PluginUtilBase
     System.out.println("Patcher resolved to " + patcher.getClass().getName());
     
     return patcher;
+  }
+  
+  public static Collection<GeoserverInitializerIF> getGeoserverInitializers()
+  {
+    ServiceLoader<GeoserverInitializerIF> loader = ServiceLoader.load(GeoserverInitializerIF.class, Thread.currentThread().getContextClassLoader());
+
+    ArrayList<GeoserverInitializerIF> initializers = new ArrayList<GeoserverInitializerIF>();
+    
+    try
+    {
+      Iterator<GeoserverInitializerIF> it = loader.iterator();
+
+      GeoserverInitializerIF initializer = it.next();
+      
+      initializers.add(initializer);
+    }
+    catch (ServiceConfigurationError | NoSuchElementException ex)
+    {
+      
+    }
+    
+    return initializers;
   }
   
 }

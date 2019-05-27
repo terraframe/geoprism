@@ -279,4 +279,18 @@ public class GeoserverFacade
     getService().removeCoverageStore(storeName);
   }
 
+//  public static void forceRemoveLayer(String storeName)
+//  {
+//    getService().forceRemoveLayer(storeName);
+//  }
+//
+//  public static void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    getService().publishS3GeoTIFF(storeName, url);
+//  }
+
+  public static void publishGeoTiff(String storeName, File tiff)
+  {
+    getService().publishGeoTiff(storeName, tiff);
+  }
 }

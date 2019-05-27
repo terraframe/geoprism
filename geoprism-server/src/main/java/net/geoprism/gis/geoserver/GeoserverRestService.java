@@ -109,6 +109,106 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to reload geoserver.");
     }
   }
+  
+//  public S3Object download(String key)
+//  {
+////  AmazonS3 client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+//    AmazonS3 client = new AmazonS3Client();
+//    
+////    String bucketName = AppProperties.getBucketName();
+//    String bucketName = "";
+//
+//    GetObjectRequest request = new GetObjectRequest(bucketName, key);
+//
+//    return client.getObject(request);
+//  }
+  
+  public void publishGeoTiff(String storeName, File geoTiff)
+  {
+    try
+    {
+      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, geoTiff))
+      {
+        GeoserverProperties.getPublisher().publishStyle("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+            "<StyledLayerDescriptor version=\"1.0.0\" \n" + 
+            " xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" \n" + 
+            " xmlns=\"http://www.opengis.net/sld\" \n" + 
+            " xmlns:ogc=\"http://www.opengis.net/ogc\" \n" + 
+            " xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n" + 
+            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
+            "  <!-- a Named Layer is the basic building block of an SLD document -->\n" + 
+            "  <NamedLayer>\n" + 
+            "    <Name>default_raster</Name>\n" + 
+            "    <UserStyle>\n" + 
+            "    <!-- Styles can have names, titles and abstracts -->\n" + 
+            "      <Title>Default Raster</Title>\n" + 
+            "      <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>\n" + 
+            "      <!-- FeatureTypeStyles describe how to render different features -->\n" + 
+            "      <!-- A FeatureTypeStyle for rendering rasters -->\n" + 
+            "      <FeatureTypeStyle>\n" + 
+            "        <Rule>\n" + 
+            "          <Name>rule1</Name>\n" + 
+            "          <Title>Opaque Raster</Title>\n" + 
+            "          <Abstract>A raster with 100% opacity</Abstract>\n" + 
+            "          <RasterSymbolizer>\n" + 
+            "            <Opacity>1.0</Opacity>\n" + 
+            "          </RasterSymbolizer>\n" + 
+            "        </Rule>\n" + 
+            "      </FeatureTypeStyle>\n" + 
+            "    </UserStyle>\n" + 
+            "  </NamedLayer>\n" + 
+            "</StyledLayerDescriptor>\n" + 
+            "", storeName);
+        
+        log.info("Published geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
+      }
+      else
+      {
+        log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
+      }
+    }
+    catch (Throwable t)
+    {
+      log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].", t);
+    }
+  }
+  
+//  @Override
+//  public void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    try
+//    {
+//      S3Object s3Obj = download(url);
+//      
+//      File temp = Files.createTempFile("geotiff-" + storeName, ".tif").toFile();
+//      IOUtils.copy(s3Obj.getObjectContent(), new FileOutputStream(temp));
+//      
+//      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, temp))
+//      {
+//        log.info("Published s3 geo tiff [" + storeName + "], [" + url + "].");
+//      }
+//      else
+//      {
+//        log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].");
+//      }
+//    }
+//    catch (Throwable t)
+//    {
+//      log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].", t);
+//    }
+//  }
+  
+  public void removeCoverageStore(String storeName)
+  {
+    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
+    {
+      log.info("Removed the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+    else
+    {
+      log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+  }
 
   public void removeStore()
   {
@@ -122,17 +222,17 @@ public class GeoserverRestService implements GeoserverService
     }
   }
 
-  public void removeCoverageStore(String storeName)
-  {
-    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
-    {
-      log.info("Removed the datastore [" + GeoserverProperties.getStore() + "].");
-    }
-    else
-    {
-      log.warn("Failed to remove the datastore [" + GeoserverProperties.getStore() + "].");
-    }
-  }
+//  public void removeCoverageStore(String storeName)
+//  {
+//    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
+//    {
+//      log.info("Removed the datastore [" + GeoserverProperties.getStore() + "].");
+//    }
+//    else
+//    {
+//      log.warn("Failed to remove the datastore [" + GeoserverProperties.getStore() + "].");
+//    }
+//  }
 
   public void removeWorkspace()
   {
@@ -850,5 +950,4 @@ public class GeoserverRestService implements GeoserverService
     }
     return success;
   }
-
 }

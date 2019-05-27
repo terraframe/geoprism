@@ -18,41 +18,29 @@
  */
 package net.geoprism.gis.geoserver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
-public class CleanupRunnable implements Runnable
+public class CleanupThread extends Thread
 {
   /**
    * Delay in milliseconds. Set to 5 minutes
    */
   private static final int DELAY = 1000 * 60 * 5;
 
-  private static final Log log   = LogFactory.getLog(CleanupRunnable.class);
+  private static final Logger logger   = LoggerFactory.getLogger(CleanupThread.class);
 
-  private boolean          running;
-
-  public CleanupRunnable()
+  public CleanupThread()
   {
-    this.running = true;
-  }
-
-  public synchronized boolean isRunning()
-  {
-    return running;
-  }
-
-  public synchronized void setRunning(boolean running)
-  {
-    this.running = running;
+    
   }
 
   @Override
   public void run()
   {
-    while (this.isRunning())
+    while (!Thread.interrupted())
     {
       try
       {
@@ -60,6 +48,7 @@ public class CleanupRunnable implements Runnable
       }
       catch (InterruptedException e)
       {
+        return;
       }
 
       try
@@ -69,16 +58,9 @@ public class CleanupRunnable implements Runnable
       }
       catch (Exception e)
       {
-        log.error(e.getMessage(), e);
-
-        e.printStackTrace();
+        logger.error("Cleanup runnable encountered an error.", e);
       }
     }
-  }
-
-  public void shutdown()
-  {
-    this.setRunning(false);
   }
 
 }
