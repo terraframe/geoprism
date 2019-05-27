@@ -38,11 +38,6 @@ public class NullGeoserverService implements GeoserverService
   }
   
   @Override
-  public void removeCoverageStore(String storeName)
-  {
-  }
-
-  @Override
   public void removeWorkspace()
   {
 
@@ -198,11 +193,11 @@ public class NullGeoserverService implements GeoserverService
   }
 
   @Override
-<<<<<<< HEAD
   public boolean publishS3GeoTIFF(String storeName, String url)
   {
     return true;
-=======
+  }
+  
   public void removeCoverageStore(String storeName)
   {
     
@@ -218,8 +213,6 @@ public class NullGeoserverService implements GeoserverService
   public void publishGeoTiff(String storeName, File geoTiff)
   {
     // TODO Auto-generated method stub
-    
->>>>>>> refs/remotes/origin/image-server
   }
 
 }

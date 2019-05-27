@@ -27,8 +27,6 @@ public interface GeoserverService
 
   public void removeStore();
   
-  public void removeCoverageStore(String storeName);
-
   public void removeWorkspace();
 
   public void publishWorkspace();
@@ -157,13 +155,9 @@ public interface GeoserverService
 
   public boolean workspaceExists();
 
-<<<<<<< HEAD
   public boolean publishS3GeoTIFF(String storeName, String url);
 
   public void removeCoverageStore(String storeName);
-=======
-//  public void publishS3GeoTIFF(String storeName, String url);
   
   public void publishGeoTiff(String storeName, File geoTiff);
->>>>>>> refs/remotes/origin/image-server
 }
