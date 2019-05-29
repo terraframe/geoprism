@@ -3,27 +3,25 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
 import java.io.File;
 import java.util.List;
 
-
-
-public class GeoserverFacade 
+public class GeoserverFacade
 {
   public static final String      GEOM_COLUMN = "geom";
 
@@ -56,12 +54,11 @@ public class GeoserverFacade
   {
     getService().removeStore();
   }
-  
+
   public static boolean workspaceExists()
   {
     return getService().workspaceExists();
   }
-
 
   public static void removeWorkspace()
   {
@@ -100,7 +97,8 @@ public class GeoserverFacade
   }
 
   /**
-   * Checks if the cache directory exists. This method does not check what tiles or zoom levels have been cached.
+   * Checks if the cache directory exists. This method does not check what tiles
+   * or zoom levels have been cached.
    * 
    * @param cacheName
    * @return
@@ -129,7 +127,8 @@ public class GeoserverFacade
   }
 
   /**
-   * Removes the style defined in Geoserver, including the .sld and .xml file artifacts.
+   * Removes the style defined in Geoserver, including the .sld and .xml file
+   * artifacts.
    * 
    * @param styleName
    *          The name of the style to delete.
@@ -179,7 +178,7 @@ public class GeoserverFacade
   {
     return getService().publishLayer(layer.getLayerName(), layer.getStyleName());
   }
-  
+
   /**
    * Removes the layer from geoserver.
    * 
@@ -189,6 +188,11 @@ public class GeoserverFacade
   public static void removeLayer(String layer)
   {
     getService().removeLayer(layer);
+  }
+
+  public static void forceRemoveLayer(String layer)
+  {
+    getService().forceRemoveLayer(layer);
   }
 
   public static void publishCache(String layer)
@@ -265,9 +269,9 @@ public class GeoserverFacade
     return getService().getExpandedBBOX(views, expandVal);
   }
 
-  public static void forceRemoveLayer(String storeName)
+  public static boolean publishS3GeoTIFF(String storeName, String url)
   {
-    getService().forceRemoveLayer(storeName);
+    return getService().publishS3GeoTIFF(storeName, url);
   }
 
   public static void removeCoverageStore(String storeName)
@@ -275,14 +279,18 @@ public class GeoserverFacade
     getService().removeCoverageStore(storeName);
   }
 
+//  public static void forceRemoveLayer(String storeName)
+//  {
+//    getService().forceRemoveLayer(storeName);
+//  }
+//
 //  public static void publishS3GeoTIFF(String storeName, String url)
 //  {
 //    getService().publishS3GeoTIFF(storeName, url);
 //  }
-  
+
   public static void publishGeoTiff(String storeName, File tiff)
   {
     getService().publishGeoTiff(storeName, tiff);
   }
-  
 }

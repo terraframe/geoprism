@@ -110,7 +110,7 @@
           <div *ngIf="!(!account.user.newInstance && account.user.username === 'admin')">
             <div class="row-holder">
               <div class="label-holder">
-                <label><localize [key]="account.inactive"></localize></label>
+                <label><localize key="account.inactive"></localize></label>
               </div>
               <div class="holder">
                 <boolean-field [(value)]="account.user.inactive"></boolean-field>
