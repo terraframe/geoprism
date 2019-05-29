@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -34,7 +34,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.SingleActor;
 
-public class RoleView extends RoleViewBase 
+public class RoleView extends RoleViewBase
 {
   private static final long  serialVersionUID    = -875685428;
 
@@ -89,32 +89,29 @@ public class RoleView extends RoleViewBase
 
     return array.toString();
   }
-  
+
   @Transaction
   public static List<RoleView> getGeoprismRoleViews(GeoprismUser user)
   {
     List<RoleView> list = new LinkedList<RoleView>();
     List<Roles> roles = RoleView.getGeoprismRoles();
     Set<String> authorizedRoles = RoleView.getAuthorizedRoles(user);
-    
+
     for (Roles role : roles)
     {
       RoleView view = RoleView.getView(role, authorizedRoles, "adminRoles");
 
       list.add(view);
     }
-    
+
     return list;
   }
 
   @Transaction
   public static List<Roles> getGeoprismRoles()
   {
-    String[] excludedRoles = new String[]{
-        "AdminScreenAccess", "Administrator", "Developer", "OWNER", "PUBLIC",
-        "RoleAdministrator", "geoprism.DecisionMaker"
-    };
-    
+    String[] excludedRoles = new String[] { "AdminScreenAccess", "Administrator", "Developer", "OWNER", "PUBLIC", "RoleAdministrator", "geoprism.DecisionMaker" };
+
     List<Roles> list = new LinkedList<Roles>();
 
     RolesQuery query = new RolesQuery(new QueryFactory());
@@ -142,7 +139,7 @@ public class RoleView extends RoleViewBase
       it.close();
     }
   }
-  
+
   /**
    * Deprecated in favour of getGeoprismRoleViews
    */
@@ -197,13 +194,17 @@ public class RoleView extends RoleViewBase
   {
     TreeSet<String> set = new TreeSet<String>();
 
-    if (user.isAppliedToDB())
+    if (user != null)
     {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
 
-      for (RoleDAOIF role : roles)
+      if (user.isAppliedToDB())
       {
-        set.add(role.getOid());
+        Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
+
+        for (RoleDAOIF role : roles)
+        {
+          set.add(role.getOid());
+        }
       }
     }
 
