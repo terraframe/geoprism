@@ -35,6 +35,8 @@ public class GeoprismApplication
   private String      description;
 
   private String      url;
+  
+  private String      customHomeUrl;
 
   private Set<String> roleNames;
 

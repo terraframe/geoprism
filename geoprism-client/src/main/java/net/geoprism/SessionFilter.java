@@ -19,6 +19,7 @@
 package net.geoprism;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.Date;
 import java.util.LinkedList;
@@ -100,7 +101,14 @@ public class SessionFilter implements Filter
 
         if (path.equals("/"))
         {
-          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + "/prism/home");
+//          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + "/prism/home");
+          
+          Class<?> pluginUtil = SessionFilter.class.getClassLoader().loadClass("net.geoprism.PluginUtil");
+          Method m = pluginUtil.getMethod("getGeoprismConfiguration", new Class<?>[]{});
+          GeoprismConfigurationIF config = (GeoprismConfigurationIF) m.invoke(null);
+          
+          String homeUrl = config.getHomeUrl();
+          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + homeUrl);
         }
         else
         {
