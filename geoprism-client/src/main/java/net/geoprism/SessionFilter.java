@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.controller.ErrorUtility;
+import com.runwaysdk.session.InvalidLoginExceptionDTO;
 import com.runwaysdk.session.InvalidSessionExceptionDTO;
 import com.runwaysdk.web.ServletUtility;
 import com.runwaysdk.web.WebClientSession;
@@ -101,12 +102,14 @@ public class SessionFilter implements Filter
 
         if (path.equals("/"))
         {
-//          ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + "/prism/home");
-          
+          // ( (HttpServletResponse) res
+          // ).sendRedirect(httpServletRequest.getContextPath() +
+          // "/prism/home");
+
           Class<?> pluginUtil = SessionFilter.class.getClassLoader().loadClass("net.geoprism.PluginUtil");
-          Method m = pluginUtil.getMethod("getGeoprismConfiguration", new Class<?>[]{});
+          Method m = pluginUtil.getMethod("getGeoprismConfiguration", new Class<?>[] {});
           GeoprismConfigurationIF config = (GeoprismConfigurationIF) m.invoke(null);
-          
+
           String homeUrl = config.getHomeUrl();
           ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + homeUrl);
         }
@@ -138,7 +141,8 @@ public class SessionFilter implements Filter
             dispatcher.forward(request, response);
 
             // // Not an asynchronous request, redirect to the login page.
-            // response.sendRedirect(request.getContextPath() + "/loginRedirect");
+            // response.sendRedirect(request.getContextPath() +
+            // "/loginRedirect");
           }
         }
         else
@@ -163,36 +167,46 @@ public class SessionFilter implements Filter
     }
     else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").length() > 0 && request.getHeader("Authorization").toLowerCase().startsWith("basic "))
     {
-      // The credentials are provided in the headers of the request (known as 'basic' http authentication). Useful for scripts and RESTful requests.
-      
-      String authHeader = request.getHeader("Authorization");
-      String encodedAuth = authHeader.split(" ")[1];
-      String decodedAuth = new String(Base64.getDecoder().decode(encodedAuth));
-      
-      String username = decodedAuth.split(":")[0];
-      String password = decodedAuth.split(":")[1];
-      
-      Locale[] locales = ServletUtility.getLocales(request);
-
-      clientSession = WebClientSession.createUserSession(username, password, locales);
-
-      request.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
-      request.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
-
-      req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
-
       try
       {
-        chain.doFilter(req, res);
+        // The credentials are provided in the headers of the request (known as
+        // 'basic' http authentication). Useful for scripts and RESTful
+        // requests.
+
+        String authHeader = request.getHeader("Authorization");
+        String encodedAuth = authHeader.split(" ")[1];
+        String decodedAuth = new String(Base64.getDecoder().decode(encodedAuth));
+
+        String username = decodedAuth.split(":")[0];
+        String password = decodedAuth.split(":")[1];
+
+        Locale[] locales = ServletUtility.getLocales(request);
+
+        clientSession = WebClientSession.createUserSession(username, password, locales);
+
+        request.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+        request.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+
+        req.setAttribute(ClientConstants.CLIENTREQUEST, clientSession.getRequest());
+
+        try
+        {
+          chain.doFilter(req, res);
+        }
+        finally
+        {
+          clientSession.logout();
+          req.removeAttribute(ClientConstants.CLIENTREQUEST);
+          req.removeAttribute(ClientConstants.CLIENTSESSION);
+          request.logout();
+        }
+        return;
       }
-      finally
+      catch (InvalidLoginExceptionDTO e)
       {
-        clientSession.logout();
-        req.removeAttribute(ClientConstants.CLIENTREQUEST);
-        req.removeAttribute(ClientConstants.CLIENTSESSION);
-        request.logout();
+        response.setHeader("WWW-Authenticate", "BASIC"); 
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);        
       }
-      return;
     }
     else
     {
