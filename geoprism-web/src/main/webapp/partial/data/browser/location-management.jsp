@@ -71,16 +71,15 @@
 					</ul>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="location-management-widget-section"
-					ng-show="entity != null">
-					<div>
-						<label><gdb:localize key="location.management.entity" /></label>
-					</div>
-					<div class="text">{{entity.displayLabel}}
-						({{entity.universal}}) : {{entity.geoId}}</div>
-				</div>
-			</div>
+<!-- 			<div class="row-fluid"> -->
+<!-- 				<div class="location-management-widget-section" ng-show="entity != null"> -->
+<!-- 					<div> -->
+<%-- 						<label><gdb:localize key="location.management.entity" /></label> --%>
+<!-- 					</div> -->
+<!-- 					<div class="text">{{entity.displayLabel}} -->
+<!-- 						({{entity.universal}}) : {{entity.geoId}}</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<div class="row-fluid">
 				<div ng-if="universal.options.length > 1">
 					<div>
@@ -102,7 +101,8 @@
 					class="location-management-widget-section location-management-list-container"
 					ng-show="children.length > 0">
 					<div>
-						<label><gdb:localize key="location.management.sublocations" /></label>
+						<label><gdb:localize key="location.management.sublocations.label" />: {{entity.displayLabel}}
+						</label>
 					</div>
 					<div>
 						<div class="list-group">
