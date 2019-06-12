@@ -52,6 +52,12 @@ const routes: Routes = [
     data: { title: 'login.header' }    
   },
   {
+    path: 'menu/:value',
+    component: HubComponent,
+    canActivate: [ AuthGuard ],
+    data: { title: 'login.header' }    
+  },
+  {
     path: 'forgotpassword',
     component: ForgotPasswordComponent,
     data: { title: 'useraccounts.title' }                
