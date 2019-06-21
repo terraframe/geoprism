@@ -102,7 +102,7 @@
 					class="location-management-widget-section location-management-list-container"
 					ng-show="children.length > 0">
 					<div>
-						<label><gdb:localize key="location.management.sublocations" /></label>
+						<label>{{universal.label}} <gdb:localize key="location.management.sublocations" /></label>
 					</div>
 					<div>
 						<div class="list-group">

@@ -87,6 +87,7 @@ public class LocationController
   {
     UniversalDTO universal = entity.getUniversal();
     MdRelationshipDTO[] hierarchies = GeoEntityUtilDTO.getHierarchies(request, universal.getOid());
+    String universalLabel = "";
 
     MdRelationshipDTO mdRelationshipDTO = null;
 
@@ -106,6 +107,7 @@ public class LocationController
     if ( ( universalId == null || universalId.length() == 0 ) && universals.length > 0)
     {
       universalId = universals[0].getOid();
+      universalLabel = universals[0].getDisplayLabel().getValue();
     }
 
     // String geometries = GeoEntityUtilDTO.publishLayers(request,
@@ -117,17 +119,18 @@ public class LocationController
 
     // if (children.getCount() > 0)
     // {
-//    JSONArray jaRoles = new JSONArray();
-//    RoleViewDTO[] roles = RoleViewDTO.getRoles(request, (GeoprismUserDTO) net.geoprism.GeoprismUserDTO.getCurrentUser(request));
-//    for (RoleViewDTO role : roles)
-//    {
-//      JSONObject jo = new JSONObject();
-//      jo.put("assigned", role.getAssigned());
-//      jo.put("label", role.getDisplayLabel());
-//      jaRoles.put(jo);
-//    }
+    // JSONArray jaRoles = new JSONArray();
+    // RoleViewDTO[] roles = RoleViewDTO.getRoles(request, (GeoprismUserDTO)
+    // net.geoprism.GeoprismUserDTO.getCurrentUser(request));
+    // for (RoleViewDTO role : roles)
+    // {
+    // JSONObject jo = new JSONObject();
+    // jo.put("assigned", role.getAssigned());
+    // jo.put("label", role.getDisplayLabel());
+    // jaRoles.put(jo);
+    // }
     response.set("roles", new JSONArray(RoleViewDTO.getCurrentRoles(request)));
-    
+
     response.set("children", children);
 
     response.set("universals", new ListSerializable(Arrays.asList(universals)));
@@ -136,6 +139,7 @@ public class LocationController
     response.set("entityRelationship", entityRelationshipId);
     response.set("entity", new GeoEntitySerializable(entity), new GeoEntityJsonConfiguration());
     response.set("universal", ( universalId != null && universalId.length() > 0 ) ? universalId : "");
+    response.set("universalLabel", universalLabel);
     response.set("workspace", GeoserverProperties.getWorkspace());
     response.set("geometryType", universal.getGeometryType().get(0).getName());
 
