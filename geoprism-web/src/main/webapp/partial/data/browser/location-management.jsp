@@ -71,16 +71,15 @@
 					</ul>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="location-management-widget-section"
-					ng-show="entity != null">
-					<div>
-						<label><gdb:localize key="location.management.entity" /></label>
-					</div>
-					<div class="text">{{entity.displayLabel}}
-						({{entity.universal}}) : {{entity.geoId}}</div>
-				</div>
-			</div>
+<!-- 			<div class="row-fluid"> -->
+<!-- 				<div class="location-management-widget-section" ng-show="entity != null"> -->
+<!-- 					<div> -->
+<%-- 						<label><gdb:localize key="location.management.entity" /></label> --%>
+<!-- 					</div> -->
+<!-- 					<div class="text">{{entity.displayLabel}} -->
+<!-- 						({{entity.universal}}) : {{entity.geoId}}</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<div class="row-fluid">
 				<div ng-if="universal.options.length > 1">
 					<div>
