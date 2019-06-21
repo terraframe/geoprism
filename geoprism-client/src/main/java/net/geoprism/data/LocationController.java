@@ -143,14 +143,14 @@ public class LocationController
     response.set("workspace", GeoserverProperties.getWorkspace());
     response.set("geometryType", universal.getGeometryType().get(0).getName());
 
-    if (children.getCount() > 0)
-    {
-      response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId));
-    }
-    else
-    {
+//    if (children.getCount() > 0)
+//    {
+//      response.set("bbox", GeoEntityUtilDTO.getChildrenBBOX(request, entity.getOid(), universalId));
+//    }
+//    else
+//    {
       response.set("bbox", GeoEntityUtilDTO.getEntitiesBBOX(request, new String[] { entity.getOid() }));
-    }
+//    }
 
     if (universalId != null)
     {
