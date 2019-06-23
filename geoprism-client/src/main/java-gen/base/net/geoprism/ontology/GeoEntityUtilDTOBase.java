@@ -1,10 +1,10 @@
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = -855466081)
+@com.runwaysdk.business.ClassSignature(hash = 740311421)
 public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDTO
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
-  private static final long serialVersionUID = -855466081;
+  private static final long serialVersionUID = 740311421;
   
   protected GeoEntityUtilDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -121,10 +121,10 @@ public abstract class GeoEntityUtilDTOBase extends com.runwaysdk.business.UtilDT
     return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
-  public static final com.runwaysdk.business.ValueQueryDTO getGeoEntitySuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String universalId, java.lang.String text, java.lang.Integer limit)
+  public static final com.runwaysdk.business.ValueQueryDTO getGeoEntitySuggestions(com.runwaysdk.constants.ClientRequestIF clientRequest, java.lang.String parentId, java.lang.String universalId, java.lang.String text, java.lang.Integer limit, java.lang.String mdRelationshipId)
   {
-    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer"};
-    Object[] _parameters = new Object[]{parentId, universalId, text, limit};
+    String[] _declaredTypes = new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.Integer", "java.lang.String"};
+    Object[] _parameters = new Object[]{parentId, universalId, text, limit, mdRelationshipId};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.ontology.GeoEntityUtilDTO.CLASS, "getGeoEntitySuggestions", _declaredTypes);
     return (com.runwaysdk.business.ValueQueryDTO) clientRequest.invokeMethod(_metadata, null, _parameters);
   }

@@ -44,6 +44,7 @@ import org.json.JSONWriter;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.BusinessQuery;
 import com.runwaysdk.business.RelationshipQuery;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.Authenticate;
@@ -57,7 +58,10 @@ import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.metadata.MdRelationshipDAO;
+import com.runwaysdk.dataaccess.metadata.MdTermDAO;
+import com.runwaysdk.dataaccess.metadata.MdTermRelationshipDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTable;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.CONCAT;
@@ -83,6 +87,8 @@ import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdRelationship;
+import com.runwaysdk.system.metadata.MdTerm;
+import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -835,7 +841,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     throw new ProgrammingErrorException("Country universal has more than one corresponding geo entity");
   }
 
-  public static ValueQuery getGeoEntitySuggestions(String parentOid, String universalId, String text, Integer limit)
+  public static ValueQuery getGeoEntitySuggestions(String parentOid, String universalId, String text, Integer limit, String mdRelationshipId)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
@@ -851,7 +857,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
     label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
 
-    query.SELECT(oid, label);
+    query.SELECT_DISTINCT(oid, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
 
     if (universalId != null && universalId.length() > 0)
@@ -861,10 +867,38 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
     if (parentOid != null && parentOid.length() > 0)
     {
-      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
+      if (mdRelationshipId != null && mdRelationshipId.length() > 0)
+      {
+        String geoEntityRelationship = getGeoEntityRelationship(mdRelationshipId);
+        MdTermRelationshipDAOIF mdTermRelationship = (MdTermRelationshipDAOIF) MdTermRelationshipDAO.get(geoEntityRelationship);
 
-      query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
-      query.AND(aptQuery.getParentTerm().EQ(parentOid));
+        String packageName = DatabaseAllPathsStrategy.getPackageName((MdTerm) BusinessFacade.get(MdTermDAO.getMdTermDAO(GeoEntity.CLASS)));
+        String typeName = DatabaseAllPathsStrategy.getTypeName(mdTermRelationship);
+
+        BusinessQuery aptQuery = new BusinessQuery(query, packageName + "." + typeName);
+
+        query.AND(aptQuery.aReference(LocatedInAllPathsTable.PARENTTERM).EQ(parentOid));
+        query.AND(entityQuery.EQ(aptQuery.aReference(LocatedInAllPathsTable.CHILDTERM)));
+      }
+      else
+      {
+        LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
+
+        query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+        query.AND(aptQuery.getParentTerm().EQ(parentOid));
+      }
+    }
+    else if (mdRelationshipId != null && mdRelationshipId.length() > 0)
+    {
+      String geoEntityRelationship = getGeoEntityRelationship(mdRelationshipId);
+      MdTermRelationshipDAOIF mdTermRelationship = (MdTermRelationshipDAOIF) MdTermRelationshipDAO.get(geoEntityRelationship);
+
+      String packageName = DatabaseAllPathsStrategy.getPackageName((MdTerm) BusinessFacade.get(MdTermDAO.getMdTermDAO(GeoEntity.CLASS)));
+      String typeName = DatabaseAllPathsStrategy.getTypeName(mdTermRelationship);
+
+      BusinessQuery aptQuery = new BusinessQuery(query, packageName + "." + typeName);
+
+      query.AND(entityQuery.EQ(aptQuery.aReference(LocatedInAllPathsTable.CHILDTERM)));
     }
 
     query.ORDER_BY_ASC(geoLabel);
@@ -1290,7 +1324,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   {
     Universal universal = Universal.get(parentId);
     MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(mdRelationshipId);
-    
+
     List<Term> children = (List<Term>) universal.getDirectDescendants(mdRelationship.definesType()).getAll();
 
     return children.toArray(new Universal[children.size()]);

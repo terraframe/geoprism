@@ -1,6 +1,6 @@
 package net.geoprism.ontology;
 
-@com.runwaysdk.business.ClassSignature(hash = 200691999)
+@com.runwaysdk.business.ClassSignature(hash = -737583107)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -12,7 +12,7 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util
 {
   public final static String CLASS = "net.geoprism.ontology.GeoEntityUtil";
   public static java.lang.String OID = "oid";
-  private static final long serialVersionUID = 200691999;
+  private static final long serialVersionUID = -737583107;
   
   public GeoEntityUtilBase()
   {
@@ -123,7 +123,7 @@ public abstract class GeoEntityUtilBase extends com.runwaysdk.business.Util
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
   }
   
-  public static com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String parentId, java.lang.String universalId, java.lang.String text, java.lang.Integer limit)
+  public static com.runwaysdk.query.ValueQuery getGeoEntitySuggestions(java.lang.String parentId, java.lang.String universalId, java.lang.String text, java.lang.Integer limit, java.lang.String mdRelationshipId)
   {
     String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.ontology.GeoEntityUtil.java";
     throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);

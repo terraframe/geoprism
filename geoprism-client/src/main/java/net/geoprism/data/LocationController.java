@@ -172,9 +172,9 @@ public class LocationController
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF suggestions(ClientRequestIF request, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  public ResponseIF suggestions(ClientRequestIF request, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit, @RequestParamter(name = "mdRelationshipId") String mdRelationshipId) throws JSONException
   {
-    ValueQueryDTO results = GeoEntityUtilDTO.getGeoEntitySuggestions(request, null, null, text, limit);
+    ValueQueryDTO results = GeoEntityUtilDTO.getGeoEntitySuggestions(request, null, null, text, limit, mdRelationshipId);
 
     return new RestBodyResponse(results);
   }

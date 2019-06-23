@@ -202,11 +202,11 @@ public class DataUploaderController
   }
 
   @Endpoint(error = ErrorSerialization.JSON)
-  public ResponseIF getGeoEntitySuggestions(ClientRequestIF request, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit) throws JSONException
+  public ResponseIF getGeoEntitySuggestions(ClientRequestIF request, @RequestParamter(name = "parentOid") String parentOid, @RequestParamter(name = "universalId") String universalId, @RequestParamter(name = "text") String text, @RequestParamter(name = "limit") Integer limit, @RequestParamter(name = "mdRelationshipId") String mdRelationshipId) throws JSONException
   {
     JSONArray response = new JSONArray();
 
-    ValueQueryDTO query = GeoEntityUtilDTO.getGeoEntitySuggestions(request, parentOid, universalId, text, limit);
+    ValueQueryDTO query = GeoEntityUtilDTO.getGeoEntitySuggestions(request, parentOid, universalId, text, limit, mdRelationshipId);
     List<ValueObjectDTO> results = query.getResultSet();
 
     for (ValueObjectDTO result : results)
