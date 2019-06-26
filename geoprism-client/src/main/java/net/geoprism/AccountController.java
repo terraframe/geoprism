@@ -3,18 +3,18 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -103,6 +103,7 @@ public class AccountController
   private JSONArray createRoleMap(RoleViewDTO[] roles) throws JSONException
   {
     Map<String, JSONArray> map = new HashMap<String, JSONArray>();
+    Map<String, String> selected = new HashMap<String, String>();
 
     for (RoleViewDTO role : roles)
     {
@@ -112,11 +113,15 @@ public class AccountController
       }
 
       JSONObject object = new JSONObject();
-      object.put(RoleViewDTO.ASSIGNED, role.getAssigned());
       object.put(RoleViewDTO.DISPLAYLABEL, role.getDisplayLabel());
       object.put(RoleViewDTO.ROLEID, role.getRoleId());
 
       map.get(role.getGroupName()).put(object);
+
+      if (role.getAssigned())
+      {
+        selected.put(role.getGroupName(), role.getRoleId());
+      }
     }
 
     JSONArray groups = new JSONArray();
@@ -128,6 +133,11 @@ public class AccountController
       JSONObject group = new JSONObject();
       group.put("name", entry.getKey());
       group.put("roles", entry.getValue());
+
+      if (selected.containsKey(entry.getKey()))
+      {
+        group.put(RoleViewDTO.ASSIGNED, selected.get(entry.getKey()));
+      }
 
       groups.put(group);
     }

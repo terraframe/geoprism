@@ -88,13 +88,14 @@ export class AccountComponent implements OnInit {
     for(let i = 0; i < this.account.groups.length; i++) {
       let group = this.account.groups[i];
       
-      for(let j = 0; j < group.roles.length; j++) {
-        let role = group.roles[j];
-        
-        if(role.assigned) {
-          roleIds.push(role.roleId);
-        }      
-      }    
+      roleIds.push(group.assigned);
+//      for(let j = 0; j < group.roles.length; j++) {
+//        let role = group.roles[j];
+//        
+//        if(role.assigned) {
+//          roleIds.push(role.roleId);
+//        }      
+//      }    
     }
     
     if(!this.account.changePassword && !this.account.user.newInstance) {

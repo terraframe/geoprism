@@ -127,7 +127,9 @@
                 <label>{{role.displayLabel}}</label>
               </div>          
               <div class="holder" >
-                <boolean-field [(value)]="role.assigned"></boolean-field>
+                <div class="check-block">
+                  <input type="radio" [value]="role.roleId" [(ngModel)]="group.assigned" [name]="group.name">
+                </div>              
               </div>
             </div>              
           </div>
