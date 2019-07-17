@@ -315,7 +315,7 @@
               },
               "layout": {
                       "text-field": "{displayLabel}",
-                      "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                      "text-font": ["NotoSansRegular"],
                       "text-offset": [0, 0.6],
                       "text-anchor": "top",
                       "text-size": 12,
@@ -373,7 +373,7 @@
                 		},
                 		"layout": {
                 			"text-field": "{displayLabel}",
-                			"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                            "text-font": ["NotoSansRegular"],
                 			"text-offset": [0, 0.6],
                 			"text-anchor": "top",
                 			"text-size": 12
@@ -495,7 +495,7 @@
                        },
                        "layout": {
                                "text-field": "{displayLabel}",
-                               "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                               "text-font": ["NotoSansRegular"],
                                "text-anchor": "center",
                                "text-size": 12,
                                "symbol-spacing": 10000,
@@ -1091,14 +1091,47 @@
             this.removeStaleMapFragments();
           }
           
+          var protocol = window.location.protocol;
+          var host = window.location.host;
+          
           // TODO: replace accessToken with TerraFrame or customer token
           mapboxgl.accessToken = 'pk.eyJ1IjoianVzdGlubGV3aXMiLCJhIjoiY2l0YnlpdWRkMDlkNjJ5bzZuMTR3MHZ3YyJ9.Ad0fQd8onRSYR9QZP6VyUw';
           var map = new mapboxgl.Map({
               container: 'mapDivId',
 //              minZoom: 2,
 //              maxBounds: [[-180,-90],[180,90]],
-              style: 'mapbox://styles/mapbox/satellite-v8'
-          });
+              style: {
+            	  "version": 8,
+            	  "name": "Satellite",
+            	  "metadata": {
+            	    "mapbox:autocomposite": true
+            	  },
+            	  "sources": {
+            	    "mapbox": {
+            	      "type": "raster",
+            	      "url": "mapbox://mapbox.satellite",
+            	      "tileSize": 256
+            	    }
+            	  },
+            	  "sprite": "mapbox://sprites/mapbox/satellite-v8",
+            	  "glyphs": protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/glyphs/{fontstack}/{range}.pbf',            	  
+            	  "layers": [
+            	    {
+            	      "id": "background",
+            	      "type": "background",
+            	      "paint": {
+            	        "background-color": "rgb(4,7,14)"
+            	      }
+            	    },
+            	    {
+            	      "id": "satellite",
+            	      "type": "raster",
+            	      "source": "mapbox",
+            	      "source-layer": "mapbox_satellite_full"
+            	    }
+            	  ]
+            	}
+          });          
           
 //          map.on("zoomend", function(e){
 //        	  console.log(map.getZoom())
