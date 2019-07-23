@@ -189,7 +189,9 @@
           controller.startEditingFeatures(geom);
         },
         onFailure : function(error) {
-          // TODO : Proper error handling
+        	if(error.localizedMessage) {
+        		alert(error.localizedMessage);
+        	}
         }
       };
       locationService.openEditingSession(connection, config);
@@ -231,8 +233,9 @@
           controller._isEditing = false;
         },
         onFailure : function(error) {
-          // TODO : Proper error handling
-          console.log(error);
+        	if(error.localizedMessage) {
+        		alert(error.localizedMessage);
+        	}
         }
       };
       locationService.cancelEditingSession(connection, config);
@@ -369,8 +372,9 @@
           $scope.$emit('locationReloadCurrent');
         },
         onFailure : function(error) {
-          // TODO : Proper error handling
-          console.log(error);
+        	if(error.localizedMessage) {
+        		alert(error.localizedMessage);
+        	}
         }
       };
       locationService.applyGeometries(connection, updatedFeatureCollection);

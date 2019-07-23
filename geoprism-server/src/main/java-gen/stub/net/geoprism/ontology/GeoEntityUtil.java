@@ -101,6 +101,7 @@ import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
+import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.GeometrySerializationUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
@@ -307,7 +308,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       Geometry geom = geometryMap.get(oid);
 
       // try
-      // {
+      // {6
       // CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:3857", true);
       // CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326", true);
       // MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
@@ -321,6 +322,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
       GeoEntity geo = GeoEntity.lock(oid);
       geo.setWkt(geom.toText());
+
+      if (!geo.getUniversal().getIsGeometryEditable() && geo.isModified(GeoEntity.WKT))
+      {
+        throw new GeometryUpdateException();
+      }
+
       geo.apply();
     }
   }
