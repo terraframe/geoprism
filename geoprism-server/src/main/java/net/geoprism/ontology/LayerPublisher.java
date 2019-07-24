@@ -108,17 +108,17 @@ public abstract class LayerPublisher
   {
     String labelColumn = "default_locale";
 
-//    Locale locale = Session.getCurrentLocale();
-//
-//    if (locale != null)
-//    {
-//      MdStructDAOIF mdStruct = MdStructDAO.getMdStructDAO(GeoEntityDisplayLabel.CLASS);
-//
-//      if (mdStruct.definesAttribute(locale.toString()) != null)
-//      {
-//        labelColumn = locale.toString().toLowerCase();
-//      }
-//    }
+    Locale locale = Session.getCurrentLocale();
+
+    if (locale != null)
+    {
+      MdStructDAOIF mdStruct = MdStructDAO.getMdStructDAO(GeoEntityDisplayLabel.CLASS);
+
+      if (mdStruct.definesAttribute(locale.toString()) != null)
+      {
+        labelColumn = locale.toString().toLowerCase();
+      }
+    }
 
     return labelColumn;
   }
