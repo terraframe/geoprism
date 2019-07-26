@@ -1,8 +1,15 @@
 #container {
-    background-color: #333;
+    /* background-color: #333; */
     margin: 0;
     height: 100%; 
     overflow: hidden;
+}
+
+.vertical-center {
+    min-height: 100%;
+    min-height: calc(100vh - 164px);
+    display: flex;
+    align-items: center;
 }
 
 h1 {
@@ -24,21 +31,14 @@ h1 {
     width: 200px;
   }
 
-#geoprism-landing-top-div{
-  border-bottom: grey solid 3px;
-  /* height: 30%; */
-  height: 200px;
-  position: relative;
-}
-
-#geoprism-landing-bottom-div{
-  overflow: hidden;
-}
 
 #login-btn{
-  right: 10px;
-  top: 5px;
-  position: absolute;
+  float: right;
+  background: white;
+}
+#login-btn:hover,
+#login-btn:active{
+    border-color: #6BA542;
 }
 
 /* unvisited link */
@@ -63,53 +63,42 @@ a:active {
     color: darkgrey;
 }
 
-#geoprism-landing-footer{
-  height: 100px;
-  background-color: #019edc;
-  bottom: 0px;
-      position: absolute;
-      width: 100%;
-      opacity: 0.6;
-      filter: alpha(opacity=60); /* For IE8 and earlier */
-}
-
 #login-form{
-  float: right;
-  width: 325px;
-  height: 200px;
+  /* float: right; */
+  /* width: 325px; */
+  /* height: 200px; */
 }
 
 #login-input-container{
-  position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+  /* position: absolute; */
+      /* top: 50%; */
+      /* transform: translateY(-50%); */
 }
 
-#login-form input[type="text"]{
-  float:left;
-  width:200px;
-  height:25px;
-/*      margin:0 11px 0 0; */
+/* input {
+  height:56px;
   padding:6px 10px;
-  font-size:14px;
+  font-size:20px;
   line-height:18px;
   color:#333;
   border:1px solid #bbb;
-  background:#eee;
+  border-radius: 8px;
+  background:white;
   outline:none;
+}
+input:focus,
+input:active{
+    border-color:#6BA542;
+} */
+
+#login-form input[type="text"]{
+  float:left;
+  width:100%;
   margin-bottom: 5px;
 }
 #login-form input[type="password"]{
   float:left;
-  width:200px;
-  height:25px;
-/*      margin:0 11px 0 0; */
-  padding:6px 10px;
-  font-size:14px;
-  line-height:18px;
-  color:#333;
-  border:1px solid #bbb;
-  background:#eee;
+  width:100%;
 }
 #login-form ::-webkit-input-placeholder{color:#999;}
 #login-form :-ms-input-placeholder{color:#999;}
@@ -124,10 +113,10 @@ a:active {
 #login-form :focus::-moz-placeholder{color:#ccc;}
 #login-form .field-error input[type="text"]:focus,
 #login-form .field-error input[type="text"]:active,
-#login-form input[type="text"]:focus,
-#login-form input[type="text"]:active{border-color:#019edc;}
+/* #login-form input[type="text"]:focus,
+#login-form input[type="text"]:active{border-color:#6BA542;} */
 #login-form .field-error input[type="text"]{
-  border-color:#e09999;
+  border-color:#6BA542;
   background:#f8f8f8;
 }
 #login-form .field-error input[type="password"]{

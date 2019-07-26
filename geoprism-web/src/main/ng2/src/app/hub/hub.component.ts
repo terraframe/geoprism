@@ -17,7 +17,7 @@
 /// License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 ///
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -26,6 +26,7 @@ import { AuthService } from '../core/authentication/auth.service';
 import { SessionService } from '../authentication/session.service';
 import { Application } from './application';
 import { HubService } from './hub.service';
+import { HubHeaderComponent } from './hub-header.component'
 
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
@@ -49,43 +50,35 @@ export class HubComponent implements OnInit {
 	private authService:AuthService,
 	private profileService:ProfileService,
 	private modalService: BsModalService,
-	private router:Router) {
+	private router:Router,
+	private route:ActivatedRoute
+	) {
 	  
     this.context = acp as string;
   }
   
   ngOnInit():void {
     this.service.applications().then(applications => {
-      this.applications = applications;
-      
-      if(this.applications.length > 3 || this.applications.length % 3 === 0) {
-        this.buckets = 'col-sm-4';
-      }
-      else if(this.applications.length === 2) {
-        this.buckets = 'col-sm-6';
-      }
-      else {
-        this.buckets = 'col-sm-12';
-      }
+      this.applications = applications;      
     }); 	  
     
     this.isAdmin = this.authService.isAdmin();
   }
   
-  logout():void {
-    this.sessionService.logout().then(response => {
-      this.router.navigate(['/login']);	  
-    }); 	  
-  }
+//   logout():void {
+//     this.sessionService.logout().then(response => {
+//       this.router.navigate(['/login']);	  
+//     }); 	  
+//   }
   
   open(application:Application):void { 
     window.location.href = this.context + '/' + application.url;	  
   }
   
-  account():void{
-    this.profileService.get().then(profile => {
-      this.bsModalRef = this.modalService.show(ProfileComponent, {backdrop: 'static', class: 'gray modal-lg'});
-      this.bsModalRef.content.profile = profile;
-    });
-  }
+//   account():void{
+//     this.profileService.get().then(profile => {
+//       this.bsModalRef = this.modalService.show(ProfileComponent, {backdrop: 'static', class: 'gray modal-lg'});
+//       this.bsModalRef.content.profile = profile;
+//     });
+//   }
 }

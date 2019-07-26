@@ -27,7 +27,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import com.runwaysdk.business.RelationshipQuery;
 import com.runwaysdk.business.ontology.Term;
+import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.query.QueryFactory;
@@ -38,7 +40,7 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
-import com.runwaysdk.system.gis.geo.LocatedInQuery;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Envelope;
 import com.wdtinc.mapbox_vector_tile.VectorTile;
@@ -57,9 +59,9 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
 
   private String universalId;
 
-  public LocationTargetPublisher(String oid, String universalId, String layers)
+  public LocationTargetPublisher(MdRelationshipDAOIF mdRelationship, String oid, String universalId, String layers, GeometryType geometryType)
   {
-    super(layers);
+    super(mdRelationship, layers, geometryType);
 
     this.oid = oid;
     this.universalId = universalId;
@@ -68,7 +70,6 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
   @Override
   protected List<GeoserverLayerIF> buildLayers()
   {
-
     GeoEntity entity = GeoEntity.get(this.oid);
     Universal universal = entity.getUniversal();
     List<Term> descendants = universal.getAllDescendants(AllowedIn.CLASS).getAll();
@@ -98,7 +99,7 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
   private ValueQuery getQuery(GeoEntity entity, LayerType type)
   {
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
-    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
+    RelationshipQuery liQuery = new RelationshipQuery(vQuery, this.getMdRelationship().definesType());
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
 
     // Id column
@@ -111,19 +112,19 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
     Selectable geoId = query.getGeoId(GeoEntity.GEOID);
     geoId.setColumnAlias(GeoEntity.GEOID);
 
-    Selectable geom = ( type.equals(LayerType.POINT) ? query.get(GeoEntity.GEOPOINT) : query.get(GeoEntity.GEOMULTIPOLYGON) );
+    Selectable geom = this.getGeometrySelectable(query);
     geom.setColumnAlias(GeoserverFacade.GEOM_COLUMN);
     geom.setUserDefinedAlias(GeoserverFacade.GEOM_COLUMN);
 
     vQuery.SELECT(oid, label, geoId, geom);
     vQuery.WHERE(liQuery.parentOid().EQ(entity.getOid()));
-    vQuery.AND(query.locatedIn(liQuery));
+    vQuery.AND(query.getOid().EQ(liQuery.childOid()));
 
     if (this.universalId != null && this.universalId.length() > 0)
     {
       vQuery.AND(query.getUniversal().EQ(this.universalId));
     }
-    
+
     // prevent NULL geometries to prevent errors in MapboxGL
     vQuery.AND(geom.getAttribute().NE((String) null));
 
@@ -177,13 +178,16 @@ public class LocationTargetPublisher extends LayerPublisher implements VectorLay
 
   private ResultSet getResultSet(String entityId, LayerType type)
   {
+    String column = this.getGeometryColumn();
+    String labelColumn = this.getLabelColumn();
+
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT ge.oid, gdl.default_locale, ge.geo_id, ST_Transform(ge.geo_multi_polygon, 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
+    sql.append("SELECT ge.oid, gdl." + labelColumn + " AS default_locale, ge.geo_id, ST_Transform(ge." + column + ", 3857) AS " + GeoserverFacade.GEOM_COLUMN + "\n");
     sql.append("FROM geo_entity AS ge\n");
     sql.append("JOIN geo_entity_display_label AS gdl ON gdl.oid = ge.display_label\n");
-    sql.append("JOIN located_in AS li ON li.child_oid = ge.oid\n");
+    sql.append("JOIN " + this.getMdRelationship().getTableName() + " AS li ON li.child_oid = ge.oid\n");
     sql.append("WHERE li.parent_oid::text = '" + entityId + "'\n");
-    sql.append("AND ge.geo_multi_polygon IS NOT NULL\n");
+    sql.append("AND ge." + column + " IS NOT NULL\n");
 
     if (this.universalId != null && this.universalId.length() > 0)
     {

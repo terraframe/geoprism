@@ -32,7 +32,7 @@ public class GeoserverContextListener implements ServerContextListener
   @Override
   public void startup()
   {
-    GeoserverInitializer.setup();
+    GeoserverInitializer.startup();
   }
 
   @Override

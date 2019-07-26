@@ -55,10 +55,10 @@
       var map = controller.getWebGLMap();
       controller._editingControl = new MapboxDraw({
         controls : {
-          point : false,
+          point : true,
           line_string : false,
           polygon : true,
-          trash : true,
+          trash : false,
           combine_features : false,
           uncombine_features : false
         }
@@ -189,7 +189,9 @@
           controller.startEditingFeatures(geom);
         },
         onFailure : function(error) {
-          // TODO : Proper error handling
+        	if(error.localizedMessage) {
+        		alert(error.localizedMessage);
+        	}
         }
       };
       locationService.openEditingSession(connection, config);
@@ -231,8 +233,9 @@
           controller._isEditing = false;
         },
         onFailure : function(error) {
-          // TODO : Proper error handling
-          console.log(error);
+        	if(error.localizedMessage) {
+        		alert(error.localizedMessage);
+        	}
         }
       };
       locationService.cancelEditingSession(connection, config);
@@ -272,6 +275,7 @@
       
       $scope.$emit('locationEditNew', {
         wkt: _wkt,
+        geojson: geojson,
         afterApply: function(){
           controller._isEditing = false;
           
@@ -368,8 +372,9 @@
           $scope.$emit('locationReloadCurrent');
         },
         onFailure : function(error) {
-          // TODO : Proper error handling
-          console.log(error);
+        	if(error.localizedMessage) {
+        		alert(error.localizedMessage);
+        	}
         }
       };
       locationService.applyGeometries(connection, updatedFeatureCollection);
@@ -433,7 +438,8 @@
           layer: "context",
           type: "CONTEXT",
           index: 1,
-          is3d: false          
+          is3d: false,
+          geomType: data.config.contextGeom
         },{
           name: "target-multipolygon",
           style: $scope.targetStyle,
@@ -441,6 +447,7 @@
           type: "TARGET",
           index: 2,
           is3d: false,
+          geomType: data.config.targetGeom,
           bbox: bboxObj
         }];
         
@@ -475,8 +482,8 @@
         
         controller.updateVectorLayer(data, layers);
         
-        controller.addVectorHoverEvents(hoverCallback, ["target-multipolygon"]);
-        controller.addVectorClickEvents(featureClickCallback, ["target-multipolygon"]);
+        controller.addVectorHoverEvents(hoverCallback, ["target-multipolygon", "target-multipolygon-point"]);
+        controller.addVectorClickEvents(featureClickCallback, ["target-multipolygon", "target-multipolygon-point"]);
         
         if (bboxObj != null)
         {
@@ -539,6 +546,13 @@
         
       } else if (!isEmptyJSONObject($scope.sharedGeoData)) {
         controller.refreshWithContextLayer('sharedGeoData');
+      }
+    });
+    
+    $scope.$on("roleUpdate", function(event, data) {
+      if (!data.isMaintainer)
+      {
+  	    controller._geoprismEditingControl.onRemove();
       }
     });
 
@@ -616,8 +630,9 @@
           });
           this._container.append(this._bCancel);
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").prop('title', localizationService.localize("location.management.editing", "trash"));
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").prop('title', localizationService.localize("location.management.editing", "trash"));
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").prop('title', localizationService.localize("location.management.editing", "polygon"));
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").prop('title', localizationService.localize("location.management.editing", "point"));
           
           this.stopEditing();
           
@@ -625,7 +640,8 @@
         },
         
         onRemove : function() {
-          this._container.parentNode.removeChild(this._container);
+//          this._container.parentNode.removeChild(this._container);
+          this._container.remove();
           this._map = undefined;
         },
         
@@ -657,9 +673,10 @@
           this._bSave.css("display", "block");
           this._bCancel.css("display", "block");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").removeAttr("style");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").removeAttr("style");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").removeAttr("style");
           
@@ -672,9 +689,10 @@
           this._bSave.css("display", "none");
           this._bCancel.css("display", "none");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
           
@@ -687,9 +705,10 @@
           this._bSave.css("display", "block");
           this._bCancel.css("display", "block");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").removeAttr("style");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
         },
@@ -700,9 +719,10 @@
           this._bSave.css("display", "none");
           this._bCancel.css("display", "none");
           
-          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
+//          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_line").css("display", "none");
           $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").css("display", "none");
+          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_point").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_combine").css("display", "none");
 //          $(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_uncombine").css("display", "none");
         }

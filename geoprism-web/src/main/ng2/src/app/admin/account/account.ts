@@ -37,6 +37,7 @@ export class Role {
 
 export class Group {
   name:string;
+  assigned:string;
   roles:Role[];
 }
 

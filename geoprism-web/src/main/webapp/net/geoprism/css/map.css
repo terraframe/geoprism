@@ -159,7 +159,9 @@ div.row-holder .chk-area, div.row-holder .rad-area {
 	}
 	
 	
-	
+.warning-text{
+  color: orange;
+}
 	
 	
 button.enable-edit-mode-btn {
@@ -296,10 +298,10 @@ button.cancel-edits-btn.active{
 span.fa {
 	font-size: 18px;
 }
-span.fa:hover,
+/* span.fa:hover,
 span.fa:focus{
 	color: #00bfff
-}
+} */
 
 #base-layer-switcher-wrapper {
 	position: absolute;

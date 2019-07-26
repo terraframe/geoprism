@@ -21,14 +21,15 @@
   function LocationService(runwayService) {
     var service = {};
     
-    service.select = function(connection, oid, universalId, existingLayers, config) {
+    service.select = function(connection, oid, universalId, existingLayers, mdRelationshipId, config) {
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/select',
         data : {
           oid : oid,
           universalId : universalId,
-          existingLayers : existingLayers
+          existingLayers : existingLayers,
+          mdRelationshipId : mdRelationshipId
         }
       }      
       
@@ -48,27 +49,29 @@
       runwayService.execute(req, connection);      
     }
     
-    service.getGeoEntitySuggestions = function(connection, text, limit) {
+    service.getGeoEntitySuggestions = function(connection, text, limit, mdRelationshipId) {
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/suggestions',
         data : {
           text : text,
-          limit : limit
+          limit : limit,
+          mdRelationshipId : mdRelationshipId          
         }
       }      
               
       runwayService.execute(req, connection);      
     }
     
-    service.apply = function(connection, entity, parentOid, existingLayers) {
+    service.apply = function(connection, entity, parentOid, existingLayers, mdRelationshipId) {
       var req = {
         method: 'POST',
         url: com.runwaysdk.__applicationContextPath + '/location/apply',
         data : {
           entity : entity,
           parentOid : parentOid,          
-          existingLayers : existingLayers
+          existingLayers : existingLayers,
+          mdRelationshipId : mdRelationshipId
         }
       }      
       

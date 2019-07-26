@@ -103,6 +103,7 @@ public class AccountController
   private JSONArray createRoleMap(RoleViewDTO[] roles) throws JSONException
   {
     Map<String, JSONArray> map = new HashMap<String, JSONArray>();
+    Map<String, String> selected = new HashMap<String, String>();
 
     for (RoleViewDTO role : roles)
     {
@@ -112,11 +113,15 @@ public class AccountController
       }
 
       JSONObject object = new JSONObject();
-      object.put(RoleViewDTO.ASSIGNED, role.getAssigned());
       object.put(RoleViewDTO.DISPLAYLABEL, role.getDisplayLabel());
       object.put(RoleViewDTO.ROLEID, role.getRoleId());
 
       map.get(role.getGroupName()).put(object);
+
+      if (role.getAssigned())
+      {
+        selected.put(role.getGroupName(), role.getRoleId());
+      }
     }
 
     JSONArray groups = new JSONArray();
@@ -128,6 +133,11 @@ public class AccountController
       JSONObject group = new JSONObject();
       group.put("name", entry.getKey());
       group.put("roles", entry.getValue());
+
+      if (selected.containsKey(entry.getKey()))
+      {
+        group.put(RoleViewDTO.ASSIGNED, selected.get(entry.getKey()));
+      }
 
       groups.put(group);
     }

@@ -26,12 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.geoprism.data.etl.TargetBuilder;
-import net.geoprism.ontology.CompositePublisher;
-import net.geoprism.ontology.LocationContextPublisher;
-import net.geoprism.ontology.LocationTargetPublisher;
-import net.geoprism.ontology.PublisherUtil;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,9 +36,19 @@ import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.MdRelationshipDAO;
 import com.runwaysdk.gis.constants.GISConstants;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeometryType;
+import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.vividsolutions.jts.geom.Envelope;
+
+import net.geoprism.data.etl.TargetBuilder;
+import net.geoprism.ontology.CompositePublisher;
+import net.geoprism.ontology.LocationContextPublisher;
+import net.geoprism.ontology.LocationTargetPublisher;
+import net.geoprism.ontology.PublisherUtil;
 
 public class DefaultConfiguration implements ConfigurationIF
 {
@@ -84,8 +88,8 @@ public class DefaultConfiguration implements ConfigurationIF
   public Collection<String> getDatabrowserTypes()
   {
     List<String> types = new LinkedList<String>();
-    types.add(GISConstants.GEO_PACKAGE+".Universal");
-    types.add(GISConstants.GEO_PACKAGE+".GeoEntity");
+    types.add(GISConstants.GEO_PACKAGE + ".Universal");
+    types.add(GISConstants.GEO_PACKAGE + ".GeoEntity");
 
     return types;
   }
@@ -193,27 +197,37 @@ public class DefaultConfiguration implements ConfigurationIF
       {
         String oid = object.has("oid") ? object.getString("oid") : null;
         String universalId = object.has("universalId") ? object.getString("universalId") : null;
-        
+        MdRelationshipDAOIF mdRelationship = object.has("relationshipId") ? MdRelationshipDAO.get(object.getString("relationshipId")) : MdRelationshipDAO.getMdRelationshipDAO(LocatedIn.CLASS);
+
         Envelope envelope = PublisherUtil.getEnvelope(object);
         Envelope bounds = PublisherUtil.getTileBounds(envelope);
 
         if (type.equals(LM_CONTEXT))
         {
-          LocationContextPublisher publisher = new LocationContextPublisher(oid, "");
+          GeometryType geometryType = object.has("geometryType") ? GeometryType.valueOf(object.getString("geometryType")) : GeometryType.MULTIPOLYGON;
+
+          LocationContextPublisher publisher = new LocationContextPublisher(mdRelationship, oid, "", geometryType);
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM_TARGET))
         {
-          LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "");
+          GeometryType geometryType = object.has("geometryType") ? GeometryType.valueOf(object.getString("geometryType")) : GeometryType.MULTIPOLYGON;
+          LocationTargetPublisher publisher = new LocationTargetPublisher(mdRelationship, oid, universalId, "", geometryType);
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
         }
         else if (type.equals(LM))
         {
-          CompositePublisher publisher = new CompositePublisher(new LocationTargetPublisher(oid, universalId, ""), new LocationContextPublisher(oid, ""));
+          GeometryType contextGeom = object.has("contextGeom") ? GeometryType.valueOf(object.getString("contextGeom")) : GeometryType.MULTIPOLYGON;
+          GeometryType targetGeom = object.has("targetGeom") ? GeometryType.valueOf(object.getString("targetGeom")) : GeometryType.MULTIPOLYGON;
+
+          LocationTargetPublisher tPublisher = new LocationTargetPublisher(mdRelationship, oid, universalId, "", targetGeom);
+          LocationContextPublisher cPublisher = new LocationContextPublisher(mdRelationship, oid, "", contextGeom);
+
+          CompositePublisher publisher = new CompositePublisher(tPublisher, cPublisher);
           byte[] bytes = publisher.writeVectorTiles(envelope, bounds);
 
           return new ByteArrayInputStream(bytes);
@@ -227,16 +241,27 @@ public class DefaultConfiguration implements ConfigurationIF
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   @Override
   public void onEntityDelete(GeoEntity entity)
   {
     // Do nothing
   }
-  
+
   @Override
   public void onMappableClassDelete(MappableClass mClass)
   {
     // Do nothing
+  }
+
+  @Override
+  public String getGeoEntityRelationship(MdRelationshipDAOIF mdRelationshipDAOIF)
+  {
+    if (mdRelationshipDAOIF.definesType().equals(AllowedIn.CLASS))
+    {
+      return MdRelationshipDAO.getMdRelationshipDAO(LocatedIn.CLASS).getOid();
+    }
+
+    return null;
   }
 }

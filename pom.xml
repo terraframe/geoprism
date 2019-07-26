@@ -18,6 +18,7 @@
     License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 -->
+<!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is part of Runway SDK(tm). Runway SDK(tm) is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -39,14 +40,14 @@
   </modules>
 
   <properties>
-    <runway.version>3.0.16</runway.version>
+    <runway.version>3.0.21</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>16.1</geotools.version>
-  
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <aspectj.version>1.8.6</aspectj.version>    
+    <aspectj.version>1.8.6</aspectj.version>
     <aspectj.plugin.version>1.7</aspectj.plugin.version>
   </properties>
 
@@ -70,9 +71,9 @@
       <id>osgeo</id>
       <name>Open Source Geospatial Foundation Repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
-    </repository>    
+    </repository>
   </repositories>
-  
+
   <distributionManagement>
     <repository>
       <id>terraframe-releases</id>
@@ -96,14 +97,14 @@
       <url>http://www.gnu.org/licenses/lgpl.html</url>
     </license>
   </licenses>
-  
+
   <scm>
     <connection>scm:git:ssh://git@github.com/terraframe/geoprism</connection>
     <developerConnection>scm:git:ssh://git@github.com/terraframe/geoprism</developerConnection>
     <url>scm:git:ssh://git@github.com/terraframe/geoprism</url>
     <tag>1.01.0027</tag>
   </scm>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -115,9 +116,9 @@
             <artifactId>maven-scm-provider-gitexe</artifactId>
             <version>1.8.1</version>
           </dependency>
-         </dependencies>
+        </dependencies>
       </plugin>
-    
+
       <!-- Add generated source directories -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -231,17 +232,17 @@
                   </action>
                 </pluginExecution>
                 <pluginExecution>
-                	<pluginExecutionFilter>
-                		<groupId>org.apache.maven.plugins</groupId>
-                		<artifactId>maven-dependency-plugin</artifactId>
-                		<versionRange>[2.8,)</versionRange>
-                		<goals>
-                			<goal>build-classpath</goal>
-                		</goals>
-                	</pluginExecutionFilter>
-                	<action>
-                		<execute />
-                	</action>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[2.8,)</versionRange>
+                    <goals>
+                      <goal>build-classpath</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>

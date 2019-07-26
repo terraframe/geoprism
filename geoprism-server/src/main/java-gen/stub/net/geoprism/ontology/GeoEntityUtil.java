@@ -25,7 +25,6 @@ import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,16 +44,25 @@ import org.json.JSONWriter;
 
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.BusinessQuery;
+import com.runwaysdk.business.RelationshipQuery;
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.DuplicateDataException;
+import com.runwaysdk.dataaccess.MdBusinessDAOIF;
+import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
+import com.runwaysdk.dataaccess.MdTermRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
+import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+import com.runwaysdk.dataaccess.metadata.MdRelationshipDAO;
+import com.runwaysdk.dataaccess.metadata.MdTermDAO;
+import com.runwaysdk.dataaccess.metadata.MdTermRelationshipDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTable;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
-import com.runwaysdk.gis.geometry.GeometryHelper;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.CONCAT;
 import com.runwaysdk.query.Coalesce;
@@ -64,32 +72,41 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.query.SelectableUUID;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityProblem;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemQuery;
 import com.runwaysdk.system.gis.geo.GeoEntityProblemView;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeometryType;
+import com.runwaysdk.system.gis.geo.IsARelationship;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.gis.geo.Synonym;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.SynonymRelationshipQuery;
+import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.metadata.MdRelationship;
+import com.runwaysdk.system.metadata.MdTerm;
+import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 import net.geoprism.ConfigurationIF;
 import net.geoprism.ConfigurationService;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.TermSynonymRelationship;
+import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.data.DatabaseUtil;
 import net.geoprism.data.GeometrySerializationUtil;
 import net.geoprism.data.importer.SeedKeyGenerator;
 
-public class GeoEntityUtil extends GeoEntityUtilBase 
+public class GeoEntityUtil extends GeoEntityUtilBase
 {
   private static final KeyGeneratorIF generator        = new SeedKeyGenerator();
 
@@ -132,7 +149,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   /**
    * MdMethod
    * 
-   * Accepts a JSON configuration object (Similar to getData) and locks all geoentities to be edited.
+   * Accepts a JSON configuration object (Similar to getData) and locks all
+   * geoentities to be edited.
    * 
    * @param config
    * @return VectorTile data
@@ -152,8 +170,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     JSONObject jObj = new JSONObject(config);
     String oid = jObj.getString("oid");
     String universalId = jObj.has("universalId") ? jObj.getString("universalId") : null;
+    GeometryType geometryType = jObj.has("targetGeom") ? GeometryType.valueOf(jObj.getString("targetGeom")) : GeometryType.MULTIPOLYGON;
+    MdRelationshipDAOIF mdRelationship = jObj.has("relationshipId") ? MdRelationshipDAO.get(jObj.getString("relationshipId")) : MdRelationshipDAO.getMdRelationshipDAO(LocatedIn.CLASS);
 
-    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, "");
+    LocationTargetPublisher publisher = new LocationTargetPublisher(mdRelationship, oid, universalId, "", geometryType);
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
@@ -181,7 +201,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   /**
    * MdMethod
    * 
-   * Cancels an editing session by unlocking all GeoEntities at a given universal level.
+   * Cancels an editing session by unlocking all GeoEntities at a given
+   * universal level.
    * 
    * @param config
    * @return VectorTile data
@@ -199,16 +220,16 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   /**
    * MdMethod
    * 
-   * Accepts a JSON FeatureCollection from the client. This JSON is directly produced by the Mapbox GL Draw plugin.
+   * Accepts a JSON FeatureCollection from the client. This JSON is directly
+   * produced by the Mapbox GL Draw plugin.
    */
   @Transaction
   public static void applyGeometries(java.lang.String featureCollection)
   {
     GeometryFactory geometryFactory = new GeometryFactory();
-    GeometryHelper geometryHelper = new GeometryHelper();
     GeometrySerializationUtil serializer = new GeometrySerializationUtil(geometryFactory);
 
-    HashMap<String, List<Polygon>> multiPolyMap = new HashMap<String, List<Polygon>>();
+    HashMap<String, Geometry> geometryMap = new HashMap<String, Geometry>();
 
     try
     {
@@ -231,21 +252,23 @@ public class GeoEntityUtil extends GeoEntityUtilBase
           String geoEntId = properties.getString("oid");
           JSONArray coordinates = geometry.getJSONArray("coordinates");
 
-          if (!multiPolyMap.containsKey(geoEntId))
-          {
-            multiPolyMap.put(geoEntId, new ArrayList<Polygon>());
-          }
-          List<Polygon> polygons = multiPolyMap.get(geoEntId);
-
           if (featureType.equals("polygon"))
           {
             coordinates = coordinates.getJSONArray(0);
 
             Polygon polygon = serializer.jsonToPolygon(coordinates);
-            polygons.add(polygon);
+            geometryMap.put(geoEntId, polygon);
+          }
+          else if (featureType.equals("point"))
+          {
+            Point point = serializer.jsonToPoint(coordinates);
+            geometryMap.put(geoEntId, point);
           }
           else if (featureType.equals("multipolygon"))
           {
+            List<Polygon> polygons = new LinkedList<>();
+            ;
+
             for (int p = 0; p < coordinates.length(); ++p)
             {
               JSONArray jsonP = coordinates.getJSONArray(p).getJSONArray(0);
@@ -253,6 +276,10 @@ public class GeoEntityUtil extends GeoEntityUtilBase
               Polygon polygon = serializer.jsonToPolygon(jsonP);
               polygons.add(polygon);
             }
+
+            MultiPolygon geom = geometryFactory.createMultiPolygon(polygons.toArray(new Polygon[polygons.size()]));
+
+            geometryMap.put(geoEntId, geom);
           }
           else
           {
@@ -274,43 +301,46 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       e.printStackTrace();
     }
 
-    Set<String> ids = multiPolyMap.keySet();
+    Set<String> ids = geometryMap.keySet();
+
     for (String oid : ids)
     {
-      List<Polygon> listPoly = multiPolyMap.get(oid);
+      Geometry geom = geometryMap.get(oid);
 
-      MultiPolygon multiPoly = geometryFactory.createMultiPolygon(listPoly.toArray(new Polygon[listPoly.size()]));
-
-      // Make sure we're in 4326 projection
-      Geometry geom = multiPoly;
       // try
-      // {
+      // {6
       // CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:3857", true);
       // CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326", true);
       // MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
       // geom = JTS.transform(multiPoly, transform);
       // }
-      // catch (FactoryException | MismatchedDimensionException | TransformException e)
+      // catch (FactoryException | MismatchedDimensionException |
+      // TransformException e)
       // {
       // throw new RuntimeException(e);
       // }
 
       GeoEntity geo = GeoEntity.lock(oid);
-      geo.setGeoPoint(geometryHelper.getGeoPoint(geom));
-      geo.setGeoMultiPolygon(geometryHelper.getGeoMultiPolygon(geom));
       geo.setWkt(geom.toText());
+
+      if (!geo.getUniversal().getIsGeometryEditable() && geo.isModified(GeoEntity.WKT))
+      {
+        throw new GeometryUpdateException();
+      }
+
       geo.apply();
     }
   }
 
   /**
-   * Merges the source geo entity into the destination geo entity and creates a new synonym with the name of the source
-   * geo entity.
+   * Merges the source geo entity into the destination geo entity and creates a
+   * new synonym with the name of the source geo entity.
    * 
    * @param sourceId
    * @param destinationId
    * 
-   * @return Returns a list of all geo entity ids which may need to be refreshed in the browser
+   * @return Returns a list of all geo entity ids which may need to be refreshed
+   *         in the browser
    */
   @Transaction
   public static String[] makeSynonym(String sourceId, String destinationId)
@@ -360,7 +390,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       throw exception;
     }
 
-    // Delete all problems for the source geo entity so that they aren't transfered over to the destination entity
+    // Delete all problems for the source geo entity so that they aren't
+    // transfered over to the destination entity
     GeoEntityProblemQuery problemQuery = new GeoEntityProblemQuery(new QueryFactory());
     problemQuery.WHERE(problemQuery.getGeoEntity().EQ(source));
 
@@ -404,7 +435,8 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     BusinessDAOIF sourceDAO = (BusinessDAOIF) BusinessFacade.getEntityDAO(source);
 
     /*
-     * Remove the source from the allpaths table so we don't violate allpaths uniqueness constraints
+     * Remove the source from the allpaths table so we don't violate allpaths
+     * uniqueness constraints
      */
     List<? extends Business> parents = source.getParents(LocatedIn.CLASS).getAll();
     for (Business parent : parents)
@@ -575,12 +607,14 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   }
 
   /**
-   * Returns the JSONObject representation of the node and all of its children nodes
+   * Returns the JSONObject representation of the node and all of its children
+   * nodes
    * 
    * @param _entity
    *          Entity to serialize into a JSONObject
    * @param _ids
-   *          List of entity ids in which to include the children in the serialization
+   *          List of entity ids in which to include the children in the
+   *          serialization
    * @param _isRoot
    *          Flag indicating if the entity represents a root node of the tree
    * @return
@@ -687,12 +721,15 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     problem.delete();
   }
 
-  public static GeoEntity[] getOrderedAncestors(String oid)
+  public static GeoEntity[] getOrderedAncestors(String oid, String universeRelationshipId)
   {
     GeoEntity root = GeoEntity.getRoot();
     GeoEntity entity = GeoEntity.get(oid);
 
-    Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, entity, LocatedIn.CLASS);
+    String mdRelationshipId = getGeoEntityRelationship(universeRelationshipId);
+    MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(mdRelationshipId);
+
+    Collection<Term> ancestors = GeoEntityUtil.getOrderedAncestors(root, entity, mdRelationship.definesType());
 
     return ancestors.toArray(new GeoEntity[ancestors.size()]);
   }
@@ -811,7 +848,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     throw new ProgrammingErrorException("Country universal has more than one corresponding geo entity");
   }
 
-  public static ValueQuery getGeoEntitySuggestions(String parentOid, String universalId, String text, Integer limit)
+  public static ValueQuery getGeoEntitySuggestions(String parentOid, String universalId, String text, Integer limit, String mdRelationshipId)
   {
     ValueQuery query = new ValueQuery(new QueryFactory());
 
@@ -827,7 +864,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     label.setUserDefinedAlias(GeoEntity.DISPLAYLABEL);
     label.setUserDefinedDisplayLabel(GeoEntity.DISPLAYLABEL);
 
-    query.SELECT(oid, label);
+    query.SELECT_DISTINCT(oid, label);
     query.WHERE(label.LIKEi("%" + text + "%"));
 
     if (universalId != null && universalId.length() > 0)
@@ -837,10 +874,38 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
     if (parentOid != null && parentOid.length() > 0)
     {
-      LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
+      if (mdRelationshipId != null && mdRelationshipId.length() > 0)
+      {
+        String geoEntityRelationship = getGeoEntityRelationship(mdRelationshipId);
+        MdTermRelationshipDAOIF mdTermRelationship = (MdTermRelationshipDAOIF) MdTermRelationshipDAO.get(geoEntityRelationship);
 
-      query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
-      query.AND(aptQuery.getParentTerm().EQ(parentOid));
+        String packageName = DatabaseAllPathsStrategy.getPackageName((MdTerm) BusinessFacade.get(MdTermDAO.getMdTermDAO(GeoEntity.CLASS)));
+        String typeName = DatabaseAllPathsStrategy.getTypeName(mdTermRelationship);
+
+        BusinessQuery aptQuery = new BusinessQuery(query, packageName + "." + typeName);
+
+        query.AND(aptQuery.aReference(LocatedInAllPathsTable.PARENTTERM).EQ(parentOid));
+        query.AND(entityQuery.EQ(aptQuery.aReference(LocatedInAllPathsTable.CHILDTERM)));
+      }
+      else
+      {
+        LocatedInAllPathsTableQuery aptQuery = new LocatedInAllPathsTableQuery(query);
+
+        query.AND(entityQuery.EQ(aptQuery.getChildTerm()));
+        query.AND(aptQuery.getParentTerm().EQ(parentOid));
+      }
+    }
+    else if (mdRelationshipId != null && mdRelationshipId.length() > 0)
+    {
+      String geoEntityRelationship = getGeoEntityRelationship(mdRelationshipId);
+      MdTermRelationshipDAOIF mdTermRelationship = (MdTermRelationshipDAOIF) MdTermRelationshipDAO.get(geoEntityRelationship);
+
+      String packageName = DatabaseAllPathsStrategy.getPackageName((MdTerm) BusinessFacade.get(MdTermDAO.getMdTermDAO(GeoEntity.CLASS)));
+      String typeName = DatabaseAllPathsStrategy.getTypeName(mdTermRelationship);
+
+      BusinessQuery aptQuery = new BusinessQuery(query, packageName + "." + typeName);
+
+      query.AND(entityQuery.EQ(aptQuery.aReference(LocatedInAllPathsTable.CHILDTERM)));
     }
 
     query.ORDER_BY_ASC(geoLabel);
@@ -909,46 +974,43 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       throw new ProgrammingErrorException(e);
     }
   }
-  
+
   public static String getEntitiesBBOX(String[] ids)
   {
-	  if(ids.length > 0)
-	  {
-		  StringBuffer geoIdsStr = new StringBuffer();
-		  for(int i=0; i<ids.length; i++)
-		  {
-			  String oid = ids[i];
-			  
-			  if(i > 0){
-				  geoIdsStr.append(",");
-			  }
-			  geoIdsStr.append("'").append(oid).append("'");
-		  }
-		  
-		  
-		  ValueQuery vQuery = new ValueQuery(new QueryFactory());
-		  GeoEntityQuery query = new GeoEntityQuery(vQuery);
-	
-		  StringBuffer sql = new StringBuffer();
-		  sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
-		  sql.append(" FROM geo_entity WHERE geo_entity.oid = any (array["+geoIdsStr+"]);");
-		  
-		    	
-		  ResultSet bboxResult = Database.query(sql.toString());
-	
-		  return formatBBox(bboxResult).toString();
-	  }
-	  
-	  return null;
+    if (ids.length > 0)
+    {
+      StringBuffer geoIdsStr = new StringBuffer();
+      for (int i = 0; i < ids.length; i++)
+      {
+        String oid = ids[i];
+
+        if (i > 0)
+        {
+          geoIdsStr.append(",");
+        }
+        geoIdsStr.append("'").append(oid).append("'");
+      }
+
+      ValueQuery vQuery = new ValueQuery(new QueryFactory());
+      GeoEntityQuery query = new GeoEntityQuery(vQuery);
+
+      StringBuffer sql = new StringBuffer();
+      sql.append("SELECT ST_AsText(ST_Extent(" + query.getGeoMultiPolygon().getDbColumnName() + ")) AS bbox");
+      sql.append(" FROM geo_entity WHERE geo_entity.oid::text = any (array[" + geoIdsStr + "]);");
+
+      ResultSet bboxResult = Database.query(sql.toString());
+
+      return formatBBox(bboxResult).toString();
+    }
+
+    return null;
   }
-  
-  
+
   public static String getChildrenBBOX(String oid, String universalId)
   {
     GeoEntity entity = GeoEntity.get(oid);
 
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
-    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
 
     StringBuffer sql = new StringBuffer();
@@ -957,13 +1019,12 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     sql.append(" AND ((located_in.parent_oid ='" + entity.getOid() + "'");
     sql.append(" AND geo_entity.oid = located_in.child_oid)");
     sql.append(" AND geo_entity.universal = '" + universalId + "');");
-    
+
     ResultSet bboxResult = Database.query(sql.toString());
 
     return formatBBox(bboxResult).toString();
   }
-  
-  
+
   /**
    * Format the bounding box result set returned from a PostGIS database query
    * 
@@ -1041,14 +1102,15 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
     return bboxArr;
   }
-  
 
-  public static ValueQuery getChildren(String oid, String universalId, Integer limit)
+  public static ValueQuery getChildren(String oid, String universalId, Integer limit, String mdRelationshipId)
   {
+    MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(mdRelationshipId);
+
     GeoEntity entity = GeoEntity.get(oid);
 
     ValueQuery vQuery = new ValueQuery(new QueryFactory());
-    LocatedInQuery liQuery = new LocatedInQuery(vQuery);
+    RelationshipQuery liQuery = new RelationshipQuery(vQuery, mdRelationship.definesType());
     GeoEntityQuery query = new GeoEntityQuery(vQuery);
 
     Coalesce label = query.getDisplayLabel().localize(GeoEntity.DISPLAYLABEL);
@@ -1058,7 +1120,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     vQuery.SELECT(query.getGeoId());
     vQuery.SELECT(query.getUniversal().getDisplayLabel().localize(GeoEntity.UNIVERSAL));
     vQuery.WHERE(liQuery.parentOid().EQ(entity.getOid()));
-    vQuery.AND(query.locatedIn(liQuery));
+    vQuery.AND(query.getOid().EQ(liQuery.childOid()));
 
     if (universalId != null)
     {
@@ -1071,7 +1133,7 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     {
       vQuery.restrictRows(limit, 1);
     }
-    
+
     return vQuery;
   }
 
@@ -1123,7 +1185,9 @@ public class GeoEntityUtil extends GeoEntityUtilBase
 
   public static String publishLayers(String oid, String universalId, String existingLayerNames)
   {
-    LocationTargetPublisher publisher = new LocationTargetPublisher(oid, universalId, existingLayerNames);
+    MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.getMdRelationshipDAO(LocatedIn.CLASS);
+
+    LocationTargetPublisher publisher = new LocationTargetPublisher(mdRelationship, oid, universalId, existingLayerNames, GeometryType.MULTIPOLYGON);
 
     StringWriter writer = new StringWriter();
     JSONWriter jw = new JSONWriter(writer);
@@ -1203,6 +1267,28 @@ public class GeoEntityUtil extends GeoEntityUtilBase
   {
     GeoEntity entity = GeoEntity.get(oid);
 
+    /*
+     * Dont allow geo entities to be deleted if they have children
+     */
+    MdRelationship[] hierarchies = getHierarchies(null);
+
+    for (MdRelationship hierarchy : hierarchies)
+    {
+      String relationshipId = getGeoEntityRelationship(hierarchy.getOid());
+      MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(relationshipId);
+
+      RelationshipQuery query = new QueryFactory().relationshipQuery(mdRelationship.definesType());
+      query.WHERE(query.parentOid().EQ(entity.getOid()));
+
+      long count = query.getCount();
+
+      if (count > 0)
+      {
+        throw new CannotDeleteEntityExcepiton();
+      }
+
+    }
+
     List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
 
     for (ConfigurationIF configuration : configurations)
@@ -1211,5 +1297,85 @@ public class GeoEntityUtil extends GeoEntityUtilBase
     }
 
     entity.delete();
+  }
+
+  public static MdRelationship[] getHierarchies(String oid)
+  {
+    List<MdRelationship> hierarchies = new LinkedList<MdRelationship>();
+
+    // Universal root = Universal.getRoot();
+    // Universal universal = Universal.get(oid);
+
+    MdBusinessDAOIF mdBusiness = MdBusinessDAO.getMdBusinessDAO(Universal.CLASS);
+    List<MdRelationshipDAOIF> mdRelationships = mdBusiness.getAllChildMdRelationships();
+
+    for (MdRelationshipDAOIF hierarchyType : mdRelationships)
+    {
+      if (hierarchyType instanceof MdTermRelationshipDAOIF && !hierarchyType.definesType().equals(IsARelationship.CLASS))
+      {
+        // Note: Ordered ancestors always includes self
+        // Collection<?> parents = GeoEntityUtil.getOrderedAncestors(root,
+        // universal, hierarchyType.definesType());
+        //
+        // if (parents.size() > 0)
+        // {
+        hierarchies.add(MdRelationship.get(hierarchyType.getOid()));
+        // }
+      }
+    }
+
+    return hierarchies.toArray(new MdRelationship[hierarchies.size()]);
+  }
+
+  public static Universal[] getUniversals(String parentId, String mdRelationshipId)
+  {
+    Universal universal = Universal.get(parentId);
+    MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(mdRelationshipId);
+
+    List<Term> children = (List<Term>) universal.getDirectDescendants(mdRelationship.definesType()).getAll();
+
+    return children.toArray(new Universal[children.size()]);
+  }
+
+  public static String getGeoEntityRelationship(String universalRelationshipId)
+  {
+    MdRelationshipDAOIF mdRelationshipDAOIF = MdRelationshipDAO.get(universalRelationshipId);
+
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+
+    for (ConfigurationIF configuration : configurations)
+    {
+      String relationshipId = configuration.getGeoEntityRelationship(mdRelationshipDAOIF);
+
+      if (relationshipId != null)
+      {
+        return relationshipId;
+      }
+    }
+
+    throw new UnsupportedOperationException();
+  }
+
+  public static String findValidMdRelationship(String entityId)
+  {
+    GeoEntity entity = GeoEntity.get(entityId);
+    GeoEntity root = GeoEntity.getRoot();
+
+    MdRelationship[] hierarchies = getHierarchies(null);
+
+    for (MdRelationship hierarchy : hierarchies)
+    {
+      String mdRelationshipId = getGeoEntityRelationship(hierarchy.getOid());
+      MdRelationshipDAOIF mdRelationship = MdRelationshipDAO.get(mdRelationshipId);
+
+      List<Term> ancestors = entity.getDirectAncestors(mdRelationship.definesType()).getAll();
+
+      if (ancestors.size() > 0 && !ancestors.get(0).getOid().equals(root.getOid()))
+      {
+        return hierarchy.getOid();
+      }
+    }
+
+    return MdRelationshipDAO.getMdRelationshipDAO(AllowedIn.CLASS).getOid();
   }
 }

@@ -4,7 +4,7 @@ import { CommonModule} from '@angular/common';
 import { FormsModule} from '@angular/forms';
 import { XHRBackend, RequestOptions, Http} from '@angular/http';
 
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar'; 
 
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { ProgressService } from './progress-bar/progress.service';
@@ -34,9 +34,10 @@ import { EventService, IdService, BasicService} from './service/core.service';
 import { LocalizationService } from './service/localization.service';
 import { EventHttpService } from './service/event-http.service';
 
+import { CookieService } from 'angular2-cookie/services/cookies.service';
+
 import { AuthService } from './authentication/auth.service';
 
-import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 @NgModule({
   imports: [
@@ -97,8 +98,8 @@ export class CoreModule {
         ConfirmService,
         LocalizationService,
         IdService,
+        CookieService, 
         AuthService,
-        CookieService,    
         EventService,
         { 
           provide : EventHttpService,

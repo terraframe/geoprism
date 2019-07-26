@@ -18,9 +18,14 @@
  */
  
 .body {
-  background-color: black;
+  background-color: white;
   margin: 0;
   min-width: 100%;
+}
+
+.new-admin-design-main {
+    height: 100%;
+    overflow-y: auto;
 }
 
 .body, #container {
@@ -30,9 +35,15 @@
  
 #container{
   height: 100%; 
-  background-color: black;
+  background-color: white;
   margin: 0;
   min-width: 100%;  
+}
+
+#app-container {
+    background-image: url(../net/geoprism/images/homebackground.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 h1 {
@@ -72,9 +83,9 @@ h1 {
   overflow: hidden;
   height: 100vh;
   overflow-y: auto;
-  background-image: url(../net/geoprism/images/theme_background.png);
-  background-size: 100%;
-  background-repeat: no-repeat;
+  /* background-image: url(../net/geoprism/images/theme_background.png); */
+  /* background-size: 100%; */
+  /* background-repeat: no-repeat; */
 /*    background-position-y: -10%; */
 }
   
@@ -117,28 +128,34 @@ h1 {
     width: 650px;
 }
 
-.nav-option{
-
+.nav-option-wrapper {
+    background-color: #DBD7A5;
+    /* padding: 10px; */
 }
 
 .nav-icon-img{
-    border: solid white 5px;
-    border-radius: 15px;
+    /* border: solid white 5px; */
+    /* border-radius: 15px; */
     cursor: pointer;
     background-color: white;
 }
-
 .nav-icon-img:hover{
-    border: solid #019edc 5px;
+    border: solid grey 3px;
 }
 
-#dashboard-link{
-  cursor: pointer;
+.nav-icon-img-description {
+    text-align: left;
+    padding: 10px;
 }
 
 .nav-icon-img-label{
   text-align: center;
   margin-top: 10px;
+  color: #3E2A5A;
+}
+
+#dashboard-link{
+  cursor: pointer;
 }
 
 #header{

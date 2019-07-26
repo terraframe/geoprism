@@ -21,9 +21,7 @@ package net.geoprism.gis.geoserver;
 import java.io.File;
 import java.util.List;
 
-
-
-public class GeoserverFacade 
+public class GeoserverFacade
 {
   public static final String      GEOM_COLUMN = "geom";
 
@@ -56,12 +54,11 @@ public class GeoserverFacade
   {
     getService().removeStore();
   }
-  
+
   public static boolean workspaceExists()
   {
     return getService().workspaceExists();
   }
-
 
   public static void removeWorkspace()
   {
@@ -100,7 +97,8 @@ public class GeoserverFacade
   }
 
   /**
-   * Checks if the cache directory exists. This method does not check what tiles or zoom levels have been cached.
+   * Checks if the cache directory exists. This method does not check what tiles
+   * or zoom levels have been cached.
    * 
    * @param cacheName
    * @return
@@ -129,7 +127,8 @@ public class GeoserverFacade
   }
 
   /**
-   * Removes the style defined in Geoserver, including the .sld and .xml file artifacts.
+   * Removes the style defined in Geoserver, including the .sld and .xml file
+   * artifacts.
    * 
    * @param styleName
    *          The name of the style to delete.
@@ -179,7 +178,7 @@ public class GeoserverFacade
   {
     return getService().publishLayer(layer.getLayerName(), layer.getStyleName());
   }
-  
+
   /**
    * Removes the layer from geoserver.
    * 
@@ -189,6 +188,11 @@ public class GeoserverFacade
   public static void removeLayer(String layer)
   {
     getService().removeLayer(layer);
+  }
+
+  public static void forceRemoveLayer(String layer)
+  {
+    getService().forceRemoveLayer(layer);
   }
 
   public static void publishCache(String layer)
@@ -264,5 +268,29 @@ public class GeoserverFacade
   {
     return getService().getExpandedBBOX(views, expandVal);
   }
-  
+
+  public static boolean publishS3GeoTIFF(String storeName, String url)
+  {
+    return getService().publishS3GeoTIFF(storeName, url);
+  }
+
+  public static void removeCoverageStore(String storeName)
+  {
+    getService().removeCoverageStore(storeName);
+  }
+
+//  public static void forceRemoveLayer(String storeName)
+//  {
+//    getService().forceRemoveLayer(storeName);
+//  }
+//
+//  public static void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    getService().publishS3GeoTIFF(storeName, url);
+//  }
+
+  public static void publishGeoTiff(String storeName, File tiff)
+  {
+    getService().publishGeoTiff(storeName, tiff);
+  }
 }

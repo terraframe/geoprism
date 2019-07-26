@@ -20,26 +20,43 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SessionService } from './session.service';
+import { LoginHeaderComponent } from './login-header.component';
+import { HubService } from '../hub/hub.service';
+import { Application } from '../hub/application';
 
 declare var acp: any;
 
-@Component({  
-  selector: 'login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
-})
+@Component( {
+    selector: 'login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
+} )
 export class LoginComponent {
-  context:string;
-  username:string = '';
-  password:string = '';		  
+    context: string;
+    username: string = '';
+    password: string = '';
 
-  constructor(private service:SessionService, private router:Router) {
-    this.context = acp as string;
-  }
-  
-  onSubmit():void {
-    this.service.login(this.username, this.password).then(response => {
-      this.router.navigate([ '/' ]);
-    }); 
-  }
+    constructor( private service: SessionService, private hService: HubService, private router: Router ) {
+        this.context = acp as string;
+    }
+
+    onSubmit(): void {
+        this.service.login( this.username, this.password ).then( response => {
+
+            this.hService.applications().then( applications => {
+                if ( applications.length == 1 ) {
+                    this.open( applications[0] );
+                }
+                else {
+                    this.router.navigate( ['/menu/true'] );
+                }
+            } );
+
+        } );
+    }
+
+    open( application: Application ): void {
+        window.location.href = this.context + '/' + application.url;
+    }
+
 }

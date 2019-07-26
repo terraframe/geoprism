@@ -3,20 +3,61 @@
  *
  * This file is part of Runway SDK(tm).
  *
- * Runway SDK(tm) is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Runway SDK(tm) is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Runway SDK(tm). If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.runwaysdk.constants.DatabaseProperties;
+import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.gis.mapping.gwc.SeedRequest;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.system.gis.ConfigurationException;
+import com.runwaysdk.util.FileIO;
 
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;
@@ -24,30 +65,8 @@ import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
 import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
 import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.geoprism.dashboard.DashboardStyle;
 import net.geoprism.dashboard.layer.DashboardLayer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.runwaysdk.constants.DatabaseProperties;
-import com.runwaysdk.dataaccess.ValueObject;
-
-import com.runwaysdk.gis.mapping.gwc.SeedRequest;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.query.ValueQuery;
-import com.runwaysdk.system.gis.ConfigurationException;
-import com.runwaysdk.util.FileIO;
 
 public class GeoserverRestService implements GeoserverService
 {
@@ -90,6 +109,106 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to reload geoserver.");
     }
   }
+  
+//  public S3Object download(String key)
+//  {
+////  AmazonS3 client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+//    AmazonS3 client = new AmazonS3Client();
+//    
+////    String bucketName = AppProperties.getBucketName();
+//    String bucketName = "";
+//
+//    GetObjectRequest request = new GetObjectRequest(bucketName, key);
+//
+//    return client.getObject(request);
+//  }
+  
+  public void publishGeoTiff(String storeName, File geoTiff)
+  {
+    try
+    {
+      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, geoTiff))
+      {
+        GeoserverProperties.getPublisher().publishStyle("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+            "<StyledLayerDescriptor version=\"1.0.0\" \n" + 
+            " xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" \n" + 
+            " xmlns=\"http://www.opengis.net/sld\" \n" + 
+            " xmlns:ogc=\"http://www.opengis.net/ogc\" \n" + 
+            " xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n" + 
+            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
+            "  <!-- a Named Layer is the basic building block of an SLD document -->\n" + 
+            "  <NamedLayer>\n" + 
+            "    <Name>default_raster</Name>\n" + 
+            "    <UserStyle>\n" + 
+            "    <!-- Styles can have names, titles and abstracts -->\n" + 
+            "      <Title>Default Raster</Title>\n" + 
+            "      <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>\n" + 
+            "      <!-- FeatureTypeStyles describe how to render different features -->\n" + 
+            "      <!-- A FeatureTypeStyle for rendering rasters -->\n" + 
+            "      <FeatureTypeStyle>\n" + 
+            "        <Rule>\n" + 
+            "          <Name>rule1</Name>\n" + 
+            "          <Title>Opaque Raster</Title>\n" + 
+            "          <Abstract>A raster with 100% opacity</Abstract>\n" + 
+            "          <RasterSymbolizer>\n" + 
+            "            <Opacity>1.0</Opacity>\n" + 
+            "          </RasterSymbolizer>\n" + 
+            "        </Rule>\n" + 
+            "      </FeatureTypeStyle>\n" + 
+            "    </UserStyle>\n" + 
+            "  </NamedLayer>\n" + 
+            "</StyledLayerDescriptor>\n" + 
+            "", storeName);
+        
+        log.info("Published geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
+      }
+      else
+      {
+        log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
+      }
+    }
+    catch (Throwable t)
+    {
+      log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].", t);
+    }
+  }
+  
+//  @Override
+//  public void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    try
+//    {
+//      S3Object s3Obj = download(url);
+//      
+//      File temp = Files.createTempFile("geotiff-" + storeName, ".tif").toFile();
+//      IOUtils.copy(s3Obj.getObjectContent(), new FileOutputStream(temp));
+//      
+//      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, temp))
+//      {
+//        log.info("Published s3 geo tiff [" + storeName + "], [" + url + "].");
+//      }
+//      else
+//      {
+//        log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].");
+//      }
+//    }
+//    catch (Throwable t)
+//    {
+//      log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].", t);
+//    }
+//  }
+  
+  public void removeCoverageStore(String storeName)
+  {
+    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
+    {
+      log.info("Removed the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+    else
+    {
+      log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+  }
 
   public void removeStore()
   {
@@ -102,6 +221,18 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to remove the datastore [" + GeoserverProperties.getStore() + "].");
     }
   }
+
+//  public void removeCoverageStore(String storeName)
+//  {
+//    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
+//    {
+//      log.info("Removed the datastore [" + GeoserverProperties.getStore() + "].");
+//    }
+//    else
+//    {
+//      log.warn("Failed to remove the datastore [" + GeoserverProperties.getStore() + "].");
+//    }
+//  }
 
   public void removeWorkspace()
   {
@@ -549,7 +680,7 @@ public class GeoserverRestService implements GeoserverService
   {
     GeoServerRESTReader reader = GeoserverProperties.getReader();
 
-    boolean exists = reader.existsStyle(layer);
+    boolean exists = reader.existsLayer(GeoserverProperties.getWorkspace(), layer, true);
 
     return exists;
   }
@@ -725,4 +856,98 @@ public class GeoserverRestService implements GeoserverService
     }
   }
 
+  public boolean publishS3GeoTIFF(String storeName, String url)
+  {
+
+    try
+    {
+      boolean success = createS3CoverageStore(storeName, url);
+
+      if (success)
+      {
+        success = this.createS3Coverage(storeName, storeName);
+      }
+
+      return success;
+    }
+    catch (Exception e)
+    {
+      throw new ProgrammingErrorException(e);
+    }
+  }
+
+  private boolean createS3CoverageStore(String storeName, String url) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, UnsupportedEncodingException, IOException, ClientProtocolException
+  {
+    String workspace = GeoserverProperties.getWorkspace();
+    StringBuilder sbUrl = new StringBuilder(GeoserverProperties.getLocalPath()).append("/rest/workspaces/").append(workspace).append("/coveragestores");
+
+    JSONObject wObject = new JSONObject();
+    wObject.put("name", workspace);
+    wObject.put("link", workspace);
+
+    JSONObject coverageStore = new JSONObject();
+    coverageStore.put("name", storeName);
+    coverageStore.put("description", storeName);
+    coverageStore.put("type", "S3GeoTiff");
+    coverageStore.put("enabled", true);
+    coverageStore.put("workspace", wObject);
+    coverageStore.put("url", url);
+
+    JSONObject params = new JSONObject();
+    params.put("coverageStore", coverageStore);
+
+    return this.post(sbUrl, params);
+  }
+
+  private boolean createS3Coverage(String storeName, String coverageName) throws HttpException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException
+  {
+    String workspace = GeoserverProperties.getWorkspace();
+
+    StringBuilder sbUrl = new StringBuilder("https://localhost:8443/geoserver").append("/rest/workspaces/").append(workspace).append("/coveragestores/");
+    sbUrl.append(storeName).append("/coverages");
+
+    JSONArray array = new JSONArray();
+    array.put("WCS");
+    array.put("S3GeoTiff");
+
+    JSONObject keywords = new JSONObject();
+    keywords.put("string", array);
+
+    JSONObject coverage = new JSONObject();
+    coverage.put("name", coverageName);
+    coverage.put("keywords", keywords);
+    coverage.put("enabled", true);
+
+    JSONObject params = new JSONObject();
+    params.put("coverage", coverage);
+
+    return this.post(sbUrl, params);
+  }
+
+  private boolean post(StringBuilder sbUrl, JSONObject params) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, UnsupportedEncodingException, IOException, ClientProtocolException
+  {
+    SSLContextBuilder builder = new SSLContextBuilder();
+    builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+
+    SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+    HttpClientBuilder cbuilder = HttpClients.custom().setSSLSocketFactory(sslsf).setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+    boolean success = false;
+
+    try (CloseableHttpClient client = cbuilder.build())
+    {
+      StringEntity entity = new StringEntity(params.toString(), ContentType.APPLICATION_JSON);
+      String encoding = Base64.getEncoder().encodeToString( ( GeoserverProperties.getAdminUser() + ":" + GeoserverProperties.getAdminPassword() ).getBytes("UTF-8"));
+
+      HttpPost httpPost = new HttpPost(sbUrl.toString());
+      httpPost.setEntity(entity);
+      httpPost.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + encoding);
+
+      CloseableHttpResponse response = client.execute(httpPost);
+
+      success = response.getStatusLine().getStatusCode() == 201;
+    }
+    return success;
+  }
 }

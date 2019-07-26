@@ -39,6 +39,7 @@ import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Request;
 
 import net.geoprism.email.EmailSendAuthenticationException;
 import net.geoprism.email.EmailSendException;
@@ -57,6 +58,26 @@ public class EmailSetting extends EmailSettingBase
     super();
   }
   
+  public static void main(String[] args)
+  {
+    mainInReq(args);
+  }
+  @Request
+  private static void mainInReq(String[] args)
+  {
+    String[] toAddr = null;
+    if (args.length > 0)
+    {
+      toAddr = args;
+    }
+    
+    String subject = LocalizationFacade.getFromBundles("emailSettings.testEmailSubject");
+    String body = LocalizationFacade.getFromBundles("emailSettings.testEmailBody");
+    
+    System.out.println("email.username=" +  GeoprismProperties.getEmailUsername() + "\nemail.password=" + GeoprismProperties.getEmailPassword());
+    
+    sendEmail(subject, body, toAddr);
+  }
   
   /**
    * A reusable, easy way to send an email using the saved default EmailSetting. If toAddresses is null, they will be read from the default settings.

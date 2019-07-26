@@ -19,8 +19,18 @@
  
  .new-admin-design-main {
 	/* Accounting for the height of the header bar + a margin at the bottom */
- 	height: calc(100% - 88px);
+     /* height: calc(100% - 88px); */
  }	
+
+ #login-page {
+    background: url(../images/login-background.jpg) no-repeat center center fixed;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+ }
  
  
  /* sidebar styles */
@@ -370,44 +380,6 @@ table.com-runwaysdk-ui-factory-generic-datatable-DataTable.com-runwaysdk-ui-fact
 	width: 15%;
 }
 
- /* Location editor styles */
-
-.lw-inner-col {
- overflow-y: auto;
- height: 100%;	
-}
-
-.location-management-widget-section {
-	margin-bottom: 20px;
-}
-.location-management-list-container {
-/*   margin-top: 20px; */
-  border-top: solid 1px #ddd;
-  padding-top: 5px;
-}
-
-ul.location-management-list {
-  list-style-type: none;
-  padding-left: 20px;
-}
-
-.location-management-widget-section > input[type="text"]{
-	width:100%;
-	height:32px;
-	margin:0 11px 0 0;
-	padding:6px 10px;
-	font-size:14px;
-	line-height:18px;
-	color:#333;
-	border:1px solid #bbb;
-	background:#eee;
-	outline:none;
-}
-.location-management-widget-section > input[type="text"]:focus,
-.location-management-widget-section > input[type="text"]:active{border-color:#019edc;}
-.location-management-list-container .hover {
-  background: #B2BEB5;
-}
 
 .modal-form .check-block .chk-area { margin: 10px 0px 0 0;}
 

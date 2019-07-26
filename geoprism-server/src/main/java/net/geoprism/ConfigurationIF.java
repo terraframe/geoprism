@@ -25,7 +25,7 @@ import java.util.Set;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-
+import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 
 /**
@@ -107,4 +107,12 @@ public interface ConfigurationIF
    * @param mClass
    */
   public void onMappableClassDelete(MappableClass mClass);
+
+  /**
+   * Extension point which returns the geo entity realtionship which corresponds to the universal relationship
+   * 
+   * @param mdRelationshipDAOIF
+   * @return
+   */
+  public String getGeoEntityRelationship(MdRelationshipDAOIF mdRelationshipDAOIF);
 }

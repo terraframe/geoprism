@@ -36,7 +36,7 @@ public class NullGeoserverService implements GeoserverService
   {
 
   }
-
+  
   @Override
   public void removeWorkspace()
   {
@@ -128,11 +128,11 @@ public class NullGeoserverService implements GeoserverService
   {
 
   }
-  
+
   @Override
   public void forceRemoveLayer(String layer)
   {
-    
+
   }
 
   @Override
@@ -173,7 +173,7 @@ public class NullGeoserverService implements GeoserverService
 
     return false;
   }
-  
+
   @Override
   public boolean workspaceExists()
   {
@@ -190,6 +190,29 @@ public class NullGeoserverService implements GeoserverService
   public double[] getExpandedBBOX(List<String> views, double expandVal)
   {
     return new double[] { 0, 0, 0, 0 };
+  }
+
+  @Override
+  public boolean publishS3GeoTIFF(String storeName, String url)
+  {
+    return true;
+  }
+  
+  public void removeCoverageStore(String storeName)
+  {
+    
+  }
+
+//  @Override
+//  public void publishS3GeoTIFF(String storeName, String url)
+//  {
+//    
+//  }
+
+  @Override
+  public void publishGeoTiff(String storeName, File geoTiff)
+  {
+    // TODO Auto-generated method stub
   }
 
 }

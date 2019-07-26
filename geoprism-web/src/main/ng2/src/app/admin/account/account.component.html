@@ -3,9 +3,9 @@
   
   <message></message>
 
-  <form #form="ngForm" class="modal-form" (ngSubmit)="form.valid && onSubmit()">    
-    <div class="modal-dialog">
-      <div class="modal-content">
+  <form #form="ngForm" style="height:calc(100vh - 144px);padding-bottom: 20px;" class="modal-form" (ngSubmit)="form.valid && onSubmit()">    
+    <div class="modal-dialog" style="height: 100%;">
+      <div class="modal-content" style="height: 100%;overflow-y: auto;">
         <fieldset>            
           <div class="heading">
             <h3><localize key="account.user.heading"></localize></h3>
@@ -67,7 +67,7 @@
             </div>          
             <div class="holder" >
               <span class="text">
-                <input type="text" [(ngModel)]="account.user.username" name="username" required>
+                <input type="text" [disabled]="!account.user.newInstance && account.user.username === 'admin'" [(ngModel)]="account.user.username" name="username" required>
               </span>
             </div>
           </div>
@@ -107,6 +107,16 @@
               </div>
             </div>  
           </div>
+          <div *ngIf="!(!account.user.newInstance && account.user.username === 'admin')">
+            <div class="row-holder">
+              <div class="label-holder">
+                <label><localize key="account.inactive"></localize></label>
+              </div>
+              <div class="holder">
+                <boolean-field [(value)]="account.user.inactive"></boolean-field>
+              </div>
+            </div>
+          </div>
           <div *ngFor="let group of account.groups">
             <div class="heading">
               <h3><localize [key]="'com.runwaysdk.ui.userstable.UsersTable.' + group.name"></localize></h3>
@@ -117,7 +127,9 @@
                 <label>{{role.displayLabel}}</label>
               </div>          
               <div class="holder" >
-                <boolean-field [(value)]="role.assigned"></boolean-field>
+                <div class="check-block">
+                  <input type="radio" [value]="role.roleId" [(ngModel)]="group.assigned" [name]="group.name">
+                </div>              
               </div>
             </div>              
           </div>

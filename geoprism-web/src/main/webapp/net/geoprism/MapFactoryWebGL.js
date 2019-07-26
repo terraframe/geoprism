@@ -247,7 +247,7 @@
       
           // add scale bar
           map.addControl(new mapboxgl.ScaleControl({position: 'bottom-left', unit: 'imperial'}));
-          //map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+          map.addControl(new mapboxgl.NavigationControl({showCompass:false}), 'top-right');
         },
         
         // TODO: convert to webgl
@@ -285,58 +285,63 @@
             var layerName = layer.name;
             var styleObj = layer.style;
             
-                if (layerName.indexOf("point") !== -1){
-                  
-                  // add the main layer
-                   map.addLayer({
-                     "id": layerName,
-                     "source": source.name,
-                     "source-layer": layer.layer,                     
-                     "type": "circle",
-                     "paint": {
-                         "circle-radius": styleObj.radius,
-                         "circle-color": styleObj.fill,
-                         "circle-stroke-width": styleObj.strokeWidth,
-                         "circle-stroke-color": styleObj.strokeColor
-                     }                   
-                   });
-                   
-                   // add labels
-                   map.addLayer({
-                     "id": layerName + "-label",
-                     "source": source.name,
-                     "source-layer": layer.layer,                     
-                     "type": "symbol",
-                     "paint": {
-                         "text-color": "black",
-                         "text-halo-color": "#fff",
-                            "text-halo-width": 2
-                     },
-                     "layout": {
-                             "text-field": "{displayLabel}",
-                             "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-                             "text-offset": [0, 0.6],
-                             "text-anchor": "top",
-                             "text-size": 12
-                         }
-                   });
-                   
-                   // This layer is displayed when they hover over the feature
-                   map.addLayer({
-                     "id": layerName + "-hover",
-                     "source": source.name,
-                     "source-layer": layer.layer,                     
-                     "type": "circle",
-                     "paint": {
-                         "circle-radius": styleObj.radius,
-                         "circle-color": that.getHoverPointStyle().fill,
-                         "circle-opacity": that.getHoverPointStyle().opacity
-                     },
-                       "filter": ["==", "name", ""] // hide all features in the layer
-                    });
-                }
-                // Handle line layers
-                else if (layerName.indexOf("line") !== -1){
+            // add the main layer
+            map.addLayer({
+              "id": layerName + "-point",
+              "source": source.name,
+              "source-layer": layer.layer,                     
+              "type": "circle",
+              "paint": {
+                  "circle-radius": styleObj.radius,
+                  "circle-color": styleObj.fill,
+                  "circle-stroke-width": styleObj.strokeWidth,
+                  "circle-stroke-color": styleObj.strokeColor
+              },
+              'layout': {
+                'visibility' : layer.geomType.indexOf("POINT") !== -1 ? 'visible' : 'none'
+              }              
+            });
+            
+            // add labels
+            map.addLayer({
+              "id": layerName + "-point" + "-label",
+              "source": source.name,
+              "source-layer": layer.layer,                     
+              "type": "symbol",
+              "paint": {
+                  "text-color": "black",
+                  "text-halo-color": "#fff",
+                   "text-halo-width": 2
+              },
+              "layout": {
+                      "text-field": "{displayLabel}",
+                      "text-font": ["NotoSansRegular"],
+                      "text-offset": [0, 0.6],
+                      "text-anchor": "top",
+                      "text-size": 12,
+                      'visibility' : layer.geomType.indexOf("POINT") !== -1 ? 'visible' : 'none'
+                  }
+            });
+            
+            // This layer is displayed when they hover over the feature
+            map.addLayer({
+              "id": layerName + "-point" + "-hover",
+              "source": source.name,
+              "source-layer": layer.layer,                     
+              "type": "circle",
+              "paint": {
+                  "circle-radius": styleObj.radius,
+                  "circle-color": that.getHoverPointStyle().fill,
+                  "circle-opacity": that.getHoverPointStyle().opacity
+              },
+              'layout': {
+                  'visibility' : layer.geomType.indexOf("POINT") !== -1 ? 'visible' : 'none'
+              },
+              "filter": ["==", "name", ""] // hide all features in the layer
+             });
+            
+            
+                if (layerName.indexOf("line") !== -1){
                 	
                 	// add the main layer
                 	map.addLayer({
@@ -368,14 +373,14 @@
                 		},
                 		"layout": {
                 			"text-field": "{displayLabel}",
-                			"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                            "text-font": ["NotoSansRegular"],
                 			"text-offset": [0, 0.6],
                 			"text-anchor": "top",
                 			"text-size": 12
                 		}
                 	});                	
                 }
-                else if (layerName.indexOf("multipolygon") !== -1){
+                else if (layerName.indexOf("polygon") !== -1){
                   
                   if(layer.is3d){
                   
@@ -405,7 +410,10 @@
 //                       'fill-extrusion-height': layer.height,
 //                       'fill-extrusion-base': layer.base,
                        'fill-extrusion-opacity': .9
-                     }
+                     },
+                    'layout': {
+                        'visibility' : layer.geomType.indexOf("POLYGON") !== -1 ? 'visible' : 'none'
+                     }                                  
                  }
                     
                     
@@ -429,6 +437,9 @@
                           },
                      },
                     'fill-extrusion-opacity': .5,
+                    'layout': {
+                        'visibility' : layer.geomType.indexOf("POLYGON") !== -1 ? 'visible' : 'none'
+                     },                                  
                      "filter": ["==", "name", ""] // hide all features in the layer
                      });
                   }
@@ -443,7 +454,11 @@
                            "fill-outline-color": "black"
                            //"fill-stroke-width": 5,
                            //"fill-stroke-color": "#000000"
-                       }
+                       },
+                      'layout': {
+                         'visibility' : layer.geomType.indexOf("POLYGON") !== -1 ? 'visible' : 'none'
+                       }                                  
+                    
                    }
                     
                     map.addLayer(polygonSimpleStyle);
@@ -458,6 +473,9 @@
                        "fill-color": that.getHoverPolygonStyle().fill,
                        "fill-opacity": that.getHoverPolygonStyle().opacity
                      },
+                     'layout': {
+                         'visibility' : layer.geomType.indexOf("POLYGON") !== -1 ? 'visible' : 'none'
+                      },                     
                      "filter": ["==", "name", ""] // hide all features in the layer
                      });
                   }
@@ -477,10 +495,11 @@
                        },
                        "layout": {
                                "text-field": "{displayLabel}",
-                               "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                               "text-font": ["NotoSansRegular"],
                                "text-anchor": "center",
                                "text-size": 12,
-                               "symbol-spacing": 10000
+                               "symbol-spacing": 10000,
+                               'visibility' : layer.geomType.indexOf("POLYGON") !== -1 ? 'visible' : 'none'                               
                            }
                    });
                 }
@@ -529,6 +548,27 @@
               type: 'vector', 
               tiles: [protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/location/data?x={x}&y={y}&z={z}&config=' + encodeURIComponent(JSON.stringify(source.config))]
             });
+            
+            for(var i = 0; i < layers.length; i++) {
+            	var layer = layers[i];
+            	
+            	if(layer.geomType.indexOf("POINT") !== -1) {
+            		map.setLayoutProperty(layer.name + "-point", 'visibility', 'visible');            	            		
+            		map.setLayoutProperty(layer.name + "-point-label", 'visibility', 'visible');            	            		
+            		map.setLayoutProperty(layer.name + "-point-hover", 'visibility', 'visible');            	            		
+            		map.setLayoutProperty(layer.name, 'visibility', 'none');            	            		
+            		map.setLayoutProperty(layer.name + "-label", 'visibility', 'none');            	            		
+            		map.setLayoutProperty(layer.name + "-hover", 'visibility', 'none');            	            		
+            	}
+            	else {
+            		map.setLayoutProperty(layer.name + "-point", 'visibility', 'none');            	            		
+            		map.setLayoutProperty(layer.name + "-point-label", 'visibility', 'none');            	            		
+            		map.setLayoutProperty(layer.name + "-point-hover", 'visibility', 'none');            	            		
+            		map.setLayoutProperty(layer.name, 'visibility', 'visible');            	            		
+            		map.setLayoutProperty(layer.name + "-label", 'visibility', 'visible');            	            		
+            		map.setLayoutProperty(layer.name + "-hover", 'visibility', 'visible');            	            		
+            	}
+            }
           }
           else {
             this.addVectorLayer(source, layers);
@@ -1051,14 +1091,47 @@
             this.removeStaleMapFragments();
           }
           
+          var protocol = window.location.protocol;
+          var host = window.location.host;
+          
           // TODO: replace accessToken with TerraFrame or customer token
           mapboxgl.accessToken = 'pk.eyJ1IjoianVzdGlubGV3aXMiLCJhIjoiY2l0YnlpdWRkMDlkNjJ5bzZuMTR3MHZ3YyJ9.Ad0fQd8onRSYR9QZP6VyUw';
           var map = new mapboxgl.Map({
               container: 'mapDivId',
 //              minZoom: 2,
 //              maxBounds: [[-180,-90],[180,90]],
-              style: 'mapbox://styles/mapbox/satellite-v8'
-          });
+              style: {
+            	  "version": 8,
+            	  "name": "Satellite",
+            	  "metadata": {
+            	    "mapbox:autocomposite": true
+            	  },
+            	  "sources": {
+            	    "mapbox": {
+            	      "type": "raster",
+            	      "url": "mapbox://mapbox.satellite",
+            	      "tileSize": 256
+            	    }
+            	  },
+            	  "sprite": "mapbox://sprites/mapbox/satellite-v8",
+            	  "glyphs": protocol + '//' + host + com.runwaysdk.__applicationContextPath + '/glyphs/{fontstack}/{range}.pbf',            	  
+            	  "layers": [
+            	    {
+            	      "id": "background",
+            	      "type": "background",
+            	      "paint": {
+            	        "background-color": "rgb(4,7,14)"
+            	      }
+            	    },
+            	    {
+            	      "id": "satellite",
+            	      "type": "raster",
+            	      "source": "mapbox",
+            	      "source-layer": "mapbox_satellite_full"
+            	    }
+            	  ]
+            	}
+          });          
           
 //          map.on("zoomend", function(e){
 //        	  console.log(map.getZoom())

@@ -24,24 +24,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.geotools.geojson.geom.GeometryJSON;
+import org.hsqldb.lib.StringInputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 import org.postgis.jts.JtsGeometry;
 
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import com.runwaysdk.dataaccess.AttributeIF;
+import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
+import com.runwaysdk.dataaccess.MdStructDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.ValueObject;
+import com.runwaysdk.dataaccess.metadata.MdStructDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.dataaccess.AttributeGeometryIF;
 import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+import com.runwaysdk.system.gis.geo.GeoEntityDisplayLabel;
+import com.runwaysdk.system.gis.geo.GeoEntityQuery;
+import com.runwaysdk.system.gis.geo.GeometryType;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -66,14 +78,101 @@ public abstract class LayerPublisher
     POINT, POLYGON
   }
 
-  private String       layers;
+  private String              layers;
 
-  private GeometryJSON gjson;
+  private GeometryType        geometryType;
 
-  public LayerPublisher(String layers)
+  private GeometryJSON        gjson;
+
+  private MdRelationshipDAOIF mdRelationship;
+
+  public LayerPublisher(MdRelationshipDAOIF mdRelationship, String layers, GeometryType geometryType)
   {
+    this.mdRelationship = mdRelationship;
     this.layers = layers;
+    this.geometryType = geometryType;
     this.gjson = new GeometryJSON(8);
+  }
+
+  public MdRelationshipDAOIF getMdRelationship()
+  {
+    return mdRelationship;
+  }
+
+  public GeometryType getGeometryType()
+  {
+    return geometryType;
+  }
+
+  protected String getLabelColumn()
+  {
+    String labelColumn = "default_locale";
+
+    Locale locale = Session.getCurrentLocale();
+
+    if (locale != null)
+    {
+      MdStructDAOIF mdStruct = MdStructDAO.getMdStructDAO(GeoEntityDisplayLabel.CLASS);
+
+      if (mdStruct.definesAttribute(locale.toString()) != null)
+      {
+        labelColumn = locale.toString().toLowerCase();
+      }
+    }
+
+    return labelColumn;
+  }
+
+  protected String getGeometryColumn()
+  {
+    if (this.geometryType.equals(GeometryType.POINT))
+    {
+      return "geo_point";
+    }
+    else if (this.geometryType.equals(GeometryType.MULTIPOINT))
+    {
+      return "geo_multi_point";
+    }
+    else if (this.geometryType.equals(GeometryType.LINE))
+    {
+      return "geo_line";
+    }
+    else if (this.geometryType.equals(GeometryType.MULTILINE))
+    {
+      return "geo_multi_line";
+    }
+    else if (this.geometryType.equals(GeometryType.POLYGON))
+    {
+      return "geo_polygon";
+    }
+
+    return "geo_multi_polygon";
+  }
+
+  protected Selectable getGeometrySelectable(GeoEntityQuery query)
+  {
+    if (this.geometryType.equals(GeometryType.POINT))
+    {
+      return query.get(GeoEntity.GEOPOINT);
+    }
+    else if (this.geometryType.equals(GeometryType.MULTIPOINT))
+    {
+      return query.get(GeoEntity.GEOMULTIPOINT);
+    }
+    else if (this.geometryType.equals(GeometryType.LINE))
+    {
+      return query.get(GeoEntity.GEOLINE);
+    }
+    else if (this.geometryType.equals(GeometryType.MULTILINE))
+    {
+      return query.get(GeoEntity.GEOMULTILINE);
+    }
+    else if (this.geometryType.equals(GeometryType.POLYGON))
+    {
+      return query.get(GeoEntity.GEOPOLYGON);
+    }
+
+    return query.get(GeoEntity.GEOMULTIPOLYGON);
   }
 
   protected void removeGeoserverLayers() throws JSONException
@@ -224,9 +323,9 @@ public abstract class LayerPublisher
         writer.endObject();
       }
     }
-    catch(JSONException e)
+    catch (JSONException e)
     {
-    	throw new ProgrammingErrorException(e);
+      throw new ProgrammingErrorException(e);
     }
     finally
     {
@@ -282,7 +381,6 @@ public abstract class LayerPublisher
 
         geometries.add(geometry);
       }
-
 
       GeometryFactory geomFactory = new GeometryFactory();
       IGeometryFilter acceptAllGeomFilter = geometry -> true;
@@ -343,9 +441,11 @@ public abstract class LayerPublisher
 
       while (resultSet.next())
       {
+        String label = resultSet.getString("default_locale");
+        
         Map<String, String> data = new TreeMap<String, String>();
         data.put(GeoEntity.OID, resultSet.getString("oid"));
-        data.put(GeoEntity.DISPLAYLABEL, resultSet.getString("default_locale"));
+        data.put(GeoEntity.DISPLAYLABEL, label);
         data.put(GeoEntity.GEOID, resultSet.getString("geo_id"));
         data.put("height", "15"); // TODO: This should be set on the GeoEntity
         data.put("base", "0"); // TODO: This should be set on the GeoEntity
