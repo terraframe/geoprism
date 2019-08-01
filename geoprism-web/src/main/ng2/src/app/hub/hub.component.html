@@ -33,5 +33,29 @@
                     </div>
 
         </div>
+      <!-- 
+      <div style="width:100%">
+        <label style="text-align: left; width:50%; display: inline;">{{authService.getUsername()}} : {{authService.getRoles()}}</label>
+        <label style="text-align: right; width:50%; display: inline;">{{authService.getVersion()}}</label>
+      </div>
+      -->
+      <!--
+      <div class="container">
+		    <div class="row justify-content-between">
+			    <div class="col-4">
+			      {{authService.getUsername()}} : {{authService.getRoles()}}
+			    </div>
+			    <div class="col-4">
+			      {{authService.getVersion()}}
+			    </div>
+        </div>
+      </div>
+      -->
+      <p style="text-align:left;">
+		    {{authService.getUsername()}} : {{authService.getRoleDisplayLabels()}}
+		    <span style="float:right;">
+		      {{authService.getVersion()}}
+		    </span>
+			</p>
     </div>
 </div>

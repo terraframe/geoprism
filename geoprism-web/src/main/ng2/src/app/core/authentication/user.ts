@@ -1,5 +1,7 @@
 export class User {
-  username:string;
+  userName:string;
   loggedIn:boolean;
-  roles:string[];  
+  roles:string[];
+  roleDisplayLabels:string[];
+  version:string;
 }

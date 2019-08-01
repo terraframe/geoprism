@@ -25,8 +25,10 @@ import { User } from './user';
 export class AuthService {
   private user:User = {
     loggedIn:false,
-    username:'',
-    roles:[]
+    userName:'',
+    roles:[],
+    roleDisplayLabels:[],
+    version:"0"
   };
 
   constructor(private service:CookieService) {
@@ -44,8 +46,10 @@ export class AuthService {
   removeUser():void {
     this.user = {
       loggedIn:false,
-      username:'',
-      roles:[]
+      userName:'',
+      roles:[],
+      roleDisplayLabels:[],
+      version:"0"
     };	  
   }
   
@@ -55,5 +59,43 @@ export class AuthService {
   
   isAdmin():boolean {
     return this.user.roles.indexOf("geoprism.admin.Administrator") !== -1;
-  }  
+  }
+  
+  getUsername(): string {
+    return this.user.userName;
+  }
+  
+  getRoles(): string {
+    let str = "";
+    for (let i = 0; i < this.user.roles.length; ++i)
+    {
+      str = str + this.user.roles[i];
+      
+      if (i < this.user.roles.length-1)
+      {
+        str = str + ",";
+      }
+    }
+  
+    return str;
+  }
+  
+  getRoleDisplayLabels(): string {
+    let str = "";
+    for (let i = 0; i < this.user.roles.length; ++i)
+    {
+      str = str + this.user.roleDisplayLabels[i];
+      
+      if (i < this.user.roleDisplayLabels.length-1)
+      {
+        str = str + ",";
+      }
+    }
+  
+    return str;
+  }
+  
+  getVersion(): string {
+    return this.user.version;
+  }
 }

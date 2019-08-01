@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism;
 
-@com.runwaysdk.business.ClassSignature(hash = 1011971322)
-public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO 
+@com.runwaysdk.business.ClassSignature(hash = 2010227803)
+public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO
 {
   public final static String CLASS = "net.geoprism.RoleView";
-  private static final long serialVersionUID = 1011971322;
+  private static final long serialVersionUID = 2010227803;
   
   protected RoleViewDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -193,6 +175,14 @@ public abstract class RoleViewDTOBase extends com.runwaysdk.business.ViewDTO
     Object[] _parameters = new Object[]{user};
     com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.RoleViewDTO.CLASS, "getAdminRoles", _declaredTypes);
     return (net.geoprism.RoleViewDTO[]) clientRequest.invokeMethod(_metadata, null, _parameters);
+  }
+  
+  public static final java.lang.String getCurrentRoleDisplayLabels(com.runwaysdk.constants.ClientRequestIF clientRequest)
+  {
+    String[] _declaredTypes = new String[]{};
+    Object[] _parameters = new Object[]{};
+    com.runwaysdk.business.MethodMetaData _metadata = new com.runwaysdk.business.MethodMetaData(net.geoprism.RoleViewDTO.CLASS, "getCurrentRoleDisplayLabels", _declaredTypes);
+    return (java.lang.String) clientRequest.invokeMethod(_metadata, null, _parameters);
   }
   
   public static final java.lang.String getCurrentRoles(com.runwaysdk.constants.ClientRequestIF clientRequest)

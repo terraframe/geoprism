@@ -106,11 +106,14 @@ public class SessionController
     req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
 
     JSONArray roles = new JSONArray(RoleViewDTO.getCurrentRoles(clientRequest));
+    JSONArray roleDisplayLabels = new JSONArray(RoleViewDTO.getCurrentRoleDisplayLabels(clientRequest));
 
     CookieResponse response = new CookieResponse("user", -1);
     response.set("loggedIn", clientRequest.isLoggedIn());
     response.set("roles", roles);
+    response.set("roleDisplayLabels", roleDisplayLabels);
     response.set("userName", username);
+    response.set("version", GeoprismVersionProperties.getInstance().getVersion());
 
     return response;
   }

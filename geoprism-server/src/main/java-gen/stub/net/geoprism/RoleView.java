@@ -30,6 +30,7 @@ import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.RolesQuery;
 import com.runwaysdk.system.SingleActor;
@@ -89,7 +90,26 @@ public class RoleView extends RoleViewBase
 
     return array.toString();
   }
+  
+  public static java.lang.String getCurrentRoleDisplayLabels()
+  {
+    JSONArray array = new JSONArray();
 
+    SingleActor user = GeoprismUser.getCurrentUser();
+
+    if (user.isAppliedToDB())
+    {
+      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
+
+      for (RoleDAOIF role : roles)
+      {
+        array.put(role.getDisplayLabel(Session.getCurrentLocale()));
+      }
+    }
+
+    return array.toString();
+  }
+  
   @Transaction
   public static List<RoleView> getGeoprismRoleViews(GeoprismUser user)
   {
