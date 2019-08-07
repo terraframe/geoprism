@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.geoprism.account.UserInviteDTO;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import com.runwaysdk.mvc.RequestParamter;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.mvc.RestResponse;
+import com.runwaysdk.request.ServletRequestIF;
 import com.runwaysdk.system.SingleActorDTO;
 
 @Controller(url = "account")
@@ -79,7 +82,7 @@ public class AccountController
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF newInstance(ClientRequestIF request) throws JSONException
   {
-    GeoprismUserDTO user = new GeoprismUserDTO(request);
+    GeoprismUserDTO user = UserInviteDTO.newUserInst(request);
     RoleViewDTO[] roles = RoleViewDTO.getRoles(request, user);
 
     JSONArray groups = this.createRoleMap(roles);
@@ -173,5 +176,46 @@ public class AccountController
     }
 
     return new RestBodyResponse(account);
+  }
+  
+  public static String getBaseUrl(ServletRequestIF request)
+  {
+    String scheme = request.getScheme() + "://";
+    String serverName = request.getServerName();
+    String serverPort = ( request.getServerPort() == 80 ) ? "" : ":" + request.getServerPort();
+    String contextPath = request.getContextPath();
+    return scheme + serverName + serverPort + contextPath;
+  }
+  
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF inviteUser(ClientRequestIF request, ServletRequestIF sr, @RequestParamter(name = "invite") String sInvite, @RequestParamter(name = "roleIds") String roleIds) throws JSONException
+  {
+    UserInviteDTO.initiate(request, sInvite, roleIds, getBaseUrl(sr));
+
+    return new RestResponse();
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF newInvite(ClientRequestIF request) throws JSONException
+  {
+    RoleViewDTO[] roles = RoleViewDTO.getRoles(request, null);
+    JSONObject user = new JSONObject();
+    user.put("newInstance", true);
+
+    JSONArray groups = this.createRoleMap(roles);
+
+    RestResponse response = new RestResponse();
+    response.set("user", user);
+    response.set("groups", groups);
+
+    return response;
+  }
+
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF inviteComplete(ClientRequestIF request, @RequestParamter(name = "user", parser = ParseType.BASIC_JSON) GeoprismUserDTO user, @RequestParamter(name = "token") String token) throws JSONException
+  {
+    UserInviteDTO.complete(request, token, user);
+
+    return new RestResponse();
   }
 }

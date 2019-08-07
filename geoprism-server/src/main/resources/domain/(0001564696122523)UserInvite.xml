@@ -1,0 +1,91 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdBusiness name="net.geoprism.account.UserInvite" publish="true">
+        <attributes>
+          <text name="email" label="email" required="true" />
+          <char name="token" label="token" indexType="unique index" size="100" />
+          <dateTime name="startTime" label="time" required="true" />
+          <text name="roleIds" label="roleIds" required="false" />
+        </attributes>
+        <mdMethod name="newUserInst" label="newUserInst" static="true" returnType="net.geoprism.GeoprismUser">
+        </mdMethod>
+        <mdMethod name="initiate" label="initate" static="true" returnType="void">
+          <mdParameter name="invite" label="invite" order="0" type="java.lang.String"/>
+          <mdParameter name="serverUrl" label="serverUrl" order="1" type="java.lang.String"/>
+          <mdParameter name="roleIds" label="roleIds" order="2" type="java.lang.String"/>
+        </mdMethod>
+        <mdMethod name="complete" label="complete" static="true" returnType="void">
+          <mdParameter name="token" label="token" order="0" type="java.lang.String"/>
+          <mdParameter name="user" label="user" order="1" type="net.geoprism.GeoprismUser"/>
+        </mdMethod>
+      </mdBusiness>
+      
+      <mdException name="net.geoprism.account.InvalidUserInviteToken" label="Invalid user invite token" message="The provided token is invalid (it may have expired). You must ask your administrator for another invite." publish="false">
+      </mdException>
+    </create>
+    <update></update>
+    <permissions>
+      <method methodName="newUserInst" type="net.geoprism.account.UserInvite">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.GeoprismUser">
+            <operation name="CREATE" />
+          </mdBusinessPermission>
+        </grant>
+      </method>
+      <method methodName="initiate" type="net.geoprism.account.UserInvite">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInvite">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.EmailSetting">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.GeoprismUser">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </method>
+      <method methodName="complete" type="net.geoprism.account.UserInvite">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInvite">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.GeoprismUser">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </method>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInvite">
+            <mdMethodPermission methodName="initiate">  
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="PUBLIC">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInvite">
+            <mdMethodPermission methodName="complete">  
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+            <mdMethodPermission methodName="newUserInst">  
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.GeoprismUser">
+            <operation name="CREATE" />
+          </mdBusinessPermission>
+        </grant>
+      </role>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.account.UserInvite" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.account.InvalidUserInviteToken" type="com.runwaysdk.system.metadata.MdException"/>
+    </delete>
+  </undoIt>
+</version>

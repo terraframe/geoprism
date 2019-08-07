@@ -38,6 +38,11 @@ public class GeoprismProperties
     this.props = ConfigurationManager.getReader(GeoprismConfigGroup.COMMON, "geoprism.properties");
   }
 
+  public static int getInviteUserTokenExpireTime()
+  {
+    return Singleton.INSTANCE.props.getInteger("invite.user.token.expire.time", 72);
+  }
+  
   public static String getEmailFrom()
   {
     return Singleton.INSTANCE.props.getString("email.from");
