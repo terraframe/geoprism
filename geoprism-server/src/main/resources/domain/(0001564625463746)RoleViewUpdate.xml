@@ -1,0 +1,18 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create></create>
+    <update>
+      <mdView name="net.geoprism.RoleView">
+        <create>
+          <mdMethod name="getCurrentRoleDisplayLabels" label="getCurrentRoleDisplayLabels" static="true" returnType="java.lang.String"/>
+          <mdMethod name="getCurrentRoles" label="Get Current roles" returnType="java.lang.String" static="true" />
+        </create>
+      </mdView>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.RoleView.getCurrentRoleDisplayLabels" type="com.runwaysdk.system.metadata.MdMethod"/>
+    </delete>
+  </undoIt>
+</version>

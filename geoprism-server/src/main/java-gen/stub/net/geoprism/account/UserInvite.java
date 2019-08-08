@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.LocalizationFacade;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
@@ -149,10 +150,11 @@ public class UserInvite extends UserInviteBase
   private void sendEmail(String serverExternalUrl)
   {
     String address = this.getEmail();
-    String link = serverExternalUrl + "/project/management#/admin/invite-complete/" + this.getToken();
+    String link = serverExternalUrl + "/cgr/manage#/admin/invite-complete/" + this.getToken();
 
-    String subject = "UAS Data Management Account Invitation";
-    String body = "Congratulations!\n" + "\n" + "You have been invited to create an account with the UAS Data Management system. To do so, click the link below:\n" + "${link}\n" + "\n" + "The above link will stop working in ${expireTime} hours.\n" + "If you did not request this, you can safely ignore this email.";
+    String subject = LocalizationFacade.localize("user.invite.email.subject");
+    String body = LocalizationFacade.localize("user.invite.email.body");
+    body = body.replaceAll("\\\\n", "\n");
     body = body.replace("${link}", link);
     body = body.replace("${expireTime}", String.valueOf(expireTime));
 
