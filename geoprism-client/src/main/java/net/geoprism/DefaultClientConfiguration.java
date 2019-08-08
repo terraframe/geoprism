@@ -67,7 +67,7 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
     endpoint.add("forgotpassword/initiate");
     endpoint.add("forgotpassword/complete");
     endpoint.add("account/inviteComplete");
-    endpoint.add("account/newInstance");
+    endpoint.add("account/newUserInstance");
 
     return endpoint;
   }

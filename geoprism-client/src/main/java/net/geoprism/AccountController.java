@@ -93,6 +93,14 @@ public class AccountController
 
     return response;
   }
+  
+  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  public ResponseIF newUserInstance(ClientRequestIF request) throws JSONException
+  {
+    GeoprismUserDTO user = UserInviteDTO.newUserInst(request);
+    
+    return new RestBodyResponse(user);
+  }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
   public ResponseIF remove(ClientRequestIF request, @RequestParamter(name = "oid") String oid) throws JSONException
