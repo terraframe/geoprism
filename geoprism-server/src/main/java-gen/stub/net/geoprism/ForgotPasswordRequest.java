@@ -165,6 +165,7 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase
     
     String subject = LocalizationFacade.getFromBundles("forgotpassword.emailSubject");
     String body = LocalizationFacade.getFromBundles("forgotpassword.emailBody");
+    body = body.replaceAll("\\\\n", "\n");
     body = body.replace("${link}", link);
     body = body.replace("${expireTime}", String.valueOf(expireTime));
     
