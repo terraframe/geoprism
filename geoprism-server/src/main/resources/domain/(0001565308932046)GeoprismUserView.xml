@@ -1,0 +1,39 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <createOrUpdate>
+      <object type="com.runwaysdk.localization.LocalizedValueStore" key="account.roles">
+        <attribute name="storeTag" value="UIText" />
+        <attribute name="storeKey" value="account.roles" />
+        <attributeStruct name="storeValue">
+          <attribute name="defaultLocale" value="Roles" />
+        </attributeStruct>
+      </object>
+    </createOrUpdate>
+    <create>
+      <mdView name="net.geoprism.account.GeoprismUserView">
+        <attributes>
+          <reference name="user" type="net.geoprism.GeoprismUser"/>
+          <virtual concrete="username" type="com.runwaysdk.system.Users"/>
+          <!-- <virtual concrete="password" type="com.runwaysdk.system.Users"/> -->
+          <virtual concrete="firstName" type="net.geoprism.GeoprismUser"/>
+          <virtual concrete="lastName" type="net.geoprism.GeoprismUser"/>
+          <virtual concrete="email"  type="net.geoprism.GeoprismUser"/>
+          <virtual concrete="phoneNumber" type="net.geoprism.GeoprismUser"/>
+          <virtual concrete="inactive" type="com.runwaysdk.system.Users"/>
+          <boolean name="newInstance" />
+          <text name="roles" />
+        </attributes>
+        
+        <mdMethod name="page" static="true" returnType="java.lang.String">
+          <mdParameter name="pageNumber" order="0" type="java.lang.Integer"/>
+        </mdMethod>
+      </mdView>
+    </create>
+    <update></update>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.account.GeoprismUserView" type="com.runwaysdk.system.metadata.MdView"/>
+    </delete>
+  </undoIt>
+</version>
