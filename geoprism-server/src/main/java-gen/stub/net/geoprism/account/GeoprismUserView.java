@@ -25,6 +25,9 @@ public class GeoprismUserView extends GeoprismUserViewBase
   {
     GeoprismUserViewQuery query = new GeoprismUserViewQuery(new QueryFactory());
     
+    query.restrictRows(10, pageNumber);
+    query.ORDER_BY_ASC(query.getUsername());
+    
     return query.toJSON().toString();
   }
   
