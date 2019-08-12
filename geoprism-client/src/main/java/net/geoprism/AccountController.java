@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.geoprism.account.GeoprismUserViewDTO;
+import net.geoprism.account.GeoprismUserViewQueryDTO;
 import net.geoprism.account.UserInviteDTO;
 
 import org.json.JSONArray;
@@ -50,9 +52,13 @@ public class AccountController
   @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF page(ClientRequestIF request, @RequestParamter(name = "number") Integer number) throws JSONException
   {
-    GeoprismUserQueryDTO users = GeoprismUserDTO.getAllInstances(request, GeoprismUserDTO.USERNAME, true, 10, number);
-
-    return new RestBodyResponse(users);
+//    GeoprismUserQueryDTO users = GeoprismUserDTO.getAllInstances(request, GeoprismUserDTO.USERNAME, true, 10, number);
+//
+//    return new RestBodyResponse(users);
+    
+    String json = GeoprismUserViewDTO.page(request, number);
+    
+    return new RestBodyResponse(json);
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
