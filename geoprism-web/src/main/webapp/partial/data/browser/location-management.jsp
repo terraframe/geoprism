@@ -44,6 +44,15 @@
       
       		<div class="row-fluid">
 				<div class="location-management-widget-section">
+					<select ng-model="hierarchy.value" style="float: none;"
+						ng-options="opt.oid as opt.displayLabel for opt in hierarchy.options"
+						ng-change="ctrl.setHierarchy()">
+					</select>
+				</div>
+			</div>
+			
+      		<div class="row-fluid">
+				<div class="location-management-widget-section">
 					<input id="location-search-input" type="text"
 						placeholder="<gdb:localize key="location.management.autocomplete"/>"
 						autocomplete="on" callback-auto-complete
@@ -52,15 +61,6 @@
 				</div>
 			</div>
       
-      		<div class="row-fluid">
-				<div class="location-management-widget-section">
-					<select ng-model="hierarchy.value" style="float: none;"
-						ng-options="opt.oid as opt.displayLabel for opt in hierarchy.options"
-						ng-change="ctrl.setHierarchy()">
-					</select>
-				</div>
-			</div>
-
 			<div class="row-fluid">
 				<div class="location-management-widget-section">
 					<ul class="breadcrumb">
