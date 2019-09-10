@@ -102,15 +102,8 @@ public class SessionFilter implements Filter
 
         if (path.equals("/"))
         {
-          // ( (HttpServletResponse) res
-          // ).sendRedirect(httpServletRequest.getContextPath() +
-          // "/prism/home");
+          String homeUrl = ClientConfigurationService.getHomeUrl();
 
-          Class<?> pluginUtil = SessionFilter.class.getClassLoader().loadClass("net.geoprism.PluginUtil");
-          Method m = pluginUtil.getMethod("getGeoprismConfiguration", new Class<?>[] {});
-          GeoprismConfigurationIF config = (GeoprismConfigurationIF) m.invoke(null);
-
-          String homeUrl = config.getHomeUrl();
           ( (HttpServletResponse) res ).sendRedirect(httpServletRequest.getContextPath() + homeUrl);
         }
         else

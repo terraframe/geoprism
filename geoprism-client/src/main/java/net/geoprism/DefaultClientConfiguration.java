@@ -71,5 +71,16 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
 
     return endpoint;
   }
+  
+  @Override
+  public String getHomeUrl()
+  {
+    return "/prism/home";
+  }
 
+  @Override
+  public String getLoginUrl()
+  {
+    return "/prism/home#login";
+  }  
 }

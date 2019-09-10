@@ -95,25 +95,5 @@ public class PluginUtil extends PluginUtilBase
     }
     
     return initializers;
-  }
-  
-  public static GeoprismConfigurationIF getGeoprismConfiguration()
-  {
-    ServiceLoader<GeoprismConfigurationIF> loader = ServiceLoader.load(GeoprismConfigurationIF.class, Thread.currentThread().getContextClassLoader());
-
-    GeoprismConfigurationIF config;
-    
-    try
-    {
-      Iterator<GeoprismConfigurationIF> it = loader.iterator();
-
-      config = it.next();
-    }
-    catch (ServiceConfigurationError | NoSuchElementException ex)
-    {
-      config = new GeoprismDefaultConfiguration();
-    }
-    
-    return config;
-  }
+  }  
 }

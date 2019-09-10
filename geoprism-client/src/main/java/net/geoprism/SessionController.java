@@ -130,7 +130,7 @@ public class SessionController
     req.getSession().removeAttribute(ClientConstants.CLIENTSESSION);
     req.getSession().invalidate();
 
-    return new LogoutResponse(req.getContextPath() + "/", "user", 0);
+    return new LogoutResponse(req.getContextPath() + ClientConfigurationService.getLoginUrl(), "user", 0);
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
