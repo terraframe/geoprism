@@ -18,10 +18,12 @@
  */
 package net.geoprism;
 
-import net.geoprism.configuration.GeoprismConfigGroup;
+import java.io.File;
 
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.configuration.ConfigurationReaderIF;
+
+import net.geoprism.configuration.GeoprismConfigGroup;
 
 
 public class GeoprismProperties
@@ -75,7 +77,7 @@ public class GeoprismProperties
 
   public static Integer getForgotPasswordExpireTime()
   {
-    return Singleton.INSTANCE.props.getInteger("forgotPassword.expireTime");
+    return Singleton.INSTANCE.props.getInteger("forgotPassword.expireTime", 2);
   }
 
   public static Boolean getEncrypted()
@@ -91,5 +93,23 @@ public class GeoprismProperties
   public static boolean getSolrLookup()
   {
     return Singleton.INSTANCE.props.getBoolean("solr.lookup", false);
+  }
+  
+  /**
+   * Returns the root directory of a filesystem location which is suitable for long-term
+   * storage of files that will be preserved through patches, upgrades and reboots.
+   */
+  public static File getGeoprismFileStorage()
+  {
+    String geoprismVolume = Singleton.INSTANCE.props.getString("geoprism.volume", "/opt/geoprism/misc");
+    
+    File fGeoprismVolume = new File(geoprismVolume);
+    
+    if (!fGeoprismVolume.exists())
+    {
+      fGeoprismVolume.mkdirs();
+    }
+    
+    return fGeoprismVolume;
   }
 }

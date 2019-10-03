@@ -61,7 +61,7 @@ public class InputStreamResponse implements ResponseIF
 
       if (this.filename != null)
       {
-        resp.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(this.filename, "UTF-8"));
+        resp.setHeader("Content-disposition", "attachment; filename=\"" + URLEncoder.encode(this.filename, "UTF-8") + "\"");
       }
 
       OutputStream ostream = resp.getOutputStream();

@@ -25,6 +25,9 @@ import java.util.NoSuchElementException;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import com.runwaysdk.constants.VaultInfo;
+import com.runwaysdk.constants.VaultProperties;
+
 import net.geoprism.dhis2.DHIS2PluginIF;
 import net.geoprism.gis.geoserver.GeoserverInitializerIF;
 
@@ -55,6 +58,9 @@ public class PluginUtil extends PluginUtilBase
   
   public static GeoprismPatcherIF getPatcher()
   {
+    System.out.println("Default vault path : " + VaultProperties.getPath(VaultInfo.DEFAULT));
+    System.out.println("geoprism file storage path : " + GeoprismProperties.getGeoprismFileStorage().getAbsolutePath());
+    
     ServiceLoader<GeoprismPatcherIF> loader = ServiceLoader.load(GeoprismPatcherIF.class, Thread.currentThread().getContextClassLoader());
 
     GeoprismPatcherIF patcher;
