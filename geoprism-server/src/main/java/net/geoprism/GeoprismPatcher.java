@@ -33,7 +33,7 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.util.ClasspathResource;
+import com.runwaysdk.resource.ClasspathResource;
 import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
