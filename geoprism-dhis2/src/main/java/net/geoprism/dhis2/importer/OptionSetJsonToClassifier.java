@@ -73,12 +73,10 @@ public class OptionSetJsonToClassifier
       String runwayId = DHIS2Util.getRunwayIdFromDhis2Id(jsonOption.getString("id"));
       if (runwayId == null)
       {
-        logger.error("Unable to find runwayId mapping for DHIS2 option [" + jsonOption.getString("id") + "].");
+        logger.error("Database integrity problem: OptionSet [" + json.getString("id") + "] references Option [" + jsonOption.getString("id") + "] which does not exist (or was not imported properly).");
       }
       else
       {
-        logger.info("Found mapping for DHIS2 option [" + jsonOption.getString("id") + "].");
-        
         Classifier option = Classifier.get(runwayId);
         
         option.addLink(classy, ClassifierIsARelationship.CLASS);

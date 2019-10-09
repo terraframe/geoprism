@@ -19,12 +19,16 @@
 package net.geoprism.dhis2.importer;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.geoprism.dhis2.util.DHIS2Util;
 import net.geoprism.ontology.Classifier;
 
 public class OptionJsonToClassifier
 {
+  private final Logger logger = LoggerFactory.getLogger(OptionSetJsonToClassifier.class);
+  
   private JSONObject json;
   
   public OptionJsonToClassifier(JSONObject json)
@@ -45,6 +49,12 @@ public class OptionJsonToClassifier
       
       DHIS2Util.mapIds(classy.getId(), json.getString("id"));
       DHIS2Util.mapOptionCode(classy.getId(), json.getString("code"));
+    }
+    else
+    {
+      // All three of these are required attributes in DHIS2. Apparently their database is allowed to have invalid data.
+      
+      logger.error("Database integrity problem: missing either code, id or name in option json [" + json.toString() + "].");
     }
   }
 }
