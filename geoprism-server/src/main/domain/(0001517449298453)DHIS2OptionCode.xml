@@ -24,7 +24,7 @@
       <mdBusiness name="net.geoprism.dhis2.OptionCodeMapping" label="Option Code Mapping">
         <attributes>
           <char name="runwayId" size="64" indexType="unique index" label="Runway Id" />
-          <char name="code" size="64" label="code" />
+          <text name="code" label="code" />
         </attributes>
       </mdBusiness>
     </create>

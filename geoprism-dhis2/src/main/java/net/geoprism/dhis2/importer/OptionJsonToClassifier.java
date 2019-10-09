@@ -34,14 +34,17 @@ public class OptionJsonToClassifier
   
   public void apply()
   {
-    Classifier classy = new Classifier();
-    classy.getDisplayLabel().setValue(json.getString("name"));
-    classy.setClassifierId(json.getString("id"));
-    classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
-    classy.setCategory(false);
-    classy.apply();
-    
-    DHIS2Util.mapIds(classy.getId(), json.getString("id"));
-    DHIS2Util.mapOptionCode(classy.getId(), json.getString("code"));
+    if (json.has("code") && json.has("id") && json.has("name"))
+    {
+      Classifier classy = new Classifier();
+      classy.getDisplayLabel().setValue(json.getString("name"));
+      classy.setClassifierId(json.getString("id"));
+      classy.setClassifierPackage(OptionSetJsonToClassifier.DHIS2_CLASSIFIER_PACKAGE_PREFIX + json.getString("id"));
+      classy.setCategory(false);
+      classy.apply();
+      
+      DHIS2Util.mapIds(classy.getId(), json.getString("id"));
+      DHIS2Util.mapOptionCode(classy.getId(), json.getString("code"));
+    }
   }
 }

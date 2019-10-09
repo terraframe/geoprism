@@ -20,6 +20,8 @@ package net.geoprism.dhis2.importer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.geoprism.dhis2.util.DHIS2Util;
 import net.geoprism.ontology.Classifier;
@@ -27,6 +29,8 @@ import net.geoprism.ontology.ClassifierIsARelationship;
 
 public class OptionSetJsonToClassifier
 {
+  private final Logger logger = LoggerFactory.getLogger(OptionSetJsonToClassifier.class);
+  
   private JSONObject json;
   
   private Classifier classy;
@@ -65,9 +69,20 @@ public class OptionSetJsonToClassifier
     for (int i = 0; i < options.length(); ++i)
     {
       JSONObject jsonOption = options.getJSONObject(i);
-      Classifier option = Classifier.get(DHIS2Util.getRunwayIdFromDhis2Id(jsonOption.getString("id")));
       
-      option.addLink(classy, ClassifierIsARelationship.CLASS);
+      String runwayId = DHIS2Util.getRunwayIdFromDhis2Id(jsonOption.getString("id"));
+      if (runwayId == null)
+      {
+        logger.error("Unable to find runwayId mapping for DHIS2 option [" + jsonOption.getString("id") + "].");
+      }
+      else
+      {
+        logger.info("Found mapping for DHIS2 option [" + jsonOption.getString("id") + "].");
+        
+        Classifier option = Classifier.get(runwayId);
+        
+        option.addLink(classy, ClassifierIsARelationship.CLASS);
+      }
     }
   }
 }
