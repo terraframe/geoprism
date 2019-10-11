@@ -21,6 +21,8 @@ package net.geoprism.gis.geoserver;
 import java.io.File;
 import java.util.List;
 
+import org.geotools.data.ows.WMSCapabilities;
+
 public class GeoserverFacade
 {
   public static final String      GEOM_COLUMN = "geom";
@@ -292,5 +294,10 @@ public class GeoserverFacade
   public static void publishGeoTiff(String storeName, File tiff)
   {
     getService().publishGeoTiff(storeName, tiff);
+  }
+  
+  public static WMSCapabilities getCapabilities(String layer)
+  {
+    return getService().getCapabilities(layer);
   }
 }

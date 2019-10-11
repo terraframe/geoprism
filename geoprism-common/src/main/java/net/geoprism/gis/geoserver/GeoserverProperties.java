@@ -18,20 +18,20 @@
  */
 package net.geoprism.gis.geoserver;
 
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import net.geoprism.configuration.GeoprismConfigGroup;
 
 import org.apache.commons.logging.LogFactory;
 
 import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.configuration.ConfigurationReaderIF;
 import com.runwaysdk.configuration.RunwayConfigurationException;
-
-
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
-import net.geoprism.configuration.GeoprismConfigGroup;
 
 public class GeoserverProperties 
 {
