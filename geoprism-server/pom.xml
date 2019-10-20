@@ -46,13 +46,11 @@
       <artifactId>runwaysdk-gis-server</artifactId>
       <version>${runway.version}</version>
     </dependency>
-<!-- 
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-orientdb</artifactId>
       <version>${runway.version}</version>
     </dependency>    
- -->    
     <dependency>
       <groupId>net.geoprism</groupId>
       <artifactId>geoprism-common</artifactId>
