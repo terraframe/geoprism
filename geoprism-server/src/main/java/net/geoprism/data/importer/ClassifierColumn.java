@@ -18,11 +18,11 @@
  */
 package net.geoprism.data.importer;
 
-import net.geoprism.ontology.Classifier;
-
 import org.apache.poi.ss.usermodel.Cell;
 
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
+
+import net.geoprism.ontology.Classifier;
 
 public class ClassifierColumn extends ExcelColumn
 {

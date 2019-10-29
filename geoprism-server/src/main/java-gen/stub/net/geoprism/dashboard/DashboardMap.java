@@ -57,27 +57,6 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
 
-import net.geoprism.MappableClass;
-import net.geoprism.MappableClassQuery;
-import net.geoprism.TaskExecutor;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.dashboard.layer.DashboardLayer;
-import net.geoprism.dashboard.layer.DashboardReferenceLayer;
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-import net.geoprism.dashboard.layer.HasLayer;
-import net.geoprism.dashboard.layer.HasLayerQuery;
-import net.geoprism.dashboard.query.MdAttributeViewPredicate;
-import net.geoprism.dashboard.query.ThematicQueryBuilder;
-import net.geoprism.data.DropViewTask;
-import net.geoprism.data.etl.excel.ValueQueryExcelExporter;
-import net.geoprism.gis.geoserver.GeoserverBatch;
-import net.geoprism.gis.geoserver.GeoserverFacade;
-import net.geoprism.gis.geoserver.GeoserverProperties;
-import net.geoprism.gis.wrapper.MapVisitor;
-import net.geoprism.ontology.GeoEntityUtil;
-import net.geoprism.util.Iterables;
-import net.geoprism.util.Predicate;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -130,6 +109,27 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+
+import net.geoprism.MappableClass;
+import net.geoprism.MappableClassQuery;
+import net.geoprism.TaskExecutor;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.layer.DashboardLayer;
+import net.geoprism.dashboard.layer.DashboardReferenceLayer;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.layer.HasLayer;
+import net.geoprism.dashboard.layer.HasLayerQuery;
+import net.geoprism.dashboard.query.MdAttributeViewPredicate;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
+import net.geoprism.data.DropViewTask;
+import net.geoprism.data.etl.excel.ValueQueryExcelExporter;
+import net.geoprism.gis.geoserver.GeoserverBatch;
+import net.geoprism.gis.geoserver.GeoserverFacade;
+import net.geoprism.gis.geoserver.GeoserverProperties;
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.ontology.GeoEntityUtil;
+import net.geoprism.util.Iterables;
+import net.geoprism.util.Predicate;
 
 public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.wrapper.Map
 {

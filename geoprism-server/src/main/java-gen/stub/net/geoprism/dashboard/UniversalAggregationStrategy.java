@@ -18,13 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-import net.geoprism.dashboard.layer.EmptyLayerInformation;
-import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
-import net.geoprism.dashboard.query.ThematicQueryBuilder;
-import net.geoprism.gis.geoserver.GeoserverFacade;
-import net.geoprism.gis.wrapper.FeatureType;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -38,6 +31,12 @@ import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
+
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.query.GeoEntityThematicQueryBuilder;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
+import net.geoprism.gis.geoserver.GeoserverFacade;
+import net.geoprism.gis.wrapper.FeatureType;
 
 public class UniversalAggregationStrategy extends UniversalAggregationStrategyBase 
 {

@@ -20,8 +20,6 @@ package net.geoprism.data.importer;
 
 import java.util.List;
 
-import net.geoprism.KeyGeneratorIF;
-
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
@@ -34,6 +32,8 @@ import com.runwaysdk.dataaccess.io.excel.ImportListener;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+
+import net.geoprism.KeyGeneratorIF;
 
 public class GenericTypeExcelListenerBuilder
 {

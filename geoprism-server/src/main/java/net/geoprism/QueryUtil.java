@@ -28,7 +28,6 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdTableDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.generation.loader.LoaderDecorator;
-
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.GenericBusinessQuery;
 import com.runwaysdk.query.GenericTableQuery;

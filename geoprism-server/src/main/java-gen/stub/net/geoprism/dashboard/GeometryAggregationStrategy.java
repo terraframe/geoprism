@@ -18,15 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.QueryUtil;
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-import net.geoprism.dashboard.layer.EmptyLayerInformation;
-import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
-import net.geoprism.dashboard.query.ThematicQueryBuilder;
-import net.geoprism.gis.geoserver.GeoserverFacade;
-import net.geoprism.gis.wrapper.FeatureType;
-import net.geoprism.localization.LocalizationFacade;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -47,6 +38,15 @@ import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoNode;
+
+import net.geoprism.QueryUtil;
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.layer.EmptyLayerInformation;
+import net.geoprism.dashboard.query.GeometryThematicQueryBuilder;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
+import net.geoprism.gis.geoserver.GeoserverFacade;
+import net.geoprism.gis.wrapper.FeatureType;
+import net.geoprism.localization.LocalizationFacade;
 
 public class GeometryAggregationStrategy extends GeometryAggregationStrategyBase 
 {

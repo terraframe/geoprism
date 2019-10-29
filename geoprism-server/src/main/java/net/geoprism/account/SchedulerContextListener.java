@@ -18,10 +18,9 @@
  */
 package net.geoprism.account;
 
-import net.geoprism.context.ServerContextListener;
-
-
 import com.runwaysdk.system.scheduler.SchedulerManager;
+
+import net.geoprism.context.ServerContextListener;
 
 public class SchedulerContextListener implements ServerContextListener
 {

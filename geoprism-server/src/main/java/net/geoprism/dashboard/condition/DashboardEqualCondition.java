@@ -19,7 +19,6 @@
 package net.geoprism.dashboard.condition;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-
 import com.runwaysdk.query.AttributeBoolean;
 import com.runwaysdk.query.AttributeCharacter;
 import com.runwaysdk.query.AttributeDate;

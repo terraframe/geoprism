@@ -32,9 +32,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.geoprism.KeyGeneratorIF;
-import net.geoprism.ontology.Classifier;
-
 import org.apache.commons.io.FileUtils;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -49,7 +46,6 @@ import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-
 import com.runwaysdk.gis.dataaccess.MdAttributeMultiPolygonDAOIF;
 import com.runwaysdk.gis.dataaccess.MdAttributePointDAOIF;
 import com.runwaysdk.gis.geometry.GeometryHelper;
@@ -68,6 +64,9 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
+
+import net.geoprism.KeyGeneratorIF;
+import net.geoprism.ontology.Classifier;
 
 /**
  * Class responsible for importing GeoEntity definitions from a shapefile.

@@ -18,13 +18,6 @@
  */
 package net.geoprism.gis.geoserver;
 
-import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
-import it.geosolutions.geoserver.rest.GeoServerRESTReader;
-import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
-import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
-import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
-import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -38,9 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.layer.DashboardLayer;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.logging.Log;
@@ -71,6 +61,15 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.ConfigurationException;
 import com.runwaysdk.util.FileIO;
+
+import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
+import it.geosolutions.geoserver.rest.GeoServerRESTReader;
+import it.geosolutions.geoserver.rest.encoder.GSLayerEncoder;
+import it.geosolutions.geoserver.rest.encoder.datastore.GSPostGISDatastoreEncoder;
+import it.geosolutions.geoserver.rest.encoder.feature.GSFeatureTypeEncoder;
+import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.layer.DashboardLayer;
 
 public class GeoserverRestService implements GeoserverService
 {

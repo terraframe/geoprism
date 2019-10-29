@@ -23,16 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.DashboardMap;
-import net.geoprism.dashboard.DashboardStyle;
-import net.geoprism.dashboard.DashboardThematicStyle;
-import net.geoprism.dashboard.query.ThematicQueryBuilder;
-import net.geoprism.gis.geoserver.GeoserverFacade;
-import net.geoprism.gis.wrapper.FeatureType;
-import net.geoprism.gis.wrapper.MapVisitor;
-import net.geoprism.gis.wrapper.ReferenceLayer;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +39,16 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardMap;
+import net.geoprism.dashboard.DashboardStyle;
+import net.geoprism.dashboard.DashboardThematicStyle;
+import net.geoprism.dashboard.query.ThematicQueryBuilder;
+import net.geoprism.gis.geoserver.GeoserverFacade;
+import net.geoprism.gis.wrapper.FeatureType;
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.gis.wrapper.ReferenceLayer;
 
 public class DashboardReferenceLayer extends DashboardReferenceLayerBase implements ReferenceLayer
 {

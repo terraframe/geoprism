@@ -21,7 +21,6 @@ package net.geoprism.data.importer;
 import java.util.LinkedList;
 
 import com.runwaysdk.dataaccess.ValueObject;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.session.Request;
 

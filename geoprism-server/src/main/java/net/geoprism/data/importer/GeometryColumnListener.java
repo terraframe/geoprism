@@ -30,7 +30,6 @@ import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
-
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.session.Session;
 import com.vividsolutions.jts.geom.Geometry;

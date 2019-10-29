@@ -20,7 +20,6 @@ package net.geoprism.data.importer;
 
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 

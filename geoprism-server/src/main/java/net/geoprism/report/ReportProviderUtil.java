@@ -23,12 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.runwaysdk.query.GeneratedComponentQuery;
+
 import net.geoprism.DateParseException;
 import net.geoprism.dashboard.condition.DashboardCondition;
 import net.geoprism.localization.LocalizationFacade;
-
-
-import com.runwaysdk.query.GeneratedComponentQuery;
 
 public class ReportProviderUtil 
 {

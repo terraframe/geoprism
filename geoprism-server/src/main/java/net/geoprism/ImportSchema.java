@@ -18,12 +18,12 @@
  */
 package net.geoprism;
 
-import net.geoprism.data.importer.GeoprismImportPlugin;
-
 import com.runwaysdk.dataaccess.io.Versioning;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.session.Request;
+
+import net.geoprism.data.importer.GeoprismImportPlugin;
 
 public class ImportSchema
 {

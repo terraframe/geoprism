@@ -24,7 +24,6 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-
 import com.runwaysdk.query.AggregateFunction;
 import com.runwaysdk.query.Attribute;
 import com.runwaysdk.query.AttributeChar;

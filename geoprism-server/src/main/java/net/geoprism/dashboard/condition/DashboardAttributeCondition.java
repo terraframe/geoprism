@@ -20,7 +20,6 @@ package net.geoprism.dashboard.condition;
 
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;

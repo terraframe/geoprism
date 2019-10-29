@@ -30,7 +30,6 @@ import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
-
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.AttributeReference;
 import com.runwaysdk.query.Coalesce;

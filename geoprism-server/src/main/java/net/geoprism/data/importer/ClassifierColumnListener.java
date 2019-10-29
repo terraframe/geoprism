@@ -21,10 +21,6 @@ package net.geoprism.data.importer;
 import java.util.List;
 import java.util.Locale;
 
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierQuery;
-import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
@@ -36,10 +32,13 @@ import com.runwaysdk.dataaccess.io.excel.ExcelAdapter;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierQuery;
+import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 
 public class ClassifierColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener
 {

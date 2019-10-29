@@ -20,9 +20,9 @@ package net.geoprism.report;
 
 import java.util.List;
 
-import net.geoprism.dashboard.condition.DashboardCondition;
-
 import org.json.JSONArray;
+
+import net.geoprism.dashboard.condition.DashboardCondition;
 
 
 

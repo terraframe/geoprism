@@ -22,11 +22,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.MappableClass;
-import net.geoprism.MappableClassGeoNode;
-import net.geoprism.MappableClassGeoNodeQuery;
-import net.geoprism.ontology.GeoEntityUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +36,11 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.metadata.MdAttributeMultiPolygon;
 import com.runwaysdk.system.gis.metadata.MdAttributePoint;
 import com.runwaysdk.system.metadata.MdAttribute;
+
+import net.geoprism.MappableClass;
+import net.geoprism.MappableClassGeoNode;
+import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class AggregationStrategyView extends AggregationStrategyViewBase 
 {

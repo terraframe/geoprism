@@ -18,9 +18,6 @@
  */
 package net.geoprism.account;
 
-import net.geoprism.DefaultConfiguration;
-import net.geoprism.GeoprismUserIF;
-
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
@@ -40,13 +37,15 @@ import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.business.rbac.SingleActorDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.InvalidLoginException;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
+
+import net.geoprism.DefaultConfiguration;
+import net.geoprism.GeoprismUserIF;
 
 public class ExternalProfile extends ExternalProfileBase implements GeoprismUserIF
 {

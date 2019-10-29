@@ -21,14 +21,14 @@ package net.geoprism.ontology;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.TermSynonymRelationship;
-
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.business.ontology.TermAndRel;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
+
+import net.geoprism.TermSynonymRelationship;
 
 public class ClassifierSynonym extends ClassifierSynonymBase 
 {

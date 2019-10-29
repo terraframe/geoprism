@@ -24,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.business.rbac.Authenticate;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 

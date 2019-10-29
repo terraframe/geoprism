@@ -29,8 +29,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.geoprism.util.Predicate;
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -49,6 +47,8 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.session.Session;
+
+import net.geoprism.util.Predicate;
 
 public class ValueQueryExcelExporter
 {

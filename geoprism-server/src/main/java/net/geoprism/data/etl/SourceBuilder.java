@@ -20,10 +20,6 @@ package net.geoprism.data.etl;
 
 import java.util.List;
 
-import net.geoprism.ConfigurationIF;
-import net.geoprism.ConfigurationService;
-import net.geoprism.DataUploader;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +34,10 @@ import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.dataaccess.metadata.MdViewDAO;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdViewQuery;
+
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
+import net.geoprism.DataUploader;
 
 public class SourceBuilder
 {

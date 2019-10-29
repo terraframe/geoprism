@@ -26,8 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.geoprism.ontology.GeoEntityUtil;
-
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
@@ -36,6 +34,8 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
+
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class TargetFieldGeoEntityBinding extends TargetFieldGeoEntityBindingBase 
 {

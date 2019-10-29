@@ -2,8 +2,6 @@ package net.geoprism.account;
 
 import java.util.Set;
 
-import net.geoprism.GeoprismUser;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,6 +9,8 @@ import com.runwaysdk.business.rbac.RoleDAOIF;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
+
+import net.geoprism.GeoprismUser;
 
 public class GeoprismUserView extends GeoprismUserViewBase
 {

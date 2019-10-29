@@ -23,12 +23,6 @@ import java.awt.GraphicsEnvironment;
 import java.util.Arrays;
 import java.util.Locale;
 
-import net.geoprism.SessionParameterFacade;
-import net.geoprism.dashboard.layer.DashboardLayer;
-import net.geoprism.gis.sld.SLDMapVisitor;
-import net.geoprism.gis.wrapper.MapVisitor;
-import net.geoprism.gis.wrapper.Style;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +43,12 @@ import com.runwaysdk.system.metadata.MdAttributeMoment;
 import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdAttributeText;
 import com.runwaysdk.system.metadata.MdAttributeVirtual;
+
+import net.geoprism.SessionParameterFacade;
+import net.geoprism.dashboard.layer.DashboardLayer;
+import net.geoprism.gis.sld.SLDMapVisitor;
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.gis.wrapper.Style;
 
 public class DashboardStyle extends DashboardStyleBase implements Style
 {

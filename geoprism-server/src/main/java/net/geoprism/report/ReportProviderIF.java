@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.json.JSONException;
 
-
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
 

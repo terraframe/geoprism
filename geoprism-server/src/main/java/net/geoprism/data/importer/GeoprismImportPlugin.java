@@ -22,29 +22,6 @@ import java.io.File;
 import java.net.URI;
 import java.util.List;
 
-import net.geoprism.ClassUniversalQuery;
-import net.geoprism.MappableAttribute;
-import net.geoprism.MappableClass;
-import net.geoprism.MappableClassGeoNodeQuery;
-import net.geoprism.MappableClassQuery;
-import net.geoprism.context.ProjectDataConfiguration;
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.DashboardBuilder;
-import net.geoprism.dashboard.DashboardQuery;
-import net.geoprism.dashboard.DashboardState;
-import net.geoprism.dashboard.DashboardTypeInfo;
-import net.geoprism.data.CachedEndpoint;
-import net.geoprism.data.LocationImporter;
-import net.geoprism.data.XMLEndpoint;
-import net.geoprism.data.XMLLocationImporter;
-import net.geoprism.data.aws.AmazonEndpoint;
-import net.geoprism.data.etl.LocalPersistenceStrategy;
-import net.geoprism.data.etl.TargetBinding;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationship;
-import net.geoprism.ontology.ClassifierQuery;
-import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
-
 import org.xml.sax.Attributes;
 
 import com.runwaysdk.business.Business;
@@ -56,7 +33,6 @@ import com.runwaysdk.constants.MdClassInfo;
 import com.runwaysdk.constants.MdElementInfo;
 import com.runwaysdk.constants.ServerProperties;
 import com.runwaysdk.constants.SingleActorInfo;
-import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.BusinessDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
@@ -95,6 +71,29 @@ import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeTermQuery;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdClassQuery;
+
+import net.geoprism.ClassUniversalQuery;
+import net.geoprism.MappableAttribute;
+import net.geoprism.MappableClass;
+import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.MappableClassQuery;
+import net.geoprism.context.ProjectDataConfiguration;
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.DashboardBuilder;
+import net.geoprism.dashboard.DashboardQuery;
+import net.geoprism.dashboard.DashboardState;
+import net.geoprism.dashboard.DashboardTypeInfo;
+import net.geoprism.data.CachedEndpoint;
+import net.geoprism.data.LocationImporter;
+import net.geoprism.data.XMLEndpoint;
+import net.geoprism.data.XMLLocationImporter;
+import net.geoprism.data.aws.AmazonEndpoint;
+import net.geoprism.data.etl.LocalPersistenceStrategy;
+import net.geoprism.data.etl.TargetBinding;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.ontology.ClassifierQuery;
+import net.geoprism.ontology.ClassifierTermAttributeRootQuery;
 
 public class GeoprismImportPlugin implements ImportPluginIF
 {
@@ -684,7 +683,6 @@ public class GeoprismImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
-      ServerProperties.setAllowModificationOfMdAttribute(true);
       ServerProperties.setIgnoreSiteMaster(true);
 
       try
@@ -725,7 +723,6 @@ public class GeoprismImportPlugin implements ImportPluginIF
       }
       finally
       {
-        ServerProperties.setAllowModificationOfMdAttribute(false);
         ServerProperties.setIgnoreSiteMaster(false);
       }
     }
@@ -741,7 +738,6 @@ public class GeoprismImportPlugin implements ImportPluginIF
     @Override
     public void onStartElement(String localName, Attributes attributes, TagContext context)
     {
-      ServerProperties.setAllowModificationOfMdAttribute(true);
       ServerProperties.setIgnoreSiteMaster(true);
 
       try
@@ -786,7 +782,6 @@ public class GeoprismImportPlugin implements ImportPluginIF
       }
       finally
       {
-        ServerProperties.setAllowModificationOfMdAttribute(false);
         ServerProperties.setIgnoreSiteMaster(false);
       }
     }

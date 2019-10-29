@@ -24,13 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import net.geoprism.ClassUniversalQuery;
-import net.geoprism.MappableAttribute;
-import net.geoprism.MappableClassGeoNodeQuery;
-import net.geoprism.MappableClassQuery;
-import net.geoprism.dashboard.layer.DashboardReferenceLayer;
-import net.geoprism.dashboard.layer.DashboardReferenceLayerQuery;
-
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
@@ -49,6 +42,12 @@ import com.runwaysdk.system.gis.geo.GeoNodeQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdClassQuery;
+
+import net.geoprism.ClassUniversalQuery;
+import net.geoprism.MappableClassGeoNodeQuery;
+import net.geoprism.MappableClassQuery;
+import net.geoprism.dashboard.layer.DashboardReferenceLayer;
+import net.geoprism.dashboard.layer.DashboardReferenceLayerQuery;
 
 public class MetadataWrapper extends MetadataWrapperBase 
 {

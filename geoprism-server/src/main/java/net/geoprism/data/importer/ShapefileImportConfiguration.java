@@ -21,14 +21,13 @@ package net.geoprism.data.importer;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.geoprism.KeyGeneratorIF;
-
 import org.opengis.feature.type.AttributeDescriptor;
 
 import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-
 import com.runwaysdk.system.gis.geo.GeoEntity;
+
+import net.geoprism.KeyGeneratorIF;
 
 public class ShapefileImportConfiguration 
 {

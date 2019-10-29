@@ -28,11 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.geoprism.ContentStream;
-import net.geoprism.MappableClass;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationship;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +38,11 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeTermDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+
+import net.geoprism.ContentStream;
+import net.geoprism.MappableClass;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
 
 public class ProblemResponse implements ImportResponseIF
 {

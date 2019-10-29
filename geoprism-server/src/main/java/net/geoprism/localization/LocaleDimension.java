@@ -31,7 +31,6 @@ import com.runwaysdk.dataaccess.MdDimensionDAOIF;
 import com.runwaysdk.dataaccess.io.FileReadException;
 import com.runwaysdk.dataaccess.metadata.MdDimensionDAO;
 
-
 import net.geoprism.configuration.GeoprismConfigGroup;
 
 public class LocaleDimension 

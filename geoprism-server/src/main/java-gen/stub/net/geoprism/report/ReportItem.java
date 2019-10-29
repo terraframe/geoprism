@@ -33,11 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.oda.driver.session.IClientSession;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.birt.core.archive.FileArchiveWriter;
 import org.eclipse.birt.core.archive.IDocArchiveReader;
@@ -86,6 +81,11 @@ import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.util.FileIO;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
+
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.oda.driver.session.IClientSession;
 
 public class ReportItem extends ReportItemBase 
 {
