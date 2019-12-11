@@ -186,7 +186,7 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   }
 
   @Request
-  private void runWithRequest()
+  protected void runWithRequest()
   {
     runWithTransaction();
   }
