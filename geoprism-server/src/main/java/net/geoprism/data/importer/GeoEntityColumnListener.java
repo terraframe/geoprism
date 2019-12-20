@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import net.geoprism.KeyGeneratorIF;
-import net.geoprism.ontology.GeoEntityUtil;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
@@ -41,7 +38,6 @@ import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
 import com.runwaysdk.dataaccess.io.excel.ExcelUtil;
 import com.runwaysdk.dataaccess.io.excel.ImportListener;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.OR;
 import com.runwaysdk.query.QueryFactory;
@@ -54,6 +50,9 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
+
+import net.geoprism.KeyGeneratorIF;
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class GeoEntityColumnListener extends ExcelAdapter implements ExcelExportListener, ImportListener
 {

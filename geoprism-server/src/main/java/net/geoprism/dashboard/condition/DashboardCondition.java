@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;

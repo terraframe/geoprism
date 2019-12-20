@@ -18,10 +18,10 @@
  */
 package net.geoprism.gis.geoserver;
 
-import net.geoprism.ontology.LayerPublisher.LayerType;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import net.geoprism.ontology.LayerPublisher.LayerType;
 
 public class GeoserverLayer implements GeoserverLayerIF
 {

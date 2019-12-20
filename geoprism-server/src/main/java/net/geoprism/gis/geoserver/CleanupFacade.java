@@ -24,18 +24,16 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.SessionParameterFacade;
-import net.geoprism.data.DatabaseUtil;
-import net.geoprism.util.Iterables;
-
 import org.apache.commons.io.FileUtils;
 
 import com.runwaysdk.constants.VaultProperties;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-
 import com.runwaysdk.session.Request;
+
+import net.geoprism.SessionParameterFacade;
+import net.geoprism.data.DatabaseUtil;
+import net.geoprism.util.Iterables;
 
 public class CleanupFacade 
 {

@@ -28,7 +28,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
-
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.AllowedInQuery;

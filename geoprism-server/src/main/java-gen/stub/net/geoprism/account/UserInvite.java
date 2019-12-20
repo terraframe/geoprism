@@ -23,10 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import net.geoprism.EmailSetting;
-import net.geoprism.GeoprismProperties;
-import net.geoprism.GeoprismUser;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -37,6 +33,10 @@ import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+
+import net.geoprism.EmailSetting;
+import net.geoprism.GeoprismProperties;
+import net.geoprism.GeoprismUser;
 
 public class UserInvite extends UserInviteBase
 {

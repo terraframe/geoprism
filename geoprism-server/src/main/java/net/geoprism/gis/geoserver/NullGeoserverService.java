@@ -22,9 +22,17 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.geotools.data.ows.WMSCapabilities;
+
 public class NullGeoserverService implements GeoserverService
 {
 
+  @Override
+  public WMSCapabilities getCapabilities(String layer)
+  {
+    return null;
+  }
+  
   @Override
   public void refresh()
   {

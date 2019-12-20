@@ -26,12 +26,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.geoprism.data.importer.LocatedInBean.BuildTypes;
-
 import com.runwaysdk.dataaccess.RelationshipDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
-
 import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.query.OIterator;
@@ -41,6 +38,8 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.system.metadata.MdEntity;
+
+import net.geoprism.data.importer.LocatedInBean.BuildTypes;
 
 public class LocatedInBuilder 
 {

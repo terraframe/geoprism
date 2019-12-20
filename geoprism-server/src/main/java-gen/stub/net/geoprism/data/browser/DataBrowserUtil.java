@@ -21,9 +21,6 @@ package net.geoprism.data.browser;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.ConfigurationIF;
-import net.geoprism.ConfigurationService;
-
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.Entity;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
@@ -33,6 +30,9 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.EntityQuery;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
 
 public class DataBrowserUtil extends DataBrowserUtilBase 
 {

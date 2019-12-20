@@ -33,20 +33,21 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.util.ClasspathResource;
 import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
+import com.runwaysdk.constants.ServerProperties;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
+import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
 import com.runwaysdk.patcher.RunwayPatcher;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.resource.ClasspathResource;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -64,8 +65,8 @@ import net.geoprism.data.XMLLocationImporter;
 import net.geoprism.data.aws.AmazonEndpoint;
 import net.geoprism.data.importer.GeoprismImportPlugin;
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 
 public class GeoprismPatcher implements GeoprismPatcherIF
 {
@@ -98,6 +99,8 @@ public class GeoprismPatcher implements GeoprismPatcherIF
 
   public static void main(String[] args)
   {
+    ServerProperties.setAllowModificationOfMdAttribute(true);
+
     GeoprismPatcherIF patcher = PluginUtil.getPatcher();
     patcher.initialize(args);
     patcher.run();
@@ -183,7 +186,7 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   }
 
   @Request
-  private void runWithRequest()
+  protected void runWithRequest()
   {
     runWithTransaction();
   }

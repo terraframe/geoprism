@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -46,6 +47,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.geotools.data.ows.WMSCapabilities;
+import org.geotools.data.wms.WebMapServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -207,6 +210,26 @@ public class GeoserverRestService implements GeoserverService
     else
     {
       log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+    }
+  }
+  
+  @Override
+  public WMSCapabilities getCapabilities(String layer)
+  {
+    try {
+      String path = GeoserverProperties.getLocalPath() + "/" + GeoserverProperties.getWorkspace();
+      
+      if (layer != null)
+      {
+        path = path + "/" + layer;
+      }
+      
+      path = path + "/wms";
+      
+      WebMapServer wms = new WebMapServer( new URL(path), 1000000 );
+      return wms.getCapabilities();
+    } catch ( Exception e ) {
+      throw new ProgrammingErrorException(e);
     }
   }
 

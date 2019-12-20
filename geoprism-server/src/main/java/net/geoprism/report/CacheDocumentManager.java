@@ -19,11 +19,11 @@
 package net.geoprism.report;
 
 import java.io.File;
+import java.util.Base64;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.axis.encoding.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -61,7 +61,7 @@ public class CacheDocumentManager implements Runnable
         {
           for (File file : files)
           {
-            String sessionId = new String(Base64.decode(file.getName()));
+            String sessionId = new String(Base64.getDecoder().decode(file.getName()));
 
             if (!SessionFacade.containsSession(sessionId))
             {

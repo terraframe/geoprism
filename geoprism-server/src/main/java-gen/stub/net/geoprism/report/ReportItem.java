@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,12 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.geoprism.dashboard.Dashboard;
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.oda.driver.session.IClientSession;
-
-import org.apache.axis.encoding.Base64;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.birt.core.archive.FileArchiveWriter;
 import org.eclipse.birt.core.archive.IDocArchiveReader;
@@ -86,6 +81,11 @@ import com.runwaysdk.system.gis.geo.LocatedInQuery;
 import com.runwaysdk.util.FileIO;
 import com.runwaysdk.vault.VaultFileDAO;
 import com.runwaysdk.vault.VaultFileDAOIF;
+
+import net.geoprism.dashboard.Dashboard;
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.oda.driver.session.IClientSession;
 
 public class ReportItem extends ReportItemBase 
 {
@@ -836,7 +836,7 @@ public class ReportItem extends ReportItemBase
     SessionIF session = Session.getCurrentSession();
     String sessionId = session.getOid();
 
-    return Base64.encode(sessionId.getBytes());
+    return Base64.getEncoder().encodeToString(sessionId.getBytes());
   }
 
   public void validatePermissions()

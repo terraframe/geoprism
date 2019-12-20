@@ -54,6 +54,7 @@ import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.MdTermRelationshipDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.database.BusinessDAOFactory;
 import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
@@ -1180,7 +1181,22 @@ public class GeoEntityUtil extends GeoEntityUtilBase
       }
     }
 
-    return GeoEntity.get(oid);
+    if (oid.length() == 36)
+    {
+      try
+      {
+        return GeoEntity.get(oid);
+      }
+      catch (DataNotFoundException e)
+      {
+        return GeoEntity.getByKey(oid);
+      }
+    }
+    else
+    {
+      return GeoEntity.getByKey(oid);
+    }
+
   }
 
   public static String publishLayers(String oid, String universalId, String existingLayerNames)

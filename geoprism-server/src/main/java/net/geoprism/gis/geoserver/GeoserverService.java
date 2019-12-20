@@ -21,6 +21,8 @@ package net.geoprism.gis.geoserver;
 import java.io.File;
 import java.util.List;
 
+import org.geotools.data.ows.WMSCapabilities;
+
 public interface GeoserverService
 {
   public void refresh();
@@ -160,4 +162,6 @@ public interface GeoserverService
   public void removeCoverageStore(String storeName);
   
   public void publishGeoTiff(String storeName, File geoTiff);
+  
+  public WMSCapabilities getCapabilities(String layer);
 }

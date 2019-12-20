@@ -18,11 +18,10 @@
  */
 package net.geoprism.report;
 
-import net.geoprism.dashboard.condition.DashboardCondition;
-
-
 import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.ValueQuery;
+
+import net.geoprism.dashboard.condition.DashboardCondition;
 
 public class ReportConditionHandler implements ReportConditionHandlerIF
 {

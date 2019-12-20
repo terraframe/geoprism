@@ -18,12 +18,12 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-
 import org.json.JSONObject;
 
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoNode;
+
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
 
 public abstract class AggregationStrategy extends AggregationStrategyBase 
 {

@@ -18,13 +18,12 @@
  */
 package net.geoprism.gis.geoserver;
 
-import net.geoprism.util.Predicate;
-
-
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.session.SessionIF;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.util.Predicate;
 
 public class SessionPredicate implements Predicate<String>
 {

@@ -18,12 +18,12 @@
  */
 package net.geoprism.account;
 
-import net.geoprism.GeoprismUserQuery;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.runwaysdk.query.OIterator;
+
+import net.geoprism.GeoprismUserQuery;
 
 /**
  *

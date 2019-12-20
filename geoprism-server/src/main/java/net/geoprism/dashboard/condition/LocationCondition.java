@@ -21,10 +21,6 @@ package net.geoprism.dashboard.condition;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.QueryUtil;
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.ontology.GeoEntityUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +34,10 @@ import com.runwaysdk.query.GeneratedComponentQuery;
 import com.runwaysdk.query.Selectable;
 import com.runwaysdk.query.ValueQuery;
 import com.runwaysdk.system.gis.geo.GeoEntity;
+
+import net.geoprism.QueryUtil;
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class LocationCondition extends DashboardCondition 
 {

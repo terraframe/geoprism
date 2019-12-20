@@ -20,9 +20,6 @@ package net.geoprism.dashboard;
 
 import java.util.List;
 
-import net.geoprism.gis.wrapper.MapVisitor;
-import net.geoprism.gis.wrapper.ThematicStyle;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +28,9 @@ import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+
+import net.geoprism.gis.wrapper.MapVisitor;
+import net.geoprism.gis.wrapper.ThematicStyle;
 
 
 public class DashboardThematicStyle extends DashboardThematicStyleBase implements ThematicStyle

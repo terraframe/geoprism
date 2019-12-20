@@ -24,8 +24,6 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.data.XMLEndpoint;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +38,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.data.XMLEndpoint;
 
 public class AmazonEndpoint implements XMLEndpoint
 {

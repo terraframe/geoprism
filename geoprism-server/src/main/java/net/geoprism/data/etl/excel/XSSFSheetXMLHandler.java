@@ -18,8 +18,6 @@
  */
 package net.geoprism.data.etl.excel;
 
-import net.geoprism.data.etl.ColumnType;
-
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -30,6 +28,8 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import net.geoprism.data.etl.ColumnType;
 
 /**
  * This class handles the processing of a sheet#.xml sheet part of a XSSF .xlsx

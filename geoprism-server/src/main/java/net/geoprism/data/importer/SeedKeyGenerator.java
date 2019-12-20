@@ -20,10 +20,9 @@ package net.geoprism.data.importer;
 
 import java.util.Random;
 
-import net.geoprism.KeyGeneratorIF;
-
-
 import com.runwaysdk.system.gis.geo.GeoEntity;
+
+import net.geoprism.KeyGeneratorIF;
 
 public class SeedKeyGenerator implements KeyGeneratorIF
 {

@@ -21,13 +21,13 @@ package net.geoprism.data.etl;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.geoprism.MappableClass;
-
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdView;
+
+import net.geoprism.MappableClass;
 
 public class ExcelSourceBinding extends ExcelSourceBindingBase 
 {

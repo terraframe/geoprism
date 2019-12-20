@@ -22,14 +22,10 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import net.geoprism.data.importer.LocatedInBean.BuildTypes;
-import net.geoprism.localization.LocalizationFacade;
-
 import com.runwaysdk.ProblemException;
 import com.runwaysdk.ProblemIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
@@ -38,6 +34,9 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.LocatedInQuery;
+
+import net.geoprism.data.importer.LocatedInBean.BuildTypes;
+import net.geoprism.localization.LocalizationFacade;
 
 public class LocatedInManager extends TaskObservable implements UncaughtExceptionHandler
 {

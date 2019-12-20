@@ -21,7 +21,6 @@ package net.geoprism;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.runwaysdk.session.Session;
 import com.runwaysdk.session.SessionIF;
 

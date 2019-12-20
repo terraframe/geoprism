@@ -26,9 +26,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import net.geoprism.context.CountryDataConfiguration;
-import net.geoprism.context.ProjectDataConfiguration;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -43,6 +40,9 @@ import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.context.CountryDataConfiguration;
+import net.geoprism.context.ProjectDataConfiguration;
 
 public class XMLLocationImporter implements LocationImporter
 {

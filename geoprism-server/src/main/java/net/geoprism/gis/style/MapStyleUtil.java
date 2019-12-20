@@ -23,15 +23,15 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
 
-import net.geoprism.gis.wrapper.AttributeType;
-import net.geoprism.gis.wrapper.ThematicStyle;
-import net.geoprism.localization.LocalizationFacade;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+
+import net.geoprism.gis.wrapper.AttributeType;
+import net.geoprism.gis.wrapper.ThematicStyle;
+import net.geoprism.localization.LocalizationFacade;
 
 public class MapStyleUtil 
 {

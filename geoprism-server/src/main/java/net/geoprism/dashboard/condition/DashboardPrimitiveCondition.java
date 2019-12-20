@@ -25,9 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import net.geoprism.localization.LocalizationFacade;
-import net.geoprism.report.ReportProviderUtil;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +35,9 @@ import com.runwaysdk.dataaccess.MdAttributeMomentDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeNumberDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+
+import net.geoprism.localization.LocalizationFacade;
+import net.geoprism.report.ReportProviderUtil;
 
 
 public abstract class DashboardPrimitiveCondition extends DashboardAttributeCondition 

@@ -24,7 +24,6 @@ import com.runwaysdk.dataaccess.MdAttributeVirtualDAOIF;
 import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.RelationshipDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeVirtualDAO;
-
 import com.runwaysdk.system.metadata.MdClass;
 
 public class LocatedInQueryUtil 

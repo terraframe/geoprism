@@ -18,10 +18,6 @@
  */
 package net.geoprism.dashboard;
 
-import net.geoprism.dashboard.condition.DashboardCondition;
-import net.geoprism.dashboard.condition.DashboardEqualCondition;
-import net.geoprism.dashboard.condition.DashboardGreaterThanCondition;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +25,10 @@ import com.runwaysdk.dataaccess.MdAttributeCharDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeNumberDAO;
+
+import net.geoprism.dashboard.condition.DashboardCondition;
+import net.geoprism.dashboard.condition.DashboardEqualCondition;
+import net.geoprism.dashboard.condition.DashboardGreaterThanCondition;
 
 public class MdAttributeView extends MdAttributeViewBase 
 {

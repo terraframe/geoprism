@@ -29,15 +29,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.geotools.geojson.geom.GeometryJSON;
-import org.hsqldb.lib.StringInputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONWriter;
 import org.postgis.jts.JtsGeometry;
 
-import com.ibm.icu.text.CharsetDetector;
-import com.ibm.icu.text.CharsetMatch;
 import com.runwaysdk.dataaccess.AttributeIF;
 import com.runwaysdk.dataaccess.MdRelationshipDAOIF;
 import com.runwaysdk.dataaccess.MdStructDAOIF;

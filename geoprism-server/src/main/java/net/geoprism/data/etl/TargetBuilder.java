@@ -27,18 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.geoprism.ConfigurationIF;
-import net.geoprism.ConfigurationService;
-import net.geoprism.DataUploader;
-import net.geoprism.MappableAttribute;
-import net.geoprism.MappableClass;
-import net.geoprism.TermSynonymRelationship;
-import net.geoprism.data.browser.DataBrowserUtil;
-import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.ClassifierIsARelationship;
-import net.geoprism.ontology.ClassifierSynonym;
-import net.geoprism.ontology.GeoEntityUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,6 +77,18 @@ import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.system.metadata.MdBusinessQuery;
 import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.util.IDGenerator;
+
+import net.geoprism.ConfigurationIF;
+import net.geoprism.ConfigurationService;
+import net.geoprism.DataUploader;
+import net.geoprism.MappableAttribute;
+import net.geoprism.MappableClass;
+import net.geoprism.TermSynonymRelationship;
+import net.geoprism.data.browser.DataBrowserUtil;
+import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.ClassifierIsARelationship;
+import net.geoprism.ontology.ClassifierSynonym;
+import net.geoprism.ontology.GeoEntityUtil;
 
 public class TargetBuilder
 {

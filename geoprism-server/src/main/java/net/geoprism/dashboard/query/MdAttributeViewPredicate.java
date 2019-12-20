@@ -18,12 +18,12 @@
  */
 package net.geoprism.dashboard.query;
 
-import net.geoprism.dashboard.MdAttributeView;
-import net.geoprism.util.Predicate;
-
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeMomentDAOIF;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
+
+import net.geoprism.dashboard.MdAttributeView;
+import net.geoprism.util.Predicate;
 
 
 public class MdAttributeViewPredicate implements Predicate<MdAttributeView>

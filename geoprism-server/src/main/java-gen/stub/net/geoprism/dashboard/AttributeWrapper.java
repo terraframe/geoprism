@@ -21,12 +21,12 @@ package net.geoprism.dashboard;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.geoprism.dashboard.layer.DashboardThematicLayer;
-import net.geoprism.dashboard.layer.DashboardThematicLayerQuery;
-
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+
+import net.geoprism.dashboard.layer.DashboardThematicLayer;
+import net.geoprism.dashboard.layer.DashboardThematicLayerQuery;
 
 public class AttributeWrapper extends AttributeWrapperBase 
 {
