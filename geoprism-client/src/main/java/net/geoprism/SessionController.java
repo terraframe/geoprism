@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ClientSession;
+import com.runwaysdk.LocalizationFacade;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.CommonProperties;
@@ -97,6 +98,19 @@ public class SessionController
     }
 
     Locale[] locales = this.getLocales(req);
+    
+    JSONArray installedLocalesArr = new JSONArray();
+    List<Locale> installedLocales = LocalizationFacade.getInstalledLocales();
+    for(Locale loc : installedLocales)
+    {
+      JSONObject locObj = new JSONObject();
+      locObj.put("language", loc.getDisplayLanguage());
+      locObj.put("country", loc.getDisplayCountry());
+      locObj.put("name", loc.getDisplayName());
+      locObj.put("variant", loc.getDisplayVariant());
+      
+      installedLocalesArr.put(locObj);
+    }
 
     WebClientSession clientSession = WebClientSession.createUserSession(username, password, locales);
     ClientRequestIF clientRequest = clientSession.getRequest();
@@ -114,6 +128,7 @@ public class SessionController
     response.set("roleDisplayLabels", roleDisplayLabels);
     response.set("userName", username);
     response.set("version", GeoprismVersionProperties.getInstance().getVersion());
+    response.set("installedLocales", installedLocalesArr);
 
     return response;
   }
