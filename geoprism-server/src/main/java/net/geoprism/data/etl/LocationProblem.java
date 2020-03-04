@@ -56,7 +56,7 @@ public class LocationProblem implements ImportProblemIF, Comparable<ImportProble
   public JSONObject toJSON() throws JSONException
   {
     JSONObject object = new JSONObject();
-    object.put("type", "LOCATION");
+    object.put("type", "LocationProblem");
     object.put("label", label);
     object.put("parentOid", parent.getOid());
     object.put("universalId", universal.getOid());
