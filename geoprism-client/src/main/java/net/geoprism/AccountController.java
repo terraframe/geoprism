@@ -26,7 +26,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import net.geoprism.account.GeoprismUserViewDTO;
-import net.geoprism.account.GeoprismUserViewQueryDTO;
 import net.geoprism.account.UserInviteDTO;
 
 import org.json.JSONArray;
