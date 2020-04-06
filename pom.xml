@@ -40,7 +40,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.0.40</runway.version>
+    <runway.version>3.0.42-SNAPSHOT</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>16.1</geotools.version>
 
@@ -107,6 +107,19 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>5.3.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.4.2</version>

@@ -18,22 +18,17 @@
  */
 package net.geoprism.report;
 
-import org.eclipse.birt.report.engine.api.IReportDocument;
-import org.eclipse.birt.report.engine.api.RenderOption;
-
-
-
 public class HTMLUrlActionHandler extends AbstractUrlActionHandler 
 {
-  public HTMLUrlActionHandler(IReportDocument document, String baseURL, String reportURL)
-  {
-    super(document, baseURL, reportURL);
-  }
-
-  @Override
-  protected String getDefaultFormat()
-  {
-    return RenderOption.OUTPUT_FORMAT_HTML;
-  }
-
+//  public HTMLUrlActionHandler(IReportDocument document, String baseURL, String reportURL)
+//  {
+//    super(document, baseURL, reportURL);
+//  }
+//
+//  @Override
+//  protected String getDefaultFormat()
+//  {
+//    return RenderOption.OUTPUT_FORMAT_HTML;
+//  }
+//
 }

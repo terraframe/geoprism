@@ -19,6 +19,7 @@
 package net.geoprism;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -52,7 +53,9 @@ public class CookieResponse extends RestResponse implements ResponseIF
       path = "/";
     }
 
-    Cookie cookie = new Cookie(this.name, serialize.toString());
+    final String value = URLEncoder.encode(serialize.toString(), "UTF-8");
+    
+    Cookie cookie = new Cookie(this.name, value);
     cookie.setMaxAge(this.maxAge);
     cookie.setPath(path);
 

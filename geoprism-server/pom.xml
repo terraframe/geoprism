@@ -1,24 +1,16 @@
-<!--
-
-    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
-
-    This file is part of Geoprism(tm).
-
-    Geoprism(tm) is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    Geoprism(tm) is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses />.
-
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is 
+  part of Geoprism(tm). Geoprism(tm) is free software: you can redistribute 
+  it and/or modify it under the terms of the GNU Lesser General Public License 
+  as published by the Free Software Foundation, either version 3 of the License, 
+  or (at your option) any later version. Geoprism(tm) is distributed in the 
+  hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  GNU Lesser General Public License for more details. You should have received 
+  a copy of the GNU Lesser General Public License along with Geoprism(tm). 
+  If not, see <http://www.gnu.org/licenses />. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -70,39 +62,19 @@
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-orientdb</artifactId>
       <version>${runway.version}</version>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>net.geoprism</groupId>
       <artifactId>geoprism-common</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- Need to have a dependency on the client jar for code generation and compiling. -->
+    <!-- Need to have a dependency on the client jar for code generation 
+      and compiling. -->
     <dependency>
       <groupId>net.geoprism</groupId>
       <artifactId>geoprism-client</artifactId>
       <version>${project.version}</version>
       <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.birt.runtime</groupId>
-      <artifactId>org.eclipse.birt.runtime</artifactId>
-      <version>4.4.2</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>org.apache.batik.pdf</artifactId>
-          <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.birt.runtime</groupId>
-      <artifactId>org.eclipse.core.runtime</artifactId>
-      <version>3.10.0.v20140318-2214</version>
-    </dependency>
-    <dependency>
-      <groupId>net.geoprism</groupId>
-      <artifactId>oda.driver</artifactId>
-      <version>1.0.4</version>
     </dependency>
 
     <dependency>
@@ -131,10 +103,11 @@
       <version>${geotools.version}</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.10.66</version>
+      <version>1.11.756</version>
     </dependency>
 
     <dependency>
@@ -164,30 +137,18 @@
       <artifactId>mapbox-vector-tile</artifactId>
       <version>1.1.1-tf</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
-      <version>4.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi</artifactId>
-      <version>3.17</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi-ooxml</artifactId>
-      <version>3.17</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi-ooxml-schemas</artifactId>
-      <version>3.17</version>
+      <version>4.4</version>
     </dependency>
 
   </dependencies>
 
-  <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, like rebuilding the database and importing schemas. -->
+  <!-- These profiles allow for Maven execution of Runway-SDK's Java Tools, 
+    like rebuilding the database and importing schemas. -->
   <profiles>
     <profile>
       <id>new-schema</id>
@@ -425,7 +386,8 @@
     </plugins>
     <pluginManagement>
       <plugins>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
+          only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>

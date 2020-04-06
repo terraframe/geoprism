@@ -249,12 +249,12 @@ public class Dashboard extends DashboardBase
     }
 
     // Delete the corresponding report item
-    ReportItem report = ReportItem.getByDashboard(this.getOid());
-
-    if (report != null)
-    {
-      report.delete();
-    }
+//    ReportItem report = ReportItem.getByDashboard(this.getOid());
+//
+//    if (report != null)
+//    {
+//      report.delete();
+//    }
 
     Roles role = this.getDashboardRole();
 
@@ -531,11 +531,11 @@ public class Dashboard extends DashboardBase
     }
 
     // Clone the report
-    if (this.hasReport())
-    {
-      ReportItem item = ReportItem.getByDashboard(this.getOid());
-      item.clone(clone);
-    }
+//    if (this.hasReport())
+//    {
+//      ReportItem item = ReportItem.getByDashboard(this.getOid());
+//      item.clone(clone);
+//    }
 
     return clone;
   }
@@ -966,10 +966,11 @@ public class Dashboard extends DashboardBase
   @Override
   public Boolean hasReport()
   {
-    ReportItemQuery query = new ReportItemQuery(new QueryFactory());
-    query.WHERE(query.getDashboard().EQ(this));
-
-    return ( query.getCount() > 0 );
+    return false;
+//    ReportItemQuery query = new ReportItemQuery(new QueryFactory());
+//    query.WHERE(query.getDashboard().EQ(this));
+//
+//    return ( query.getCount() > 0 );
   }
 
   public DashboardCondition[] getConditions()

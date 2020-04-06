@@ -33,18 +33,6 @@
     <mime-type>text/xml</mime-type>
   </mime-mapping>
   <servlet>
-    <servlet-name>JSONControllerServlet</servlet-name>
-    <servlet-class>
-      com.runwaysdk.web.json.JSONControllerServlet
-    </servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>JSONControllerServlet</servlet-name>
-    <url-pattern>
-      /Mojo/JSONControllerServlet
-    </url-pattern>
-  </servlet-mapping>
-  <servlet>
     <servlet-name>JavascriptServlet</servlet-name>
     <servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
     <init-param>
@@ -109,42 +97,6 @@
     <exception-type>com.runwaysdk.session.InvalidSessionExceptionDTO</exception-type>
     <location>/net/geoprism/login/login.jsp</location>
   </error-page>
-  <filter>
-    <filter-name>RunwayFilter</filter-name>
-    <filter-class>
-      com.runwaysdk.web.RunwayFilter
-    </filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>RunwayFilter</filter-name>
-    <url-pattern>
-      *.mojo
-    </url-pattern>
-  </filter-mapping>
-  <filter>
-    <filter-name>MojaxFilter</filter-name>
-    <filter-class>
-      com.runwaysdk.web.MojaxFilter
-    </filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>MojaxFilter</filter-name>
-    <url-pattern>
-      *.mojax
-    </url-pattern>
-  </filter-mapping>
-  <filter>
-    <filter-name>MofoFilter</filter-name>
-    <filter-class>
-      com.runwaysdk.web.MofoFilter
-    </filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>MofoFilter</filter-name>
-    <url-pattern>
-      *.mofo
-    </url-pattern>
-  </filter-mapping>
   
   
   <filter>

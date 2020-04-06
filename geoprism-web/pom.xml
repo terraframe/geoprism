@@ -1,431 +1,392 @@
-<!--
+<!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is 
+	part of Geoprism(tm). Geoprism(tm) is free software: you can redistribute 
+	it and/or modify it under the terms of the GNU Lesser General Public License 
+	as published by the Free Software Foundation, either version 3 of the License, 
+	or (at your option) any later version. Geoprism(tm) is distributed in the 
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU Lesser General Public License for more details. You should have received 
+	a copy of the GNU Lesser General Public License along with Geoprism(tm). 
+	If not, see <http://www.gnu.org/licenses />. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+	<parent>
+		<groupId>net.geoprism</groupId>
+		<artifactId>geoprism</artifactId>
+		<version>0.7.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>geoprism-web</artifactId>
+	<packaging>war</packaging>
 
-    This file is part of Geoprism(tm).
+	<name>Geoprism Web</name>
+	<description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
 
-    Geoprism(tm) is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
+	<properties>
+		<geoserver.version>2.14.2</geoserver.version>
+		<db.name>geoprism</db.name>
+		<db.user>geoprism</db.user>
+		<db.port>5432</db.port>
+		<local.host>$${pageContext.request.contextPath}</local.host>
+	</properties>
 
-    Geoprism(tm) is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+	<dependencies>
+		<dependency>
+			<groupId>net.geoprism</groupId>
+			<artifactId>geoprism-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.geoprism</groupId>
+			<artifactId>geoprism-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.geoprism</groupId>
+			<artifactId>geoprism-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.geoprism</groupId>
+			<artifactId>geoprism-dhis2</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.runwaysdk</groupId>
+			<artifactId>runwaysdk-gis-web</artifactId>
+			<version>${runway.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>net.jawr</groupId>
+			<artifactId>jawr-core</artifactId>
+			<version>3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.asual.lesscss</groupId>
+			<artifactId>lesscss-engine</artifactId>
+			<version>1.3.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>rhino</artifactId>
+					<groupId>org.mozilla</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.geoserver</groupId>
+			<artifactId>geoserver</artifactId>
+			<version>${geoserver.version}</version>
+			<type>war</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+	</dependencies>
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses />.
+	<profiles>
+		<profile>
+			<id>ng2-dev</id>
+			<properties>
+				<local.host>https://localhost:8080</local.host>
+			</properties>
+		</profile>
 
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+		<profile>
+			<id>cargo-run</id>
+			<activation>
+				<property>
+					<name>cargo-run</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<version>1.4.15</version>
+						<configuration>
+							<container>
+								<containerId>tomcat8x</containerId>
+								<artifactInstaller>
+									<groupId>org.apache.tomcat</groupId>
+									<artifactId>tomcat</artifactId>
+									<version>8.0.23</version>
+								</artifactInstaller>
+								<timeout>10000000</timeout>
+							</container>
+							<configuration>
+								<properties>
+									<cargo.servlet.port>8443</cargo.servlet.port>
+									<cargo.protocol>https</cargo.protocol>
+									<cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
+									<cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
+									<cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
+									<cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
+									<cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
+									<cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
+									<cargo.jvmargs>
+										-Xmx5120M
+										-Xdebug
+										-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+										-Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
+										-Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
+										-Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
+										-Djavax.net.ssl.trustStore=/${project.basedir}/src/test/resources/tomcat.truststore
+										-Djavax.net.ssl.trustStorePassword=2v8hVW2rPFncN6m
+										-Djava.rmi.server.hostname=127.0.0.1
+										-Dbirt-server=true
+										-Dendpoint.cache=/${project.basedir}/cache
+										-Denvcfg=${project.basedir}/../envcfg
+									</cargo.jvmargs>
+								</properties>
+							</configuration>
+							<deployables>
+								<deployable>
+									<groupId>net.geoprism</groupId>
+									<artifactId>geoprism-web</artifactId>
+									<type>war</type>
+									<properties>
+										<context>${geoprism.app}</context>
+									</properties>
+								</deployable>
+								<deployable>
+									<groupId>org.geoserver</groupId>
+									<artifactId>geoserver</artifactId>
+									<type>war</type>
+									<properties>
+										<context>geoserver</context>
+									</properties>
+								</deployable>
+							</deployables>
+						</configuration>
+						<executions>
+							<execution>
+								<id>cargo-run</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
-  <parent>
-    <groupId>net.geoprism</groupId>
-    <artifactId>geoprism</artifactId>
-    <version>0.7.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>geoprism-web</artifactId>
-  <packaging>war</packaging>
+	<build>
+		<!-- Just for convenience, this stops us from having to add the version 
+			when we hit our webapp. -->
+		<finalName>geoprism</finalName>
 
-  <name>Geoprism Web</name>
-  <description>This project is a clerver, a client to the database server and a server to clients using web browsers. JSPs, servlets, javascript and CSS are all found in this project.</description>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.xlsx</exclude>
+					<exclude>**/*.zip</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.xlsx</include>
+					<include>**/*.zip</include>
+				</includes>
+			</resource>
+		</resources>
 
-  <properties>
-    <geoserver.version>2.14.2</geoserver.version>
-    <db.name>geoprism</db.name>
-    <db.user>geoprism</db.user>
-    <db.port>5432</db.port>
-    <local.host>$${pageContext.request.contextPath}</local.host>
-  </properties>
+		<plugins>
+			<!-- Weave Aspects -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>${aspectj.plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjtools</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<aspectLibraries>
+						<aspectLibrary>
+							<groupId>com.runwaysdk</groupId>
+							<artifactId>runwaysdk-common</artifactId>
+						</aspectLibrary>
+						<aspectLibrary>
+							<groupId>com.runwaysdk</groupId>
+							<artifactId>runwaysdk-server</artifactId>
+						</aspectLibrary>
+					</aspectLibraries>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<complianceLevel>${maven.compiler.target}</complianceLevel>
+					<fork>true</fork>
+					<meminitial>512m</meminitial>
+					<maxmem>1024m</maxmem>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<complianceLevel>${maven.compiler.target}</complianceLevel>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<warSourceExcludes>**/prism.jsp,**/admin.jsp</warSourceExcludes>
+					<packagingExcludes>
+						<!-- Exclude all jars provided by tomcat -->
+						**/*catalina*.jar,
+						**/*servlet-api*.jar,
+						**/*annotations-api*.jar,
+						<!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
+						**/aspectjtools*.jar
+					</packagingExcludes>
+					<overlays>
+						<overlay>
+							<!-- empty groupId/artifactId represents the current build -->
+						</overlay>
+						<overlay>
+							<groupId>com.runwaysdk</groupId>
+							<artifactId>runwaysdk-gis-web</artifactId>
+						</overlay>
+					</overlays>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/webapp/WEB-INF/source</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>exec-maven-plugin</artifactId> 
+				<version>1.6.0</version> <executions> <execution> <id>exec-npm-install</id> 
+				<phase>generate-sources</phase> <configuration> <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory> 
+				<executable>npm</executable> <arguments> <argument>install</argument> </arguments> 
+				</configuration> <goals> <goal>exec</goal> </goals> </execution> <execution> 
+				<id>exec-typings-install</id> <phase>generate-sources</phase> <configuration> 
+				<workingDirectory>${project.basedir}/src/main/ng2</workingDirectory> <executable>typings</executable> 
+				<arguments> <argument>install</argument> <argument>lodash</argument> </arguments> 
+				</configuration> <goals> <goal>exec</goal> </goals> </execution> <execution> 
+				<id>exec-npm-run-tsc</id> <phase>generate-sources</phase> <configuration> 
+				<workingDirectory>${project.basedir}/src/main/ng2</workingDirectory> <executable>npm</executable> 
+				<arguments> <argument>run</argument> <argument>build</argument> </arguments> 
+				</configuration> <goals> <goal>exec</goal> </goals> </execution> </executions> 
+				</plugin> -->
 
-  <dependencies>
-    <dependency>
-      <groupId>net.geoprism</groupId>
-      <artifactId>geoprism-common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.geoprism</groupId>
-      <artifactId>geoprism-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.geoprism</groupId>
-      <artifactId>geoprism-server</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.geoprism</groupId>
-      <artifactId>geoprism-dhis2</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.runwaysdk</groupId>
-      <artifactId>runwaysdk-gis-web</artifactId>
-      <version>${runway.version}</version>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>net.jawr</groupId>
-      <artifactId>jawr-core</artifactId>
-      <version>3.7</version>
-    </dependency>
-    <dependency>
-      <groupId>com.asual.lesscss</groupId>
-      <artifactId>lesscss-engine</artifactId>
-      <version>1.3.3</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>rhino</artifactId>
-          <groupId>org.mozilla</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>2.1</version>
-      <scope>provided</scope> <!-- This dependency is NOT transitive because scope=provided -->
-    </dependency>
-    <dependency>
-      <groupId>org.geoserver</groupId>
-      <artifactId>geoserver</artifactId>
-      <version>${geoserver.version}</version>
-      <type>war</type>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
-
-  <profiles>
-    <profile>
-      <id>ng2-dev</id>
-      <properties>
-        <local.host>https://localhost:8080</local.host>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>cargo-run</id>
-      <activation>
-        <property>
-          <name>cargo-run</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven2-plugin</artifactId>
-            <version>1.4.15</version>
-            <configuration>
-              <container>
-                <containerId>tomcat8x</containerId>
-                <artifactInstaller>
-                  <groupId>org.apache.tomcat</groupId>
-                  <artifactId>tomcat</artifactId>
-                  <version>8.0.23</version>
-                </artifactInstaller>
-                <timeout>10000000</timeout>
-              </container>
-              <configuration>
-                <properties>
-                  <cargo.servlet.port>8443</cargo.servlet.port>
-                  <cargo.protocol>https</cargo.protocol>
-                  <cargo.tomcat.connector.clientAuth>false</cargo.tomcat.connector.clientAuth>
-                  <cargo.tomcat.connector.sslProtocol>TLS</cargo.tomcat.connector.sslProtocol>
-                  <cargo.tomcat.connector.keystoreFile>/${project.basedir}/src/test/resources/keystore.ks</cargo.tomcat.connector.keystoreFile>
-                  <cargo.tomcat.connector.keystorePass>2v8hVW2rPFncN6m</cargo.tomcat.connector.keystorePass>
-                  <cargo.tomcat.connector.keyAlias>tomcat</cargo.tomcat.connector.keyAlias>
-                  <cargo.tomcat.httpSecure>true</cargo.tomcat.httpSecure>
-                  <cargo.jvmargs>
-                    -Xmx5120M
-                    -Xdebug
-                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
-                    -Dtomcat.home=/${project.basedir}/target/cargo/configurations/tomcat8x
-                    -Djavax.net.ssl.keyStore=/${project.basedir}/src/test/resources/keystore.ks
-                    -Djavax.net.ssl.keyStorePassword=2v8hVW2rPFncN6m
-                    -Djavax.net.ssl.trustStore=/${project.basedir}/src/test/resources/tomcat.truststore
-                    -Djavax.net.ssl.trustStorePassword=2v8hVW2rPFncN6m
-                    -Djava.rmi.server.hostname=127.0.0.1
-                    -Dbirt-server=true
-                    -Dendpoint.cache=/${project.basedir}/cache
-                    -Denvcfg=${project.basedir}/../envcfg
-                  </cargo.jvmargs>
-                </properties>
-              </configuration>
-              <deployables>
-                <deployable>
-                  <groupId>net.geoprism</groupId>
-                  <artifactId>geoprism-web</artifactId>
-                  <type>war</type>
-                  <properties>
-                    <context>${geoprism.app}</context>
-                  </properties>
-                </deployable>
-                <deployable>
-                  <groupId>org.geoserver</groupId>
-                  <artifactId>geoserver</artifactId>
-                  <type>war</type>
-                  <properties>
-                    <context>geoserver</context>
-                  </properties>
-                </deployable>
-              </deployables>
-            </configuration>
-            <executions>
-              <execution>
-                <id>cargo-run</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
-  <build>
-    <!-- Just for convenience, this stops us from having to add the version when we hit our webapp. -->
-    <finalName>geoprism</finalName>
-
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <excludes>
-          <exclude>**/*.xlsx</exclude>
-          <exclude>**/*.zip</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>**/*.xlsx</include>
-          <include>**/*.zip</include>
-        </includes>
-      </resource>
-    </resources>
-
-    <plugins>
-      <!-- Weave Aspects -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>aspectj-maven-plugin</artifactId>
-        <version>${aspectj.plugin.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjtools</artifactId>
-            <version>${aspectj.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <aspectLibraries>
-            <aspectLibrary>
-              <groupId>com.runwaysdk</groupId>
-              <artifactId>runwaysdk-common</artifactId>
-            </aspectLibrary>
-            <aspectLibrary>
-              <groupId>com.runwaysdk</groupId>
-              <artifactId>runwaysdk-server</artifactId>
-            </aspectLibrary>
-          </aspectLibraries>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
-          <complianceLevel>${maven.compiler.target}</complianceLevel>
-          <fork>true</fork>
-          <meminitial>512m</meminitial>
-          <maxmem>1024m</maxmem>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
-          <complianceLevel>${maven.compiler.target}</complianceLevel>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <warSourceExcludes>**/prism.jsp,**/admin.jsp</warSourceExcludes>
-          <packagingExcludes>
-            <!-- Exclude all jars provided by tomcat -->
-            **/*catalina*.jar,
-            **/*servlet-api*.jar,
-            **/*annotations-api*.jar,
-            <!-- Exclude aspectjtools because it conflicts with our BIRT jar -->
-            **/aspectjtools*.jar
-          </packagingExcludes>
-          <overlays>
-            <overlay>
-              <!-- empty groupId/artifactId represents the current build -->
-            </overlay>
-            <overlay>
-              <groupId>com.runwaysdk</groupId>
-              <artifactId>runwaysdk-gis-web</artifactId>
-            </overlay>
-          </overlays>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>src/main/webapp/WEB-INF/source</directory>
-              <includes>
-                <include>**/*</include>
-              </includes>
-              <followSymlinks>false</followSymlinks>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-<!--  
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-          <execution>
-            <id>exec-npm-install</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
-              <executable>npm</executable>
-              <arguments>
-                <argument>install</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>exec-typings-install</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
-              <executable>typings</executable>
-              <arguments>
-                <argument>install</argument>
-                <argument>lodash</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>exec-npm-run-tsc</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <workingDirectory>${project.basedir}/src/main/ng2</workingDirectory>
-              <executable>npm</executable>
-              <arguments>
-                <argument>run</argument>
-                <argument>build</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
--->      
-      
-      <plugin>
-        <groupId>com.google.code.maven-replacer-plugin</groupId>
-        <artifactId>maven-replacer-plugin</artifactId>
-        <version>1.4.1</version>
-        <executions>
-          <execution>
-            <id>replace-prism.jsp</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>replace</goal>
-            </goals>
-            <inherited>false</inherited>
-            <configuration>
-              <file>src/main/webapp/WEB-INF/net/geoprism/prism/prism.jsp</file>
-              <outputFile>target/geoprism/WEB-INF/net/geoprism/prism/prism.jsp</outputFile>
-              <regex>false</regex>
-              <token>$local.host$</token>
-              <value>${local.host}</value>
-            </configuration>
-          </execution>
-          <execution>
-            <id>replace-admin.jsp</id>          
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>replace</goal>
-            </goals>
-            <inherited>false</inherited>
-            <configuration>
-              <file>src/main/webapp/WEB-INF/net/geoprism/prism/admin.jsp</file>
-              <outputFile>target/geoprism/WEB-INF/net/geoprism/prism/admin.jsp</outputFile>
-              <regex>false</regex>
-              <token>$local.host$</token>
-              <value>${local.host}</value>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-    <pluginManagement>
-     <plugins>
-      <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-      <plugin>
-       <groupId>org.eclipse.m2e</groupId>
-       <artifactId>lifecycle-mapping</artifactId>
-       <version>1.0.0</version>
-       <configuration>
-        <lifecycleMappingMetadata>
-         <pluginExecutions>
-          <pluginExecution>
-           <pluginExecutionFilter>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <versionRange>[1.6.0,)</versionRange>
-            <goals>
-             <goal>exec</goal>
-            </goals>
-           </pluginExecutionFilter>
-           <action>
-            <ignore />
-           </action>
-          </pluginExecution>
-         </pluginExecutions>
-        </lifecycleMappingMetadata>
-       </configuration>
-      </plugin>
-     </plugins>
-    </pluginManagement>
-  </build>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>maven-replacer-plugin</artifactId>
+				<version>1.4.1</version>
+				<executions>
+					<execution>
+						<id>replace-prism.jsp</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<file>src/main/webapp/WEB-INF/net/geoprism/prism/prism.jsp</file>
+							<outputFile>target/geoprism/WEB-INF/net/geoprism/prism/prism.jsp</outputFile>
+							<regex>false</regex>
+							<token>$local.host$</token>
+							<value>${local.host}</value>
+						</configuration>
+					</execution>
+					<execution>
+						<id>replace-admin.jsp</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<file>src/main/webapp/WEB-INF/net/geoprism/prism/admin.jsp</file>
+							<outputFile>target/geoprism/WEB-INF/net/geoprism/prism/admin.jsp</outputFile>
+							<regex>false</regex>
+							<token>$local.host$</token>
+							<value>${local.host}</value>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>exec-maven-plugin</artifactId>
+										<versionRange>[1.6.0,)</versionRange>
+										<goals>
+											<goal>exec</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
