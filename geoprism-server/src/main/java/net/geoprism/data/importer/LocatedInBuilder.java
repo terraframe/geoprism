@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.data.importer;
 
@@ -26,11 +26,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.runwaysdk.dataaccess.RelationshipDAOIF;
 import com.runwaysdk.dataaccess.ValueObject;
 import com.runwaysdk.dataaccess.database.Database;
-import com.runwaysdk.logging.LogLevel;
-import com.runwaysdk.logging.RunwayLogUtil;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.query.ValueQuery;
@@ -41,7 +42,7 @@ import com.runwaysdk.system.metadata.MdEntity;
 
 import net.geoprism.data.importer.LocatedInBean.BuildTypes;
 
-public class LocatedInBuilder 
+public class LocatedInBuilder
 {
   public static final String            CHILD_ID                   = "child_oid";
 
@@ -85,6 +86,8 @@ public class LocatedInBuilder
 
   private volatile boolean              inProgress;
 
+  private Logger                        log                        = LoggerFactory.getLogger(LocatedInBuilder.class);
+
   public LocatedInBuilder(BuildTypes type, int percent, Map<String, List<PathOption>> paths)
   {
     this.type = type;
@@ -122,18 +125,21 @@ public class LocatedInBuilder
 
       // sql.append("DROP TABLE IF EXISTS " + UNIVERSALS_TABLE + ";\n");
       // sql.append("CREATE TABLE " + UNIVERSALS_TABLE + " AS (\n");
-      // sql.append("  SELECT DISTINCT ai.child_oid " + CHILD_CLASS + ",\n");
-      // sql.append("         ai.parent_oid " + PARENT_CLASS + ",\n");
-      // sql.append("         root.child_oid " + ROOT_CLASS + "\n");
-      // sql.append("  FROM " + allowedIn + " AS ai, \n");
-      // sql.append("  " + allowedIn + " AS root \n");
-      // sql.append("  JOIN " + uapt + " AS uapt ON root.child_oid = uapt.child_term \n");
-      // sql.append("  WHERE ai.child_oid = uapt.parent_term \n");
+      // sql.append(" SELECT DISTINCT ai.child_oid " + CHILD_CLASS + ",\n");
+      // sql.append(" ai.parent_oid " + PARENT_CLASS + ",\n");
+      // sql.append(" root.child_oid " + ROOT_CLASS + "\n");
+      // sql.append(" FROM " + allowedIn + " AS ai, \n");
+      // sql.append(" " + allowedIn + " AS root \n");
+      // sql.append(" JOIN " + uapt + " AS uapt ON root.child_oid =
+      // uapt.child_term \n");
+      // sql.append(" WHERE ai.child_oid = uapt.parent_term \n");
       // sql.append(");\n");
       //
       // sql.append("DELETE from universals \n");
-      // sql.append("WHERE " + CHILD_CLASS + " = 'i3n7tzda2ow04gquixyagr7ngfi101ezi1vpa2tywfkq0wgqelwt6ay8b49cnbch'\n");
-      // sql.append("AND " + ROOT_CLASS + " = 'ik8lufs0102vbtpwjydai205wtkssne8i1vpa2tywfkq0wgqelwt6ay8b49cnbch';\n");
+      // sql.append("WHERE " + CHILD_CLASS + " =
+      // 'i3n7tzda2ow04gquixyagr7ngfi101ezi1vpa2tywfkq0wgqelwt6ay8b49cnbch'\n");
+      // sql.append("AND " + ROOT_CLASS + " =
+      // 'ik8lufs0102vbtpwjydai205wtkssne8i1vpa2tywfkq0wgqelwt6ay8b49cnbch';\n");
 
       sql.append("CREATE INDEX parent_child_ind ON " + UNIVERSALS_TABLE + "(" + CHILD_CLASS + ", " + PARENT_CLASS + ", " + ROOT_CLASS + ");\n");
 
@@ -184,7 +190,8 @@ public class LocatedInBuilder
     }
     catch (SQLException e)
     {
-      RunwayLogUtil.logToLevel(LogLevel.ERROR, "Error occured while creating the database tables used for the located in builder", e);
+      log.error("Error occured while creating the database tables used for the located in builder", e);
+      
       Database.throwDatabaseException(e);
     }
     finally
@@ -318,7 +325,7 @@ public class LocatedInBuilder
     }
     catch (SQLException e)
     {
-      RunwayLogUtil.logToLevel(LogLevel.ERROR, "Error occured while rebuilding the located in all paths", e);
+      log.error("Error occured while rebuilding the located in all paths", e);
 
       Database.throwDatabaseException(e);
     }
@@ -376,7 +383,7 @@ public class LocatedInBuilder
     }
     catch (SQLException e)
     {
-      RunwayLogUtil.logToLevel(LogLevel.ERROR, "Error occured while creating the database tables used for the located in builder", e);
+      log.error("Error occured while creating the database tables used for the located in builder", e);
       Database.throwDatabaseException(e);
     }
     finally
@@ -477,7 +484,7 @@ public class LocatedInBuilder
     }
     catch (SQLException e)
     {
-      RunwayLogUtil.logToLevel(LogLevel.ERROR, "Error occured while cleaning up the located in builder", e);
+      log.error("Error occured while cleaning up the located in builder", e);
 
       Database.throwDatabaseException(e);
     }

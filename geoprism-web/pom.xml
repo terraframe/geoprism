@@ -63,6 +63,12 @@
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr-core</artifactId>
 			<version>3.7</version>
+			<exclusions>
+			  <exclusion>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>slf4j-api</artifactId>
+			  </exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.lesscss</groupId>
