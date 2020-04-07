@@ -32,8 +32,6 @@ import com.runwaysdk.mvc.Endpoint;
 import com.runwaysdk.mvc.ErrorSerialization;
 import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestBodyResponse;
-import com.runwaysdk.system.RolesDTO;
-import com.runwaysdk.system.SingleActorDTO;
 
 @Controller(url = "menu")
 public class MenuController
@@ -62,17 +60,27 @@ public class MenuController
 
   private Set<String> getAssignedRoleNames(ClientRequestIF request)
   {
-    Set<String> roleNames = new TreeSet<String>();
-
-    SingleActorDTO currentUser = GeoprismUserDTO.getCurrentUser(request);
-
-    List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
-    for (RolesDTO role : userRoles)
+    try
     {
-      roleNames.add(role.getRoleName());
+      Set<String> roleNames = new TreeSet<String>();
+  
+//      SingleActorDTO currentUser = GeoprismUserDTO.getCurrentUser(request);
+  //    List<? extends RolesDTO> userRoles = currentUser.getAllAssignedRole();
+      
+      JSONArray jaUserRoles = new JSONArray(RoleViewDTO.getCurrentRoles(request));
+      for (int i = 0; i < jaUserRoles.length(); ++i)
+      {
+        String roleName = jaUserRoles.getString(i);
+        
+        roleNames.add(roleName);
+      }
+  
+      return roleNames;
     }
-
-    return roleNames;
+    catch (JSONException e)
+    {
+      throw new RuntimeException(e);
+    }
   }
 
 }
