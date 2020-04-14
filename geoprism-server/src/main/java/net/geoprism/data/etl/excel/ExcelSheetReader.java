@@ -21,8 +21,8 @@ package net.geoprism.data.etl.excel;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.poi.POIXMLProperties;
-import org.apache.poi.POIXMLProperties.CustomProperties;
+import org.apache.poi.ooxml.POIXMLProperties;
+import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.eventusermodel.ReadOnlySharedStringsTable;
