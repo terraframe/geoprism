@@ -30,7 +30,7 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.apache.poi.POIXMLProperties;
+import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -64,7 +64,7 @@ public class SourceContentHandler implements SheetHandler
    */
   private ProgressMonitorIF                   monitor;
 
-  /**
+  /**   
    * Handler which handles the view object once they have been created.
    */
   private ConverterIF                         converter;
