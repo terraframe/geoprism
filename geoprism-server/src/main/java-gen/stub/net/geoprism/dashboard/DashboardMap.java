@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.dashboard;
 
@@ -94,7 +94,6 @@ import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.logging.LogLevel;
 import com.runwaysdk.query.F;
 import com.runwaysdk.query.MAX;
 import com.runwaysdk.query.OIterator;
@@ -171,7 +170,7 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
 
       layer.setConditions(Arrays.asList(conditions));
       layer.publish(batch);
-      
+
       TaskExecutor.addTask(new DropViewTask(viewName));
     }
 
@@ -280,7 +279,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
   /**
    * MdMethod
    * 
-   * Invoked after the user reorders a layer via drag+drop in the dashboard viewer.
+   * Invoked after the user reorders a layer via drag+drop in the dashboard
+   * viewer.
    * 
    * @return The JSON representation of the current DashboardMap.
    */
@@ -399,7 +399,6 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
   /**
    * MdMethod
    */
-  @com.runwaysdk.logging.Log(level = LogLevel.DEBUG)
   public String getMapJSON(String config)
   {
     try
@@ -797,7 +796,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
    * Generate an image replicating the users map in the browser.
    * 
    * @outFileFormat - Allowed types (png, gif, jpg, bmp)
-   * @mapBounds - JSON constructed as {"bottom":"VALUE", "top":"VALUE", "left":"VALUE", "right":"VALUE"}
+   * @mapBounds - JSON constructed as {"bottom":"VALUE", "top":"VALUE",
+   *            "left":"VALUE", "right":"VALUE"}
    * @mapSize - JSON constructed as {"width":"VALUE", "height":"VALUE"}
    * @activeBaseMap = JSON constructed as {"LAYER_SOURCE_TYPE":"VALUE"}
    */
@@ -835,7 +835,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
         base = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
       }
 
-      // Create the base canvas that all other map elements will be draped on top of
+      // Create the base canvas that all other map elements will be draped on
+      // top of
       mapBaseGraphic = base.getGraphics();
       mapBaseGraphic.setColor(Color.white);
       mapBaseGraphic.fillRect(0, 0, width, height);
@@ -969,20 +970,24 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
       try
       {
         //
-        // Currently we are using the WMS service from http://irs.gis-lab.info/ because most web services are offered as
-        // Tiled Map Services (TMS) which are not directly consumable by geotools.
+        // Currently we are using the WMS service from http://irs.gis-lab.info/
+        // because most web services are offered as
+        // Tiled Map Services (TMS) which are not directly consumable by
+        // geotools.
         //
 //        url = new URL("http://irs.gis-lab.info/?layers=" + wmsLayerName + "&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
 
         //
         // BACKUP SERVICE
-        // Currently we are using the WMS service from http://ows.terrestris.de/dienste.html#wms
-        // because this one http://irs.gis-lab.info/ is un-reliable and most web services are offered as
-        // Tiled Map Services (TMS) which are not directly consumable by geotools.
+        // Currently we are using the WMS service from
+        // http://ows.terrestris.de/dienste.html#wms
+        // because this one http://irs.gis-lab.info/ is un-reliable and most web
+        // services are offered as
+        // Tiled Map Services (TMS) which are not directly consumable by
+        // geotools.
         //
-         wmsLayerName = "osm-wms";
-         url = new
-         URL("http://ows.terrestris.de/osm/service?layers="+wmsLayerName+"&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
+        wmsLayerName = "osm-wms";
+        url = new URL("http://ows.terrestris.de/osm/service?layers=" + wmsLayerName + "&styles=&VERSION=1.1.1&Request=GetCapabilities&Service=WMS");
 
       }
       catch (MalformedURLException e)
@@ -1013,7 +1018,9 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
 
       GetMapRequest request = wms.createGetMapRequest();
       request.setFormat("image/png");
-      request.setDimensions(mapWidth, mapHeight); // sets the dimensions of the image to be returned from the server
+      request.setDimensions(mapWidth, mapHeight); // sets the dimensions of the
+                                                  // image to be returned from
+                                                  // the server
       request.setTransparent(true);
       request.setSRS("EPSG:4326");
       request.setBBox(left + "," + bottom + "," + right + "," + top);
@@ -1065,7 +1072,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
    * @mapWidth
    * @mapHeight
    * @orderedLayers
-   * @mapBounds - expects json object {"bottom":"VALUE", "top":"VALUE", "left":"VALUE", "right":"VALUE"}
+   * @mapBounds - expects json object {"bottom":"VALUE", "top":"VALUE",
+   *            "left":"VALUE", "right":"VALUE"}
    */
   public BufferedImage getLayersExportCanvas(int mapWidth, int mapHeight, DashboardLayer[] orderedLayers, String mapBounds)
   {
@@ -1073,7 +1081,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
     String top;
     String right;
     String left;
-    String processingFormat = "png"; // needed to allow transparency on each overlay before combining to a single
+    String processingFormat = "png"; // needed to allow transparency on each
+                                     // overlay before combining to a single
                                      // map/format
     Graphics mapBaseGraphic = null;
     BufferedImage base = null;
@@ -1112,13 +1121,16 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
         requestURL.append(GeoserverProperties.getLocalPath() + "/wms?");
         requestURL.append("LAYERS=" + layersString);
         requestURL.append("&");
-        requestURL.append("STYLES="); // there are no geoserver styles being added. sld's are used instead
+        requestURL.append("STYLES="); // there are no geoserver styles being
+                                      // added. sld's are used instead
         requestURL.append("&");
         requestURL.append("SRS=EPSG%3A4326");
         requestURL.append("&");
         requestURL.append("TRANSPARENT=true");
         requestURL.append("&");
-        requestURL.append("ISBASELAYER=false"); // in the browser the baselayer prop is set for the 1st layer in the
+        requestURL.append("ISBASELAYER=false"); // in the browser the baselayer
+                                                // prop is set for the 1st layer
+                                                // in the
                                                 // map.
         requestURL.append("&");
         requestURL.append("SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage");
@@ -1139,7 +1151,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
           newOverlayBaseGraphic = newOverlayBase.createGraphics();
 
           // Add transparency to the layerGraphic
-          // This is set in JavaScript in the app so we are replicating browser side transparency settings that are
+          // This is set in JavaScript in the app so we are replicating browser
+          // side transparency settings that are
           // applied to the whole layer
           AlphaComposite thisLayerComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getLayerOpacity(layer));
           mapLayerGraphic2d = layerImg.createGraphics();
@@ -1262,7 +1275,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
               if (legendTopPlacement + fullHeight >= mapHeight)
               {
                 legendLeftPlacement = widestLegend + legendLeftPlacement + padding;
-                legendTopPlacement = 0; // reset so 2nd column legends start at the top row
+                legendTopPlacement = 0; // reset so 2nd column legends start at
+                                        // the top row
               }
               legendXPosition = legendLeftPlacement + padding;
               legendYPosition = legendTopPlacement + padding;
@@ -1340,7 +1354,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
       contSize = tStyle.getBubbleContinuousSize();
     }
 
-    // forcing labels for gradient for instances where only one feature is mapped which geoserver hides labels by
+    // forcing labels for gradient for instances where only one feature is
+    // mapped which geoserver hides labels by
     // default
     if (layer.getFeatureStrategy().toString() == "GRADIENT" || layer.getFeatureStrategy().toString() == "CATEGORY")
     {
@@ -1348,12 +1363,14 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
     }
     else if (layer.getFeatureStrategy().toString() == "BUBBLE" && layer.getLayerType().toString() == "BASIC")
     {
-      // The label should be hidden when mapping bubbles against a text or term attribute.
+      // The label should be hidden when mapping bubbles against a text or term
+      // attribute.
       requestURL.append("forceLabels:off;");
     }
     else if (layer.getFeatureStrategy().toString() == "BUBBLE" && contSize && layer.getLayerType().toString() != "BASIC")
     {
-      // The label should be displayed when mapping continuous size bubbles against anything other than a text or term
+      // The label should be displayed when mapping continuous size bubbles
+      // against anything other than a text or term
       // attribute.
       requestURL.append("forceLabels:on;");
     }
@@ -1501,7 +1518,8 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
   }
 
   /**
-   * Makes a getMap request to geoserver and returns the response as a ByteArrayOutputStream
+   * Makes a getMap request to geoserver and returns the response as a
+   * ByteArrayOutputStream
    * 
    * @throws NoSuchAlgorithmException
    * 
@@ -1528,11 +1546,13 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
       SSLConnectionSocketFactory factory = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" }, null, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
       client = HttpClients.custom()
-      // Allow all hostnames regardless of what is specified in the certificate
+          // Allow all hostnames regardless of what is specified in the
+          // certificate
           .setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
           // Use the provided SSL socket factory
           .setSSLSocketFactory(factory)
-          // Set a default cookie store which will be used in all of the requests
+          // Set a default cookie store which will be used in all of the
+          // requests
           .setDefaultCookieStore(new BasicCookieStore()).build();
       HttpGet method = new HttpGet(requestURL);
       response = client.execute(method);
@@ -1696,10 +1716,12 @@ public class DashboardMap extends DashboardMapBase implements net.geoprism.gis.w
   public void reorderLayers()
   {
     /*
-     * Update the indexes of all of the existing layers. We must reorder all of the layer indexes such that the
-     * reference layers are on the bottom depending on their order referenced universal in the universal tree. The
-     * thematic layers will be on top based up their relative indexing between other thematic layers. If this layer is a
-     * new thematic layer then it will be on top.
+     * Update the indexes of all of the existing layers. We must reorder all of
+     * the layer indexes such that the reference layers are on the bottom
+     * depending on their order referenced universal in the universal tree. The
+     * thematic layers will be on top based up their relative indexing between
+     * other thematic layers. If this layer is a new thematic layer then it will
+     * be on top.
      */
     Map<String, Integer> indices = this.calculateLayerIndices();
     List<? extends HasLayer> relationships = this.getAllHasLayerRel().getAll();

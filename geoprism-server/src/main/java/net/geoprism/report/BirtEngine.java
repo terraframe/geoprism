@@ -20,12 +20,6 @@ package net.geoprism.report;
 
 import java.util.logging.Level;
 
-import org.eclipse.birt.core.exception.BirtException;
-import org.eclipse.birt.core.framework.Platform;
-import org.eclipse.birt.report.engine.api.EngineConfig;
-import org.eclipse.birt.report.engine.api.IReportEngine;
-import org.eclipse.birt.report.engine.api.IReportEngineFactory;
-
 
 
 public class BirtEngine 
@@ -46,39 +40,39 @@ public class BirtEngine
     }
   }
 
-  private static IReportEngine engine = null;
-
-  public static synchronized IReportEngine getBirtEngine(String logDirectory) throws BirtException
-  {
-    if (engine == null)
-    {
-      EngineConfig config = new EngineConfig();
-      config.setLogConfig(logDirectory, LogLevel.SEVERE.getLevel());
-
-      Platform.startup(config);
-
-      IReportEngineFactory factory = (IReportEngineFactory) Platform.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
-      engine = factory.createReportEngine(config);
-    }
-
-    return engine;
-  }
-
-  public static synchronized void destroyBirtEngine()
-  {
-    if (engine == null)
-    {
-      return;
-    }
-
-    engine.destroy();
-    Platform.shutdown();
-
-    engine = null;
-  }
-
-  public Object clone() throws CloneNotSupportedException
-  {
-    throw new CloneNotSupportedException();
-  }
+//  private static IReportEngine engine = null;
+//
+//  public static synchronized IReportEngine getBirtEngine(String logDirectory) throws BirtException
+//  {
+//    if (engine == null)
+//    {
+//      EngineConfig config = new EngineConfig();
+//      config.setLogConfig(logDirectory, LogLevel.SEVERE.getLevel());
+//
+//      Platform.startup(config);
+//
+//      IReportEngineFactory factory = (IReportEngineFactory) Platform.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
+//      engine = factory.createReportEngine(config);
+//    }
+//
+//    return engine;
+//  }
+//
+//  public static synchronized void destroyBirtEngine()
+//  {
+//    if (engine == null)
+//    {
+//      return;
+//    }
+//
+//    engine.destroy();
+//    Platform.shutdown();
+//
+//    engine = null;
+//  }
+//
+//  public Object clone() throws CloneNotSupportedException
+//  {
+//    throw new CloneNotSupportedException();
+//  }
 }

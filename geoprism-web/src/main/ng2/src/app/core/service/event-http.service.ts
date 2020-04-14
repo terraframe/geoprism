@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, RequestOptionsArgs, Response, ConnectionBackend } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/finally';
+import { finalize } from 'rxjs/operators';
 
 import { EventService } from './core.service';
 
