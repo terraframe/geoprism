@@ -99,7 +99,8 @@ public class RoleView extends RoleViewBase
 
     if (user.isAppliedToDB())
     {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
+//      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
+      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).assignedRoles();
 
       for (RoleDAOIF role : roles)
       {
