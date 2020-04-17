@@ -30,4 +30,6 @@
     saveOnRestart="false">
       <Store className="org.apache.catalina.session.FileStore"/>
   </Manager>
+  
+  <Resources cachingAllowed="true" cacheMaxSize="100000" />
 </Context>
