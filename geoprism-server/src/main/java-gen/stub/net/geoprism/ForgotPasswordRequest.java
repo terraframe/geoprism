@@ -161,7 +161,7 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase
   private void sendEmail(String serverExternalUrl)
   {
     String address = this.getUserRef().getEmail();
-    String link = serverExternalUrl + "/prism/home#/forgotpassword-complete/" + this.getToken();
+    String link = serverExternalUrl + "#/forgotpassword-complete/" + this.getToken();
     
     String subject = LocalizationFacade.getFromBundles("forgotpassword.emailSubject");
     String body = LocalizationFacade.getFromBundles("forgotpassword.emailBody");
