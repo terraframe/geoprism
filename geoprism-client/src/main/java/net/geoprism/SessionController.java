@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism;
 
@@ -43,14 +43,15 @@ import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.request.ServletRequestIF;
 import com.runwaysdk.web.WebClientSession;
 
+import net.geoprism.SessionEvent.EventType;
 import net.geoprism.account.ExternalProfileDTO;
 import net.geoprism.account.LocaleSerializer;
 import net.geoprism.account.OauthServerIF;
 
 @Controller(url = "session")
-public class SessionController 
+public class SessionController
 {
-  public static final long   serialVersionUID = 1234283350799L;
+  public static final long serialVersionUID = 1234283350799L;
 
   //
   // public ResponseIF form()
@@ -71,7 +72,8 @@ public class SessionController
   // req.setAttribute("errorMessage", errorMessage);
   // }
   //
-  // WebClientSession clientSession = WebClientSession.createAnonymousSession(locales);
+  // WebClientSession clientSession =
+  // WebClientSession.createAnonymousSession(locales);
   //
   // try
   // {
@@ -98,26 +100,21 @@ public class SessionController
     }
 
     Locale[] locales = this.getLocales(req);
-    
+
     JSONArray installedLocalesArr = new JSONArray();
     List<Locale> installedLocales = LocalizationFacade.getInstalledLocales();
-    for(Locale loc : installedLocales)
+    for (Locale loc : installedLocales)
     {
       JSONObject locObj = new JSONObject();
       locObj.put("language", loc.getDisplayLanguage());
       locObj.put("country", loc.getDisplayCountry());
       locObj.put("name", loc.getDisplayName());
       locObj.put("variant", loc.getDisplayVariant());
-      
+
       installedLocalesArr.put(locObj);
     }
 
-    WebClientSession clientSession = WebClientSession.createUserSession(username, password, locales);
-    ClientRequestIF clientRequest = clientSession.getRequest();
-
-    req.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
-    req.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
-    req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
+    ClientRequestIF clientRequest = login(req, username, password, locales);
 
     JSONArray roles = new JSONArray(RoleViewDTO.getCurrentRoles(clientRequest));
     JSONArray roleDisplayLabels = new JSONArray(RoleViewDTO.getCurrentRoleDisplayLabels(clientRequest));
@@ -131,6 +128,29 @@ public class SessionController
     response.set("installedLocales", installedLocalesArr);
 
     return response;
+  }
+
+  public ClientRequestIF login(ServletRequestIF req, String username, String password, Locale[] locales)
+  {
+    try
+    {
+      WebClientSession clientSession = WebClientSession.createUserSession(username, password, locales);
+      ClientRequestIF clientRequest = clientSession.getRequest();
+
+      req.getSession().setMaxInactiveInterval(CommonProperties.getSessionTime());
+      req.getSession().setAttribute(ClientConstants.CLIENTSESSION, clientSession);
+      req.setAttribute(ClientConstants.CLIENTREQUEST, clientRequest);
+
+      ClientConfigurationService.handleSessionEvent(new SessionEvent(EventType.LOGIN_SUCCESS, clientRequest, username));
+
+      return clientRequest;
+    }
+    catch (RuntimeException e)
+    {
+      ClientConfigurationService.handleSessionEvent(new SessionEvent(EventType.LOGIN_FAILURE, null, username));
+
+      throw e;
+    }
   }
 
   @Endpoint(method = ServletMethod.GET)
