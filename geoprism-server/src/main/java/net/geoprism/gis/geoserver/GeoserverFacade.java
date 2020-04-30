@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
@@ -70,6 +70,21 @@ public class GeoserverFacade
   public static void publishWorkspace()
   {
     getService().publishWorkspace();
+  }
+
+  public static boolean workspaceExists(String workspace)
+  {
+    return getService().workspaceExists(workspace);
+  }
+
+  public static void removeWorkspace(String workspace)
+  {
+    getService().removeWorkspace(workspace);
+  }
+
+  public static void publishWorkspace(String workspace)
+  {
+    getService().publishWorkspace(workspace);
   }
 
   /**
@@ -197,6 +212,11 @@ public class GeoserverFacade
     getService().forceRemoveLayer(layer);
   }
 
+  public static void forceRemoveLayer(String workspace, String layer)
+  {
+    getService().forceRemoveLayer(workspace, layer);
+  }
+
   public static void publishCache(String layer)
   {
     getService().publishCache(layer);
@@ -236,6 +256,17 @@ public class GeoserverFacade
   public static boolean layerExists(String layer)
   {
     return getService().layerExists(layer);
+  }
+
+  /**
+   * Checks if the given layer exists in Geoserver.
+   * 
+   * @param layer
+   * @return
+   */
+  public static boolean layerExists(String workspace, String layer)
+  {
+    return getService().layerExists(workspace, layer);
   }
 
   /**
@@ -281,6 +312,11 @@ public class GeoserverFacade
     getService().removeCoverageStore(storeName);
   }
 
+  public static void removeCoverageStore(String workspace, String storeName)
+  {
+    getService().removeCoverageStore(workspace, storeName);
+  }
+
 //  public static void forceRemoveLayer(String storeName)
 //  {
 //    getService().forceRemoveLayer(storeName);
@@ -295,7 +331,12 @@ public class GeoserverFacade
   {
     getService().publishGeoTiff(storeName, tiff);
   }
-  
+
+  public static void publishGeoTiff(String workspace, String storeName, File tiff)
+  {
+    getService().publishGeoTiff(workspace, storeName, tiff);
+  }
+
   public static WMSCapabilities getCapabilities(String layer)
   {
     return getService().getCapabilities(layer);

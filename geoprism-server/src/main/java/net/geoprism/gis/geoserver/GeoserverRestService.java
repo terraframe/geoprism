@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
@@ -33,6 +33,7 @@ import java.util.Base64;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
@@ -112,57 +113,46 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to reload geoserver.");
     }
   }
-  
-//  public S3Object download(String key)
-//  {
-////  AmazonS3 client = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
-//    AmazonS3 client = new AmazonS3Client();
-//    
-////    String bucketName = AppProperties.getBucketName();
-//    String bucketName = "";
-//
-//    GetObjectRequest request = new GetObjectRequest(bucketName, key);
-//
-//    return client.getObject(request);
-//  }
-  
+
   public void publishGeoTiff(String storeName, File geoTiff)
+  {
+    publishGeoTiff(GeoserverProperties.getWorkspace(), storeName, geoTiff);
+  }
+
+  public void publishGeoTiff(final String workspace, String storeName, File geoTiff)
   {
     try
     {
-      if (GeoserverProperties.getPublisher().publishGeoTIFF(GeoserverProperties.getWorkspace(), storeName, geoTiff))
+      if (GeoserverProperties.getPublisher().publishGeoTIFF(workspace, storeName, geoTiff))
       {
-        GeoserverProperties.getPublisher().publishStyle("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-            "<StyledLayerDescriptor version=\"1.0.0\" \n" + 
-            " xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" \n" + 
-            " xmlns=\"http://www.opengis.net/sld\" \n" + 
-            " xmlns:ogc=\"http://www.opengis.net/ogc\" \n" + 
-            " xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n" + 
-            " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
-            "  <!-- a Named Layer is the basic building block of an SLD document -->\n" + 
-            "  <NamedLayer>\n" + 
-            "    <Name>default_raster</Name>\n" + 
-            "    <UserStyle>\n" + 
-            "    <!-- Styles can have names, titles and abstracts -->\n" + 
-            "      <Title>Default Raster</Title>\n" + 
-            "      <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>\n" + 
-            "      <!-- FeatureTypeStyles describe how to render different features -->\n" + 
-            "      <!-- A FeatureTypeStyle for rendering rasters -->\n" + 
-            "      <FeatureTypeStyle>\n" + 
-            "        <Rule>\n" + 
-            "          <Name>rule1</Name>\n" + 
-            "          <Title>Opaque Raster</Title>\n" + 
-            "          <Abstract>A raster with 100% opacity</Abstract>\n" + 
-            "          <RasterSymbolizer>\n" + 
-            "            <Opacity>1.0</Opacity>\n" + 
-            "          </RasterSymbolizer>\n" + 
-            "        </Rule>\n" + 
-            "      </FeatureTypeStyle>\n" + 
-            "    </UserStyle>\n" + 
-            "  </NamedLayer>\n" + 
-            "</StyledLayerDescriptor>\n" + 
-            "", storeName);
-        
+//        StringBuilder xml = new StringBuilder();
+//        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+//        xml.append("<StyledLayerDescriptor version=\"1.0.0\" \n" + " xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" \n" + " xmlns=\"http://www.opengis.net/sld\" \n" + " xmlns:ogc=\"http://www.opengis.net/ogc\" \n" + " xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n" + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n");
+//        xml.append("  <!-- a Named Layer is the basic building block of an SLD document -->\n");
+//        xml.append("  <NamedLayer>\n");
+//        xml.append("    <Name>default_raster</Name>\n");
+//        xml.append("    <UserStyle>\n");
+//        xml.append("    <!-- Styles can have names, titles and abstracts -->\n");
+//        xml.append("      <Title>Default Raster</Title>\n");
+//        xml.append("      <Abstract>A sample style that draws a raster, good for displaying imagery</Abstract>\n");
+//        xml.append("      <!-- FeatureTypeStyles describe how to render different features -->\n");
+//        xml.append("      <!-- A FeatureTypeStyle for rendering rasters -->\n");
+//        xml.append("      <FeatureTypeStyle>\n");
+//        xml.append("        <Rule>\n");
+//        xml.append("          <Name>rule1</Name>\n");
+//        xml.append("          <Title>Opaque Raster</Title>\n");
+//        xml.append("          <Abstract>A raster with 100% opacity</Abstract>\n");
+//        xml.append("          <RasterSymbolizer>\n");
+//        xml.append("            <Opacity>1.0</Opacity>\n");
+//        xml.append("          </RasterSymbolizer>\n");
+//        xml.append("        </Rule>\n");
+//        xml.append("      </FeatureTypeStyle>\n");
+//        xml.append("    </UserStyle>\n");
+//        xml.append("  </NamedLayer>\n");
+//        xml.append("</StyledLayerDescriptor>\n");
+//
+//        GeoserverProperties.getPublisher().publishStyle(xml.toString(), storeName);
+
         log.info("Published geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].");
       }
       else
@@ -175,7 +165,7 @@ public class GeoserverRestService implements GeoserverService
       log.warn("Failed to publish geo tiff [" + storeName + "], [" + geoTiff.getAbsolutePath() + "].", t);
     }
   }
-  
+
 //  @Override
 //  public void publishS3GeoTIFF(String storeName, String url)
 //  {
@@ -200,42 +190,70 @@ public class GeoserverRestService implements GeoserverService
 //      log.warn("Failed to publish s3 geo tiff [" + storeName + "], [" + url + "].", t);
 //    }
 //  }
-  
+
   public void removeCoverageStore(String storeName)
   {
-    if (GeoserverProperties.getPublisher().removeCoverageStore(GeoserverProperties.getWorkspace(), storeName, true))
+    removeCoverageStore(GeoserverProperties.getWorkspace(), storeName);
+  }
+
+  public void removeCoverageStore(final String workspace, String storeName)
+  {
+    if (GeoserverProperties.getPublisher().removeCoverageStore(workspace, storeName, true, GeoServerRESTPublisher.Purge.ALL))
     {
       log.info("Removed the coverage store [" + GeoserverProperties.getStore() + "].");
+
+      // This is dumb but manually delete the granule file
+      String geoserverData = System.getProperty("GEOSERVER_DATA_DIR");
+
+      if (geoserverData != null)
+      {
+        try
+        {
+          FileUtils.deleteDirectory(new File(geoserverData + "/data/" + workspace + "/" + storeName));
+        }
+        catch(IOException e)
+        {
+          log.warn("Failed to delete the data directory of the coverage store [" + storeName + "].");          
+        }
+      }
     }
     else
     {
-      log.warn("Failed to remove the coverage store [" + GeoserverProperties.getStore() + "].");
+      log.warn("Failed to remove the coverage store [" + storeName + "].");
     }
   }
-  
+
   @Override
   public WMSCapabilities getCapabilities(String layer)
   {
-    try {
+    try
+    {
       String path = GeoserverProperties.getLocalPath() + "/" + GeoserverProperties.getWorkspace();
-      
+
       if (layer != null)
       {
         path = path + "/" + layer;
       }
-      
+
       path = path + "/wms";
-      
-      WebMapServer wms = new WebMapServer( new URL(path), 1000000 );
+
+      WebMapServer wms = new WebMapServer(new URL(path), 1000000);
       return wms.getCapabilities();
-    } catch ( Exception e ) {
+    }
+    catch (Exception e)
+    {
       throw new ProgrammingErrorException(e);
     }
   }
 
   public void removeStore()
   {
-    if (GeoserverProperties.getPublisher().removeDatastore(GeoserverProperties.getWorkspace(), GeoserverProperties.getStore(), true))
+    removeStore(GeoserverProperties.getWorkspace());
+  }
+
+  public void removeStore(final String workspace)
+  {
+    if (GeoserverProperties.getPublisher().removeDatastore(workspace, GeoserverProperties.getStore(), true))
     {
       log.info("Removed the datastore [" + GeoserverProperties.getStore() + "].");
     }
@@ -259,17 +277,28 @@ public class GeoserverRestService implements GeoserverService
 
   public void removeWorkspace()
   {
-    if (GeoserverProperties.getPublisher().removeWorkspace(GeoserverProperties.getWorkspace(), true))
+    removeWorkspace(GeoserverProperties.getWorkspace());
+  }
+
+  public void removeWorkspace(String workspace)
+  {
+    if (GeoserverProperties.getPublisher().removeWorkspace(workspace, true))
     {
-      log.info("Removed the workspace [" + GeoserverProperties.getWorkspace() + "].");
+      log.info("Removed the workspace [" + workspace + "].");
     }
     else
     {
-      log.warn("Failed to remove the workspace [" + GeoserverProperties.getWorkspace() + "].");
+      log.warn("Failed to remove the workspace [" + workspace + "].");
     }
   }
 
   public void publishWorkspace()
+  {
+    this.publishWorkspace(GeoserverProperties.getWorkspace());
+  }
+
+  @Override
+  public void publishWorkspace(String workspace)
   {
     try
     {
@@ -277,18 +306,18 @@ public class GeoserverRestService implements GeoserverService
 
       // IMPORTANT: The URI must match the namespace of the store or rendering
       // doesn't work
-      if (publisher.createWorkspace(GeoserverProperties.getWorkspace(), new URI(GeoserverProperties.getWorkspace())))
+      if (publisher.createWorkspace(workspace, new URI(workspace)))
       {
-        log.info("Created the workspace [" + GeoserverProperties.getWorkspace() + "].");
+        log.info("Created the workspace [" + workspace + "].");
       }
       else
       {
-        log.warn("Failed to create the workspace [" + GeoserverProperties.getWorkspace() + "].");
+        log.warn("Failed to create the workspace [" + workspace + "].");
       }
     }
     catch (URISyntaxException e)
     {
-      throw new ConfigurationException("The URI [" + GeoserverProperties.getWorkspace() + "] is invalid.", e);
+      throw new ConfigurationException("The URI [" + workspace + "] is invalid.", e);
     }
   }
 
@@ -315,8 +344,13 @@ public class GeoserverRestService implements GeoserverService
 
   public void publishStore()
   {
+    publishStore(GeoserverProperties.getWorkspace());
+  }
+
+  @Override
+  public void publishStore(String workspace)
+  {
     String dbSchema = DatabaseProperties.getNamespace().length() != 0 ? DatabaseProperties.getNamespace() : "public";
-    String workspace = GeoserverProperties.getWorkspace();
 
     GSPostGISDatastoreEncoder encoder = new GSPostGISDatastoreEncoder(GeoserverProperties.getStore());
     encoder.setDatabase(DatabaseProperties.getDatabaseName());
@@ -355,9 +389,13 @@ public class GeoserverRestService implements GeoserverService
    */
   public boolean workspaceExists()
   {
-    GeoServerRESTReader reader = GeoserverProperties.getReader();
+    return workspaceExists(GeoserverProperties.getWorkspace());
+  }
 
-    return reader.existsWorkspace(GeoserverProperties.getWorkspace());
+  public boolean workspaceExists(String workspace)
+  {
+    GeoServerRESTReader reader = GeoserverProperties.getReader();
+    return reader.existsWorkspace(workspace);
   }
 
   /**
@@ -596,16 +634,7 @@ public class GeoserverRestService implements GeoserverService
     if (GeoserverFacade.layerExists(layer))
     {
       String workspace = GeoserverProperties.getWorkspace();
-      GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
-
-      if (publisher.unpublishFeatureType(workspace, GeoserverProperties.getStore(), layer))
-      {
-        log.info("Removed the layer for [" + layer + "].");
-      }
-      else
-      {
-        log.warn("Failed to remove the layer for [" + layer + "].");
-      }
+      forceRemoveLayer(workspace, layer);
     }
   }
 
@@ -617,7 +646,11 @@ public class GeoserverRestService implements GeoserverService
    */
   public void forceRemoveLayer(String layer)
   {
-    String workspace = GeoserverProperties.getWorkspace();
+    forceRemoveLayer(GeoserverProperties.getWorkspace(), layer);
+  }
+
+  public void forceRemoveLayer(String workspace, String layer)
+  {
     GeoServerRESTPublisher publisher = GeoserverProperties.getPublisher();
 
     if (publisher.unpublishFeatureType(workspace, GeoserverProperties.getStore(), layer))
@@ -699,13 +732,18 @@ public class GeoserverRestService implements GeoserverService
    * @param layer
    * @return
    */
+  @Override
   public boolean layerExists(String layer)
+  {
+    return layerExists(GeoserverProperties.getWorkspace(), layer);
+  }
+
+  @Override
+  public boolean layerExists(String workspace, String layer)
   {
     GeoServerRESTReader reader = GeoserverProperties.getReader();
 
-    boolean exists = reader.existsLayer(GeoserverProperties.getWorkspace(), layer, true);
-
-    return exists;
+    return reader.existsLayer(workspace, layer, true);
   }
 
   /**
@@ -881,14 +919,15 @@ public class GeoserverRestService implements GeoserverService
 
   public boolean publishS3GeoTIFF(String storeName, String url)
   {
+    final String workspace = GeoserverProperties.getWorkspace();
 
     try
     {
-      boolean success = createS3CoverageStore(storeName, url);
+      boolean success = createS3CoverageStore(workspace, storeName, url);
 
       if (success)
       {
-        success = this.createS3Coverage(storeName, storeName);
+        success = this.createS3Coverage(workspace, storeName, storeName);
       }
 
       return success;
@@ -899,9 +938,8 @@ public class GeoserverRestService implements GeoserverService
     }
   }
 
-  private boolean createS3CoverageStore(String storeName, String url) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, UnsupportedEncodingException, IOException, ClientProtocolException
+  private boolean createS3CoverageStore(String workspace, String storeName, String url) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, UnsupportedEncodingException, IOException, ClientProtocolException
   {
-    String workspace = GeoserverProperties.getWorkspace();
     StringBuilder sbUrl = new StringBuilder(GeoserverProperties.getLocalPath()).append("/rest/workspaces/").append(workspace).append("/coveragestores");
 
     JSONObject wObject = new JSONObject();
@@ -922,9 +960,30 @@ public class GeoserverRestService implements GeoserverService
     return this.post(sbUrl, params);
   }
 
-  private boolean createS3Coverage(String storeName, String coverageName) throws HttpException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException
+  private boolean createUrlCoverageStore(String workspace, String storeName, String url) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, UnsupportedEncodingException, IOException, ClientProtocolException
   {
-    String workspace = GeoserverProperties.getWorkspace();
+    StringBuilder sbUrl = new StringBuilder(GeoserverProperties.getLocalPath()).append("/rest/workspaces/").append(workspace).append("/coveragestores");
+
+    JSONObject wObject = new JSONObject();
+    wObject.put("name", workspace);
+    wObject.put("link", workspace);
+
+    JSONObject coverageStore = new JSONObject();
+    coverageStore.put("name", storeName);
+    coverageStore.put("description", storeName);
+    coverageStore.put("type", "S3GeoTiff");
+    coverageStore.put("enabled", true);
+    coverageStore.put("workspace", wObject);
+    coverageStore.put("url", url);
+
+    JSONObject params = new JSONObject();
+    params.put("coverageStore", coverageStore);
+
+    return this.post(sbUrl, params);
+  }
+
+  private boolean createS3Coverage(String workspace, String storeName, String coverageName) throws HttpException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException
+  {
 
     StringBuilder sbUrl = new StringBuilder("https://localhost:8443/geoserver").append("/rest/workspaces/").append(workspace).append("/coveragestores/");
     sbUrl.append(storeName).append("/coverages");

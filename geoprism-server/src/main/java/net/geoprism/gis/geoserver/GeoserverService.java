@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.gis.geoserver;
 
@@ -27,15 +27,27 @@ public interface GeoserverService
 {
   public void refresh();
 
-  public void removeStore();
-  
+  public boolean geoserverExists();
+
+  public boolean workspaceExists();
+
+  public boolean workspaceExists(String workspace);
+
   public void removeWorkspace();
+
+  public void removeWorkspace(String workspace);
 
   public void publishWorkspace();
 
-  public boolean geoserverExists();
+  public void publishWorkspace(String workspace);
+
+  public void removeStore();
+
+  public void removeStore(String workspace);
 
   public void publishStore();
+
+  public void publishStore(String workspace);
 
   /**
    * Checks if the given style exists in geoserver.
@@ -104,6 +116,8 @@ public interface GeoserverService
 
   public void forceRemoveLayer(String layer);
 
+  public void forceRemoveLayer(String workspace, String layer);
+
   public void publishCache(String layer);
 
   /**
@@ -131,6 +145,14 @@ public interface GeoserverService
   public boolean layerExists(String layer);
 
   /**
+   * Checks if the given layer exists in Geoserver.
+   * 
+   * @param layer
+   * @return
+   */
+  public boolean layerExists(String workspace, String layer);
+
+  /**
    * Checks if the given layer has a database view.
    * 
    * @param layer
@@ -155,13 +177,17 @@ public interface GeoserverService
    */
   public double[] getExpandedBBOX(List<String> views, double expandVal);
 
-  public boolean workspaceExists();
+  public void removeCoverageStore(String storeName);
+  
+  public void removeCoverageStore(String workspace, String storeName);
+
 
   public boolean publishS3GeoTIFF(String storeName, String url);
 
-  public void removeCoverageStore(String storeName);
-  
   public void publishGeoTiff(String storeName, File geoTiff);
-  
+
+  public void publishGeoTiff(String workspace, String storeName, File geoTiff);
+
   public WMSCapabilities getCapabilities(String layer);
+
 }
