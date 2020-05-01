@@ -32,6 +32,12 @@ public class NullGeoserverService implements GeoserverService
   {
     return null;
   }
+  
+  @Override
+  public WMSCapabilities getCapabilities(String workspace, String layer)
+  {
+    return null;
+  }
 
   @Override
   public void refresh()
