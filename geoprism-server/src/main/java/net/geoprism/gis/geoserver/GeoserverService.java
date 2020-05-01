@@ -178,9 +178,8 @@ public interface GeoserverService
   public double[] getExpandedBBOX(List<String> views, double expandVal);
 
   public void removeCoverageStore(String storeName);
-  
-  public void removeCoverageStore(String workspace, String storeName);
 
+  public void removeCoverageStore(String workspace, String storeName);
 
   public boolean publishS3GeoTIFF(String storeName, String url);
 
@@ -189,5 +188,7 @@ public interface GeoserverService
   public void publishGeoTiff(String workspace, String storeName, File geoTiff);
 
   public WMSCapabilities getCapabilities(String layer);
+
+  WMSCapabilities getCapabilities(String workspace, String layer);
 
 }

@@ -341,4 +341,9 @@ public class GeoserverFacade
   {
     return getService().getCapabilities(layer);
   }
+  
+  public static WMSCapabilities getCapabilities(String workspace, String layer)
+  {
+    return getService().getCapabilities(workspace, layer);
+  }
 }

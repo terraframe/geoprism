@@ -226,9 +226,15 @@ public class GeoserverRestService implements GeoserverService
   @Override
   public WMSCapabilities getCapabilities(String layer)
   {
+    return getCapabilities(GeoserverProperties.getWorkspace(), layer);
+  }
+
+  @Override
+  public WMSCapabilities getCapabilities(final String workspace, String layer)
+  {
     try
     {
-      String path = GeoserverProperties.getLocalPath() + "/" + GeoserverProperties.getWorkspace();
+      String path = GeoserverProperties.getLocalPath() + "/" + workspace;
 
       if (layer != null)
       {
