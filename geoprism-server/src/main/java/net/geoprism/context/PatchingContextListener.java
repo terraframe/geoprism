@@ -22,17 +22,17 @@ import java.io.File;
 
 import com.runwaysdk.constants.DeployProperties;
 
-import net.geoprism.GeoprismPatcherIF;
 import net.geoprism.PluginUtil;
+import net.geoprism.build.GeoprismDatabaseBuilderIF;
 
 public class PatchingContextListener implements ServerContextListener
 {
-  protected GeoprismPatcherIF patcher;
+  protected GeoprismDatabaseBuilderIF patcher;
 
   @Override
   public void initialize()
   {
-    patcher = PluginUtil.getPatcher();
+    patcher = PluginUtil.getDatabaseBuilder();
     patcher.initialize(new File(DeployProperties.getDeployBin(), "metadata"));
   }
 

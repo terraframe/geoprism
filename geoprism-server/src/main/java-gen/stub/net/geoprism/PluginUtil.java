@@ -28,6 +28,8 @@ import java.util.ServiceLoader;
 import com.runwaysdk.constants.VaultInfo;
 import com.runwaysdk.constants.VaultProperties;
 
+import net.geoprism.build.GeoprismDatabaseBuilder;
+import net.geoprism.build.GeoprismDatabaseBuilderIF;
 import net.geoprism.dhis2.DHIS2PluginIF;
 import net.geoprism.gis.geoserver.GeoserverInitializerIF;
 
@@ -56,27 +58,27 @@ public class PluginUtil extends PluginUtilBase
     }
   }
   
-  public static GeoprismPatcherIF getPatcher()
+  public static GeoprismDatabaseBuilderIF getDatabaseBuilder()
   {
     System.out.println("Default vault path : " + VaultProperties.getPath(VaultInfo.DEFAULT));
     System.out.println("geoprism file storage path : " + GeoprismProperties.getGeoprismFileStorage().getAbsolutePath());
     
-    ServiceLoader<GeoprismPatcherIF> loader = ServiceLoader.load(GeoprismPatcherIF.class, Thread.currentThread().getContextClassLoader());
+    ServiceLoader<GeoprismDatabaseBuilderIF> loader = ServiceLoader.load(GeoprismDatabaseBuilderIF.class, Thread.currentThread().getContextClassLoader());
 
-    GeoprismPatcherIF patcher;
+    GeoprismDatabaseBuilderIF patcher;
     
     try
     {
-      Iterator<GeoprismPatcherIF> it = loader.iterator();
+      Iterator<GeoprismDatabaseBuilderIF> it = loader.iterator();
 
       patcher = it.next();
     }
     catch (ServiceConfigurationError | NoSuchElementException ex)
     {
-      patcher = new GeoprismPatcher();
+      patcher = new GeoprismDatabaseBuilder();
     }
     
-    System.out.println("Patcher resolved to " + patcher.getClass().getName());
+    System.out.println("Database builder resolved to " + patcher.getClass().getName());
     
     return patcher;
   }

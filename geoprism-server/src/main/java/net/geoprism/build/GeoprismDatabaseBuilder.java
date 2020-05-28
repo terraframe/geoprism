@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism;
+package net.geoprism.build;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +33,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.build.DatabaseBootstrapper;
+import com.runwaysdk.build.DatabaseBuilder;
 import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
@@ -40,12 +42,12 @@ import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.constants.ServerProperties;
+import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
 import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
-import com.runwaysdk.patcher.RunwayPatcher;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.resource.ClasspathResource;
 import com.runwaysdk.session.Request;
@@ -56,6 +58,8 @@ import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
 import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
 
+import net.geoprism.GeoprismProperties;
+import net.geoprism.PluginUtil;
 import net.geoprism.context.PatchingContextListener;
 import net.geoprism.context.ProjectDataConfiguration;
 import net.geoprism.data.CachedEndpoint;
@@ -68,7 +72,7 @@ import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.ontology.ClassifierIsARelationshipAllPathsTableQuery;
 
-public class GeoprismPatcher implements GeoprismPatcherIF
+public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
 {
   private static Logger logger = LoggerFactory.getLogger(PatchingContextListener.class);
 
@@ -78,10 +82,18 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   
   static
   {
-    checkDuplicateClasspathResources();
+    try
+    {
+      checkDuplicateClasspathResources();
+    }
+    catch (Throwable t)
+    {
+      t.printStackTrace();
+      throw t;
+    }
   }
 
-  public GeoprismPatcher()
+  public GeoprismDatabaseBuilder()
   {
     
   }
@@ -101,26 +113,18 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   {
     ServerProperties.setAllowModificationOfMdAttribute(true);
 
-    GeoprismPatcherIF patcher = PluginUtil.getPatcher();
-    patcher.initialize(args);
-    patcher.run();
+    GeoprismDatabaseBuilderIF builder = PluginUtil.getDatabaseBuilder();
+    builder.initialize(args);
+    builder.run();
   }
   
   protected void processCLIArgs(String[] args)
   {
     CommandLineParser parser = new DefaultParser();
-    Options options = new Options();
-    options.addOption(Option.builder("metadataDir").hasArg().argName("metadataDir").longOpt("metadataDir").desc("The path to the location of metadata schema files. Optional").optionalArg(true).build());
     
-    // All the runway args
-    options.addOption(Option.builder("mode").hasArg().argName("mode").longOpt("mode").desc("The mode to run the RunwayPatcher in. Can be either bootstrap or standard. If omitted standard is assumed. During standard mode, bootstrapping will be attempted if Runway does not exist.").optionalArg(true).build());
-    options.addOption(Option.builder("rootUser").hasArg().argName("rootUser").longOpt("rootUser").desc("The username of the root database user. Only required when bootstrapping.").optionalArg(true).build());
-    options.addOption(Option.builder("rootPass").hasArg().argName("rootPass").longOpt("rootPass").desc("The password of the root database user. Only required when bootstrapping.").optionalArg(true).build());
-    options.addOption(Option.builder("templateDb").hasArg().argName("templateDb").longOpt("templateDb").desc("The template database to use when creating the application database. Only required when bootstrapping.").optionalArg(true).build());
-    options.addOption(Option.builder("extensions").hasArg().argName("extensions").longOpt("extensions").desc("A comma separated list of extensions denoting which schema files to run. If unspecified we will use all supported.").optionalArg(true).build());
-    options.addOption(Option.builder("clean").hasArg().argName("clean").longOpt("clean").desc("A boolean parameter denoting whether or not to clean the database and delete all data. Default is false.").optionalArg(true).build());
-    options.addOption(Option.builder("path").hasArg().argName("path").longOpt("path").desc("The path (from the root of the classpath) to the location of the metadata files. Defaults to 'domain'").optionalArg(true).build());
-    options.addOption(Option.builder("ignoreErrors").hasArg().argName("ignoreErrors").longOpt("ignoreErrors").desc("Ignore errors if one occurs while importing sql. Not recommended for everyday usage.").optionalArg(true).build());
+    Options options = DatabaseBuilder.buildCliOptions();
+    
+    options.addOption(Option.builder("metadataDir").hasArg().argName("metadataDir").longOpt("metadataDir").desc("The path to the location of metadata schema files. Optional").optionalArg(true).build());
     
     try
     {
@@ -146,29 +150,29 @@ public class GeoprismPatcher implements GeoprismPatcherIF
     }
   }
   
-  private String[] getRunwayBootstrapArgs(Boolean isBootstrap)
-  {
-    ArrayList<String> clean = new ArrayList<String>();
-    
-    for (String rwArg : this.runwayArgs)
-    {
-      if (!rwArg.contains("mode") && (!rwArg.contains("clean") || isBootstrap))
-      {
-        clean.add(rwArg);
-      }
-    }
-    
-    if (isBootstrap)
-    {
-      clean.add("--mode=" + RunwayPatcher.MODE_BOOTSTRAP);
-    }
-    else
-    {
-      clean.add("--mode=" + RunwayPatcher.MODE_STANDARD);
-    }
-    
-    return clean.toArray(new String[clean.size()]);
-  }
+//  private String[] getRunwayBootstrapArgs(Boolean isBootstrap)
+//  {
+//    ArrayList<String> clean = new ArrayList<String>();
+//    
+//    for (String rwArg : this.runwayArgs)
+//    {
+//      if (!rwArg.contains("mode") && (!rwArg.contains("clean") || isBootstrap))
+//      {
+//        clean.add(rwArg);
+//      }
+//    }
+//    
+//    if (isBootstrap)
+//    {
+//      clean.add("--mode=" + RunwayPatcher.MODE_BOOTSTRAP);
+//    }
+//    else
+//    {
+//      clean.add("--mode=" + RunwayPatcher.MODE_STANDARD);
+//    }
+//    
+//    return clean.toArray(new String[clean.size()]);
+//  }
   
   public void setRunwayArgs(String[] rwArgs)
   {
@@ -180,6 +184,11 @@ public class GeoprismPatcher implements GeoprismPatcherIF
       {
         clean.add(rwArg);
       }
+    }
+    
+    if (!clean.contains("plugins"))
+    {
+      clean.add("--plugins=" + GISImportPlugin.class.getName() + "," + GeoprismImportPlugin.class.getName());
     }
     
     this.runwayArgs = clean.toArray(new String[clean.size()]);
@@ -247,12 +256,7 @@ public class GeoprismPatcher implements GeoprismPatcherIF
   {
     validate();
     
-    RunwayPatcher.main(getRunwayBootstrapArgs(true));
-    
-    SAXSourceParser.registerPlugin(new GISImportPlugin());
-    SAXSourceParser.registerPlugin(new GeoprismImportPlugin());
-    
-    RunwayPatcher.main(getRunwayBootstrapArgs(false));
+    DatabaseBuilder.main(this.runwayArgs);
     
     runWithRequest();
   }

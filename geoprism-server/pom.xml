@@ -43,13 +43,6 @@
   <description>The back-end database server for Geoprism</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
 
-  <properties>
-    <!-- Specify your development root database credentials here. -->
-    <root.db>postgres</root.db>
-    <root.user>postgres</root.user>
-    <root.pass>postgres</root.pass>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -309,10 +302,10 @@
       </build>
     </profile>
     <profile>
-      <id>patch</id>
+      <id>database</id>
       <activation>
         <property>
-          <name>patch</name>
+          <name>database</name>
         </property>
       </activation>
       <build>
@@ -323,20 +316,20 @@
             <version>1.2.1</version>
             <executions>
               <execution>
-                <id>patch</id>
+                <id>database</id>
                 <phase>install</phase>
                 <goals>
                   <goal>java</goal>
                 </goals>
                 <configuration>
                   <executable>java</executable>
-                  <mainClass>net.geoprism.GeoprismPatcher</mainClass>
+                  <mainClass>net.geoprism.build.GeoprismDatabaseBuilder</mainClass>
                   <arguments>
                     <argument>--metadataDir=${project.basedir}/target/classes/metadata</argument>
-                    <argument>--rootUser=${root.user}</argument>
-                    <argument>--rootPass=${root.pass}</argument>
-                    <argument>--templateDb=${root.db}</argument>
-                    <argument>--clean=${root.clean}</argument>
+                    <argument>--rootUser=${db.rootUser}</argument>
+                    <argument>--rootPass=${db.rootPass}</argument>
+                    <argument>--templateDb=${dob.rootDb}</argument>
+                    <argument>--clean=${db.clean}</argument>
                   </arguments>
                   <systemProperties>
                     <systemProperty>
