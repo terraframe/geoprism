@@ -40,7 +40,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.2.0</runway.version>
+    <runway.version>3.2.2</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>16.1</geotools.version>
 
@@ -107,6 +107,22 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.0.0</version>
+        <dependencies>
+          <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+          <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>4.0.3</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <maxHeap>4000</maxHeap>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
