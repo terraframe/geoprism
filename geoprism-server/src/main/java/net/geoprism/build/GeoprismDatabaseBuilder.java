@@ -101,7 +101,7 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
   public void initialize(File metadataDir)
   {
     this.metadataDir = metadataDir;
-    this.runwayArgs = new String[]{};
+    this.setRunwayArgs(new String[]{});
   }
   
   public void initialize(String[] cliArgs)
@@ -190,6 +190,12 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
     {
       clean.add("--plugins=" + GISImportPlugin.class.getName() + "," + GeoprismImportPlugin.class.getName());
     }
+    
+    if (!clean.contains("rootUser") && !clean.contains("rootPass") && !clean.contains("patch"))
+    {
+      clean.add("--patch");
+    }
+      
     
     this.runwayArgs = clean.toArray(new String[clean.size()]);
   }

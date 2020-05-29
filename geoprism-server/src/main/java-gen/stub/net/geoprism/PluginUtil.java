@@ -25,6 +25,9 @@ import java.util.NoSuchElementException;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.runwaysdk.constants.VaultInfo;
 import com.runwaysdk.constants.VaultProperties;
 
@@ -35,6 +38,8 @@ import net.geoprism.gis.geoserver.GeoserverInitializerIF;
 
 public class PluginUtil extends PluginUtilBase 
 {
+  private static final Logger logger = LoggerFactory.getLogger(PluginUtil.class);
+  
   private static final long serialVersionUID = 682516980;
   
   public PluginUtil()
@@ -60,8 +65,8 @@ public class PluginUtil extends PluginUtilBase
   
   public static GeoprismDatabaseBuilderIF getDatabaseBuilder()
   {
-    System.out.println("Default vault path : " + VaultProperties.getPath(VaultInfo.DEFAULT));
-    System.out.println("geoprism file storage path : " + GeoprismProperties.getGeoprismFileStorage().getAbsolutePath());
+    logger.debug("Default vault path : " + VaultProperties.getPath(VaultInfo.DEFAULT));
+    logger.debug("geoprism file storage path : " + GeoprismProperties.getGeoprismFileStorage().getAbsolutePath());
     
     ServiceLoader<GeoprismDatabaseBuilderIF> loader = ServiceLoader.load(GeoprismDatabaseBuilderIF.class, Thread.currentThread().getContextClassLoader());
 
@@ -78,7 +83,7 @@ public class PluginUtil extends PluginUtilBase
       patcher = new GeoprismDatabaseBuilder();
     }
     
-    System.out.println("Database builder resolved to " + patcher.getClass().getName());
+    logger.debug("Database builder resolved to " + patcher.getClass().getName());
     
     return patcher;
   }
