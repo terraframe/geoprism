@@ -34,12 +34,14 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.runwaysdk.business.rbac.Operation;
 import com.runwaysdk.dataaccess.BusinessDAO;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
+import com.runwaysdk.session.Session;
 
 import net.geoprism.email.EmailSendAuthenticationException;
 import net.geoprism.email.EmailSendException;
@@ -164,9 +166,14 @@ public class EmailSetting extends EmailSettingBase
    * 
    * @return The default email settings.
    */
-  public static net.geoprism.EmailSetting editDefault()
+  public static synchronized net.geoprism.EmailSetting editDefault()
   {
     EmailSetting setting = getDefault();
+    
+    if (!setting.isAppliedToDB())
+    {
+      setting.applyWithoutTesting();
+    }
     
     setting.lock();
     
@@ -199,7 +206,7 @@ public class EmailSetting extends EmailSettingBase
     else
     {
       setting = readSettingsFromProperties();
-      setting.applyWithoutTesting();
+//      setting.applyWithoutTesting(); // They may not have permissions to write EmailSettings
     }
     
     return setting;

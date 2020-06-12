@@ -134,4 +134,16 @@ public class ClientConfigurationService
       configuration.handleSessionEvent(event);
     }
   }
+  
+  public static String getServerVersion()
+  {
+    List<ClientConfigurationIF> configurations = ClientConfigurationService.getConfigurations();
+
+    for (ClientConfigurationIF configuration : configurations)
+    {
+      return configuration.getServerVersion();
+    }
+    
+    return new DefaultClientConfiguration().getServerVersion();
+  }
 }

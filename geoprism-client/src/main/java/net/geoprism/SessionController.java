@@ -124,7 +124,7 @@ public class SessionController
     response.set("roles", roles);
     response.set("roleDisplayLabels", roleDisplayLabels);
     response.set("userName", username);
-    response.set("version", GeoprismVersionProperties.getInstance().getVersion());
+    response.set("version", ClientConfigurationService.getServerVersion());
     response.set("installedLocales", installedLocalesArr);
 
     return response;

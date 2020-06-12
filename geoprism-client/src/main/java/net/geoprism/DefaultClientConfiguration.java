@@ -89,4 +89,10 @@ public class DefaultClientConfiguration implements ClientConfigurationIF
   {
     // Do nothing
   }
+
+  @Override
+  public String getServerVersion()
+  {
+    return GeoprismVersionProperties.getInstance().getVersion();
+  }
 }

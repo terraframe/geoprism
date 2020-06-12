@@ -34,4 +34,6 @@ public interface ClientConfigurationIF
   public String getLoginUrl();
 
   public void handleSessionEvent(SessionEvent event);
+  
+  public String getServerVersion();
 }
