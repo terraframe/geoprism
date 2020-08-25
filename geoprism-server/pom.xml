@@ -34,7 +34,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>0.9.10</version>
+    <version>0.9.11-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-server</artifactId>
   <packaging>jar</packaging>
