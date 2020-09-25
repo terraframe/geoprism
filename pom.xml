@@ -123,6 +123,7 @@
           <maxHeap>4000</maxHeap>
         </configuration>
       </plugin>
+<!-- 
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
@@ -135,6 +136,7 @@
           </execution>
         </executions>
       </plugin>
+ -->      
     
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
