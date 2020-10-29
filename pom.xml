@@ -24,7 +24,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>0.9.13-SNAPSHOT</version>
+  <version>0.9.15-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -40,7 +40,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.2.12</runway.version>
+    <runway.version>3.2.13</runway.version>
     <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>19.4</geotools.version>
 
@@ -123,6 +123,7 @@
           <maxHeap>4000</maxHeap>
         </configuration>
       </plugin>
+<!-- 
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
@@ -135,6 +136,7 @@
           </execution>
         </executions>
       </plugin>
+ -->      
     
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
