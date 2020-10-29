@@ -106,12 +106,16 @@ public class GeoserverProperties
 
   public static String getAdminUser()
   {
-    return Singleton.getProps().getString("admin.user");
+    ConfigurationReaderIF props = Singleton.getProps();
+    
+    return props.getString("geoserver.admin.user") == null ? props.getString("admin.user") : props.getString("geoserver.admin.user");
   }
 
   public static String getAdminPassword()
   {
-    return Singleton.getProps().getString("admin.password");
+    ConfigurationReaderIF props = Singleton.getProps();
+    
+    return props.getString("geoserver.admin.password") == null ? props.getString("admin.password") : props.getString("geoserver.admin.password");
   }
 
   public static String getRemotePath()
