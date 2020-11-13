@@ -36,7 +36,7 @@
     <aspectj.version>1.8.6</aspectj.version>    
     <aspectj.plugin.version>1.7</aspectj.plugin.version>
     
-    <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
+    <mvn.server.url>https://nexus.terraframe.com/</mvn.server.url>
   </properties>
 
   <repositories>
