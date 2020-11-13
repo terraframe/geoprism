@@ -41,7 +41,7 @@
 
   <properties>
     <runway.version>3.2.14</runway.version>
-    <mvn.server.url>http://nexus.terraframe.com/</mvn.server.url>
+    <mvn.server.url>https://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>19.4</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -64,7 +64,7 @@
     <repository>
       <id>terraframe</id>
       <name>terraframe</name>
-      <url>http://nexus.terraframe.com/content/groups/allrepos</url>
+      <url>https://nexus.terraframe.com/content/groups/allrepos</url>
       <layout>default</layout>
     </repository>
     <repository>
@@ -78,13 +78,13 @@
     <repository>
       <id>terraframe-releases</id>
       <name>terraframe-releases</name>
-      <url>http://nexus.terraframe.com/content/repositories/releases/</url>
+      <url>https://nexus.terraframe.com/content/repositories/releases/</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
       <id>terraframe-snapshots</id>
       <name>terraframe-snapshots</name>
-      <url>http://nexus.terraframe.com/content/repositories/snapshots/</url>
+      <url>https://nexus.terraframe.com/content/repositories/snapshots/</url>
       <layout>default</layout>
     </snapshotRepository>
   </distributionManagement>
