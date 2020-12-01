@@ -183,7 +183,7 @@ public class SessionController
     return new CookieResponse("user", 0);
   }
 
-  @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)
+  @Endpoint(method = ServletMethod.GET, error = ErrorSerialization.JSON)
   public ResponseIF ologin(ServletRequestIF req, @RequestParamter(name = "code") String code, @RequestParamter(name = "state") String state) throws MalformedURLException, JSONException
   {
     URL url = new URL(req.getScheme(), req.getServerName(), req.getServerPort(), req.getContextPath());
@@ -219,7 +219,7 @@ public class SessionController
     }
   }
 
-  private void createSession(ServletRequestIF req, String sessionId, Locale[] locales)
+  public void createSession(ServletRequestIF req, String sessionId, Locale[] locales)
   {
     WebClientSession clientSession = WebClientSession.getExistingSession(sessionId, locales);
     ClientRequestIF clientRequest = clientSession.getRequest();

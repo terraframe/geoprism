@@ -44,7 +44,7 @@ public class OauthServer extends OauthServerBase
     {
       if (serverType.equals(DHIS2))
       {
-        return object.getString("oid");
+        return object.getString("id");
       }
       else
       {
@@ -56,6 +56,17 @@ public class OauthServer extends OauthServerBase
       throw new RuntimeException(e);
     }
 
+  }
+  
+  public void populate(OauthServer server)
+  {
+    this.setAuthorizationLocation(server.getAuthorizationLocation());
+    this.setTokenLocation(server.getTokenLocation());
+    this.setProfileLocation(server.getProfileLocation());
+    this.setSecretKey(server.getSecretKey());
+    this.getDisplayLabel().setValue(server.getDisplayLabel().getValue());
+    this.setServerType(server.getServerType());
+    this.setClientId(server.getClientId());
   }
 
   public static void populate(String serverType, ExternalProfile profile, JSONObject object)

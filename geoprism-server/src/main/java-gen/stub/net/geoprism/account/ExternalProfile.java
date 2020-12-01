@@ -1,22 +1,27 @@
 /**
  * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
  *
- * This file is part of Geoprism(tm).
+ * This file is part of Runway SDK(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
+ * Runway SDK(tm) is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
+ * Runway SDK(tm) is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * License along with Runway SDK(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.account;
+
+import net.geoprism.DefaultConfiguration;
+import net.geoprism.GeoprismUserIF;
+
+import java.util.Base64;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -44,16 +49,9 @@ import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 
-import net.geoprism.DefaultConfiguration;
-import net.geoprism.GeoprismUserIF;
-
 public class ExternalProfile extends ExternalProfileBase implements GeoprismUserIF
 {
   private static final long serialVersionUID = -377482924;
-  
-  private static OAuthJSONAccessTokenResponse accessToken; // TODO this cant be static
-  
-  private static OAuthClient oAuthClient;
 
   public ExternalProfile()
   {
@@ -76,64 +74,50 @@ public class ExternalProfile extends ExternalProfileBase implements GeoprismUser
 
     return false;
   }
-  
-  public static String getAccessToken()
-  {
-    if (accessToken == null) { return null;}
-    
-    return accessToken.getAccessToken();
-  }
-  
-  public static JSONObject resourceRequest(String url)
-  {
-    try
-    {
-      OAuthBearerClientRequest requestBuilder = new OAuthBearerClientRequest(url);
-      requestBuilder.setAccessToken(accessToken.getAccessToken());
-  
-      OAuthClientRequest bearerRequest = requestBuilder.buildQueryMessage();
-      OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
-  
-      String body = resourceResponse.getBody();
-  
-      JSONObject object = new JSONObject(body);
-      
-      return object;
-    }
-    catch (JSONException | OAuthSystemException | OAuthProblemException e)
-    {
-      throw new InvalidLoginException(e);
-    }
-  }
 
   @Authenticate
   public static String login(String serverId, String code, String locales, String redirectBase)
-  {
+  { 
     try
     {
       String redirect = redirectBase + "/session/ologin";
-      
+
       OauthServer server = OauthServer.get(serverId);
       /*
        * Get the access token
        */
       TokenRequestBuilder tokenBuilder = OAuthClientRequest.tokenLocation(server.getTokenLocation());
       tokenBuilder.setGrantType(GrantType.AUTHORIZATION_CODE);
-      tokenBuilder.setClientId(server.getClientId());
-      tokenBuilder.setClientSecret(server.getSecretKey());
       tokenBuilder.setRedirectURI(redirect);
       tokenBuilder.setCode(code);
       
-      OAuthClientRequest tokenRequest = tokenBuilder.buildQueryMessage();
+//    tokenBuilder.setClientId(server.getClientId());
+//    tokenBuilder.setClientSecret(server.getSecretKey());
+//      tokenBuilder.setUsername(server.getClientId());
+//      tokenBuilder.setPassword(server.getSecretKey());
+      
+      String auth = server.getClientId() + ":" + server.getSecretKey();
+      
+      OAuthClientRequest tokenRequest = tokenBuilder.buildBodyMessage();
       tokenRequest.setHeader("Accept", "application/json");
+      tokenRequest.setHeader("Authorization", "Basic " + new String(Base64.getEncoder().encode(auth.getBytes())));
       
-      oAuthClient = new OAuthClient(new URLConnectionClient());
-      accessToken = oAuthClient.accessToken(tokenRequest);
-      
+      URLConnectionClient connClient = new URLConnectionClient();
+      OAuthClient oAuthClient = new OAuthClient(connClient);
+      OAuthJSONAccessTokenResponse accessToken = oAuthClient.accessToken(tokenRequest, OAuth.HttpMethod.POST, OAuthJSONAccessTokenResponse.class);
+
       /*
        * Request the user information
        */
-      JSONObject object = resourceRequest(server.getProfileLocation());
+      OAuthBearerClientRequest requestBuilder = new OAuthBearerClientRequest(server.getProfileLocation());
+      requestBuilder.setAccessToken(accessToken.getAccessToken());
+
+      OAuthClientRequest bearerRequest = requestBuilder.buildQueryMessage();
+      OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+
+      String body = resourceResponse.getBody();
+
+      JSONObject object = new JSONObject(body);
 
       SingleActorDAOIF profile = ExternalProfile.getOrCreate(server, object);
 

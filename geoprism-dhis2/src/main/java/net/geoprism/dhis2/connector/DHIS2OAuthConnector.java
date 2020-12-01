@@ -80,7 +80,7 @@ public class DHIS2OAuthConnector extends AbstractDHIS2Connector
   {
     super.initialize();
     
-    this.accessToken = ExternalProfile.getAccessToken();
+//    this.accessToken = ExternalProfile.getAccessToken();
     
     if (!isInitialized() && username != null && password != null)
     {
