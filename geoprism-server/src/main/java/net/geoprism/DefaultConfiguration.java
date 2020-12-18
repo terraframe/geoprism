@@ -253,6 +253,12 @@ public class DefaultConfiguration implements ConfigurationIF
   {
     // Do nothing
   }
+  
+  @Override
+  public void onInitiateForgotPasswordForUser(GeoprismUser user, ForgotPasswordRequest req)
+  {
+    // Do nothing
+  }
 
   @Override
   public String getGeoEntityRelationship(MdRelationshipDAOIF mdRelationshipDAOIF)

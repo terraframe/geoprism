@@ -107,6 +107,14 @@ public interface ConfigurationIF
    * @param mClass
    */
   public void onMappableClassDelete(MappableClass mClass);
+  
+  /**
+   * Extension point for forgot password initiation
+   * 
+   * @param user
+   * @param req
+   */
+  public void onInitiateForgotPasswordForUser(GeoprismUser user, ForgotPasswordRequest req);
 
   /**
    * Extension point which returns the geo entity realtionship which corresponds to the universal relationship

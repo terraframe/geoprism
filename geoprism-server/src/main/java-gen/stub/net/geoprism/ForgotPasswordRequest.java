@@ -19,6 +19,7 @@
 package net.geoprism;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -154,6 +155,12 @@ public class ForgotPasswordRequest extends ForgotPasswordRequestBase
     req.setStartTime(new Date());
     req.setToken(req.generateEncryptedToken(user));
     req.apply();
+    
+    List<ConfigurationIF> configurations = ConfigurationService.getConfigurations();
+    for (ConfigurationIF configuration : configurations)
+    {
+      configuration.onInitiateForgotPasswordForUser(user, req);
+    }
     
     req.sendEmail(serverExternalUrl);
   }
