@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import org.json.JSONArray;
 
 import com.runwaysdk.business.rbac.RoleDAOIF;
+import com.runwaysdk.business.rbac.SingleActorDAO;
 import com.runwaysdk.business.rbac.UserDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
@@ -80,7 +81,7 @@ public class RoleView extends RoleViewBase
 
     if (user.isAppliedToDB())
     {
-      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
+      Set<RoleDAOIF> roles = SingleActorDAO.get(user.getOid()).authorizedRoles();
 
       for (RoleDAOIF role : roles)
       {
@@ -99,8 +100,7 @@ public class RoleView extends RoleViewBase
 
     if (user.isAppliedToDB())
     {
-//      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).authorizedRoles();
-      Set<RoleDAOIF> roles = UserDAO.get(user.getOid()).assignedRoles();
+      Set<RoleDAOIF> roles = SingleActorDAO.get(user.getOid()).assignedRoles();
 
       for (RoleDAOIF role : roles)
       {

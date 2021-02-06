@@ -93,7 +93,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.geoprism.AccessConstants;
 import net.geoprism.ClassUniversalQuery;
 import net.geoprism.GeoprismUser;
-import net.geoprism.GeoprismUserIF;
+import net.geoprism.GeoprismActorIF;
 import net.geoprism.GeoprismUserQuery;
 import net.geoprism.KeyGeneratorIF;
 import net.geoprism.MappableClass;
@@ -1025,9 +1025,9 @@ public class Dashboard extends DashboardBase
   {
     SingleActor currentUser = GeoprismUser.getCurrentUser();
 
-    if (currentUser != null && currentUser instanceof GeoprismUserIF)
+    if (currentUser != null && currentUser instanceof GeoprismActorIF)
     {
-      Boolean access = ( (GeoprismUserIF) currentUser ).isAssigned(this.getDashboardRole());
+      Boolean access = ( (GeoprismActorIF) currentUser ).isAssigned(this.getDashboardRole());
 
       if (!access)
       {

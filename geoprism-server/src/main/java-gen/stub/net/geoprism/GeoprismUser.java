@@ -38,7 +38,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.SingleActor;
 import com.runwaysdk.system.Users;
 
-public class GeoprismUser extends GeoprismUserBase implements GeoprismUserIF
+public class GeoprismUser extends GeoprismUserBase implements GeoprismActorIF
 {
   private static final long serialVersionUID = 394889520;
 

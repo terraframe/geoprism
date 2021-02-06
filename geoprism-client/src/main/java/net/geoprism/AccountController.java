@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.geoprism.account.GeoprismUserViewDTO;
-import net.geoprism.account.UserInviteDTO;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +41,10 @@ import com.runwaysdk.mvc.RestBodyResponse;
 import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.request.ServletRequestIF;
 import com.runwaysdk.system.SingleActorDTO;
+
+import net.geoprism.account.ExternalProfileDTO;
+import net.geoprism.account.GeoprismUserViewDTO;
+import net.geoprism.account.UserInviteDTO;
 
 @Controller(url = "account")
 public class AccountController
@@ -79,9 +80,31 @@ public class AccountController
   public ResponseIF get(ClientRequestIF request) throws JSONException
   {
     SingleActorDTO user = GeoprismUserDTO.getCurrentUser(request);
-    user.lock();
-
-    return new RestBodyResponse(user);
+    
+    if (!(user instanceof ExternalProfileDTO))
+    {
+      user.lock();
+      
+      return new RestBodyResponse(user);
+    }
+    else
+    {
+      ExternalProfileDTO ep = (ExternalProfileDTO) user;
+      
+      JSONObject jo = new JSONObject();
+      
+      jo.put("username", ep.getDisplayName());
+      
+      jo.put("email", ep.getEmail());
+      
+      jo.put("firstName", ep.getFirstName());
+      
+      jo.put("lastName", ep.getLastName());
+      
+      jo.put("phoneNumber", ep.getPhoneNumber());
+      
+      return new RestBodyResponse(jo.toString());
+    }
   }
 
   @Endpoint(method = ServletMethod.POST, error = ErrorSerialization.JSON)

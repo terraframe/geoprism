@@ -1,28 +1,10 @@
-/**
- * Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism(tm).
- *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.account;
 
-@com.runwaysdk.business.ClassSignature(hash = -837290465)
-public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.SingleActorDTO 
+@com.runwaysdk.business.ClassSignature(hash = 1438090482)
+public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.SingleActorDTO
 {
   public final static String CLASS = "net.geoprism.account.ExternalProfile";
-  private static final long serialVersionUID = -837290465;
+  private static final long serialVersionUID = 1438090482;
   
   protected ExternalProfileDTOBase(com.runwaysdk.constants.ClientRequestIF clientRequest)
   {
@@ -46,6 +28,10 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   }
   
   public static java.lang.String DISPLAYNAME = "displayName";
+  public static java.lang.String EMAIL = "email";
+  public static java.lang.String FIRSTNAME = "firstName";
+  public static java.lang.String LASTNAME = "lastName";
+  public static java.lang.String PHONENUMBER = "phoneNumber";
   public static java.lang.String REMOTEID = "remoteId";
   public static java.lang.String SERVER = "server";
   public static java.lang.String USERNAME = "username";
@@ -84,6 +70,154 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
   public final com.runwaysdk.transport.metadata.AttributeCharacterMdDTO getDisplayNameMd()
   {
     return (com.runwaysdk.transport.metadata.AttributeCharacterMdDTO) getAttributeDTO(DISPLAYNAME).getAttributeMdDTO();
+  }
+  
+  public String getEmail()
+  {
+    return getValue(EMAIL);
+  }
+  
+  public void setEmail(String value)
+  {
+    if(value == null)
+    {
+      setValue(EMAIL, "");
+    }
+    else
+    {
+      setValue(EMAIL, value);
+    }
+  }
+  
+  public boolean isEmailWritable()
+  {
+    return isWritable(EMAIL);
+  }
+  
+  public boolean isEmailReadable()
+  {
+    return isReadable(EMAIL);
+  }
+  
+  public boolean isEmailModified()
+  {
+    return isModified(EMAIL);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getEmailMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(EMAIL).getAttributeMdDTO();
+  }
+  
+  public String getFirstName()
+  {
+    return getValue(FIRSTNAME);
+  }
+  
+  public void setFirstName(String value)
+  {
+    if(value == null)
+    {
+      setValue(FIRSTNAME, "");
+    }
+    else
+    {
+      setValue(FIRSTNAME, value);
+    }
+  }
+  
+  public boolean isFirstNameWritable()
+  {
+    return isWritable(FIRSTNAME);
+  }
+  
+  public boolean isFirstNameReadable()
+  {
+    return isReadable(FIRSTNAME);
+  }
+  
+  public boolean isFirstNameModified()
+  {
+    return isModified(FIRSTNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getFirstNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(FIRSTNAME).getAttributeMdDTO();
+  }
+  
+  public String getLastName()
+  {
+    return getValue(LASTNAME);
+  }
+  
+  public void setLastName(String value)
+  {
+    if(value == null)
+    {
+      setValue(LASTNAME, "");
+    }
+    else
+    {
+      setValue(LASTNAME, value);
+    }
+  }
+  
+  public boolean isLastNameWritable()
+  {
+    return isWritable(LASTNAME);
+  }
+  
+  public boolean isLastNameReadable()
+  {
+    return isReadable(LASTNAME);
+  }
+  
+  public boolean isLastNameModified()
+  {
+    return isModified(LASTNAME);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getLastNameMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(LASTNAME).getAttributeMdDTO();
+  }
+  
+  public String getPhoneNumber()
+  {
+    return getValue(PHONENUMBER);
+  }
+  
+  public void setPhoneNumber(String value)
+  {
+    if(value == null)
+    {
+      setValue(PHONENUMBER, "");
+    }
+    else
+    {
+      setValue(PHONENUMBER, value);
+    }
+  }
+  
+  public boolean isPhoneNumberWritable()
+  {
+    return isWritable(PHONENUMBER);
+  }
+  
+  public boolean isPhoneNumberReadable()
+  {
+    return isReadable(PHONENUMBER);
+  }
+  
+  public boolean isPhoneNumberModified()
+  {
+    return isModified(PHONENUMBER);
+  }
+  
+  public final com.runwaysdk.transport.metadata.AttributeTextMdDTO getPhoneNumberMd()
+  {
+    return (com.runwaysdk.transport.metadata.AttributeTextMdDTO) getAttributeDTO(PHONENUMBER).getAttributeMdDTO();
   }
   
   public String getRemoteId()
@@ -135,7 +269,7 @@ public abstract class ExternalProfileDTOBase extends com.runwaysdk.system.Single
     }
   }
   
-  public String getServerId()
+  public String getServerOid()
   {
     return getValue(SERVER);
   }

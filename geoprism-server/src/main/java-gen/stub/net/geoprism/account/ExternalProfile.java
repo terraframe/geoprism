@@ -19,7 +19,7 @@
 package net.geoprism.account;
 
 import net.geoprism.DefaultConfiguration;
-import net.geoprism.GeoprismUserIF;
+import net.geoprism.GeoprismActorIF;
 
 import java.util.Base64;
 
@@ -49,7 +49,7 @@ import com.runwaysdk.session.SessionFacade;
 import com.runwaysdk.system.AssignmentsQuery;
 import com.runwaysdk.system.Roles;
 
-public class ExternalProfile extends ExternalProfileBase implements GeoprismUserIF
+public class ExternalProfile extends ExternalProfileBase implements GeoprismActorIF
 {
   private static final long serialVersionUID = -377482924;
 

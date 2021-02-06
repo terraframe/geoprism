@@ -278,7 +278,7 @@
                 </goals>
                 <configuration>
                   <executable>java</executable>
-                  <mainClass>com.runwaysdk.dataaccess.io.Versioning</mainClass>
+                  <mainClass>net.geoprism.ImportSchema</mainClass>
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
                     <argument />
@@ -317,7 +317,7 @@
             <executions>
               <execution>
                 <id>database</id>
-                <phase>install</phase>
+                <phase>validate</phase>
                 <goals>
                   <goal>java</goal>
                 </goals>
@@ -328,8 +328,9 @@
                     <argument>--metadataDir=${project.basedir}/target/classes/metadata</argument>
                     <argument>--rootUser=${db.rootUser}</argument>
                     <argument>--rootPass=${db.rootPass}</argument>
-                    <argument>--templateDb=${dob.rootDb}</argument>
+                    <argument>--templateDb=${db.rootDb}</argument>
                     <argument>--clean=${db.clean}</argument>
+                    <argument>--patch=${db.patch}</argument>
                   </arguments>
                   <systemProperties>
                     <systemProperty>

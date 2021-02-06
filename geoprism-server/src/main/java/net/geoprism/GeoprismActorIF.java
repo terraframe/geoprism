@@ -18,11 +18,32 @@
  */
 package net.geoprism;
 
+import com.runwaysdk.business.MutableWithStructs;
 import com.runwaysdk.system.Roles;
 
-public interface GeoprismUserIF
+public interface GeoprismActorIF extends MutableWithStructs
 {
 
   public Boolean isAssigned(Roles dashboardRole);
+  
+  public String getEmail();
+  
+  public void setEmail(String email);
+  
+  public String getUsername();
+  
+  public void setUsername(String username);
+  
+  public String getFirstName();
+  
+  public void setFirstName(String firstName);
+  
+  public String getLastName();
+  
+  public void setLastName(String lastName);
+  
+  public String getPhoneNumber();
+  
+  public void setPhoneNumber(String phoneNumber);
 
 }

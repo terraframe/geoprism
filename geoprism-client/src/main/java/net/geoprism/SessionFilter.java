@@ -230,7 +230,7 @@ public class SessionFilter implements Filter
     }
   }
 
-  private boolean isPublic(HttpServletRequest req)
+  public static boolean isPublic(HttpServletRequest req)
   {
     String uri = req.getRequestURI();
 
@@ -252,7 +252,7 @@ public class SessionFilter implements Filter
     return false;
   }
 
-  private boolean pathAllowed(HttpServletRequest req)
+  public static boolean pathAllowed(HttpServletRequest req)
   {
     String uri = req.getRequestURI();
 

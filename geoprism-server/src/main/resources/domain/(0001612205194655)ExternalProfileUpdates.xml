@@ -1,0 +1,28 @@
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <createOrUpdate>
+    </createOrUpdate>
+    <create>
+    </create>
+    <update>
+      <mdBusiness name="net.geoprism.account.ExternalProfile">
+        <attributes>
+          <reference name="server" required="false"/>
+        </attributes>
+        
+        <create>
+          <attributes>
+            <text name="firstName"/>
+            <text name="lastName"/>
+            <text name="phoneNumber"/>
+            <text name="email"/>
+          </attributes>
+        </create>
+      </mdBusiness>
+    </update>
+  </doIt>
+  <undoIt>
+    <delete>
+    </delete>
+  </undoIt>
+</version>
