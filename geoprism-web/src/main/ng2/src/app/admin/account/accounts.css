@@ -1,4 +1,0 @@
-.ngx-pagination .current {
-    background: #6BA542; /* IE fallback */
-    background: var(--theme-submit-button-color);
-}

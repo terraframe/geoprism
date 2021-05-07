@@ -1,1 +1,0 @@
-window.acp = 'https://localhost:8443/dev';
