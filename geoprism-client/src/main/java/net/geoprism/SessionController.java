@@ -114,7 +114,7 @@ public class SessionController
       installedLocalesArr.put(locObj);
     }
 
-    ClientRequestIF clientRequest = login(req, username, password, locales);
+    ClientRequestIF clientRequest = loginWithLocales(req, username, password, locales);
 
     JSONArray roles = new JSONArray(RoleViewDTO.getCurrentRoles(clientRequest));
     JSONArray roleDisplayLabels = new JSONArray(RoleViewDTO.getCurrentRoleDisplayLabels(clientRequest));
@@ -130,7 +130,7 @@ public class SessionController
     return response;
   }
 
-  public ClientRequestIF login(ServletRequestIF req, String username, String password, Locale[] locales)
+  public ClientRequestIF loginWithLocales(ServletRequestIF req, String username, String password, Locale[] locales)
   {
     try
     {
