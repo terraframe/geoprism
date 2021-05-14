@@ -102,11 +102,13 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
   {
     this.metadataDir = metadataDir;
     this.setRunwayArgs(new String[]{});
+    DatabaseBuilder.main(this.runwayArgs);
   }
   
   public void initialize(String[] cliArgs)
   {
     this.processCLIArgs(cliArgs);
+    DatabaseBuilder.main(this.runwayArgs);
   }
 
   public static void main(String[] args)
@@ -261,8 +263,6 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
   public void run()
   {
     validate();
-    
-    DatabaseBuilder.main(this.runwayArgs);
     
     runWithRequest();
   }
