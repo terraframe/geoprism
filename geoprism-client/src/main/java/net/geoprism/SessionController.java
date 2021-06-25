@@ -20,6 +20,7 @@ package net.geoprism;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.runwaysdk.ClientSession;
-import com.runwaysdk.LocalizationFacade;
+import com.runwaysdk.localization.LocalizationFacade;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.CommonProperties;
@@ -102,7 +103,7 @@ public class SessionController
     Locale[] locales = this.getLocales(req);
 
     JSONArray installedLocalesArr = new JSONArray();
-    List<Locale> installedLocales = LocalizationFacade.getInstalledLocales();
+    Collection<Locale> installedLocales = LocalizationFacade.getInstalledLocales();
     for (Locale loc : installedLocales)
     {
       JSONObject locObj = new JSONObject();

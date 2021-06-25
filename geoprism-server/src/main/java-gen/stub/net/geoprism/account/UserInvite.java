@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.LocalizationFacade;
+import com.runwaysdk.localization.LocalizationFacade;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;

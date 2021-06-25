@@ -45,7 +45,7 @@ public class LocalizationFacade extends LocalizationFacadeBase
 
   public static String getFromBundles(String key)
   {
-    String localized = com.runwaysdk.LocalizationFacade.localize(key);
+    String localized = com.runwaysdk.localization.LocalizationFacade.localize(key);
     
     if (localized == null)
     {
@@ -59,7 +59,7 @@ public class LocalizationFacade extends LocalizationFacadeBase
 
   public static String getJSON()
   {
-    Map<String, String> properties = com.runwaysdk.LocalizationFacade.getAll();
+    Map<String, String> properties = com.runwaysdk.localization.LocalizationFacade.getAll();
 
     try
     {
