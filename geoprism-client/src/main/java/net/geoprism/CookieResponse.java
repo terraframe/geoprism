@@ -29,6 +29,11 @@ import com.runwaysdk.mvc.ResponseIF;
 import com.runwaysdk.mvc.RestResponse;
 import com.runwaysdk.request.ServletResponseIF;
 
+/**
+ * Use the one in the Runway mvc package instead. This cookie response doesn't provide
+ * a distinction between setting values in the response body versus the Set-Cookie header
+ */
+@Deprecated
 public class CookieResponse extends RestResponse implements ResponseIF
 {
   private String name;
