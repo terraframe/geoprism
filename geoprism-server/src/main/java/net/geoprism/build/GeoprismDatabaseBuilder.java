@@ -39,6 +39,7 @@ import com.runwaysdk.business.ontology.CompositeStrategy;
 import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
 import com.runwaysdk.business.ontology.OntologyStrategyFactory;
 import com.runwaysdk.business.ontology.OntologyStrategyIF;
+import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.constants.ServerProperties;
@@ -193,7 +194,12 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
       clean.add("--plugins=" + GISImportPlugin.class.getName() + "," + GeoprismImportPlugin.class.getName());
     }
     
-    if (!clean.contains("rootUser") && !clean.contains("rootPass") && !clean.contains("patch"))
+    String rootUser = DatabaseProperties.getRootUser();
+    String rootPass = DatabaseProperties.getRootPassword();
+    
+    if (((rootUser == null || rootUser.length() == 0) && !clean.contains("rootUser"))
+        && ((rootPass == null || rootPass.length() == 0) && !clean.contains("rootPass"))
+        && !clean.contains("patch"))
     {
       clean.add("--patch");
     }

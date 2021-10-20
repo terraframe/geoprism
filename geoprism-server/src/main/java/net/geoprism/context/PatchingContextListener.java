@@ -41,7 +41,7 @@ public class PatchingContextListener implements ServerContextListener
   {
     if (patcher == null)
     {
-      initialize();
+      patcher = PluginUtil.getDatabaseBuilder();
     }
 
     patcher.run();
