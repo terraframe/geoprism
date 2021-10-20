@@ -23,7 +23,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>0.10.10</version>
+  <version>0.10.11-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -101,7 +101,7 @@
     <connection>scm:git:ssh://git@github.com/terraframe/geoprism</connection>
     <developerConnection>scm:git:ssh://git@github.com/terraframe/geoprism</developerConnection>
     <url>scm:git:ssh://git@github.com/terraframe/geoprism</url>
-    <tag>0.10.10</tag>
+    <tag>1.01.0027</tag>
   </scm>
 
   <build>
