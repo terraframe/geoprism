@@ -39,7 +39,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.4.11</runway.version>
+    <runway.version>3.4.12</runway.version>
     <mvn.server.url>https://nexus.terraframe.com/</mvn.server.url>
     <geotools.version>19.4</geotools.version>
 
