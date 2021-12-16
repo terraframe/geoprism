@@ -33,19 +33,12 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.runwaysdk.build.DatabaseBootstrapper;
 import com.runwaysdk.build.DatabaseBuilder;
-import com.runwaysdk.business.ontology.CompositeStrategy;
-import com.runwaysdk.business.ontology.OntologyStrategyBuilderIF;
-import com.runwaysdk.business.ontology.OntologyStrategyFactory;
-import com.runwaysdk.business.ontology.OntologyStrategyIF;
 import com.runwaysdk.constants.DatabaseProperties;
 import com.runwaysdk.constants.DeployProperties;
 import com.runwaysdk.constants.LocalProperties;
 import com.runwaysdk.constants.ServerProperties;
-import com.runwaysdk.dataaccess.database.Database;
 import com.runwaysdk.dataaccess.io.dataDefinition.GISImportPlugin;
-import com.runwaysdk.dataaccess.io.dataDefinition.SAXSourceParser;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.generated.system.gis.geo.AllowedInAllPathsTableQuery;
 import com.runwaysdk.generated.system.gis.geo.LocatedInAllPathsTableQuery;
@@ -56,10 +49,7 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.metadata.ontology.DatabaseAllPathsStrategy;
-import com.runwaysdk.system.metadata.ontology.GeoEntitySolrOntologyStrategy;
 
-import net.geoprism.GeoprismProperties;
 import net.geoprism.PluginUtil;
 import net.geoprism.context.PatchingContextListener;
 import net.geoprism.context.ProjectDataConfiguration;
@@ -248,17 +238,17 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
 
   protected void configureStrategies()
   {
-    if (GeoprismProperties.getSolrLookup())
-    {
-      OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
-      {
-        @Override
-        public OntologyStrategyIF build()
-        {
-          return new CompositeStrategy(DatabaseAllPathsStrategy.factory(GeoEntity.CLASS), new GeoEntitySolrOntologyStrategy());
-        }
-      });
-    }
+//    if (GeoprismProperties.getSolrLookup())
+//    {
+//      OntologyStrategyFactory.set(GeoEntity.CLASS, new OntologyStrategyBuilderIF()
+//      {
+//        @Override
+//        public OntologyStrategyIF build()
+//        {
+//          return new CompositeStrategy(DatabaseAllPathsStrategy.factory(GeoEntity.CLASS), new GeoEntitySolrOntologyStrategy());
+//        }
+//      });
+//    }
   }
   
   public void validate()

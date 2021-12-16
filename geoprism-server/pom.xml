@@ -54,11 +54,13 @@
       <artifactId>httpclient</artifactId>
       <version>4.3.6</version>
     </dependency>
+    <!--
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-solr</artifactId>
       <version>${runway.version}</version>
     </dependency>
+    -->
     <dependency>
       <groupId>com.runwaysdk</groupId>
       <artifactId>runwaysdk-localization-server</artifactId>
