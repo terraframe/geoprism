@@ -35,13 +35,13 @@ import java.util.StringJoiner;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.util.ClientUtils;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
+//import org.apache.solr.client.solrj.SolrQuery;
+//import org.apache.solr.client.solrj.SolrServerException;
+//import org.apache.solr.client.solrj.impl.HttpSolrClient;
+//import org.apache.solr.client.solrj.response.QueryResponse;
+//import org.apache.solr.client.solrj.util.ClientUtils;
+//import org.apache.solr.common.SolrDocument;
+//import org.apache.solr.common.SolrDocumentList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,8 +62,8 @@ import com.runwaysdk.system.gis.geo.GeoEntityQuery;
 import com.runwaysdk.system.gis.geo.SynonymQuery;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdAttribute;
-import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
-import com.runwaysdk.system.metadata.ontology.SolrProperties;
+//import com.runwaysdk.system.metadata.ontology.SolrOntolgyStrategy;
+//import com.runwaysdk.system.metadata.ontology.SolrProperties;
 import com.runwaysdk.util.IDGenerator;
 
 import net.geoprism.GeoprismProperties;
@@ -341,85 +341,95 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
         throw new ExclusionException("Location not found in system.");
       }
     }
-    catch (SolrServerException e)
-    {
-      throw new ProgrammingErrorException(e);
-    }
+//    catch (SolrServerException e)
+//    {
+//      throw new ProgrammingErrorException(e);
+//    }
     catch (IOException e)
     {
       throw new ProgrammingErrorException(e);
     }
   }
 
-  private Collection<String> findSolrGeoEntities(List<String> labels) throws SolrServerException, IOException
+  private Collection<String> findSolrGeoEntities(List<String> labels) throws IOException
   {
-    if (!GeoprismProperties.getSolrLookup())
-    {
-      return new LinkedList<String>();
-    }
-
-    List<String> conditions = new LinkedList<String>();
-
-    Universal uni = null;
-
-    for (int i = 0; i < attributes.size(); i++)
-    {
-      UniversalAttribute attribute = attributes.get(i);
-      String label = labels.get(i);
-
-      if (label != null && label.length() > 0)
-      {
-        Universal universal = attribute.getUniversal();
-
-        conditions.add(universal.getOid() + "%%%" + label);
-
-        uni = universal;
-      }
-    }
-
-    Collections.reverse(conditions);
-
-    String qText = SolrOntolgyStrategy.QUALIFIER + ":(" + uni.getOid() + ")";
-
-    for (int i = 0; i < conditions.size(); i++)
-    {
-      String condition = conditions.get(i);
-
-      qText += " AND " + SolrOntolgyStrategy.RELATIONSHIPS + ":(" + ClientUtils.escapeQueryChars(condition) + ")";
-    }
-
-    HttpSolrClient client = new HttpSolrClient.Builder(SolrProperties.getUrl()).build();
-
-    try
-    {
-      SolrQuery query = new SolrQuery();
-      query.setQuery(qText);
-      query.setFields(SolrOntolgyStrategy.ENTITY);
-      // query.setRows(0);
-
-      QueryResponse response = client.query(query);
-
-      SolrDocumentList list = response.getResults();
-
-      Iterator<SolrDocument> iterator = list.iterator();
-
-      Set<String> ids = new TreeSet<String>();
-
-      while (iterator.hasNext())
-      {
-        SolrDocument document = iterator.next();
-
-        String entityId = (String) document.getFieldValue(SolrOntolgyStrategy.ENTITY);
-
-        ids.add(entityId);
-      }
-
-      return ids;
-    }
-    finally
-    {
-      client.close();
-    }
+    return new LinkedList<String>();
+    
+    // Code removed because we've removed a dependency on solrj (since it increases security vulnerability exposure)
+//    if (!GeoprismProperties.getSolrLookup())
+//    {
+//      return new LinkedList<String>();
+//    }
+//
+//    try
+//    {
+//      List<String> conditions = new LinkedList<String>();
+//  
+//      Universal uni = null;
+//  
+//      for (int i = 0; i < attributes.size(); i++)
+//      {
+//        UniversalAttribute attribute = attributes.get(i);
+//        String label = labels.get(i);
+//  
+//        if (label != null && label.length() > 0)
+//        {
+//          Universal universal = attribute.getUniversal();
+//  
+//          conditions.add(universal.getOid() + "%%%" + label);
+//  
+//          uni = universal;
+//        }
+//      }
+//  
+//      Collections.reverse(conditions);
+//  
+//      String qText = SolrOntolgyStrategy.QUALIFIER + ":(" + uni.getOid() + ")";
+//  
+//      for (int i = 0; i < conditions.size(); i++)
+//      {
+//        String condition = conditions.get(i);
+//  
+//        qText += " AND " + SolrOntolgyStrategy.RELATIONSHIPS + ":(" + ClientUtils.escapeQueryChars(condition) + ")";
+//      }
+//  
+//      HttpSolrClient client = new HttpSolrClient.Builder(SolrProperties.getUrl()).build();
+//  
+//      try
+//      {
+//        SolrQuery query = new SolrQuery();
+//        query.setQuery(qText);
+//        query.setFields(SolrOntolgyStrategy.ENTITY);
+//        // query.setRows(0);
+//  
+//        QueryResponse response = client.query(query);
+//  
+//        SolrDocumentList list = response.getResults();
+//  
+//        Iterator<SolrDocument> iterator = list.iterator();
+//  
+//        Set<String> ids = new TreeSet<String>();
+//  
+//        while (iterator.hasNext())
+//        {
+//          SolrDocument document = iterator.next();
+//  
+//          String entityId = (String) document.getFieldValue(SolrOntolgyStrategy.ENTITY);
+//  
+//          ids.add(entityId);
+//        }
+//  
+//        return ids;
+//      }
+//      finally
+//      {
+//        client.close();
+//      }
+//    }
+//    catch (SolrServerException e)
+//    {
+//      throw new ProgrammingErrorException(e);
+//    }
   }
 
   private GeoEntity findGeoEntity(GeoEntity parent, Universal universal, String label, JSONObject spatialRefCoordObj)
@@ -817,7 +827,7 @@ public class TargetFieldGeoEntity extends TargetField implements TargetFieldGeoE
 
       return null;
     }
-    catch (SolrServerException | IOException e)
+    catch (IOException e) // | SolrServerException
     {
       throw new ProgrammingErrorException(e);
     }
