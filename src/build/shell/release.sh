@@ -17,7 +17,7 @@
 # License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#if curl -f -s --head "http://nexus.terraframe.com/service/local/artifact/maven/redirect?r=allrepos&g=net.geoprism&a=geoprism-web&p=war&v=$VERSION" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null; then
+#if curl -f -s --head "https://dl.cloudsmith.io/public/terraframe/geoprism/maven/net/geoprism/geoprism-web/$VERSION/geoprism-web-$VERSION.war" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null; then
 #   echo "The release version $VERSION has already been deployed! Please ensure you are releasing the correct version of geoprism."
 #   exit 1
 #fi
