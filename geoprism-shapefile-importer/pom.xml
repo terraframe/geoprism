@@ -35,8 +35,6 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <aspectj.version>1.8.6</aspectj.version>    
     <aspectj.plugin.version>1.7</aspectj.plugin.version>
-    
-    <mvn.server.url>https://nexus.terraframe.com/</mvn.server.url>
   </properties>
 
   <repositories>
@@ -48,18 +46,14 @@
   </repositories>
 
   <distributionManagement>
-    <repository>
-      <id>terraframe-releases</id>
-      <name>terraframe-releases</name>
-      <url>${mvn.server.url}content/repositories/releases/</url>
-      <layout>default</layout>
-    </repository>
     <snapshotRepository>
-      <id>terraframe-snapshots</id>
-      <name>terraframe-snapshots</name>
-      <url>${mvn.server.url}content/repositories/snapshots/</url>
-      <layout>default</layout>
+      <id>cloudsmith</id>
+      <url>https://maven.cloudsmith.io/terraframe/public/</url>
     </snapshotRepository>
+    <repository>
+      <id>cloudsmith</id>
+      <url>https://maven.cloudsmith.io/terraframe/public/</url>
+    </repository>
   </distributionManagement>
 
   <dependencies>
