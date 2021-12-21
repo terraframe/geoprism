@@ -39,7 +39,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.4.17</runway.version>
+    <runway.version>3.4.19</runway.version>
     <geotools.version>19.4</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,6 +72,18 @@
       </snapshots>
     </repository>
     <repository>
+      <id>terraframe-public</id>
+      <url>https://dl.cloudsmith.io/public/terraframe/runwaysdk/maven/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+    <repository>
       <id>osgeo</id>
       <name>Open Source Geospatial Foundation Repository</name>
       <url>https://repo.osgeo.org/repository/release/</url>
@@ -81,11 +93,11 @@
   <distributionManagement>
     <snapshotRepository>
       <id>cloudsmith</id>
-      <url>https://maven.cloudsmith.io/terraframe/public/</url>
+      <url>https://maven.cloudsmith.io/terraframe/geoprism/</url>
     </snapshotRepository>
     <repository>
       <id>cloudsmith</id>
-      <url>https://maven.cloudsmith.io/terraframe/public/</url>
+      <url>https://maven.cloudsmith.io/terraframe/geoprism/</url>
     </repository>
   </distributionManagement>
 
