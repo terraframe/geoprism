@@ -45,7 +45,7 @@
   <repositories>
     <repository>
       <id>GeoSolutions</id>
-      <url>http://maven.geo-solutions.it/</url>
+      <url>https://maven.geo-solutions.it/</url>
     </repository>
   </repositories>
 
