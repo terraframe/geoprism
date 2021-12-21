@@ -32,7 +32,7 @@ BRANCH=${GIT_BRANCH#*/}
 git checkout $BRANCH
 git pull
 
-mvn license:format
+mvn license:format -B
 git add -A
 git diff-index --quiet HEAD || git commit -m 'License headers'
 git push
