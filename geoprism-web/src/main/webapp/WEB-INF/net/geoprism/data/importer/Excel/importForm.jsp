@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
+    Copyright (c) 2022 TerraFrame, Inc. All rights reserved.
 
     This file is part of Geoprism(tm).
 
@@ -18,8 +18,6 @@
     License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-
-
 <%--
 
     Copyright (c) 2015 TerraFrame, Inc. All rights reserved.
