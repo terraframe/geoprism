@@ -61,10 +61,16 @@
 
   <repositories>
     <repository>
-      <id>terraframe</id>
-      <name>terraframe</name>
-      <url>https://nexus.terraframe.com/content/groups/allrepos</url>
-      <layout>default</layout>
+      <id>terraframe-public</id>
+      <url>https://dl.cloudsmith.io/public/terraframe/public/maven/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
     </repository>
     <repository>
       <id>osgeo</id>
@@ -74,18 +80,14 @@
   </repositories>
 
   <distributionManagement>
-    <repository>
-      <id>terraframe-releases</id>
-      <name>terraframe-releases</name>
-      <url>https://nexus.terraframe.com/content/repositories/releases/</url>
-      <layout>default</layout>
-    </repository>
     <snapshotRepository>
-      <id>terraframe-snapshots</id>
-      <name>terraframe-snapshots</name>
-      <url>https://nexus.terraframe.com/content/repositories/snapshots/</url>
-      <layout>default</layout>
+      <id>cloudsmith</id>
+      <url>https://maven.cloudsmith.io/terraframe/public/</url>
     </snapshotRepository>
+    <repository>
+      <id>cloudsmith</id>
+      <url>https://maven.cloudsmith.io/terraframe/public/</url>
+    </repository>
   </distributionManagement>
 
   <licenses>
