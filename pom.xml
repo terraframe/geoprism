@@ -72,7 +72,7 @@
       </snapshots>
     </repository>
     <repository>
-      <id>terraframe-public</id>
+      <id>terraframe-runwaysdk</id>
       <url>https://dl.cloudsmith.io/public/terraframe/runwaysdk/maven/</url>
       <releases>
         <enabled>true</enabled>
