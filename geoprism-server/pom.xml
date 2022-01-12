@@ -52,7 +52,7 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.3.6</version>
+      <version>4.5.13</version>
     </dependency>
     <!--
     <dependency>
@@ -120,7 +120,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.11.756</version>
+      <version>1.11.1034</version>
     </dependency>
 
     <dependency>
@@ -238,7 +238,7 @@
                   <mainClass>com.runwaysdk.dataaccess.io.UndoAll</mainClass>
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
-                    <argument />
+                    <argument/>
                     <argument>false</argument>
                   </arguments>
                   <systemProperties>
@@ -283,7 +283,7 @@
                   <mainClass>net.geoprism.ImportSchema</mainClass>
                   <arguments>
                     <argument>${project.basedir}/src/main/working</argument>
-                    <argument />
+                    <argument/>
                     <argument>false</argument>
                   </arguments>
                   <systemProperties>
@@ -436,7 +436,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -455,7 +455,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -468,7 +468,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
