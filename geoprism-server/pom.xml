@@ -15,7 +15,7 @@
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
-    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses />.
 
 -->
 <!-- Copyright (c) 2015 TerraFrame, Inc. All rights reserved. This file is 
@@ -34,7 +34,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>0.10.20-SNAPSHOT</version>
+    <version>0.10.20</version>
   </parent>
   <artifactId>geoprism-server</artifactId>
   <packaging>jar</packaging>
