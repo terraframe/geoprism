@@ -39,7 +39,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.4.21</runway.version>
+    <runway.version>3.4.22</runway.version>
     <geotools.version>19.4</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -59,6 +59,12 @@
   </dependencies>
 
   <repositories>
+    <repository>
+      <id>central</id>
+      <name>central</name>
+      <url> https://repo1.maven.org/maven2/</url>
+      <layout>default</layout>
+    </repository>    
     <repository>
       <id>terraframe-public</id>
       <url>https://dl.cloudsmith.io/public/terraframe/public/maven/</url>
