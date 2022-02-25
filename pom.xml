@@ -39,7 +39,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.4.26</runway.version>
+    <runway.version>3.4.27</runway.version>
     <geotools.version>19.4</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
