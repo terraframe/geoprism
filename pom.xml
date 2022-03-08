@@ -15,7 +15,7 @@
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
-    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses />.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -23,7 +23,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>0.10.28-SNAPSHOT</version>
+  <version>0.10.28</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -120,7 +120,7 @@
     <connection>scm:git:ssh://git@github.com/terraframe/geoprism</connection>
     <developerConnection>scm:git:ssh://git@github.com/terraframe/geoprism</developerConnection>
     <url>scm:git:ssh://git@github.com/terraframe/geoprism</url>
-    <tag>1.01.0027</tag>
+    <tag>0.10.28</tag>
   </scm>
 
   <build>
