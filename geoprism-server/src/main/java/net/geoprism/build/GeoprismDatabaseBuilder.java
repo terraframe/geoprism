@@ -187,11 +187,32 @@ public class GeoprismDatabaseBuilder implements GeoprismDatabaseBuilderIF
     String rootUser = DatabaseProperties.getRootUser();
     String rootPass = DatabaseProperties.getRootPassword();
     
-    if (((rootUser == null || rootUser.length() == 0) && !clean.contains("rootUser"))
-        && ((rootPass == null || rootPass.length() == 0) && !clean.contains("rootPass"))
-        && !clean.contains("patch"))
+    // When this code gets invoked on server bootup, we want to make sure that we provide a patch param
+    boolean hasPatch = false;
+    boolean hasRootUser = false;
+    boolean hasRootPass = false;
+    
+    for (String rwArg : clean)
     {
-      clean.add("--patch");
+      if (rwArg.contains("rootUser"))
+      {
+        hasRootUser = true;
+      }
+      else if (rwArg.contains("rootPass"))
+      {
+        hasRootPass = true;
+      }
+      else if (rwArg.contains("patch"))
+      {
+        hasPatch = true;
+      }
+    }
+    
+    if (((rootUser == null || rootUser.length() == 0) && !hasRootUser)
+        && ((rootPass == null || rootPass.length() == 0) && !hasRootPass)
+        && !hasPatch)
+    {
+      clean.add("--patch=true");
     }
       
     
