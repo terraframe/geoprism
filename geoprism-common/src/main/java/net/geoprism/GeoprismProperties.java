@@ -138,7 +138,7 @@ public class GeoprismProperties
   public static CloseableFile newTempFile() throws IOException
   {
     File storage = GeoprismProperties.getGeoprismFileStorage();
-    CloseableFile file = new CloseableFile(storage, new Long(new Random().nextInt()).toString(), true);
+    CloseableFile file = new CloseableFile(storage, new Long(Math.abs(new Random().nextInt())).toString(), true);
     file.createNewFile();
     
     return file;
