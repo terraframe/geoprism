@@ -30,8 +30,8 @@ import com.runwaysdk.system.gis.geo.GeoNodeGeometryQuery;
 import com.runwaysdk.system.metadata.MdAttribute;
 import com.runwaysdk.system.metadata.MdAttributeReference;
 import com.runwaysdk.util.IDGenerator;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Point;
 
 public class TargetFieldPoint extends TargetFieldCoordinate implements TargetFieldPointIF
 {

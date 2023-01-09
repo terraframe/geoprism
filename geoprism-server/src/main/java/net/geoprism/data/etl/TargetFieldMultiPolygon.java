@@ -21,8 +21,8 @@ package net.geoprism.data.etl;
 import com.runwaysdk.business.Transient;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.system.metadata.MdAttribute;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Point;
 
 public class TargetFieldMultiPolygon extends TargetFieldCoordinate implements TargetFieldIF
 {

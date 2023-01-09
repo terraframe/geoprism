@@ -28,7 +28,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 public class PublisherUtil
 {

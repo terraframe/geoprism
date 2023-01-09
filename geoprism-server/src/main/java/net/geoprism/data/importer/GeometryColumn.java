@@ -20,8 +20,8 @@ package net.geoprism.data.importer;
 
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.dataaccess.io.excel.ExcelColumn;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTWriter;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
 
 public class GeometryColumn extends ExcelColumn 
 {

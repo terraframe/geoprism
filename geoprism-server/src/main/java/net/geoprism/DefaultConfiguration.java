@@ -42,7 +42,7 @@ import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.GeometryType;
 import com.runwaysdk.system.gis.geo.LocatedIn;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 
 import net.geoprism.data.etl.TargetBuilder;
 import net.geoprism.ontology.CompositePublisher;
