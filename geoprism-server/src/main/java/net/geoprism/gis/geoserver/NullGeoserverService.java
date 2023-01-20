@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.geotools.data.ows.WMSCapabilities;
+import org.geotools.ows.wms.WMSCapabilities;
 
 public class NullGeoserverService implements GeoserverService
 {

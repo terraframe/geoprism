@@ -21,7 +21,7 @@ package net.geoprism.gis.geoserver;
 import java.io.File;
 import java.util.List;
 
-import org.geotools.data.ows.WMSCapabilities;
+import org.geotools.ows.wms.WMSCapabilities;
 
 public interface GeoserverService
 {

@@ -39,8 +39,8 @@
   </modules>
 
   <properties>
-    <runway.version>3.6.1</runway.version>
-    <geotools.version>20.5</geotools.version>
+    <runway.version>3.6.2-SNAPSHOT</runway.version>
+    <geotools.version>24.6</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>

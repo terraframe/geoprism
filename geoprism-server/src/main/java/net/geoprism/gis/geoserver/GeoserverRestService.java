@@ -48,8 +48,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.geotools.data.ows.WMSCapabilities;
-import org.geotools.data.wms.WebMapServer;
+import org.geotools.ows.wms.WMSCapabilities;
+import org.geotools.ows.wms.WebMapServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
