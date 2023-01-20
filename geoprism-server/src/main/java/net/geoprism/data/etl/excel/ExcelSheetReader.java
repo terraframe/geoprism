@@ -21,6 +21,9 @@ package net.geoprism.data.etl.excel;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -87,7 +90,12 @@ public class ExcelSheetReader
           InputSource sheetSource = new InputSource(sheet);
           ContentHandler handler = new XSSFSheetXMLHandler(styles, strings, this.handler, this.formatter, false);
 
-          XMLReader reader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+          SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+          parserFactory.setValidating(false);
+
+          SAXParser parser = parserFactory.newSAXParser();
+          
+          XMLReader reader = parser.getXMLReader();
           reader.setContentHandler(handler);
           reader.parse(sheetSource);
 

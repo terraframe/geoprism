@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>net.geoprism</groupId>
 		<artifactId>geoprism</artifactId>
-		<version>0.12.2-SNAPSHOT</version>
+		<version>0.13.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>geoprism-web</artifactId>
 	<packaging>war</packaging>
@@ -229,7 +229,7 @@
 		<plugins>
 			<!-- Weave Aspects -->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>dev.aspectj</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
 				<version>${aspectj.plugin.version}</version>
 				<dependencies>
