@@ -1,3 +1,4 @@
+package net.geoprism.configuration;
 /**
  * Copyright (c) 2022 TerraFrame, Inc. All rights reserved.
  *
@@ -16,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.configuration;
+
 
 import com.runwaysdk.configuration.ConfigurationManager.ConfigGroupIF;
 

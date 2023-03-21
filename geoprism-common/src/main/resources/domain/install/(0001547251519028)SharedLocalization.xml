@@ -1,0 +1,1044 @@
+<!-- Copyright (c) 2022 TerraFrame, Inc. All rights reserved. This file is 
+	part of Geoprism(tm). Geoprism(tm) is free software: you can redistribute 
+	it and/or modify it under the terms of the GNU Lesser General Public License 
+	as published by the Free Software Foundation, either version 3 of the License, 
+	or (at your option) any later version. Geoprism(tm) is distributed in the 
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU Lesser General Public License for more details. You should have received 
+	a copy of the GNU Lesser General Public License along with Geoprism(tm). 
+	If not, see <http://www.gnu.org/licenses/>. -->
+<version
+	xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<doIt>
+		<createOrUpdate>
+		  <object type="com.runwaysdk.localization.LocalizedValueStore" key="account.roles">
+        <attribute name="storeTag" value="UIText" />
+        <attribute name="storeKey" value="account.roles" />
+        <attributeStruct name="storeValue">
+          <attribute name="defaultLocale" value="Roles" />
+        </attributeStruct>
+      </object>
+		  <object type="com.runwaysdk.localization.LocalizedValueStore" key="login.page.title">
+        <attribute name="storeTag" value="UIText" />
+        <attribute name="storeKey" value="login.page.title" />
+        <attributeStruct name="storeValue">
+          <attribute name="defaultLocale" value="GeoPrism Data Management" />
+        </attributeStruct>
+      </object>
+		  <object type="com.runwaysdk.localization.LocalizedValueStore" key="account.inactive">
+        <attribute name="storeTag" value="UIText" />
+        <attribute name="storeKey" value="account.inactive" />
+        <attributeStruct name="storeValue">
+          <attribute name="defaultLocale" value="Disabled" />
+        </attributeStruct>
+      </object>
+			<object key="dataUploader.resolvedSynonym"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.resolvedSynonym" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Resolved with synonym to " />
+				</attributeStruct>
+			</object>
+			<object key="account.phone.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="account.phone.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Must be a valid phone number" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.ignoreAtLocation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.ignoreAtLocation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Ignore" />
+				</attributeStruct>
+			</object>
+			<object key="system.image.removeTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="system.image.removeTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Remove custom image" />
+				</attributeStruct>
+			</object>
+			<object key="system.image.uploadText"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="system.image.uploadText" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Upload a custom image" />
+				</attributeStruct>
+			</object>
+			<object key="dashboard.messagesLabel"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dashboard.messagesLabel" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Messages" />
+				</attributeStruct>
+			</object>
+			<object key="error.message"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="error.message" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="An uncaught error has occurred with the following message:" />
+				</attributeStruct>
+			</object>
+			<object key="System_Configuration"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="System_Configuration" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="System Configuration" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.ignoreCategoryTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.ignoreCategoryTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Exclude data from your data set that is associated with this category (for this import only)." />
+				</attributeStruct>
+			</object>
+			<object key="login.password"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="login.password" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="password" />
+				</attributeStruct>
+			</object>
+			<object key="com.runwaysdk.ui.userstable.UsersTable.admin"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="com.runwaysdk.ui.userstable.UsersTable.admin" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Admin" />
+				</attributeStruct>
+			</object>
+			<object key="account.email"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.email" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Email Address" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.token"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.token" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Token" />
+				</attributeStruct>
+			</object>
+			<object key="account.info.heading"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.info.heading" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Account Information" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.ok"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.ok" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Ok" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.synonymn"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataUploader.synonymn" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Synonym for" />
+				</attributeStruct>
+			</object>
+			<object key="system.image.preview"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="system.image.preview" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Preview" />
+				</attributeStruct>
+			</object>
+			<object key="login.forgotPassword"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="login.forgotPassword" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Forgot password?" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.newPassword"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.newPassword" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="New password" />
+				</attributeStruct>
+			</object>
+			<object key="error.title"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="error.title" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Error" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.categoryAttribute"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.categoryAttribute" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Attribute" />
+				</attributeStruct>
+			</object>
+			<object key="Menu"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Menu" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Home" />
+				</attributeStruct>
+			</object>
+			<object key="account.firstname"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.firstname" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="First name" />
+				</attributeStruct>
+			</object>
+			<object key="neq"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="neq" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="not equal to" />
+				</attributeStruct>
+			</object>
+			<object key="dataset.submit"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataset.submit" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Submit" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.submit"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.submit" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Submit" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.ignore"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataUploader.ignore" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Ignore" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.resolvedCategoryOption"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.resolvedCategoryOption" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Resolved as new category option" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword.emailIsSent"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword.emailIsSent" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="An email has been sent to the address registered with this account. Please check your inbox and click the included verification link to reset your password." />
+				</attributeStruct>
+			</object>
+			<object key="account.editTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.editTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Edit account" />
+				</attributeStruct>
+			</object>
+			<object key="Run"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Run" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Run" />
+				</attributeStruct>
+			</object>
+			<object key="Other"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Other" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Other" />
+				</attributeStruct>
+			</object>
+			<object key="account.user.heading"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.user.heading" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="User Information" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.locatedWithin"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.locatedWithin" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Located within:" />
+				</attributeStruct>
+			</object>
+			<object key="view"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="view" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="View" />
+				</attributeStruct>
+			</object>
+			<object key="email.password"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.password" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Password" />
+				</attributeStruct>
+			</object>
+			<object key="hierarchy.management.title"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="hierarchy.management.title" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Hierarchy management" />
+				</attributeStruct>
+			</object>
+			<object key="account.changePassword"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.changePassword" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Change password?" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.locationContext"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.locationContext" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Location context" />
+				</attributeStruct>
+			</object>
+			<object key="account.phone"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.phone" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Phone" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.location"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataUploader.location" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Location" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.createSynonym"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.createSynonym" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Create synonym" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.createNewOptionTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.createNewOptionTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Create a new category option using this option name." />
+				</attributeStruct>
+			</object>
+			<object key="account.newTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.newTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Add new user" />
+				</attributeStruct>
+			</object>
+			<object key="login.username"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="login.username" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="username" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.unknownCategory"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.unknownCategory" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Unknown category" />
+				</attributeStruct>
+			</object>
+			<object key="email.to.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.to.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Must be a valid email address" />
+				</attributeStruct>
+			</object>
+			<object key="userDashboards.logout"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="userDashboards.logout" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Log out" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.cancel"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.cancel" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Cancel" />
+				</attributeStruct>
+			</object>
+			<object key="account.certainPassword.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="account.certainPassword.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Passwords must match" />
+				</attributeStruct>
+			</object>
+			<object key="viewAll"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="viewAll" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="View all" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.undoFixedLocationTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.undoFixedLocationTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Undo the fix applied to this location." />
+				</attributeStruct>
+			</object>
+			<object key="email.port.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.port.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Must be a port number" />
+				</attributeStruct>
+			</object>
+			<object key="login.header"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="login.header" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="GeoPrism" />
+				</attributeStruct>
+			</object>
+			<object key="system.image.removeContent"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="system.image.removeContent" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Are you sure you want to revert back to the default system image?" />
+				</attributeStruct>
+			</object>
+			<object key="accounts.link"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="accounts.link" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Manage accounts" />
+				</attributeStruct>
+			</object>
+			<object key="account.lastname"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.lastname" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Last name" />
+				</attributeStruct>
+			</object>
+			<object key="category.icon.ok"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="category.icon.ok" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Upload" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.actions"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataUploader.actions" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Actions" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword.cancel"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="forgotpassword.cancel" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Cancel" />
+				</attributeStruct>
+			</object>
+			<object key="email.server.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.server.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Must be a valid server url" />
+				</attributeStruct>
+			</object>
+			<object key="account.removeTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.removeTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Remove account" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.ignoreAtLocationTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.ignoreAtLocationTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Exclude data from your data set that is associated with this location (for this import only)." />
+				</attributeStruct>
+			</object>
+			<object key="email.port"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.port" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Port" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.undo"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataUploader.undo" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Undo" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.unknownLocation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.unknownLocation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Unknown source location" />
+				</attributeStruct>
+			</object>
+			<object key="account.username"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.username" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Username" />
+				</attributeStruct>
+			</object>
+			<object key="login.title"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="login.title" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="GeoPrism Login" />
+				</attributeStruct>
+			</object>
+			<object key="eq"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="eq" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="equal to" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.resolvedIgnoreCategory"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.resolvedIgnoreCategory" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Ignore all data with category " />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.passwordIsReset"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.passwordIsReset" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Your password has been successfully reset. You may now use it to log in." />
+				</attributeStruct>
+			</object>
+			<object key="ge"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="ge" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="greater than or equal to" />
+				</attributeStruct>
+			</object>
+			<object key="login.button"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="login.button" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Login" />
+				</attributeStruct>
+			</object>
+			<object key="gt"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="gt" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="greater than" />
+				</attributeStruct>
+			</object>
+			<object key="email.link"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.link" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Email settings" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.undoFixedCategoryTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.undoFixedCategoryTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Undo the fix applied to this category" />
+				</attributeStruct>
+			</object>
+			<object key="email.from.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.from.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Must be a valid email address" />
+				</attributeStruct>
+			</object>
+			<object key="email.from"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.from" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="From" />
+				</attributeStruct>
+			</object>
+			<object key="email.server"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.server" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Server" />
+				</attributeStruct>
+			</object>
+			<object key="le"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="le" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="less than or equal to" />
+				</attributeStruct>
+			</object>
+			<object key="account.password"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.password" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Password" />
+				</attributeStruct>
+			</object>
+			<object key="lt"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="lt" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="less than" />
+				</attributeStruct>
+			</object>
+			<object key="system.image.editTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="system.image.editTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Edit system image" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword.username"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="forgotpassword.username" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Username" />
+				</attributeStruct>
+			</object>
+			<object key="userMenu.menuTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="userMenu.menuTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Home" />
+				</attributeStruct>
+			</object>
+			<object key="Reports"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Reports" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Reports" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.resolvedIgnoreAtLocation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.resolvedIgnoreAtLocation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Ignore all data at location" />
+				</attributeStruct>
+			</object>
+			<object key="dataset.loadingData"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataset.loadingData" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Loading data..." />
+				</attributeStruct>
+			</object>
+			<object key="Categories"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Categories" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Categories" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.category"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataUploader.category" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Category" />
+				</attributeStruct>
+			</object>
+			<object key="accounts.title"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="accounts.title" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Account management" />
+				</attributeStruct>
+			</object>
+			<object key="Hierarchies"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Hierarchies" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Hierarchies" />
+				</attributeStruct>
+			</object>
+			<object key="account.title"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.title" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Account" />
+				</attributeStruct>
+			</object>
+			<object key="account.email.validation"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="account.email.validation" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Must be a valid email" />
+				</attributeStruct>
+			</object>
+			<object key="country"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="country" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Country" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword.submit"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="forgotpassword.submit" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Submit" />
+				</attributeStruct>
+			</object>
+			<object key="dashboard.errorsLabel"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dashboard.errorsLabel" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Errors" />
+				</attributeStruct>
+			</object>
+			<object key="account.phonenumber"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.phonenumber" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Phone Number" />
+				</attributeStruct>
+			</object>
+			<object key="Icons"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Icons" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Icons" />
+				</attributeStruct>
+			</object>
+			<object key="account.certainPassword"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="account.certainPassword" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Confirm password" />
+				</attributeStruct>
+			</object>
+			<object key="Account"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="Account" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Account" />
+				</attributeStruct>
+			</object>
+			<object key="NONE"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="NONE" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="None" />
+				</attributeStruct>
+			</object>
+			<object key="TYPE"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="TYPE" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Type" />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword-complete.header"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="forgotpassword-complete.header" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Reset your password" />
+				</attributeStruct>
+			</object>
+			<object key="email.username"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.username" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="User name" />
+				</attributeStruct>
+			</object>
+			<object key="email.to"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="email.to" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="To" />
+				</attributeStruct>
+			</object>
+			<object key="error.generic"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="error.generic" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="A system level error has occurred.  Please contact your technical support." />
+				</attributeStruct>
+			</object>
+			<object key="system.image.label"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="system.image.label" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Label" />
+				</attributeStruct>
+			</object>
+			<object
+				key="com.runwaysdk.ui.userstable.UsersTable.adminRoles"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="com.runwaysdk.ui.userstable.UsersTable.adminRoles" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="System roles" />
+				</attributeStruct>
+			</object>
+			<object key="useraccounts.title"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="useraccounts.title" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Account Management" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.createSynonymFromLocationTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.createSynonymFromLocationTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Create a new synonym relationship between this location name and the location selected in the search bar.  All data imported to this target dataset with this location name will be mapped to the selected location resulting in the consolidation of both locations for visualization and analysis." />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword.ok"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="forgotpassword.ok" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Ok" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.existingProblems"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.existingProblems" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="There are still problems that must be corrected before attempting to re-import your data." />
+				</attributeStruct>
+			</object>
+			<object key="forgotpassword.header"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="forgotpassword.header" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Reset your password" />
+				</attributeStruct>
+			</object>
+			<object key="dataUploader.createSynonymCategoryTooltip"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey"
+					value="dataUploader.createSynonymCategoryTooltip" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale"
+						value="Create a new synonym relationship between this label and the category selected in the search bar.  All data imported to this target dataset with this label will be mapped to the selected category." />
+				</attributeStruct>
+			</object>
+			<object key="dataset.cancel"
+				type="com.runwaysdk.localization.LocalizedValueStore">
+				<attribute name="storeTag" value="UIText" />
+				<attribute name="storeKey" value="dataset.cancel" />
+				<attributeStruct name="storeValue">
+					<attribute name="defaultLocale" value="Cancel" />
+				</attributeStruct>
+			</object>
+		</createOrUpdate>
+	</doIt>
+	<undoIt>
+		<delete>
+		</delete>
+	</undoIt>
+</version>

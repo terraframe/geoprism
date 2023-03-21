@@ -1,0 +1,84 @@
+<!--
+
+    Copyright (c) 2022 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Geoprism(tm).
+
+    Geoprism(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Geoprism(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+      <mdUtil name="net.geoprism.account.UserInviteAuthenticator" publish="true">
+        <mdMethod name="initiate" label="initate" static="false" returnType="void">
+          <mdParameter name="invite" label="invite" order="0" type="java.lang.String"/>
+          <mdParameter name="roleIds" label="roleIds" order="1" type="java.lang.String"/>
+        </mdMethod>
+        <mdMethod name="complete" label="complete" static="false" returnType="void">
+          <mdParameter name="token" label="token" order="0" type="java.lang.String"/>
+          <mdParameter name="user" label="user" order="1" type="java.lang.String"/>
+        </mdMethod>
+      </mdUtil>
+    </create>
+    <permissions>
+      <method methodName="initiate" type="net.geoprism.account.UserInviteAuthenticator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInvite">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.EmailSetting">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.GeoprismUser">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </method>
+      <method methodName="complete" type="net.geoprism.account.UserInviteAuthenticator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInvite">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+          <mdBusinessPermission type="net.geoprism.GeoprismUser">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </method>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInviteAuthenticator">
+            <mdMethodPermission methodName="initiate">  
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="PUBLIC">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.UserInviteAuthenticator">
+            <mdMethodPermission methodName="complete">  
+              <operation name="EXECUTE" />
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+    </permissions>
+  </doIt>
+  <undoIt>
+    <delete>
+      <object type="com.runwaysdk.system.metadata.MdUtil" key="net.geoprism.account.UserInviteAuthenticator" />
+    </delete>
+  </undoIt>
+</version>

@@ -1,5 +1,10 @@
 /logs
-.settings
+**/.settings
 
 /dhis2-data-importer/
-
+**/target/**
+**/.class
+**/.classpath
+**/.DS_Store
+**/.project
+**/.log

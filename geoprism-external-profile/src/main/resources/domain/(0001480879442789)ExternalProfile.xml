@@ -1,0 +1,80 @@
+<!--
+
+    Copyright (c) 2022 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Geoprism(tm).
+
+    Geoprism(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Geoprism(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<version xsi:noNamespaceSchemaLocation="classpath:geoprism/xsd/version_geoprism.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <doIt>
+    <create>
+       <timestamp version="0001612205194655" /> <!-- ExternalProfileUpdates -->
+
+       <mdBusiness name="net.geoprism.account.OauthServer" label="Oauth Server">
+        <attributes>
+          <localChar name="displayLabel" label="Display label" size="255"/>
+          <text name="profileLocation" label="Profile location" required="true" />
+          <text name="authorizationLocation" label="Authorization location" required="true" />
+          <text name="tokenLocation" label="Token location" required="true" />
+          <text name="secretKey" label="Secret key" required="true" />
+          <text name="clientId" label="Client id" required="true" />
+          <char name="serverType" label="Server type" required="true" size="255" />          
+        </attributes>
+        <mdMethod name="getAll" static="true" label="Get all" returnType="net.geoprism.account.OauthServer[]" />
+      </mdBusiness>
+      
+      <mdBusiness name="net.geoprism.account.ExternalProfile" label="External profile" extends="com.runwaysdk.system.SingleActor">
+        <attributes>
+          <char name="remoteId" label="Remote id" required="true" size="255" />
+          <char name="displayName" label="Display name" size="255" />
+          <char name="username" label="Username" size="255" />
+          <reference name="server" type="net.geoprism.account.OauthServer" label="Server" required="false" />
+          <text name="firstName"/>
+          <text name="lastName"/>
+          <text name="phoneNumber"/>
+          <text name="email"/>
+        </attributes>
+      </mdBusiness>
+    </create>
+    <permissions>
+      <role roleName="geoprism.admin.Administrator">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.OauthServer">
+            <operation name="ALL" />
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <role roleName="PUBLIC">
+        <grant>
+          <mdBusinessPermission type="net.geoprism.account.OauthServer">
+            <mdMethodPermission methodName="getAll">
+              <operation name="EXECUTE"/>
+            </mdMethodPermission>
+          </mdBusinessPermission>
+        </grant>
+      </role>
+      <method methodName="getAll" type="net.geoprism.account.OauthServer">
+        <assignedRole roleName="Administrator"/>
+      </method>
+    </permissions>    
+  </doIt>
+  <undoIt>
+    <delete>
+      <object key="net.geoprism.account.ExternalProfile" type="com.runwaysdk.system.metadata.MdBusiness"/>
+      <object key="net.geoprism.account.OauthServer" type="com.runwaysdk.system.metadata.MdBusiness"/>
+    </delete>
+  </undoIt>
+</version>
