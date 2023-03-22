@@ -37,14 +37,14 @@
         <attribute name="storeTag" value="UIText" />
         <attribute name="storeKey" value="user.invite.email.subject" />
         <attributeStruct name="storeValue">
-          <attribute name="defaultLocale" value="Geoprism Registry Account Invitation" />
+          <attribute name="defaultLocale" value="Account Invitation" />
         </attributeStruct>
       </object>
       <object type="com.runwaysdk.localization.LocalizedValueStore" key="user.invite.email.body">
         <attribute name="storeTag" value="UIText" />
         <attribute name="storeKey" value="user.invite.email.body" />
         <attributeStruct name="storeValue">
-          <attribute name="defaultLocale" value="Congratulations!\n\nYou have been invited to create an account with the Geoprism Registry. To do so, click the link below:\n${link}\n\nThe above link will stop working in ${expireTime} hours.\nIf you did not request this, you can safely ignore this email." />
+          <attribute name="defaultLocale" value="Congratulations!\n\nYou have been invited to create an account. To do so, click the link below:\n${link}\n\nThe above link will stop working in ${expireTime} hours.\nIf you did not request this, you can safely ignore this email." />
         </attributeStruct>
       </object>
 		</createOrUpdate>

@@ -38,6 +38,10 @@ import com.runwaysdk.ProblemExceptionDTO;
 import com.runwaysdk.business.ProblemDTOIF;
 import com.runwaysdk.transport.conversion.json.ProblemExceptionDTOToJSON;
 import com.runwaysdk.transport.conversion.json.RunwayExceptionDTOToJSON;
+import com.runwaysdk.business.ExceptionDTO;
+import com.runwaysdk.business.SmartExceptionDTO;
+
+import net.geoprism.security.UnauthorizedAccessException;
 
 @ControllerAdvice
 public class JsonExceptionHandler
@@ -107,6 +111,17 @@ public class JsonExceptionHandler
 //    {
 //      httpStatus = HttpStatus.UNAUTHORIZED;
 //    }
+    
+    if (t instanceof SmartExceptionDTO)
+    {
+      SmartExceptionDTO ex = ( (SmartExceptionDTO) t );
+      ExceptionDTO cause = SmartExceptionDTO.getExceptionDTO(ex);
+
+      if (cause.getType().equals(UnauthorizedAccessException.CLASS))
+      {
+        httpStatus = HttpStatus.UNAUTHORIZED;
+      }
+    }
 
     RunwayExceptionDTOToJSON converter = new RunwayExceptionDTOToJSON(t.getClass().getName(), t.getMessage(), t.getLocalizedMessage());
     JSONObject json = converter.populate();
