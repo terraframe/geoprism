@@ -22,5 +22,7 @@ public interface FeatureRow
 {
 
   public Object getValue(String attributeName);
+  
+  public Long getRowNumber();
 
 }

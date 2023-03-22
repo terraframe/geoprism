@@ -23,8 +23,10 @@ import org.opengis.feature.simple.SimpleFeature;
 public class SimpleFeatureRow implements FeatureRow
 {
   private SimpleFeature feature;
+  
+  private Long rowNumber;
 
-  public SimpleFeatureRow(SimpleFeature feature)
+  public SimpleFeatureRow(SimpleFeature feature, Long rowNumber)
   {
     this.feature = feature;
   }
@@ -38,5 +40,11 @@ public class SimpleFeatureRow implements FeatureRow
   public Object getValue(String attributeName)
   {
     return this.feature.getAttribute(attributeName);
+  }
+  
+  @Override
+  public Long getRowNumber()
+  {
+    return this.rowNumber;
   }
 }
