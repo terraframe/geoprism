@@ -29,6 +29,7 @@ public class SimpleFeatureRow implements FeatureRow
   public SimpleFeatureRow(SimpleFeature feature, Long rowNumber)
   {
     this.feature = feature;
+    this.rowNumber = rowNumber;
   }
 
   public SimpleFeature getFeature()
