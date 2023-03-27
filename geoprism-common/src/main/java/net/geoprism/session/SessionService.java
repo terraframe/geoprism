@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.session;
 
@@ -30,19 +30,29 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.rbac.SingleActorDAOIF;
+import com.runwaysdk.business.rbac.UserDAOIF;
 import com.runwaysdk.localization.LocalizationFacade;
+import com.runwaysdk.session.Request;
+import com.runwaysdk.session.RequestType;
+import com.runwaysdk.session.Session;
+import com.runwaysdk.session.SessionIF;
+
+import net.geoprism.rbac.RoleView;
 
 @Component
 public class SessionService implements SessionServiceIF
 {
-  // TODO : Don't autowire components here because this service is directly instantiated in IDM
-  
+  // TODO : Don't autowire components here because this service is directly
+  // instantiated in IDM
+
   @Override
   public JsonArray getInstalledLocales(String sessionId)
   {
     JsonArray jaLocales = new JsonArray();
-    
+
     Collection<Locale> installedLocales = LocalizationFacade.getInstalledLocales();
     for (Locale loc : installedLocales)
     {
@@ -54,16 +64,16 @@ public class SessionService implements SessionServiceIF
 
       jaLocales.add(locObj);
     }
-    
+
     return jaLocales;
   }
-  
+
   @Override
   public String getServerVersion()
   {
     return "1.0-SNAPSHOT";
   }
-  
+
   @Override
   public String getHomeUrl()
   {
@@ -75,7 +85,7 @@ public class SessionService implements SessionServiceIF
   {
     return "/prism/home#login";
   }
-  
+
   @Override
   public Set<String> getPublicEndpoints()
   {
@@ -90,12 +100,12 @@ public class SessionService implements SessionServiceIF
 
     return endpoint;
   }
-  
+
   @Override
   public boolean isPublic(HttpServletRequest req)
   {
     String uri = req.getRequestURI();
-    
+
     if (uri.equals("/") || uri.equals(""))
     {
       return true;
@@ -200,4 +210,71 @@ public class SessionService implements SessionServiceIF
   {
     // Do nothing
   }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonElement getCookieInformation(String sessionId, Set<RoleView> roles)
+  {
+    JsonArray roleNames = new JsonArray();
+    roles.stream().forEach(role -> roleNames.add(role.getRoleName()));
+
+    JsonArray roleDisplayLabels = new JsonArray();
+    roles.stream().forEach(role -> roleDisplayLabels.add(role.getDisplayLabel()));
+
+    JsonObject response = new JsonObject();
+    response.add("roles", roleNames);
+    response.add("roleDisplayLabels", roleDisplayLabels);
+    response.addProperty("version", this.getServerVersion());
+
+    this.setLoginInformation(response);
+
+    return response;
+  }
+
+  @Override
+  public JsonElement getLoginResponse(String sessionId, Set<RoleView> roles)
+  {
+    JsonArray roleNames = new JsonArray();
+    roles.stream().forEach(role -> roleNames.add(role.getRoleName()));
+
+    JsonArray roleDisplayLabels = new JsonArray();
+    roles.stream().forEach(role -> roleDisplayLabels.add(role.getDisplayLabel()));
+
+    JsonObject response = new JsonObject();
+    response.add("installedLocales", this.getInstalledLocales(sessionId));
+    response.add("roles", roleNames);
+    response.add("roleDisplayLabels", roleDisplayLabels);
+    response.addProperty("version", this.getServerVersion());
+
+    this.setLoginInformation(response);
+
+    return response;
+  }
+
+  private void setLoginInformation(JsonObject response)
+  {
+    SessionIF session = Session.getCurrentSession();
+
+    if (session != null)
+    {
+      SingleActorDAOIF user = session.getUser();
+
+      if ( ( user instanceof UserDAOIF ) && ! ( user.getOid().equals(UserDAOIF.PUBLIC_USER_ID) ))
+      {
+        response.addProperty("userName", ( (UserDAOIF) user ).getUsername());
+        response.addProperty("loggedIn", true);
+      }
+      else
+      {
+        response.addProperty("userName", "");
+        response.addProperty("loggedIn", false);
+      }
+    }
+    else
+    {
+      response.addProperty("userName", "");
+      response.addProperty("loggedIn", false);
+    }
+  }
+
 }
