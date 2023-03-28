@@ -30,7 +30,6 @@
 			<object key="splash.pagetitle" type="com.runwaysdk.localization.LocalizedValueStore"/>
 			<object key="filter.false" type="com.runwaysdk.localization.LocalizedValueStore"/>
 			<object key="com.runwaysdk.ui.RunwayControllerForm.submit" type="com.runwaysdk.localization.LocalizedValueStore"/>
-			<object key="system.image.editHeader" type="com.runwaysdk.localization.LocalizedValueStore"/>
 			<object key="dashboard.descriptionLabel" type="com.runwaysdk.localization.LocalizedValueStore"/>
 			<object key="DashboardLayer.form.categoryOptionsHeading" type="com.runwaysdk.localization.LocalizedValueStore"/>
 			<object key="dataUploader.featureLabel" type="com.runwaysdk.localization.LocalizedValueStore"/>
