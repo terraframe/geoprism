@@ -24,7 +24,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-external-profile</artifactId>
   <packaging>jar</packaging>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.apache.oltu.oauth2</groupId>
       <artifactId>org.apache.oltu.oauth2.client</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
