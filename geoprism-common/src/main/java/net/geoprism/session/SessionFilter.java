@@ -72,13 +72,12 @@ public class SessionFilter implements Filter
     HttpSession session = request.getSession();
 
     WebClientSession clientSession = (WebClientSession) session.getAttribute(ClientConstants.CLIENTSESSION);
+    
+    boolean loggedIn = clientSession != null && clientSession.getRequest() != null && clientSession.getRequest().isSessionValid();
 
-    // This isLoggedIn check is not 100% sufficient, it doesn't go to the server
-    // and check, it only does it locally, so if the session has expired it'l
-    // let it through.
     if (sessionService.isPublic(request))
     {
-      if (clientSession == null)
+      if (!loggedIn)
       {
         Locale[] locales = ServletUtility.getLocales(request);
 
@@ -93,7 +92,7 @@ public class SessionFilter implements Filter
       chain.doFilter(req, res);
       return;
     }
-    else if (clientSession != null && clientSession.getRequest().isLoggedIn() && !clientSession.getRequest().isPublicUser())
+    else if (loggedIn && !clientSession.getRequest().isPublicUser())
     {
       try
       {
@@ -120,6 +119,7 @@ public class SessionFilter implements Filter
           t = t.getCause();
         }
 
+        // TODO : This code may no longer be necessary since switching to 'ClientRequest.isSessionValid' to check for session validity.
         if (t instanceof InvalidSessionExceptionDTO)
         {
           response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

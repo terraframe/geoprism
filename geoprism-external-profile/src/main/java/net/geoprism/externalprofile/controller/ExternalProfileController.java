@@ -114,7 +114,7 @@ public class ExternalProfileController extends RunwaySpringController
       roles.stream().forEach(role -> roleDisplayLabels.add(role.getDisplayLabel()));
       
       JsonObject cookieJson = new JsonObject();
-      cookieJson.addProperty("loggedIn", clientRequest.isLoggedIn());
+      cookieJson.addProperty("loggedIn", clientRequest.isSessionValid());
       cookieJson.add("roles", roleNames);
       cookieJson.add("roleDisplayLabels", roleDisplayLabels);
       cookieJson.addProperty("userName", username);
