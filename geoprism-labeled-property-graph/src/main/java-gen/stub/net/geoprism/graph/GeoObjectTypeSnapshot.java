@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -52,6 +53,7 @@ import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdAttributeBoolean;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
+import com.runwaysdk.system.metadata.MdAttributeClassification;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeDateTime;
 import com.runwaysdk.system.metadata.MdAttributeDouble;
@@ -64,9 +66,11 @@ import com.runwaysdk.system.metadata.MdGraphClass;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.graph.conversion.AttributeTypeConverter;
-import net.geoprism.graph.conversion.LocalizedValueConverter;
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
+import net.geoprism.registry.conversion.AttributeTypeConverter;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.ClassificationType;
 
 public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
 {
@@ -385,7 +389,7 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     attributes.forEach(joAttr -> {
       AttributeType attributeType = AttributeType.parse(joAttr.getAsJsonObject());
 
-      if (! ( attributeType instanceof AttributeTermType ) && ! ( attributeType instanceof AttributeClassificationType ))
+      if (! ( attributeType instanceof AttributeTermType ))
       {
         GeoObjectTypeSnapshot.createMdAttributeFromAttributeType(mdTable, attributeType);
       }
@@ -480,40 +484,37 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     }
     else if (attributeType.getType().equals(AttributeClassificationType.TYPE))
     {
-      // AttributeClassificationType attributeClassificationType =
-      // (AttributeClassificationType) attributeType;
-      // String classificationTypeCode =
-      // attributeClassificationType.getClassificationType();
-      //
-      // ClassificationType classificationType =
-      // ClassificationType.getByCode(classificationTypeCode);
-      //
-      // mdAttribute = new MdAttributeClassification();
-      // MdAttributeClassification mdAttributeTerm = (MdAttributeClassification)
-      // mdAttribute;
-      // mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
-      //
-      // Term root = attributeClassificationType.getRootTerm();
-      //
-      // if (root != null)
-      // {
-      // Classification classification = Classification.get(classificationType,
-      // root.getCode());
-      //
-      // if (classification == null)
-      // {
-      // net.geoprism.registry.DataNotFoundException ex = new
-      // net.geoprism.registry.DataNotFoundException();
-      // ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-      // ex.setDataIdentifier(root.getCode());
-      // ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-      //
-      // throw ex;
-      // }
-      //
-      // mdAttributeTerm.setValue(MdAttributeClassification.ROOT,
-      // classification.getOid());
-      // }
+      AttributeClassificationType attributeClassificationType = (AttributeClassificationType) attributeType;
+      String classificationTypeCode = attributeClassificationType.getClassificationType();
+
+      ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
+
+      mdAttribute = new MdAttributeClassification();
+      MdAttributeClassification mdAttributeTerm = (MdAttributeClassification) mdAttribute;
+      mdAttributeTerm.setReferenceMdClassification(classificationType.getMdClassificationObject());
+
+      Term root = attributeClassificationType.getRootTerm();
+
+      if (root != null)
+      {
+        Classification classification = Classification.get(classificationType, root.getCode());
+
+        if (classification == null)
+        {
+//          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
+//          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
+//          ex.setDataIdentifier(root.getCode());
+//          ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+//
+//          throw ex;
+          
+          // TODO Change exception type
+
+          throw new RuntimeException("Unable to find a classification with the code [" + root.getCode() + "]");
+        }
+
+        mdAttributeTerm.setValue(MdAttributeClassification.ROOT, classification.getOid());
+      }
     }
     else if (attributeType.getType().equals(AttributeBooleanType.TYPE))
     {

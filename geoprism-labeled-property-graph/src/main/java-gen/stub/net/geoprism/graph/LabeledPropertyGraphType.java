@@ -42,8 +42,9 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.graph.conversion.LocalizedValueConverter;
 import net.geoprism.graph.service.LocaleSerializer;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.service.ClassificationObjectServiceIF;
 
 public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeBase
 {
@@ -87,11 +88,8 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   @Transaction
   public void apply()
   {
-    if (!isValidName(this.getCode()))
-    {
-//      throw new InvalidMasterListCodeException("The list code has an invalid character");
-    }
-
+    ClassificationObjectServiceIF.getInstance().validateName(this.getCode());
+    
     super.apply();
   }
 
@@ -385,16 +383,6 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     list.createEntries();
 
     return list;
-  }
-
-  public static boolean isValidName(String name)
-  {
-    if (name.contains(" ") || name.contains("<") || name.contains(">") || name.contains("-") || name.contains("+") || name.contains("=") || name.contains("!") || name.contains("@") || name.contains("#") || name.contains("$") || name.contains("%") || name.contains("^") || name.contains("&") || name.contains("*") || name.contains("?") || name.contains(";") || name.contains(":") || name.contains(",") || name.contains("^") || name.contains("{") || name.contains("}") || name.contains("]") || name.contains("[") || name.contains("`") || name.contains("~") || name.contains("|") || name.contains("/") || name.contains("\\"))
-    {
-      return false;
-    }
-
-    return true;
   }
 
   public static JsonArray list()

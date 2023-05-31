@@ -14,8 +14,9 @@ import org.locationtech.jts.geom.Geometry;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.graph.conversion.LocalizedValueConverter;
-import net.geoprism.graph.registry.RegistryConstants;
+import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.Classification;
 
 public abstract class AbstractGraphVersionPublisher
 {
@@ -65,18 +66,18 @@ public abstract class AbstractGraphVersionPublisher
         }
         else if (attribute instanceof AttributeClassificationType)
         {
-//          String value = (String) geoObject.getValue(attributeName);
-//
-//          if (value != null)
-//          {
-//            Classification classification = Classification.get((AttributeClassificationType) attribute, value);
-//
-//            node.setValue(attributeName, classification.getVertex());
-//          }
-//          else
-//          {
-//            node.setValue(attributeName, (String) null);
-//          }
+          String value = (String) geoObject.getValue(attributeName);
+
+          if (value != null)
+          {
+            Classification classification = Classification.get((AttributeClassificationType) attribute, value);
+
+            node.setValue(attributeName, classification.getVertex());
+          }
+          else
+          {
+            node.setValue(attributeName, (String) null);
+          }
         }
         else
         {

@@ -26,10 +26,10 @@
     <artifactId>geoprism</artifactId>
     <version>1.0.5-SNAPSHOT</version>
   </parent>
-  <artifactId>geoprism-labeled-property-graph</artifactId>
+  <artifactId>geoprism-classification</artifactId>
   <packaging>jar</packaging>
 
-  <name>Geoprism Labeled Property Graph</name>
+  <name>Geoprism Classification</name>
   <description>Provides basic features for Geoprism apps.</description>
   <url>http://www.terraframe.com/products/runwaysdk</url>
   
@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
 	  <groupId>net.geoprism</groupId>
-	  <artifactId>geoprism-classification</artifactId>
+	  <artifactId>georegistry-adapter</artifactId>
 	  <version>${project.version}</version>
 	</dependency>
     

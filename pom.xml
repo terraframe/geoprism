@@ -41,6 +41,7 @@
     <module>geoprism-geoserver</module>
     <module>geoprism-excel</module>
     <module>georegistry-adapter/java/common</module>        
+    <module>geoprism-classification</module>
     <module>geoprism-labeled-property-graph</module>
   </modules>
 

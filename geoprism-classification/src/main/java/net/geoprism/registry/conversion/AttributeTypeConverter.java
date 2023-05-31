@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.graph.conversion;
+package net.geoprism.registry.conversion;
 
 import java.util.List;
 import java.util.Locale;

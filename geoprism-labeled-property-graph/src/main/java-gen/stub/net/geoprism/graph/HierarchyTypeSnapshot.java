@@ -13,10 +13,10 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdGraphClassQuery;
 
-import net.geoprism.graph.conversion.AttributeTypeConverter;
-import net.geoprism.graph.conversion.LocalizedValueConverter;
-import net.geoprism.graph.registry.RegistryConstants;
+import net.geoprism.registry.conversion.AttributeTypeConverter;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
+import net.geoprism.registry.RegistryConstants;
 
 public class HierarchyTypeSnapshot extends HierarchyTypeSnapshotBase
 {

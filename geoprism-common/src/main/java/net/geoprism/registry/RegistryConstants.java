@@ -16,9 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.graph.registry;
-
-import org.commongeoregistry.adapter.metadata.RegistryRole;
+package net.geoprism.registry;
 
 public interface RegistryConstants
 {
@@ -64,23 +62,5 @@ public interface RegistryConstants
 
   public static final String GEO_MULTIPOLYGON_ATTRIBUTE_LABEL = "Geo MultiPolygon";
 
-  public static final String REGISTRY_ROLE_PREFIX             = RegistryRole.Type.REGISTRY_ROLE_PREFIX + ".";
-
-  public static final String REGISTRY_SUPER_ADMIN_ROLE        = REGISTRY_ROLE_PREFIX + "SRA";
-
-  public static final String REGISTRY_MAINTAINER_PREFIX       = REGISTRY_ROLE_PREFIX + "registry.maintainer.";
-
-  public static final String REGISTRY_ADMIN_ROLE              = REGISTRY_ROLE_PREFIX + "RegistryAdministrator";
-
-  public static final String REGISTRY_MAINTAINER_ROLE         = REGISTRY_ROLE_PREFIX + "RegistryMaintainer";
-
-  public static final String REGISTRY_CONTRIBUTOR_ROLE        = REGISTRY_ROLE_PREFIX + "RegistryContributor";
-
-  public static final String API_CONSUMER_ROLE                = REGISTRY_ROLE_PREFIX + "APIConsumer";
-
   public final static String TERM_CLASS                       = "CLASS";
-
-  public static final String ADMIN_USER_NAME                  = "admin";
-  
-  public static final String CONTROLLER_ROOT                  = "";
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.graph.conversion;
+package net.geoprism.registry.conversion;
 
 import java.text.DateFormat;
 import java.time.LocalDate;
@@ -44,7 +44,7 @@ import com.runwaysdk.localization.LocalizedValueIF;
 import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.Universal;
 
-import net.geoprism.graph.DateUtil;
+import net.geoprism.registry.DateUtil;
 
 public class LocalizedValueConverter
 {

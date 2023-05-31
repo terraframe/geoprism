@@ -10,6 +10,8 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.Pair;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.DateUtil;
+
 public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPropertyGraphTypeBase
 {
   @SuppressWarnings("unused")

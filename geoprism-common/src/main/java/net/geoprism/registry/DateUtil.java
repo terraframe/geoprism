@@ -1,4 +1,4 @@
-package net.geoprism.graph;
+package net.geoprism.registry;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

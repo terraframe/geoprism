@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.Attribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
+import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
@@ -42,9 +43,10 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.graph.conversion.LocalizedValueConverter;
-import net.geoprism.graph.registry.RegistryConstants;
-
+import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.ClassificationType;
 
 public class LabeledPropertyGraphJsonExporter
 {
@@ -164,39 +166,43 @@ public class LabeledPropertyGraphJsonExporter
         {
           if (attribute instanceof AttributeTermType)
           {
-//            Classifier classifier = Classifier.get((String) value);
-//
-//            try
-//            {
-//              geoObj.setValue(attributeName, classifier.getClassifierId());
-//            }
-//            catch (UnknownTermException e)
-//            {
-//              TermValueException ex = new TermValueException();
-//              ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-//              ex.setCode(e.getCode());
-//
-//              throw e;
-//            }
+            // Classifier classifier = Classifier.get((String) value);
+            //
+            // try
+            // {
+            // geoObj.setValue(attributeName, classifier.getClassifierId());
+            // }
+            // catch (UnknownTermException e)
+            // {
+            // TermValueException ex = new TermValueException();
+            // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
+            // ex.setCode(e.getCode());
+            //
+            // throw e;
+            // }
           }
           else if (attribute instanceof AttributeClassificationType)
           {
-//            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-//            ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
-//            Classification classification = Classification.getByOid(classificationType, (String) value);
-//
-//            try
-//            {
-//              geoObj.setValue(attributeName, classification.toTerm());
-//            }
-//            catch (UnknownTermException e)
-//            {
-//              TermValueException ex = new TermValueException();
-//              ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-//              ex.setCode(e.getCode());
-//
-//              throw e;
-//            }
+            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+            ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
+            Classification classification = Classification.getByOid(classificationType, (String) value);
+
+            try
+            {
+              geoObj.setValue(attributeName, classification.toTerm());
+            }
+            catch (UnknownTermException e)
+            {
+              // TermValueException ex = new TermValueException();
+              // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
+              // ex.setCode(e.getCode());
+              //
+              // throw e;
+              
+              // TODO Change exception type
+
+              throw new RuntimeException("Unable to find a classification with the code [" + e.getCode() + "] and attribute [" + e.getAttribute().getLabel().getValue() + "]");
+            }
           }
           else
           {

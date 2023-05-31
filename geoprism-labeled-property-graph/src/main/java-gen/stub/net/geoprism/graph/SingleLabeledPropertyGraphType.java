@@ -3,6 +3,8 @@ package net.geoprism.graph;
 import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.DateUtil;
+
 public class SingleLabeledPropertyGraphType extends SingleLabeledPropertyGraphTypeBase
 {
   @SuppressWarnings("unused")

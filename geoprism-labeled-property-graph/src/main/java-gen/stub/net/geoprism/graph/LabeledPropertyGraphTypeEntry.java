@@ -31,6 +31,7 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
+import net.geoprism.registry.DateUtil;
 
 public class LabeledPropertyGraphTypeEntry extends LabeledPropertyGraphTypeEntryBase implements LabeledVersion
 {

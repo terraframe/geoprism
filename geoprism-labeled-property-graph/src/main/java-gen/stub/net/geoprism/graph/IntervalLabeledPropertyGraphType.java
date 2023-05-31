@@ -12,6 +12,8 @@ import com.google.gson.JsonParser;
 import com.runwaysdk.Pair;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.registry.DateUtil;
+
 public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGraphTypeBase
 {
   @SuppressWarnings("unused")
