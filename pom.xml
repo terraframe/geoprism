@@ -40,6 +40,7 @@
     <module>geoprism-external-profile</module>
     <module>geoprism-geoserver</module>
     <module>geoprism-excel</module>
+    <module>georegistry-adapter/java/common</module>        
     <module>geoprism-labeled-property-graph</module>
   </modules>
 
@@ -136,46 +137,6 @@
 
   <build>
     <plugins>
-      <!-- Weave Aspects -->
-      <plugin>
-        <groupId>dev.aspectj</groupId>
-        <artifactId>aspectj-maven-plugin</artifactId>
-        <version>${aspectj.plugin.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjtools</artifactId>
-            <version>${aspectj.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <aspectLibraries>
-            <aspectLibrary>
-              <groupId>com.runwaysdk</groupId>
-              <artifactId>runwaysdk-common</artifactId>
-            </aspectLibrary>
-            <aspectLibrary>
-              <groupId>com.runwaysdk</groupId>
-              <artifactId>runwaysdk-server</artifactId>
-            </aspectLibrary>
-          </aspectLibraries>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
-          <complianceLevel>${maven.compiler.target}</complianceLevel>
-          <fork>true</fork>
-          <meminitial>512m</meminitial>
-          <maxmem>1024m</maxmem>
-        </configuration>
-      </plugin>
-      
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
