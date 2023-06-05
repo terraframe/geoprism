@@ -80,6 +80,8 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
 
   public static final String SPLIT            = "__";
 
+  public static final String ROOT             = "__ROOT__";
+
   @SuppressWarnings("unused")
   private static final long  serialVersionUID = -1232639915;
 
@@ -340,7 +342,7 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     GeoObjectTypeSnapshot snapshot = new GeoObjectTypeSnapshot();
     snapshot.setVersion(version);
     snapshot.setGraphMdVertex(graphMdVertex);
-    snapshot.setCode(viewName);
+    snapshot.setCode(ROOT);
     snapshot.setIsAbstract(true);
     snapshot.setIsRoot(true);
     snapshot.setIsPrivate(true);
@@ -501,13 +503,14 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
 
         if (classification == null)
         {
-//          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-//          ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
-//          ex.setDataIdentifier(root.getCode());
-//          ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-//
-//          throw ex;
-          
+          // net.geoprism.registry.DataNotFoundException ex = new
+          // net.geoprism.registry.DataNotFoundException();
+          // ex.setTypeLabel(classificationType.getDisplayLabel().getValue());
+          // ex.setDataIdentifier(root.getCode());
+          // ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
+          //
+          // throw ex;
+
           // TODO Change exception type
 
           throw new RuntimeException("Unable to find a classification with the code [" + root.getCode() + "]");

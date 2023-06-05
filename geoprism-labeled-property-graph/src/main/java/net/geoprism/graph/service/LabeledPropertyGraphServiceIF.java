@@ -42,4 +42,8 @@ public interface LabeledPropertyGraphServiceIF
   public void postCreate(LabeledPropertyGraphTypeVersion version);
 
   public void assignPermissions(ComponentIF component);
+
+  public void postSynchronization(LabeledPropertyGraphTypeVersion version);
+
+  public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 }

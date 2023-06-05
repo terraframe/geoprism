@@ -89,7 +89,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   public void apply()
   {
     ClassificationObjectServiceIF.getInstance().validateName(this.getCode());
-    
+
     super.apply();
   }
 
@@ -270,7 +270,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   {
     if (!this.isValid())
     {
-//      throw new InvalidMasterListException();
+      // throw new InvalidMasterListException();
     }
 
     LabeledPropertyGraphTypeEntryQuery query = new LabeledPropertyGraphTypeEntryQuery(new QueryFactory());
@@ -288,54 +288,55 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     return LabeledPropertyGraphTypeEntry.create(this, forDate);
   }
 
-//  public void setHierarchyType(ServerHierarchyType type)
-//  {
-//    this.setHierarchy(type.getCode());
-//  }
-//
-//  public ServerHierarchyType getHierarchyType()
-//  {
-//    return ServerHierarchyType.get(this.getHierarchy());
-//  }
-//
-//  public void markAsInvalid(ServerHierarchyType hierarchyType, ServerGeoObjectType type)
-//  {
-//    boolean isValid = true;
-//
-//
-//    if (!isValid)
-//    {
-//      this.appLock();
-//      this.setValid(false);
-//      this.apply();
-//    }
-//  }
-//
-//  public void markAsInvalid(ServerGeoObjectType type)
-//  {
-//    boolean isValid = true;
-//
-//
-//    if (!isValid)
-//    {
-//      this.appLock();
-//      this.setValid(false);
-//      this.apply();
-//    }
-//  }
-//
-//  public void markAsInvalid(ServerHierarchyType hierarchyType)
-//  {
-//    boolean isValid = this.getHierarchy().equals(hierarchyType.getCode());
-//
-//
-//    if (!isValid)
-//    {
-//      this.appLock();
-//      this.setValid(false);
-//      this.apply();
-//    }
-//  }
+  // public void setHierarchyType(ServerHierarchyType type)
+  // {
+  // this.setHierarchy(type.getCode());
+  // }
+  //
+  // public ServerHierarchyType getHierarchyType()
+  // {
+  // return ServerHierarchyType.get(this.getHierarchy());
+  // }
+  //
+  // public void markAsInvalid(ServerHierarchyType hierarchyType,
+  // ServerGeoObjectType type)
+  // {
+  // boolean isValid = true;
+  //
+  //
+  // if (!isValid)
+  // {
+  // this.appLock();
+  // this.setValid(false);
+  // this.apply();
+  // }
+  // }
+  //
+  // public void markAsInvalid(ServerGeoObjectType type)
+  // {
+  // boolean isValid = true;
+  //
+  //
+  // if (!isValid)
+  // {
+  // this.appLock();
+  // this.setValid(false);
+  // this.apply();
+  // }
+  // }
+  //
+  // public void markAsInvalid(ServerHierarchyType hierarchyType)
+  // {
+  // boolean isValid = this.getHierarchy().equals(hierarchyType.getCode());
+  //
+  //
+  // if (!isValid)
+  // {
+  // this.appLock();
+  // this.setValid(false);
+  // this.apply();
+  // }
+  // }
 
   public boolean isValid()
   {
@@ -377,10 +378,19 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   @Transaction
   public static LabeledPropertyGraphType apply(JsonObject object)
   {
+    return apply(object, true);
+  }
+
+  @Transaction
+  public static LabeledPropertyGraphType apply(JsonObject object, boolean createEntries)
+  {
     LabeledPropertyGraphType list = LabeledPropertyGraphType.fromJSON(object);
     list.apply();
 
-    list.createEntries();
+    if (createEntries)
+    {
+      list.createEntries();
+    }
 
     return list;
   }
@@ -412,33 +422,35 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     return response;
   }
 
-
-//  @Transaction
-//  public static void markAllAsInvalid(ServerHierarchyType hierarchyType, ServerGeoObjectType type)
-//  {
-//    LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(new QueryFactory());
-//    query.WHERE(query.getValid().EQ((Boolean) null));
-//    query.OR(query.getValid().EQ(true));
-//
-//    try (OIterator<? extends LabeledPropertyGraphType> iterator = query.getIterator())
-//    {
-//      while (iterator.hasNext())
-//      {
-//        LabeledPropertyGraphType masterlist = iterator.next();
-//
-//        if (hierarchyType != null && type != null)
-//        {
-//          masterlist.markAsInvalid(hierarchyType, type);
-//        }
-//        else if (hierarchyType != null)
-//        {
-//          masterlist.markAsInvalid(hierarchyType);
-//        }
-//        else if (type != null)
-//        {
-//          masterlist.markAsInvalid(type);
-//        }
-//      }
-//    }
-//  }
+  // @Transaction
+  // public static void markAllAsInvalid(ServerHierarchyType hierarchyType,
+  // ServerGeoObjectType type)
+  // {
+  // LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(new
+  // QueryFactory());
+  // query.WHERE(query.getValid().EQ((Boolean) null));
+  // query.OR(query.getValid().EQ(true));
+  //
+  // try (OIterator<? extends LabeledPropertyGraphType> iterator =
+  // query.getIterator())
+  // {
+  // while (iterator.hasNext())
+  // {
+  // LabeledPropertyGraphType masterlist = iterator.next();
+  //
+  // if (hierarchyType != null && type != null)
+  // {
+  // masterlist.markAsInvalid(hierarchyType, type);
+  // }
+  // else if (hierarchyType != null)
+  // {
+  // masterlist.markAsInvalid(hierarchyType);
+  // }
+  // else if (type != null)
+  // {
+  // masterlist.markAsInvalid(type);
+  // }
+  // }
+  // }
+  // }
 }
