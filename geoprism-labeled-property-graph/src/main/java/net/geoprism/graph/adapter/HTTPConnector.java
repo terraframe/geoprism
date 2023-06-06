@@ -54,10 +54,15 @@ public class HTTPConnector implements RegistryConnectorIF
 
     this.serverurl = url;
   }
+  
+  protected void setClient(CloseableHttpClient client)
+  {
+    this.client = client;
+  }
 
   synchronized public void initialize()
   {
-    this.client = HttpClients.createDefault(); // TODO : Thread safety ?
+    this.setClient(HttpClients.createDefault()); // TODO : Thread safety ?
   }
 
   public boolean isInitialized()

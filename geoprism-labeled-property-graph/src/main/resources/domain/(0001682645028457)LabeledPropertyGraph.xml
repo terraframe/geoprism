@@ -117,9 +117,10 @@
           <integer name="versionNumber" label="Version Number" required="true" />      
           <reference name="graphType" type="net.geoprism.graph.LabeledPropertyGraphType" required="false" label="Graph Type" />        
           <reference name="entry" type="net.geoprism.graph.LabeledPropertyGraphTypeEntry" required="false" label="Graph Entry" />
-          <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="false" label="Graph Version" />
-            
+          <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="false" label="Graph Version" />            
         </attributes>
+        <mdMethod name="execute" label="Execute" static="false" returnType="void" />        
+        
       </mdBusiness>
 
             
@@ -135,6 +136,9 @@
         <assignedRole roleName="Administrator" />
       </method>    
       <method methodName="remove" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion">
+        <assignedRole roleName="Administrator" />
+      </method>    
+      <method methodName="execute" type="net.geoprism.graph.LabeledPropertyGraphSynchronization">
         <assignedRole roleName="Administrator" />
       </method>    
       <role roleName="geoprism.admin.Administrator">
@@ -168,6 +172,9 @@
           </mdRelationshipPermission>     
           <mdBusinessPermission type="net.geoprism.graph.LabeledPropertyGraphSynchronization">
             <operation name="ALL" />
+            <mdMethodPermission methodName="execute">
+              <operation name="EXECUTE" />
+            </mdMethodPermission>                                    
           </mdBusinessPermission>                       
         </grant>
       </role>

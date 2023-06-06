@@ -58,7 +58,7 @@ public class RegistryBridge
     // validateApiCompatVersion(this.versionApiCompat);
   }
 
-  public RegistryResponse getLabeledPropertyGraphTypes() throws HTTPException, BadServerUriException
+  public RegistryResponse getTypes() throws HTTPException, BadServerUriException
   {
     return this.apiGet(API_PATH + "/get-all");
   }

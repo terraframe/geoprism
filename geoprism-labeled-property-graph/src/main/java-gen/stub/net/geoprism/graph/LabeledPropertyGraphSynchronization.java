@@ -3,6 +3,7 @@ package net.geoprism.graph;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
@@ -45,18 +46,31 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     }
   }
 
+  @Override
+  @Authenticate
   public void execute()
   {
-    this.doIt();
+    JsonObject data = this.doIt();
 
     // Refresh permissions in case new definitions were defined during the
     // synchronization process
-    ( (Session) Session.getCurrentSession() ).reloadPermissions();
+    Session session = (Session) Session.getCurrentSession();
 
+    if (session != null)
+    {
+      session.reloadPermissions();
+    }
+    
+    LabeledPropertyGraphTypeVersion version = this.getVersion();
+    version.truncate();
+
+    new JsonGraphVersionPublisher(version).publish(data);
+
+    LabeledPropertyGraphServiceIF.getInstance().postSynchronization(version);
   }
 
   @Transaction
-  private void doIt()
+  private JsonObject doIt()
   {
     try (RegistryConnectorIF connector = RegistryConnectorFactory.getConnector(this.getUrl()))
     {
@@ -64,13 +78,13 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
 
       JsonObject typeObject = bridge.getType(this.getRemoteType()).getJsonObject();
       typeObject.remove(OID);
-      
+
       JsonObject entryObject = bridge.getEntry(this.getRemoteEntry()).getJsonObject();
       entryObject.remove(OID);
-      
+
       JsonObject versionObject = bridge.getVersion(this.getRemoteVersion()).getJsonObject();
       versionObject.remove(OID);
-      
+
       JsonObject data = bridge.getData(this.getRemoteVersion()).getJsonObject();
 
       this.appLock();
@@ -97,13 +111,8 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
       }
 
       this.apply();
-
-      LabeledPropertyGraphTypeVersion version = this.getVersion();
-      version.truncate();
-
-      new JsonGraphVersionPublisher(version).publish(data);
-
-      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(version);
+      
+      return data;
     }
     catch (HTTPException | BadServerUriException e)
     {

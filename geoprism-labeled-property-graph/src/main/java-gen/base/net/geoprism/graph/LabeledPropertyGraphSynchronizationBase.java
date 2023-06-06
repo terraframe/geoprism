@@ -689,4 +689,17 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
       return super.toString();
     }
   }
+  
+  public void execute()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void execute(java.lang.String oid)
+  {
+    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
+    _instance.remove();
+  }
+
 }
