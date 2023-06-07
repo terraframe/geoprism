@@ -1,11 +1,22 @@
 package net.geoprism.graph;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.LinkedList;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.query.AttributeLocal;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.OrderBy.SortOrder;
+import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.query.Selectable;
+import com.runwaysdk.query.SelectableChar;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.graph.adapter.RegistryBridge;
@@ -14,8 +25,12 @@ import net.geoprism.graph.adapter.RegistryConnectorIF;
 import net.geoprism.graph.adapter.exception.BadServerUriException;
 import net.geoprism.graph.adapter.exception.HTTPException;
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
+import net.geoprism.registry.DateUtil;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.view.JsonSerializable;
+import net.geoprism.registry.view.Page;
 
-public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSynchronizationBase
+public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSynchronizationBase implements JsonSerializable
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 63302423;
@@ -60,7 +75,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     {
       session.reloadPermissions();
     }
-    
+
     LabeledPropertyGraphTypeVersion version = this.getVersion();
     version.truncate();
 
@@ -111,12 +126,175 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
       }
 
       this.apply();
-      
+
       return data;
     }
     catch (HTTPException | BadServerUriException e)
     {
       throw new ProgrammingErrorException(e);
+    }
+  }
+
+  protected void parse(JsonObject object)
+  {
+    this.setUrl(object.get(LabeledPropertyGraphSynchronization.URL).getAsString());
+    this.setRemoteType(object.get(LabeledPropertyGraphSynchronization.REMOTETYPE).getAsString());
+    LocalizedValueConverter.populate(this.getDisplayLabel(), LocalizedValue.fromJSON(object.get(LabeledPropertyGraphType.DISPLAYLABEL).getAsJsonObject()));
+    this.setRemoteEntry(object.get(LabeledPropertyGraphSynchronization.REMOTEENTRY).getAsString());
+    this.setForDate(DateUtil.parseDate(object.get(LabeledPropertyGraphSynchronization.FORDATE).getAsString()));
+    this.setRemoteVersion(object.get(LabeledPropertyGraphSynchronization.REMOTEVERSION).getAsString());
+    this.setVersionNumber(object.get(LabeledPropertyGraphSynchronization.VERSIONNUMBER).getAsInt());
+  }
+
+  public final JsonObject toJSON()
+  {
+    JsonObject object = new JsonObject();
+
+    if (this.isAppliedToDB())
+    {
+      object.addProperty(LabeledPropertyGraphSynchronization.OID, this.getOid());
+    }
+
+    object.addProperty(LabeledPropertyGraphSynchronization.URL, this.getUrl());
+    object.addProperty(LabeledPropertyGraphSynchronization.REMOTETYPE, this.getRemoteType());
+    object.add(LabeledPropertyGraphType.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
+    object.addProperty(LabeledPropertyGraphSynchronization.REMOTEENTRY, this.getRemoteVersion());
+    object.addProperty(LabeledPropertyGraphSynchronization.FORDATE, DateUtil.formatDate(this.getForDate(), false));
+    object.addProperty(LabeledPropertyGraphSynchronization.REMOTEVERSION, this.getRemoteEntry());
+    object.addProperty(LabeledPropertyGraphSynchronization.VERSIONNUMBER, this.getVersionNumber());
+
+    return object;
+  }
+
+  public static LabeledPropertyGraphSynchronization fromJSON(JsonObject object)
+  {
+    LabeledPropertyGraphSynchronization list = null;
+
+    if (object.has("oid") && !object.get("oid").isJsonNull())
+    {
+      String oid = object.get("oid").getAsString();
+
+      list = LabeledPropertyGraphSynchronization.lock(oid);
+    }
+    else
+    {
+      list = new LabeledPropertyGraphSynchronization();
+    }
+
+    list.parse(object);
+
+    return list;
+  }
+
+  @Transaction
+  public static LabeledPropertyGraphSynchronization apply(JsonObject object)
+  {
+    LabeledPropertyGraphSynchronization list = LabeledPropertyGraphSynchronization.fromJSON(object);
+    list.apply();
+
+    return list;
+  }
+
+  public static JsonArray getAll()
+  {
+    LabeledPropertyGraphSynchronizationQuery query = new LabeledPropertyGraphSynchronizationQuery(new QueryFactory());
+    query.ORDER_BY_DESC(query.getRemoteType());
+
+    JsonArray array = new JsonArray();
+
+    try (OIterator<? extends LabeledPropertyGraphSynchronization> iterator = query.getIterator())
+    {
+      iterator.forEach(i -> array.add(i.toJSON()));
+    }
+
+    return array;
+  }
+
+  public static Page<LabeledPropertyGraphSynchronization> page(JsonObject criteria)
+  {
+    LabeledPropertyGraphSynchronizationQuery query = new LabeledPropertyGraphSynchronizationQuery(new QueryFactory());
+    int pageSize = 10;
+    int pageNumber = 1;
+
+    if (criteria.has("first") && criteria.has("rows"))
+    {
+      int first = criteria.get("first").getAsInt();
+      pageSize = criteria.get("rows").getAsInt();
+      pageNumber = ( first / pageSize ) + 1;
+
+      query.restrictRows(pageSize, pageNumber);
+    }
+
+    if (criteria.has("sortField") && criteria.has("sortOrder"))
+    {
+      String field = criteria.get("sortField").getAsString();
+      SortOrder order = criteria.get("sortOrder").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
+
+      query.ORDER_BY(query.getS(field), order);
+    }
+    else if (criteria.has("multiSortMeta"))
+    {
+      JsonArray sorts = criteria.get("multiSortMeta").getAsJsonArray();
+
+      for (int i = 0; i < sorts.size(); i++)
+      {
+        JsonObject sort = sorts.get(i).getAsJsonObject();
+
+        String field = sort.get("field").getAsString();
+        SortOrder order = sort.get("order").getAsInt() == 1 ? SortOrder.ASC : SortOrder.DESC;
+
+        query.ORDER_BY(query.getS(field), order);
+      }
+    }
+
+    if (criteria.has("filters"))
+    {
+      JsonObject filters = criteria.get("filters").getAsJsonObject();
+      Set<String> keys = filters.keySet();
+
+      for (String attributeName : keys)
+      {
+        Selectable attribute = query.get(attributeName);
+
+        if (attribute != null)
+        {
+          JsonObject filter = filters.get(attributeName).getAsJsonObject();
+
+          String value = filter.get("value").getAsString();
+          String mode = filter.get("matchMode").getAsString();
+
+          if (mode.equals("contains"))
+          {
+            if (attribute instanceof AttributeLocal)
+            {
+              query.WHERE(((AttributeLocal) attribute).localize().LIKEi("%" + value + "%"));
+            }
+            else
+            {
+              SelectableChar selectable = (SelectableChar) attribute;
+              query.WHERE(selectable.LIKEi("%" + value + "%"));
+            }
+          }
+          else if (mode.equals("equals"))
+          {
+            if (attribute instanceof AttributeLocal)
+            {
+              query.WHERE(((AttributeLocal) attribute).localize().EQ(value));
+            }
+            else
+            {
+              query.WHERE(attribute.EQ(value));
+            }
+          }
+        }
+      }
+    }
+
+    long count = query.getCount();
+
+    try (OIterator<? extends LabeledPropertyGraphSynchronization> iterator = query.getIterator())
+    {
+      return new Page<LabeledPropertyGraphSynchronization>(count, pageNumber, pageSize, new LinkedList<LabeledPropertyGraphSynchronization>(iterator.getAll()));
     }
   }
 

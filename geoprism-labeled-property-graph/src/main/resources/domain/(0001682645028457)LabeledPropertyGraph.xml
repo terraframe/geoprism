@@ -107,22 +107,21 @@
         <parent cardinality="1" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ParentSnapshot" />
         <child cardinality="*" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ChildSnapshot" />
       </mdRelationship>
-
-      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphSynchronization" label="Graph Synchronization" generateController="false" publish="false">
+      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphSynchronization" table="lpg_sync" label="Graph Synchronization" generateController="false" publish="false">
         <attributes>
           <text name="url" label="URL" required="true" />
           <text name="remoteType" label="Remote Graph Type" required="true" />
+          <localChar name="displayLabel" label="Label" required="true" />          
           <text name="remoteEntry" label="Remote Entry" required="true" />
+          <dateTime name="forDate" label="For Date" required="true" immutable="true" />          
           <text name="remoteVersion" label="Remote Version" required="true" />
           <integer name="versionNumber" label="Version Number" required="true" />      
           <reference name="graphType" type="net.geoprism.graph.LabeledPropertyGraphType" required="false" label="Graph Type" />        
           <reference name="entry" type="net.geoprism.graph.LabeledPropertyGraphTypeEntry" required="false" label="Graph Entry" />
           <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="false" label="Graph Version" />            
         </attributes>
-        <mdMethod name="execute" label="Execute" static="false" returnType="void" />        
-        
+        <mdMethod name="execute" label="Execute" static="false" returnType="void" />                
       </mdBusiness>
-
             
     </create>
     <permissions>

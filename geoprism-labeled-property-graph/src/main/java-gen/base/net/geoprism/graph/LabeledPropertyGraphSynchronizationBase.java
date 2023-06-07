@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1267615944)
+@com.runwaysdk.business.ClassSignature(hash = 2067769605)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -13,8 +13,12 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
   public final static String CLASS = "net.geoprism.graph.LabeledPropertyGraphSynchronization";
   public final static java.lang.String CREATEDATE = "createDate";
   public final static java.lang.String CREATEDBY = "createdBy";
+  public final static java.lang.String DISPLAYLABEL = "displayLabel";
+  private com.runwaysdk.business.Struct displayLabel = null;
+  
   public final static java.lang.String ENTITYDOMAIN = "entityDomain";
   public final static java.lang.String ENTRY = "entry";
+  public final static java.lang.String FORDATE = "forDate";
   public final static java.lang.String GRAPHTYPE = "graphType";
   public final static java.lang.String KEYNAME = "keyName";
   public final static java.lang.String LASTUPDATEDATE = "lastUpdateDate";
@@ -32,11 +36,12 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
   public final static java.lang.String VERSION = "version";
   public final static java.lang.String VERSIONNUMBER = "versionNumber";
   @SuppressWarnings("unused")
-  private static final long serialVersionUID = -1267615944;
+  private static final long serialVersionUID = 2067769605;
   
   public LabeledPropertyGraphSynchronizationBase()
   {
     super();
+    displayLabel = super.getStruct("displayLabel");
   }
   
   public java.util.Date getCreateDate()
@@ -81,6 +86,22 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
   {
     com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphSynchronization.CLASS);
     return (com.runwaysdk.dataaccess.MdAttributeReferenceDAOIF)mdClassIF.definesAttribute(CREATEDBY);
+  }
+  
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabel getDisplayLabel()
+  {
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabel) displayLabel;
+  }
+  
+  public void validateDisplayLabel()
+  {
+    this.validateAttribute(DISPLAYLABEL);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF getDisplayLabelMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphSynchronization.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeLocalCharacterDAOIF)mdClassIF.definesAttribute(DISPLAYLABEL);
   }
   
   public com.runwaysdk.system.metadata.MdDomain getEntityDomain()
@@ -184,6 +205,34 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
     else
     {
       setValue(ENTRY, oid);
+    }
+  }
+  
+  public java.util.Date getForDate()
+  {
+    return com.runwaysdk.constants.MdAttributeDateTimeUtil.getTypeSafeValue(getValue(FORDATE));
+  }
+  
+  public void validateForDate()
+  {
+    this.validateAttribute(FORDATE);
+  }
+  
+  public static com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF getForDateMd()
+  {
+    com.runwaysdk.dataaccess.MdClassDAOIF mdClassIF = com.runwaysdk.dataaccess.metadata.MdClassDAO.getMdClassDAO(net.geoprism.graph.LabeledPropertyGraphSynchronization.CLASS);
+    return (com.runwaysdk.dataaccess.MdAttributeDateTimeDAOIF)mdClassIF.definesAttribute(FORDATE);
+  }
+  
+  public void setForDate(java.util.Date value)
+  {
+    if(value == null)
+    {
+      setValue(FORDATE, "");
+    }
+    else
+    {
+      setValue(FORDATE, new java.text.SimpleDateFormat(com.runwaysdk.constants.Constants.DATETIME_FORMAT).format(value));
     }
   }
   
@@ -662,6 +711,18 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
     return (LabeledPropertyGraphSynchronization) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
+  public void execute()
+  {
+    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphSynchronization.java";
+    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+  }
+  
+  public static final void execute(java.lang.String oid)
+  {
+    LabeledPropertyGraphSynchronization _instance = LabeledPropertyGraphSynchronization.get(oid);
+    _instance.execute();
+  }
+  
   public static LabeledPropertyGraphSynchronization lock(java.lang.String oid)
   {
     LabeledPropertyGraphSynchronization _instance = LabeledPropertyGraphSynchronization.get(oid);
@@ -689,17 +750,4 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
       return super.toString();
     }
   }
-  
-  public void execute()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final void execute(java.lang.String oid)
-  {
-    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
-    _instance.remove();
-  }
-
 }

@@ -1,6 +1,6 @@
 package net.geoprism.graph;
 
-@com.runwaysdk.business.ClassSignature(hash = -1206103505)
+@com.runwaysdk.business.ClassSignature(hash = -1924527492)
 /**
  * This class is generated automatically.
  * DO NOT MAKE CHANGES TO IT - THEY WILL BE OVERWRITTEN
@@ -78,6 +78,29 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.CREATEDBY, mdAttributeIF, this, alias, displayLabel);
 
   }
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel()
+  {
+    return getDisplayLabel(null);
+
+  }
+ 
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL);
+
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL, mdAttributeIF, this, alias, null);
+
+  }
+ 
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
+  {
+
+    com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL);
+
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL, mdAttributeIF, this, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -122,6 +145,23 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     com.runwaysdk.dataaccess.MdAttributeDAOIF mdAttributeIF = this.getComponentQuery().getMdAttributeROfromMap(net.geoprism.graph.LabeledPropertyGraphSynchronization.ENTRY);
 
     return (net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF)this.getComponentQuery().internalAttributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.ENTRY, mdAttributeIF, this, alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getForDate()
+  {
+    return getForDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getForDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphSynchronization.FORDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getForDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.getComponentQuery().get(net.geoprism.graph.LabeledPropertyGraphSynchronization.FORDATE, alias, displayLabel);
 
   }
   public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType()
@@ -469,6 +509,21 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     }
   }
 
+  protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL)) 
+    {
+       return new net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
+      throw new com.runwaysdk.query.QueryException(error);
+    }
+  }
+
   /**  
    * Returns an iterator of Business objects that match the query criteria specified
    * on this query object. 
@@ -507,12 +562,18 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel();
+    public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias);
+    public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
     public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry();
     public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry(String alias);
     public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getForDate();
+    public com.runwaysdk.query.SelectableMoment getForDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getForDate(String alias, String displayLabel);
     public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType();
     public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType(String alias);
     public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType(String alias, String displayLabel);
@@ -630,6 +691,23 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.CREATEDBY,  alias, displayLabel);
 
   }
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel()
+  {
+    return getDisplayLabel(null);
+
+  }
+ 
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias)
+  {
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+
+  }
+ 
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
+  {
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -662,6 +740,23 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
   public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry(String alias, String displayLabel)
   {
     return (net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.ENTRY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getForDate()
+  {
+    return getForDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getForDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.FORDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getForDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.FORDATE, alias, displayLabel);
 
   }
   public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType()
@@ -979,6 +1074,21 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     }
   }
 
+  protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL)) 
+    {
+       return new net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
+      throw new com.runwaysdk.query.QueryException(error);
+    }
+  }
+
   }
 
 /**
@@ -994,12 +1104,18 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy();
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias);
     public com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF getCreatedBy(String alias, String displayLabel);
+    public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel();
+    public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias);
+    public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain();
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias);
     public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain(String alias, String displayLabel);
     public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry();
     public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry(String alias);
     public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry(String alias, String displayLabel);
+    public com.runwaysdk.query.SelectableMoment getForDate();
+    public com.runwaysdk.query.SelectableMoment getForDate(String alias);
+    public com.runwaysdk.query.SelectableMoment getForDate(String alias, String displayLabel);
     public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType();
     public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType(String alias);
     public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType(String alias, String displayLabel);
@@ -1166,6 +1282,23 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     return (com.runwaysdk.system.SingleActorQuery.SingleActorQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.CREATEDBY,  alias, displayLabel);
 
   }
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel()
+  {
+    return getDisplayLabel(null);
+
+  }
+ 
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias)
+  {
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, null);
+
+  }
+ 
+  public net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF getDisplayLabel(String alias, String displayLabel)
+  {
+    return (net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStructIF)this.attributeFactory(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL, com.runwaysdk.system.metadata.MdAttributeLocalCharacter.CLASS, alias, displayLabel);
+
+  }
   public com.runwaysdk.system.metadata.MdDomainQuery.MdDomainQueryReferenceIF getEntityDomain()
   {
     return getEntityDomain(null);
@@ -1198,6 +1331,23 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
   public net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF getEntry(String alias, String displayLabel)
   {
     return (net.geoprism.graph.LabeledPropertyGraphTypeEntryQuery.LabeledPropertyGraphTypeEntryQueryReferenceIF)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.ENTRY,  alias, displayLabel);
+
+  }
+  public com.runwaysdk.query.SelectableMoment getForDate()
+  {
+    return getForDate(null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getForDate(String alias)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.FORDATE, alias, null);
+
+  }
+ 
+  public com.runwaysdk.query.SelectableMoment getForDate(String alias, String displayLabel)
+  {
+    return (com.runwaysdk.query.SelectableMoment)this.get(net.geoprism.graph.LabeledPropertyGraphSynchronization.FORDATE, alias, displayLabel);
 
   }
   public net.geoprism.graph.LabeledPropertyGraphTypeQuery.LabeledPropertyGraphTypeQueryReferenceIF getGraphType()
@@ -1507,6 +1657,21 @@ public  class LabeledPropertyGraphSynchronizationQuery extends com.runwaysdk.que
     else if (name.equals(net.geoprism.graph.LabeledPropertyGraphSynchronization.VERSION)) 
     {
        return new net.geoprism.graph.LabeledPropertyGraphTypeVersionQuery.LabeledPropertyGraphTypeVersionQueryReference((com.runwaysdk.dataaccess.MdAttributeRefDAOIF)mdAttributeIF, attributeNamespace, definingTableName, definingTableAlias, referenceMdBusinessIF, referenceTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
+    }
+    else 
+    {
+      String error = "Attribute type ["+mdAttributeIF.getType()+"] is invalid.";
+      throw new com.runwaysdk.query.QueryException(error);
+    }
+  }
+
+  protected com.runwaysdk.query.AttributeLocal localFactory( com.runwaysdk.dataaccess.MdAttributeLocalDAOIF mdAttributeIF, String attributeNamespace, String definingTableName, String definingTableAlias,  com.runwaysdk.dataaccess.MdLocalStructDAOIF mdLocalStructIF, String structTableAlias, com.runwaysdk.query.ComponentQuery rootQuery, java.util.Set<com.runwaysdk.query.Join> tableJoinSet, String userDefinedAlias, String userDefinedDisplayLabel)
+  {
+    String name = mdAttributeIF.definesAttribute();
+    
+    if (name.equals(net.geoprism.graph.LabeledPropertyGraphSynchronization.DISPLAYLABEL)) 
+    {
+       return new net.geoprism.graph.LabeledPropertyGraphSynchronizationDisplayLabelQuery.LabeledPropertyGraphSynchronizationDisplayLabelQueryStruct((com.runwaysdk.dataaccess.MdAttributeLocalDAOIF)mdAttributeIF,  attributeNamespace, definingTableName, definingTableAlias, mdLocalStructIF, structTableAlias, rootQuery, tableJoinSet, userDefinedAlias, userDefinedDisplayLabel);
     }
     else 
     {
