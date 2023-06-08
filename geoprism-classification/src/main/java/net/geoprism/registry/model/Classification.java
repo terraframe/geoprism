@@ -494,7 +494,7 @@ public class Classification implements JsonSerializable
     }
   }
 
-  private static void importJsonTree(ClassificationType type, Classification parent, JsonObject object)
+  public static void importJsonTree(ClassificationType type, Classification parent, JsonObject object)
   {
     Classification classification = Classification.construct(type, object, true);
     classification.populate(object);

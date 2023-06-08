@@ -4,17 +4,17 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.model;
 
@@ -32,6 +32,7 @@ import com.runwaysdk.constants.graph.MdClassificationInfo;
 import com.runwaysdk.dataaccess.MdClassificationDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdClassificationDAO;
@@ -161,7 +162,7 @@ public class ClassificationType implements JsonSerializable
 
   public void assignPermissions()
   {
-    
+
     MdVertexDAOIF mdVertex = this.mdClassification.getReferenceMdVertexDAO();
     MdEdgeDAOIF mdEdge = this.mdClassification.getReferenceMdEdgeDAO();
 
@@ -172,7 +173,7 @@ public class ClassificationType implements JsonSerializable
   @Transaction
   public static ClassificationType apply(JsonObject json)
   {
-    String oid = (json.has(MdClassificationInfo.OID) && !json.get(MdClassificationInfo.OID).isJsonNull()) ? json.get(MdClassificationInfo.OID).getAsString() : null;
+    String oid = ( json.has(MdClassificationInfo.OID) && !json.get(MdClassificationInfo.OID).isJsonNull() ) ? json.get(MdClassificationInfo.OID).getAsString() : null;
     String code = json.get(DefaultAttribute.CODE.getName()).getAsString();
     LocalizedValue displayLabel = LocalizedValue.fromJSON(json.get(MdClassificationInfo.DISPLAY_LABEL).getAsJsonObject());
     LocalizedValue description = LocalizedValue.fromJSON(json.get(MdClassificationInfo.DESCRIPTION).getAsJsonObject());
@@ -231,9 +232,16 @@ public class ClassificationType implements JsonSerializable
   {
     String classificationType = RegistryConstants.CLASSIFICATION_PACKAGE + "." + code;
 
-    MdClassificationDAOIF mdClassification = (MdClassificationDAOIF) MdClassificationDAO.get(MdClassificationInfo.CLASS, classificationType);
+    try
+    {
+      MdClassificationDAOIF mdClassification = (MdClassificationDAOIF) MdClassificationDAO.get(MdClassificationInfo.CLASS, classificationType);
 
-    return new ClassificationType(mdClassification);
+      return new ClassificationType(mdClassification);
+    }
+    catch (DataNotFoundException e)
+    {
+      return null;
+    }
   }
 
 }

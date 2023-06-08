@@ -20,7 +20,14 @@ package net.geoprism.graph;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import org.commongeoregistry.adapter.Term;
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
+import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
+import org.commongeoregistry.adapter.metadata.GeoObjectType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -35,10 +42,13 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
+import com.runwaysdk.session.Session;
 
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.ClassificationType;
 
 public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVersionBase implements LabeledVersion
 {
@@ -313,6 +323,37 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
       });
 
       object.add("hierarchies", hierarchies);
+
+      // Add classification definitions
+      JsonArray classifications = new JsonArray();
+      Set<String> processed = new TreeSet<String>();
+
+      vertices.stream().sorted((a, b) -> b.getIsAbstract().compareTo(a.getIsAbstract())).filter(type -> !type.isRoot()).forEach(t -> {
+        GeoObjectType type = t.toGeoObjectType();
+
+        type.getAttributeMap().forEach((name, a) -> {
+          if (a instanceof AttributeClassificationType)
+          {
+            AttributeClassificationType attribute = (AttributeClassificationType) a;
+            Term rootTerm = attribute.getRootTerm();
+            String classificationType = attribute.getClassificationType();
+
+            if (!processed.contains(classificationType))
+            {
+              JsonObject typeObject = new JsonObject();
+              typeObject.add("type", ClassificationType.getByCode(classificationType).toJSON());
+              typeObject.add("tree", Classification.exportToJson(classificationType, rootTerm.getCode()));
+
+              classifications.add(typeObject);
+
+              processed.add(classificationType);
+            }
+          }
+        });
+      });
+
+      object.add("classifications", classifications);
+
     }
 
     return object;
@@ -338,6 +379,37 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
   @Transaction
   public static LabeledPropertyGraphTypeVersion create(LabeledPropertyGraphTypeEntry entry, JsonObject json)
   {
+    // Handle classification definitions
+    JsonArray classifications = json.get("classifications").getAsJsonArray();
+
+    for (JsonElement element : classifications)
+    {
+      JsonObject classificationObject = element.getAsJsonObject();
+      JsonObject classificationType = classificationObject.get("type").getAsJsonObject();
+      
+      String code = classificationType.get(DefaultAttribute.CODE.getName()).getAsString();
+      
+      // If a type doesn't exist create it      
+      if(ClassificationType.getByCode(code) == null) {
+        classificationType.remove(OID);
+        
+        ClassificationType type = ClassificationType.apply(classificationType);
+        
+        // Refresh permissions in case new definitions were defined during the
+        // synchronization process
+        Session session = (Session) Session.getCurrentSession();
+
+        if (session != null)
+        {
+          session.reloadPermissions();
+        }
+        
+        
+        Classification.importJsonTree(type, null, classificationObject.get("tree").getAsJsonObject());
+      }
+
+    }
+
     LabeledPropertyGraphType graphType = entry.getGraphType();
 
     LabeledPropertyGraphTypeVersion version = new LabeledPropertyGraphTypeVersion();

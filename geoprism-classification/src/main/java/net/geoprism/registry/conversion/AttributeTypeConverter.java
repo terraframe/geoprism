@@ -55,6 +55,9 @@ import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.RelationshipDAOIF;
 import com.runwaysdk.session.Session;
 
+import net.geoprism.registry.model.Classification;
+import net.geoprism.registry.model.ClassificationType;
+
 public class AttributeTypeConverter extends LocalizedValueConverter
 {
   public AttributeType build(MdAttributeConcreteDAOIF mdAttribute)
@@ -113,14 +116,14 @@ public class AttributeTypeConverter extends LocalizedValueConverter
 
       String rootOid = ( (MdAttributeClassificationDAOIF) mdAttribute ).getValue(MdAttributeClassificationInfo.ROOT);
 
-//      if (rootOid != null && rootOid.length() > 0)
-//      {
-//        ClassificationType type = new ClassificationType(mdClassification);
-//
-//        Classification classification = Classification.getByOid(type, rootOid);
-//
-//        attributeType.setRootTerm(classification.toTerm());
-//      }
+      if (rootOid != null && rootOid.length() > 0)
+      {
+        ClassificationType type = new ClassificationType(mdClassification);
+
+        Classification classification = Classification.getByOid(type, rootOid);
+
+        attributeType.setRootTerm(classification.toTerm());
+      }
 
       return attributeType;
     }

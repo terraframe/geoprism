@@ -65,23 +65,33 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
   @Authenticate
   public void execute()
   {
-    JsonObject data = this.doIt();
+    JsonObject data = null;
 
-    // Refresh permissions in case new definitions were defined during the
-    // synchronization process
-    Session session = (Session) Session.getCurrentSession();
-
-    if (session != null)
+    try
     {
-      session.reloadPermissions();
+      data = this.doIt();
+    }
+    finally
+    {
+      // Refresh permissions in case new definitions were defined during the
+      // synchronization process
+      Session session = (Session) Session.getCurrentSession();
+
+      if (session != null)
+      {
+        session.reloadPermissions();
+      }
     }
 
-    LabeledPropertyGraphTypeVersion version = this.getVersion();
-    version.truncate();
+    if (data != null)
+    {
+      LabeledPropertyGraphTypeVersion version = this.getVersion();
+      version.truncate();
 
-    new JsonGraphVersionPublisher(version).publish(data);
+      new JsonGraphVersionPublisher(version).publish(data);
 
-    LabeledPropertyGraphServiceIF.getInstance().postSynchronization(version);
+      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(version);
+    }
   }
 
   @Transaction
@@ -267,7 +277,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
           {
             if (attribute instanceof AttributeLocal)
             {
-              query.WHERE(((AttributeLocal) attribute).localize().LIKEi("%" + value + "%"));
+              query.WHERE( ( (AttributeLocal) attribute ).localize().LIKEi("%" + value + "%"));
             }
             else
             {
@@ -279,7 +289,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
           {
             if (attribute instanceof AttributeLocal)
             {
-              query.WHERE(((AttributeLocal) attribute).localize().EQ(value));
+              query.WHERE( ( (AttributeLocal) attribute ).localize().EQ(value));
             }
             else
             {
