@@ -18,32 +18,24 @@
  */
 package net.geoprism.graph.service;
 
-import java.util.LinkedList;
+import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.system.scheduler.ExecutableJob;
-import com.runwaysdk.system.scheduler.JobHistory;
 
 import net.geoprism.graph.LabeledPropertyGraphJsonExporter;
 import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.graph.service.LabeledPropertyGraphTypeServiceIF;
-import net.geoprism.registry.service.ClassificationObjectServiceIF;
-import net.geoprism.registry.view.JsonSerializable;
-import net.geoprism.registry.view.Page;
+import net.geoprism.registry.GeoRegistryUtil;
 
 @Component
 public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphTypeServiceIF
@@ -106,12 +98,11 @@ public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphType
   public JsonObject createVersion(String sessionId, String oid)
   {
     LabeledPropertyGraphTypeEntry entry = LabeledPropertyGraphTypeEntry.get(oid);
-    LabeledPropertyGraphType listType = entry.getGraphType();
 
-//    if (!listType.isValid())
-//    {
-//      throw new InvalidMasterListException();
-//    }
+    // if (!listType.isValid())
+    // {
+    // throw new InvalidMasterListException();
+    // }
 
     String version = entry.publish();
 
@@ -172,15 +163,14 @@ public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphType
       // Do nothing
     }
   }
-  
+
   @Request(RequestType.SESSION)
   public JsonObject getData(String sessionId, String oid)
   {
     LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.get(oid);
-    
+
     LabeledPropertyGraphJsonExporter exporter = new LabeledPropertyGraphJsonExporter(version);
-    
+
     return exporter.export();
   }
-
 }

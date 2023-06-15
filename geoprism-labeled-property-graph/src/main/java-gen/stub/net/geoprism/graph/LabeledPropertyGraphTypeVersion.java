@@ -240,14 +240,14 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
   // return job.start();
   // }
 
-  @Transaction
+//  @Transaction
   @Authenticate
   public String publish()
   {
     return this.publishNoAuth();
   }
 
-  @Transaction
+//  @Transaction
   public String publishNoAuth()
   {
     LabeledPropertyGraphServiceIF.getInstance().publish(this);
