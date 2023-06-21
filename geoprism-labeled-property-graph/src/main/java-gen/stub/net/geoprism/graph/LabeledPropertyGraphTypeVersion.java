@@ -257,9 +257,11 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
 
   public void truncate()
   {
-    this.getTypes().forEach(type -> {
-      type.truncate();
-    });
+//    this.getTypes().forEach(type -> {
+//      type.truncate();
+//    });
+    
+    this.getRootType().truncate();
 
   }
 
@@ -434,6 +436,8 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
     {
       HierarchyTypeSnapshot.create(version, element.getAsJsonObject(), root);
     }
+    
+    LabeledPropertyGraphServiceIF.getInstance().postCreate(version);
 
     return version;
   }

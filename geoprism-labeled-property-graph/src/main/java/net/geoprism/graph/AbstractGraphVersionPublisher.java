@@ -12,6 +12,7 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.locationtech.jts.geom.Geometry;
 
 import com.runwaysdk.business.graph.VertexObject;
+import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.registry.RegistryConstants;
@@ -25,7 +26,7 @@ public abstract class AbstractGraphVersionPublisher
 //    return publish(mdVertex, object.toGeoObject(forDate));
 //  }
 
-  @SuppressWarnings("unchecked")
+  @Transaction
   protected VertexObject publish(MdVertex mdVertex, GeoObject geoObject)
   {
     GeoObjectType type = geoObject.getType();

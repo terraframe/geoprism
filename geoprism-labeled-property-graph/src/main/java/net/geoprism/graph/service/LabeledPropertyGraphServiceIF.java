@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 
 import com.runwaysdk.ComponentIF;
 
+import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.spring.ApplicationContextHolder;
 
@@ -43,7 +44,7 @@ public interface LabeledPropertyGraphServiceIF
 
   public void assignPermissions(ComponentIF component);
 
-  public void postSynchronization(LabeledPropertyGraphTypeVersion version);
-
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
+
+  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization);
 }

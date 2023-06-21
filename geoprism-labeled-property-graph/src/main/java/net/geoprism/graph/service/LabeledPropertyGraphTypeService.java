@@ -18,7 +18,6 @@
  */
 package net.geoprism.graph.service;
 
-import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -35,7 +34,6 @@ import net.geoprism.graph.LabeledPropertyGraphJsonExporter;
 import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeEntry;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
-import net.geoprism.registry.GeoRegistryUtil;
 
 @Component
 public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphTypeServiceIF

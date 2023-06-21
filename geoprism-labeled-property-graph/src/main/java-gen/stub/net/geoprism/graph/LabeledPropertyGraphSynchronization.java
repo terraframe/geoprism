@@ -90,7 +90,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
 
       new JsonGraphVersionPublisher(version).publish(data);
 
-      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(version);
+      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(this);
     }
   }
 
@@ -133,6 +133,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
         LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.create(this.getEntry(), versionObject);
 
         this.setVersion(version);
+
       }
 
       this.apply();
@@ -142,6 +143,48 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     catch (HTTPException | BadServerUriException e)
     {
       throw new ProgrammingErrorException(e);
+    }
+  }
+
+//  @Transaction
+  public void updateRemoteVersion(String versionId, Integer versionNumber)
+  {
+    if (!this.getRemoteVersion().equals(versionId))
+    {
+      LabeledPropertyGraphTypeVersion version = this.getVersion();
+      
+      // Due to memory constraints in the orientdb database we need to truncate the graph first
+      // in its own transaction
+      if (version != null)
+      {
+        version.truncate();
+      }
+      
+      updateRemoteVersion(versionId, versionNumber, version);
+    }
+  }
+
+  @Transaction
+  private void updateRemoteVersion(String versionId, Integer versionNumber, LabeledPropertyGraphTypeVersion version)
+  {
+    this.appLock();
+
+    try
+    {
+
+      this.setVersion(null);
+      this.setRemoteVersion(versionId);
+      this.setVersionNumber(versionNumber);
+      this.apply();
+
+      if (version != null)
+      {
+        version.remove();
+      }
+    }
+    finally
+    {
+      this.unlock();
     }
   }
 
@@ -168,9 +211,9 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     object.addProperty(LabeledPropertyGraphSynchronization.URL, this.getUrl());
     object.addProperty(LabeledPropertyGraphSynchronization.REMOTETYPE, this.getRemoteType());
     object.add(LabeledPropertyGraphType.DISPLAYLABEL, LocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel()).toJSON());
-    object.addProperty(LabeledPropertyGraphSynchronization.REMOTEENTRY, this.getRemoteVersion());
+    object.addProperty(LabeledPropertyGraphSynchronization.REMOTEENTRY, this.getRemoteEntry());
     object.addProperty(LabeledPropertyGraphSynchronization.FORDATE, DateUtil.formatDate(this.getForDate(), false));
-    object.addProperty(LabeledPropertyGraphSynchronization.REMOTEVERSION, this.getRemoteEntry());
+    object.addProperty(LabeledPropertyGraphSynchronization.REMOTEVERSION, this.getRemoteVersion());
     object.addProperty(LabeledPropertyGraphSynchronization.VERSIONNUMBER, this.getVersionNumber());
 
     return object;
