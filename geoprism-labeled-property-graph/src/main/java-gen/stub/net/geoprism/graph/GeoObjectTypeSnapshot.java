@@ -432,6 +432,23 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     return null;
   }
 
+  public static GeoObjectTypeSnapshot get(LabeledPropertyGraphTypeVersion version, MdVertexDAOIF mdVertex)
+  {
+    GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
+    query.WHERE(query.getVersion().EQ(version));
+    query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
+    
+    try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
+    {
+      if (it.hasNext())
+      {
+        return it.next();
+      }
+    }
+    
+    return null;
+  }
+  
   public static GeoObjectTypeSnapshot getRoot(LabeledPropertyGraphTypeVersion version)
   {
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());

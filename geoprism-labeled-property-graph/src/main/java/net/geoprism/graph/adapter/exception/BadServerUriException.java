@@ -18,7 +18,7 @@
  */
 package net.geoprism.graph.adapter.exception;
 
-public class BadServerUriException extends Exception
+public class BadServerUriException extends RuntimeException
 {
   private static final long serialVersionUID = -8355461305287296933L;
   

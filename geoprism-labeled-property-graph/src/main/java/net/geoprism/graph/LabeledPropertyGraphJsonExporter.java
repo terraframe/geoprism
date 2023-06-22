@@ -144,10 +144,13 @@ public class LabeledPropertyGraphJsonExporter
     return graph;
   }
 
-  protected GeoObject serialize(VertexObject vertex, GeoObjectTypeSnapshot snapshot)
+  public static GeoObject serialize(VertexObject vertex, GeoObjectTypeSnapshot snapshot)
   {
-    GeoObjectType type = snapshot.toGeoObjectType();
+    return serialize(vertex, snapshot.toGeoObjectType());
+  }
 
+  public static GeoObject serialize(VertexObject vertex, GeoObjectType type)
+  {
     Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(type);
 
     GeoObject geoObj = new GeoObject(type, type.getGeometryType(), attributeMap);

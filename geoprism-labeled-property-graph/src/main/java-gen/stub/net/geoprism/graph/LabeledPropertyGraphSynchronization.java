@@ -9,7 +9,6 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.rbac.Authenticate;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.AttributeLocal;
 import com.runwaysdk.query.OIterator;
@@ -22,8 +21,6 @@ import com.runwaysdk.session.Session;
 import net.geoprism.graph.adapter.RegistryBridge;
 import net.geoprism.graph.adapter.RegistryConnectorFactory;
 import net.geoprism.graph.adapter.RegistryConnectorIF;
-import net.geoprism.graph.adapter.exception.BadServerUriException;
-import net.geoprism.graph.adapter.exception.HTTPException;
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
 import net.geoprism.registry.DateUtil;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
@@ -139,10 +136,6 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
       this.apply();
 
       return data;
-    }
-    catch (HTTPException | BadServerUriException e)
-    {
-      throw new ProgrammingErrorException(e);
     }
   }
 
