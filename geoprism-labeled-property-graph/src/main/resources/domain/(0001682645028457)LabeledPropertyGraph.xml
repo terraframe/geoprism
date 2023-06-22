@@ -25,7 +25,7 @@
         <attributes>
           <localChar name="displayLabel" label="Label" required="true" />
           <localText name="description"/>          
-          <char name="code" label="Code" size="255" required="true" indexType="unique index" />
+          <char name="code" label="Code" size="255" required="true" />
           <text name="hierarchy" label="Hierarchy" />
           <boolean name="valid" label="Valid" />
           <char name="strategyType" label="Strategy Type" size="255" required="true" />          
