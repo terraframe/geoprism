@@ -23,24 +23,31 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
+import net.geoprism.rbac.RoleView;
 
 public interface SessionServiceIF
 {
   public JsonArray getInstalledLocales(String sessionId);
-  
+
+  public JsonElement getCookieInformation(String sessionId, Set<RoleView> roles);
+
+  public JsonElement getLoginResponse(String sessionId, Set<RoleView> roles);
+
   public String getServerVersion();
-  
+
   public String getHomeUrl();
-  
+
   public String getLoginUrl();
-  
+
   public Set<String> getPublicEndpoints();
-  
+
   public boolean isPublic(HttpServletRequest req);
-  
+
   public boolean pathAllowed(HttpServletRequest req);
-  
+
   public void onLoginSuccess(String username, String sessionId);
-  
+
   public void onLoginFailure(String username);
 }

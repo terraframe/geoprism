@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.runwaysdk.ClientSession;
 import com.runwaysdk.constants.ClientConstants;
@@ -114,30 +115,13 @@ public class SessionController extends RunwaySpringController
 
     Set<RoleView> roles = this.roleService.getCurrentRoles(clientRequest.getSessionId(), true);
     
-    JsonArray roleNames = new JsonArray();
-    roles.stream().forEach(role -> roleNames.add(role.getRoleName()));
-    
-    JsonArray roleDisplayLabels = new JsonArray();
-    roles.stream().forEach(role -> roleDisplayLabels.add(role.getDisplayLabel()));
-    
-    JsonObject cookieValue = new JsonObject();
-    cookieValue.addProperty("loggedIn", clientRequest.isLoggedIn());
-    cookieValue.add("roles", roleNames);
-    cookieValue.add("roleDisplayLabels", roleDisplayLabels);
-    cookieValue.addProperty("userName", username);
-    cookieValue.addProperty("version", this.service.getServerVersion());
-
+    JsonElement cookieValue = this.service.getCookieInformation(clientRequest.getSessionId(), roles);
+ 
     this.addCookie(cookieValue);
 
-    JsonObject object = new JsonObject();
-    object.add("installedLocales", this.service.getInstalledLocales(clientRequest.getSessionId()));
-    object.addProperty("loggedIn", clientRequest.isLoggedIn());
-    object.add("roles", roleNames);
-    object.add("roleDisplayLabels", roleDisplayLabels);
-    object.addProperty("userName", username);
-    object.addProperty("version", this.service.getServerVersion());
+    JsonElement response = this.service.getLoginResponse(clientRequest.getSessionId(), roles);
 
-    return new ResponseEntity<String>(object.toString(), HttpStatus.OK);
+    return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
   }
 
   public ClientRequestIF loginWithLocales(String username, String password, Locale[] locales)
@@ -210,7 +194,7 @@ public class SessionController extends RunwaySpringController
     return locales.toArray(new Locale[locales.size()]);
   }
   
-  public void addCookie(JsonObject cookieValue) throws UnsupportedEncodingException
+  public void addCookie(JsonElement cookieValue) throws UnsupportedEncodingException
   {
     String path = this.getRequest().getContextPath();
 

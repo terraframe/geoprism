@@ -20,6 +20,15 @@
 -->
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
+    <createOrUpdate>
+      <object type="com.runwaysdk.localization.LocalizedValueStore" key="system.image.editHeader">
+        <attribute name="storeTag" value="UIText" />
+        <attribute name="storeKey" value="system.image.editHeader" />
+        <attributeStruct name="storeValue">
+          <attribute name="defaultLocale" value="Edit system image" />
+        </attributeStruct>
+      </object>
+    </createOrUpdate>
     <create>
       <mdBusiness name="net.geoprism.SystemLogoSingleton" label="SystemLogoSingleton" generateController="false">
         <attributes>

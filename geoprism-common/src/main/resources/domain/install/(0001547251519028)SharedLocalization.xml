@@ -33,6 +33,24 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<doIt>
 		<createOrUpdate>
+		  <!--
+		  ==========
+		    Common
+		  ==========
+		  -->
+		  <object type="com.runwaysdk.localization.LocalizedValueStore" key="common.loading">
+        <attribute name="storeTag" value="UIText" />
+        <attribute name="storeKey" value="common.loading" />
+        <attributeStruct name="storeValue">
+          <attribute name="defaultLocale" value="Loading..." />
+        </attributeStruct>
+      </object>
+		
+		<!--
+      ==========
+        Account
+      ==========
+      -->
 		  <object type="com.runwaysdk.localization.LocalizedValueStore" key="account.roles">
         <attribute name="storeTag" value="UIText" />
         <attribute name="storeKey" value="account.roles" />
@@ -54,6 +72,12 @@
           <attribute name="defaultLocale" value="Disabled" />
         </attributeStruct>
       </object>
+      
+      <!--
+      ==========
+        Other
+      ==========
+      -->
 			<object key="dataUploader.resolvedSynonym"
 				type="com.runwaysdk.localization.LocalizedValueStore">
 				<attribute name="storeTag" value="UIText" />
