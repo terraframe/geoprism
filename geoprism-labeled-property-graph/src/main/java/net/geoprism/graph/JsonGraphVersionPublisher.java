@@ -12,10 +12,13 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
 {
-  private LabeledPropertyGraphTypeVersion version;
+  private LabeledPropertyGraphSynchronization synchronization;
 
-  public JsonGraphVersionPublisher(LabeledPropertyGraphTypeVersion version)
+  private LabeledPropertyGraphTypeVersion     version;
+
+  public JsonGraphVersionPublisher(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version)
   {
+    this.synchronization = synchronization;
     this.version = version;
   }
 
@@ -39,7 +42,8 @@ public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
 
         MdVertex mdVertex = snapshot.getGraphMdVertex();
 
-        this.publish(mdVertex, geoObject);
+        this.publish(this.synchronization, mdVertex, geoObject);
+
       }
     }
 

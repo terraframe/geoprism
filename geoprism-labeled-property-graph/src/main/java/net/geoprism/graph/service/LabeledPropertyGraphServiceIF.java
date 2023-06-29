@@ -21,6 +21,7 @@ package net.geoprism.graph.service;
 import org.springframework.stereotype.Repository;
 
 import com.runwaysdk.ComponentIF;
+import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
@@ -47,4 +48,8 @@ public interface LabeledPropertyGraphServiceIF
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 
   public void postSynchronization(LabeledPropertyGraphSynchronization synchronization);
+
+  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, VertexObject node);
+
+  public void postTruncate(LabeledPropertyGraphSynchronization synchronization);
 }

@@ -15,6 +15,7 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.metadata.MdVertex;
 
+import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
@@ -27,7 +28,7 @@ public abstract class AbstractGraphVersionPublisher
 //  }
 
   @Transaction
-  protected VertexObject publish(MdVertex mdVertex, GeoObject geoObject)
+  protected VertexObject publish(LabeledPropertyGraphSynchronization synchronization, MdVertex mdVertex, GeoObject geoObject)
   {
     GeoObjectType type = geoObject.getType();
 
@@ -98,6 +99,8 @@ public abstract class AbstractGraphVersionPublisher
     });
 
     node.apply();
+    
+    LabeledPropertyGraphServiceIF.getInstance().postSynchronization(synchronization, node);   
 
     return node;
   }

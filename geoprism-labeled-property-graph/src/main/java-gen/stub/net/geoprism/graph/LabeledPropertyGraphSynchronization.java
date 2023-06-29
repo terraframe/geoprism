@@ -84,8 +84,10 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     {
       LabeledPropertyGraphTypeVersion version = this.getVersion();
       version.truncate();
+      
+      LabeledPropertyGraphServiceIF.getInstance().postTruncate(this);
 
-      new JsonGraphVersionPublisher(version).publish(data);
+      new JsonGraphVersionPublisher(this, version).publish(data);
 
       LabeledPropertyGraphServiceIF.getInstance().postSynchronization(this);
     }
@@ -151,6 +153,8 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
       if (version != null)
       {
         version.truncate();
+                
+        LabeledPropertyGraphServiceIF.getInstance().postTruncate(this);
       }
       
       updateRemoteVersion(versionId, versionNumber, version);
