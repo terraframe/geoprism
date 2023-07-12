@@ -84,12 +84,13 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     {
       LabeledPropertyGraphTypeVersion version = this.getVersion();
       version.truncate();
-      
+
       LabeledPropertyGraphServiceIF.getInstance().postTruncate(this);
 
-      new JsonGraphVersionPublisher(this, version).publish(data);
+      JsonGraphVersionPublisher publisher = new JsonGraphVersionPublisher(this, version);
+      publisher.publish(data);
 
-      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(this);
+      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(this, publisher.getCache());
     }
   }
 
@@ -141,22 +142,23 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     }
   }
 
-//  @Transaction
+  // @Transaction
   public void updateRemoteVersion(String versionId, Integer versionNumber)
   {
     if (!this.getRemoteVersion().equals(versionId))
     {
       LabeledPropertyGraphTypeVersion version = this.getVersion();
-      
-      // Due to memory constraints in the orientdb database we need to truncate the graph first
+
+      // Due to memory constraints in the orientdb database we need to truncate
+      // the graph first
       // in its own transaction
       if (version != null)
       {
         version.truncate();
-                
+
         LabeledPropertyGraphServiceIF.getInstance().postTruncate(this);
       }
-      
+
       updateRemoteVersion(versionId, versionNumber, version);
     }
   }

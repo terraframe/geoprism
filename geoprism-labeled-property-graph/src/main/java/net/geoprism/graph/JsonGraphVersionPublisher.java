@@ -1,5 +1,7 @@
 package net.geoprism.graph;
 
+import java.util.Map;
+
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectJsonAdapters;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
@@ -12,6 +14,37 @@ import com.runwaysdk.system.metadata.MdVertex;
 
 public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
 {
+  private static class TypeSnapshotCacheObject
+  {
+    private GeoObjectTypeSnapshot snapshot;
+
+    private GeoObjectType         type;
+
+    private MdVertex              mdVertex;
+
+    public TypeSnapshotCacheObject(GeoObjectTypeSnapshot snapshot)
+    {
+      this.snapshot = snapshot;
+      this.type = snapshot.toGeoObjectType();
+      this.mdVertex = snapshot.getGraphMdVertex();
+    }
+
+  }
+
+  private static class HierarchySnapshotCacheObject
+  {
+    private HierarchyTypeSnapshot snapshot;
+
+    private MdEdge                mdEdge;
+
+    public HierarchySnapshotCacheObject(HierarchyTypeSnapshot snapshot)
+    {
+      this.snapshot = snapshot;
+      this.mdEdge = snapshot.getGraphMdEdge();
+    }
+
+  }
+
   private LabeledPropertyGraphSynchronization synchronization;
 
   private LabeledPropertyGraphTypeVersion     version;
@@ -24,6 +57,8 @@ public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
 
   public void publish(JsonObject graph)
   {
+    Map<String, Object> cache = this.getCache();
+
     JsonArray array = graph.get("geoObjects").getAsJsonArray();
 
     for (int i = 0; i < array.size(); i++)
@@ -32,18 +67,23 @@ public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
 
       String typeCode = GeoObjectJsonAdapters.GeoObjectDeserializer.getTypeCode(object);
 
-      GeoObjectTypeSnapshot snapshot = GeoObjectTypeSnapshot.get(version, typeCode);
+      String key = "snapshot-" + typeCode;
+
+      if (!cache.containsKey(key))
+      {
+        GeoObjectTypeSnapshot snapshot = GeoObjectTypeSnapshot.get(version, typeCode);
+
+        cache.put(key, new TypeSnapshotCacheObject(snapshot));
+      }
+
+      TypeSnapshotCacheObject cachedObject = (TypeSnapshotCacheObject) cache.get(key);
+      GeoObjectTypeSnapshot snapshot = cachedObject.snapshot;
 
       if (!snapshot.getIsAbstract())
       {
-        GeoObjectType type = snapshot.toGeoObjectType();
+        GeoObject geoObject = GeoObject.fromJSON(cachedObject.type, object.toString());
 
-        GeoObject geoObject = GeoObject.fromJSON(type, object.toString());
-
-        MdVertex mdVertex = snapshot.getGraphMdVertex();
-
-        this.publish(this.synchronization, mdVertex, geoObject);
-
+        this.publish(this.synchronization, cachedObject.mdVertex, geoObject);
       }
     }
 
@@ -58,14 +98,21 @@ public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
       String childType = object.get("endType").getAsString();
       String typeCode = object.get("type").getAsString();
 
-      HierarchyTypeSnapshot hierarchy = HierarchyTypeSnapshot.get(this.version, typeCode);
+      String key = "hierarchy-" + typeCode;
 
-      MdEdge mdEdge = hierarchy.getGraphMdEdge();
+      if (!cache.containsKey(key))
+      {
+        HierarchyTypeSnapshot hierarchy = HierarchyTypeSnapshot.get(this.version, typeCode);
+
+        cache.put(key, new HierarchySnapshotCacheObject(hierarchy));
+      }
+
+      HierarchySnapshotCacheObject cachedObject = (HierarchySnapshotCacheObject) cache.get(key);
 
       VertexObject parent = version.getVertex(parentUid, parentType);
       VertexObject child = version.getVertex(childUid, childType);
 
-      parent.addChild(child, mdEdge.definesType()).apply();
+      parent.addChild(child, cachedObject.mdEdge.definesType()).apply();
     }
   }
 

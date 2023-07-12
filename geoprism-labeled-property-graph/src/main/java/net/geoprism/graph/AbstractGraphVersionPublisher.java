@@ -1,5 +1,6 @@
 package net.geoprism.graph;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
@@ -22,10 +23,23 @@ import net.geoprism.registry.model.Classification;
 
 public abstract class AbstractGraphVersionPublisher
 {
-//  protected VertexObject publish(ServerGeoObjectIF object, MdVertex mdVertex, Date forDate)
-//  {
-//    return publish(mdVertex, object.toGeoObject(forDate));
-//  }
+  private Map<String, Object> cache;
+
+  public AbstractGraphVersionPublisher()
+  {
+    this.cache = new HashMap<String, Object>();
+  }
+  
+  public Map<String, Object> getCache()
+  {
+    return cache;
+  }
+
+  // protected VertexObject publish(ServerGeoObjectIF object, MdVertex mdVertex,
+  // Date forDate)
+  // {
+  // return publish(mdVertex, object.toGeoObject(forDate));
+  // }
 
   @Transaction
   protected VertexObject publish(LabeledPropertyGraphSynchronization synchronization, MdVertex mdVertex, GeoObject geoObject)
@@ -47,24 +61,26 @@ public abstract class AbstractGraphVersionPublisher
       {
         if (attribute instanceof AttributeTermType)
         {
-//          Iterator<String> it = (Iterator<String>) geoObject.getValue(attributeName);
-//
-//          if (it.hasNext())
-//          {
-//            String code = it.next();
-//
-//            Term root = ( (AttributeTermType) attribute ).getRootTerm();
-//            String parent = TermConverter.buildClassifierKeyFromTermCode(root.getCode());
-//
-//            String classifierKey = Classifier.buildKey(parent, code);
-//            Classifier classifier = Classifier.getByKey(classifierKey);
-//
-//            node.setValue(attributeName, classifier.getOid());
-//          }
-//          else
-//          {
-//            node.setValue(attributeName, (String) null);
-//          }
+          // Iterator<String> it = (Iterator<String>)
+          // geoObject.getValue(attributeName);
+          //
+          // if (it.hasNext())
+          // {
+          // String code = it.next();
+          //
+          // Term root = ( (AttributeTermType) attribute ).getRootTerm();
+          // String parent =
+          // TermConverter.buildClassifierKeyFromTermCode(root.getCode());
+          //
+          // String classifierKey = Classifier.buildKey(parent, code);
+          // Classifier classifier = Classifier.getByKey(classifierKey);
+          //
+          // node.setValue(attributeName, classifier.getOid());
+          // }
+          // else
+          // {
+          // node.setValue(attributeName, (String) null);
+          // }
         }
         else if (attribute instanceof AttributeClassificationType)
         {
@@ -99,8 +115,8 @@ public abstract class AbstractGraphVersionPublisher
     });
 
     node.apply();
-    
-    LabeledPropertyGraphServiceIF.getInstance().postSynchronization(synchronization, node);   
+
+    LabeledPropertyGraphServiceIF.getInstance().postSynchronization(synchronization, node, this.cache);
 
     return node;
   }

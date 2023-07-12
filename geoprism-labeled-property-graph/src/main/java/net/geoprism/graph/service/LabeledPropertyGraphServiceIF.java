@@ -18,6 +18,8 @@
  */
 package net.geoprism.graph.service;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.runwaysdk.ComponentIF;
@@ -47,9 +49,9 @@ public interface LabeledPropertyGraphServiceIF
 
   public void createPublishJob(LabeledPropertyGraphTypeVersion version);
 
-  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization);
+  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, Map<String, Object> cache);
 
-  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, VertexObject node);
+  public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, VertexObject node, Map<String, Object> cache);
 
   public void postTruncate(LabeledPropertyGraphSynchronization synchronization);
 }
