@@ -23,7 +23,7 @@
 
   <groupId>net.geoprism</groupId>
   <artifactId>geoprism</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.6-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Geoprism</name>
@@ -46,7 +46,7 @@
   </modules>
 
   <properties>
-    <runway.version>3.8.5-SNAPSHOT</runway.version>
+    <runway.version>3.8.4</runway.version>
     <geotools.version>24.6</geotools.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
