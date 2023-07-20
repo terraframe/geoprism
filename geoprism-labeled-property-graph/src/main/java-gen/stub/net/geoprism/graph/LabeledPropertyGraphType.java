@@ -42,6 +42,8 @@ import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
+import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
+import net.geoprism.graph.service.LabeledPropertyGraphTypeServiceIF;
 import net.geoprism.graph.service.LocaleSerializer;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.service.ClassificationObjectServiceIF;
@@ -89,6 +91,8 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
   public void apply()
   {
     ClassificationObjectServiceIF.getInstance().validateName(this.getCode());
+    
+    LabeledPropertyGraphServiceIF.getInstance().preApply(this);
 
     super.apply();
   }

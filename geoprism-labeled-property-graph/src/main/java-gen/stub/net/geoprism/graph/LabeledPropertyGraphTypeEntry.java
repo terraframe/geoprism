@@ -153,8 +153,7 @@ public class LabeledPropertyGraphTypeEntry extends LabeledPropertyGraphTypeEntry
     // Refresh the users session
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
     
-    LabeledPropertyGraphServiceIF.getInstance().publish(version);
-
+    LabeledPropertyGraphServiceIF.getInstance().createPublishJob(version);
 
     return version.toJSON().toString();
   }

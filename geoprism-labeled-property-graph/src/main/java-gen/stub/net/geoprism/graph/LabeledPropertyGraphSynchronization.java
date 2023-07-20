@@ -8,6 +8,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.business.rbac.Authenticate;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.AttributeLocal;
@@ -216,6 +217,11 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
     object.addProperty(LabeledPropertyGraphSynchronization.VERSIONNUMBER, this.getVersionNumber());
 
     return object;
+  }
+
+  public VertexObject getObject(String uid)
+  {
+    return this.getVersion().getObject(uid);
   }
 
   public static LabeledPropertyGraphSynchronization fromJSON(JsonObject object)

@@ -264,6 +264,16 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
     this.getRootType().truncate();
 
   }
+  
+  public VertexObject getObject(String uid)
+  {
+    GeoObjectTypeSnapshot rootType = this.getRootType();
+    
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>("SELECT FROM " + rootType.getGraphMdVertex().getDbClassName() + " WHERE uuid = :uuid");
+    query.setParameter("uuid", uid);
+
+    return query.getSingleResult();
+  }
 
   public JsonObject toJSON()
   {
@@ -451,5 +461,4 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
       return it.getAll();
     }
   }
-
 }

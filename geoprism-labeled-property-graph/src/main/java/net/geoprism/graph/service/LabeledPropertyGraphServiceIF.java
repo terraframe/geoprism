@@ -26,6 +26,7 @@ import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.graph.VertexObject;
 
 import net.geoprism.graph.LabeledPropertyGraphSynchronization;
+import net.geoprism.graph.LabeledPropertyGraphType;
 import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.spring.ApplicationContextHolder;
 
@@ -37,6 +38,8 @@ public interface LabeledPropertyGraphServiceIF
     return ApplicationContextHolder.getContext().getBean(LabeledPropertyGraphServiceIF.class);
   }
 
+  public void preApply(LabeledPropertyGraphType type);
+  
   public String publish(LabeledPropertyGraphTypeVersion version);
 
   public void preDelete(LabeledPropertyGraphTypeVersion version);
@@ -54,4 +57,5 @@ public interface LabeledPropertyGraphServiceIF
   public void postSynchronization(LabeledPropertyGraphSynchronization synchronization, VertexObject node, Map<String, Object> cache);
 
   public void postTruncate(LabeledPropertyGraphSynchronization synchronization);
+
 }
