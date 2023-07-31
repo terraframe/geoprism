@@ -41,14 +41,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.runwaysdk.ClientSession;
+import com.runwaysdk.RunwayException;
+import com.runwaysdk.RunwayExceptionDTO;
 import com.runwaysdk.constants.ClientConstants;
 import com.runwaysdk.constants.ClientRequestIF;
 import com.runwaysdk.constants.CommonProperties;
 import com.runwaysdk.request.ServletRequestIF;
+import com.runwaysdk.session.InvalidLoginException;
+import com.runwaysdk.session.InvalidLoginExceptionDTO;
 import com.runwaysdk.web.WebClientSession;
 
 import net.geoprism.rbac.RoleServiceIF;
@@ -97,10 +99,15 @@ public class SessionController extends RunwaySpringController
   
   @Autowired
   protected RoleServiceIF roleService;
+  
+  @Autowired
+  protected LoginBruteForceGuardService loginGuard;
 
   @PostMapping(API_PATH + "/login")
   public ResponseEntity<String> login(@Valid @RequestBody LoginBody body) throws UnsupportedEncodingException
   {
+    loginGuard.guardLogin();
+    
     String username = body.username;
     String password = body.password;
     
@@ -142,9 +149,39 @@ public class SessionController extends RunwaySpringController
     catch (RuntimeException e)
     {
       this.service.onLoginFailure(username);
+      
+      if (IsInvalidLoginException(e))
+      {
+        final String xfHeader = this.getRequest().getHeader("X-Forwarded-For");
+        if (xfHeader == null || xfHeader.isEmpty() || !xfHeader.contains(this.getRequest().getRemoteAddr())) {
+          loginGuard.loginFailed(this.getRequest().getRemoteAddr());
+        } else {
+          loginGuard.loginFailed(xfHeader.split(",")[0]);
+        }
+      }
 
       throw e;
     }
+  }
+  
+  private boolean IsInvalidLoginException(RuntimeException e)
+  {
+    if (e instanceof InvalidLoginException || e instanceof InvalidLoginExceptionDTO)
+    {
+      return true;
+    }
+    
+    if (e instanceof RunwayExceptionDTO)
+    {
+      return ( (RunwayExceptionDTO) e ).getType().equals(InvalidLoginExceptionDTO.CLASS);
+    }
+    
+    if (e instanceof RunwayException)
+    {
+      return ( (RunwayException) e ).getClass().getName().equals(InvalidLoginExceptionDTO.CLASS);
+    }
+    
+    return false;
   }
 
   @GetMapping(API_PATH + "/logout")
