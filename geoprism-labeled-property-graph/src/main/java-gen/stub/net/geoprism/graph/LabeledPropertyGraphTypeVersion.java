@@ -383,7 +383,7 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
     version.setVersionNumber(versionNumber);
     version.apply();
 
-    LabeledPropertyGraphServiceIF.getInstance().postCreate(version);
+    LabeledPropertyGraphServiceIF.getInstance().postCreate(version, true);
 
     return version;
   }
@@ -447,7 +447,7 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
       HierarchyTypeSnapshot.create(version, element.getAsJsonObject(), root);
     }
     
-    LabeledPropertyGraphServiceIF.getInstance().postCreate(version);
+    LabeledPropertyGraphServiceIF.getInstance().postCreate(version, false);
 
     return version;
   }

@@ -46,7 +46,7 @@ public interface LabeledPropertyGraphServiceIF
 
   public void postDelete(LabeledPropertyGraphTypeVersion version);
 
-  public void postCreate(LabeledPropertyGraphTypeVersion version);
+  public void postCreate(LabeledPropertyGraphTypeVersion version, boolean createTypes);
 
   public void assignPermissions(ComponentIF component);
 
