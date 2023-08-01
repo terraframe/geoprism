@@ -35,13 +35,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.runwaysdk.ProblemExceptionDTO;
+import com.runwaysdk.business.ExceptionDTO;
 import com.runwaysdk.business.ProblemDTOIF;
+import com.runwaysdk.business.SmartExceptionDTO;
+import com.runwaysdk.constants.JSON;
+import com.runwaysdk.constants.RunwayExceptionDTOInfo;
+import com.runwaysdk.localization.LocalizationFacade;
 import com.runwaysdk.transport.conversion.json.ProblemExceptionDTOToJSON;
 import com.runwaysdk.transport.conversion.json.RunwayExceptionDTOToJSON;
-import com.runwaysdk.business.ExceptionDTO;
-import com.runwaysdk.business.SmartExceptionDTO;
 
 import net.geoprism.security.UnauthorizedAccessException;
+import net.geoprism.session.LoginBlockedException;
+import net.geoprism.session.LoginBlockedExceptionDTO;
 
 @ControllerAdvice
 public class JsonExceptionHandler
@@ -121,6 +126,20 @@ public class JsonExceptionHandler
       {
         httpStatus = HttpStatus.UNAUTHORIZED;
       }
+    }
+    
+    // TOOD : I have no idea why the aspects aren't weaving which would convert this into a DTO. For now it's just going to be hardcoded.
+    if (t instanceof LoginBlockedException)
+    {
+      String localizedMessage = "You have reached the max login attempts. Please try again tomorrow.";
+      String devMessage = "";
+      
+      JSONObject json = new JSONObject();
+      json.put(JSON.DTO_TYPE.getLabel(), RunwayExceptionDTOInfo.CLASS);
+      json.put(JSON.EXCEPTION_DTO_WRAPPED_EXCEPTION.getLabel(), LoginBlockedExceptionDTO.CLASS);
+      json.put(JSON.EXCEPTION_LOCALIZED_MESSAGE.getLabel(), localizedMessage != null ? localizedMessage : JSONObject.NULL);
+      json.put(JSON.EXCEPTION_DEVELOPER_MESSAGE.getLabel(), devMessage != null ? devMessage : JSONObject.NULL);
+      return new ResponseEntity<String>(json.toString(), httpStatus);
     }
 
     RunwayExceptionDTOToJSON converter = new RunwayExceptionDTOToJSON(t.getClass().getName(), t.getMessage(), t.getLocalizedMessage());

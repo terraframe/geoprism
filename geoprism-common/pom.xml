@@ -24,7 +24,7 @@
   <parent>
     <groupId>net.geoprism</groupId>
     <artifactId>geoprism</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.8-SNAPSHOT</version>
   </parent>
   <artifactId>geoprism-common</artifactId>
   <packaging>jar</packaging>
@@ -59,6 +59,11 @@
       <artifactId>spring-webmvc</artifactId>
       <version>5.3.24</version>
     </dependency>
+    <dependency>
+	  <groupId>com.google.guava</groupId>
+	  <artifactId>guava</artifactId>
+	  <version>31.0.1-jre</version>
+	</dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>

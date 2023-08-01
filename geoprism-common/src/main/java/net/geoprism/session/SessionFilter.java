@@ -53,6 +53,9 @@ public class SessionFilter implements Filter
   @Autowired
   protected SessionServiceIF sessionService;
   
+  @Autowired
+  protected LoginBruteForceGuardService loginGuard;
+  
   public void init(FilterConfig filterConfig) throws ServletException
   {
   }
@@ -162,6 +165,8 @@ public class SessionFilter implements Filter
     }
     else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").length() > 0 && request.getHeader("Authorization").toLowerCase().startsWith("basic "))
     {
+      loginGuard.guardLogin();
+      
       try
       {
         // The credentials are provided in the headers of the request (known as
@@ -199,6 +204,13 @@ public class SessionFilter implements Filter
       }
       catch (InvalidLoginExceptionDTO e)
       {
+        final String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null || xfHeader.isEmpty() || !xfHeader.contains(request.getRemoteAddr())) {
+          loginGuard.loginFailed(request.getRemoteAddr());
+        } else {
+          loginGuard.loginFailed(xfHeader.split(",")[0]);
+        }
+        
         response.setHeader("WWW-Authenticate", "BASIC"); 
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);        
       }
