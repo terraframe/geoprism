@@ -199,6 +199,22 @@ public class LabeledPropertyGraphTypeController extends RunwaySpringController
     return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
   }
   
+  @GetMapping(API_PATH + "/geo-objects")                    
+  public ResponseEntity<String> geoObjects(@NotEmpty @RequestParam String oid, @NotEmpty @RequestParam Long skip, @NotEmpty @RequestParam Integer blockSize)
+  {
+    JsonArray response = this.service.getGeoObjects(this.getSessionId(), oid, skip, blockSize);
+    
+    return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
+  }
+  
+  @GetMapping(API_PATH + "/edges")                    
+  public ResponseEntity<String> edges(@NotEmpty @RequestParam String oid, @NotEmpty @RequestParam Long skip, @NotEmpty @RequestParam Integer blockSize)
+  {
+    JsonArray response = this.service.getEdges(this.getSessionId(), oid, skip, blockSize);
+    
+    return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
+  }
+  
   @PostMapping(API_PATH + "/remove-version")            
   public ResponseEntity<Void> removeVersion(@Valid @RequestBody OidBody body)
   {

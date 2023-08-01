@@ -63,11 +63,9 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
   @Authenticate
   public void execute()
   {
-    JsonObject data = null;
-
     try
     {
-      data = this.doIt();
+      this.createTables();
     }
     finally
     {
@@ -81,22 +79,51 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
       }
     }
 
-    if (data != null)
+    LabeledPropertyGraphTypeVersion version = this.getVersion();
+    version.truncate();
+
+    LabeledPropertyGraphServiceIF.getInstance().postTruncate(this);
+
+    JsonGraphVersionPublisher publisher = new JsonGraphVersionPublisher(this, version);
+
+    try (RegistryConnectorIF connector = RegistryConnectorFactory.getConnector(this.getUrl()))
     {
-      LabeledPropertyGraphTypeVersion version = this.getVersion();
-      version.truncate();
+      RegistryBridge bridge = new RegistryBridge(connector);
 
-      LabeledPropertyGraphServiceIF.getInstance().postTruncate(this);
+      JsonArray results = new JsonArray();
 
-      JsonGraphVersionPublisher publisher = new JsonGraphVersionPublisher(this, version);
-      publisher.publish(data);
+      // Should this number be configurable to increase speed on larger systems
+      final int BLOCK_SIZE = 50;
+      long skip = 0;
 
-      LabeledPropertyGraphServiceIF.getInstance().postSynchronization(this, publisher.getCache());
+      // Get all of the geoObjects
+      do
+      {
+        results = bridge.getGeoObjects(this.getRemoteVersion(), skip, BLOCK_SIZE).getJsonArray();
+
+        publisher.publishGeoObjects(results);
+
+        skip += BLOCK_SIZE;
+      } while (results.size() > 0);
+
+      // Get all of the edges
+      skip = 0;
+      do
+      {
+        results = bridge.getEdges(this.getRemoteVersion(), skip, BLOCK_SIZE).getJsonArray();
+
+        publisher.publishEdges(results);
+
+        skip += BLOCK_SIZE;
+      } while (results.size() > 0);
+
     }
+
+    LabeledPropertyGraphServiceIF.getInstance().postSynchronization(this, publisher.getCache());
   }
 
   @Transaction
-  private JsonObject doIt()
+  private void createTables()
   {
     try (RegistryConnectorIF connector = RegistryConnectorFactory.getConnector(this.getUrl()))
     {
@@ -110,8 +137,6 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
 
       JsonObject versionObject = bridge.getVersion(this.getRemoteVersion()).getJsonObject();
       versionObject.remove(OID);
-
-      JsonObject data = bridge.getData(this.getRemoteVersion()).getJsonObject();
 
       this.appLock();
 
@@ -138,8 +163,6 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
       }
 
       this.apply();
-
-      return data;
     }
   }
 

@@ -402,7 +402,7 @@ public class LabeledPropertyGraphTypeVersion extends LabeledPropertyGraphTypeVer
       String code = classificationType.get(DefaultAttribute.CODE.getName()).getAsString();
       
       // If a type doesn't exist create it      
-      if(ClassificationType.getByCode(code) == null) {
+      if(ClassificationType.getByCode(code, false) == null) {
         classificationType.remove(OID);
         
         ClassificationType type = ClassificationType.apply(classificationType);

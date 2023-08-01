@@ -18,17 +18,11 @@
  */
 package net.geoprism.graph;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.dataaccess.Attribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
-import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
-import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
-import org.commongeoregistry.adapter.metadata.AttributeTermType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,26 +31,116 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.dataaccess.MdEdgeDAOIF;
+import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
+import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdVertex;
-
-import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.model.Classification;
-import net.geoprism.registry.model.ClassificationType;
 
 public class LabeledPropertyGraphJsonExporter
 {
+  private static class TypeSnapshotCacheObject
+  {
+    private GeoObjectType         type;
+
+    public TypeSnapshotCacheObject(GeoObjectTypeSnapshot snapshot)
+    {
+      this.type = snapshot.toGeoObjectType();
+    }
+
+  }
+
   final private Logger                          logger = LoggerFactory.getLogger(LabeledPropertyGraphJsonExporter.class);
 
   final private LabeledPropertyGraphTypeVersion version;
 
+  private Map<String, TypeSnapshotCacheObject>  cache;
+
   public LabeledPropertyGraphJsonExporter(LabeledPropertyGraphTypeVersion version)
   {
     this.version = version;
+    this.cache = new HashMap<String, TypeSnapshotCacheObject>();
+  }
+
+  public JsonArray getGeoObjects(Long skip, Integer blockSize)
+  {
+    JsonArray geoObjects = new JsonArray();
+
+    MdVertex mdVertex = this.version.getRootType().getGraphMdVertex();
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDbClassName());
+    statement.append(" ORDER BY oid");
+    statement.append(" SKIP " + skip);
+    statement.append(" LIMIT " + blockSize);
+
+    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
+    List<VertexObject> objects = query.getResults();
+
+    for (VertexObject object : objects)
+    {
+      // Get the type of the geo object
+      GeoObjectType type = getType(object.getMdClass());
+      GeoObject geoObject = GeoObjectTypeSnapshot.toGeoObject(object, type);
+
+      geoObjects.add(geoObject.toJSON());
+
+    }
+
+    return geoObjects;
+  }
+
+  private GeoObjectType getType(MdClassDAOIF mdClass)
+  {
+    if (!cache.containsKey(mdClass.getOid()))
+    {
+      GeoObjectTypeSnapshot snapshot = GeoObjectTypeSnapshot.get(version, (MdVertexDAOIF) mdClass);
+
+      cache.put(mdClass.getOid(), new TypeSnapshotCacheObject(snapshot));
+    }
+
+    GeoObjectType type = cache.get(mdClass.getOid()).type;
+    return type;
+  }
+
+  public JsonArray getEdges(Long skip, Integer blockSize)
+  {
+    JsonArray edges = new JsonArray();
+
+    HierarchyTypeSnapshot hierarchy = this.version.getHierarchies().get(0);
+    MdEdge mdEdge = hierarchy.getGraphMdEdge();
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT out.uuid AS parentUid, out.@class AS parentClass, in.uuid AS childUid, in.@class AS childClass FROM " + mdEdge.getDbClassName());
+    statement.append(" ORDER BY oid");
+    statement.append(" SKIP " + skip);
+    statement.append(" LIMIT " + blockSize);
+
+    GraphQuery<Map<String, Object>> query = new GraphQuery<Map<String, Object>>(statement.toString());
+    List<Map<String, Object>> objects = query.getResults();
+
+    for (Map<String, Object> object : objects)
+    {
+      String parentUid = (String) object.get("parentUid");
+      String parentClass = (String) object.get("parentClass");
+      String childUid = (String) object.get("childUid");
+      String childClass = (String) object.get("childClass");
+
+      GeoObjectType parentType = this.getType(MdVertexDAO.getMdGraphClassByTableName(parentClass));
+      GeoObjectType childType = this.getType(MdVertexDAO.getMdGraphClassByTableName(childClass));
+
+      JsonObject jsonEdge = new JsonObject();
+      jsonEdge.addProperty("startNode", parentUid);
+      jsonEdge.addProperty("startType", parentType.getCode());
+      jsonEdge.addProperty("endNode", childUid);
+      jsonEdge.addProperty("endType", childType.getCode());
+      jsonEdge.addProperty("type", hierarchy.getCode());
+
+      edges.add(jsonEdge);
+
+    }
+
+    return edges;
   }
 
   public JsonObject export()
@@ -64,165 +148,36 @@ public class LabeledPropertyGraphJsonExporter
     JsonArray geoObjects = new JsonArray();
     JsonArray edges = new JsonArray();
 
-    List<GeoObjectTypeSnapshot> types = version.getTypes().stream().filter(type -> !type.getIsAbstract()).collect(Collectors.toList());
-    List<HierarchyTypeSnapshot> hierarchies = version.getHierarchies();
+    JsonArray results = new JsonArray();
+    final int BLOCK_SIZE = 2000;
+    long skip = 0;
 
-    for (GeoObjectTypeSnapshot type : types)
+    // Get all of the geoObjects
+    do
     {
+      results = this.getGeoObjects(skip, BLOCK_SIZE);
 
-      final int BLOCK_SIZE = 2000;
+      geoObjects.addAll(results);
 
-      VertexObject prev = null;
+      skip += BLOCK_SIZE;
+    } while (results.size() > 0);
 
-      MdVertex mdVertex = type.getGraphMdVertex();
+    // Get all of the edges
+    skip = 0;
+    do
+    {
+      results = this.getEdges(skip, BLOCK_SIZE);
 
-      do
-      {
-        StringBuilder statement = new StringBuilder();
-        statement.append("SELECT FROM " + mdVertex.getDbClassName());
+      edges.addAll(results);
 
-        if (prev != null)
-        {
-          statement.append(" WHERE @rid > :rid");
-        }
-
-        statement.append(" LIMIT " + BLOCK_SIZE);
-
-        GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-
-        if (prev != null)
-        {
-          query.setParameter("rid", prev.getRID());
-        }
-
-        List<VertexObject> objects = query.getResults();
-
-        prev = null;
-
-        for (VertexObject object : objects)
-        {
-          GeoObject geoObject = this.serialize(object, type);
-
-          geoObjects.add(geoObject.toJSON());
-
-          for (HierarchyTypeSnapshot hierarchy : hierarchies)
-          {
-            MdEdgeDAOIF mdEdge = MdEdgeDAO.get(hierarchy.getGraphMdEdgeOid());
-
-            object.getChildren(mdEdge, VertexObject.class).forEach(child -> {
-
-              MdVertexDAOIF mdClass = (MdVertexDAOIF) child.getMdClass();
-
-              GeoObjectTypeSnapshot childType = types.stream().filter(t -> {
-                return t.getGraphMdVertexOid().equals(mdClass.getOid());
-              }).findAny().orElseThrow(() -> {
-                throw new ProgrammingErrorException("Unable to find end type");
-              });
-
-              JsonObject jsonEdge = new JsonObject();
-              jsonEdge.addProperty("startNode", geoObject.getUid());
-              jsonEdge.addProperty("startType", geoObject.getType().getCode());
-              jsonEdge.addProperty("endNode", (String) child.getObjectValue(RegistryConstants.UUID));
-              jsonEdge.addProperty("endType", childType.getCode());
-
-              jsonEdge.addProperty("type", hierarchy.getCode());
-
-              edges.add(jsonEdge);
-            });
-
-          }
-
-          Thread.yield();
-        }
-      } while (prev != null);
-    }
+      skip += BLOCK_SIZE;
+    } while (results.size() > 0);
 
     JsonObject graph = new JsonObject();
     graph.add("geoObjects", geoObjects);
     graph.add("edges", edges);
 
     return graph;
-  }
-
-  public static GeoObject serialize(VertexObject vertex, GeoObjectTypeSnapshot snapshot)
-  {
-    return serialize(vertex, snapshot.toGeoObjectType());
-  }
-
-  public static GeoObject serialize(VertexObject vertex, GeoObjectType type)
-  {
-    Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(type);
-
-    GeoObject geoObj = new GeoObject(type, type.getGeometryType(), attributeMap);
-
-    Map<String, AttributeType> attributes = type.getAttributeMap();
-    attributes.forEach((attributeName, attribute) -> {
-      if (attributeName.equals(DefaultAttribute.TYPE.getName()))
-      {
-        // Ignore
-      }
-      else if (vertex.hasAttribute(attributeName))
-      {
-        Object value = vertex.getObjectValue(attributeName);
-
-        if (value != null)
-        {
-          if (attribute instanceof AttributeTermType)
-          {
-            // Classifier classifier = Classifier.get((String) value);
-            //
-            // try
-            // {
-            // geoObj.setValue(attributeName, classifier.getClassifierId());
-            // }
-            // catch (UnknownTermException e)
-            // {
-            // TermValueException ex = new TermValueException();
-            // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-            // ex.setCode(e.getCode());
-            //
-            // throw e;
-            // }
-          }
-          else if (attribute instanceof AttributeClassificationType)
-          {
-            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
-            ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
-            Classification classification = Classification.getByOid(classificationType, (String) value);
-
-            try
-            {
-              geoObj.setValue(attributeName, classification.toTerm());
-            }
-            catch (UnknownTermException e)
-            {
-              // TermValueException ex = new TermValueException();
-              // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
-              // ex.setCode(e.getCode());
-              //
-              // throw e;
-              
-              // TODO Change exception type
-
-              throw new RuntimeException("Unable to find a classification with the code [" + e.getCode() + "] and attribute [" + e.getAttribute().getLabel().getValue() + "]");
-            }
-          }
-          else
-          {
-            geoObj.setValue(attributeName, value);
-          }
-        }
-      }
-    });
-
-    geoObj.setUid(vertex.getObjectValue(RegistryConstants.UUID));
-    geoObj.setCode(vertex.getObjectValue(DefaultAttribute.CODE.getName()));
-    geoObj.setGeometry(vertex.getObjectValue(DefaultAttribute.GEOMETRY.getName()));
-    geoObj.setDisplayLabel(LocalizedValueConverter.convert(vertex.getEmbeddedComponent(DefaultAttribute.DISPLAY_LABEL.getName())));
-    geoObj.setExists(true);
-    geoObj.setInvalid(false);
-
-    return geoObj;
   }
 
 }

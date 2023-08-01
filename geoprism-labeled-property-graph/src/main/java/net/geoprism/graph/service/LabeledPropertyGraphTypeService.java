@@ -171,4 +171,24 @@ public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphType
 
     return exporter.export();
   }
+
+  @Override
+  public JsonArray getGeoObjects(String sessionId, String oid, Long skip, Integer blockSize)
+  {
+    LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.get(oid);
+
+    LabeledPropertyGraphJsonExporter exporter = new LabeledPropertyGraphJsonExporter(version);
+
+    return exporter.getGeoObjects(skip, blockSize);
+  }
+
+  @Override
+  public JsonArray getEdges(String sessionId, String oid, Long skip, Integer blockSize)
+  {
+    LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.get(oid);
+
+    LabeledPropertyGraphJsonExporter exporter = new LabeledPropertyGraphJsonExporter(version);
+
+    return exporter.getEdges(skip, blockSize);
+  }
 }

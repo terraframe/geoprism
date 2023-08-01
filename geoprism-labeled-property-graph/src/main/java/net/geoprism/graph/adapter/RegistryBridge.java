@@ -93,6 +93,16 @@ public class RegistryBridge
     return this.apiGet(API_PATH + "/data", new BasicNameValuePair("oid", oid), new BasicNameValuePair("includeTableDefinitions", "true"));
   }
 
+  public RegistryResponse getGeoObjects(String oid, Long skip, Integer blockSize) throws HTTPException, BadServerUriException
+  {
+    return this.apiGet(API_PATH + "/geo-objects", new BasicNameValuePair("oid", oid), new BasicNameValuePair("skip", skip.toString()), new BasicNameValuePair("blockSize", blockSize.toString()));
+  }
+  
+  public RegistryResponse getEdges(String oid, Long skip, Integer blockSize) throws HTTPException, BadServerUriException
+  {
+    return this.apiGet(API_PATH + "/edges", new BasicNameValuePair("oid", oid), new BasicNameValuePair("skip", skip.toString()), new BasicNameValuePair("blockSize", blockSize.toString()));
+  }
+  
   public String getRemoteServerUrl()
   {
     return this.connector.getServerUrl();

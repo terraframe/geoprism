@@ -3,12 +3,16 @@ package net.geoprism.graph;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
+import org.commongeoregistry.adapter.dataaccess.Attribute;
+import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.dataaccess.UnknownTermException;
 import org.commongeoregistry.adapter.metadata.AttributeBooleanType;
 import org.commongeoregistry.adapter.metadata.AttributeCharacterType;
 import org.commongeoregistry.adapter.metadata.AttributeClassificationType;
@@ -23,6 +27,7 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.BusinessFacade;
+import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
@@ -67,6 +72,7 @@ import com.runwaysdk.system.metadata.MdGraphClassQuery;
 import com.runwaysdk.system.metadata.MdVertex;
 
 import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
+import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.AttributeTypeConverter;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.model.Classification;
@@ -437,7 +443,7 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
     query.WHERE(query.getVersion().EQ(version));
     query.AND(query.getGraphMdVertex().EQ(mdVertex.getOid()));
-    
+
     try (OIterator<? extends GeoObjectTypeSnapshot> it = query.getIterator())
     {
       if (it.hasNext())
@@ -445,10 +451,10 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
         return it.next();
       }
     }
-    
+
     return null;
   }
-  
+
   public static GeoObjectTypeSnapshot getRoot(LabeledPropertyGraphTypeVersion version)
   {
     GeoObjectTypeSnapshotQuery query = new GeoObjectTypeSnapshotQuery(new QueryFactory());
@@ -598,6 +604,87 @@ public class GeoObjectTypeSnapshot extends GeoObjectTypeSnapshotBase
       // attributeTermType.setRootTerm(term);
     }
     return mdAttribute;
+  }
+
+  public GeoObject toGeoObject(VertexObject vertex)
+  {
+    return toGeoObject(vertex, this.toGeoObjectType());
+  }
+
+  public static GeoObject toGeoObject(VertexObject vertex, GeoObjectType type)
+  {
+    Map<String, Attribute> attributeMap = GeoObject.buildAttributeMap(type);
+
+    GeoObject geoObj = new GeoObject(type, type.getGeometryType(), attributeMap);
+
+    Map<String, AttributeType> attributes = type.getAttributeMap();
+    attributes.forEach((attributeName, attribute) -> {
+      if (attributeName.equals(DefaultAttribute.TYPE.getName()))
+      {
+        // Ignore
+      }
+      else if (vertex.hasAttribute(attributeName))
+      {
+        Object value = vertex.getObjectValue(attributeName);
+
+        if (value != null)
+        {
+          if (attribute instanceof AttributeTermType)
+          {
+            // Classifier classifier = Classifier.get((String) value);
+            //
+            // try
+            // {
+            // geoObj.setValue(attributeName, classifier.getClassifierId());
+            // }
+            // catch (UnknownTermException e)
+            // {
+            // TermValueException ex = new TermValueException();
+            // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
+            // ex.setCode(e.getCode());
+            //
+            // throw e;
+            // }
+          }
+          else if (attribute instanceof AttributeClassificationType)
+          {
+            String classificationTypeCode = ( (AttributeClassificationType) attribute ).getClassificationType();
+            ClassificationType classificationType = ClassificationType.getByCode(classificationTypeCode);
+            Classification classification = Classification.getByOid(classificationType, (String) value);
+
+            try
+            {
+              geoObj.setValue(attributeName, classification.toTerm());
+            }
+            catch (UnknownTermException e)
+            {
+              // TermValueException ex = new TermValueException();
+              // ex.setAttributeLabel(e.getAttribute().getLabel().getValue());
+              // ex.setCode(e.getCode());
+              //
+              // throw e;
+
+              // TODO Change exception type
+
+              throw new RuntimeException("Unable to find a classification with the code [" + e.getCode() + "] and attribute [" + e.getAttribute().getLabel().getValue() + "]");
+            }
+          }
+          else
+          {
+            geoObj.setValue(attributeName, value);
+          }
+        }
+      }
+    });
+
+    geoObj.setUid(vertex.getObjectValue(RegistryConstants.UUID));
+    geoObj.setCode(vertex.getObjectValue(DefaultAttribute.CODE.getName()));
+    geoObj.setGeometry(vertex.getObjectValue(DefaultAttribute.GEOMETRY.getName()));
+    geoObj.setDisplayLabel(LocalizedValueConverter.convert(vertex.getEmbeddedComponent(DefaultAttribute.DISPLAY_LABEL.getName())));
+    geoObj.setExists(true);
+    geoObj.setInvalid(false);
+
+    return geoObj;
   }
 
 }

@@ -22,11 +22,8 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.google.gson.JsonObject;
-import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.graph.VertexObject;
-import com.runwaysdk.business.rbac.Operation;
-import com.runwaysdk.business.rbac.RoleDAO;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
 import com.runwaysdk.constants.graph.MdClassificationInfo;
 import com.runwaysdk.dataaccess.MdClassificationDAOIF;
@@ -37,9 +34,6 @@ import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdClassificationDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.system.Roles;
-import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
-import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClassification;
 
 import net.geoprism.registry.RegistryConstants;
@@ -230,6 +224,11 @@ public class ClassificationType implements JsonSerializable
 
   public static ClassificationType getByCode(String code)
   {
+    return ClassificationType.getByCode(code, true);
+  }
+
+  public static ClassificationType getByCode(String code, boolean throwException)
+  {
     String classificationType = RegistryConstants.CLASSIFICATION_PACKAGE + "." + code;
 
     try
@@ -240,6 +239,11 @@ public class ClassificationType implements JsonSerializable
     }
     catch (DataNotFoundException e)
     {
+      if (throwException)
+      {
+        throw e;
+      }
+
       return null;
     }
   }

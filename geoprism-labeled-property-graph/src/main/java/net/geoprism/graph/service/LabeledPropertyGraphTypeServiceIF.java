@@ -29,12 +29,8 @@ public interface LabeledPropertyGraphTypeServiceIF
 
   public JsonObject getData(String sessionId, String oid);
 
-  // public JsonObject getPublishJobs(String sessionId, String oid, int
-  // pageSize, int pageNumber, String sortAttr, boolean isAscending);
-  //
-  // public JsonObject getPublishJob(String sessionId, String historyOid);
-  //
-  //  
-  //  public JsonObject publishVersion(String sessionId, String oid);
+  public JsonArray getGeoObjects(String sessionId, String oid, Long skip, Integer blockSize);
+
+  public JsonArray getEdges(String sessionId, String oid, Long skip, Integer blockSize);
 
 }

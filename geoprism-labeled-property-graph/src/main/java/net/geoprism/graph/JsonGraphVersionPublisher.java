@@ -49,46 +49,23 @@ public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
 
   private LabeledPropertyGraphTypeVersion     version;
 
+  private Map<String, Object>                 cache = this.getCache();
+
   public JsonGraphVersionPublisher(LabeledPropertyGraphSynchronization synchronization, LabeledPropertyGraphTypeVersion version)
   {
     this.synchronization = synchronization;
     this.version = version;
+    this.cache = this.getCache();
   }
 
   public void publish(JsonObject graph)
   {
-    Map<String, Object> cache = this.getCache();
+    this.publishGeoObjects(graph.get("geoObjects").getAsJsonArray());
+    this.publishEdges(graph.get("edges").getAsJsonArray());
+  }
 
-    JsonArray array = graph.get("geoObjects").getAsJsonArray();
-
-    for (int i = 0; i < array.size(); i++)
-    {
-      JsonObject object = array.get(i).getAsJsonObject();
-
-      String typeCode = GeoObjectJsonAdapters.GeoObjectDeserializer.getTypeCode(object);
-
-      String key = "snapshot-" + typeCode;
-
-      if (!cache.containsKey(key))
-      {
-        GeoObjectTypeSnapshot snapshot = GeoObjectTypeSnapshot.get(version, typeCode);
-
-        cache.put(key, new TypeSnapshotCacheObject(snapshot));
-      }
-
-      TypeSnapshotCacheObject cachedObject = (TypeSnapshotCacheObject) cache.get(key);
-      GeoObjectTypeSnapshot snapshot = cachedObject.snapshot;
-
-      if (!snapshot.getIsAbstract())
-      {
-        GeoObject geoObject = GeoObject.fromJSON(cachedObject.type, object.toString());
-
-        this.publish(this.synchronization, cachedObject.mdVertex, geoObject);
-      }
-    }
-
-    JsonArray edges = graph.get("edges").getAsJsonArray();
-
+  public void publishEdges(JsonArray edges)
+  {
     for (int i = 0; i < edges.size(); i++)
     {
       JsonObject object = edges.get(i).getAsJsonObject();
@@ -113,6 +90,35 @@ public class JsonGraphVersionPublisher extends AbstractGraphVersionPublisher
       VertexObject child = version.getVertex(childUid, childType);
 
       parent.addChild(child, cachedObject.mdEdge.definesType()).apply();
+    }
+  }
+
+  public void publishGeoObjects(JsonArray array)
+  {
+    for (int i = 0; i < array.size(); i++)
+    {
+      JsonObject object = array.get(i).getAsJsonObject();
+
+      String typeCode = GeoObjectJsonAdapters.GeoObjectDeserializer.getTypeCode(object);
+
+      String key = "snapshot-" + typeCode;
+
+      if (!cache.containsKey(key))
+      {
+        GeoObjectTypeSnapshot snapshot = GeoObjectTypeSnapshot.get(version, typeCode);
+
+        cache.put(key, new TypeSnapshotCacheObject(snapshot));
+      }
+
+      TypeSnapshotCacheObject cachedObject = (TypeSnapshotCacheObject) cache.get(key);
+      GeoObjectTypeSnapshot snapshot = cachedObject.snapshot;
+
+      if (!snapshot.getIsAbstract())
+      {
+        GeoObject geoObject = GeoObject.fromJSON(cachedObject.type, object.toString());
+
+        this.publish(this.synchronization, cachedObject.mdVertex, geoObject);
+      }
     }
   }
 
