@@ -173,6 +173,7 @@ public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphType
   }
 
   @Override
+  @Request(RequestType.SESSION)
   public JsonArray getGeoObjects(String sessionId, String oid, Long skip, Integer blockSize)
   {
     LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.get(oid);
@@ -183,6 +184,7 @@ public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphType
   }
 
   @Override
+  @Request(RequestType.SESSION)  
   public JsonArray getEdges(String sessionId, String oid, Long skip, Integer blockSize)
   {
     LabeledPropertyGraphTypeVersion version = LabeledPropertyGraphTypeVersion.get(oid);

@@ -57,6 +57,7 @@ public class LabeledPropertyGraphSynchronization extends LabeledPropertyGraphSyn
   }
 
   @Override
+  @Transaction
   public void delete()
   {
     super.delete();
