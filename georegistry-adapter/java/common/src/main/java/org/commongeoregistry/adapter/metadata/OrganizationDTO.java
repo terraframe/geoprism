@@ -3,18 +3,19 @@
  *
  * This file is part of Common Geo Registry Adapter(tm).
  *
- * Common Geo Registry Adapter(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Common Geo Registry Adapter(tm) is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
- * Common Geo Registry Adapter(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Common Geo Registry Adapter(tm) is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Common Geo Registry Adapter(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Common Geo Registry Adapter(tm). If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.commongeoregistry.adapter.metadata;
 
@@ -30,54 +31,83 @@ public class OrganizationDTO implements Serializable
   /**
    * 
    */
-  private static final long serialVersionUID = 5581583993542023928L;
+  private static final long  serialVersionUID            = 5581583993542023928L;
 
-  public static final String         JSON_CODE                   = "code";
-  
-  public static final String         JSON_LOCALIZED_LABEL        = "label";
-  
-  public static final String         JSON_LOCALIZED_CONTACT_INFO = "contactInfo";
-  
+  public static final String JSON_CODE                   = "code";
+
+  public static final String JSON_LOCALIZED_LABEL        = "label";
+
+  public static final String JSON_LOCALIZED_CONTACT_INFO = "contactInfo";
+
+  public static final String JSON_PARENT_CODE            = "parentCode";
+
+  public static final String JSON_PARENT_LABEL           = "parentLabel";
+
   /**
-   * Unique but human readable identifier. For example, "MOH" for the Ministry of Health
+   * Unique but human readable identifier. For example, "MOH" for the Ministry
+   * of Health
    */
-  private String                     code;
+  private String             code;
 
   /**
    * The localized label of this organization, such as "Ministry of Health".
    */
-  private LocalizedValue             label;
+  private LocalizedValue     label;
 
   /**
    * The localized contact information of this organization.
    */
-  private LocalizedValue             contactInfo;
-  
+  private LocalizedValue     contactInfo;
+
   /**
-   * Precondition: code cannot be null
-   * Precondition: label cannot be null and its default value must contain a value.
-   * Precondition: contactInfo cannot be null.
+   * Code the parent organization if one exists
+   */
+  private String             parentCode;
+
+  /**
+   * The localized label of the parent organization if one exists
+   */
+  private LocalizedValue     parentLabel;
+
+  /**
+   * Precondition: code cannot be null Precondition: label cannot be null and
+   * its default value must contain a value. Precondition: contactInfo cannot be
+   * null.
    * 
-   * @param code organization code
-   * @param label localized label
-   * @param contactInfo localized contact information
+   * @param code
+   *          organization code
+   * @param label
+   *          localized label
+   * @param contactInfo
+   *          localized contact information
    */
   public OrganizationDTO(String code, LocalizedValue label, LocalizedValue contactInfo)
   {
     this.init(code, label, contactInfo);
   }
- 
+
+  public OrganizationDTO(String code, LocalizedValue label, LocalizedValue contactInfo, String parentCode, LocalizedValue parentLabel)
+  {
+    this.init(code, label, contactInfo);
+
+    this.parentCode = parentCode;
+    this.parentLabel = parentLabel;
+  }
+
   /**
    * 
-   * @param code organization code
-   * @param label localized label
-   * @param contactInfo localized contact information
+   * @param code
+   *          organization code
+   * @param label
+   *          localized label
+   * @param contactInfo
+   *          localized contact information
    */
   private void init(String code, LocalizedValue label, LocalizedValue contactInfo)
   {
-    this.code =             code;
-    this.label =            label;
-    this.contactInfo =      contactInfo;
+    this.code = code;
+    this.label = label;
+    this.contactInfo = contactInfo;
   }
 
   /**
@@ -89,7 +119,7 @@ public class OrganizationDTO implements Serializable
   {
     return this.code;
   }
-  
+
   /**
    * Returns the localized label of this {@link OrganizationDTO} used for the
    * presentation layer.
@@ -100,7 +130,7 @@ public class OrganizationDTO implements Serializable
   {
     return this.label;
   }
-  
+
   /**
    * Sets the localized display label of this {@link OrganizationDTO}.
    * 
@@ -112,23 +142,26 @@ public class OrganizationDTO implements Serializable
   {
     this.label = label;
   }
-  
+
   /**
    * Sets the localized display label of this {@link OrganizationDTO}.
    * 
-   * Precondition: key may not be null
-   * Precondition: key must represent a valid locale that has been defined on the back-end
+   * Precondition: key may not be null Precondition: key must represent a valid
+   * locale that has been defined on the back-end
    * 
-   * @param key string of the locale name.
-   * @param value value for the given locale.
+   * @param key
+   *          string of the locale name.
+   * @param value
+   *          value for the given locale.
    */
   public void setLabel(String key, String value)
   {
     this.label.setValue(key, value);
   }
-  
+
   /**
-   * Returns the localized label of the contact information of this {@link OrganizationDTO}.
+   * Returns the localized label of the contact information of this
+   * {@link OrganizationDTO}.
    * 
    * @return Localized label of this {@link OrganizationDTO}.
    */
@@ -137,7 +170,6 @@ public class OrganizationDTO implements Serializable
     return this.contactInfo;
   }
 
-  
   /**
    * Sets the localized contact info of this {@link OrganizationDTO}.
    * 
@@ -149,21 +181,43 @@ public class OrganizationDTO implements Serializable
   {
     this.contactInfo = contactInfo;
   }
-  
+
   /**
    * Sets the localized contact info of this {@link OrganizationDTO}.
    * 
-   * Precondition: key may not be null
-   * Precondition: key must represent a valid locale that has been defined on the back-end
+   * Precondition: key may not be null Precondition: key must represent a valid
+   * locale that has been defined on the back-end
    * 
-   * @param key string of the locale name.
-   * @param value value for the given locale.
+   * @param key
+   *          string of the locale name.
+   * @param value
+   *          value for the given locale.
    */
   public void setContactInfo(String key, String value)
   {
     this.contactInfo.setValue(key, value);
   }
+
+  public String getParentCode()
+  {
+    return parentCode;
+  }
+
+  public void setParentCode(String parentCode)
+  {
+    this.parentCode = parentCode;
+  }
   
+  public LocalizedValue getParentLabel()
+  {
+    return parentLabel;
+  }
+  
+  public void setParentLabel(LocalizedValue parentLabel)
+  {
+    this.parentLabel = parentLabel;
+  }
+
   /**
    * Creates a {@link OrganizationDTO} from the given JSON string.
    * 
@@ -173,21 +227,28 @@ public class OrganizationDTO implements Serializable
    */
   public static OrganizationDTO fromJSON(String sJson)
   {
-    JsonParser parser = new JsonParser();
-
-    JsonObject oJson = parser.parse(sJson).getAsJsonObject();
+    JsonObject oJson = JsonParser.parseString(sJson).getAsJsonObject();
 
     String code = oJson.get(JSON_CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_LABEL).getAsJsonObject());
     LocalizedValue contactInfo = LocalizedValue.fromJSON(oJson.get(JSON_LOCALIZED_CONTACT_INFO).getAsJsonObject());
 
     // TODO Need to validate that the default attributes are still defined.
-    OrganizationDTO geoObjType = new OrganizationDTO(code, label, contactInfo);
+    OrganizationDTO organization = new OrganizationDTO(code, label, contactInfo);
+
+    if (oJson.has(JSON_PARENT_CODE))
+    {
+      organization.setParentCode(oJson.get(JSON_PARENT_CODE).getAsString());
+    }
+
+    if (oJson.has(JSON_PARENT_LABEL))
+    {
+      organization.setParentLabel(LocalizedValue.fromJSON(oJson.get(JSON_PARENT_LABEL).getAsJsonObject()));
+    }
     
-    return geoObjType;
+    return organization;
   }
-  
-  
+
   /**
    * Return the JSON representation of this {@link OrganizationDTO}.
    * 
@@ -197,7 +258,7 @@ public class OrganizationDTO implements Serializable
   {
     return toJSON(new DefaultSerializer());
   }
-  
+
   /**
    * Return the JSON representation of this {@link OrganizationDTO}. Filters the
    * attributes to include in serialization.
@@ -210,14 +271,24 @@ public class OrganizationDTO implements Serializable
   public JsonObject toJSON(CustomSerializer serializer)
   {
     JsonObject json = new JsonObject();
-    
+
     json.addProperty(JSON_CODE, this.getCode());
-    
+
     json.add(JSON_LOCALIZED_LABEL, this.getLabel().toJSON(serializer));
-    
+
     json.add(JSON_LOCALIZED_CONTACT_INFO, this.getContactInfo().toJSON(serializer));
 
+    if (this.parentCode != null)
+    {
+      json.addProperty(JSON_PARENT_CODE, this.getParentCode());
+    }
+
+    if (this.parentLabel != null)
+    {
+      json.add(JSON_PARENT_LABEL, this.getParentLabel().toJSON(serializer));
+    }
+    
     return json;
   }
-  
+
 }
