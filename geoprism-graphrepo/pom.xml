@@ -1,0 +1,92 @@
+<!--
+
+    Copyright (c) 2023 TerraFrame, Inc. All rights reserved.
+
+    This file is part of Geoprism(tm).
+
+    Geoprism(tm) is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    Geoprism(tm) is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses />.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>net.geoprism</groupId>
+    <artifactId>geoprism</artifactId>
+    <version>1.0.10-SNAPSHOT</version>
+  </parent>
+  <artifactId>geoprism-graphrepo</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Geoprism Graph Repo</name>
+  <description>Provides basic features for Geoprism apps.</description>
+  <url>http://www.terraframe.com/products/runwaysdk</url>
+  
+  <dependencies>
+    <dependency>
+      <groupId>net.geoprism</groupId>
+      <artifactId>geoprism-labeled-property-graph</artifactId>
+      <version>1.0.10-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>net.geoprism</groupId>
+      <artifactId>geoprism-classifier</artifactId>
+      <version>1.0.10-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <!-- Weave Aspects -->
+      <plugin>
+        <groupId>dev.aspectj</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>${aspectj.plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <aspectLibraries>
+            <aspectLibrary>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-common</artifactId>
+            </aspectLibrary>
+            <aspectLibrary>
+              <groupId>com.runwaysdk</groupId>
+              <artifactId>runwaysdk-server</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <complianceLevel>${maven.compiler.target}</complianceLevel>
+          <fork>true</fork>
+          <meminitial>512m</meminitial>
+          <maxmem>1024m</maxmem>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>      
+</project>
