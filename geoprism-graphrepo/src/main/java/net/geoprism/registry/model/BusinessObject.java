@@ -42,7 +42,7 @@ import com.runwaysdk.system.metadata.MdAttribute;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
-import net.geoprism.registry.GeoRegistryUtil;
+import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
@@ -84,7 +84,7 @@ public class BusinessObject
       {
         if (value instanceof Date)
         {
-          return GeoRegistryUtil.formatDate((Date) value, false);
+          return DateFormatter.formatDate((Date) value, false);
         }
 
         return value.toString();
@@ -184,7 +184,7 @@ public class BusinessObject
           }
           else if (value instanceof Date)
           {
-            data.addProperty(mdAttribute.definesAttribute(), GeoRegistryUtil.formatDate((Date) value, false));
+            data.addProperty(mdAttribute.definesAttribute(), DateFormatter.formatDate((Date) value, false));
           }
         }
       }

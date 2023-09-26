@@ -40,9 +40,9 @@ import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.permission.CGRPermissionActionIF;
+import net.geoprism.registry.permission.RepoPermissionActionIF;
 import net.geoprism.registry.permission.GeoObjectTypePermissionServiceIF;
-import net.geoprism.registry.permission.UserPermissionService.CGRPermissionAction;
+import net.geoprism.registry.permission.UserPermissionService.RepoPermissionAction;
 import net.geoprism.registry.service.ServiceFactory;
 
 /**
@@ -89,7 +89,7 @@ public class TermConverter
 
     Classifier parent = Classifier.getByKey(parentClassifierKey);
 
-    enforceTermPermissions(parent, CGRPermissionAction.CREATE);
+    enforceTermPermissions(parent, RepoPermissionAction.CREATE);
 
     Classifier classifier = new Classifier();
     classifier.setClassifierId(term.getCode());
@@ -112,7 +112,7 @@ public class TermConverter
 
     Classifier parent = Classifier.getByKey(parentClassifierKey);
 
-    enforceTermPermissions(parent, CGRPermissionAction.WRITE);
+    enforceTermPermissions(parent, RepoPermissionAction.WRITE);
 
     String classifierKey = Classifier.buildKey(parent.getKey(), termCode);
 
@@ -288,7 +288,7 @@ public class TermConverter
     return Classifier.buildKey(RegistryConstants.REGISTRY_PACKAGE, termCode);
   }
 
-  public static void enforceTermPermissions(Classifier parent, CGRPermissionActionIF action)
+  public static void enforceTermPermissions(Classifier parent, RepoPermissionActionIF action)
   {
     GeoObjectTypePermissionServiceIF service = ServiceFactory.getGeoObjectTypePermissionService();
 

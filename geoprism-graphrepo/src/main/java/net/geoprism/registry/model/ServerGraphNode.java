@@ -24,7 +24,7 @@ import org.commongeoregistry.adapter.dataaccess.TreeNode;
 
 import com.google.gson.JsonObject;
 
-import net.geoprism.registry.GeoRegistryUtil;
+import net.geoprism.registry.DateFormatter;
 
 public abstract class ServerGraphNode
 {
@@ -113,12 +113,12 @@ public abstract class ServerGraphNode
     
     if (this.startDate != null)
     {
-      json.addProperty("startDate", GeoRegistryUtil.formatDate(this.startDate, false));
+      json.addProperty("startDate", DateFormatter.formatDate(this.startDate, false));
     }
     
     if (this.endDate != null)
     {
-      json.addProperty("endDate", GeoRegistryUtil.formatDate(this.endDate, false));
+      json.addProperty("endDate", DateFormatter.formatDate(this.endDate, false));
     }
     
     return json;

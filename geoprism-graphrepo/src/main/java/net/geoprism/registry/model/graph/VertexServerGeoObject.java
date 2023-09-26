@@ -28,17 +28,16 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.HashedMap;
@@ -49,6 +48,7 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.constants.GeometryType;
 import org.commongeoregistry.adapter.dataaccess.AlternateId;
 import org.commongeoregistry.adapter.dataaccess.Attribute;
+import org.commongeoregistry.adapter.dataaccess.ExternalId;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
@@ -102,10 +102,7 @@ import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
 import com.runwaysdk.localization.LocalizationFacade;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.session.CreatePermissionException;
-import com.runwaysdk.session.ReadPermissionException;
 import com.runwaysdk.session.Session;
-import com.runwaysdk.session.WritePermissionException;
 import com.runwaysdk.system.AbstractClassification;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.GeoEntity;
@@ -115,13 +112,12 @@ import com.runwaysdk.system.metadata.MdVertexQuery;
 import net.geoprism.dashboard.GeometryUpdateException;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.DuplicateGeoObjectCodeException;
 import net.geoprism.registry.DuplicateGeoObjectException;
 import net.geoprism.registry.DuplicateGeoObjectMultipleException;
-import net.geoprism.registry.GeoRegistryUtil;
 import net.geoprism.registry.GeometrySizeException;
 import net.geoprism.registry.GeometryTypeException;
-import net.geoprism.registry.GeoregistryProperties;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.RegistryConstants;
@@ -129,11 +125,7 @@ import net.geoprism.registry.RequiredAttributeException;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.etl.upload.ClassifierCache;
-import net.geoprism.registry.etl.upload.ImportConfiguration.ImportStrategy;
-import net.geoprism.registry.exception.DuplicateExternalIdException;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
-import net.geoprism.registry.graph.DHIS2ExternalSystem;
-import net.geoprism.registry.graph.ExternalSystem;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexSynonym;
 import net.geoprism.registry.io.TermValueException;
@@ -153,11 +145,6 @@ import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.query.graph.AbstractVertexRestriction;
-import net.geoprism.registry.roles.CreateGeoObjectPermissionException;
-import net.geoprism.registry.roles.ReadGeoObjectPermissionException;
-import net.geoprism.registry.roles.WriteGeoObjectPermissionException;
-import net.geoprism.registry.service.RegistryIdService;
-import net.geoprism.registry.service.SearchService;
 import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
@@ -165,7 +152,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 {
   private static final Logger logger = LoggerFactory.getLogger(VertexServerGeoObject.class);
 
-  private static class EdgeComparator implements Comparator<EdgeObject>, Serializable
+  protected static class EdgeComparator implements Comparator<EdgeObject>, Serializable
   {
     private static final long serialVersionUID = 1L;
 
@@ -179,11 +166,11 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     }
   }
 
-  private ServerGeoObjectType type;
+  protected ServerGeoObjectType type;
 
-  private VertexObject        vertex;
+  protected VertexObject        vertex;
 
-  private Date                date;
+  protected Date                date;
 
   public VertexServerGeoObject(ServerGeoObjectType type, VertexObject vertex)
   {
@@ -268,11 +255,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       throw ex;
     }
 
-    if (geometry != null && geometry.getNumPoints() > GeoregistryProperties.getMaxNumberOfPoints())
-    {
-      throw new GeometrySizeException();
-    }
-
     // Populate the correct geom field
     String geometryAttribute = this.getGeometryAttributeName();
 
@@ -289,11 +271,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       ex.setExpectedType(this.getType().getGeometryType().name());
 
       throw ex;
-    }
-
-    if (geometry != null && geometry.getNumPoints() > GeoregistryProperties.getMaxNumberOfPoints())
-    {
-      throw new GeometrySizeException();
     }
 
     // Populate the correct geom field
@@ -447,10 +424,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     if (at instanceof AttributeLocalType)
     {
       RegistryLocalizedValueConverter.populate(this.vertex, attributeName, (LocalizedValue) value, this.date, null);
-    }
-    else if (at instanceof AttributeListType && at.getName().equals(DefaultAttribute.ALT_IDS.getName()))
-    {
-      this.setAlternateIds((List<AlternateId>) value);
     }
     else
     {
@@ -1346,40 +1319,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     this.validate();
 
-    try
-    {
-      this.getVertex().apply();
-    }
-    catch (CreatePermissionException ex)
-    {
-      CreateGeoObjectPermissionException goex = new CreateGeoObjectPermissionException();
-      goex.setGeoObjectType(this.getType().getLabel().getValue());
-      goex.setOrganization(this.getType().getOrganization().getDisplayLabel().getValue());
-      throw goex;
-    }
-    catch (WritePermissionException ex)
-    {
-      WriteGeoObjectPermissionException goex = new WriteGeoObjectPermissionException();
-      goex.setGeoObjectType(this.getType().getLabel().getValue());
-      goex.setOrganization(this.getType().getOrganization().getDisplayLabel().getValue());
-      throw goex;
-    }
-    catch (ReadPermissionException ex)
-    {
-      ReadGeoObjectPermissionException goex = new ReadGeoObjectPermissionException();
-      goex.setGeoObjectType(this.getType().getLabel().getValue());
-      goex.setOrganization(this.getType().getOrganization().getDisplayLabel().getValue());
-      throw goex;
-    }
-
-    if (!this.getInvalid())
-    {
-      new SearchService().insert(this, isNew);
-    }
-    else if (!isNew)
-    {
-      new SearchService().remove(this.getCode());
-    }
+    this.getVertex().apply();
   }
 
   @Override
@@ -1484,52 +1424,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
       for (EdgeObject e : edges)
       {
         e.apply();
-      }
-    }
-  }
-
-  public void setAlternateIds(List<AlternateId> alternateIds)
-  {
-    if (alternateIds == null)
-    {
-      alternateIds = new ArrayList<>();
-    }
-
-    final List<ExternalId> olds = this.getAllExternalIds();
-    final Map<String, ExternalSystem> esMap = ExternalSystem.getAll().stream().collect(Collectors.toMap(es -> es.getOid(), es -> es));
-    final Set<Integer> newMatched = new HashSet<Integer>();
-
-    for (ExternalId oldId : olds)
-    {
-      boolean matched = false;
-
-      for (int i = 0; i < alternateIds.size(); ++i)
-      {
-        org.commongeoregistry.adapter.dataaccess.ExternalId newId = (org.commongeoregistry.adapter.dataaccess.ExternalId) alternateIds.get(i);
-
-        if (!newMatched.contains(i) && oldId.getExternalId().equals(newId.getId()))
-        {
-          oldId.setExternalId(newId.getId());
-          oldId.apply();
-
-          matched = true;
-          newMatched.add(i);
-          break;
-        }
-      }
-
-      if (!matched)
-      {
-        oldId.delete();
-      }
-    }
-    for (int i = 0; i < alternateIds.size(); ++i)
-    {
-      org.commongeoregistry.adapter.dataaccess.ExternalId newId = (org.commongeoregistry.adapter.dataaccess.ExternalId) alternateIds.get(i);
-
-      if (!newMatched.contains(i))
-      {
-        this.createExternalId(esMap.get(newId.getExternalSystemId()), newId.getId(), ImportStrategy.NEW_ONLY);
       }
     }
   }
@@ -1820,15 +1714,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     if (vertex.isNew())// && !vertex.isAppliedToDB())
     {
-      geoObj.setUid(RegistryIdService.getInstance().next());
-    }
-
-    if (includeExternalIds)
-    {
-      for (ExternalId id : this.getAllExternalIds())
-      {
-        geoObj.addAlternateId(id.toDTO());
-      }
+      geoObj.setUid(UUID.randomUUID().toString());
     }
 
     return geoObj;
@@ -2048,7 +1934,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     if (generateUid && vertex.isNew())// && !vertex.isAppliedToDB())
     {
-      geoObj.setUid(RegistryIdService.getInstance().next());
+      geoObj.setUid(UUID.randomUUID().toString());
 
       // geoObj.setStatus(ServiceFactory.getAdapter().getMetadataCache().getTerm(DefaultTerms.GeoObjectStatusTerm.NEW.code).get(),
       // this.date, this.date);
@@ -2071,11 +1957,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     geoObj.setValueCollection(DefaultAttribute.GEOMETRY.getName(), votcDTO);
 
     geoObj.setCode(vertex.getObjectValue(DefaultAttribute.CODE.getName()));
-
-    for (ExternalId id : this.getAllExternalIds())
-    {
-      geoObj.addAlternateId(id.toDTO());
-    }
 
     return geoObj;
   }
@@ -2240,117 +2121,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     this.vertex.addChild(synonym, GeoVertex.HAS_SYNONYM).apply();
 
     return synonym.getOid();
-  }
-
-  public static VertexServerGeoObject getByExternalId(String externalId, DHIS2ExternalSystem system, ServerGeoObjectType type)
-  {
-    MdEdgeDAOIF mdEdge = MdEdgeDAO.getMdEdgeDAO(GeoVertex.EXTERNAL_ID);
-
-    StringBuilder statement = new StringBuilder();
-
-    if (type != null)
-    {
-      statement.append("SELECT FROM (");
-    }
-
-    statement.append("SELECT expand(in) FROM (");
-    statement.append("SELECT expand(outE('" + mdEdge.getDBClassName() + "')[id = '" + externalId + "']) FROM :system)");
-
-    if (type != null)
-    {
-      statement.append(") WHERE @class='" + type.getMdVertex().getDBClassName() + "'");
-    }
-
-    GraphQuery<VertexObject> query = new GraphQuery<VertexObject>(statement.toString());
-    query.setParameter("system", system.getRID());
-
-    VertexObject vo = query.getSingleResult();
-
-    if (vo != null)
-    {
-      if (type == null)
-      {
-        type = ServerGeoObjectType.get((MdVertexDAOIF) vo.getMdClass());
-      }
-
-      return new VertexServerGeoObject(type, vo);
-    }
-    else
-    {
-      return null;
-    }
-  }
-
-  private ExternalId getExternalIdEdge(ExternalSystem system)
-  {
-    MdEdgeDAOIF mdEdge = MdEdgeDAO.getMdEdgeDAO(GeoVertex.EXTERNAL_ID);
-
-    String statement = "SELECT expand(inE('" + mdEdge.getDBClassName() + "')[out = :parent])";
-    statement += " FROM :child";
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("parent", system.getRID());
-    query.setParameter("child", this.getVertex().getRID());
-
-    EdgeObject edge = query.getSingleResult();
-
-    if (edge == null)
-    {
-      return null;
-    }
-    else
-    {
-      return new ExternalId(edge);
-    }
-  }
-
-  public List<ExternalId> getAllExternalIds()
-  {
-    MdEdgeDAOIF mdEdge = MdEdgeDAO.getMdEdgeDAO(GeoVertex.EXTERNAL_ID);
-
-    String statement = "SELECT expand(inE('" + mdEdge.getDBClassName() + "'))";
-    statement += " FROM :child";
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement);
-    query.setParameter("child", this.getVertex().getRID());
-
-    return query.getResults().stream().map(edge -> new ExternalId(edge)).collect(Collectors.toList());
-  }
-
-  @Override
-  public void createExternalId(ExternalSystem system, String id, ImportStrategy importStrategy)
-  {
-    if (importStrategy.equals(ImportStrategy.NEW_ONLY))
-    {
-      ExternalId externalId = new ExternalId(this.getVertex().addParent(system, GeoVertex.EXTERNAL_ID));
-      externalId.setExternalId(id);
-      externalId.apply();
-    }
-    else
-    {
-      ExternalId externalId = this.getExternalIdEdge(system);
-
-      if (externalId == null)
-      {
-        externalId = new ExternalId(this.getVertex().addParent(system, GeoVertex.EXTERNAL_ID));
-      }
-
-      externalId.setExternalId(id);
-      externalId.apply();
-    }
-  }
-
-  @Override
-  public String getExternalId(ExternalSystem system)
-  {
-    ExternalId edge = this.getExternalIdEdge(system);
-
-    if (edge != null)
-    {
-      return edge.getExternalId();
-    }
-
-    return null;
   }
 
   public static VertexObject getVertex(ServerGeoObjectType type, String uuid)
@@ -2687,7 +2457,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     final Date startDate = new GraphQuery<Date>("SELECT MIN(exists_cot.startDate) FROM " + dbClassName).getSingleResult();
     final Date endDate = new GraphQuery<Date>("SELECT MAX(exists_cot.startDate) FROM " + dbClassName).getSingleResult();
 
-    Date current = GeoRegistryUtil.getCurrentDate();
+    Date current = DateFormatter.getCurrentDate();
 
     if (startDate != null && endDate != null)
     {
@@ -2729,63 +2499,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
 
     GraphDBService service = GraphDBService.getInstance();
     service.command(service.getGraphDBRequest(), statement.toString(), parameters);
-  }
-
-  public static void handleDuplicateDataException(ServerGeoObjectType type, DuplicateDataException e)
-  {
-    MdClassDAOIF mdClass = e.getMdClassDAOIF();
-
-    if (mdClass.definesType().equals(ExternalId.CLASS))
-    {
-      String key = e.getValues().get(0);
-      String externalId = key.split(ExternalId.KEY_SEPARATOR)[0];
-      String externalSystem = ExternalSystem.get(key.split(ExternalId.KEY_SEPARATOR)[1]).getDisplayLabel().getValue();
-
-      DuplicateExternalIdException ex = new DuplicateExternalIdException();
-      ex.setExternalId(externalId);
-      ex.setExternalSystem(externalSystem);
-      throw ex;
-    }
-    else
-    {
-      if (e.getAttributes().size() == 0)
-      {
-        throw e;
-      }
-      else if (e.getAttributes().size() == 1)
-      {
-        MdAttributeDAOIF attr = e.getAttributes().get(0);
-
-        if (isCodeAttribute(attr))
-        {
-          DuplicateGeoObjectCodeException ex = new DuplicateGeoObjectCodeException();
-          ex.setGeoObjectType(findTypeLabelFromGeoObjectCode(e.getValues().get(0), type));
-          ex.setValue(e.getValues().get(0));
-          throw ex;
-        }
-        else
-        {
-          DuplicateGeoObjectException ex = new DuplicateGeoObjectException();
-          ex.setGeoObjectType(type.getLabel().getValue());
-          ex.setValue(e.getValues().get(0));
-          ex.setAttributeName(getAttributeLabel(type, attr));
-          throw ex;
-        }
-      }
-      else
-      {
-        List<String> attrLabels = new ArrayList<String>();
-
-        for (MdAttributeDAOIF attr : e.getAttributes())
-        {
-          attrLabels.add(getAttributeLabel(type, attr));
-        }
-
-        DuplicateGeoObjectMultipleException ex = new DuplicateGeoObjectMultipleException();
-        ex.setAttributeLabels(StringUtils.join(attrLabels, ", "));
-        throw ex;
-      }
-    }
   }
 
   private static String findTypeLabelFromGeoObjectCode(String code, ServerGeoObjectType rootType)

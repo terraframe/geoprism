@@ -34,8 +34,6 @@ import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import org.locationtech.jts.geom.Geometry;
 
 import net.geoprism.registry.BusinessType;
-import net.geoprism.registry.etl.upload.ImportConfiguration.ImportStrategy;
-import net.geoprism.registry.graph.ExternalSystem;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 public interface ServerGeoObjectIF
@@ -147,10 +145,6 @@ public interface ServerGeoObjectIF
   public JsonArray getHierarchiesForGeoObject(Date date);
 
   public void setDate(Date date);
-
-  public void createExternalId(ExternalSystem system, String id, ImportStrategy importStrategy);
-
-  public String getExternalId(ExternalSystem system);
 
   // GRAPH ENDPOINTS
   public void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate);

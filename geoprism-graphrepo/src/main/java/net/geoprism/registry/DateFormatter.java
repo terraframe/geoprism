@@ -2,6 +2,7 @@ package net.geoprism.registry;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -66,5 +67,13 @@ public class DateFormatter
     }
 
     return null;
+  }
+  
+  public static Date getCurrentDate()
+  {
+    Calendar calendar = Calendar.getInstance(SYSTEM_TIMEZONE);
+    String dateString = calendar.get(Calendar.YEAR) + "-" + ( calendar.get(Calendar.MONTH) + 1 ) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+
+    return parseDate(dateString);
   }
 }

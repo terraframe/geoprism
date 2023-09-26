@@ -48,7 +48,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Session;
 
-import net.geoprism.registry.GeoRegistryUtil;
+import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.transition.Transition.TransitionImpact;
 import net.geoprism.registry.graph.transition.Transition.TransitionType;
@@ -59,7 +59,6 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.permission.GeoObjectPermissionService;
 import net.geoprism.registry.permission.RolePermissionService;
 import net.geoprism.registry.query.graph.GeoObjectTypeRestrictionUtil;
-import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.transition.TransitionPermissionService;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
@@ -135,8 +134,8 @@ public class TransitionEvent extends TransitionEventBase implements JsonSerializ
 
   public JsonObject toJSON(boolean includeTransitions)
   {
-    DateFormat format = new SimpleDateFormat(GeoObjectImportConfiguration.DATE_FORMAT);
-    format.setTimeZone(GeoRegistryUtil.SYSTEM_TIMEZONE);
+    DateFormat format = new SimpleDateFormat(DateFormatter.DATE_FORMAT);
+    format.setTimeZone(DateFormatter.SYSTEM_TIMEZONE);
 
     LocalizedValue localizedValue = RegistryLocalizedValueConverter.convert(this.getEmbeddedComponent(TransitionEvent.DESCRIPTION));
     ServerGeoObjectType beforeType = ServerGeoObjectType.get(this.getBeforeTypeCode());
@@ -191,8 +190,8 @@ public class TransitionEvent extends TransitionEventBase implements JsonSerializ
       // ServiceFactory.getGeoObjectPermissionService().enforceCanWrite(afterType.getOrganization().getCode(),
       // afterType);
 
-      DateFormat format = new SimpleDateFormat(GeoObjectImportConfiguration.DATE_FORMAT);
-      format.setTimeZone(GeoRegistryUtil.SYSTEM_TIMEZONE);
+      DateFormat format = new SimpleDateFormat(DateFormatter.DATE_FORMAT);
+      format.setTimeZone(DateFormatter.SYSTEM_TIMEZONE);
 
       LocalizedValue description = LocalizedValue.fromJSON(json.get(TransitionEvent.DESCRIPTION).getAsJsonObject());
       TransitionEvent event = json.has(OID) ? TransitionEvent.get(json.get(OID).getAsString()) : new TransitionEvent();
@@ -303,7 +302,7 @@ public class TransitionEvent extends TransitionEventBase implements JsonSerializ
         if (attr.equals(TransitionEvent.EVENTDATE))
         {
           DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-          format.setTimeZone(GeoRegistryUtil.SYSTEM_TIMEZONE);
+          format.setTimeZone(DateFormatter.SYSTEM_TIMEZONE);
 
           List<String> dateConditions = new ArrayList<String>();
 

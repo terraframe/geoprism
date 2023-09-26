@@ -31,7 +31,7 @@ import org.commongeoregistry.adapter.dataaccess.TreeNode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.geoprism.registry.GeoRegistryUtil;
+import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.ServerGeoObjectService;
@@ -212,14 +212,14 @@ public class ServerParentGraphNode extends ServerGraphNode
     
     if (jo.has("startDate"))
     {
-      startDate = GeoRegistryUtil.parseDate(jo.get("startDate").getAsString());
+      startDate = DateFormatter.parseDate(jo.get("startDate").getAsString());
     }
     
     Date endDate = null;
     
     if (jo.has("endDate"))
     {
-      endDate = GeoRegistryUtil.parseDate(jo.get("startDate").getAsString());
+      endDate = DateFormatter.parseDate(jo.get("startDate").getAsString());
     }
     
     String oid = null;

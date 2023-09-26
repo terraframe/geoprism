@@ -20,17 +20,18 @@ package net.geoprism.registry.conversion;
 
 import java.util.Date;
 
+import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 
 import com.runwaysdk.business.graph.VertexObject;
 
-import net.geoprism.registry.InvalidRegistryIdException;
+import net.geoprism.registry.DataNotFoundException;
+import net.geoprism.registry.model.GeoObjectMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
 import net.geoprism.registry.query.graph.VertexGeoObjectQuery;
-import net.geoprism.registry.service.RegistryIdService;
 
 public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter implements ServerGeoObjectStrategyIF
 {
@@ -57,8 +58,10 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
 
       if (vertex == null)
       {
-        InvalidRegistryIdException ex = new InvalidRegistryIdException();
-        ex.setRegistryId(geoObject.getUid());
+        DataNotFoundException ex = new DataNotFoundException();
+        ex.setTypeLabel(geoObject.getType().getLabel().getValue());
+        ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.UID.getName()));
+        ex.setDataIdentifier(geoObject.getUid());
         throw ex;
       }
 
@@ -66,13 +69,6 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
     }
     else
     {
-      if (!RegistryIdService.getInstance().isIssuedId(geoObject.getUid()))
-      {
-        InvalidRegistryIdException ex = new InvalidRegistryIdException();
-        ex.setRegistryId(geoObject.getUid());
-        throw ex;
-      }
-
       VertexObject vertex = VertexServerGeoObject.newInstance(type);
 
       return new VertexServerGeoObject(type, vertex);
@@ -88,8 +84,10 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
 
       if (vertex == null)
       {
-        InvalidRegistryIdException ex = new InvalidRegistryIdException();
-        ex.setRegistryId(goTime.getUid());
+        DataNotFoundException ex = new DataNotFoundException();
+        ex.setTypeLabel(goTime.getType().getLabel().getValue());
+        ex.setAttributeLabel(GeoObjectMetadata.get().getAttributeDisplayLabel(DefaultAttribute.UID.getName()));
+        ex.setDataIdentifier(goTime.getUid());
         throw ex;
       }
 
@@ -97,13 +95,6 @@ public class VertexGeoObjectStrategy extends RegistryLocalizedValueConverter imp
     }
     else
     {
-      if (!RegistryIdService.getInstance().isIssuedId(goTime.getUid()))
-      {
-        InvalidRegistryIdException ex = new InvalidRegistryIdException();
-        ex.setRegistryId(goTime.getUid());
-        throw ex;
-      }
-
       VertexObject vertex = VertexServerGeoObject.newInstance(type);
 
       return new VertexServerGeoObject(type, vertex);
