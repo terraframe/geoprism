@@ -49,6 +49,8 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdTermRelationship;
 
+import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
+import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.registry.AbstractParentException;
 import net.geoprism.registry.HierarchicalRelationshipType;
@@ -65,8 +67,6 @@ import net.geoprism.registry.graph.CantRemoveInheritedGOT;
 import net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
-import net.geoprism.registry.permission.GeoObjectTypePermissionServiceIF;
-import net.geoprism.registry.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.service.SerializedListTypeCache;
 import net.geoprism.registry.service.ServerGeoObjectService;
 import net.geoprism.registry.service.ServiceFactory;

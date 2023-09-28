@@ -18,6 +18,7 @@
  */
 package net.geoprism.registry.model;
 
+import java.awt.TrayIcon.MessageType;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -96,8 +97,8 @@ import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.ListType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.TypeInUseException;
-import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
+import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.ServerGeoObjectTypeConverter;
 import net.geoprism.registry.conversion.TermConverter;
@@ -105,6 +106,7 @@ import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.graph.transition.Transition;
 import net.geoprism.registry.graph.transition.TransitionEvent;
+import net.geoprism.registry.service.ServiceFactory;
 //import net.geoprism.registry.service.ChangeRequestService;
 //import net.geoprism.registry.service.SearchService;
 //import net.geoprism.registry.service.SerializedListTypeCache;

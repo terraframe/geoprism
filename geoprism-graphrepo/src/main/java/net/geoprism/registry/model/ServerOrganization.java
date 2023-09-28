@@ -52,11 +52,10 @@ import net.geoprism.registry.OrganizationContactInfo;
 import net.geoprism.registry.OrganizationDisplayLabel;
 import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.OrganizationUser;
+import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.GraphOrganization;
-import net.geoprism.registry.permission.RolePermissionService;
-import net.geoprism.registry.service.OrganizationService.OrganizationUtil;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
 
@@ -547,89 +546,17 @@ public class ServerOrganization implements JsonSerializable
     return organizationList;
   }
 
-  public static List<ServerOrganization> getUserAdminOrganizations()
-  {
-    return Organization.getUserAdminOrganizations().stream().map(org -> ServerOrganization.get(org)).collect(Collectors.toList());
-  }
-
   public static List<ServerOrganization> getUserOrganizations()
   {
     return Organization.getUserOrganizations().stream().map(org -> ServerOrganization.get(org)).collect(Collectors.toList());
   }
-
-  /**
-   * @param org
-   * @return If the current user is part of the registry admin role for the
-   *         given organization
-   */
-  public static boolean isRegistryAdmin(ServerOrganization org)
-  {
-    if (new RolePermissionService().isSRA())
-    {
-      return true;
-    }
-
-    String roleName = RegistryRole.Type.getRA_RoleName( ( org.getCode() ));
-
-    final SessionIF session = Session.getCurrentSession();
-
-    if (session != null)
-    {
-      return session.userHasRole(roleName);
-    }
-
-    return true;
-  }
-
-  /**
-   * @param org
-   * @return If the current user is part of the registry admin role for the
-   *         given organization
-   */
-  public static boolean isRegistryMaintainer(Organization org)
-  {
-    if (new RolePermissionService().isSRA())
-    {
-      return true;
-    }
-
-    final SessionIF session = Session.getCurrentSession();
-
-    if (session != null)
-    {
-      Map<String, ServerGeoObjectType> types = org.getGeoObjectTypes();
-
-      Set<Entry<String, ServerGeoObjectType>> entries = types.entrySet();
-
-      for (Entry<String, ServerGeoObjectType> entry : entries)
-      {
-        String roleName = RegistryRole.Type.getRM_RoleName(org.getCode(), entry.getKey());
-
-        boolean hasRole = session.userHasRole(roleName);
-
-        if (hasRole)
-        {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    return true;
-  }
-
+  
   /**
    * @param org
    * @return If the current user is a member of the given organization
    */
   public static boolean isMember(ServerOrganization org)
   {
-    if (new RolePermissionService().isSRA())
-    {
-      return true;
-    }
-
     final SessionIF session = Session.getCurrentSession();
 
     if (session != null)

@@ -21,7 +21,6 @@ package net.geoprism.registry.service;
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.RegistryAdapterServer;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.ConversionService;
@@ -35,7 +34,6 @@ import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
 import net.geoprism.registry.cache.ServerMetadataCache;
 import net.geoprism.registry.hierarchy.HierarchyService;
-import net.geoprism.registry.permission.GPRGeoObjectPermissionService;
 
 @Component
 public class ServiceFactory implements ApplicationContextAware
@@ -148,6 +146,11 @@ public class ServiceFactory implements ApplicationContextAware
   public static GeoObjectTypePermissionServiceIF getGeoObjectTypePermissionService()
   {
     return getBean(GeoObjectTypePermissionServiceIF.class);
+  }
+  
+  public static OrganizationServiceIF getOrganizationService()
+  {
+    return getBean(OrganizationServiceIF.class);
   }
 
   public static ServerMetadataCache getMetadataCache()

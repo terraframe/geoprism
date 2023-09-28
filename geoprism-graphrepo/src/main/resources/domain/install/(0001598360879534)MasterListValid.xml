@@ -21,19 +21,20 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdException name="net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException" 
-                   label="Multiple Root Exception" 
-                   message="You cannot add the Geo-Object Type with code [{gotCode}] to this hierarchy because it is already part of the hierarchy.">
-        <attributes>
-          <text name="gotCode"></text>
-        </attributes>
+      <mdException name="net.geoprism.registry.HierarchyRootException" 
+                   label="Non root exception" 
+                   message="Only the root node of a hierarchy can inherit another hierarchy">
+      </mdException>
+      <mdException name="net.geoprism.registry.TypeInUseException" 
+                   label="Type In Use Exception" 
+                   message="Cannot delete the Geo-Object Type because it is being used in a hierarchy.">
       </mdException>
     </create>
-    <update></update>
   </doIt>
   <undoIt>
     <delete>
-      <object key="net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException" type="com.runwaysdk.system.metadata.MdException"></object>
+      <object key="net.geoprism.registry.TypeInUseException" type="com.runwaysdk.system.metadata.MdException"></object>
+      <object key="net.geoprism.registry.HierarchyRootException" type="com.runwaysdk.system.metadata.MdException"></object>
     </delete>
   </undoIt>
 </version>

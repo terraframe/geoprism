@@ -2501,7 +2501,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     service.command(service.getGraphDBRequest(), statement.toString(), parameters);
   }
 
-  private static String findTypeLabelFromGeoObjectCode(String code, ServerGeoObjectType rootType)
+  public static String findTypeLabelFromGeoObjectCode(String code, ServerGeoObjectType rootType)
   {
     ServerGeoObjectType type = null;
 

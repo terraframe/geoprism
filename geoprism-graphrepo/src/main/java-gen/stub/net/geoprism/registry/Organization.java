@@ -49,7 +49,6 @@ import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.permission.RolePermissionService;
 import net.geoprism.registry.service.ServiceFactory;
 
 public class Organization extends OrganizationBase
@@ -91,7 +90,6 @@ public class Organization extends OrganizationBase
     if (this.isNew())
     {
       this.createOrganizationRole();
-      this.createRegistryAdminOrganizationRole();
     }
   }
 
@@ -169,44 +167,6 @@ public class Organization extends OrganizationBase
   }
 
   /**
-   * Returns the {@link RoleDAOIF} name for the Registry Administrator for this
-   * {@link Organization}.
-   * 
-   * @return the {@link RoleDAOIF} name for the Registry Administrator for this
-   *         {@link Organization}.
-   */
-  public String getRegistryAdminRoleName()
-  {
-    return RegistryRole.Type.getRA_RoleName(this.getCode());
-  }
-
-  /**
-   * Returns the Registry Administrator {@link Roles} for this
-   * {@link Organization}.
-   * 
-   * @return the Registry Administrator {@link Roles} for this
-   *         {@link Organization}.
-   */
-  public Roles getRegistryAdminiRole()
-  {
-    return Roles.findRoleByName(this.getRegistryAdminRoleName());
-  }
-
-  /**
-   * Returns the Registry Administrator {@link Roles} for this
-   * {@link Organization}.
-   * 
-   * @param organizationCode
-   * 
-   * @return the Registry Administrator {@link Roles} for this
-   *         {@link Organization}.
-   */
-  public static Roles getRegistryAdminiRole(String organizationCode)
-  {
-    return Roles.findRoleByName(RegistryRole.Type.getRA_RoleName(organizationCode));
-  }
-
-  /**
    * Return a map of {@link GeoObjectType} codes and labels for this
    * {@link Organization}.
    * 
@@ -257,38 +217,6 @@ public class Organization extends OrganizationBase
     RoleDAO rootOrgRole = (RoleDAO) RoleDAO.findRole(RegistryRole.Type.REGISTRY_ROOT_ORG_ROLE);
 
     rootOrgRole.addInheritance(orgRole);
-  }
-
-  /**
-   * Creates a Registry Administrator {@link RoleDAOIF} for this
-   * {@link Organization}.
-   * 
-   * Precondition: a {@link RoleDAOIF} does not exist for this
-   * {@link Organization}. Precondition: the display label for the default
-   * locale has a value for this {@link Organization}
-   * 
-   */
-  private void createRegistryAdminOrganizationRole()
-  {
-    String registryAdminRoleName = this.getRegistryAdminRoleName();
-
-    String defaultDisplayLabel = this.getDisplayLabel().getDefaultValue() + " Registry Administrator";
-
-    // Heads up: clean up move to Roles.java?
-    Roles raOrgRole = new Roles();
-    raOrgRole.setRoleName(registryAdminRoleName);
-    raOrgRole.getDisplayLabel().setDefaultValue(defaultDisplayLabel);
-    raOrgRole.apply();
-
-    Roles orgRole = (Roles) this.getRole();
-    RoleDAO orgRoleDAO = (RoleDAO) BusinessFacade.getEntityDAO(orgRole);
-
-    RoleDAO raOrgRoleDAO = (RoleDAO) BusinessFacade.getEntityDAO(raOrgRole);
-    orgRoleDAO.addInheritance(raOrgRoleDAO);
-
-    // Inherit the permissions from the root RA role
-    RoleDAO rootRA_DAO = (RoleDAO) BusinessFacade.getEntityDAO(Roles.findRoleByName(RegistryConstants.REGISTRY_ADMIN_ROLE));
-    rootRA_DAO.addInheritance(raOrgRoleDAO);
   }
 
   /**
@@ -407,23 +335,6 @@ public class Organization extends OrganizationBase
     return new OrganizationDTO(this.getCode(), RegistryLocalizedValueConverter.convert(this.getDisplayLabel()), RegistryLocalizedValueConverter.convert(this.getContactInfo()));
   }
 
-  public static List<Organization> getUserAdminOrganizations()
-  {
-    OrganizationQuery query = new OrganizationQuery(new QueryFactory());
-    query.ORDER_BY_ASC(query.getDisplayLabel().localize());
-
-    try (final OIterator<? extends Organization> iterator = query.getIterator())
-    {
-      final List<? extends Organization> orgs = iterator.getAll();
-
-      List<Organization> result = orgs.stream().filter(o -> {
-        return Organization.isRegistryAdmin(o);
-      }).collect(Collectors.toList());
-
-      return result;
-    }
-  }
-
   public static List<Organization> getUserOrganizations()
   {
     OrganizationQuery query = new OrganizationQuery(new QueryFactory());
@@ -441,75 +352,8 @@ public class Organization extends OrganizationBase
     }
   }
   
-  /**
-   * @param org
-   * @return If the current user is part of the registry admin role for the
-   *         given organization
-   */
-  public static boolean isRegistryAdmin(Organization org)
-  {
-    if (new RolePermissionService().isSRA())
-    {
-      return true;
-    }
-
-    String roleName = RegistryRole.Type.getRA_RoleName( ( org.getCode() ));
-
-    final SessionIF session = Session.getCurrentSession();
-
-    if (session != null)
-    {
-      return session.userHasRole(roleName);
-    }
-
-    return true;
-  }
-
-  /**
-   * @param org
-   * @return If the current user is part of the registry admin role for the
-   *         given organization
-   */
-  public static boolean isRegistryMaintainer(Organization org)
-  {
-    if (new RolePermissionService().isSRA())
-    {
-      return true;
-    }
-
-    final SessionIF session = Session.getCurrentSession();
-
-    if (session != null)
-    {
-      Map<String, ServerGeoObjectType> types = org.getGeoObjectTypes();
-
-      Set<Entry<String, ServerGeoObjectType>> entries = types.entrySet();
-
-      for (Entry<String, ServerGeoObjectType> entry : entries)
-      {
-        String roleName = RegistryRole.Type.getRM_RoleName(org.getCode(), entry.getKey());
-
-        boolean hasRole = session.userHasRole(roleName);
-
-        if (hasRole)
-        {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    return true;
-  }
-  
   public static boolean isMember(Organization org)
   {
-    if (new RolePermissionService().isSRA())
-    {
-      return true;
-    }
-
     final SessionIF session = Session.getCurrentSession();
 
     if (session != null)

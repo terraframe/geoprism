@@ -42,14 +42,6 @@ public class OrganizationConverter extends RegistryLocalizedValueConverter
     return new OrganizationDTO(code, label, contactInfo);
   }
 
-  @Transaction
-  public ServerOrganization create(String json)
-  {
-    OrganizationDTO organizationDTO = OrganizationDTO.fromJSON(json);
-
-    return this.create(organizationDTO);
-  }
-
   public ServerOrganization fromDTO(OrganizationDTO organizationDTO)
   {
     ServerOrganization organization = new ServerOrganization(new Organization(), new GraphOrganization());
@@ -57,18 +49,6 @@ public class OrganizationConverter extends RegistryLocalizedValueConverter
     organization.setCode(organizationDTO.getCode());
     organization.setDisplayLabel(organizationDTO.getLabel());
     organization.setContactInfo(organizationDTO.getContactInfo());
-
-    return organization;
-  }
-
-  @Transaction
-  public ServerOrganization create(OrganizationDTO organizationDTO)
-  {
-    final ServerOrganization organization = this.fromDTO(organizationDTO);
-
-    ServiceFactory.getOrganizationPermissionService().enforceActorCanCreate();
-
-    organization.apply();
 
     return organization;
   }
