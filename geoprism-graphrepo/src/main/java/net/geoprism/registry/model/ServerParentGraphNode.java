@@ -32,9 +32,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.business.GeoObjectBusinessService;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
-import net.geoprism.registry.service.ServerGeoObjectService;
 import net.geoprism.registry.service.ServiceFactory;
 
 public class ServerParentGraphNode extends ServerGraphNode
@@ -194,7 +194,7 @@ public class ServerParentGraphNode extends ServerGraphNode
       GeoObject go = GeoObject.fromJSON(ServiceFactory.getAdapter(), jo.get(TreeNode.JSON_GEO_OBJECT).toString());
       
       ServerGeoObjectType type = ServerGeoObjectType.get(go.getType());
-      ServerGeoObjectStrategyIF strategy = new ServerGeoObjectService().getStrategy(type);
+      ServerGeoObjectStrategyIF strategy = new GeoObjectBusinessService().getStrategy(type);
       goif = strategy.constructFromGeoObject(go, false);
     }
     

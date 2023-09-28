@@ -16,9 +16,32 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.model;
+package net.geoprism.registry.permission;
 
-public interface ServerElement
-{
-  public String getCode();
+import com.runwaysdk.business.rbac.Operation;
+
+public enum PermissionContext {
+  READ(Operation.READ), WRITE(Operation.WRITE);
+
+  private Operation operation;
+
+  private PermissionContext(Operation operation)
+  {
+    this.operation = operation;
+  }
+
+  public Operation getOperation()
+  {
+    return operation;
+  }
+
+  public static PermissionContext get(String context)
+  {
+    if (context != null && context.length() > 0)
+    {
+      return PermissionContext.valueOf(context);
+    }
+
+    return PermissionContext.READ;
+  }
 }

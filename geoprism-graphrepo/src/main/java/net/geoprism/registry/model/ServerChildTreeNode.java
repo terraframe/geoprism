@@ -28,8 +28,8 @@ import org.commongeoregistry.adapter.dataaccess.ChildTreeNode;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
-import net.geoprism.registry.permission.GeoObjectPermissionServiceIF;
-import net.geoprism.registry.permission.GeoObjectRelationshipPermissionServiceIF;
+import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
+import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.registry.service.ServiceFactory;
 
 public class ServerChildTreeNode extends ServerTreeNode

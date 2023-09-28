@@ -23,10 +23,8 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 
 import com.runwaysdk.dataaccess.MdClassDAOIF;
-import com.runwaysdk.dataaccess.MdEntityDAOIF;
 import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
-import com.runwaysdk.dataaccess.metadata.MdEntityDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.session.Request;
@@ -35,14 +33,14 @@ import com.runwaysdk.system.metadata.MdAttributeTerm;
 import com.runwaysdk.system.metadata.MdBusiness;
 import com.runwaysdk.system.metadata.MdClass;
 
+import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
+import net.geoprism.graphrepo.permission.RepoPermissionActionIF;
+import net.geoprism.graphrepo.permission.UserPermissionService.RepoPermissionAction;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.ontology.ClassifierIsARelationship;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.permission.RepoPermissionActionIF;
-import net.geoprism.registry.permission.GeoObjectTypePermissionServiceIF;
-import net.geoprism.registry.permission.UserPermissionService.RepoPermissionAction;
 import net.geoprism.registry.service.ServiceFactory;
 
 /**

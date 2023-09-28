@@ -48,7 +48,7 @@ public class RegistryLocalizedValueConverter extends LocalizedValueConverter
    * @param business
    * @param organizationCode
    */
-  protected static void setOwner(Business business, String organizationCode)
+  public static void setOwner(Business business, String organizationCode)
   {
     Organization organization = null;
     Roles orgRole = null;

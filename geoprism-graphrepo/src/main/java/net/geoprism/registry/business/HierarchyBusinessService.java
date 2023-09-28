@@ -1,24 +1,7 @@
-/**
- * Copyright (c) 2022 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism Registry(tm).
- *
- * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
- */
-package net.geoprism.registry.conversion;
+package net.geoprism.registry.business;
 
 import org.commongeoregistry.adapter.metadata.HierarchyType;
+import org.springframework.stereotype.Component;
 
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
@@ -39,6 +22,7 @@ import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.constants.GISConstants;
+import com.runwaysdk.session.Session;
 import com.runwaysdk.system.gis.geo.GeoEntity;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.AssociationType;
@@ -51,17 +35,39 @@ import net.geoprism.rbac.RoleConstants;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateHierarchyTypeException;
 import net.geoprism.registry.HierarchicalRelationshipType;
-import net.geoprism.registry.InvalidMasterListCodeException;
-import net.geoprism.registry.MasterList;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
+import net.geoprism.registry.conversion.LocalizedValueConverter;
+import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.service.ServiceFactory;
 
-public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
+@Component
+public class HierarchyBusinessService implements HierarchyBusinessServiceIF
 {
-  @Transaction
+  /**
+   * Create the {@link HierarchyType}
+   * 
+   * @param sessionId
+   * @param htJSON
+   */
   public ServerHierarchyType createHierarchyType(HierarchyType hierarchyType)
+  {
+    ServiceFactory.getHierarchyPermissionService().enforceCanCreate(hierarchyType.getOrganizationCode());
+    
+    ServerHierarchyType sht = createHierarchyTypeInTrans(hierarchyType);
+    
+    // The transaction did not error out, so it is safe to put into the cache.
+    ServiceFactory.getMetadataCache().addHierarchyType(sht);
+    
+    ( (Session) Session.getCurrentSession() ).reloadPermissions();
+    
+    return sht;
+  }
+  
+  @Transaction
+  public ServerHierarchyType createHierarchyTypeInTrans(HierarchyType hierarchyType)
   {
     if (hierarchyType.getOrganizationCode() == null || hierarchyType.getOrganizationCode().equals(""))
     {
@@ -80,10 +86,6 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
       ex.setLength(64 - addons.length());
       throw ex;
     }
-
-    RoleDAO maintainer = RoleDAO.findRole(RegistryConstants.REGISTRY_MAINTAINER_ROLE).getBusinessDAO();
-    RoleDAO consumer = RoleDAO.findRole(RegistryConstants.API_CONSUMER_ROLE).getBusinessDAO();
-    RoleDAO contributor = RoleDAO.findRole(RegistryConstants.REGISTRY_CONTRIBUTOR_ROLE).getBusinessDAO();
 
     InitializationStrategyIF strategy = new InitializationStrategyIF()
     {
@@ -104,19 +106,6 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
         adminRole.grantPermission(Operation.WRITE_ALL, mdBusiness.getOid());
         adminRole.grantPermission(Operation.CREATE, mdBusiness.getOid());
         adminRole.grantPermission(Operation.DELETE, mdBusiness.getOid());
-
-        maintainer.grantPermission(Operation.READ, mdBusiness.getOid());
-        maintainer.grantPermission(Operation.READ_ALL, mdBusiness.getOid());
-        maintainer.grantPermission(Operation.WRITE, mdBusiness.getOid());
-        maintainer.grantPermission(Operation.WRITE_ALL, mdBusiness.getOid());
-        maintainer.grantPermission(Operation.CREATE, mdBusiness.getOid());
-        maintainer.grantPermission(Operation.DELETE, mdBusiness.getOid());
-
-        consumer.grantPermission(Operation.READ, mdBusiness.getOid());
-        consumer.grantPermission(Operation.READ_ALL, mdBusiness.getOid());
-
-        contributor.grantPermission(Operation.READ, mdBusiness.getOid());
-        contributor.grantPermission(Operation.READ_ALL, mdBusiness.getOid());
       }
     };
 
@@ -126,24 +115,18 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
       mdTermRelUniversal.apply();
 
       this.grantWritePermissionsOnMdTermRel(mdTermRelUniversal);
-      this.grantWritePermissionsOnMdTermRel(maintainer, mdTermRelUniversal);
-      this.grantReadPermissionsOnMdTermRel(consumer, mdTermRelUniversal);
-      this.grantReadPermissionsOnMdTermRel(contributor, mdTermRelUniversal);
 
       Universal.getStrategy().initialize(mdTermRelUniversal.definesType(), strategy);
 
       MdEdge mdEdge = this.createMdEdge(hierarchyType);
 
       this.grantWritePermissionsOnMdTermRel(mdEdge);
-      this.grantWritePermissionsOnMdTermRel(maintainer, mdEdge);
-      this.grantReadPermissionsOnMdTermRel(consumer, mdEdge);
-      this.grantReadPermissionsOnMdTermRel(contributor, mdEdge);
 
       HierarchicalRelationshipType hierarchicalRelationship = new HierarchicalRelationshipType();
       hierarchicalRelationship.setCode(hierarchyType.getCode());
       hierarchicalRelationship.setOrganization(organization);
-      populate(hierarchicalRelationship.getDisplayLabel(), hierarchyType.getLabel());
-      populate(hierarchicalRelationship.getDescription(), hierarchyType.getDescription());
+      LocalizedValueConverter.populate(hierarchicalRelationship.getDisplayLabel(), hierarchyType.getLabel());
+      LocalizedValueConverter.populate(hierarchicalRelationship.getDescription(), hierarchyType.getDescription());
       hierarchicalRelationship.setMdTermRelationship(mdTermRelUniversal);
       hierarchicalRelationship.setMdEdge(mdEdge);
       hierarchicalRelationship.setAbstractDescription(hierarchyType.getAbstractDescription());
@@ -166,7 +149,7 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
       throw ex2;
     }
   }
-
+  
   /**
    * It creates an {@link MdTermRelationship} to model the relationship between
    * {@link Universal}s.
@@ -178,9 +161,9 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
    */
   public MdTermRelationship newHierarchyToMdTermRelForUniversals(HierarchyType hierarchyType)
   {
-    if (!MasterList.isValidName(hierarchyType.getCode()))
+    if (!isValidName(hierarchyType.getCode()))
     {
-      throw new InvalidMasterListCodeException("The hierarchy type code has an invalid character");
+      throw new AttributeValueException("The hierarchy type code has an invalid character.", hierarchyType.getCode());
     }
 
     MdBusiness mdBusUniversal = MdBusiness.getMdBusiness(Universal.CLASS);
@@ -201,8 +184,8 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
     // }
 
     mdTermRelationship.setPackageName(GISConstants.GEO_PACKAGE);
-    populate(mdTermRelationship.getDisplayLabel(), hierarchyType.getLabel());
-    populate(mdTermRelationship.getDescription(), hierarchyType.getDescription());
+    LocalizedValueConverter.populate(mdTermRelationship.getDisplayLabel(), hierarchyType.getLabel());
+    LocalizedValueConverter.populate(mdTermRelationship.getDescription(), hierarchyType.getDescription());
     mdTermRelationship.setIsAbstract(false);
     mdTermRelationship.setGenerateSource(false);
     mdTermRelationship.addCacheAlgorithm(RelationshipCache.CACHE_EVERYTHING);
@@ -219,7 +202,7 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
     // Set the owner of the universal to the id of the corresponding role of the
     // responsible organization.
     String organizationCode = hierarchyType.getOrganizationCode();
-    setOwner(mdTermRelationship, organizationCode);
+    RegistryLocalizedValueConverter.setOwner(mdTermRelationship, organizationCode);
 
     return mdTermRelationship;
   }
@@ -241,8 +224,8 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
 
     mdTermRelationship.setTypeName(hierarchyType.getCode());
     mdTermRelationship.setPackageName(GISConstants.GEO_PACKAGE);
-    populate(mdTermRelationship.getDisplayLabel(), hierarchyType.getLabel());
-    populate(mdTermRelationship.getDescription(), hierarchyType.getDescription());
+    LocalizedValueConverter.populate(mdTermRelationship.getDisplayLabel(), hierarchyType.getLabel());
+    LocalizedValueConverter.populate(mdTermRelationship.getDescription(), hierarchyType.getDescription());
     mdTermRelationship.setIsAbstract(false);
     mdTermRelationship.setGenerateSource(false);
     mdTermRelationship.addCacheAlgorithm(RelationshipCache.CACHE_NOTHING);
@@ -259,7 +242,7 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
     // Set the owner of the universal to the id of the corresponding role of the
     // responsible organization.
     String organizationCode = hierarchyType.getOrganizationCode();
-    setOwner(mdTermRelationship, organizationCode);
+    RegistryLocalizedValueConverter.setOwner(mdTermRelationship, organizationCode);
 
     return mdTermRelationship;
   }
@@ -282,8 +265,8 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
     mdEdgeDAO.setValue(MdEdgeInfo.NAME, hierarchyType.getCode());
     mdEdgeDAO.setValue(MdEdgeInfo.PARENT_MD_VERTEX, mdBusGeoEntity.getOid());
     mdEdgeDAO.setValue(MdEdgeInfo.CHILD_MD_VERTEX, mdBusGeoEntity.getOid());
-    populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, hierarchyType.getLabel());
-    populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, hierarchyType.getDescription());
+    LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DISPLAY_LABEL, hierarchyType.getLabel());
+    LocalizedValueConverter.populate(mdEdgeDAO, MdEdgeInfo.DESCRIPTION, hierarchyType.getDescription());
     mdEdgeDAO.setValue(MdEdgeInfo.ENABLE_CHANGE_OVER_TIME, MdAttributeBooleanInfo.FALSE);
     mdEdgeDAO.apply();
 
@@ -358,5 +341,14 @@ public class ServerHierarchyTypeBuilder extends RegistryLocalizedValueConverter
 
     return sht;
   }
+  
+  public static boolean isValidName(String name)
+  {
+    if (name.contains(" ") || name.contains("<") || name.contains(">") || name.contains("-") || name.contains("+") || name.contains("=") || name.contains("!") || name.contains("@") || name.contains("#") || name.contains("$") || name.contains("%") || name.contains("^") || name.contains("&") || name.contains("*") || name.contains("?") || name.contains(";") || name.contains(":") || name.contains(",") || name.contains("^") || name.contains("{") || name.contains("}") || name.contains("]") || name.contains("[") || name.contains("`") || name.contains("~") || name.contains("|") || name.contains("/") || name.contains("\\"))
+    {
+      return false;
+    }
 
+    return true;
+  }
 }

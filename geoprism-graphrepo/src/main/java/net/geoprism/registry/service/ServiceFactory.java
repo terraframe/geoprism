@@ -32,6 +32,7 @@ import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectTypeRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.cache.ServerMetadataCache;
 import net.geoprism.registry.hierarchy.HierarchyService;
 
@@ -44,34 +45,24 @@ public class ServiceFactory implements ApplicationContextAware
   
   private RegistryIdService                            idService;
 
-  private ConversionService                            cs;
-
-  private RegistryService                              registryService;
-
   private RegistryAdapter                              adapter;
 
   private HierarchyService                             hierarchyService;
-
-  private ServerGeoObjectService                       serverGoService;
 
   private ServerMetadataCache                          metadataCache;
 
   private void initialize()
   {
-    this.registryService = new RegistryService();
-    this.cs = new ConversionService();
+    GraphRepoServiceIF repoService = getGraphRepoService();
+    
     this.idService = new RegistryIdService();
     
     this.adapter = new RegistryAdapterServer(this.idService);
 
-    this.serverGoService = new ServerGeoObjectService(goPermissionServ);
-
-    this.hierarchyService = new HierarchyService();
-
     this.metadataCache = new ServerMetadataCache(this.adapter);
     this.metadataCache.rebuild();
 
-    this.registryService.initialize();
+    repoService.initialize();
   }
 
   public static synchronized ServiceFactory getInstance()
@@ -93,14 +84,9 @@ public class ServiceFactory implements ApplicationContextAware
     return ServiceFactory.getInstance().adapter;
   }
 
-  public static RegistryService getRegistryService()
+  public static GraphRepoServiceIF getGraphRepoService()
   {
-    return ServiceFactory.getInstance().registryService;
-  }
-
-  public static ConversionService getConversionService()
-  {
-    return ServiceFactory.getInstance().cs;
+    return getBean(GraphRepoServiceIF.class);
   }
 
   public static HierarchyService getHierarchyService()
@@ -108,9 +94,9 @@ public class ServiceFactory implements ApplicationContextAware
     return ServiceFactory.getInstance().hierarchyService;
   }
 
-  public static ServerGeoObjectService getGeoObjectService()
+  public static GeoObjectBusinessServiceIF getGeoObjectService()
   {
-    return ServiceFactory.getInstance().serverGoService;
+    return getBean(GeoObjectBusinessServiceIF.class);
   }
   
   public static RegistryIdService getIdService()

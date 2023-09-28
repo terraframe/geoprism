@@ -16,38 +16,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service;
+package net.geoprism.registry.business;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-
 import org.apache.commons.lang3.StringUtils;
-import org.commongeoregistry.adapter.constants.CGRAdapterProperties;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.query.OIterator;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
-import com.runwaysdk.session.Session;
 
-import net.geoprism.graph.service.LocaleSerializer;
 import net.geoprism.graphrepo.permission.AllowAllGeoObjectPermissionService;
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.BusinessType;
@@ -69,23 +61,25 @@ import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
 import net.geoprism.registry.query.graph.VertexGeoObjectQuery;
+import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.GeoObjectSplitView;
 
 @Component
-public class ServerGeoObjectService extends RegistryLocalizedValueConverter implements ServerGeoObjectServiceIF
+public class GeoObjectBusinessService extends RegistryLocalizedValueConverter implements GeoObjectBusinessServiceIF
 {
+  @Autowired
   protected GeoObjectPermissionServiceIF permissionService;
 
-  public ServerGeoObjectService()
+  public GeoObjectBusinessService()
   {
     this(new AllowAllGeoObjectPermissionService());
   }
 
-  public ServerGeoObjectService(GeoObjectPermissionServiceIF permissionService)
+  public GeoObjectBusinessService(GeoObjectPermissionServiceIF permissionService)
   {
     this.permissionService = permissionService;
   }
-
+  
   @Request(RequestType.SESSION)
   public JsonObject getAll(String sessionId, String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize)
   {
@@ -393,6 +387,13 @@ public class ServerGeoObjectService extends RegistryLocalizedValueConverter impl
   {
     return new VertexGeoObjectQuery(type, date);
   }
+  
+  public ServerGeoObjectQuery createQuery(String typeCode)
+  {
+    ServerGeoObjectType type = ServerGeoObjectType.get(typeCode);
+
+    return this.createQuery(type, null);
+  }
 
   public boolean hasData(ServerHierarchyType serverHierarchyType, ServerGeoObjectType childType)
   {
@@ -407,7 +408,7 @@ public class ServerGeoObjectService extends RegistryLocalizedValueConverter impl
   @Request(RequestType.SESSION)
   public JsonObject doesGeoObjectExistAtRange(String sessionId, Date startDate, Date endDate, String typeCode, String code)
   {
-    VertexServerGeoObject vsgo = (VertexServerGeoObject) new ServerGeoObjectService().getGeoObjectByCode(code, typeCode);
+    VertexServerGeoObject vsgo = (VertexServerGeoObject) new GeoObjectBusinessService().getGeoObjectByCode(code, typeCode);
 
     JsonObject jo = new JsonObject();
 
@@ -431,7 +432,7 @@ public class ServerGeoObjectService extends RegistryLocalizedValueConverter impl
   @Request(RequestType.SESSION)
   public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode)
   {
-    VertexServerGeoObject vsgo = (VertexServerGeoObject) new ServerGeoObjectService().getGeoObjectByCode(code, typeCode);
+    VertexServerGeoObject vsgo = (VertexServerGeoObject) new GeoObjectBusinessService().getGeoObjectByCode(code, typeCode);
 
     List<BusinessObject> objects = null;
 

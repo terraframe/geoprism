@@ -61,6 +61,7 @@ import net.geoprism.registry.NoChildForLeafGeoObjectType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.RootNodeCannotBeInheritedException;
+import net.geoprism.registry.business.GeoObjectBusinessService;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobjecttype.AssignPublicChildOfPrivateType;
 import net.geoprism.registry.graph.CantRemoveInheritedGOT;
@@ -68,7 +69,6 @@ import net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
 import net.geoprism.registry.service.SerializedListTypeCache;
-import net.geoprism.registry.service.ServerGeoObjectService;
 import net.geoprism.registry.service.ServiceFactory;
 
 public class ServerHierarchyType implements ServerElement, GraphType
@@ -531,7 +531,7 @@ public class ServerHierarchyType implements ServerElement, GraphType
   @Transaction
   private void removeFromHierarchy(ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
   {
-    ServerGeoObjectService service = new ServerGeoObjectService();
+    GeoObjectBusinessService service = new GeoObjectBusinessService();
 
     List<? extends InheritedHierarchyAnnotation> annotations = InheritedHierarchyAnnotation.getByInheritedHierarchy(childType.getUniversal(), this.hierarchicalRelationship);
 

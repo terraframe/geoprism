@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service;
+package net.geoprism.registry.business;
 
 import java.util.Date;
 
@@ -34,7 +34,7 @@ import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.query.ServerGeoObjectQuery;
 import net.geoprism.registry.view.GeoObjectSplitView;
 
-public interface ServerGeoObjectServiceIF
+public interface GeoObjectBusinessServiceIF
 {
   public JsonObject getAll(String sessionId, String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize);
 

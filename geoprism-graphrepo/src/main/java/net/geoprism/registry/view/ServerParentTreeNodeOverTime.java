@@ -49,12 +49,12 @@ import net.geoprism.graphrepo.permission.AllowAllGeoObjectPermissionService;
 import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
+import net.geoprism.registry.business.GeoObjectBusinessService;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerParentTreeNode;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
-import net.geoprism.registry.service.ServerGeoObjectService;
 import net.geoprism.registry.service.ServiceFactory;
 
 public class ServerParentTreeNodeOverTime
@@ -445,7 +445,7 @@ public class ServerParentTreeNodeOverTime
     {
       GeoObject geoObject = context.deserialize(go, GeoObject.class);
       
-      final ServerGeoObjectIF pSGO = new ServerGeoObjectService(new AllowAllGeoObjectPermissionService()).getGeoObjectByCode(geoObject.getCode(), goTypeCode);
+      final ServerGeoObjectIF pSGO = new GeoObjectBusinessService(new AllowAllGeoObjectPermissionService()).getGeoObjectByCode(geoObject.getCode(), goTypeCode);
       
       return pSGO;
     }
