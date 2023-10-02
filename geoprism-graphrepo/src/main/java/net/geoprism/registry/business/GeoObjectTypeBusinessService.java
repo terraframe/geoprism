@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.business;
 
-import java.awt.TrayIcon.MessageType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,11 +26,14 @@ import java.util.stream.Collectors;
 import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.business.rbac.Operation;
@@ -44,24 +46,33 @@ import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeLocalCharacterEmbeddedInfo;
 import com.runwaysdk.constants.MdAttributeLocalInfo;
 import com.runwaysdk.constants.MdAttributeReferenceInfo;
+import com.runwaysdk.dataaccess.AttributeDoesNotExistException;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdAttributeBlobDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeEncryptionDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeFileDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeIndicatorDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeLocalDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeStructDAOIF;
+import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeTimeDAOIF;
 import com.runwaysdk.dataaccess.MdAttributeUUIDDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.attributes.AttributeValueException;
+import com.runwaysdk.dataaccess.cache.DataNotFoundException;
 import com.runwaysdk.dataaccess.metadata.MdAttributeBooleanDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeCharacterDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
+import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeLocalCharacterEmbeddedDAO;
 import com.runwaysdk.dataaccess.metadata.MdAttributeUUIDDAO;
 import com.runwaysdk.dataaccess.metadata.MdBusinessDAO;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
@@ -73,6 +84,7 @@ import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
+import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeIndices;
 import com.runwaysdk.system.metadata.MdAttributeUUID;
 import com.runwaysdk.system.metadata.MdBusiness;
@@ -83,6 +95,7 @@ import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
 import net.geoprism.registry.GeoObjectTypeAssignmentException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
+import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.TypeInUseException;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
@@ -90,13 +103,11 @@ import net.geoprism.registry.conversion.LocalizedValueConverter;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
+import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexType;
 import net.geoprism.registry.graph.transition.Transition;
 import net.geoprism.registry.graph.transition.TransitionEvent;
-import net.geoprism.registry.model.ChangeRequestService;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
-import net.geoprism.registry.model.GlobalNotificationMessage;
-import net.geoprism.registry.model.SearchService;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGeoObjectTypeConverter;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -356,13 +367,196 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     roleDAO.grantPermission(Operation.WRITE_ALL, component.getOid());
   }
   
+  /**
+   * The GeoObjectType is a DTO type, which means it contains data which has been localized to a particular user's session.
+   * We need to rebuild this object such that it includes relevant request information (like the correct locale).
+   */
+  public GeoObjectType buildType(ServerGeoObjectType serverType)
+  {
+    com.runwaysdk.system.gis.geo.GeometryType geoPrismgeometryType = serverType.getUniversal().getGeometryType().get(0);
+
+    org.commongeoregistry.adapter.constants.GeometryType cgrGeometryType = GeometryTypeFactory.get(geoPrismgeometryType);
+    
+    LocalizedValue label = RegistryLocalizedValueConverter.convert(serverType.getUniversal().getDisplayLabel());
+    LocalizedValue description = RegistryLocalizedValueConverter.convert(serverType.getUniversal().getDescription());
+    
+    String ownerActerOid = serverType.getUniversal().getOwnerOid();
+
+    String organizationCode = Organization.getRootOrganizationCode(ownerActerOid);
+    
+    MdVertexDAOIF superType = serverType.getMdVertex().getSuperClass();
+    
+    GeoObjectType type = new GeoObjectType(serverType.getUniversal().getUniversalId(), cgrGeometryType, label, description, serverType.getUniversal().getIsGeometryEditable(), organizationCode, ServiceFactory.getAdapter());
+    type.setIsAbstract(serverType.getMdBusiness().getIsAbstract());
+
+    type = convertAttributeTypes(serverType.getUniversal(), type, serverType.getMdBusiness());
+    
+    try
+    {
+      GeoObjectTypeMetadata metadata = GeoObjectTypeMetadata.getByKey(serverType.getUniversal().getKey());
+      type.setIsPrivate(metadata.getIsPrivate());
+      metadata.injectDisplayLabels(type);
+    }
+    catch (DataNotFoundException | AttributeDoesNotExistException e)
+    {
+      type.setIsPrivate(false);
+    }
+
+    if (superType != null && !superType.definesType().equals(GeoVertex.CLASS))
+    {
+      String parentCode = superType.getTypeName();
+
+      type.setSuperTypeCode(parentCode);
+    }
+    
+    serverType.setType(type);
+
+    return type;
+  }
+  
+  /**
+   * Creates an {@link MdAttributeConcrete} for the given {@link MdBusiness}
+   * from the given {@link AttributeType}
+   * 
+   * @pre assumes no attribute has been defined on the type with the given name.
+   * @param geoObjectType
+   *          TODO
+   * @param mdBusiness
+   *          Type to receive attribute definition
+   * @param attributeType
+   *          newly defined attribute
+   * 
+   * @return {@link AttributeType}
+   */
+  @Transaction
+  public MdAttributeConcrete createMdAttributeFromAttributeType(ServerGeoObjectType serverType, AttributeType attributeType)
+  {
+    MdAttributeConcrete mdAttribute = ServerGeoObjectType.createMdAttributeFromAttributeType(serverType.getMdBusiness(), attributeType);
+
+    ListType.createMdAttribute(this, attributeType);
+
+    ( (MdVertexDAO) serverType.getMdVertex() ).copyAttribute(MdAttributeDAO.get(mdAttribute.getOid()));
+
+    return mdAttribute;
+  }
+
+  public void removeAttribute(ServerGeoObjectType serverType, String attributeName)
+  {
+    deleteMdAttributeFromAttributeType(serverType, attributeName);
+
+    serverType.getType().removeAttribute(attributeName);
+
+    // If this did not error out then add to the cache
+    refreshCache(serverType);
+
+    // Refresh the users session
+    ( (Session) Session.getCurrentSession() ).reloadPermissions();
+  }
+
+  /**
+   * Delete the {@link MdAttributeConcreteDAOIF} from the given {
+   * 
+   * @param type
+   *          TODO
+   * @param mdBusiness
+   * @param attributeName
+   */
+  @Transaction
+  public void deleteMdAttributeFromAttributeType(ServerGeoObjectType serverType, String attributeName)
+  {
+    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = ServerGeoObjectType.getMdAttribute(serverType.getMdBusiness(), attributeName);
+
+    if (mdAttributeConcreteDAOIF != null)
+    {
+      if (mdAttributeConcreteDAOIF instanceof MdAttributeTermDAOIF || mdAttributeConcreteDAOIF instanceof MdAttributeMultiTermDAOIF)
+      {
+        String attributeTermKey = TermConverter.buildtAtttributeKey(serverType.getMdBusiness().getTypeName(), mdAttributeConcreteDAOIF.definesAttribute());
+
+        try
+        {
+          Classifier attributeTerm = Classifier.getByKey(attributeTermKey);
+          attributeTerm.delete();
+        }
+        catch (DataNotFoundException e)
+        {
+        }
+      }
+
+      mdAttributeConcreteDAOIF.getBusinessDAO().delete();
+
+      Optional<AttributeType> optional = serverType.getType().getAttribute(attributeName);
+
+      if (optional.isPresent())
+      {
+        ListType.deleteMdAttribute(serverType.getUniversal(), optional.get());
+      }
+    }
+
+    MdAttributeDAOIF mdAttributeDAO = serverType.getMdVertex().definesAttribute(attributeName);
+
+    if (mdAttributeDAO != null)
+    {
+      mdAttributeDAO.getBusinessDAO().delete();
+    }
+  }
+
+  public AttributeType updateAttributeType(ServerGeoObjectType serverType, String attributeTypeJSON)
+  {
+    JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
+    AttributeType attrType = AttributeType.parse(attrObj);
+
+    MdAttributeConcrete mdAttribute = ServerGeoObjectType.updateMdAttributeFromAttributeType(serverType.getMdBusiness(), attrType);
+    attrType = new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
+
+    serverType.getType().addAttribute(attrType);
+
+    // If this did not error out then add to the cache
+    refreshCache(serverType);
+
+    return attrType;
+  }
+  
+  public AttributeType createAttributeType(ServerGeoObjectType serverType, AttributeType attributeType)
+  {
+    MdAttributeConcrete mdAttribute = createMdAttributeFromAttributeType(serverType, attributeType);
+
+    attributeType = new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
+
+    serverType.getType().addAttribute(attributeType);
+
+    // If this did not error out then add to the cache
+    refreshCache(serverType);
+
+    // Refresh the users session
+    if (Session.getCurrentSession() != null)
+    {
+      ( (Session) Session.getCurrentSession() ).reloadPermissions();
+    }
+
+    return attributeType;
+  }
+
+  private void refreshCache(ServerGeoObjectType type)
+  {
+    ServiceFactory.getMetadataCache().addGeoObjectType(type);
+
+    // Refresh all of the subtypes
+    List<ServerGeoObjectType> subtypes = type.getSubtypes();
+    for (ServerGeoObjectType subtype : subtypes)
+    {
+      ServerGeoObjectType type2 = build(subtype.getUniversal());
+
+      ServiceFactory.getMetadataCache().addGeoObjectType(type2);
+    }
+  }
+  
   public ServerGeoObjectType build(Universal universal)
   {
     MdBusiness mdBusiness = universal.getMdBusiness();
     MdGeoVertexDAO mdVertex = GeoVertexType.getMdGeoVertex(universal.getUniversalId());
     
     ServerGeoObjectType server = new ServerGeoObjectType(null, universal, mdBusiness, mdVertex);
-    server.buildType();
+    buildType(server);
     
     return server;
   }
@@ -561,9 +755,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
 
     // Delete the transition and transition events
-    TransitionEvent.removeAll(this);
+    TransitionEvent.removeAll(type);
 
-    Transition.removeAll(this);
+    Transition.removeAll(type);
   }
   
   /**
@@ -610,7 +804,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(got.getOrganization().getCode(), got, got.getIsPrivate());
 
-    AttributeType attrType = got.updateAttributeType(attributeTypeJSON);
+    AttributeType attrType = updateAttributeType(got, attributeTypeJSON);
 
     return attrType;
   }
@@ -635,7 +829,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(got.getOrganization().getCode(), got, got.getIsPrivate());
 
-    got.removeAttribute(attributeName);
+    removeAttribute(got, attributeName);
   }
   
   /**
@@ -811,7 +1005,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       }
     }
     
-    return gots.stream().map(server -> server.buildType()).collect(Collectors.toList());
+    return gots.stream().map(server -> buildType(server)).collect(Collectors.toList());
   }
   
   public static boolean isValidName(String name)

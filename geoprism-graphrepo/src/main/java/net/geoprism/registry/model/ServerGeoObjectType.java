@@ -99,7 +99,6 @@ import net.geoprism.registry.TypeInUseException;
 import net.geoprism.registry.conversion.GeometryTypeFactory;
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
-import net.geoprism.registry.conversion.ServerGeoObjectTypeConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.graph.GeoVertexType;
@@ -139,51 +138,6 @@ public class ServerGeoObjectType implements ServerElement, AttributedType
     return type;
   }
   
-  /**
-   * The GeoObjectType is a DTO type, which means it contains data which has been localized to a particular user's session.
-   * We need to rebuild this object such that it includes relevant request information (like the correct locale).
-   */
-  public GeoObjectType buildType()
-  {
-    com.runwaysdk.system.gis.geo.GeometryType geoPrismgeometryType = universal.getGeometryType().get(0);
-
-    org.commongeoregistry.adapter.constants.GeometryType cgrGeometryType = GeometryTypeFactory.get(geoPrismgeometryType);
-    
-    LocalizedValue label = RegistryLocalizedValueConverter.convert(universal.getDisplayLabel());
-    LocalizedValue description = RegistryLocalizedValueConverter.convert(universal.getDescription());
-    
-    String ownerActerOid = universal.getOwnerOid();
-
-    String organizationCode = Organization.getRootOrganizationCode(ownerActerOid);
-    
-    MdVertexDAOIF superType = mdVertex.getSuperClass();
-    
-    this.type = new GeoObjectType(universal.getUniversalId(), cgrGeometryType, label, description, universal.getIsGeometryEditable(), organizationCode, ServiceFactory.getAdapter());
-    this.type.setIsAbstract(mdBusiness.getIsAbstract());
-
-    this.type = new ServerGeoObjectTypeConverter().convertAttributeTypes(universal, this.type, mdBusiness);
-    
-    try
-    {
-      GeoObjectTypeMetadata metadata = GeoObjectTypeMetadata.getByKey(universal.getKey());
-      this.type.setIsPrivate(metadata.getIsPrivate());
-      metadata.injectDisplayLabels(type);
-    }
-    catch (DataNotFoundException | AttributeDoesNotExistException e)
-    {
-      this.type.setIsPrivate(false);
-    }
-
-    if (superType != null && !superType.definesType().equals(GeoVertex.CLASS))
-    {
-      String parentCode = superType.getTypeName();
-
-      this.type.setSuperTypeCode(parentCode);
-    }
-
-    return this.type;
-  }
-
   public void setType(GeoObjectType type)
   {
     this.type = type;
@@ -298,40 +252,6 @@ public class ServerGeoObjectType implements ServerElement, AttributedType
     return createAttributeType(attrType);
   }
 
-  public AttributeType createAttributeType(AttributeType attributeType)
-  {
-    MdAttributeConcrete mdAttribute = this.createMdAttributeFromAttributeType(attributeType);
-
-    attributeType = new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
-
-    this.type.addAttribute(attributeType);
-
-    // If this did not error out then add to the cache
-    this.refreshCache();
-
-    // Refresh the users session
-    if (Session.getCurrentSession() != null)
-    {
-      ( (Session) Session.getCurrentSession() ).reloadPermissions();
-    }
-
-    return attributeType;
-  }
-
-  private void refreshCache()
-  {
-    ServiceFactory.getMetadataCache().addGeoObjectType(this);
-
-    // Refresh all of the subtypes
-    List<ServerGeoObjectType> subtypes = this.getSubtypes();
-    for (ServerGeoObjectType subtype : subtypes)
-    {
-      ServerGeoObjectType type = new ServerGeoObjectTypeConverter().build(subtype.getUniversal());
-
-      ServiceFactory.getMetadataCache().addGeoObjectType(type);
-    }
-  }
-
   /**
    * @return The organization associated with this GeoObjectType.
    */
@@ -356,108 +276,6 @@ public class ServerGeoObjectType implements ServerElement, AttributedType
   public String getOrganizationCode()
   {
     return this.getOrganization().getCode();
-  }
-
-  /**
-   * Creates an {@link MdAttributeConcrete} for the given {@link MdBusiness}
-   * from the given {@link AttributeType}
-   * 
-   * @pre assumes no attribute has been defined on the type with the given name.
-   * @param geoObjectType
-   *          TODO
-   * @param mdBusiness
-   *          Type to receive attribute definition
-   * @param attributeType
-   *          newly defined attribute
-   * 
-   * @return {@link AttributeType}
-   */
-  @Transaction
-  public MdAttributeConcrete createMdAttributeFromAttributeType(AttributeType attributeType)
-  {
-    MdAttributeConcrete mdAttribute = ServerGeoObjectType.createMdAttributeFromAttributeType(this.mdBusiness, attributeType);
-
-    ListType.createMdAttribute(this, attributeType);
-
-    ( (MdVertexDAO) this.mdVertex ).copyAttribute(MdAttributeDAO.get(mdAttribute.getOid()));
-
-    return mdAttribute;
-  }
-
-  public void removeAttribute(String attributeName)
-  {
-    this.deleteMdAttributeFromAttributeType(attributeName);
-
-    this.type.removeAttribute(attributeName);
-
-    // If this did not error out then add to the cache
-    this.refreshCache();
-
-    // Refresh the users session
-    ( (Session) Session.getCurrentSession() ).reloadPermissions();
-  }
-
-  /**
-   * Delete the {@link MdAttributeConcreteDAOIF} from the given {
-   * 
-   * @param type
-   *          TODO
-   * @param mdBusiness
-   * @param attributeName
-   */
-  @Transaction
-  public void deleteMdAttributeFromAttributeType(String attributeName)
-  {
-    MdAttributeConcreteDAOIF mdAttributeConcreteDAOIF = getMdAttribute(this.mdBusiness, attributeName);
-
-    if (mdAttributeConcreteDAOIF != null)
-    {
-      if (mdAttributeConcreteDAOIF instanceof MdAttributeTermDAOIF || mdAttributeConcreteDAOIF instanceof MdAttributeMultiTermDAOIF)
-      {
-        String attributeTermKey = TermConverter.buildtAtttributeKey(this.mdBusiness.getTypeName(), mdAttributeConcreteDAOIF.definesAttribute());
-
-        try
-        {
-          Classifier attributeTerm = Classifier.getByKey(attributeTermKey);
-          attributeTerm.delete();
-        }
-        catch (DataNotFoundException e)
-        {
-        }
-      }
-
-      mdAttributeConcreteDAOIF.getBusinessDAO().delete();
-
-      Optional<AttributeType> optional = this.type.getAttribute(attributeName);
-
-      if (optional.isPresent())
-      {
-        ListType.deleteMdAttribute(this.universal, optional.get());
-      }
-    }
-
-    MdAttributeDAOIF mdAttributeDAO = this.mdVertex.definesAttribute(attributeName);
-
-    if (mdAttributeDAO != null)
-    {
-      mdAttributeDAO.getBusinessDAO().delete();
-    }
-  }
-
-  public AttributeType updateAttributeType(String attributeTypeJSON)
-  {
-    JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
-    AttributeType attrType = AttributeType.parse(attrObj);
-
-    MdAttributeConcrete mdAttribute = ServerGeoObjectType.updateMdAttributeFromAttributeType(this.mdBusiness, attrType);
-    attrType = new RegistryAttributeTypeConverter().build(MdAttributeConcreteDAO.get(mdAttribute.getOid()));
-
-    this.type.addAttribute(attrType);
-
-    // If this did not error out then add to the cache
-    this.refreshCache();
-
-    return attrType;
   }
 
   public List<ServerGeoObjectType> getChildren(ServerHierarchyType hierarchy)
