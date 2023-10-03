@@ -109,7 +109,6 @@ import net.geoprism.registry.graph.transition.Transition;
 import net.geoprism.registry.graph.transition.TransitionEvent;
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 import net.geoprism.registry.model.ServerGeoObjectType;
-import net.geoprism.registry.model.ServerGeoObjectTypeConverter;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;
 import net.geoprism.registry.service.ServiceFactory;
@@ -433,8 +432,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   {
     MdAttributeConcrete mdAttribute = ServerGeoObjectType.createMdAttributeFromAttributeType(serverType.getMdBusiness(), attributeType);
 
-    ListType.createMdAttribute(this, attributeType);
-
     ( (MdVertexDAO) serverType.getMdVertex() ).copyAttribute(MdAttributeDAO.get(mdAttribute.getOid()));
 
     return mdAttribute;
@@ -483,13 +480,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       }
 
       mdAttributeConcreteDAOIF.getBusinessDAO().delete();
-
-      Optional<AttributeType> optional = serverType.getType().getAttribute(attributeName);
-
-      if (optional.isPresent())
-      {
-        ListType.deleteMdAttribute(serverType.getUniversal(), optional.get());
-      }
     }
 
     MdAttributeDAOIF mdAttributeDAO = serverType.getMdVertex().definesAttribute(attributeName);
@@ -534,6 +524,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
 
     return attributeType;
+  }
+  
+  public AttributeType createAttributeType(ServerGeoObjectType sgot, String attributeTypeJSON)
+  {
+    JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
+
+    AttributeType attrType = AttributeType.parse(attrObj);
+
+    return createAttributeType(sgot, attrType);
   }
 
   private void refreshCache(ServerGeoObjectType type)
@@ -780,7 +779,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanWrite(got.getOrganization().getCode(), got, got.getIsPrivate());
 
-    AttributeType attrType = got.createAttributeType(attributeTypeJSON);
+    AttributeType attrType = createAttributeType(got, attributeTypeJSON);
 
     return attrType;
   }

@@ -18,7 +18,6 @@
  */
 package net.geoprism.registry.model;
 
-import java.awt.TrayIcon.MessageType;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -46,29 +45,19 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.runwaysdk.business.BusinessFacade;
 import com.runwaysdk.constants.MdAttributeCharacterInfo;
 import com.runwaysdk.constants.MdAttributeConcreteInfo;
 import com.runwaysdk.constants.MdAttributeDoubleInfo;
-import com.runwaysdk.dataaccess.AttributeDoesNotExistException;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeMultiTermDAOIF;
-import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdBusinessDAOIF;
 import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
-import com.runwaysdk.dataaccess.cache.DataNotFoundException;
-import com.runwaysdk.dataaccess.metadata.MdAttributeConcreteDAO;
-import com.runwaysdk.dataaccess.metadata.MdAttributeDAO;
-import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.dataaccess.transaction.TransactionState;
 import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
 import com.runwaysdk.query.OIterator;
 import com.runwaysdk.query.QueryFactory;
-import com.runwaysdk.session.Session;
 import com.runwaysdk.system.Actor;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -95,15 +84,8 @@ import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.Organization;
-import net.geoprism.registry.TypeInUseException;
-import net.geoprism.registry.conversion.GeometryTypeFactory;
-import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;
-import net.geoprism.registry.graph.GeoVertex;
-import net.geoprism.registry.graph.GeoVertexType;
-import net.geoprism.registry.graph.transition.Transition;
-import net.geoprism.registry.graph.transition.TransitionEvent;
 import net.geoprism.registry.service.ServiceFactory;
 //import net.geoprism.registry.service.ChangeRequestService;
 //import net.geoprism.registry.service.SearchService;
@@ -113,7 +95,7 @@ import net.geoprism.registry.service.ServiceFactory;
 //import net.geoprism.registry.ws.MessageType;
 //import net.geoprism.registry.ws.NotificationFacade;
 
-public class ServerGeoObjectType implements ServerElement, AttributedType
+public class ServerGeoObjectType implements ServerElement
 {
   // private Logger logger = LoggerFactory.getLogger(ServerLeafGeoObject.class);
 
@@ -241,15 +223,6 @@ public class ServerGeoObjectType implements ServerElement, AttributedType
   public GeoObjectTypeMetadata getMetadata()
   {
     return GeoObjectTypeMetadata.getByKey(this.universal.getKey());
-  }
-
-  public AttributeType createAttributeType(String attributeTypeJSON)
-  {
-    JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
-
-    AttributeType attrType = AttributeType.parse(attrObj);
-
-    return createAttributeType(attrType);
   }
 
   /**
@@ -607,18 +580,6 @@ public class ServerGeoObjectType implements ServerElement, AttributedType
     }
 
     return RegistryRole.Type.getRM_RoleName(this.getOrganization().getCode(), this.getCode());
-  }
-
-  public String getAdminRoleName()
-  {
-    ServerGeoObjectType superType = this.getSuperType();
-
-    if (superType != null)
-    {
-      return superType.getOrganization().getRegistryAdminRoleName();
-    }
-
-    return this.getOrganization().getRegistryAdminRoleName();
   }
 
   /**
