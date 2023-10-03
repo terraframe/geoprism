@@ -59,6 +59,7 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.permission.GeoObjectPermissionService;
 import net.geoprism.registry.permission.RolePermissionService;
 import net.geoprism.registry.query.graph.GeoObjectTypeRestrictionUtil;
+import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.transition.TransitionPermissionService;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;

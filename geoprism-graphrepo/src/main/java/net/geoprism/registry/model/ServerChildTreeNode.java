@@ -30,6 +30,7 @@ import org.commongeoregistry.adapter.metadata.HierarchyType;
 
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
+import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.ServiceFactory;
 
 public class ServerChildTreeNode extends ServerTreeNode
@@ -79,7 +80,7 @@ public class ServerChildTreeNode extends ServerTreeNode
     final GeoObjectPermissionServiceIF goPermServ = ServiceFactory.getGeoObjectPermissionService();
 
     GeoObject go = this.getGeoObject().toGeoObject(this.getStartDate());
-    HierarchyType ht = this.getHierarchyType() != null ? this.getHierarchyType().toHierarchyType() : null;
+    HierarchyType ht = this.getHierarchyType() != null ? ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).toHierarchyType(this.getHierarchyType()) : null;
 
     ChildTreeNode node = new ChildTreeNode(go, ht);
 

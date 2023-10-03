@@ -19,8 +19,13 @@
 package net.geoprism.registry.business;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.Optional;
@@ -30,6 +35,7 @@ import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.RegistryRole;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
@@ -76,6 +82,8 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.gis.dataaccess.MdAttributeGeometryDAOIF;
 import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
@@ -83,6 +91,7 @@ import com.runwaysdk.system.Actor;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
+import com.runwaysdk.system.gis.metadata.graph.MdGeoVertexQuery;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdAttributeIndices;
@@ -90,10 +99,13 @@ import com.runwaysdk.system.metadata.MdAttributeUUID;
 import com.runwaysdk.system.metadata.MdBusiness;
 
 import net.geoprism.ontology.Classifier;
+import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.registry.ChainInheritanceException;
 import net.geoprism.registry.CodeLengthException;
 import net.geoprism.registry.DuplicateGeoObjectTypeException;
 import net.geoprism.registry.GeoObjectTypeAssignmentException;
+import net.geoprism.registry.HierarchicalRelationshipType;
+import net.geoprism.registry.HierarchyRootException;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
@@ -116,8 +128,290 @@ import net.geoprism.registry.service.ServiceFactory;
 @Component
 public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServiceIF
 {
+  @Autowired
+  private HierarchyTypeBusinessServiceIF htServ;
+  
   public GeoObjectTypeBusinessService()
   {
+  }
+  
+  public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType sgot)
+  {
+    List<ServerGeoObjectType> children = new LinkedList<>();
+
+    if (sgot.getIsAbstract())
+    {
+      MdGeoVertexQuery query = new MdGeoVertexQuery(new QueryFactory());
+      query.WHERE(query.getSuperMdVertex().EQ(sgot.getMdVertex().getOid()));
+
+      try (OIterator<? extends MdGeoVertex> iterator = query.getIterator())
+      {
+        while (iterator.hasNext())
+        {
+          MdGeoVertex cUniversal = (MdGeoVertex) iterator.next();
+
+          children.add(ServerGeoObjectType.get(MdGeoVertexDAO.get(cUniversal.getOid())));
+        }
+
+      }
+    }
+
+    return children;
+  }
+
+  public Set<ServerHierarchyType> getHierarchiesOfSubTypes(ServerGeoObjectType sgot)
+  {
+    List<ServerGeoObjectType> subtypes = getSubtypes(sgot);
+    Set<ServerHierarchyType> hierarchyTypes = new TreeSet<ServerHierarchyType>(new Comparator<ServerHierarchyType>()
+    {
+      @Override
+      public int compare(ServerHierarchyType o1, ServerHierarchyType o2)
+      {
+        return o1.getCode().compareTo(o2.getCode());
+      }
+    });
+
+    for (ServerGeoObjectType type : subtypes)
+    {
+      hierarchyTypes.addAll(getHierarchies(type, false));
+    }
+
+    return hierarchyTypes;
+  }
+  
+  
+  
+  
+  
+  /**
+   * @param sType
+   *          Hierarchy Type
+   * 
+   * @return If this geo object type is the direct (non-inherited) root of the
+   *         given hierarchy
+   */
+  public boolean isRoot(ServerGeoObjectType sgot, ServerHierarchyType sType)
+  {
+    List<ServerGeoObjectType> roots = htServ.getDirectRootNodes(sType);
+
+    for (ServerGeoObjectType root : roots)
+    {
+      if (root.getCode().equals(sgot.getType().getCode()))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @Transaction
+  public InheritedHierarchyAnnotation setInheritedHierarchy(ServerGeoObjectType sgot, ServerHierarchyType forHierarchy, ServerHierarchyType inheritedHierarchy)
+  {
+    // Ensure that this geo object type is the root geo object type for the "For
+    // Hierarchy"
+    if (!this.isRoot(sgot, forHierarchy) || sgot.getIsAbstract())
+    {
+      throw new HierarchyRootException();
+    }
+
+    HierarchicalRelationshipType fhrt = forHierarchy.getHierarchicalRelationshipType();
+    HierarchicalRelationshipType ihrt = inheritedHierarchy.getHierarchicalRelationshipType();
+
+    if (InheritedHierarchyAnnotation.getByForHierarchical(fhrt) != null)
+    {
+      throw new UnsupportedOperationException("A hierarchy cannot inherit from more than one other hierarchy");
+    }
+
+    if (isRoot(sgot, inheritedHierarchy))
+    {
+      throw new UnsupportedOperationException("A root node in a hierarchy cannot be inherited");
+    }
+
+    InheritedHierarchyAnnotation annotation = new InheritedHierarchyAnnotation();
+    annotation.setUniversal(sgot.getUniversal());
+    annotation.setInheritedHierarchicalRelationshipType(ihrt);
+    annotation.setForHierarchicalRelationshipType(fhrt);
+    annotation.apply();
+
+    return annotation;
+  }
+
+  @Transaction
+  public void removeInheritedHierarchy(ServerHierarchyType forHierarchy)
+  {
+    InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.getByForHierarchical(forHierarchy.getHierarchicalRelationshipType());
+
+    if (annotation != null)
+    {
+      annotation.delete();
+    }
+  }
+  
+  public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot)
+  {
+    return getHierarchies(sgot, true);
+  }
+
+  public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot, boolean includeFromSuperType)
+  {
+    List<ServerHierarchyType> hierarchies = new LinkedList<ServerHierarchyType>();
+
+    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
+    Universal root = Universal.getRoot();
+
+    for (ServerHierarchyType hierarchyType : hierarchyTypes)
+    {
+      Organization org = hierarchyType.getOrganization();
+
+      if (ServiceFactory.getHierarchyPermissionService().canRead(org.getCode()))
+      {
+        if (isRoot(sgot, hierarchyType))
+        {
+          hierarchies.add(hierarchyType);
+        }
+        else
+        {
+          // Note: Ordered ancestors always includes self
+          Collection<?> parents = GeoEntityUtil.getOrderedAncestors(root, sgot.getUniversal(), hierarchyType.getUniversalType());
+
+          if (parents.size() > 1)
+          {
+            hierarchies.add(hierarchyType);
+          }
+        }
+
+      }
+    }
+
+    if (includeFromSuperType)
+    {
+      ServerGeoObjectType superType = sgot.getSuperType();
+
+      if (superType != null)
+      {
+        hierarchies.addAll(getHierarchies(superType, includeFromSuperType));
+      }
+    }
+
+    return hierarchies;
+  }
+
+  public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchy)
+  {
+    return this.getInheritedHierarchy(sgot, hierarchy.getHierarchicalRelationshipType());
+  }
+
+  public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, HierarchicalRelationshipType hierarchicalRelationship)
+  {
+    InheritedHierarchyAnnotation annotation = InheritedHierarchyAnnotation.get(sgot.getUniversal(), hierarchicalRelationship);
+
+    if (annotation != null)
+    {
+      HierarchicalRelationshipType inheritedHierarchicalRelationshipType = annotation.getInheritedHierarchicalRelationshipType();
+
+      return ServerHierarchyType.get(inheritedHierarchicalRelationshipType);
+    }
+
+    return null;
+  }
+
+  /**
+   * Returns all ancestors of a GeoObjectType
+   * 
+   * @param hierarchyType
+   *          The Hierarchy code
+   * @param includeInheritedTypes
+   *          TODO
+   * @param GeoObjectType
+   *          child
+   * 
+   * @return
+   */
+  public List<ServerGeoObjectType> getTypeAncestors(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, Boolean includeInheritedTypes)
+  {
+    List<ServerGeoObjectType> ancestors = new LinkedList<ServerGeoObjectType>();
+
+    Collection<com.runwaysdk.business.ontology.Term> list = GeoEntityUtil.getOrderedAncestors(Universal.getRoot(), sgot.getUniversal(), hierarchyType.getUniversalType());
+
+    list.forEach(term -> {
+      Universal parent = (Universal) term;
+
+      if (!parent.getKeyName().equals(Universal.ROOT) && !parent.getOid().equals(sgot.getUniversal().getOid()))
+      {
+        ServerGeoObjectType sParent = ServerGeoObjectType.get(parent);
+
+        ancestors.add(sParent);
+
+        if (includeInheritedTypes && isRoot(sParent, hierarchyType))
+        {
+          ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent, hierarchyType);
+
+          if (inheritedHierarchy != null)
+          {
+            ancestors.addAll(0, getTypeAncestors(sParent, inheritedHierarchy, includeInheritedTypes));
+          }
+        }
+      }
+    });
+
+    if (ancestors.size() == 0)
+    {
+      ServerGeoObjectType superType = sgot.getSuperType();
+
+      if (superType != null)
+      {
+        return getTypeAncestors(superType, hierarchyType, includeInheritedTypes);
+      }
+    }
+
+    return ancestors;
+  }
+
+  /**
+   * Finds the actual hierarchy used for the parent type if the parent type is
+   * inherited from a different hierarchy
+   * 
+   * @param hierarchyType
+   * @param parent
+   * @return
+   */
+  public ServerHierarchyType findHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, ServerGeoObjectType parent)
+  {
+    Collection<com.runwaysdk.business.ontology.Term> list = GeoEntityUtil.getOrderedAncestors(Universal.getRoot(), sgot.getUniversal(), hierarchyType.getUniversalType());
+
+    for (Object term : list)
+    {
+      Universal universal = (Universal) term;
+
+      if (parent.getUniversal().getOid().equals(universal.getOid()))
+      {
+        return hierarchyType;
+      }
+
+      ServerGeoObjectType sParent = ServerGeoObjectType.get(universal);
+
+      if (isRoot(sParent, hierarchyType))
+      {
+        ServerHierarchyType inheritedHierarchy = getInheritedHierarchy(sParent, hierarchyType);
+
+        if (inheritedHierarchy != null)
+        {
+          return findHierarchy(sParent, inheritedHierarchy, parent);
+        }
+      }
+    }
+
+    return hierarchyType;
+  }
+  
+  
+  
+  
+  
+  public List<ServerGeoObjectType> getChildren(ServerGeoObjectType sgot, ServerHierarchyType hierarchy)
+  {
+    return htServ.getChildren(hierarchy, sgot);
   }
   
   /**
@@ -540,7 +834,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     ServiceFactory.getMetadataCache().addGeoObjectType(type);
 
     // Refresh all of the subtypes
-    List<ServerGeoObjectType> subtypes = type.getSubtypes();
+    List<ServerGeoObjectType> subtypes = getSubtypes(type);
     for (ServerGeoObjectType subtype : subtypes)
     {
       ServerGeoObjectType type2 = build(subtype.getUniversal());
@@ -621,7 +915,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     ServerGeoObjectType child = ServerGeoObjectType.get(code);
     ServerHierarchyType hierarchyType = ServerHierarchyType.get(hierarchyCode);
 
-    List<ServerGeoObjectType> ancestors = child.getTypeAncestors(hierarchyType, includeInheritedTypes);
+    List<ServerGeoObjectType> ancestors = getTypeAncestors(child, hierarchyType, includeInheritedTypes);
 
     if (includeChild)
     {
@@ -676,7 +970,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
   @Transaction
   protected void deleteInTransaction(ServerGeoObjectType type)
   {
-    List<ServerHierarchyType> hierarchies = type.getHierarchies(true);
+    List<ServerHierarchyType> hierarchies = getHierarchies(type, true);
 
     if (hierarchies.size() > 0)
     {
@@ -688,7 +982,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     /*
      * Delete all subtypes
      */
-    List<ServerGeoObjectType> subtypes = type.getSubtypes();
+    List<ServerGeoObjectType> subtypes = getSubtypes(type);
 
     for (ServerGeoObjectType subtype : subtypes)
     {
@@ -869,7 +1163,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     // isPrivate). We should refresh them as well.
     if (geoObjectTypeModifiedApplied.getIsAbstract())
     {
-      List<ServerGeoObjectType> subtypes = geoObjectTypeModifiedApplied.getSubtypes();
+      List<ServerGeoObjectType> subtypes = getSubtypes(geoObjectTypeModifiedApplied);
 
       for (ServerGeoObjectType subtype : subtypes)
       {

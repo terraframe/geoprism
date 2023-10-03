@@ -28,9 +28,11 @@ import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 
+import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.service.ServiceFactory;
 
 /**
  * This is a singleton instance that caches {@link ServerGeoObjectType} objects
@@ -175,7 +177,7 @@ public class ServerMetadataCache
   {
     this.hierarchyTypeMap.put(hierarchyType.getCode(), hierarchyType);
 
-    getAdapter().getMetadataCache().addHierarchyType(hierarchyType.toHierarchyType());
+    getAdapter().getMetadataCache().addHierarchyType(ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).toHierarchyType(hierarchyType));
   }
 
   public Optional<ServerHierarchyType> getHierachyType(String code)

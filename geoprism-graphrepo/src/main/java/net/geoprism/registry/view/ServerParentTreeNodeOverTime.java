@@ -50,6 +50,7 @@ import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.business.GeoObjectBusinessService;
+import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -235,7 +236,7 @@ public class ServerParentTreeNodeOverTime
       final Hierarchy hierarchy = entry.getValue();
       final ServerHierarchyType ht = hierarchy.getType();
 
-      List<ServerGeoObjectType> parentTypes = this.type.getTypeAncestors(ht, true);
+      List<ServerGeoObjectType> parentTypes = ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).getTypeAncestors(this.type, ht, true);
       Collections.reverse(parentTypes);
 
       // Populate a "types" array with all ancestors of the GOT they passed us
@@ -256,7 +257,7 @@ public class ServerParentTreeNodeOverTime
 
           rTypes.add(pObject);
           
-          if (pType.isRoot(inherited))
+          if (ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).isRoot(pType, inherited))
           {
             InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.getByForHierarchical(ht.getHierarchicalRelationshipType());
             

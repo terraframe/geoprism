@@ -38,7 +38,9 @@ import com.runwaysdk.session.RequestType;
 import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.business.HierarchyBusinessServiceIF;
+import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -51,6 +53,13 @@ public class HierarchyService implements HierarchyServiceIF
 {
   @Autowired
   private HierarchyBusinessServiceIF service;
+  
+  @Autowired
+  private GeoObjectTypeBusinessServiceIF gotServ;
+  
+  @Autowired
+  private HierarchyTypeBusinessServiceIF htBizServ;
+  
   
   @Request(RequestType.SESSION)
   public JsonArray getHierarchiesForType(String sessionId, String code, Boolean includeTypes)
@@ -68,9 +77,9 @@ public class HierarchyService implements HierarchyServiceIF
     {
       if (htpService.canRead(sHT.getOrganizationCode()))
       {
-        List<ServerGeoObjectType> parents = geoObjectType.getTypeAncestors(sHT, true);
+        List<ServerGeoObjectType> parents = gotServ.getTypeAncestors(geoObjectType, sHT, true);
 
-        if (parents.size() > 0 || geoObjectType.isRoot(sHT))
+        if (parents.size() > 0 || gotServ.isRoot(geoObjectType, sHT))
         {
           JsonObject object = new JsonObject();
           object.addProperty("code", sHT.getCode());
@@ -106,7 +115,7 @@ public class HierarchyService implements HierarchyServiceIF
       {
         if (htpService.canWrite(sHT.getOrganizationCode()))
         {
-          if (geoObjectType.isRoot(sHT))
+          if (gotServ.isRoot(geoObjectType, sHT))
           {
             JsonObject object = new JsonObject();
             object.addProperty("code", sHT.getCode());
@@ -126,7 +135,7 @@ public class HierarchyService implements HierarchyServiceIF
   public JsonArray getHierarchiesForSubtypes(String sessionId, String code)
   {
     ServerGeoObjectType geoObjectType = ServerGeoObjectType.get(code);
-    Set<ServerHierarchyType> hierarchyTypes = geoObjectType.getHierarchiesOfSubTypes();
+    Set<ServerHierarchyType> hierarchyTypes = gotServ.getHierarchiesOfSubTypes(geoObjectType);
 
     JsonArray hierarchies = new JsonArray();
 
@@ -217,8 +226,8 @@ public class HierarchyService implements HierarchyServiceIF
 
       return ! ( ( context.equals(PermissionContext.READ) && !hierPermServ.canRead(org.getCode()) ) || ( context.equals(PermissionContext.WRITE) && !hierPermServ.canWrite(org.getCode()) ) );
     })
-        .filter(type -> type.hasVisibleRoot())
-        .map(type -> type.toHierarchyType(false)).collect(Collectors.toList());
+        .filter(type -> htBizServ.hasVisibleRoot(type))
+        .map(type -> htBizServ.toHierarchyType(type, false)).collect(Collectors.toList());
 
     return hierarchies.toArray(new HierarchyType[hierarchies.size()]);
   }
@@ -257,9 +266,9 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServiceFactory.getHierarchyPermissionService().enforceCanWrite(type.getOrganization().getCode());
 
-    type.update(hierarchyType);
+    htBizServ.update(type, hierarchyType);
 
-    return type.toHierarchyType();
+    return htBizServ.toHierarchyType(type);
   }
 
   /**
@@ -276,7 +285,7 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServiceFactory.getHierarchyPermissionService().enforceCanDelete(type.getOrganization().getCode());
 
-    type.delete();
+    htBizServ.delete(type);
   }
 
   /**
@@ -301,9 +310,9 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(type, parentType, childType);
 
-    type.addToHierarchy(parentType, childType);
+    htBizServ.addToHierarchy(type, parentType, childType);
 
-    return type.toHierarchyType();
+    return htBizServ.toHierarchyType(type);
   }
 
   /**
@@ -335,9 +344,9 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanAddChild(type, parentType, middleType);
 
-    type.insertBetween(parentType, middleType, youngestTypes);
+    htBizServ.insertBetween(type, parentType, middleType, youngestTypes);
 
-    return type.toHierarchyType();
+    return htBizServ.toHierarchyType(type);
   }
 
   /**
@@ -363,10 +372,10 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServerGeoObjectType type = ServerGeoObjectType.get(geoObjectTypeCode);
 
-    type.setInheritedHierarchy(forHierarchy, inheritedHierarchy);
-    forHierarchy.refresh();
+    gotServ.setInheritedHierarchy(type, forHierarchy, inheritedHierarchy);
+    htBizServ.refresh(forHierarchy);
 
-    return forHierarchy.toHierarchyType();
+    return htBizServ.toHierarchyType(forHierarchy);
   }
 
   /**
@@ -389,10 +398,10 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServerGeoObjectType type = ServerGeoObjectType.get(geoObjectTypeCode);
 
-    type.removeInheritedHierarchy(forHierarchy);
-    forHierarchy.refresh();
+    gotServ.removeInheritedHierarchy(forHierarchy);
+    htBizServ.refresh(forHierarchy);
 
-    return forHierarchy.toHierarchyType();
+    return htBizServ.toHierarchyType(forHierarchy);
   }
 
   /**
@@ -417,9 +426,9 @@ public class HierarchyService implements HierarchyServiceIF
 
     ServiceFactory.getGeoObjectTypeRelationshipPermissionService().enforceCanRemoveChild(type, parentType, childType);
 
-    type.removeChild(parentType, childType, migrateChildren);
+    htBizServ.removeChild(type, parentType, childType, migrateChildren);
 
-    return type.toHierarchyType();
+    return htBizServ.toHierarchyType(type);
   }
 
 }

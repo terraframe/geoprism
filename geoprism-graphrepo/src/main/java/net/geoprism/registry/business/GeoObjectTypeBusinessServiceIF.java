@@ -1,19 +1,85 @@
 package net.geoprism.registry.business;
 
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
+import com.runwaysdk.dataaccess.transaction.Transaction;
+import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
+import com.runwaysdk.query.OIterator;
+import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.Universal;
+import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
+import com.runwaysdk.system.gis.metadata.graph.MdGeoVertexQuery;
 import com.runwaysdk.system.metadata.MdBusiness;
 
+import net.geoprism.registry.HierarchicalRelationshipType;
+import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.model.ServerGeoObjectType;
+import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;
 
 public interface GeoObjectTypeBusinessServiceIF
 {
+  public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType sgot);
+
+  public Set<ServerHierarchyType> getHierarchiesOfSubTypes(ServerGeoObjectType sgot);
+  
+  /**
+   * @param sType
+   *          Hierarchy Type
+   * 
+   * @return If this geo object type is the direct (non-inherited) root of the
+   *         given hierarchy
+   */
+  public boolean isRoot(ServerGeoObjectType sgot, ServerHierarchyType sType);
+
+  @Transaction
+  public InheritedHierarchyAnnotation setInheritedHierarchy(ServerGeoObjectType sgot, ServerHierarchyType forHierarchy, ServerHierarchyType inheritedHierarchy);
+
+  @Transaction
+  public void removeInheritedHierarchy(ServerHierarchyType forHierarchy);
+  
+  public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot);
+
+  public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot, boolean includeFromSuperType);
+
+  public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchy);
+
+  public ServerHierarchyType getInheritedHierarchy(ServerGeoObjectType sgot, HierarchicalRelationshipType hierarchicalRelationship);
+
+  /**
+   * Returns all ancestors of a GeoObjectType
+   * 
+   * @param hierarchyType
+   *          The Hierarchy code
+   * @param includeInheritedTypes
+   *          TODO
+   * @param GeoObjectType
+   *          child
+   * 
+   * @return
+   */
+  public List<ServerGeoObjectType> getTypeAncestors(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, Boolean includeInheritedTypes);
+
+  /**
+   * Finds the actual hierarchy used for the parent type if the parent type is
+   * inherited from a different hierarchy
+   * 
+   * @param hierarchyType
+   * @param parent
+   * @return
+   */
+  public ServerHierarchyType findHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, ServerGeoObjectType parent);
+  
+  public List<ServerGeoObjectType> getChildren(ServerGeoObjectType sgot, ServerHierarchyType hierarchy);
+  
   public void createDefaultAttributes(Universal universal, MdBusiness definingMdBusiness);
 
   public void createDefaultAttributes(Universal universal, MdGraphClassDAOIF mdClass);
