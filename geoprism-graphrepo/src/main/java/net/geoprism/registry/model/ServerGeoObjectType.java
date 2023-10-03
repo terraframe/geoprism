@@ -298,18 +298,6 @@ public class ServerGeoObjectType implements ServerElement
     return GeoObjectTypeMetadata.sGetClassDisplayLabel() + " : " + this.getCode();
   }
 
-  public String getMaintainerRoleName()
-  {
-    ServerGeoObjectType superType = this.getSuperType();
-
-    if (superType != null)
-    {
-      return superType.getMaintainerRoleName();
-    }
-
-    return RegistryRole.Type.getRM_RoleName(this.getOrganization().getCode(), this.getCode());
-  }
-
   /**
    * Returns a {@link Universal} from the code value on the given
    * {@link GeoObjectType}.
