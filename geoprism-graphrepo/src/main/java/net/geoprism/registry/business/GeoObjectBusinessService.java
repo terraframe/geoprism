@@ -4,17 +4,17 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.business;
 
@@ -119,16 +119,22 @@ import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 @Component
 public class GeoObjectBusinessService extends RegistryLocalizedValueConverter implements GeoObjectBusinessServiceIF
 {
-  private static final Logger logger = LoggerFactory.getLogger(GeoObjectBusinessService.class);
-  
+  private static final Logger               logger = LoggerFactory.getLogger(GeoObjectBusinessService.class);
+
   @Autowired
-  protected GeoObjectPermissionServiceIF permissionService;
-  
+  protected GeoObjectPermissionServiceIF    permissionService;
+
   @Autowired
-  protected GeoObjectTypeBusinessServiceIF gotService;
-  
+  protected GeoObjectTypeBusinessServiceIF  gotService;
+
   @Autowired
-  protected HierarchyTypeBusinessServiceIF htService;
+  protected HierarchyTypeBusinessServiceIF  htService;
+
+  @Autowired
+  protected BusinessTypeBusinessServiceIF   businessTypeService;
+
+  @Autowired
+  protected BusinessObjectBusinessServiceIF businessObjectService;
 
   public GeoObjectBusinessService()
   {
@@ -139,7 +145,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     this.permissionService = permissionService;
   }
-  
+
   @Override
   @Request(RequestType.SESSION)
   public JsonObject getAll(String sessionId, String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize)
@@ -228,7 +234,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       throw e;
     }
   }
-  
+
   @Override
   public void handleDuplicateDataException(ServerGeoObjectType type, DuplicateDataException e)
   {
@@ -270,13 +276,13 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       throw ex;
     }
   }
-  
+
   @Override
   public boolean trySetValue(ServerGeoObjectIF sgo, String attributeName, Object value)
   {
     return false;
   }
-  
+
   @Override
   public void apply(ServerGeoObjectIF sgo, boolean isImport)
   {
@@ -303,7 +309,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     sgo.getVertex().apply();
   }
-  
+
   protected void validate(ServerGeoObjectIF sgo)
   {
     // this.validateCOTAttr(DefaultAttribute.EXISTS.getName());
@@ -366,7 +372,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       throw e;
     }
   }
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public void populate(ServerGeoObjectIF sgo, GeoObject geoObject, Date startDate, Date endDate)
@@ -522,7 +528,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
             // if (value != null)
             // {
-            // sgo.getVertex().setValue(attributeName, value, votDTO.getStartDate(),
+            // sgo.getVertex().setValue(attributeName, value,
+            // votDTO.getStartDate(),
             // votDTO.getEndDate());
             // }
             // else
@@ -699,7 +706,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   {
     return new VertexGeoObjectQuery(type, date);
   }
-  
+
   @Override
   public ServerGeoObjectQuery createQuery(String typeCode)
   {
@@ -733,7 +740,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return jo;
   }
-  
+
   @Override
   public List<VertexServerGeoObject> getAncestors(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy)
   {
@@ -770,7 +777,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return list;
   }
-  
+
   protected GraphQuery<VertexObject> buildAncestorQuery(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, boolean includeNonExist)
   {
     String dbClassName = sgo.getMdClass().getDBClassName();
@@ -882,7 +889,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return query;
   }
-  
+
   @Override
   @Transaction
   public void removeChild(ServerGeoObjectIF sgo, ServerGeoObjectIF child, String hierarchyCode, Date startDate, Date endDate)
@@ -890,7 +897,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     ServerHierarchyType hierarchyType = ServerHierarchyType.get(hierarchyCode);
     removeParent(child, sgo, hierarchyType, startDate, endDate);
   }
-  
+
   @Override
   public void removeParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate)
   {
@@ -984,7 +991,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return geoObj;
   }
-  
+
   @Override
   public JsonArray getHierarchiesForGeoObject(ServerGeoObjectIF sgo, Date date)
   {
@@ -1380,7 +1387,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       }
     }
   }
-  
+
   @Override
   public void removeAllEdges(ServerGeoObjectIF sgo, ServerHierarchyType hierarchyType)
   {
@@ -1392,7 +1399,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       edge.delete();
     }
   }
-  
+
   @Override
   public ServerParentTreeNode addParent(ServerGeoObjectIF sgo, ServerGeoObjectIF parent, ServerHierarchyType hierarchyType)
   {
@@ -1416,7 +1423,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
 
     return node;
   }
-  
+
   private static ServerChildTreeNode internalGetChildGeoObjects(ServerGeoObjectIF parent, String[] childrenTypes, Boolean recursive, ServerHierarchyType htIn, Date date)
   {
     ServerChildTreeNode tnRoot = new ServerChildTreeNode(parent, htIn, date, null, null);
@@ -2000,24 +2007,24 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   public JsonObject hasDuplicateLabel(String sessionId, Date date, String typeCode, String code, String label)
   {
     boolean inUse = VertexServerGeoObject.hasDuplicateLabel(date, typeCode, code, label);
-    
-    JsonObject jo = new JsonObject();   
+
+    JsonObject jo = new JsonObject();
     jo.addProperty("labelInUse", inUse);
-    
+
     return jo;
   }
-  
+
   @Override
   @Request(RequestType.SESSION)
   public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode)
   {
-    VertexServerGeoObject vsgo = (VertexServerGeoObject) new GeoObjectBusinessService().getGeoObjectByCode(code, typeCode);
+    VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
 
     List<BusinessObject> objects = null;
 
     if (businessTypeCode != null && businessTypeCode.length() > 0)
     {
-      BusinessType businessType = BusinessType.getByCode(businessTypeCode);
+      BusinessType businessType = this.businessTypeService.getByCode(businessTypeCode);
 
       objects = vsgo.getBusinessObjects(businessType);
     }
@@ -2026,7 +2033,9 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
       objects = vsgo.getBusinessObjects();
     }
 
-    return objects.stream().map(object -> object.toJSON()).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
+    return objects.stream().map(object -> {
+      return this.businessObjectService.toJSON(object);
+    }).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
     });
   }
 }
