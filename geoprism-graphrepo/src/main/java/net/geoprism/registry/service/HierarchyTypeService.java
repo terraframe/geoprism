@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.hierarchy;
+package net.geoprism.registry.service;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,29 +40,27 @@ import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
-import net.geoprism.registry.business.HierarchyBusinessServiceIF;
 import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;
-import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 @Component
-public class HierarchyService implements HierarchyServiceIF
+public class HierarchyTypeService implements HierarchyTypeServiceIF
 {
   @Autowired
-  private HierarchyBusinessServiceIF service;
+  protected HierarchyTypeBusinessServiceIF service;
   
   @Autowired
-  private GeoObjectTypeBusinessServiceIF gotServ;
+  protected GeoObjectTypeBusinessServiceIF gotServ;
   
   @Autowired
-  private GeoObjectBusinessServiceIF goServ;
+  protected GeoObjectBusinessServiceIF goServ;
   
   @Autowired
-  private HierarchyTypeBusinessServiceIF htBizServ;
+  protected HierarchyTypeBusinessServiceIF htBizServ;
   
   
   @Request(RequestType.SESSION)

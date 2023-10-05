@@ -14,7 +14,7 @@ import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
 import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
-import net.geoprism.registry.business.HierarchyBusinessServiceIF;
+import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
@@ -23,7 +23,7 @@ import net.geoprism.registry.model.ServerOrganization;
 public class GraphRepoService implements GraphRepoServiceIF
 {
   @Autowired
-  private HierarchyBusinessServiceIF hierarchies;
+  private HierarchyTypeBusinessServiceIF hierarchies;
   
   @Autowired
   private GeoObjectTypeBusinessServiceIF gots;

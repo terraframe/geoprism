@@ -5,11 +5,18 @@ import java.util.List;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
+import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 
 public interface HierarchyTypeBusinessServiceIF
 {
+  public ServerHierarchyType createHierarchyType(HierarchyType hierarchyType);
+  
+  public ServerHierarchyType get(HierarchicalRelationshipType hierarchicalRelationship);
+  
+  public ServerHierarchyType get(HierarchicalRelationshipType hierarchicalRelationship, boolean buildHierarchyNodes);
+  
   public void refresh(ServerHierarchyType sht);
   
   public void update(ServerHierarchyType sht, HierarchyType hierarchyType);
