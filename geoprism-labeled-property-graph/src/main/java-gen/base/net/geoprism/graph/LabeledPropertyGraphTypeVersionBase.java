@@ -576,29 +576,29 @@ public abstract class LabeledPropertyGraphTypeVersionBase extends com.runwaysdk.
     return (LabeledPropertyGraphTypeVersion) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public java.lang.String publish()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final java.lang.String publish(java.lang.String oid)
-  {
-    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
-    return _instance.publish();
-  }
-  
-  public void remove()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final void remove(java.lang.String oid)
-  {
-    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
-    _instance.remove();
-  }
+//  public java.lang.String publish()
+//  {
+//    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
+//    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+//  }
+//  
+//  public static final java.lang.String publish(java.lang.String oid)
+//  {
+//    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
+//    return _instance.publish();
+//  }
+//  
+//  public void remove()
+//  {
+//    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeVersion.java";
+//    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+//  }
+//  
+//  public static final void remove(java.lang.String oid)
+//  {
+//    LabeledPropertyGraphTypeVersion _instance = LabeledPropertyGraphTypeVersion.get(oid);
+//    _instance.remove();
+//  }
   
   public static LabeledPropertyGraphTypeVersion lock(java.lang.String oid)
   {

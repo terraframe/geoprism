@@ -3,30 +3,27 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.graph;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.io.FileUtils;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 
 import com.google.gson.JsonArray;
@@ -34,19 +31,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.Pair;
-import com.runwaysdk.business.rbac.Authenticate;
-import com.runwaysdk.dataaccess.ProgrammingErrorException;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.session.Session;
 
 import net.geoprism.configuration.GeoprismProperties;
-import net.geoprism.graph.service.LabeledPropertyGraphServiceIF;
-import net.geoprism.graph.service.LabeledPropertyGraphTypeServiceIF;
-import net.geoprism.graph.service.LocaleSerializer;
+import net.geoprism.graph.lpg.LabeledVersion;
+import net.geoprism.graph.lpg.StrategyConfiguration;
+import net.geoprism.graph.lpg.TreeStrategyConfiguration;
+import net.geoprism.graph.lpg.service.LocaleSerializer;
 import net.geoprism.registry.conversion.LocalizedValueConverter;
-import net.geoprism.registry.service.ClassificationObjectServiceIF;
 
 public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeBase
 {
@@ -67,9 +59,9 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     super();
   }
 
-  protected abstract JsonObject formatVersionLabel(LabeledVersion version);
+  public abstract JsonObject formatVersionLabel(LabeledVersion version);
 
-  public abstract void createEntries();
+  public abstract List<Date> getEntryDates();
 
   public void setStrategyConfiguration(StrategyConfiguration configuration)
   {
@@ -86,54 +78,6 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  @Transaction
-  public void apply()
-  {
-    ClassificationObjectServiceIF.getInstance().validateName(this.getCode());
-    
-    LabeledPropertyGraphServiceIF.getInstance().preApply(this);
-
-    super.apply();
-  }
-
-  @Override
-  @Transaction
-  public void delete()
-  {
-    // Validate there are no public versions
-    // LabeledPropertyGraphTypeVersionQuery query = new
-    // LabeledPropertyGraphTypeVersionQuery(new QueryFactory());
-    // query.WHERE(query.getGraphType().EQ(this));
-    //
-    // long count = query.getCount();
-    //
-    // if (count > 0)
-    // {
-    // throw new CannotDeletePublicLabeledPropertyGraphTypeException();
-    // }
-
-    this.getEntries().forEach(entry -> {
-      entry.delete();
-    });
-
-    super.delete();
-
-    final File directory = this.getShapefileDirectory();
-
-    if (directory.exists())
-    {
-      try
-      {
-        FileUtils.deleteDirectory(directory);
-      }
-      catch (IOException e)
-      {
-        throw new ProgrammingErrorException(e);
-      }
-    }
-  }
-
   public File getShapefileDirectory()
   {
     final File root = GeoprismProperties.getGeoprismFileStorage();
@@ -141,45 +85,6 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
 
     return new File(directory, this.getOid());
   }
-
-  public List<LabeledPropertyGraphTypeEntry> getEntries()
-  {
-    LabeledPropertyGraphTypeEntryQuery query = new LabeledPropertyGraphTypeEntryQuery(new QueryFactory());
-    query.WHERE(query.getGraphType().EQ(this));
-    query.ORDER_BY_DESC(query.getForDate());
-
-    try (OIterator<? extends LabeledPropertyGraphTypeEntry> it = query.getIterator())
-    {
-      return new LinkedList<LabeledPropertyGraphTypeEntry>(it.getAll());
-    }
-  }
-
-  public List<LabeledPropertyGraphTypeVersion> getVersions()
-  {
-    LabeledPropertyGraphTypeVersionQuery query = new LabeledPropertyGraphTypeVersionQuery(new QueryFactory());
-    query.WHERE(query.getGraphType().EQ(this));
-    query.ORDER_BY_DESC(query.getForDate());
-
-    try (OIterator<? extends LabeledPropertyGraphTypeVersion> it = query.getIterator())
-    {
-      return new LinkedList<LabeledPropertyGraphTypeVersion>(it.getAll());
-    }
-  }
-
-  // public List<LabeledPropertyGraphTypeVersion> getWorkingVersions()
-  // {
-  // LabeledPropertyGraphTypeVersionQuery query = new
-  // LabeledPropertyGraphTypeVersionQuery(new QueryFactory());
-  // query.WHERE(query.getLabeledPropertyGraphType().EQ(this));
-  // query.WHERE(query.getWorking().EQ(true));
-  // query.ORDER_BY_DESC(query.getForDate());
-  //
-  // try (OIterator<? extends LabeledPropertyGraphTypeVersion> it =
-  // query.getIterator())
-  // {
-  // return new LinkedList<LabeledPropertyGraphTypeVersion>(it.getAll());
-  // }
-  // }
 
   public JsonElement getStrategyConfigurationAsJson()
   {
@@ -210,7 +115,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     return list;
   }
 
-  protected void parse(JsonObject object)
+  public void parse(JsonObject object)
   {
     LocalizedValueConverter.populate(this.getDisplayLabel(), LocalizedValue.fromJSON(object.get(LabeledPropertyGraphType.DISPLAYLABEL).getAsJsonObject()));
     LocalizedValueConverter.populate(this.getDescription(), LocalizedValue.fromJSON(object.get(LabeledPropertyGraphType.DESCRIPTION).getAsJsonObject()));
@@ -221,12 +126,7 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     this.setStrategyConfiguration(object.get(LabeledPropertyGraphType.STRATEGYCONFIGURATION).toString());
   }
 
-  public final JsonObject toJSON()
-  {
-    return this.toJSON(false);
-  }
-
-  public JsonObject toJSON(boolean includeEntries)
+  public JsonObject toJSON()
   {
     Locale locale = Session.getCurrentLocale();
     LocaleSerializer serializer = new LocaleSerializer(locale);
@@ -245,216 +145,12 @@ public abstract class LabeledPropertyGraphType extends LabeledPropertyGraphTypeB
     object.addProperty(LabeledPropertyGraphType.STRATEGYTYPE, this.getStrategyType());
     object.add(LabeledPropertyGraphType.STRATEGYCONFIGURATION, this.getStrategyConfigurationAsJson());
 
-    if (includeEntries)
-    {
-      List<LabeledPropertyGraphTypeEntry> entries = this.getEntries();
-
-      JsonArray jEntries = new JsonArray();
-
-      for (LabeledPropertyGraphTypeEntry entry : entries)
-      {
-        jEntries.add(entry.toJSON());
-      }
-
-      object.add("entries", jEntries);
-    }
-
     return object;
   }
-
-  @Transaction
-  @Authenticate
-  public LabeledPropertyGraphTypeEntry createEntry(Date forDate)
-  {
-    return LabeledPropertyGraphTypeEntry.create(this, forDate);
-  }
-
-  @Transaction
-  public LabeledPropertyGraphTypeEntry getOrCreateEntry(Date forDate)
-  {
-    if (!this.isValid())
-    {
-      // throw new InvalidMasterListException();
-    }
-
-    LabeledPropertyGraphTypeEntryQuery query = new LabeledPropertyGraphTypeEntryQuery(new QueryFactory());
-    query.WHERE(query.getGraphType().EQ(this));
-    query.AND(query.getForDate().EQ(forDate));
-
-    try (OIterator<? extends LabeledPropertyGraphTypeEntry> it = query.getIterator())
-    {
-      if (it.hasNext())
-      {
-        return it.next();
-      }
-    }
-
-    return LabeledPropertyGraphTypeEntry.create(this, forDate);
-  }
-
-  // public void setHierarchyType(ServerHierarchyType type)
-  // {
-  // this.setHierarchy(type.getCode());
-  // }
-  //
-  // public ServerHierarchyType getHierarchyType()
-  // {
-  // return ServerHierarchyType.get(this.getHierarchy());
-  // }
-  //
-  // public void markAsInvalid(ServerHierarchyType hierarchyType,
-  // ServerGeoObjectType type)
-  // {
-  // boolean isValid = true;
-  //
-  //
-  // if (!isValid)
-  // {
-  // this.appLock();
-  // this.setValid(false);
-  // this.apply();
-  // }
-  // }
-  //
-  // public void markAsInvalid(ServerGeoObjectType type)
-  // {
-  // boolean isValid = true;
-  //
-  //
-  // if (!isValid)
-  // {
-  // this.appLock();
-  // this.setValid(false);
-  // this.apply();
-  // }
-  // }
-  //
-  // public void markAsInvalid(ServerHierarchyType hierarchyType)
-  // {
-  // boolean isValid = this.getHierarchy().equals(hierarchyType.getCode());
-  //
-  //
-  // if (!isValid)
-  // {
-  // this.appLock();
-  // this.setValid(false);
-  // this.apply();
-  // }
-  // }
 
   public boolean isValid()
   {
     return ( this.getValid() == null || this.getValid() );
   }
 
-  public static LabeledPropertyGraphType fromJSON(JsonObject object)
-  {
-    LabeledPropertyGraphType list = null;
-
-    if (object.has("oid") && !object.get("oid").isJsonNull())
-    {
-      String oid = object.get("oid").getAsString();
-
-      list = LabeledPropertyGraphType.lock(oid);
-    }
-    else if (object.get(LabeledPropertyGraphType.GRAPH_TYPE).getAsString().equals(LabeledPropertyGraphType.SINGLE))
-    {
-      list = new SingleLabeledPropertyGraphType();
-    }
-    else if (object.get(LabeledPropertyGraphType.GRAPH_TYPE).getAsString().equals(LabeledPropertyGraphType.INCREMENTAL))
-    {
-      list = new IncrementalLabeledPropertyGraphType();
-    }
-    else if (object.get(LabeledPropertyGraphType.GRAPH_TYPE).getAsString().equals(LabeledPropertyGraphType.INTERVAL))
-    {
-      list = new IntervalLabeledPropertyGraphType();
-    }
-    else
-    {
-      throw new UnsupportedOperationException("Unknown list type");
-    }
-
-    list.parse(object);
-
-    return list;
-  }
-
-  @Transaction
-  public static LabeledPropertyGraphType apply(JsonObject object)
-  {
-    return apply(object, true);
-  }
-
-  @Transaction
-  public static LabeledPropertyGraphType apply(JsonObject object, boolean createEntries)
-  {
-    LabeledPropertyGraphType list = LabeledPropertyGraphType.fromJSON(object);
-    list.apply();
-
-    if (createEntries)
-    {
-      list.createEntries();
-    }
-
-    return list;
-  }
-
-  public static JsonArray list()
-  {
-    JsonArray response = new JsonArray();
-
-    LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(new QueryFactory());
-
-    try (OIterator<? extends LabeledPropertyGraphType> it = query.getIterator())
-    {
-      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-      it.getAll().stream().sorted((a, b) -> {
-        return a.getDisplayLabel().getValue().compareTo(b.getDisplayLabel().getValue());
-      }).forEach(list -> {
-        JsonObject object = new JsonObject();
-        object.addProperty("label", list.getDisplayLabel().getValue());
-        object.addProperty("oid", list.getOid());
-
-        object.addProperty("createDate", format.format(list.getCreateDate()));
-        object.addProperty("lasteUpdateDate", format.format(list.getLastUpdateDate()));
-
-        response.add(object);
-      });
-    }
-
-    return response;
-  }
-
-  // @Transaction
-  // public static void markAllAsInvalid(ServerHierarchyType hierarchyType,
-  // ServerGeoObjectType type)
-  // {
-  // LabeledPropertyGraphTypeQuery query = new LabeledPropertyGraphTypeQuery(new
-  // QueryFactory());
-  // query.WHERE(query.getValid().EQ((Boolean) null));
-  // query.OR(query.getValid().EQ(true));
-  //
-  // try (OIterator<? extends LabeledPropertyGraphType> iterator =
-  // query.getIterator())
-  // {
-  // while (iterator.hasNext())
-  // {
-  // LabeledPropertyGraphType masterlist = iterator.next();
-  //
-  // if (hierarchyType != null && type != null)
-  // {
-  // masterlist.markAsInvalid(hierarchyType, type);
-  // }
-  // else if (hierarchyType != null)
-  // {
-  // masterlist.markAsInvalid(hierarchyType);
-  // }
-  // else if (type != null)
-  // {
-  // masterlist.markAsInvalid(type);
-  // }
-  // }
-  // }
-  // }
 }

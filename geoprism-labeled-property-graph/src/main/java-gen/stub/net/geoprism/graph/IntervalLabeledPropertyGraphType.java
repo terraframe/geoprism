@@ -3,18 +3,18 @@
  *
  * This file is part of Geoprism(tm).
  *
- * Geoprism(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Geoprism(tm) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * Geoprism(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * Geoprism(tm) is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.graph;
 
@@ -23,13 +23,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.Pair;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.graph.lpg.LabeledVersion;
 import net.geoprism.registry.DateUtil;
 
 public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGraphTypeBase
@@ -47,9 +48,9 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  public JsonObject toJSON(boolean includeEntries)
+  public JsonObject toJSON()
   {
-    JsonObject object = super.toJSON(includeEntries);
+    JsonObject object = super.toJSON();
     object.addProperty(GRAPH_TYPE, INTERVAL);
     object.add(INTERVALJSON, JsonParser.parseString(this.getIntervalJson()));
 
@@ -57,7 +58,7 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  protected void parse(JsonObject object)
+  public void parse(JsonObject object)
   {
     super.parse(object);
 
@@ -100,7 +101,7 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  protected JsonObject formatVersionLabel(LabeledVersion version)
+  public JsonObject formatVersionLabel(LabeledVersion version)
   {
     Date versionDate = version.getForDate();
     List<Pair<Date, Date>> intervals = this.getIntervals();
@@ -128,19 +129,9 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  @Transaction
-  public void createEntries()
+  public List<Date> getEntryDates()
   {
-    if (!this.isValid())
-    {
-//      throw new InvalidMasterListException();
-    }
-
-    this.getIntervals().forEach((pair) -> {
-      Date startDate = pair.getFirst();
-
-      this.getOrCreateEntry(startDate);
-    });
+    return this.getIntervals().stream().map(pair -> pair.getFirst()).collect(Collectors.toList());
   }
 
   @Override

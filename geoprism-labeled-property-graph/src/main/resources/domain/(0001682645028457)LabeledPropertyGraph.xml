@@ -21,7 +21,7 @@
 <version xsi:noNamespaceSchemaLocation="classpath:com/runwaysdk/resources/xsd/version.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <doIt>
     <create>
-      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphType" label="Graph Type" generateController="false" publish="false">
+      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphType" label="Graph Type" generateController="false" publish="true">
         <attributes>
           <localChar name="displayLabel" label="Label" required="true" />
           <localText name="description"/>          
@@ -31,9 +31,6 @@
           <char name="strategyType" label="Strategy Type" size="255" required="true" />          
           <text name="strategyConfiguration" label="Strategy Configuration" />          
         </attributes>
-          <mdMethod name="createEntry" label="createEntry" static="false" returnType="net.geoprism.graph.LabeledPropertyGraphTypeEntry">
-            <mdParameter name="forDate" label="forDate" order="0" type="java.util.Date" />
-          </mdMethod>        
       </mdBusiness>
       <mdBusiness name="net.geoprism.graph.SingleLabeledPropertyGraphType" extends="net.geoprism.graph.LabeledPropertyGraphType" label="Single Graph Type" generateController="false">
         <attributes>
@@ -56,8 +53,6 @@
           <reference name="graphType" type="net.geoprism.graph.LabeledPropertyGraphType" required="true" label="Graph Type" />
           <dateTime name="forDate" label="For Date" required="true" immutable="true" />
         </attributes> 
-        <mdMethod name="publish" label="publish" static="false" returnType="java.lang.String">
-        </mdMethod>        
       </mdBusiness>
       <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphTypeVersion" label="Entry Version" generateController="false">
         <attributes>
@@ -67,11 +62,9 @@
           <date name="publishDate" label="Publish Date" />
           <integer name="versionNumber" label="Version Number" required="true" />
         </attributes> 
-        <mdMethod name="publish" label="publish" static="false" returnType="java.lang.String" />        
-        <mdMethod name="remove" label="publish" static="false" returnType="void" />        
       </mdBusiness>
       
-      <mdBusiness name="net.geoprism.graph.HierarchyTypeSnapshot" label="Hierarchy Type Snapshot" generateController="false" publish="false">
+      <mdBusiness name="net.geoprism.graph.HierarchyTypeSnapshot" label="Hierarchy Type Snapshot" generateController="false" publish="true">
         <attributes>
           <char name="code" label="Code" size="255" required="true" />
           <localChar name="displayLabel" label="Label" required="true" />
@@ -87,7 +80,7 @@
         </attributes>
       </mdBusiness>      
       
-      <mdBusiness name="net.geoprism.graph.GeoObjectTypeSnapshot" label="Geo-Object Type Snapshot" generateController="false" publish="false">
+      <mdBusiness name="net.geoprism.graph.GeoObjectTypeSnapshot" label="Geo-Object Type Snapshot" generateController="false" publish="true">
         <attributes>
           <char name="code" label="Code" size="255" required="true" />
           <localChar name="displayLabel" label="Label" required="true" />
@@ -103,11 +96,11 @@
         </attributes>
       </mdBusiness>      
       
-      <mdRelationship name="net.geoprism.graph.SnapshotHierarchy" label="Snapshot Hierarchy" generateController="false" exported="false" publish="false">
+      <mdRelationship name="net.geoprism.graph.SnapshotHierarchy" label="Snapshot Hierarchy" generateController="false" exported="false" publish="true">
         <parent cardinality="1" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ParentSnapshot" />
         <child cardinality="*" name="net.geoprism.graph.GeoObjectTypeSnapshot" method="ChildSnapshot" />
       </mdRelationship>
-      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphSynchronization" table="lpg_sync" label="Graph Synchronization" generateController="false" publish="false">
+      <mdBusiness name="net.geoprism.graph.LabeledPropertyGraphSynchronization" table="lpg_sync" label="Graph Synchronization" generateController="false" publish="true">
         <attributes>
           <text name="url" label="URL" required="true" />
           <text name="remoteType" label="Remote Graph Type" required="true" />
@@ -120,26 +113,10 @@
           <reference name="entry" type="net.geoprism.graph.LabeledPropertyGraphTypeEntry" required="false" label="Graph Entry" />
           <reference name="version" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion" required="false" label="Graph Version" />            
         </attributes>
-        <mdMethod name="execute" label="Execute" static="false" returnType="void" />                
       </mdBusiness>
             
     </create>
     <permissions>
-      <method methodName="createEntry" type="net.geoprism.graph.LabeledPropertyGraphType">
-        <assignedRole roleName="Administrator" />
-      </method>
-      <method methodName="publish" type="net.geoprism.graph.LabeledPropertyGraphTypeEntry">
-        <assignedRole roleName="Administrator" />
-      </method>    
-      <method methodName="publish" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion">
-        <assignedRole roleName="Administrator" />
-      </method>    
-      <method methodName="remove" type="net.geoprism.graph.LabeledPropertyGraphTypeVersion">
-        <assignedRole roleName="Administrator" />
-      </method>    
-      <method methodName="execute" type="net.geoprism.graph.LabeledPropertyGraphSynchronization">
-        <assignedRole roleName="Administrator" />
-      </method>    
       <role roleName="geoprism.admin.Administrator">
         <grant>
           <mdBusinessPermission type="net.geoprism.graph.LabeledPropertyGraphType">
@@ -147,18 +124,9 @@
           </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.graph.LabeledPropertyGraphTypeEntry">
             <operation name="ALL" />
-            <mdMethodPermission methodName="publish">
-              <operation name="EXECUTE" />
-            </mdMethodPermission>            
           </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.graph.LabeledPropertyGraphTypeVersion">
             <operation name="ALL" />
-            <mdMethodPermission methodName="publish">
-              <operation name="EXECUTE" />
-            </mdMethodPermission>                        
-            <mdMethodPermission methodName="remove">
-              <operation name="EXECUTE" />
-            </mdMethodPermission>                        
           </mdBusinessPermission>
           <mdBusinessPermission type="net.geoprism.graph.GeoObjectTypeSnapshot">
             <operation name="ALL" />
@@ -171,9 +139,6 @@
           </mdRelationshipPermission>     
           <mdBusinessPermission type="net.geoprism.graph.LabeledPropertyGraphSynchronization">
             <operation name="ALL" />
-            <mdMethodPermission methodName="execute">
-              <operation name="EXECUTE" />
-            </mdMethodPermission>                                    
           </mdBusinessPermission>                       
         </grant>
       </role>
