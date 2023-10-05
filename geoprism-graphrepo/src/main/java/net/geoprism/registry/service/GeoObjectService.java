@@ -25,7 +25,7 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 import com.runwaysdk.session.Session;
 
-import net.geoprism.graph.service.LocaleSerializer;
+import net.geoprism.graph.lpg.service.LocaleSerializer;
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.business.GeoObjectBusinessService;
 import net.geoprism.registry.hierarchy.HierarchyService;
