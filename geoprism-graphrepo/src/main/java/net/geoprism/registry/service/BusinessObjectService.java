@@ -33,6 +33,7 @@ import com.runwaysdk.session.RequestType;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateUtil;
+import net.geoprism.registry.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.business.BusinessObjectBusinessServiceIF;
 import net.geoprism.registry.business.BusinessTypeBusinessServiceIF;
 import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
@@ -43,13 +44,16 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 public class BusinessObjectService
 {
   @Autowired
-  private BusinessTypeBusinessServiceIF   typeService;
+  private BusinessTypeBusinessServiceIF     typeService;
 
   @Autowired
-  private BusinessObjectBusinessServiceIF objectService;
+  private BusinessEdgeTypeBusinessServiceIF edgeService;
 
   @Autowired
-  private GeoObjectBusinessServiceIF      geoObjectService;
+  private BusinessObjectBusinessServiceIF   objectService;
+
+  @Autowired
+  private GeoObjectBusinessServiceIF        geoObjectService;
 
   @Request(RequestType.SESSION)
   public JsonObject get(String sessionId, String businessTypeCode, String code)
@@ -77,7 +81,7 @@ public class BusinessObjectService
   public JsonArray getParents(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    BusinessEdgeType relationshipType = BusinessEdgeType.getByCode(businessEdgeTypeCode);
+    BusinessEdgeType relationshipType = this.edgeService.getByCode(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
 
@@ -92,7 +96,7 @@ public class BusinessObjectService
   public JsonArray getChildren(String sessionId, String businessTypeCode, String code, String businessEdgeTypeCode)
   {
     BusinessType type = this.typeService.getByCode(businessTypeCode);
-    BusinessEdgeType relationshipType = BusinessEdgeType.getByCode(businessEdgeTypeCode);
+    BusinessEdgeType relationshipType = this.edgeService.getByCode(businessEdgeTypeCode);
 
     BusinessObject object = this.objectService.getByCode(type, code);
 

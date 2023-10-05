@@ -636,6 +636,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     return (MdEdge) BusinessFacade.get(mdEdgeDAO);
   }
 
+  @Override
   public void grantWritePermissionsOnMdTermRel(ComponentIF mdTermRelationship)
   {
     RoleDAO adminRole = RoleDAO.findRole(RoleConstants.ADMIN).getBusinessDAO();

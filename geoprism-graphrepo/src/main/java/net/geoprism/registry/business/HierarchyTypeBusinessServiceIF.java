@@ -5,6 +5,9 @@ import java.util.List;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
+import com.runwaysdk.ComponentIF;
+import com.runwaysdk.business.rbac.RoleDAO;
+
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
@@ -50,4 +53,6 @@ public interface HierarchyTypeBusinessServiceIF
   public List<ServerGeoObjectType> getDirectRootNodes(ServerHierarchyType sht);
 
   public void validateUniversalRelationship(ServerHierarchyType sht, ServerGeoObjectType childType, ServerGeoObjectType parentType);
+
+  void grantWritePermissionsOnMdTermRel(ComponentIF mdTermRelationship);
 }

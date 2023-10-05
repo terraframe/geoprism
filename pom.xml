@@ -43,6 +43,7 @@
     <module>georegistry-adapter/java/common</module>        
     <module>geoprism-classification</module>
     <module>geoprism-labeled-property-graph</module>
+    <module>geoprism-graphrepo</module>    
   </modules>
 
   <properties>
