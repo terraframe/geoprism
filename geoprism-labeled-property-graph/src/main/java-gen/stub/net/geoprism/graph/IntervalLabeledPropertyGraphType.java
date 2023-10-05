@@ -23,13 +23,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.runwaysdk.Pair;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.graph.lpg.LabeledVersion;
 import net.geoprism.registry.DateUtil;
 
 public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGraphTypeBase
@@ -47,9 +48,9 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  public JsonObject toJSON(boolean includeEntries)
+  public JsonObject toJSON()
   {
-    JsonObject object = super.toJSON(includeEntries);
+    JsonObject object = super.toJSON();
     object.addProperty(GRAPH_TYPE, INTERVAL);
     object.add(INTERVALJSON, JsonParser.parseString(this.getIntervalJson()));
 
@@ -57,7 +58,7 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  protected void parse(JsonObject object)
+  public void parse(JsonObject object)
   {
     super.parse(object);
 
@@ -100,7 +101,7 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  protected JsonObject formatVersionLabel(LabeledVersion version)
+  public JsonObject formatVersionLabel(LabeledVersion version)
   {
     Date versionDate = version.getForDate();
     List<Pair<Date, Date>> intervals = this.getIntervals();
@@ -128,19 +129,9 @@ public class IntervalLabeledPropertyGraphType extends IntervalLabeledPropertyGra
   }
 
   @Override
-  @Transaction
-  public void createEntries()
+  public List<Date> getEntryDates()
   {
-    if (!this.isValid())
-    {
-//      throw new InvalidMasterListException();
-    }
-
-    this.getIntervals().forEach((pair) -> {
-      Date startDate = pair.getFirst();
-
-      this.getOrCreateEntry(startDate);
-    });
+    return this.getIntervals().stream().map(pair -> pair.getFirst()).collect(Collectors.toList());
   }
 
   @Override

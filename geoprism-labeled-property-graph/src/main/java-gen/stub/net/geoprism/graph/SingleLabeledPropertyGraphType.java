@@ -18,9 +18,13 @@
  */
 package net.geoprism.graph;
 
-import com.google.gson.JsonObject;
-import com.runwaysdk.dataaccess.transaction.Transaction;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
+import com.google.gson.JsonObject;
+
+import net.geoprism.graph.lpg.LabeledVersion;
 import net.geoprism.registry.DateUtil;
 
 public class SingleLabeledPropertyGraphType extends SingleLabeledPropertyGraphTypeBase
@@ -34,9 +38,9 @@ public class SingleLabeledPropertyGraphType extends SingleLabeledPropertyGraphTy
   }
 
   @Override
-  public JsonObject toJSON(boolean includeEntries)
+  public JsonObject toJSON()
   {
-    JsonObject object = super.toJSON(includeEntries);
+    JsonObject object = super.toJSON();
     object.addProperty(GRAPH_TYPE, SINGLE);
     object.addProperty(VALIDON, DateUtil.formatDate(this.getValidOn(), false));
 
@@ -44,7 +48,7 @@ public class SingleLabeledPropertyGraphType extends SingleLabeledPropertyGraphTy
   }
 
   @Override
-  protected void parse(JsonObject object)
+  public void parse(JsonObject object)
   {
     super.parse(object);
 
@@ -52,19 +56,13 @@ public class SingleLabeledPropertyGraphType extends SingleLabeledPropertyGraphTy
   }
 
   @Override
-  @Transaction
-  public void createEntries()
+  public List<Date> getEntryDates()
   {
-    if (!this.isValid())
-    {
-//      throw new InvalidMasterListException();
-    }
-
-    this.getOrCreateEntry(this.getValidOn());
+    return Arrays.asList(this.getValidOn());
   }
 
   @Override
-  protected JsonObject formatVersionLabel(LabeledVersion version)
+  public JsonObject formatVersionLabel(LabeledVersion version)
   {
     JsonObject object = new JsonObject();
     object.addProperty("type", "date");

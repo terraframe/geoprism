@@ -465,17 +465,17 @@ public abstract class LabeledPropertyGraphTypeEntryBase extends com.runwaysdk.bu
     return (LabeledPropertyGraphTypeEntry) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public java.lang.String publish()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeEntry.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final java.lang.String publish(java.lang.String oid)
-  {
-    LabeledPropertyGraphTypeEntry _instance = LabeledPropertyGraphTypeEntry.get(oid);
-    return _instance.publish();
-  }
+//  public java.lang.String publish()
+//  {
+//    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphTypeEntry.java";
+//    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
+//  }
+//  
+//  public static final java.lang.String publish(java.lang.String oid)
+//  {
+//    LabeledPropertyGraphTypeEntry _instance = LabeledPropertyGraphTypeEntry.get(oid);
+//    return _instance.publish();
+//  }
   
   public static LabeledPropertyGraphTypeEntry lock(java.lang.String oid)
   {
