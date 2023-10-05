@@ -26,32 +26,26 @@ import java.util.SortedSet;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.locationtech.jts.geom.Geometry;
 
 import com.google.gson.JsonArray;
 import com.runwaysdk.business.graph.EdgeObject;
+import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
+import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
-import org.locationtech.jts.geom.Geometry;
 
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 public interface ServerGeoObjectIF
 {
-  public SortedSet<EdgeObject> setParentCollection(ServerHierarchyType hierarchyType, ValueOverTimeCollection votc);
-
-  public ValueOverTimeCollection getParentCollection(ServerHierarchyType hierarchyType);
+  public boolean exists(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
 
   public ServerGeoObjectType getType();
 
-  public GeoObject toGeoObject(Date date);
-
-  public GeoObject toGeoObject(Date date, boolean includeExternalIds);
-
-  public GeoObjectOverTime toGeoObjectOverTime();
-
-  public GeoObjectOverTime toGeoObjectOverTime(boolean generateUid);
-
+  public Date getDate();
+  
   public Date getCreateDate();
 
   public Date getLastUpdateDate();
@@ -77,6 +71,8 @@ public interface ServerGeoObjectIF
   public void setGeometry(Geometry geometry, Date startDate, Date endDate);
 
   public Geometry getGeometry();
+  
+  public Geometry getGeometry(Date date);
 
   public String getUid();
 
@@ -87,10 +83,6 @@ public interface ServerGeoObjectIF
   public Object getValue(String attributeName);
 
   public Object getValue(String attributeName, Date date);
-
-  public ValueOverTimeCollection getValuesOverTime(String attributeName);
-
-  public void setValuesOverTime(String attributeName, ValueOverTimeCollection collection);
 
   public void setValue(String attributeName, Object value);
 
@@ -106,59 +98,35 @@ public interface ServerGeoObjectIF
 
   public String bbox(Date date);
 
-  public ServerChildTreeNode getChildGeoObjects(ServerHierarchyType hierarchy, String[] childrenTypes, Boolean recursive, Date date);
-
-  public ServerParentTreeNode getParentGeoObjects(ServerHierarchyType hierarchy, String[] parentTypes, Boolean recursive, Boolean includeInherited, Date date);
-
-  public ServerParentTreeNode getParentsForHierarchy(ServerHierarchyType hierarchy, Boolean recursive, Boolean includeInherited, Date date);
-
-  public ServerParentTreeNodeOverTime getParentsOverTime(String[] parentTypes, Boolean recursive, Boolean includeInherited);
-
-  public void setParents(ServerParentTreeNodeOverTime parentsOverTime);
-
-  public ServerParentTreeNode addChild(ServerGeoObjectIF child, ServerHierarchyType hierarchy);
-
-  public ServerParentTreeNode addChild(ServerGeoObjectIF entity, ServerHierarchyType hierarchy, Date startDate, Date endDate);
-
-  public void removeChild(ServerGeoObjectIF child, String hierarchyCode, Date startDate, Date endDate);
-
-  public ServerParentTreeNode addParent(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType);
-
-  public ServerParentTreeNode addParent(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
-
-  public void removeParent(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
-
   public void lock();
 
   public void unlock();
 
-  public void populate(GeoObject geoObject, Date startDate, Date endDate);
-
-  public void populate(GeoObjectOverTime goTime);
-
-  public void apply(boolean isImport);
-
-  public Map<String, ServerHierarchyType> getHierarchyTypeMap(String[] relationshipTypes);
-
-  public Map<String, LocationInfo> getAncestorMap(ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents);
-
-  public JsonArray getHierarchiesForGeoObject(Date date);
-
   public void setDate(Date date);
-
-  // GRAPH ENDPOINTS
-  public void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate);
-
-  public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, boolean validate);
-
-  public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, boolean validate);
-
-  public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date);
-
-  public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date);
 
   public List<BusinessObject> getBusinessObjects(BusinessType type);
 
   public List<BusinessObject> getBusinessObjects();
 
+  public MdGraphClassDAOIF getMdClass();
+
+  public VertexObject getVertex();
+
+  public EdgeObject getEdge(ServerGeoObjectIF parent, ServerHierarchyType hierarchyType, Date startDate, Date endDate);
+  
+  public ValueOverTimeCollection getValuesOverTime(String attributeName);
+
+  public void setValuesOverTime(String attributeName, ValueOverTimeCollection collection);
+  
+  public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date);
+  
+  public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date);
+
+  public LocalizedValue getDisplayLabel(Date date);
+
+  public LocalizedValue getValueLocalized(String attributeName, Date startDate);
+
+  public SortedSet<EdgeObject> getEdges(ServerHierarchyType hierarchyType);
+
+  public String getGeometryAttributeName();
 }

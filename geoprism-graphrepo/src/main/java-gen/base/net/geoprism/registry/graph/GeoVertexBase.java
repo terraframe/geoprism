@@ -255,22 +255,6 @@ public abstract class GeoVertexBase extends com.runwaysdk.business.graph.VertexO
     return super.getChildren("net.geoprism.registry.graph.LocatedIn",net.geoprism.registry.graph.GeoVertex.class);
   }
   
-  public com.runwaysdk.business.graph.EdgeObject addExternalIDParent(net.geoprism.registry.graph.ExternalSystem externalSystem)
-  {
-    return super.addParent(externalSystem, "net.geoprism.registry.graph.ExternalID");
-  }
-  
-  public void removeExternalIDParent(net.geoprism.registry.graph.ExternalSystem externalSystem)
-  {
-    super.removeParent(externalSystem, "net.geoprism.registry.graph.ExternalID");
-  }
-  
-  @SuppressWarnings("unchecked")
-  public java.util.List<net.geoprism.registry.graph.ExternalSystem> getExternalIDParentExternalSystems()
-  {
-    return super.getParents("net.geoprism.registry.graph.ExternalID", net.geoprism.registry.graph.ExternalSystem.class);
-  }
-  
   public com.runwaysdk.business.graph.EdgeObject addLocatedInParent(net.geoprism.registry.graph.GeoVertex geoVertex)
   {
     return super.addParent(geoVertex, "net.geoprism.registry.graph.LocatedIn");

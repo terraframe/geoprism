@@ -25,6 +25,8 @@ import org.commongeoregistry.adapter.dataaccess.TreeNode;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.service.ServiceFactory;
 
 public abstract class ServerGraphNode
 {
@@ -93,7 +95,7 @@ public abstract class ServerGraphNode
     
     if (this.geoObject != null)
     {
-      json.add(TreeNode.JSON_GEO_OBJECT, this.geoObject.toGeoObject(this.startDate).toJSON());
+      json.add(TreeNode.JSON_GEO_OBJECT, ServiceFactory.getBean(GeoObjectBusinessServiceIF.class).toGeoObject(this.geoObject, this.startDate).toJSON());
     }
     else
     {

@@ -51,7 +51,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServerGeoObjectType type = object.getType();
 
-    GeoObject geoObject = object.toGeoObject(date);
+    GeoObject geoObject = service.toGeoObject(object, date);
     geoObject.setWritable(pService.canCreateCR(type.getOrganization().getCode(), type));
 
     return geoObject;
@@ -64,7 +64,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServiceFactory.getGeoObjectPermissionService().enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
 
-    return object.toGeoObject(date);
+    return service.toGeoObject(object, date);
   }
 
   @Request(RequestType.SESSION)
@@ -74,7 +74,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServerGeoObjectIF object = service.apply(geoObject, startDate, endDate, true, false);
 
-    return object.toGeoObject(startDate);
+    return service.toGeoObject(object, startDate);
   }
 
   @Request(RequestType.SESSION)
@@ -84,7 +84,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServerGeoObjectIF object = service.apply(geoObject, startDate, endDate, false, false);
 
-    return object.toGeoObject(startDate);
+    return service.toGeoObject(object, startDate);
   }
   
   @Request(RequestType.SESSION)
@@ -104,7 +104,7 @@ public class GeoObjectService implements GeoObjectServiceIF
   {
     ServerGeoObjectIF goServer = service.getGeoObjectByCode(code, typeCode, true);
 
-    return goServer.toGeoObjectOverTime();
+    return service.toGeoObjectOverTime(goServer);
   }
 
   @Request(RequestType.SESSION)
@@ -117,7 +117,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServerGeoObjectIF object = service.apply(goTime, false, false);
 
-    return object.toGeoObjectOverTime();
+    return service.toGeoObjectOverTime(object);
   }
 
   @Request(RequestType.SESSION)
@@ -130,7 +130,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServerGeoObjectIF object = service.apply(goTime, true, false);
 
-    return object.toGeoObjectOverTime();
+    return service.toGeoObjectOverTime(object);
   }
 
   @Request(RequestType.SESSION)
@@ -140,7 +140,7 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     ServiceFactory.getGeoObjectPermissionService().enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
 
-    return object.toGeoObjectOverTime();
+    return service.toGeoObjectOverTime(object);
   }
   
   @Request(RequestType.SESSION)
@@ -159,7 +159,7 @@ public class GeoObjectService implements GeoObjectServiceIF
       sht = ServerHierarchyType.get(hierarchyCode);
     }
 
-    ServerChildTreeNode node = object.getChildGeoObjects(sht, childrenTypes, recursive, date);
+    ServerChildTreeNode node = service.getChildGeoObjects(object, sht, childrenTypes, recursive, date);
 
     return node.toNode(true);
   }
@@ -180,7 +180,7 @@ public class GeoObjectService implements GeoObjectServiceIF
       sht = ServerHierarchyType.get(hierarchyCode);
     }
 
-    return object.getParentGeoObjects(sht, parentTypes, recursive, includeInherited, date).toNode(true);
+    return service.getParentGeoObjects(object, sht, parentTypes, recursive, includeInherited, date).toNode(true);
   }
   
   @Request(RequestType.SESSION)
@@ -237,8 +237,8 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     go.setInvalid(false);
 
-    final GeoObjectOverTime goot = go.toGeoObjectOverTime();
-    ServerParentTreeNodeOverTime pot = go.getParentsOverTime(null, true, true);
+    final GeoObjectOverTime goot = service.toGeoObjectOverTime(go);
+    ServerParentTreeNodeOverTime pot = service.getParentsOverTime(go, null, true, true);
 
     HierarchyService.filterHierarchiesFromPermissions(type, pot);
 

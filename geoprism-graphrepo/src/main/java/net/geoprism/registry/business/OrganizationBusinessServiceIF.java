@@ -1,4 +1,4 @@
-package net.geoprism.registry.service;
+package net.geoprism.registry.business;
 
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 
@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
-public interface OrganizationServiceIF
+public interface OrganizationBusinessServiceIF
 {
   /**
    * Returns the {@link OrganizationDTO}s with the given codes or all

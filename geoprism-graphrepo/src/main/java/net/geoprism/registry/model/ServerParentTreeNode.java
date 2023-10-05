@@ -28,6 +28,7 @@ import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.service.ServiceFactory;
 
@@ -104,7 +105,7 @@ public class ServerParentTreeNode extends ServerTreeNode
 
   public ParentTreeNode toNode(boolean enforcePermissions)
   {
-    GeoObject geoObject = this.getGeoObject().toGeoObject(this.getStartDate());
+    GeoObject geoObject = ServiceFactory.getBean(GeoObjectBusinessServiceIF.class).toGeoObject(this.getGeoObject(), this.getStartDate());
     HierarchyType ht = this.getHierarchyType() != null ? ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).toHierarchyType(this.getHierarchyType()) : null;
 
     ParentTreeNode node = new ParentTreeNode(geoObject, ht);

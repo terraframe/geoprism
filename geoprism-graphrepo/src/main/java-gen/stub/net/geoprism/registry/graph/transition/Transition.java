@@ -156,23 +156,4 @@ public class Transition extends TransitionBase
 
     return transition;
   }
-
-  @Transaction
-  public static void removeAll(ServerGeoObjectType type)
-  {
-    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Transition.CLASS);
-    MdAttributeDAOIF sourceAttribute = mdVertex.definesAttribute(Transition.SOURCE);
-    MdAttributeDAOIF targetAttribute = mdVertex.definesAttribute(Transition.TARGET);
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT FROM " + mdVertex.getDBClassName());
-    statement.append(" WHERE " + sourceAttribute.getColumnName() + ".@class = :vertexClass");
-    statement.append(" OR " + targetAttribute.getColumnName() + ".@class = :vertexClass");
-
-    GraphQuery<Transition> query = new GraphQuery<Transition>(statement.toString());
-    query.setParameter("vertexClass", type.getMdVertex().getDBClassName());
-
-    List<Transition> results = query.getResults();
-    results.forEach(event -> event.delete());
-  }
 }

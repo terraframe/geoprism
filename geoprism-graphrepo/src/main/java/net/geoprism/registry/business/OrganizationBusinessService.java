@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
-package net.geoprism.registry.service;
+package net.geoprism.registry.business;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,15 +31,19 @@ import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
+import com.runwaysdk.system.Roles;
 
+import net.geoprism.registry.ObjectHasDataException;
 import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.conversion.OrganizationConverter;
 import net.geoprism.registry.model.OrganizationMetadata;
+import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.Page;
 
 @Component
-public class OrganizationService implements OrganizationServiceIF
+public class OrganizationBusinessService implements OrganizationBusinessServiceIF
 {
   /**
    * Returns the {@link OrganizationDTO}s with the given codes or all
@@ -173,10 +177,41 @@ public class OrganizationService implements OrganizationServiceIF
 
     ServiceFactory.getOrganizationPermissionService().enforceActorCanDelete();
 
-    organization.delete();
+    deleteInTrans(organization);
 
     // If this did not error out then remove from the cache
     ServiceFactory.getMetadataCache().removeOrganization(code);
+  }
+  
+  @Transaction
+  protected void deleteInTrans(ServerOrganization sorg)
+  {
+    // Can't delete if there's existing data
+    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
+
+    for (ServerHierarchyType ht : hierarchyTypes)
+    {
+      if (ht.getOrganizationCode().equals(sorg.getCode()))
+      {
+        throw new ObjectHasDataException();
+      }
+    }
+
+    deleteRoles(sorg);
+    
+    sorg.delete();
+  }
+  
+  protected void deleteRoles(ServerOrganization sorg)
+  {
+    try
+    {
+      Roles orgRole = sorg.getRole();
+      orgRole.delete();
+    }
+    catch (com.runwaysdk.dataaccess.cache.DataNotFoundException e)
+    {
+    }
   }
 
   @Request(RequestType.SESSION)

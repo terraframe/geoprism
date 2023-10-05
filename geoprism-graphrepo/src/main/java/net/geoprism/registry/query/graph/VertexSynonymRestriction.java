@@ -23,9 +23,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.service.ServiceFactory;
 
 public class VertexSynonymRestriction extends AbstractVertexRestriction implements VertexGeoObjectRestriction
 {
@@ -72,7 +74,7 @@ public class VertexSynonymRestriction extends AbstractVertexRestriction implemen
       Set<String> edges = new TreeSet<String>();
       edges.add(this.hierarchyType.getMdEdge().getDBClassName());
 
-      ServerHierarchyType inheritedHierarchy = type.findHierarchy(this.hierarchyType, this.parent.getType());
+      ServerHierarchyType inheritedHierarchy = ServiceFactory.getBean(GeoObjectTypeBusinessServiceIF.class).findHierarchy(type, this.hierarchyType, this.parent.getType());
 
       if (inheritedHierarchy != null)
       {

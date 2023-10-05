@@ -129,6 +129,12 @@ import net.geoprism.registry.service.ServiceFactory;
 public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServiceIF
 {
   @Autowired
+  private TransitionEventBusinessServiceIF tranEventServ;
+  
+  @Autowired
+  private TransitionBusinessServiceIF tranServ;
+  
+  @Autowired
   private HierarchyTypeBusinessServiceIF htServ;
   
   public GeoObjectTypeBusinessService()
@@ -1048,9 +1054,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
 
     // Delete the transition and transition events
-    TransitionEvent.removeAll(type);
+    tranEventServ.removeAll(type);
 
-    Transition.removeAll(type);
+    tranServ.removeAll(type);
   }
   
   /**

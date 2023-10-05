@@ -45,7 +45,6 @@ import com.runwaysdk.configuration.ConfigurationManager;
 import com.runwaysdk.configuration.ConfigurationReaderIF;
 import com.runwaysdk.resource.CloseableFile;
 
-
 public class GeoprismProperties
 {
   private ConfigurationReaderIF props;
@@ -70,6 +69,12 @@ public class GeoprismProperties
     }
 
     return url;
+  }
+  
+  public static int getMaxNumberOfPoints()
+  {
+    return Singleton.INSTANCE.props.getInteger("max.geometry.points", 400000);
+//    return Singleton.INSTANCE.props.getInteger("max.geometry.points", 1200000);
   }
 
   public static int getInviteUserTokenExpireTime()

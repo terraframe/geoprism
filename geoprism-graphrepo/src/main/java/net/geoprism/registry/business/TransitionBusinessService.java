@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.runwaysdk.business.graph.GraphQuery;
+import com.runwaysdk.dataaccess.MdAttributeDAOIF;
+import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.ProgrammingErrorException;
+import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 
 import net.geoprism.registry.graph.transition.Transition;
@@ -56,5 +60,24 @@ public class TransitionBusinessService implements TransitionBusinessServiceIF
       // This should be prevented by the front-end
       throw new ProgrammingErrorException("Target type must be a subtype of (" + afterType.getCode() + ")");
     }
+  }
+  
+  @Transaction
+  public void removeAll(ServerGeoObjectType type)
+  {
+    MdVertexDAOIF mdVertex = MdVertexDAO.getMdVertexDAO(Transition.CLASS);
+    MdAttributeDAOIF sourceAttribute = mdVertex.definesAttribute(Transition.SOURCE);
+    MdAttributeDAOIF targetAttribute = mdVertex.definesAttribute(Transition.TARGET);
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT FROM " + mdVertex.getDBClassName());
+    statement.append(" WHERE " + sourceAttribute.getColumnName() + ".@class = :vertexClass");
+    statement.append(" OR " + targetAttribute.getColumnName() + ".@class = :vertexClass");
+
+    GraphQuery<Transition> query = new GraphQuery<Transition>(statement.toString());
+    query.setParameter("vertexClass", type.getMdVertex().getDBClassName());
+
+    List<Transition> results = query.getResults();
+    results.forEach(event -> event.delete());
   }
 }

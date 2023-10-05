@@ -30,7 +30,9 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import net.geoprism.registry.DateFormatter;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectIF;
+import net.geoprism.registry.service.ServiceFactory;
 
 public class SeverGeoObjectJsonAdapters
 {
@@ -46,7 +48,7 @@ public class SeverGeoObjectJsonAdapters
     @Override
     public JsonElement serialize(ServerGeoObjectIF sgo, Type typeOfSrc, JsonSerializationContext context)
     {
-      return context.serialize(sgo.toGeoObject(this.date));
+      return context.serialize(ServiceFactory.getBean(GeoObjectBusinessServiceIF.class).toGeoObject(sgo, this.date));
     }
   }
 

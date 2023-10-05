@@ -50,6 +50,7 @@ import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.business.GeoObjectBusinessService;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -290,7 +291,7 @@ public class ServerParentTreeNodeOverTime
             {
               ServerParentTreeNode sptn = ptns.get(0);
               final VertexServerGeoObject sGeoObject = (VertexServerGeoObject) sptn.getGeoObject();
-              final GeoObject geoObject = sGeoObject.toGeoObject(node.getStartDate());
+              final GeoObject geoObject = ServiceFactory.getBean(GeoObjectBusinessServiceIF.class).toGeoObject(sGeoObject, node.getStartDate());
               geoObject.setGeometry(null);
 
               JsonObject pObject = new JsonObject();

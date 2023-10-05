@@ -38,6 +38,7 @@ import com.runwaysdk.session.RequestType;
 import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.Organization;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.business.HierarchyBusinessServiceIF;
 import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
@@ -56,6 +57,9 @@ public class HierarchyService implements HierarchyServiceIF
   
   @Autowired
   private GeoObjectTypeBusinessServiceIF gotServ;
+  
+  @Autowired
+  private GeoObjectBusinessServiceIF goServ;
   
   @Autowired
   private HierarchyTypeBusinessServiceIF htBizServ;
@@ -165,7 +169,7 @@ public class HierarchyService implements HierarchyServiceIF
   public JsonArray getHierarchiesForGeoObjectOverTimeInReq(String code, String typeCode)
   {
     ServerGeoObjectIF geoObject = ServiceFactory.getGeoObjectService().getGeoObjectByCode(code, typeCode);
-    ServerParentTreeNodeOverTime pot = geoObject.getParentsOverTime(null, true, true);
+    ServerParentTreeNodeOverTime pot = goServ.getParentsOverTime(geoObject, null, true, true);
 
     filterHierarchiesFromPermissions(geoObject.getType(), pot);
 

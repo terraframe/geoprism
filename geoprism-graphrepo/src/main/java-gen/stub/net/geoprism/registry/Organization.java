@@ -99,36 +99,6 @@ public class Organization extends OrganizationBase
    */
   public void delete()
   {
-    // Can't delete if there's existing data
-    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-
-    for (ServerHierarchyType ht : hierarchyTypes)
-    {
-      if (ht.getOrganizationCode().equals(this.getCode()))
-      {
-        throw new ObjectHasDataException();
-      }
-    }
-
-    try
-    {
-      Roles raOrgRole = this.getRegistryAdminiRole();
-      raOrgRole.delete();
-    }
-    // Heads up: clean up
-    catch (com.runwaysdk.dataaccess.cache.DataNotFoundException e)
-    {
-    }
-    try
-    {
-      Roles orgRole = this.getRole();
-      orgRole.delete();
-    }
-    // Heads up: clean up
-    catch (com.runwaysdk.dataaccess.cache.DataNotFoundException e)
-    {
-    }
-
     super.delete();
   }
 
