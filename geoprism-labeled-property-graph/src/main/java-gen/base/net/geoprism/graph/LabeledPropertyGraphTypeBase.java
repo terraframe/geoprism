@@ -561,18 +561,6 @@ public abstract class LabeledPropertyGraphTypeBase extends com.runwaysdk.busines
     return (LabeledPropertyGraphType) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public net.geoprism.graph.LabeledPropertyGraphTypeEntry createEntry(java.util.Date forDate)
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphType.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final net.geoprism.graph.LabeledPropertyGraphTypeEntry createEntry(java.lang.String oid, java.util.Date forDate)
-  {
-    LabeledPropertyGraphType _instance = LabeledPropertyGraphType.get(oid);
-    return _instance.createEntry(forDate);
-  }
-  
   public static LabeledPropertyGraphType lock(java.lang.String oid)
   {
     LabeledPropertyGraphType _instance = LabeledPropertyGraphType.get(oid);

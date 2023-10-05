@@ -729,18 +729,6 @@ public abstract class LabeledPropertyGraphSynchronizationBase extends com.runway
     return (LabeledPropertyGraphSynchronization) com.runwaysdk.business.Business.get(CLASS, key);
   }
   
-  public void execute()
-  {
-    String msg = "This method should never be invoked.  It should be overwritten in net.geoprism.graph.LabeledPropertyGraphSynchronization.java";
-    throw new com.runwaysdk.dataaccess.metadata.ForbiddenMethodException(msg);
-  }
-  
-  public static final void execute(java.lang.String oid)
-  {
-    LabeledPropertyGraphSynchronization _instance = LabeledPropertyGraphSynchronization.get(oid);
-    _instance.execute();
-  }
-  
   public static LabeledPropertyGraphSynchronization lock(java.lang.String oid)
   {
     LabeledPropertyGraphSynchronization _instance = LabeledPropertyGraphSynchronization.get(oid);

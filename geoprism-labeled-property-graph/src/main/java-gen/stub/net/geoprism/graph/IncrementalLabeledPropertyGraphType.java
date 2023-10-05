@@ -19,6 +19,7 @@
 package net.geoprism.graph;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -26,79 +27,27 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.Pair;
-import com.runwaysdk.dataaccess.transaction.Transaction;
 
+import net.geoprism.graph.lpg.LabeledVersion;
 import net.geoprism.registry.DateUtil;
 
 public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPropertyGraphTypeBase
 {
   @SuppressWarnings("unused")
   private static final long serialVersionUID = 794228873;
-  
+
   public IncrementalLabeledPropertyGraphType()
   {
     super();
   }
+
   @Override
-  protected JsonObject formatVersionLabel(LabeledVersion version)
+  public JsonObject formatVersionLabel(LabeledVersion version)
   {
     JsonObject object = new JsonObject();
 
-//    List<ChangeFrequency> frequency = this.getFrequency();
-//
-//    if (frequency.contains(ChangeFrequency.ANNUAL))
-//    {
-//      Calendar calendar = Calendar.getInstance(DateUtil.SYSTEM_TIMEZONE);
-//      calendar.setTime(version.getForDate());
-//
-//      object.addProperty("type", "text");
-//      object.addProperty("value", Integer.toString(calendar.get(Calendar.YEAR)));
-//    }
-//    else if (frequency.contains(ChangeFrequency.BIANNUAL))
-//    {
-//      Calendar calendar = Calendar.getInstance(DateUtil.SYSTEM_TIMEZONE);
-//      calendar.setTime(version.getForDate());
-//
-//      int halfYear = ( calendar.get(Calendar.MONTH) / 6 ) + 1;
-//
-//      object.addProperty("type", "text");
-//      object.addProperty("value", "H" + halfYear + " " + Integer.toString(calendar.get(Calendar.YEAR)));
-//    }
-//    else if (frequency.contains(ChangeFrequency.QUARTER))
-//    {
-//      Calendar calendar = Calendar.getInstance(DateUtil.SYSTEM_TIMEZONE);
-//      calendar.setTime(version.getForDate());
-//
-//      int quarter = ( calendar.get(Calendar.MONTH) / 3 ) + 1;
-//
-//      object.addProperty("type", "text");
-//      object.addProperty("value", "Q" + quarter + " " + Integer.toString(calendar.get(Calendar.YEAR)));
-//    }
-//    else if (frequency.contains(ChangeFrequency.MONTHLY))
-//    {
-//      Calendar calendar = Calendar.getInstance(DateUtil.SYSTEM_TIMEZONE);
-//      calendar.setTime(version.getForDate());
-//      calendar.set(Calendar.DAY_OF_MONTH, 1);
-//
-//      Date startOfWeek = calendar.getTime();
-//
-//      calendar.add(Calendar.MONTH, 1);
-//      calendar.add(Calendar.DAY_OF_YEAR, -1);
-//
-//      Date endOfWeek = calendar.getTime();
-//
-//      JsonObject range = new JsonObject();
-//      range.addProperty("startDate", DateUtil.formatDate(startOfWeek, false));
-//      range.addProperty("endDate", DateUtil.formatDate(endOfWeek, false));
-//
-//      object.addProperty("type", "range");
-//      object.add("value", range);
-//    }
-//    else
-//    {
-      object.addProperty("type", "date");
-      object.addProperty("value", DateUtil.formatDate(version.getForDate(), false));
-//    }
+    object.addProperty("type", "date");
+    object.addProperty("value", DateUtil.formatDate(version.getForDate(), false));
 
     return object;
   }
@@ -189,28 +138,23 @@ public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPrope
 
   private Pair<Date, Date> getDateRange()
   {
-//    Pair<Date, Date> range = VertexServerGeoObject.getDataRange(objectType);
-//
-//    // Only use the publishing start date if there is an actual range of data
-//    if (this.getPublishingStartDate() != null && range != null)
-//    {
-//      return new Pair<Date, Date>(this.getPublishingStartDate(), range.getSecond());
-//    }
-//    return range;
-    
+    // Pair<Date, Date> range = VertexServerGeoObject.getDataRange(objectType);
+    //
+    // // Only use the publishing start date if there is an actual range of data
+    // if (this.getPublishingStartDate() != null && range != null)
+    // {
+    // return new Pair<Date, Date>(this.getPublishingStartDate(),
+    // range.getSecond());
+    // }
+    // return range;
+
     return new Pair<Date, Date>(this.getPublishingStartDate(), this.getPublishingStartDate());
 
   }
 
   @Override
-  @Transaction
-  public void createEntries()
+  public List<Date> getEntryDates()
   {
-    if (!this.isValid())
-    {
-//      throw new InvalidMasterListException();
-    }
-
     Pair<Date, Date> range = this.getDateRange();
 
     if (range != null)
@@ -222,26 +166,19 @@ public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPrope
         endDate = DateUtil.getCurrentDate();
       }
 
-      List<Date> dates = this.getFrequencyDates(range.getFirst(), endDate);
+      return this.getFrequencyDates(range.getFirst(), endDate);
+    }
 
-      for (Date date : dates)
-      {
-        this.getOrCreateEntry(date);
-      }
-    }
-    else
-    {
-//      throw new EmptyListException();
-    }
+    return Arrays.asList(this.getPublishingStartDate());
   }
 
   @Override
-  public JsonObject toJSON(boolean includeEntries)
+  public JsonObject toJSON()
   {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     format.setTimeZone(DateUtil.SYSTEM_TIMEZONE);
 
-    JsonObject object = super.toJSON(includeEntries);
+    JsonObject object = super.toJSON();
     object.addProperty(IncrementalLabeledPropertyGraphType.FREQUENCY, this.toFrequency().name());
     object.addProperty(IncrementalLabeledPropertyGraphType.PUBLISHINGSTARTDATE, format.format(this.getPublishingStartDate()));
     object.addProperty(GRAPH_TYPE, INCREMENTAL);
@@ -250,7 +187,7 @@ public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPrope
   }
 
   @Override
-  protected void parse(JsonObject object)
+  public void parse(JsonObject object)
   {
     super.parse(object);
 
@@ -283,6 +220,5 @@ public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPrope
       }
     }
   }
-
 
 }
