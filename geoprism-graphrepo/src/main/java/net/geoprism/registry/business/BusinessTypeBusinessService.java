@@ -481,9 +481,9 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   }
 
   @Override
-  public JsonArray getAll()
+  public List<BusinessType> getAll()
   {
-    JsonArray response = new JsonArray();
+    List<BusinessType> response = new LinkedList<>();
 
     ServerOrganization.getSortedOrganizations().stream().filter(o -> ServerOrganization.isMember(o)).forEach(org -> {
 
@@ -495,8 +495,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       {
         while (it.hasNext())
         {
-          BusinessType type = it.next();
-          response.add(this.toJSON(type));
+          response.add(it.next());
         }
       }
     });

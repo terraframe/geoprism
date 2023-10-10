@@ -55,7 +55,7 @@ public interface BusinessTypeBusinessServiceIF
 
   JsonArray listByOrg();
 
-  JsonArray getAll();
+  List<BusinessType> getAll();
 
   List<BusinessType> getForOrganization(ServerOrganization organization);
 

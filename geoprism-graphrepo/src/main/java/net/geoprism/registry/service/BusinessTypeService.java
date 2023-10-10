@@ -33,6 +33,7 @@ import com.runwaysdk.session.Session;
 
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.business.BusinessTypeBusinessServiceIF;
 
@@ -74,7 +75,9 @@ public class BusinessTypeService
   @Request(RequestType.SESSION)
   public JsonArray getAll(String sessionId)
   {
-    return this.typeService.getAll();
+    return this.typeService.getAll().stream().map(object -> {
+      return this.typeService.toJSON(object);
+    }).collect(JsonCollectors.toJsonArray());
   }
 
   @Request(RequestType.SESSION)
@@ -200,8 +203,7 @@ public class BusinessTypeService
     BusinessType got = this.typeService.getByCode(businessTypeCode);
     List<BusinessEdgeType> edgeTypes = this.typeService.getEdgeTypes(got);
 
-    return edgeTypes.stream().map(object -> this.edgeService.toJSON(object)).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
-    });
+    return edgeTypes.stream().map(object -> this.edgeService.toJSON(object)).collect(JsonCollectors.toJsonArray());
   }
 
 }
