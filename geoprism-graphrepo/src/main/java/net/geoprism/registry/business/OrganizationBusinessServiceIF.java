@@ -1,67 +1,32 @@
 package net.geoprism.registry.business;
 
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
+import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonObject;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
+import net.geoprism.registry.model.GraphNode;
+import net.geoprism.registry.model.ServerOrganization;
+import net.geoprism.registry.view.Page;
 
+@Component
 public interface OrganizationBusinessServiceIF
 {
-  /**
-   * Returns the {@link OrganizationDTO}s with the given codes or all
-   * {@link OrganizationDTO}s if no codes are provided.
-   * 
-   * @param sessionId
-   * @param codes
-   *          codes of the {@link OrganizationDTO}s.
-   * @return the {@link OrganizationDTO}s with the given codes or all
-   *         {@link OrganizationDTO}s if no codes are provided.
-   */
-  public OrganizationDTO[] getOrganizations(String sessionId, String[] codes);
 
-  /**
-   * Creates a {@link OrganizationDTO} from the given JSON.
-   * 
-   * @param sessionId
-   * @param json
-   *          JSON of the {@link OrganizationDTO} to be created.
-   * @return newly created {@link OrganizationDTO}
-   */
-  @Request(RequestType.SESSION)
-  public OrganizationDTO createOrganization(String sessionId, String json);
+  public ServerOrganization create(OrganizationDTO organizationDTO);
 
-  /**
-   * Updates the given {@link OrganizationDTO} represented as JSON.
-   * 
-   * @pre given {@link OrganizationDTO} must already exist.
-   * 
-   * @param sessionId
-   * @param json
-   *          JSON of the {@link OrganizationDTO} to be updated.
-   * @return updated {@link OrganizationDTO}
-   */
-  @Request(RequestType.SESSION)
-  public OrganizationDTO updateOrganization(String sessionId, String json);
+  public ServerOrganization update(OrganizationDTO organizationDTO);
 
-  /**
-   * Deletes the {@link OrganizationDTO} with the given code.
-   * 
-   * @param sessionId
-   * @param code
-   *          code of the {@link OrganizationDTO} to delete.
-   */
-  public void deleteOrganization(String sessionId, String code);
+  public void delete(ServerOrganization sorg);
 
-  public void addChild(String sessionId, String parentCode, String childCode);
+  void move(ServerOrganization organization, ServerOrganization newParent);
 
-  public void removeChild(String sessionId, String parentCode, String childCode);
+  void removeAllParents(ServerOrganization organization);
 
-  public JsonObject getChildren(String sessionId, String code, Integer pageSize, Integer pageNumber);
+  GraphNode<ServerOrganization> getAncestorTree(ServerOrganization child, String rootCode, Integer pageSize);
 
-  public JsonObject getAncestorTree(String sessionId, String rootCode, String code, Integer pageSize);
+  Page<ServerOrganization> getChildren(ServerOrganization parent, Integer pageSize, Integer pageNumber);
 
-  public void move(String sessionId, String code, String parentCode);
+  void removeChild(ServerOrganization parent, ServerOrganization child);
 
-  public void removeAllParents(String sessionId, String code);
+  void addChild(ServerOrganization parent, ServerOrganization child);
+
 }

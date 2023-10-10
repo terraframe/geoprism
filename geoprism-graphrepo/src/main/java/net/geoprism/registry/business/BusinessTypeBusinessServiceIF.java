@@ -1,7 +1,6 @@
 package net.geoprism.registry.business;
 
 import java.util.List;
-import java.util.Map;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.stereotype.Component;
@@ -38,8 +37,6 @@ public interface BusinessTypeBusinessServiceIF
 
   void deleteMdAttributeFromAttributeType(BusinessType type, String attributeName);
 
-  Map<String, AttributeType> getAttributeMap(BusinessType type);
-
   JsonObject toJSON(BusinessType type);
 
   JsonObject toJSON(BusinessType type, boolean includeAttribute, boolean flattenLocalAttributes);
@@ -67,8 +64,6 @@ public interface BusinessTypeBusinessServiceIF
   boolean isEdgeABusinessType(MdEdgeDAOIF mdEdge);
 
   BusinessType getByMdEdge(MdEdgeDAOIF mdEdge);
-
-  AttributeType getAttribute(BusinessType type, String name);
 
   BusinessType getByMdVertex(MdVertexDAOIF mdVertex);
 

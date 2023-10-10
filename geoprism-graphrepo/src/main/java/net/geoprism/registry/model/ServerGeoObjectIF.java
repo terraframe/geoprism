@@ -104,10 +104,6 @@ public interface ServerGeoObjectIF
 
   public void setDate(Date date);
 
-  public List<BusinessObject> getBusinessObjects(BusinessType type);
-
-  public List<BusinessObject> getBusinessObjects();
-
   public MdGraphClassDAOIF getMdClass();
 
   public VertexObject getVertex();

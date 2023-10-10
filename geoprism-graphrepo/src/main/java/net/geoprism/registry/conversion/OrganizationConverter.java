@@ -21,12 +21,9 @@ package net.geoprism.registry.conversion;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 
-import com.runwaysdk.dataaccess.transaction.Transaction;
-
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.graph.GraphOrganization;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.service.ServiceFactory;
 
 public class OrganizationConverter extends RegistryLocalizedValueConverter
 {
@@ -35,9 +32,9 @@ public class OrganizationConverter extends RegistryLocalizedValueConverter
   {
     String code = organization.getCode();
 
-    LocalizedValue label = convert(organization.getDisplayLabel());
+    LocalizedValue label = convertNoAutoCoalesce(organization.getDisplayLabel());
 
-    LocalizedValue contactInfo = convert(organization.getContactInfo());
+    LocalizedValue contactInfo = convertNoAutoCoalesce(organization.getContactInfo());
 
     return new OrganizationDTO(code, label, contactInfo);
   }
@@ -49,30 +46,6 @@ public class OrganizationConverter extends RegistryLocalizedValueConverter
     organization.setCode(organizationDTO.getCode());
     organization.setDisplayLabel(organizationDTO.getLabel());
     organization.setContactInfo(organizationDTO.getContactInfo());
-
-    return organization;
-  }
-
-  @Transaction
-  public ServerOrganization update(OrganizationDTO organizationDTO)
-  {
-    ServerOrganization organization = ServerOrganization.getByCode(organizationDTO.getCode());
-
-    ServiceFactory.getOrganizationPermissionService().enforceActorCanUpdate();
-
-    try
-    {
-      organization.lock();
-
-      organization.setCode(organizationDTO.getCode());
-      organization.setDisplayLabel(organizationDTO.getLabel());
-      organization.setContactInfo(organizationDTO.getContactInfo());
-      organization.apply();
-    }
-    finally
-    {
-      organization.unlock();
-    }
 
     return organization;
   }

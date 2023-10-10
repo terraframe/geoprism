@@ -67,7 +67,7 @@ public class DirectedAcyclicGraphTypeBusinessService implements DirectedAcyclicG
   }
   
   @Override
-  public DirectedAcyclicGraphType create(DirectedAcyclicGraphType dagt, JsonObject object)
+  public DirectedAcyclicGraphType create(JsonObject object)
   {
     String code = object.get(DirectedAcyclicGraphType.CODE).getAsString();
     LocalizedValue label = LocalizedValue.fromJSON(object.getAsJsonObject(DirectedAcyclicGraphType.JSON_LABEL));

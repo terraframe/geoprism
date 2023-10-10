@@ -13,16 +13,6 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 public interface BusinessObjectBusinessServiceIF
 {
 
-  String getLabel(BusinessObject object);
-
-  String getCode(BusinessObject object);
-
-  void setCode(BusinessObject object, String code);
-
-  void setValue(BusinessObject object, String attributeName, Object value);
-
-  <T> T getObjectValue(BusinessObject object, String attributeName);
-
   JsonObject toJSON(BusinessObject object);
 
   void apply(BusinessObject object);

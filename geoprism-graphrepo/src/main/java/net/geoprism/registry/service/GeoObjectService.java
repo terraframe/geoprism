@@ -27,7 +27,7 @@ import com.runwaysdk.session.Session;
 
 import net.geoprism.graph.lpg.service.LocaleSerializer;
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
-import net.geoprism.registry.business.GeoObjectBusinessService;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -38,34 +38,39 @@ import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 public class GeoObjectService implements GeoObjectServiceIF
 {
   @Autowired
-  protected GeoObjectBusinessService service;
-  
+  protected GeoObjectBusinessServiceIF   service;
+
+  @Autowired
+  protected GeoObjectPermissionServiceIF permissionService;
+
+  @Override
   @Request(RequestType.SESSION)
   public GeoObject getGeoObject(String sessionId, String uid, String geoObjectTypeCode, Date date)
   {
     ServerGeoObjectIF object = this.service.getGeoObject(uid, geoObjectTypeCode);
 
-    final GeoObjectPermissionServiceIF pService = ServiceFactory.getGeoObjectPermissionService();
-    pService.enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
+    this.permissionService.enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
 
     ServerGeoObjectType type = object.getType();
 
     GeoObject geoObject = service.toGeoObject(object, date);
-    geoObject.setWritable(pService.canCreateCR(type.getOrganization().getCode(), type));
+    geoObject.setWritable(this.permissionService.canCreateCR(type.getOrganization().getCode(), type));
 
     return geoObject;
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObject getGeoObjectByCode(String sessionId, String code, String typeCode, Date date)
   {
     ServerGeoObjectIF object = service.getGeoObjectByCode(code, typeCode, true);
 
-    ServiceFactory.getGeoObjectPermissionService().enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
+    this.permissionService.enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
 
     return service.toGeoObject(object, date);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObject createGeoObject(String sessionId, String jGeoObj, Date startDate, Date endDate)
   {
@@ -76,6 +81,7 @@ public class GeoObjectService implements GeoObjectServiceIF
     return service.toGeoObject(object, startDate);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObject updateGeoObject(String sessionId, String jGeoObj, Date startDate, Date endDate)
   {
@@ -85,19 +91,22 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     return service.toGeoObject(object, startDate);
   }
-  
+
+  @Override
   @Request(RequestType.SESSION)
   public String getGeoObjectBounds(String sessionId, GeoObject geoObject)
   {
     return this.service.getGeoObject(geoObject).bbox(null);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public String getGeoObjectBoundsAtDate(String sessionId, GeoObject geoObject, Date date)
   {
     return this.service.getGeoObject(geoObject).bbox(date);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObjectOverTime getGeoObjectOverTimeByCode(String sessionId, String code, String typeCode)
   {
@@ -106,42 +115,46 @@ public class GeoObjectService implements GeoObjectServiceIF
     return service.toGeoObjectOverTime(goServer);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObjectOverTime updateGeoObjectOverTime(String sessionId, String jGeoObj)
   {
     GeoObjectOverTime goTime = GeoObjectOverTime.fromJSON(ServiceFactory.getAdapter(), jGeoObj);
     ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType().getCode());
 
-    ServiceFactory.getGeoObjectPermissionService().enforceCanWrite(goTime.getType().getOrganizationCode(), type);
+    this.permissionService.enforceCanWrite(goTime.getType().getOrganizationCode(), type);
 
     ServerGeoObjectIF object = service.apply(goTime, false, false);
 
     return service.toGeoObjectOverTime(object);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObjectOverTime createGeoObjectOverTime(String sessionId, String jGeoObj)
   {
     GeoObjectOverTime goTime = GeoObjectOverTime.fromJSON(ServiceFactory.getAdapter(), jGeoObj);
     ServerGeoObjectType type = ServerGeoObjectType.get(goTime.getType().getCode());
 
-    ServiceFactory.getGeoObjectPermissionService().enforceCanCreate(goTime.getType().getOrganizationCode(), type);
+    this.permissionService.enforceCanCreate(goTime.getType().getOrganizationCode(), type);
 
     ServerGeoObjectIF object = service.apply(goTime, true, false);
 
     return service.toGeoObjectOverTime(object);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public GeoObjectOverTime getGeoObjectOverTime(String sessionId, String id, String typeCode)
   {
     ServerGeoObjectIF object = this.service.getGeoObject(id, typeCode);
 
-    ServiceFactory.getGeoObjectPermissionService().enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
+    this.permissionService.enforceCanRead(object.getType().getOrganization().getCode(), object.getType());
 
     return service.toGeoObjectOverTime(object);
   }
-  
+
+  @Override
   @Request(RequestType.SESSION)
   public ChildTreeNode getChildGeoObjects(String sessionId, String parentCode, String parentGeoObjectTypeCode, String hierarchyCode, String[] childrenTypes, Boolean recursive, Date date)
   {
@@ -163,6 +176,7 @@ public class GeoObjectService implements GeoObjectServiceIF
     return node.toNode(true);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public ParentTreeNode getParentGeoObjects(String sessionId, String childCode, String childGeoObjectTypeCode, String hierarchyCode, String[] parentTypes, boolean recursive, boolean includeInherited, Date date)
   {
@@ -181,13 +195,15 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     return service.getParentGeoObjects(object, sht, parentTypes, recursive, includeInherited, date).toNode(true);
   }
-  
+
+  @Override
   @Request(RequestType.SESSION)
   public GeoObject newGeoObjectInstance(String sessionId, String geoObjectTypeCode)
   {
     return ServiceFactory.getAdapter().newGeoObjectInstance(geoObjectTypeCode);
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public String newGeoObjectInstance2(String sessionId, String geoObjectTypeCode)
   {
@@ -227,6 +243,7 @@ public class GeoObjectService implements GeoObjectServiceIF
     return joResp.toString();
   }
 
+  @Override
   @Request(RequestType.SESSION)
   public String newGeoObjectInstanceOverTime(String sessionId, String typeCode)
   {
@@ -251,4 +268,47 @@ public class GeoObjectService implements GeoObjectServiceIF
 
     return response.toString();
   }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonObject getAll(String sessionId, String typeCode, String hierarchyCode, Date dUpdatedSince, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize)
+  {
+    return this.service.getAll(typeCode, hierarchyCode, dUpdatedSince, includeLevel, format, externalSystemId, pageNumber, pageSize);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonObject doesGeoObjectExistAtRange(String sessionId, Date startDate, Date endDate, String typeCode, String code)
+  {
+    return this.service.doesGeoObjectExistAtRange(startDate, endDate, typeCode, code);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonObject hasDuplicateLabel(String sessionId, Date date, String typeCode, String code, String label)
+  {
+    return this.service.hasDuplicateLabel(date, typeCode, code, label);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode)
+  {
+    return this.service.getBusinessObjects(typeCode, code, businessTypeCode);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public ParentTreeNode addChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
+  {
+    return this.service.addChild(parentCode, parentTypeCode, childCode, parentTypeCode, hierarchyCode, startDate, endDate);
+  }
+
+  @Override
+  @Request(RequestType.SESSION)
+  public void removeChild(String sessionId, String parentCode, String parentTypeCode, String childCode, String childTypeCode, String hierarchyCode, Date startDate, Date endDate)
+  {
+    this.service.removeChild(parentCode, parentTypeCode, childCode, parentTypeCode, hierarchyCode, startDate, endDate);
+  }
+
 }

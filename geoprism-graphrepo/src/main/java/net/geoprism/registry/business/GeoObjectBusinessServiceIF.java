@@ -16,12 +16,11 @@ import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.DuplicateDataException;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
-import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
 
+import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.conversion.ServerGeoObjectStrategyIF;
 import net.geoprism.registry.etl.upload.ClassifierCache;
+import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.LocationInfo;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
@@ -36,19 +35,19 @@ import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 public interface GeoObjectBusinessServiceIF
 {
   public void populate(ServerGeoObjectIF sgo, GeoObjectOverTime goTime);
-  
+
   public void populate(ServerGeoObjectIF sgo, GeoObject geoObject, Date startDate, Date endDate);
-  
+
   public boolean trySetValue(ServerGeoObjectIF sgo, String attributeName, Object value);
-  
-  public JsonObject getAll(String sessionId, String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize);
 
-  public ParentTreeNode addChild(String sessionId, String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate);
+  public JsonObject getAll(String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize);
 
-  public void removeChild(String sessionId, String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate);
+  public ParentTreeNode addChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate);
+
+  public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate);
 
   public void apply(ServerGeoObjectIF sgo, boolean isImport);
-  
+
   public ServerGeoObjectIF apply(GeoObject object, Date startDate, Date endDate, boolean isNew, boolean isImport);
 
   public void handleDuplicateDataException(ServerGeoObjectType type, DuplicateDataException e);
@@ -89,7 +88,7 @@ public interface GeoObjectBusinessServiceIF
 
   public void removeAllEdges(ServerHierarchyType hierarchyType, ServerGeoObjectType childType);
 
-  public JsonObject doesGeoObjectExistAtRange(String sessionId, Date startDate, Date endDate, String typeCode, String code);
+  public JsonObject doesGeoObjectExistAtRange(Date startDate, Date endDate, String typeCode, String code);
 
   public List<VertexServerGeoObject> getAncestors(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy);
 
@@ -144,8 +143,12 @@ public interface GeoObjectBusinessServiceIF
 
   public Map<String, LocationInfo> getAncestorMap(ServerGeoObjectIF sgo, ServerHierarchyType hierarchy, List<ServerGeoObjectType> parents);
 
-  public JsonObject hasDuplicateLabel(String sessionId, Date date, String typeCode, String code, String label);
+  public JsonObject hasDuplicateLabel(Date date, String typeCode, String code, String label);
 
-  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode);
+  public JsonArray getBusinessObjects(String typeCode, String code, String businessTypeCode);
+
+  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object);
+
+  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessType type);
 
 }

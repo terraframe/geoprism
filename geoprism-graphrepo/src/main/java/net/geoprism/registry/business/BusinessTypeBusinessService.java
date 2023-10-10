@@ -2,7 +2,6 @@ package net.geoprism.registry.business;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,7 +11,6 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.gson.JsonArray;
@@ -46,7 +44,6 @@ import com.runwaysdk.system.metadata.MdAttributeConcrete;
 import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdVertex;
 
-import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessEdgeTypeQuery;
@@ -182,29 +179,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
   }
 
   @Override
-  public Map<String, AttributeType> getAttributeMap(BusinessType type)
-  {
-    RegistryAttributeTypeConverter converter = new RegistryAttributeTypeConverter();
-
-    MdVertexDAOIF mdVertex = type.getMdVertexDAO();
-
-    return mdVertex.definesAttributes().stream().filter(attr -> {
-      return !attr.isSystem() && !attr.definesAttribute().equals(BusinessType.SEQ);
-    }).map(attr -> converter.build(attr)).collect(Collectors.toMap(AttributeType::getName, attr -> attr));
-  }
-
-  @Override
-  public AttributeType getAttribute(BusinessType type, String name)
-  {
-    RegistryAttributeTypeConverter converter = new RegistryAttributeTypeConverter();
-
-    MdVertexDAOIF mdVertex = type.getMdVertexDAO();
-    MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) mdVertex.definesAttribute(name);
-
-    return converter.build(mdAttribute);
-  }
-
-  @Override
   public JsonObject toJSON(BusinessType type)
   {
     return toJSON(type, false, false);
@@ -242,7 +216,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
         return x1;
       });
 
-      JsonArray attributes = this.getAttributeMap(type).values().stream().sorted((a, b) -> {
+      JsonArray attributes = type.getAttributeMap().values().stream().sorted((a, b) -> {
         return a.getName().compareTo(b.getName());
       }).flatMap(attr -> {
         if (flattenLocalAttributes && attr instanceof AttributeLocalType)

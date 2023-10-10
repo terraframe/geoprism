@@ -32,7 +32,6 @@ import net.geoprism.graphrepo.permission.GeoObjectTypeRelationshipPermissionServ
 import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
 import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.business.OrganizationBusinessServiceIF;
 import net.geoprism.registry.cache.ServerMetadataCache;
 
 @Component
@@ -133,9 +132,9 @@ public class ServiceFactory implements ApplicationContextAware
     return getBean(GeoObjectTypePermissionServiceIF.class);
   }
   
-  public static OrganizationBusinessServiceIF getOrganizationService()
+  public static OrganizationServiceIF getOrganizationService()
   {
-    return getBean(OrganizationBusinessServiceIF.class);
+    return getBean(OrganizationServiceIF.class);
   }
 
   public static ServerMetadataCache getMetadataCache()

@@ -1210,58 +1210,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
     return this.getGraphParents(type, recursive, date, null, null, null);
   }
 
-  @Override
-  public List<BusinessObject> getBusinessObjects(BusinessType type)
-  {
-    List<VertexObject> objects = this.vertex.getChildren(type.getMdEdgeDAO(), VertexObject.class);
-
-    return objects.stream().map(object -> {
-
-      return new BusinessObject(object, type);
-
-    }).collect(Collectors.toList());
-  }
-
-  @Override
-  public List<BusinessObject> getBusinessObjects()
-  {
-    Map<String, Object> parameters = new HashedMap<String, Object>();
-    parameters.put("rid", this.getVertex().getRID());
-
-    StringBuilder statement = new StringBuilder();
-    statement.append("SELECT EXPAND(outE()) FROM :rid");
-
-    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
-
-    List<EdgeObject> edges = query.getResults();
-
-    List<BusinessObject> results = new LinkedList<BusinessObject>();
-
-    for (EdgeObject edge : edges)
-    {
-      MdEdgeDAOIF mdEdge = (MdEdgeDAOIF) edge.getMdClass();
-
-      BusinessType businessType = BusinessType.getByMdEdge(mdEdge);
-
-      if (businessType != null)
-      {
-        VertexObject childVertex = edge.getChild();
-
-        results.add(new BusinessObject(childVertex, businessType));
-      }
-    }
-
-    results.sort(new Comparator<BusinessObject>()
-    {
-      @Override
-      public int compare(BusinessObject o1, BusinessObject o2)
-      {
-        return o1.getLabel().compareTo(o2.getLabel());
-      }
-    });
-
-    return results;
-  }
 
   public static JsonArray getGeoObjectSuggestions(String text, String typeCode, String parentCode, String parentTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {

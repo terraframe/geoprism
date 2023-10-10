@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
-import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.commongeoregistry.adapter.metadata.AttributeLocalType;
-import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
-import com.runwaysdk.business.graph.GraphObject;
 import com.runwaysdk.business.graph.GraphQuery;
 import com.runwaysdk.business.graph.VertexObject;
 import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
@@ -21,13 +17,11 @@ import com.runwaysdk.dataaccess.MdAttributeTermDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.VertexObjectDAO;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.system.metadata.MdAttribute;
 
 import net.geoprism.ontology.Classifier;
 import net.geoprism.registry.BusinessEdgeType;
 import net.geoprism.registry.BusinessType;
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -37,84 +31,6 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
 {
   @Autowired
   private BusinessTypeBusinessServiceIF typeService;
-
-  @Override
-  public String getLabel(BusinessObject object)
-  {
-    MdAttribute labelAttribute = object.getType().getLabelAttribute();
-
-    if (labelAttribute != null)
-    {
-      String attributeName = labelAttribute.getAttributeName();
-
-      Object value = this.getObjectValue(object, attributeName);
-
-      if (value != null)
-      {
-        if (value instanceof Date)
-        {
-          return DateFormatter.formatDate((Date) value, false);
-        }
-
-        return value.toString();
-      }
-    }
-
-    return this.getCode(object);
-  }
-
-  @Override
-  public String getCode(BusinessObject object)
-  {
-    return this.getObjectValue(object, DefaultAttribute.CODE.getName());
-  }
-
-  @Override
-  public void setCode(BusinessObject object, String code)
-  {
-    this.setValue(object, DefaultAttribute.CODE.getName(), code);
-  }
-
-  @Override
-  public void setValue(BusinessObject object, String attributeName, Object value)
-  {
-    AttributeType at = this.typeService.getAttribute(object.getType(), attributeName);
-
-    if (at instanceof AttributeLocalType)
-    {
-      RegistryLocalizedValueConverter.populate(object.getVertex(), attributeName, (LocalizedValue) value);
-    }
-    else
-    {
-      object.getVertex().setValue(attributeName, value);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public <T> T getObjectValue(BusinessObject object, String attributeName)
-  {
-    AttributeType at = this.typeService.getAttribute(object.getType(), attributeName);
-
-    if (at instanceof AttributeLocalType)
-    {
-      return (T) this.getValueLocalized(object, attributeName);
-    }
-
-    return object.getVertex().getObjectValue(attributeName);
-  }
-
-  private LocalizedValue getValueLocalized(BusinessObject object, String attributeName)
-  {
-    GraphObject graphObject = object.getVertex().getEmbeddedComponent(attributeName);
-
-    if (graphObject == null)
-    {
-      return null;
-    }
-
-    return RegistryLocalizedValueConverter.convert(graphObject);
-  }
 
   @Override
   public JsonObject toJSON(BusinessObject object)
@@ -165,8 +81,8 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
     }
 
     JsonObject json = new JsonObject();
-    json.addProperty("code", this.getCode(object));
-    json.addProperty("label", this.getLabel(object));
+    json.addProperty("code", object.getCode());
+    json.addProperty("label", object.getLabel());
     json.add("data", data);
 
     return json;
@@ -299,7 +215,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       return new BusinessObject(vertex, businessType);
 
     }).sorted((a, b) -> {
-      return this.getLabel(a).compareTo(this.getLabel(b));
+      return a.getLabel().compareTo(b.getLabel());
     }).collect(Collectors.toList());
   }
 
@@ -333,7 +249,7 @@ public class BusinessObjectBusinessService implements BusinessObjectBusinessServ
       return new BusinessObject(vertex, businessType);
 
     }).sorted((a, b) -> {
-      return this.getLabel(a).compareTo(this.getLabel(b));
+      return a.getLabel().compareTo(b.getLabel());
     }).collect(Collectors.toList());
   }
 

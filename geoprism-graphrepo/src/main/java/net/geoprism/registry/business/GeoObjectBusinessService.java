@@ -21,6 +21,7 @@ package net.geoprism.registry.business;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,6 +31,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -66,8 +68,6 @@ import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTime;
 import com.runwaysdk.dataaccess.graph.attributes.ValueOverTimeCollection;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
 import com.runwaysdk.system.AbstractClassification;
 import com.runwaysdk.system.gis.geo.AllowedIn;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -147,8 +147,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  @Request(RequestType.SESSION)
-  public JsonObject getAll(String sessionId, String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize)
+  public JsonObject getAll(String gotCode, String hierarchyCode, Date since, Boolean includeLevel, String format, String externalSystemId, Integer pageNumber, Integer pageSize)
   {
     GeoObjectExportFormat goef = null;
     if (format != null && format.length() > 0)
@@ -169,8 +168,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  @Request(RequestType.SESSION)
-  public ParentTreeNode addChild(String sessionId, String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate)
+
+  public ParentTreeNode addChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
     ServerGeoObjectIF parent = this.getGeoObjectByCode(parentCode, parentGeoObjectTypeCode, true);
     ServerGeoObjectIF child = this.getGeoObjectByCode(childCode, childGeoObjectTypeCode, true);
@@ -182,8 +181,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  @Request(RequestType.SESSION)
-  public void removeChild(String sessionId, String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate)
+
+  public void removeChild(String parentCode, String parentGeoObjectTypeCode, String childCode, String childGeoObjectTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {
     ServerGeoObjectIF parent = this.getGeoObjectByCode(parentCode, parentGeoObjectTypeCode, true);
     ServerGeoObjectIF child = this.getGeoObjectByCode(childCode, childGeoObjectTypeCode, true);
@@ -728,8 +727,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  @Request(RequestType.SESSION)
-  public JsonObject doesGeoObjectExistAtRange(String sessionId, Date startDate, Date endDate, String typeCode, String code)
+
+  public JsonObject doesGeoObjectExistAtRange(Date startDate, Date endDate, String typeCode, String code)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) new GeoObjectBusinessService().getGeoObjectByCode(code, typeCode);
 
@@ -2003,8 +2002,8 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  @Request(RequestType.SESSION)
-  public JsonObject hasDuplicateLabel(String sessionId, Date date, String typeCode, String code, String label)
+
+  public JsonObject hasDuplicateLabel(Date date, String typeCode, String code, String label)
   {
     boolean inUse = VertexServerGeoObject.hasDuplicateLabel(date, typeCode, code, label);
 
@@ -2015,8 +2014,7 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
   }
 
   @Override
-  @Request(RequestType.SESSION)
-  public JsonArray getBusinessObjects(String sessionId, String typeCode, String code, String businessTypeCode)
+  public JsonArray getBusinessObjects(String typeCode, String code, String businessTypeCode)
   {
     VertexServerGeoObject vsgo = (VertexServerGeoObject) this.getGeoObjectByCode(code, typeCode);
 
@@ -2026,11 +2024,11 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     {
       BusinessType businessType = this.businessTypeService.getByCode(businessTypeCode);
 
-      objects = vsgo.getBusinessObjects(businessType);
+      objects = this.getBusinessObjects(vsgo, businessType);
     }
     else
     {
-      objects = vsgo.getBusinessObjects();
+      objects = this.getBusinessObjects(vsgo);
     }
 
     return objects.stream().map(object -> {
@@ -2038,4 +2036,55 @@ public class GeoObjectBusinessService extends RegistryLocalizedValueConverter im
     }).collect(() -> new JsonArray(), (array, element) -> array.add(element), (listA, listB) -> {
     });
   }
+
+  @Override
+  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object)
+  {
+    Map<String, Object> parameters = new HashedMap<String, Object>();
+    parameters.put("rid", object.getVertex().getRID());
+
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT EXPAND(outE()) FROM :rid");
+
+    GraphQuery<EdgeObject> query = new GraphQuery<EdgeObject>(statement.toString(), parameters);
+
+    List<EdgeObject> edges = query.getResults();
+
+    List<BusinessObject> results = new LinkedList<BusinessObject>();
+
+    for (EdgeObject edge : edges)
+    {
+      MdEdgeDAOIF mdEdge = (MdEdgeDAOIF) edge.getMdClass();
+
+      BusinessType businessType = this.businessTypeService.getByMdEdge(mdEdge);
+
+      if (businessType != null)
+      {
+        VertexObject childVertex = edge.getChild();
+
+        results.add(new BusinessObject(childVertex, businessType));
+      }
+    }
+
+    results.sort(new Comparator<BusinessObject>()
+    {
+      @Override
+      public int compare(BusinessObject o1, BusinessObject o2)
+      {
+        return o1.getLabel().compareTo(o2.getLabel());
+      }
+    });
+
+    return results;
+  }
+
+  @Override
+  public List<BusinessObject> getBusinessObjects(VertexServerGeoObject object, BusinessType type)
+  {
+    List<VertexObject> objects = object.getVertex().getChildren(type.getMdEdgeDAO(), VertexObject.class);
+
+    return objects.stream().map(o -> new BusinessObject(o, type)).collect(Collectors.toList());
+  }
+
+
 }

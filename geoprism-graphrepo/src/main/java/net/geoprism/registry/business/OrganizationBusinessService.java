@@ -1,191 +1,72 @@
-/**
- * Copyright (c) 2022 TerraFrame, Inc. All rights reserved.
- *
- * This file is part of Geoprism Registry(tm).
- *
- * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
- *
- * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
- */
 package net.geoprism.registry.business;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.commongeoregistry.adapter.Optional;
-import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import com.google.gson.JsonObject;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.session.Request;
-import com.runwaysdk.session.RequestType;
 import com.runwaysdk.system.Roles;
 
+import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
 import net.geoprism.registry.ObjectHasDataException;
-import net.geoprism.registry.OrganizationUtil;
 import net.geoprism.registry.conversion.OrganizationConverter;
-import net.geoprism.registry.model.OrganizationMetadata;
+import net.geoprism.registry.model.GraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.Page;
 
-@Component
+@Repository
 public class OrganizationBusinessService implements OrganizationBusinessServiceIF
 {
-  /**
-   * Returns the {@link OrganizationDTO}s with the given codes or all
-   * {@link OrganizationDTO}s if no codes are provided.
-   * 
-   * @param sessionId
-   * @param codes
-   *          codes of the {@link OrganizationDTO}s.
-   * @return the {@link OrganizationDTO}s with the given codes or all
-   *         {@link OrganizationDTO}s if no codes are provided.
-   */
-  @Request(RequestType.SESSION)
-  public OrganizationDTO[] getOrganizations(String sessionId, String[] codes)
-  {
-    List<OrganizationDTO> orgs = new LinkedList<OrganizationDTO>();
+  @Autowired
+  private OrganizationPermissionServiceIF permissionService;
 
-    if (codes == null || codes.length == 0)
-    {
-      List<OrganizationDTO> cachedOrgs = ServiceFactory.getAdapter().getMetadataCache().getAllOrganizations();
-
-      for (OrganizationDTO cachedOrg : cachedOrgs)
-      {
-        orgs.add(cachedOrg);
-      }
-    }
-    else
-    {
-      for (int i = 0; i < codes.length; ++i)
-      {
-        Optional<OrganizationDTO> optional = ServiceFactory.getAdapter().getMetadataCache().getOrganization(codes[i]);
-
-        if (optional.isPresent())
-        {
-          orgs.add(optional.get());
-        }
-        else
-        {
-          net.geoprism.registry.DataNotFoundException ex = new net.geoprism.registry.DataNotFoundException();
-          ex.setTypeLabel(OrganizationMetadata.get().getClassDisplayLabel());
-          ex.setDataIdentifier(codes[i]);
-          ex.setAttributeLabel(OrganizationMetadata.get().getAttributeDisplayLabel(DefaultAttribute.CODE.getName()));
-          throw ex;
-        }
-      }
-    }
-
-    // Filter out orgs based on permissions
-    Iterator<OrganizationDTO> it = orgs.iterator();
-    while (it.hasNext())
-    {
-      OrganizationDTO orgDTO = it.next();
-
-      if (!ServiceFactory.getOrganizationPermissionService().canActorRead(orgDTO.getCode()))
-      {
-        it.remove();
-      }
-    }
-
-    List<OrganizationDTO> list = OrganizationUtil.sortDTOs(orgs);
-
-    return list.toArray(new OrganizationDTO[orgs.size()]);
-  }
-  
-  /**
-   * Creates a {@link OrganizationDTO} from the given JSON.
-   * 
-   * @param sessionId
-   * @param json
-   *          JSON of the {@link OrganizationDTO} to be created.
-   * @return newly created {@link OrganizationDTO}
-   */
-  @Request(RequestType.SESSION)
-  public OrganizationDTO createOrganization(String sessionId, String json)
-  {
-    OrganizationDTO organizationDTO = OrganizationDTO.fromJSON(json);
-
-    final ServerOrganization org = createInTrans(organizationDTO);
-
-    // If this did not error out then add to the cache
-    ServiceFactory.getMetadataCache().addOrganization(org);
-
-    return ServiceFactory.getAdapter().getMetadataCache().getOrganization(org.getCode()).get();
-  }
-  
+  @Override
   @Transaction
-  protected ServerOrganization createInTrans(OrganizationDTO organizationDTO)
+  public ServerOrganization create(OrganizationDTO organizationDTO)
   {
+    permissionService.enforceActorCanCreate();
+
     final ServerOrganization organization = new OrganizationConverter().fromDTO(organizationDTO);
-
-    ServiceFactory.getOrganizationPermissionService().enforceActorCanCreate();
-
     organization.apply();
 
     return organization;
   }
 
-  /**
-   * Updates the given {@link OrganizationDTO} represented as JSON.
-   * 
-   * @pre given {@link OrganizationDTO} must already exist.
-   * 
-   * @param sessionId
-   * @param json
-   *          JSON of the {@link OrganizationDTO} to be updated.
-   * @return updated {@link OrganizationDTO}
-   */
-  @Request(RequestType.SESSION)
-  public OrganizationDTO updateOrganization(String sessionId, String json)
-  {
-    OrganizationDTO organizationDTO = OrganizationDTO.fromJSON(json);
-
-    final ServerOrganization org = new OrganizationConverter().update(organizationDTO);
-
-    // If this did not error out then add to the cache
-    ServiceFactory.getMetadataCache().addOrganization(org);
-
-    return ServiceFactory.getAdapter().getMetadataCache().getOrganization(org.getCode()).get();
-  }
-
-  /**
-   * Deletes the {@link OrganizationDTO} with the given code.
-   * 
-   * @param sessionId
-   * @param code
-   *          code of the {@link OrganizationDTO} to delete.
-   */
-  @Request(RequestType.SESSION)
-  public void deleteOrganization(String sessionId, String code)
-  {
-    ServerOrganization organization = ServerOrganization.getByCode(code);
-
-    ServiceFactory.getOrganizationPermissionService().enforceActorCanDelete();
-
-    deleteInTrans(organization);
-
-    // If this did not error out then remove from the cache
-    ServiceFactory.getMetadataCache().removeOrganization(code);
-  }
-  
+  @Override
   @Transaction
-  protected void deleteInTrans(ServerOrganization sorg)
+  public ServerOrganization update(OrganizationDTO organizationDTO)
   {
+    this.permissionService.enforceActorCanUpdate();
+
+    ServerOrganization organization = ServerOrganization.getByCode(organizationDTO.getCode());
+
+    try
+    {
+      organization.lock();
+
+      organization.setCode(organizationDTO.getCode());
+      organization.setDisplayLabel(organizationDTO.getLabel());
+      organization.setContactInfo(organizationDTO.getContactInfo());
+      organization.apply();
+    }
+    finally
+    {
+      organization.unlock();
+    }
+
+    return organization;
+  }
+
+  @Override
+  @Transaction
+  public void delete(ServerOrganization sorg)
+  {
+    this.permissionService.enforceActorCanDelete();
+
     // Can't delete if there's existing data
     List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
 
@@ -198,10 +79,10 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
     }
 
     deleteRoles(sorg);
-    
+
     sorg.delete();
   }
-  
+
   protected void deleteRoles(ServerOrganization sorg)
   {
     try
@@ -214,72 +95,60 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
     }
   }
 
-  @Request(RequestType.SESSION)
-  public void addChild(String sessionId, String parentCode, String childCode)
+  @Override
+  @Transaction
+  public void addChild(ServerOrganization parent, ServerOrganization child)
   {
-    ServerOrganization parent = ServerOrganization.getByCode(parentCode);
-    ServerOrganization child = ServerOrganization.getByCode(childCode);
+    this.permissionService.enforceActorCanUpdate();
 
     parent.addChild(child);
-
-    ServiceFactory.getMetadataCache().addOrganization(child);
   }
 
-  @Request(RequestType.SESSION)
-  public void removeChild(String sessionId, String parentCode, String childCode)
+  @Override
+  @Transaction
+  public void removeChild(ServerOrganization parent, ServerOrganization child)
   {
-    ServerOrganization parent = ServerOrganization.getByCode(parentCode);
-    ServerOrganization child = ServerOrganization.getByCode(childCode);
+    this.permissionService.enforceActorCanUpdate();
 
     parent.removeChild(child);
-
-    ServiceFactory.getMetadataCache().addOrganization(child);
   }
 
-  @Request(RequestType.SESSION)
-  public JsonObject getChildren(String sessionId, String code, Integer pageSize, Integer pageNumber)
+  @Override
+  public Page<ServerOrganization> getChildren(ServerOrganization parent, Integer pageSize, Integer pageNumber)
   {
-    if (code != null)
+    if (parent != null)
     {
-      ServerOrganization parent = ServerOrganization.getByCode(code);
-
-      return parent.getChildren(pageSize, pageNumber).toJSON();
+      return parent.getChildren(pageSize, pageNumber);
     }
 
     List<ServerOrganization> roots = ServerOrganization.getRoots();
 
-    return new Page<ServerOrganization>(roots.size(), pageNumber, pageSize, roots).toJSON();
+    return new Page<ServerOrganization>(roots.size(), pageNumber, pageSize, roots);
   }
 
-  @Request(RequestType.SESSION)
-  public JsonObject getAncestorTree(String sessionId, String rootCode, String code, Integer pageSize)
+  @Transaction
+  @Override
+  public GraphNode<ServerOrganization> getAncestorTree(ServerOrganization child, String rootCode, Integer pageSize)
   {
-    ServerOrganization child = ServerOrganization.getByCode(code);
-
-    return child.getAncestorTree(rootCode, pageSize).toJSON();
+    return child.getAncestorTree(rootCode, pageSize);
   }
 
-  @Request(RequestType.SESSION)
-  public void move(String sessionId, String code, String parentCode)
+  @Transaction
+  @Override
+  public void move(ServerOrganization organization, ServerOrganization newParent)
   {
-    ServerOrganization organization = ServerOrganization.getByCode(code);
-    ServerOrganization newParent = ServerOrganization.getByCode(parentCode);
+    this.permissionService.enforceActorCanUpdate();
 
     organization.move(newParent);
-
-    // Rebuild the entire organization cache
-    ServiceFactory.getMetadataCache().addOrganization(organization);
   }
 
-  @Request(RequestType.SESSION)
-  public void removeAllParents(String sessionId, String code)
+  @Transaction
+  @Override
+  public void removeAllParents(ServerOrganization organization)
   {
-    ServerOrganization organization = ServerOrganization.getByCode(code);
+    this.permissionService.enforceActorCanUpdate();
 
     organization.removeAllParents();
-
-    // Rebuild the entire organization cache
-    ServiceFactory.getMetadataCache().addOrganization(organization);
   }
 
 }

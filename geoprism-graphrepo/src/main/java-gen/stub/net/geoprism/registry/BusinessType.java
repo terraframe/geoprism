@@ -18,13 +18,19 @@
  */
 package net.geoprism.registry;
 
-import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
+import org.commongeoregistry.adapter.metadata.AttributeType;
+
+import com.runwaysdk.dataaccess.MdAttributeConcreteDAOIF;
 import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
+import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 
 public class BusinessType extends BusinessTypeBase
@@ -53,6 +59,27 @@ public class BusinessType extends BusinessTypeBase
   public LocalizedValue getLabel()
   {
     return RegistryLocalizedValueConverter.convertNoAutoCoalesce(this.getDisplayLabel());
+  }
+
+  public Map<String, AttributeType> getAttributeMap()
+  {
+    RegistryAttributeTypeConverter converter = new RegistryAttributeTypeConverter();
+
+    MdVertexDAOIF mdVertex = this.getMdVertexDAO();
+
+    return mdVertex.definesAttributes().stream().filter(attr -> {
+      return !attr.isSystem() && !attr.definesAttribute().equals(BusinessType.SEQ);
+    }).map(attr -> converter.build(attr)).collect(Collectors.toMap(AttributeType::getName, attr -> attr));
+  }
+
+  public AttributeType getAttribute(String name)
+  {
+    RegistryAttributeTypeConverter converter = new RegistryAttributeTypeConverter();
+
+    MdVertexDAOIF mdVertex = this.getMdVertexDAO();
+    MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) mdVertex.definesAttribute(name);
+
+    return converter.build(mdAttribute);
   }
 
 }
