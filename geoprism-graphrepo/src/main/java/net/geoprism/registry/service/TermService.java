@@ -8,7 +8,7 @@ import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeTermType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -27,8 +27,8 @@ import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.TermConverter;
 import net.geoprism.registry.model.ServerGeoObjectType;
 
-@Component
-public class TermService
+@Repository
+public class TermService implements TermServiceIF
 {
   /**
    * Creates a new {@link Term} object and makes it a child of the term with the
@@ -42,6 +42,7 @@ public class TermService
    * 
    * @return Newly created {@link Term} object.
    */
+  @Override
   @Request(RequestType.SESSION)
   public Term createTerm(String sessionId, String parentTermCode, String termJSON)
   {
@@ -74,6 +75,7 @@ public class TermService
    *          JSON of the term object.
    * @return Updated {@link Term} object.
    */
+  @Override
   @Request(RequestType.SESSION)
   public Term updateTerm(String sessionId, String parentTermCode, String termJSON)
   {
@@ -106,6 +108,7 @@ public class TermService
    * @param geoObjectTypeCode
    * @param attributeTypeJSON
    */
+  @Override
   @Request(RequestType.SESSION)
   public void deleteTerm(String sessionId, String parentTermCode, String termCode)
   {

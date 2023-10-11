@@ -4,17 +4,17 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.business;
 
@@ -130,17 +130,17 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 {
   @Autowired
   private TransitionEventBusinessServiceIF tranEventServ;
-  
+
   @Autowired
-  private TransitionBusinessServiceIF tranServ;
-  
+  private TransitionBusinessServiceIF      tranServ;
+
   @Autowired
-  private HierarchyTypeBusinessServiceIF htServ;
-  
+  private HierarchyTypeBusinessServiceIF   htServ;
+
   public GeoObjectTypeBusinessService()
   {
   }
-  
+
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType sgot)
   {
     List<ServerGeoObjectType> children = new LinkedList<>();
@@ -184,11 +184,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return hierarchyTypes;
   }
-  
-  
-  
-  
-  
+
   /**
    * @param sType
    *          Hierarchy Type
@@ -253,7 +249,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       annotation.delete();
     }
   }
-  
+
   public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot)
   {
     return getHierarchies(sgot, true);
@@ -410,16 +406,12 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return hierarchyType;
   }
-  
-  
-  
-  
-  
+
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType sgot, ServerHierarchyType hierarchy)
   {
     return htServ.getChildren(hierarchy, sgot);
   }
-  
+
   /**
    * Adds default attributes to the given {@link MdBusinessDAO} according to the
    * Common Geo-Registry specification for {@link GeoObject}.
@@ -509,7 +501,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     {
       throw new AttributeValueException("The geo object type code has an invalid character", geoObjectType.getCode());
     }
-    
+
     if (geoObjectType.getCode().length() > 64)
     {
       // Setting the typename on the MdBusiness creates this limitation.
@@ -647,7 +639,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return serverGeoObjectType;
   }
-  
+
   /**
    * Assigns all permissions to the {@link ComponentIF} to the given role.
    * 
@@ -665,31 +657,33 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     roleDAO.grantPermission(Operation.WRITE, component.getOid());
     roleDAO.grantPermission(Operation.WRITE_ALL, component.getOid());
   }
-  
+
   /**
-   * The GeoObjectType is a DTO type, which means it contains data which has been localized to a particular user's session.
-   * We need to rebuild this object such that it includes relevant request information (like the correct locale).
+   * The GeoObjectType is a DTO type, which means it contains data which has
+   * been localized to a particular user's session. We need to rebuild this
+   * object such that it includes relevant request information (like the correct
+   * locale).
    */
   public GeoObjectType buildType(ServerGeoObjectType serverType)
   {
     com.runwaysdk.system.gis.geo.GeometryType geoPrismgeometryType = serverType.getUniversal().getGeometryType().get(0);
 
     org.commongeoregistry.adapter.constants.GeometryType cgrGeometryType = GeometryTypeFactory.get(geoPrismgeometryType);
-    
+
     LocalizedValue label = RegistryLocalizedValueConverter.convert(serverType.getUniversal().getDisplayLabel());
     LocalizedValue description = RegistryLocalizedValueConverter.convert(serverType.getUniversal().getDescription());
-    
+
     String ownerActerOid = serverType.getUniversal().getOwnerOid();
 
     String organizationCode = Organization.getRootOrganizationCode(ownerActerOid);
-    
+
     MdVertexDAOIF superType = serverType.getMdVertex().getSuperClass();
-    
+
     GeoObjectType type = new GeoObjectType(serverType.getUniversal().getUniversalId(), cgrGeometryType, label, description, serverType.getUniversal().getIsGeometryEditable(), organizationCode, ServiceFactory.getAdapter());
     type.setIsAbstract(serverType.getMdBusiness().getIsAbstract());
 
     type = convertAttributeTypes(serverType.getUniversal(), type, serverType.getMdBusiness());
-    
+
     try
     {
       GeoObjectTypeMetadata metadata = GeoObjectTypeMetadata.getByKey(serverType.getUniversal().getKey());
@@ -707,12 +701,12 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
       type.setSuperTypeCode(parentCode);
     }
-    
+
     serverType.setType(type);
 
     return type;
   }
-  
+
   /**
    * Creates an {@link MdAttributeConcrete} for the given {@link MdBusiness}
    * from the given {@link AttributeType}
@@ -805,7 +799,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return attrType;
   }
-  
+
   public AttributeType createAttributeType(ServerGeoObjectType serverType, AttributeType attributeType)
   {
     MdAttributeConcrete mdAttribute = createMdAttributeFromAttributeType(serverType, attributeType);
@@ -825,7 +819,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return attributeType;
   }
-  
+
   public AttributeType createAttributeType(ServerGeoObjectType sgot, String attributeTypeJSON)
   {
     JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();
@@ -848,15 +842,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       ServiceFactory.getMetadataCache().addGeoObjectType(type2);
     }
   }
-  
+
   public ServerGeoObjectType build(Universal universal)
   {
     MdBusiness mdBusiness = universal.getMdBusiness();
     MdGeoVertexDAO mdVertex = GeoVertexType.getMdGeoVertex(universal.getUniversalId());
-    
+
     ServerGeoObjectType server = new ServerGeoObjectType(null, universal, mdBusiness, mdVertex);
     buildType(server);
-    
+
     return server;
   }
 
@@ -901,7 +895,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    */
   protected boolean convertMdAttributeToAttributeType(MdAttributeConcreteDAOIF mdAttribute)
   {
-    if (mdAttribute.isSystem() || (mdAttribute instanceof MdAttributeStructDAOIF && !(mdAttribute instanceof MdAttributeLocalDAOIF)) || mdAttribute instanceof MdAttributeEncryptionDAOIF || mdAttribute instanceof MdAttributeIndicatorDAOIF || mdAttribute instanceof MdAttributeBlobDAOIF || mdAttribute instanceof MdAttributeGeometryDAOIF || mdAttribute instanceof MdAttributeFileDAOIF || mdAttribute instanceof MdAttributeTimeDAOIF || mdAttribute instanceof MdAttributeUUIDDAOIF || mdAttribute.getType().equals(MdAttributeReferenceInfo.CLASS))
+    if (mdAttribute.isSystem() || ( mdAttribute instanceof MdAttributeStructDAOIF && ! ( mdAttribute instanceof MdAttributeLocalDAOIF ) ) || mdAttribute instanceof MdAttributeEncryptionDAOIF || mdAttribute instanceof MdAttributeIndicatorDAOIF || mdAttribute instanceof MdAttributeBlobDAOIF || mdAttribute instanceof MdAttributeGeometryDAOIF || mdAttribute instanceof MdAttributeFileDAOIF || mdAttribute instanceof MdAttributeTimeDAOIF || mdAttribute instanceof MdAttributeUUIDDAOIF || mdAttribute.getType().equals(MdAttributeReferenceInfo.CLASS))
     {
       return false;
     }
@@ -914,9 +908,9 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       return true;
     }
   }
-  
+
   @Request(RequestType.SESSION)
-  public List<GeoObjectType> getAncestors(String sessionId, String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild)
+  public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild)
   {
     ServerGeoObjectType child = ServerGeoObjectType.get(code);
     ServerHierarchyType hierarchyType = ServerHierarchyType.get(hierarchyCode);
@@ -930,7 +924,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return ancestors.stream().map(stype -> stype.getType()).collect(Collectors.toList());
   }
-  
+
   /**
    * Deletes the {@link GeoObjectType} with the given code. Do nothing if the
    * type does not exist.
@@ -940,7 +934,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          code of the {@link GeoObjectType} to delete.
    */
   @Request(RequestType.SESSION)
-  public void deleteGeoObjectType(String sessionId, String code)
+  public void deleteGeoObjectType(String code)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(code);
 
@@ -949,7 +943,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
       delete(type);
     }
   }
-  
+
   protected void delete(ServerGeoObjectType type)
   {
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanDelete(type.getOrganization().getCode(), type, type.getIsPrivate());
@@ -1058,7 +1052,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     tranServ.removeAll(type);
   }
-  
+
   /**
    * Adds an attribute to the given {@link GeoObjectType}.
    * 
@@ -1073,7 +1067,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    * @return updated {@link GeoObjectType}
    */
   @Request(RequestType.SESSION)
-  public AttributeType createAttributeType(String sessionId, String geoObjectTypeCode, String attributeTypeJSON)
+  public AttributeType createAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(geoObjectTypeCode);
 
@@ -1097,7 +1091,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    * @return updated {@link AttributeType}
    */
   @Request(RequestType.SESSION)
-  public AttributeType updateAttributeType(String sessionId, String geoObjectTypeCode, String attributeTypeJSON)
+  public AttributeType updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(geoObjectTypeCode);
 
@@ -1122,7 +1116,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    * @return updated {@link GeoObjectType}
    */
   @Request(RequestType.SESSION)
-  public void deleteAttributeType(String sessionId, String gtId, String attributeName)
+  public void deleteAttributeType(String gtId, String attributeName)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(gtId);
 
@@ -1130,7 +1124,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     removeAttribute(got, attributeName);
   }
-  
+
   /**
    * Updates the given {@link GeoObjectType} represented as JSON.
    * 
@@ -1142,7 +1136,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    * @return updated {@link GeoObjectType}
    */
   @Request(RequestType.SESSION)
-  public GeoObjectType updateGeoObjectType(String sessionId, String gtJSON)
+  public GeoObjectType updateGeoObjectType(String gtJSON)
   {
     GeoObjectType geoObjectType = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
     ServerGeoObjectType serverGeoObjectType = ServerGeoObjectType.get(geoObjectType.getCode());
@@ -1153,7 +1147,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return serverGeoObjectType.getType();
   }
-  
+
   protected void update(ServerGeoObjectType serverGeoObjectType, GeoObjectType geoObjectTypeNew)
   {
     GeoObjectType geoObjectTypeModified = serverGeoObjectType.getType().copy(geoObjectTypeNew);
@@ -1214,7 +1208,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return serverGeoObjectType.getUniversal();
   }
-  
+
   /**
    * Creates a {@link GeoObjectType} from the given JSON.
    * 
@@ -1223,8 +1217,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          JSON of the {@link GeoObjectType} to be created.
    * @return newly created {@link GeoObjectType}
    */
-  @Request(RequestType.SESSION)
-  public GeoObjectType createGeoObjectType(String sessionId, String gtJSON)
+
+  public GeoObjectType createGeoObjectType(String gtJSON)
   {
     ServerGeoObjectType type = null;
 
@@ -1238,7 +1232,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
 
     return type.getType();
   }
-  
+
   /**
    * Returns the {@link GeoObjectType}s with the given codes or all
    * {@link GeoObjectType}s if no codes are provided.
@@ -1291,7 +1285,8 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         if (!ServiceFactory.getGeoObjectTypePermissionService().canRead(serverGot.getOrganization().getCode(), serverGot, serverGot.getIsPrivate()))
         {
           it.remove();
-          continue; // If we don't have continue here, then it could invoke it.remove twice which throws an error.
+          continue; // If we don't have continue here, then it could invoke
+                    // it.remove twice which throws an error.
         }
       }
       else
@@ -1299,14 +1294,15 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
         if (!ServiceFactory.getGeoObjectTypePermissionService().canWrite(serverGot.getOrganization().getCode(), serverGot, serverGot.getIsPrivate()))
         {
           it.remove();
-          continue; // If we don't have continue here, then it could invoke it.remove twice which throws an error.
+          continue; // If we don't have continue here, then it could invoke
+                    // it.remove twice which throws an error.
         }
       }
     }
-    
+
     return gots.stream().map(server -> buildType(server)).collect(Collectors.toList());
   }
-  
+
   public static boolean isValidName(String name)
   {
     if (name.contains(" ") || name.contains("<") || name.contains(">") || name.contains("-") || name.contains("+") || name.contains("=") || name.contains("!") || name.contains("@") || name.contains("#") || name.contains("$") || name.contains("%") || name.contains("^") || name.contains("&") || name.contains("*") || name.contains("?") || name.contains(";") || name.contains(":") || name.contains(",") || name.contains("^") || name.contains("{") || name.contains("}") || name.contains("]") || name.contains("[") || name.contains("`") || name.contains("~") || name.contains("|") || name.contains("/") || name.contains("\\"))

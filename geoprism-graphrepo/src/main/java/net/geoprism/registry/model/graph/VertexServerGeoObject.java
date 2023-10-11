@@ -1170,29 +1170,34 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   /*
    * DIRECT ACYCLIC/UNDIRECTED GRAPH METODS
    */
+  @Override
   @Transaction
   public void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate)
   {
     type.getStrategy().removeParent((VertexServerGeoObject) child, this, startDate, endDate);
   }
 
+  @Override
   @Transaction
   public <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, boolean validate)
   {
     return type.getStrategy().addChild(this, (VertexServerGeoObject) child, startDate, endDate, validate);
   }
 
+  @Override
   @Transaction
   public <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, boolean validate)
   {
     return type.getStrategy().addParent(this, (VertexServerGeoObject) parent, startDate, endDate, validate);
   }
 
+  @Override
   public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
     return type.getStrategy().getChildren(this, recursive, date, boundsWKT, skip, limit);
   }
 
+  @Override
   public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit)
   {
     return type.getStrategy().getParents(this, recursive, date, boundsWKT, skip, limit);
@@ -1209,7 +1214,6 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
   {
     return this.getGraphParents(type, recursive, date, null, null, null);
   }
-
 
   public static JsonArray getGeoObjectSuggestions(String text, String typeCode, String parentCode, String parentTypeCode, String hierarchyCode, Date startDate, Date endDate)
   {

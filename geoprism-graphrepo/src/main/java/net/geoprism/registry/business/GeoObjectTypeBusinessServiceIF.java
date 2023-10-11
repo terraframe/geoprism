@@ -1,22 +1,14 @@
 package net.geoprism.registry.business;
 
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
-import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
-import com.runwaysdk.system.gis.metadata.graph.MdGeoVertexQuery;
 import com.runwaysdk.system.metadata.MdBusiness;
 
 import net.geoprism.registry.HierarchicalRelationshipType;
@@ -98,19 +90,19 @@ public interface GeoObjectTypeBusinessServiceIF
    */
   public GeoObjectType buildType(ServerGeoObjectType serverType);
   
-  public List<GeoObjectType> getAncestors(String sessionId, String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild);
+  public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild);
   
-  public void deleteGeoObjectType(String sessionId, String code);
+  public void deleteGeoObjectType(String code);
   
-  public AttributeType createAttributeType(String sessionId, String geoObjectTypeCode, String attributeTypeJSON);
+  public AttributeType createAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
 
-  public AttributeType updateAttributeType(String sessionId, String geoObjectTypeCode, String attributeTypeJSON);
+  public AttributeType updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
 
-  public void deleteAttributeType(String sessionId, String gtId, String attributeName);
+  public void deleteAttributeType(String gtId, String attributeName);
   
-  public GeoObjectType updateGeoObjectType(String sessionId, String gtJSON);
+  public GeoObjectType updateGeoObjectType(String gtJSON);
   
-  public GeoObjectType createGeoObjectType(String sessionId, String gtJSON);
+  public GeoObjectType createGeoObjectType(String gtJSON);
   
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
 }

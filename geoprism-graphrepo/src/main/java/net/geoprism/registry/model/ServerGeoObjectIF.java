@@ -114,9 +114,6 @@ public interface ServerGeoObjectIF
 
   public void setValuesOverTime(String attributeName, ValueOverTimeCollection collection);
   
-  public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date);
-  
-  public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date);
 
   public LocalizedValue getDisplayLabel(Date date);
 
@@ -125,4 +122,18 @@ public interface ServerGeoObjectIF
   public SortedSet<EdgeObject> getEdges(ServerHierarchyType hierarchyType);
 
   public String getGeometryAttributeName();
+
+  public <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date);
+  
+  public <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date);
+  
+  <T extends ServerGraphNode> T getGraphParents(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
+
+  <T extends ServerGraphNode> T getGraphChildren(GraphType type, Boolean recursive, Date date, String boundsWKT, Long skip, Long limit);
+
+  <T extends ServerGraphNode> T addGraphParent(ServerGeoObjectIF parent, GraphType type, Date startDate, Date endDate, boolean validate);
+
+  <T extends ServerGraphNode> T addGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate, boolean validate);
+
+  void removeGraphChild(ServerGeoObjectIF child, GraphType type, Date startDate, Date endDate);
 }
