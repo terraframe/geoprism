@@ -157,41 +157,9 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
   @Request(RequestType.SESSION)
   public JsonArray getHierarchiesForGeoObjectOverTime(String sessionId, String code, String typeCode)
   {
-    return this.getHierarchiesForGeoObjectOverTimeInReq(code, typeCode);
+    return this.service.getHierarchiesForGeoObjectOverTime(code, typeCode);
   }
 
-  public JsonArray getHierarchiesForGeoObjectOverTimeInReq(String code, String typeCode)
-  {
-    ServerGeoObjectIF geoObject = ServiceFactory.getGeoObjectService().getGeoObjectByCode(code, typeCode);
-    ServerParentTreeNodeOverTime pot = goServ.getParentsOverTime(geoObject, null, true, true);
-
-    filterHierarchiesFromPermissions(geoObject.getType(), pot);
-
-    return pot.toJSON();
-  }
-
-  public static void filterHierarchiesFromPermissions(ServerGeoObjectType type, ServerParentTreeNodeOverTime pot)
-  {
-    GeoObjectRelationshipPermissionServiceIF service = ServiceFactory.getGeoObjectRelationshipPermissionService();
-
-    Collection<ServerHierarchyType> hierarchies = pot.getHierarchies();
-
-    // Boolean isCR = ServiceFactory.getRolePermissionService().isRC() ||
-    // ServiceFactory.getRolePermissionService().isAC();
-
-    for (ServerHierarchyType hierarchy : hierarchies)
-    {
-      Organization organization = hierarchy.getOrganization();
-
-      // if ( ( isCR && !service.canAddChildCR(organization.getCode(), null,
-      // type) ) || ( !isCR && !service.canAddChild(organization.getCode(),
-      // null, type) ))
-      if (!service.canViewChild(organization.getCode(), null, type))
-      {
-        pot.remove(hierarchy);
-      }
-    }
-  }
 
   /**
    * Returns the {@link HierarchyType}s with the given codes or all

@@ -1,6 +1,7 @@
 package net.geoprism.registry.business;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.JsonArray;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -47,6 +49,7 @@ import com.runwaysdk.system.metadata.MdEdge;
 import com.runwaysdk.system.metadata.MdTermRelationship;
 import com.runwaysdk.system.metadata.RelationshipCache;
 
+import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.rbac.RoleConstants;
@@ -66,30 +69,38 @@ import net.geoprism.registry.graph.CantRemoveInheritedGOT;
 import net.geoprism.registry.graph.GeoObjectTypeAlreadyInHierarchyException;
 import net.geoprism.registry.graph.GeoVertex;
 import net.geoprism.registry.model.RootGeoObjectType;
+import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 @Component
 public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServiceIF
 {
   @Autowired
-  private GeoObjectTypeBusinessService gotServ;
-  
+  private GeoObjectTypeBusinessServiceIF           typeService;
+
+  @Autowired
+  private GeoObjectBusinessServiceIF               objectService;
+
+  @Autowired
+  private GeoObjectRelationshipPermissionServiceIF permissions;
+
   public void refresh(ServerHierarchyType sht)
   {
     sht.setHierarchicalRelationshipType(HierarchicalRelationshipType.getByCode(sht.getHierarchicalRelationshipType().getCode()));
 
     ServiceFactory.getMetadataCache().addHierarchyType(sht);
   }
-  
+
   public void update(ServerHierarchyType sht, HierarchyType hierarchyType)
   {
     sht.getHierarchicalRelationshipType().update(hierarchyType);
 
     refresh(sht);
   }
-  
+
   public void delete(ServerHierarchyType sht)
   {
     deleteInTrans(sht);
@@ -112,7 +123,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
      */
     sht.getHierarchicalRelationshipType().delete();
   }
-  
+
   public void addToHierarchy(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType)
   {
     this.addToHierarchy(sht, parentType, childType, true);
@@ -150,7 +161,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
 
     // Check to see if the child type is already in the hierarchy
-    List<ServerHierarchyType> hierarchies = gotServ.getHierarchies(childType, true);
+    List<ServerHierarchyType> hierarchies = typeService.getHierarchies(childType, true);
 
     if (hierarchies.contains(this))
     {
@@ -162,7 +173,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     // Ensure a subtype is not already in the hierarchy
     if (childType.getIsAbstract())
     {
-      Set<ServerHierarchyType> hierarchiesOfSubTypes = gotServ.getHierarchiesOfSubTypes(childType);
+      Set<ServerHierarchyType> hierarchiesOfSubTypes = typeService.getHierarchiesOfSubTypes(childType);
 
       if (hierarchiesOfSubTypes.contains(this))
       {
@@ -181,7 +192,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       this.refresh(sht);
     }
   }
-  
+
   public void removeChild(ServerHierarchyType sht, ServerGeoObjectType parentType, ServerGeoObjectType childType, boolean migrateChildren)
   {
     this.removeFromHierarchy(sht, parentType, childType, migrateChildren);
@@ -190,7 +201,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     // relationships.
     this.refresh(sht);
   }
-  
+
   public List<ServerGeoObjectType> getAllTypes(ServerHierarchyType sht)
   {
     return this.getAllTypes(sht, true);
@@ -201,30 +212,32 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     List<ServerGeoObjectType> types = new LinkedList<ServerGeoObjectType>();
 
     Universal rootUniversal = Universal.getByKey(Universal.ROOT);
-    
-//    try (OIterator<? extends Business> i = rootUniversal.getAllDescendants(sht.getHierarchicalRelationshipType().getMdTermRelationship().definesType()))
-//    {
-//      i.forEach(u -> types.add(ServerGeoObjectType.get((Universal) u)));
-//    }
-    
+
+    // try (OIterator<? extends Business> i =
+    // rootUniversal.getAllDescendants(sht.getHierarchicalRelationshipType().getMdTermRelationship().definesType()))
+    // {
+    // i.forEach(u -> types.add(ServerGeoObjectType.get((Universal) u)));
+    // }
+
     GeoEntityUtil.getOrderedDescendants(rootUniversal, sht.getHierarchicalRelationshipType().getMdTermRelationship().definesType()).forEach(universal -> {
-      if (!universal.getKey().equals(rootUniversal.getKey())) types.add(ServerGeoObjectType.get((Universal) universal));
+      if (!universal.getKey().equals(rootUniversal.getKey()))
+        types.add(ServerGeoObjectType.get((Universal) universal));
     });
-    
+
     java.util.Optional<ServerGeoObjectType> rootOfHierarchy = types.stream().findFirst();
     if (rootOfHierarchy.isPresent() && includeInherited)
     {
       ServerGeoObjectType rootType = rootOfHierarchy.get();
-      
+
       InheritedHierarchyAnnotation anno = InheritedHierarchyAnnotation.get(rootType.getUniversal(), sht.getHierarchicalRelationshipType());
-      
+
       if (anno != null)
       {
         HierarchicalRelationshipType hrt = anno.getInheritedHierarchicalRelationshipType();
         ServerHierarchyType sht2 = ServerHierarchyType.get(hrt);
-        
-        List<ServerGeoObjectType> inheritedTypes = gotServ.getTypeAncestors(rootType, sht2, true);
-        
+
+        List<ServerGeoObjectType> inheritedTypes = typeService.getTypeAncestors(rootType, sht2, true);
+
         types.addAll(0, inheritedTypes);
       }
     }
@@ -256,7 +269,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     return hierarchyType;
   }
-  
+
   public List<ServerGeoObjectType> getChildren(ServerHierarchyType sht, ServerGeoObjectType parent)
   {
     return this.getChildren(sht, parent);
@@ -277,7 +290,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     return parentNode;
   }
-  
+
   public boolean hasVisibleRoot(ServerHierarchyType sht)
   {
     List<ServerGeoObjectType> roots = this.getDirectRootNodes(sht);
@@ -330,7 +343,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       return false;
     }
   }
-  
+
   public List<HierarchyNode> getRootGeoObjectTypes(ServerHierarchyType sht)
   {
     return this.getRootGeoObjectTypes(sht, true);
@@ -344,11 +357,11 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     for (ServerGeoObjectType geoObjectType : types)
     {
-      ServerHierarchyType inheritedHierarchy = gotServ.getInheritedHierarchy(geoObjectType, sht.getHierarchicalRelationshipType());
+      ServerHierarchyType inheritedHierarchy = typeService.getInheritedHierarchy(geoObjectType, sht.getHierarchicalRelationshipType());
 
       if (inheritedHierarchy != null)
       {
-        List<ServerGeoObjectType> ancestors = gotServ.getTypeAncestors(geoObjectType, inheritedHierarchy, true);
+        List<ServerGeoObjectType> ancestors = typeService.getTypeAncestors(geoObjectType, inheritedHierarchy, true);
         Collections.reverse(ancestors);
 
         HierarchyNode child = new HierarchyNode(geoObjectType.getType(), null);
@@ -394,7 +407,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
     return rootGeoObjectTypes;
   }
-  
+
   /**
    * Create the {@link HierarchyType}
    * 
@@ -404,17 +417,17 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
   public ServerHierarchyType createHierarchyType(HierarchyType hierarchyType)
   {
     ServiceFactory.getHierarchyPermissionService().enforceCanCreate(hierarchyType.getOrganizationCode());
-    
+
     ServerHierarchyType sht = createHierarchyTypeInTrans(hierarchyType);
-    
+
     // The transaction did not error out, so it is safe to put into the cache.
     ServiceFactory.getMetadataCache().addHierarchyType(sht);
-    
+
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
-    
+
     return sht;
   }
-  
+
   @Transaction
   public ServerHierarchyType createHierarchyTypeInTrans(HierarchyType hierarchyType)
   {
@@ -498,7 +511,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       throw ex2;
     }
   }
-  
+
   /**
    * It creates an {@link MdTermRelationship} to model the relationship between
    * {@link Universal}s.
@@ -678,20 +691,22 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
    */
   public ServerHierarchyType get(HierarchicalRelationshipType hierarchicalRelationship, boolean buildHierarchyNodes)
   {
-//    LocalizedValue displayLabel = AttributeTypeConverter.convert(hierarchicalRelationship.getDisplayLabel());
-//    LocalizedValue description = AttributeTypeConverter.convert(hierarchicalRelationship.getDescription());
-//    Organization organization = hierarchicalRelationship.getOrganization();
+    // LocalizedValue displayLabel =
+    // AttributeTypeConverter.convert(hierarchicalRelationship.getDisplayLabel());
+    // LocalizedValue description =
+    // AttributeTypeConverter.convert(hierarchicalRelationship.getDescription());
+    // Organization organization = hierarchicalRelationship.getOrganization();
 
     ServerHierarchyType sht = new ServerHierarchyType(hierarchicalRelationship);
 
-//    if (buildHierarchyNodes)
-//    {
-//      sht.buildHierarchyNodes();
-//    }
+    // if (buildHierarchyNodes)
+    // {
+    // sht.buildHierarchyNodes();
+    // }
 
     return sht;
   }
-  
+
   public static boolean isValidName(String name)
   {
     if (name.contains(" ") || name.contains("<") || name.contains(">") || name.contains("-") || name.contains("+") || name.contains("=") || name.contains("!") || name.contains("@") || name.contains("#") || name.contains("$") || name.contains("%") || name.contains("^") || name.contains("&") || name.contains("*") || name.contains("?") || name.contains(";") || name.contains(":") || name.contains(",") || name.contains("^") || name.contains("{") || name.contains("}") || name.contains("]") || name.contains("[") || name.contains("`") || name.contains("~") || name.contains("|") || name.contains("/") || name.contains("\\"))
@@ -769,7 +784,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     // hierarchy.
     if (parentType instanceof RootGeoObjectType)
     {
-      List<ServerGeoObjectType> children = gotServ.getChildren(childType, sht);
+      List<ServerGeoObjectType> children = typeService.getChildren(childType, sht);
 
       if (children.size() == 1)
       {
@@ -838,4 +853,38 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       throw exception;
     }
   }
+
+  @Override  
+  public JsonArray getHierarchiesForGeoObjectOverTime(String code, String typeCode)
+  {
+    ServerGeoObjectIF geoObject = this.objectService.getGeoObjectByCode(code, typeCode);
+    ServerParentTreeNodeOverTime pot = this.objectService.getParentsOverTime(geoObject, null, true, true);
+
+    this.filterHierarchiesFromPermissions(geoObject.getType(), pot);
+
+    return pot.toJSON();
+  }
+
+  @Override  
+  public void filterHierarchiesFromPermissions(ServerGeoObjectType type, ServerParentTreeNodeOverTime pot)
+  {
+    Collection<ServerHierarchyType> hierarchies = pot.getHierarchies();
+
+    // Boolean isCR = ServiceFactory.getRolePermissionService().isRC() ||
+    // ServiceFactory.getRolePermissionService().isAC();
+
+    for (ServerHierarchyType hierarchy : hierarchies)
+    {
+      Organization organization = hierarchy.getOrganization();
+
+      // if ( ( isCR && !service.canAddChildCR(organization.getCode(), null,
+      // type) ) || ( !isCR && !service.canAddChild(organization.getCode(),
+      // null, type) ))
+      if (!this.permissions.canViewChild(organization.getCode(), null, type))
+      {
+        pot.remove(hierarchy);
+      }
+    }
+  }
+
 }

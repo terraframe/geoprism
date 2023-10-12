@@ -5,12 +5,14 @@ import java.util.List;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 
+import com.google.gson.JsonArray;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.rbac.RoleDAO;
 
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
+import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
 public interface HierarchyTypeBusinessServiceIF
 {
@@ -55,4 +57,8 @@ public interface HierarchyTypeBusinessServiceIF
   public void validateUniversalRelationship(ServerHierarchyType sht, ServerGeoObjectType childType, ServerGeoObjectType parentType);
 
   void grantWritePermissionsOnMdTermRel(ComponentIF mdTermRelationship);
+
+  void filterHierarchiesFromPermissions(ServerGeoObjectType type, ServerParentTreeNodeOverTime pot);
+
+  JsonArray getHierarchiesForGeoObjectOverTime(String code, String typeCode);
 }

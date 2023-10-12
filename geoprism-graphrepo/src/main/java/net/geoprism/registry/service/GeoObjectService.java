@@ -28,6 +28,7 @@ import com.runwaysdk.session.Session;
 import net.geoprism.graph.lpg.service.LocaleSerializer;
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerChildTreeNode;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -38,10 +39,13 @@ import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 public class GeoObjectService implements GeoObjectServiceIF
 {
   @Autowired
-  protected GeoObjectBusinessServiceIF   service;
+  protected GeoObjectBusinessServiceIF     service;
 
   @Autowired
-  protected GeoObjectPermissionServiceIF permissionService;
+  protected HierarchyTypeBusinessServiceIF hierarchyService;
+
+  @Autowired
+  protected GeoObjectPermissionServiceIF   permissionService;
 
   @Override
   @Request(RequestType.SESSION)
@@ -256,7 +260,7 @@ public class GeoObjectService implements GeoObjectServiceIF
     final GeoObjectOverTime goot = service.toGeoObjectOverTime(go);
     ServerParentTreeNodeOverTime pot = service.getParentsOverTime(go, null, true, true);
 
-    HierarchyTypeService.filterHierarchiesFromPermissions(type, pot);
+    this.hierarchyService.filterHierarchiesFromPermissions(type, pot);
 
     /**
      * Serialize the GeoObject and add it to the response
