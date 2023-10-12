@@ -1,7 +1,6 @@
 package net.geoprism.registry.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
@@ -24,11 +23,11 @@ import net.geoprism.registry.model.ServerOrganization;
 public class GraphRepoService implements GraphRepoServiceIF
 {
   @Autowired
-  private HierarchyTypeBusinessServiceIF hierarchies;
-  
+  private HierarchyTypeBusinessServiceIF hierarchyService;
+
   @Autowired
-  private GeoObjectTypeBusinessServiceIF gots;
-  
+  private GeoObjectTypeBusinessServiceIF typeService;
+
   @Request
   @Override
   public synchronized void initialize()
@@ -56,7 +55,7 @@ public class GraphRepoService implements GraphRepoServiceIF
           continue;
         }
 
-        ServerGeoObjectType type = gots.build(uni);
+        ServerGeoObjectType type = typeService.build(uni);
 
         ServiceFactory.getMetadataCache().addGeoObjectType(type);
       }
@@ -70,17 +69,17 @@ public class GraphRepoService implements GraphRepoServiceIF
     // Otherwise you will end up with a NPE when building the hierarchies
     // which inherit the inherited hierarchy if it hasn't been built
     HierarchicalRelationshipType.getInheritedTypes().forEach(relationship -> {
-      ServerHierarchyType ht = hierarchies.get(relationship, false);
+      ServerHierarchyType ht = hierarchyService.get(relationship, false);
 
-      ServiceFactory.getMetadataCache().addHierarchyType(ht);
+      ServiceFactory.getMetadataCache().addHierarchyType(ht, this.hierarchyService.toHierarchyType(ht));
     });
 
     HierarchicalRelationshipType.getAll().forEach(relationship -> {
-      ServerHierarchyType ht = hierarchies.get(relationship, false);
+      ServerHierarchyType ht = hierarchyService.get(relationship, false);
 
       if (!ServiceFactory.getMetadataCache().getHierachyType(ht.getCode()).isPresent())
       {
-        ServiceFactory.getMetadataCache().addHierarchyType(ht);
+        ServiceFactory.getMetadataCache().addHierarchyType(ht, this.hierarchyService.toHierarchyType(ht));
       }
     });
 

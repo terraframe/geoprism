@@ -4,17 +4,17 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.cache;
 
@@ -27,12 +27,11 @@ import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.Term;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
+import org.commongeoregistry.adapter.metadata.HierarchyType;
 
-import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.service.ServiceFactory;
 
 /**
  * This is a singleton instance that caches {@link ServerGeoObjectType} objects
@@ -48,7 +47,7 @@ public class ServerMetadataCache
    */
   private static final long                serialVersionUID = -8829469298178067536L;
 
-  private Map<String, ServerOrganization>        organizationMap;
+  private Map<String, ServerOrganization>  organizationMap;
 
   private Map<String, ServerGeoObjectType> geoGeoObjectTypeMap;
 
@@ -123,35 +122,36 @@ public class ServerMetadataCache
   {
     this.addGeoObjectType(refreshGot);
 
-//    List<ServerHierarchyType> hierarchyTypes = ServiceFactory.getMetadataCache().getAllHierarchyTypes();
-//    for (ServerHierarchyType ht : hierarchyTypes)
-//    {
-//      List<HierarchyNode> rootNodes = ht.getRootGeoObjectTypes();
-//
-//      for (HierarchyNode rootNode : rootNodes)
-//      {
-//        if (refreshGot.getCode().equals(rootNode.getGeoObjectType().getCode()))
-//        {
-//          rootNode.setGeoObjectType(refreshGot.getType());
-//          break;
-//        }
-//
-//        List<HierarchyNode> rootDescends = rootNode.getAllDescendants();
-//
-//        Iterator<HierarchyNode> rootDescendIt = rootDescends.iterator();
-//
-//        while (rootDescendIt.hasNext())
-//        {
-//          HierarchyNode childNode = rootDescendIt.next();
-//
-//          if (childNode.getGeoObjectType().getCode().equals(refreshGot.getCode()))
-//          {
-//            childNode.setGeoObjectType(refreshGot.getType());
-//            break;
-//          }
-//        }
-//      }
-//    }
+    // List<ServerHierarchyType> hierarchyTypes =
+    // ServiceFactory.getMetadataCache().getAllHierarchyTypes();
+    // for (ServerHierarchyType ht : hierarchyTypes)
+    // {
+    // List<HierarchyNode> rootNodes = ht.getRootGeoObjectTypes();
+    //
+    // for (HierarchyNode rootNode : rootNodes)
+    // {
+    // if (refreshGot.getCode().equals(rootNode.getGeoObjectType().getCode()))
+    // {
+    // rootNode.setGeoObjectType(refreshGot.getType());
+    // break;
+    // }
+    //
+    // List<HierarchyNode> rootDescends = rootNode.getAllDescendants();
+    //
+    // Iterator<HierarchyNode> rootDescendIt = rootDescends.iterator();
+    //
+    // while (rootDescendIt.hasNext())
+    // {
+    // HierarchyNode childNode = rootDescendIt.next();
+    //
+    // if (childNode.getGeoObjectType().getCode().equals(refreshGot.getCode()))
+    // {
+    // childNode.setGeoObjectType(refreshGot.getType());
+    // break;
+    // }
+    // }
+    // }
+    // }
   }
 
   public void addGeoObjectType(ServerGeoObjectType geoObjectType)
@@ -173,11 +173,11 @@ public class ServerMetadataCache
     getAdapter().getMetadataCache().removeGeoObjectType(code);
   }
 
-  public void addHierarchyType(ServerHierarchyType hierarchyType)
+  public void addHierarchyType(ServerHierarchyType hierarchyType, HierarchyType dto)
   {
     this.hierarchyTypeMap.put(hierarchyType.getCode(), hierarchyType);
 
-    getAdapter().getMetadataCache().addHierarchyType(ServiceFactory.getBean(HierarchyTypeBusinessServiceIF.class).toHierarchyType(hierarchyType));
+    getAdapter().getMetadataCache().addHierarchyType(dto);
   }
 
   public Optional<ServerHierarchyType> getHierachyType(String code)
