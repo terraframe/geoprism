@@ -18,20 +18,13 @@
  */
 package net.geoprism.registry.service;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import com.runwaysdk.ComponentIF;
 
-import net.geoprism.spring.ApplicationContextHolder;
-
-@Repository
+@Component
 public interface ClassificationObjectServiceIF
 {
-  public static ClassificationObjectServiceIF getInstance()
-  {
-    return ApplicationContextHolder.getContext().getBean(ClassificationObjectServiceIF.class);
-  }
-
   public void assignPermissions(ComponentIF component);
 
   public void validateName(String name);

@@ -5,7 +5,7 @@ import java.util.List;
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
@@ -13,7 +13,7 @@ import com.runwaysdk.session.RequestType;
 import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.permission.PermissionContext;
 
-@Component
+@Service
 public class GeoObjectTypeService implements GeoObjectTypeServiceIF
 {
   @Autowired

@@ -18,9 +18,12 @@
  */
 package net.geoprism.graph.lpg.service;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+@Component
 public interface LabeledPropertyGraphTypeServiceIF
 {
   public JsonArray getAll(String sessionId);

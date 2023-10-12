@@ -2,6 +2,8 @@ package net.geoprism.registry.business;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.BusinessEdgeType;
@@ -10,6 +12,7 @@ import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
+@Component
 public interface BusinessObjectBusinessServiceIF
 {
 

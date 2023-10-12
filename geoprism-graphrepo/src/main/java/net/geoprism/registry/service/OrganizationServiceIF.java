@@ -1,11 +1,13 @@
 package net.geoprism.registry.service;
 
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
 import com.runwaysdk.session.RequestType;
 
+@Component
 public interface OrganizationServiceIF
 {
   /**

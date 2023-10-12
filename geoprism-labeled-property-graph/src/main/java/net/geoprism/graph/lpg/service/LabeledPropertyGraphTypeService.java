@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -39,7 +40,7 @@ import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeBusinessServiceIF
 import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeEntryBusinessServiceIF;
 import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
 
-@Component
+@Service
 public class LabeledPropertyGraphTypeService implements LabeledPropertyGraphTypeServiceIF
 {
   @Autowired

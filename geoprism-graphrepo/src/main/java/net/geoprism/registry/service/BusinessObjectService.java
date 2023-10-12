@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -40,7 +40,7 @@ import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.model.BusinessObject;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
-@Component
+@Service
 public class BusinessObjectService
 {
   @Autowired

@@ -11,7 +11,8 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.commongeoregistry.adapter.metadata.AttributeLocalType;
 import org.commongeoregistry.adapter.metadata.AttributeType;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -64,9 +65,12 @@ import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
 
-@Repository
+@Service
 public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceIF
 {
+  @Autowired
+  private ClassificationObjectServiceIF service;
+  
   @Override
   @Transaction
   public void delete(BusinessType type)
@@ -271,7 +275,7 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
     ServiceFactory.getGeoObjectTypePermissionService().enforceCanCreate(organization.getCode(), false);
 
-    ClassificationObjectServiceIF.getInstance().validateName(code);
+    service.validateName(code);
 
     if (code.length() > 64)
     {

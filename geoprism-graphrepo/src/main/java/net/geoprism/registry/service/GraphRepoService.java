@@ -2,6 +2,7 @@ package net.geoprism.registry.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
 import com.runwaysdk.query.OIterator;
@@ -19,7 +20,7 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
 
-@Component
+@Service
 public class GraphRepoService implements GraphRepoServiceIF
 {
   @Autowired

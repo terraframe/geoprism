@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.graph.EdgeObject;
@@ -27,6 +28,7 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.graph.VertexServerGeoObject;
 
+@Service
 public class BusinessObjectBusinessService implements BusinessObjectBusinessServiceIF
 {
   @Autowired

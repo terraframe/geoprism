@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
  * A simple program which, given a localization xml file, will check through a source codebase to find keys which are not used.
  * 
  * args[0] = path to the domain xml file containing localization keys
- * args[1] = path to the root of the source code repository where we will check to see if each key is used.
+ * args[1] = path to the root of the source code Service where we will check to see if each key is used.
  * 
  * @author rrowlands
  */

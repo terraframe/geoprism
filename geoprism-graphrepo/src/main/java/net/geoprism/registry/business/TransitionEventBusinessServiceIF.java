@@ -3,6 +3,8 @@ package net.geoprism.registry.business;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.graph.transition.Transition;
@@ -13,6 +15,7 @@ import net.geoprism.registry.model.ServerGeoObjectIF;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.view.Page;
 
+@Component
 public interface TransitionEventBusinessServiceIF
 {
   public void delete(TransitionEvent tran);

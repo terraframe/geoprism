@@ -42,6 +42,7 @@ import net.geoprism.registry.query.ClassificationTypePageQuery;
 import net.geoprism.registry.service.ClassificationObjectServiceIF;
 import net.geoprism.registry.view.JsonSerializable;
 import net.geoprism.registry.view.Page;
+import net.geoprism.spring.ApplicationContextHolder;
 
 public class ClassificationType implements JsonSerializable
 {
@@ -160,8 +161,10 @@ public class ClassificationType implements JsonSerializable
     MdVertexDAOIF mdVertex = this.mdClassification.getReferenceMdVertexDAO();
     MdEdgeDAOIF mdEdge = this.mdClassification.getReferenceMdEdgeDAO();
 
-    ClassificationObjectServiceIF.getInstance().assignPermissions(mdVertex);
-    ClassificationObjectServiceIF.getInstance().assignPermissions(mdEdge);
+    ClassificationObjectServiceIF service = ApplicationContextHolder.getBean(ClassificationObjectServiceIF.class);      
+
+    service.assignPermissions(mdVertex);
+    service.assignPermissions(mdEdge);
   }
 
   @Transaction
@@ -185,7 +188,8 @@ public class ClassificationType implements JsonSerializable
     }
     else
     {
-      ClassificationObjectServiceIF.getInstance().validateName(code);
+      ClassificationObjectServiceIF service = ApplicationContextHolder.getBean(ClassificationObjectServiceIF.class);      
+      service.validateName(code);
 
       mdClassification = MdClassificationDAO.newInstance();
       mdClassification.setValue(MdClassificationInfo.PACKAGE, RegistryConstants.CLASSIFICATION_PACKAGE);

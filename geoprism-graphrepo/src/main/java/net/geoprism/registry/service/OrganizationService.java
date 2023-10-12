@@ -27,6 +27,7 @@ import org.commongeoregistry.adapter.constants.DefaultAttribute;
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.session.Request;
@@ -39,7 +40,7 @@ import net.geoprism.registry.model.OrganizationMetadata;
 import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.view.Page;
 
-@Component
+@Service
 public class OrganizationService implements OrganizationServiceIF
 {
   @Autowired

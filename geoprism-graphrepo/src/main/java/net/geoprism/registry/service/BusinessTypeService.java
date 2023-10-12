@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -37,7 +37,7 @@ import net.geoprism.registry.JsonCollectors;
 import net.geoprism.registry.business.BusinessEdgeTypeBusinessServiceIF;
 import net.geoprism.registry.business.BusinessTypeBusinessServiceIF;
 
-@Component
+@Service
 public class BusinessTypeService
 {
   @Autowired

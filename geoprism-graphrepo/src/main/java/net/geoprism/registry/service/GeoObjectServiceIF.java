@@ -6,10 +6,12 @@ import org.commongeoregistry.adapter.dataaccess.ChildTreeNode;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.dataaccess.GeoObjectOverTime;
 import org.commongeoregistry.adapter.dataaccess.ParentTreeNode;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+@Component
 public interface GeoObjectServiceIF
 {
   public GeoObject getGeoObject(String sessionId, String uid, String geoObjectTypeCode, Date date);

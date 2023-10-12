@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -58,7 +59,7 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.Page;
 
-@Component
+@Service
 public class TransitionEventBusinessService implements TransitionEventBusinessServiceIF
 {
   @Autowired protected GeoObjectTypeBusinessServiceIF gotServ;

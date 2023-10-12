@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.commongeoregistry.adapter.metadata.OrganizationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.system.Roles;
@@ -18,7 +18,7 @@ import net.geoprism.registry.model.ServerOrganization;
 import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.Page;
 
-@Repository
+@Service
 public class OrganizationBusinessService implements OrganizationBusinessServiceIF
 {
   @Autowired

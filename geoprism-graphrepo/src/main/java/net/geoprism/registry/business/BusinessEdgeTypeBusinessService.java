@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.business.BusinessFacade;
@@ -26,6 +27,7 @@ import net.geoprism.registry.Organization;
 import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 
+@Service
 public class BusinessEdgeTypeBusinessService implements BusinessEdgeTypeBusinessServiceIF
 {
   @Autowired

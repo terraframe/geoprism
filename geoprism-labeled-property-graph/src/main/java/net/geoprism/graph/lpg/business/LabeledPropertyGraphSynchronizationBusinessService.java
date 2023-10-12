@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -50,7 +50,7 @@ import net.geoprism.graph.lpg.service.AbstractGraphVersionPublisherService.State
 import net.geoprism.graph.lpg.service.JsonGraphVersionPublisherService;
 import net.geoprism.registry.view.Page;
 
-@Repository
+@Service
 public class LabeledPropertyGraphSynchronizationBusinessService implements LabeledPropertyGraphSynchronizationBusinessServiceIF
 {
   @Autowired

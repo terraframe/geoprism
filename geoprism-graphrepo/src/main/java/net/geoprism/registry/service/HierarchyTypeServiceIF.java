@@ -1,12 +1,13 @@
 package net.geoprism.registry.service;
 
 import org.commongeoregistry.adapter.metadata.HierarchyType;
+import org.springframework.stereotype.Component;
 
 import net.geoprism.registry.permission.PermissionContext;
 
+@Component
 public interface HierarchyTypeServiceIF
 {
-
   HierarchyType addToHierarchy(String sessionId, String hierarchyCode, String parentGeoObjectTypeCode, String childGeoObjectTypeCode);
 
   HierarchyType removeFromHierarchy(String sessionId, String hierarchyCode, String parentGeoObjectTypeCode, String childGeoObjectTypeCode, boolean b);

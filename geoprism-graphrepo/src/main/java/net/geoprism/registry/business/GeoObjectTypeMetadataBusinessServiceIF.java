@@ -1,7 +1,10 @@
 package net.geoprism.registry.business;
 
+import org.springframework.stereotype.Component;
+
 import net.geoprism.registry.model.GeoObjectTypeMetadata;
 
+@Component
 public interface GeoObjectTypeMetadataBusinessServiceIF
 {
 

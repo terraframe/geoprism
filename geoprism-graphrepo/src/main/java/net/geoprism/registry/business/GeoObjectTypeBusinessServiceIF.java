@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
+import org.springframework.stereotype.Component;
 
 import com.runwaysdk.dataaccess.MdGraphClassDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
@@ -17,6 +18,7 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.permission.PermissionContext;
 
+@Component
 public interface GeoObjectTypeBusinessServiceIF
 {
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType sgot);

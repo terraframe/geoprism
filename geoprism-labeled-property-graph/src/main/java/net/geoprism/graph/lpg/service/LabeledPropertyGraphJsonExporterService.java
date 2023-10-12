@@ -25,7 +25,7 @@ import java.util.Map;
 import org.commongeoregistry.adapter.dataaccess.GeoObject;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -43,7 +43,7 @@ import net.geoprism.graph.LabeledPropertyGraphTypeVersion;
 import net.geoprism.graph.lpg.business.GeoObjectTypeSnapshotBusinessServiceIF;
 import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
 
-@Repository
+@Service
 public class LabeledPropertyGraphJsonExporterService
 {
   private static class TypeSnapshotCacheObject

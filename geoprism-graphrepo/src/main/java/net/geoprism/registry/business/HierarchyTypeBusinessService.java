@@ -14,7 +14,7 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.commongeoregistry.adapter.metadata.HierarchyType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.runwaysdk.ComponentIF;
@@ -75,7 +75,7 @@ import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.service.ServiceFactory;
 import net.geoprism.registry.view.ServerParentTreeNodeOverTime;
 
-@Component
+@Service
 public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServiceIF
 {
   @Autowired
@@ -163,7 +163,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     // Check to see if the child type is already in the hierarchy
     List<ServerHierarchyType> hierarchies = typeService.getHierarchies(childType, true);
 
-    if (hierarchies.contains(this))
+    if (hierarchies.contains(sht))
     {
       GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
       ex.setGotCode(childType.getCode());
@@ -175,7 +175,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     {
       Set<ServerHierarchyType> hierarchiesOfSubTypes = typeService.getHierarchiesOfSubTypes(childType);
 
-      if (hierarchiesOfSubTypes.contains(this))
+      if (hierarchiesOfSubTypes.contains(sht))
       {
         GeoObjectTypeAlreadyInHierarchyException ex = new GeoObjectTypeAlreadyInHierarchyException();
         ex.setGotCode(childType.getCode());

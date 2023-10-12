@@ -1,7 +1,7 @@
 package net.geoprism.registry.business;
 
 import org.commongeoregistry.adapter.dataaccess.LocalizedValue;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.runwaysdk.constants.MdAttributeBooleanInfo;
@@ -22,7 +22,7 @@ import net.geoprism.registry.UndirectedGraphType;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.graph.GeoVertex;
 
-@Component
+@Service
 public class UndirectedGraphTypeBusinessService implements UndirectedGraphTypeBusinessServiceIF
 {
   @Override

@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.commongeoregistry.adapter.metadata.AttributeType;
 import org.commongeoregistry.adapter.metadata.GeoObjectType;
+import org.springframework.stereotype.Component;
 
 import net.geoprism.registry.permission.PermissionContext;
 
+@Component
 public interface GeoObjectTypeServiceIF
 {
-
   public List<GeoObjectType> getAncestors(String sessionId, String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild);
 
   public void deleteGeoObjectType(String sessionId, String code);

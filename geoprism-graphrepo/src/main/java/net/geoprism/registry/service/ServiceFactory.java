@@ -4,17 +4,17 @@
  * This file is part of Geoprism Registry(tm).
  *
  * Geoprism Registry(tm) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
  * Geoprism Registry(tm) is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geoprism Registry(tm).  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Geoprism Registry(tm). If not, see <http://www.gnu.org/licenses/>.
  */
 package net.geoprism.registry.service;
 
@@ -23,7 +23,7 @@ import org.commongeoregistry.adapter.RegistryAdapterServer;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
@@ -33,48 +33,52 @@ import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
 import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.cache.ServerMetadataCache;
+import net.geoprism.spring.ApplicationContextHolder;
 
-@Component
+@Service
 public class ServiceFactory implements ApplicationContextAware
 {
-  private static ServiceFactory                        instance;
-  
-  private static ApplicationContext context;
-  
-  private RegistryIdService                            idService;
+  private static ServiceFactory instance;
 
-  private RegistryAdapter                              adapter;
+  private RegistryIdService     idService;
 
-  private HierarchyTypeService                         hierarchyService;
+  private RegistryAdapter       adapter;
 
-  private ServerMetadataCache                          metadataCache;
+  private HierarchyTypeService  hierarchyService;
+
+  private ServerMetadataCache   metadataCache;
 
   private void initialize()
   {
-    GraphRepoServiceIF repoService = getGraphRepoService();
-    
     this.idService = new RegistryIdService();
-    
+
     this.adapter = new RegistryAdapterServer(this.idService);
 
     this.metadataCache = new ServerMetadataCache(this.adapter);
     this.metadataCache.rebuild();
 
-    repoService.initialize();
+  }
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+  {
+    applicationContext.getBean(GraphRepoServiceIF.class).initialize();
   }
 
   public static synchronized ServiceFactory getInstance()
   {
     return instance;
   }
-  
-  public ServiceFactory() {
-      instance = this;
-      initialize();
+
+  public ServiceFactory()
+  {
+    instance = this;
+    initialize();
   }
 
-  public static <T> T getBean(Class<T> clazz) {
-      return context.getBean(clazz);
+  public static <T> T getBean(Class<T> clazz)
+  {
+    return ApplicationContextHolder.getBean(clazz);
   }
 
   public static RegistryAdapter getAdapter()
@@ -96,7 +100,7 @@ public class ServiceFactory implements ApplicationContextAware
   {
     return getBean(GeoObjectBusinessServiceIF.class);
   }
-  
+
   public static RegistryIdService getIdService()
   {
     return instance.idService;
@@ -131,7 +135,7 @@ public class ServiceFactory implements ApplicationContextAware
   {
     return getBean(GeoObjectTypePermissionServiceIF.class);
   }
-  
+
   public static OrganizationServiceIF getOrganizationService()
   {
     return getBean(OrganizationServiceIF.class);
@@ -140,11 +144,5 @@ public class ServiceFactory implements ApplicationContextAware
   public static ServerMetadataCache getMetadataCache()
   {
     return ServiceFactory.getInstance().metadataCache;
-  }
-
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
-  {
-    context = applicationContext;
   }
 }

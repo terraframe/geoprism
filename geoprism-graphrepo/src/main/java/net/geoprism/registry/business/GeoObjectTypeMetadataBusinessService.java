@@ -8,6 +8,7 @@ import org.commongeoregistry.adapter.metadata.GeoObjectType;
 import org.commongeoregistry.adapter.metadata.HierarchyNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.runwaysdk.business.ontology.Term;
 import com.runwaysdk.system.gis.geo.Universal;
@@ -20,7 +21,7 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.service.ServiceFactory;
 
-@Component
+@Service
 public class GeoObjectTypeMetadataBusinessService implements GeoObjectTypeMetadataBusinessServiceIF
 {
   @Autowired
