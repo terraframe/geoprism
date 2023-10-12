@@ -28,6 +28,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,7 +43,7 @@ import com.runwaysdk.session.SessionIF;
 
 import net.geoprism.rbac.RoleView;
 
-@Component
+@Service
 public class SessionService implements SessionServiceIF
 {
   // TODO : Don't autowire components here because this service is directly

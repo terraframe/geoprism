@@ -22,11 +22,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import net.geoprism.rbac.RoleView;
 
+@Component
 public interface SessionServiceIF
 {
   public JsonArray getInstalledLocales(String sessionId);
