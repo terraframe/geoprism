@@ -32,8 +32,9 @@ import com.runwaysdk.dataaccess.metadata.graph.MdVertexDAO;
 
 import net.geoprism.registry.conversion.RegistryAttributeTypeConverter;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.model.ServerElement;
 
-public class BusinessType extends BusinessTypeBase
+public class BusinessType extends BusinessTypeBase implements ServerElement
 {
   private static final long  serialVersionUID = 88826735;
 
@@ -80,6 +81,14 @@ public class BusinessType extends BusinessTypeBase
     MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) mdVertex.definesAttribute(name);
 
     return converter.build(mdAttribute);
+  }
+
+  public void setLabelAttribute(String name)
+  {
+    MdVertexDAOIF mdVertex = this.getMdVertexDAO();
+    MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) mdVertex.definesAttribute(name);
+
+    this.setLabelAttribute(mdAttribute.getOid());
   }
 
 }

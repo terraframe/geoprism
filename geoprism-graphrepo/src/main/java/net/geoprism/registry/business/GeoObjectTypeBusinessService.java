@@ -800,6 +800,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     return attrType;
   }
 
+  @Override
   public AttributeType createAttributeType(ServerGeoObjectType serverType, AttributeType attributeType)
   {
     MdAttributeConcrete mdAttribute = createMdAttributeFromAttributeType(serverType, attributeType);
@@ -820,6 +821,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     return attributeType;
   }
 
+  @Override
   public AttributeType createAttributeType(ServerGeoObjectType sgot, String attributeTypeJSON)
   {
     JsonObject attrObj = JsonParser.parseString(attributeTypeJSON).getAsJsonObject();

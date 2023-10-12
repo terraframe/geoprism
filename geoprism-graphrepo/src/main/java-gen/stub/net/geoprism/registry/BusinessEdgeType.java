@@ -24,8 +24,9 @@ import com.runwaysdk.dataaccess.MdEdgeDAOIF;
 import com.runwaysdk.dataaccess.metadata.graph.MdEdgeDAO;
 
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
+import net.geoprism.registry.model.ServerElement;
 
-public class BusinessEdgeType extends BusinessEdgeTypeBase
+public class BusinessEdgeType extends BusinessEdgeTypeBase implements ServerElement
 {
   @SuppressWarnings("unused")
   private static final long  serialVersionUID = 1946865589;

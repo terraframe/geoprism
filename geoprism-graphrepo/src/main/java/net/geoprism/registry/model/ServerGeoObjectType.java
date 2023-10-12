@@ -18,13 +18,8 @@
  */
 package net.geoprism.registry.model;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.commongeoregistry.adapter.Optional;
 import org.commongeoregistry.adapter.Term;
@@ -55,14 +50,9 @@ import com.runwaysdk.dataaccess.MdClassDAOIF;
 import com.runwaysdk.dataaccess.MdVertexDAOIF;
 import com.runwaysdk.dataaccess.transaction.Transaction;
 import com.runwaysdk.dataaccess.transaction.TransactionState;
-import com.runwaysdk.gis.dataaccess.metadata.graph.MdGeoVertexDAO;
-import com.runwaysdk.query.OIterator;
-import com.runwaysdk.query.QueryFactory;
 import com.runwaysdk.system.Actor;
 import com.runwaysdk.system.Roles;
 import com.runwaysdk.system.gis.geo.Universal;
-import com.runwaysdk.system.gis.metadata.graph.MdGeoVertex;
-import com.runwaysdk.system.gis.metadata.graph.MdGeoVertexQuery;
 import com.runwaysdk.system.metadata.MdAttributeBoolean;
 import com.runwaysdk.system.metadata.MdAttributeCharacter;
 import com.runwaysdk.system.metadata.MdAttributeClassification;
@@ -79,10 +69,6 @@ import com.runwaysdk.system.metadata.MdClass;
 import com.runwaysdk.system.metadata.MdGraphClass;
 
 import net.geoprism.ontology.Classifier;
-import net.geoprism.ontology.GeoEntityUtil;
-import net.geoprism.registry.HierarchicalRelationshipType;
-import net.geoprism.registry.HierarchyRootException;
-import net.geoprism.registry.InheritedHierarchyAnnotation;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.conversion.TermConverter;

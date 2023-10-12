@@ -22,7 +22,7 @@ public interface GeoObjectTypeBusinessServiceIF
   public List<ServerGeoObjectType> getSubtypes(ServerGeoObjectType sgot);
 
   public Set<ServerHierarchyType> getHierarchiesOfSubTypes(ServerGeoObjectType sgot);
-  
+
   /**
    * @param sType
    *          Hierarchy Type
@@ -37,7 +37,7 @@ public interface GeoObjectTypeBusinessServiceIF
 
   @Transaction
   public void removeInheritedHierarchy(ServerHierarchyType forHierarchy);
-  
+
   public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot);
 
   public List<ServerHierarchyType> getHierarchies(ServerGeoObjectType sgot, boolean includeFromSuperType);
@@ -69,9 +69,9 @@ public interface GeoObjectTypeBusinessServiceIF
    * @return
    */
   public ServerHierarchyType findHierarchy(ServerGeoObjectType sgot, ServerHierarchyType hierarchyType, ServerGeoObjectType parent);
-  
+
   public List<ServerGeoObjectType> getChildren(ServerGeoObjectType sgot, ServerHierarchyType hierarchy);
-  
+
   public void createDefaultAttributes(Universal universal, MdBusiness definingMdBusiness);
 
   public void createDefaultAttributes(Universal universal, MdGraphClassDAOIF mdClass);
@@ -79,30 +79,37 @@ public interface GeoObjectTypeBusinessServiceIF
   public ServerGeoObjectType create(String json);
 
   public ServerGeoObjectType create(GeoObjectType geoObjectType);
-  
+
   public ServerGeoObjectType build(Universal universal);
 
   public GeoObjectType convertAttributeTypes(Universal uni, GeoObjectType gt, MdBusiness mdBusiness);
-  
+
   /**
-   * The GeoObjectType is a DTO type, which means it contains data which has been localized to a particular user's session.
-   * We need to rebuild this object such that it includes relevant request information (like the correct locale).
+   * The GeoObjectType is a DTO type, which means it contains data which has
+   * been localized to a particular user's session. We need to rebuild this
+   * object such that it includes relevant request information (like the correct
+   * locale).
    */
   public GeoObjectType buildType(ServerGeoObjectType serverType);
-  
+
   public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild);
-  
+
   public void deleteGeoObjectType(String code);
-  
+
   public AttributeType createAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
+
+  public AttributeType createAttributeType(ServerGeoObjectType type, String attributeTypeJSON);
+
+  public AttributeType createAttributeType(ServerGeoObjectType type, AttributeType attributeType);
 
   public AttributeType updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON);
 
   public void deleteAttributeType(String gtId, String attributeName);
-  
+
   public GeoObjectType updateGeoObjectType(String gtJSON);
-  
+
   public GeoObjectType createGeoObjectType(String gtJSON);
-  
+
   public List<GeoObjectType> getGeoObjectTypes(String[] codes, PermissionContext context);
+
 }
