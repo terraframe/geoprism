@@ -912,7 +912,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
     }
   }
 
-  @Request(RequestType.SESSION)
+  
   public List<GeoObjectType> getAncestors(String code, String hierarchyCode, Boolean includeInheritedTypes, Boolean includeChild)
   {
     ServerGeoObjectType child = ServerGeoObjectType.get(code);
@@ -936,7 +936,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    * @param code
    *          code of the {@link GeoObjectType} to delete.
    */
-  @Request(RequestType.SESSION)
+  
   public void deleteGeoObjectType(String code)
   {
     ServerGeoObjectType type = ServerGeoObjectType.get(code);
@@ -1069,7 +1069,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          AttributeType to be added to the GeoObjectType
    * @return updated {@link GeoObjectType}
    */
-  @Request(RequestType.SESSION)
+  
   public AttributeType createAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(geoObjectTypeCode);
@@ -1093,7 +1093,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          AttributeType to be added to the GeoObjectType
    * @return updated {@link AttributeType}
    */
-  @Request(RequestType.SESSION)
+  
   public AttributeType updateAttributeType(String geoObjectTypeCode, String attributeTypeJSON)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(geoObjectTypeCode);
@@ -1118,7 +1118,7 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          Name of the attribute to be removed from the GeoObjectType
    * @return updated {@link GeoObjectType}
    */
-  @Request(RequestType.SESSION)
+  
   public void deleteAttributeType(String gtId, String attributeName)
   {
     ServerGeoObjectType got = ServerGeoObjectType.get(gtId);
@@ -1138,7 +1138,6 @@ public class GeoObjectTypeBusinessService implements GeoObjectTypeBusinessServic
    *          JSON of the {@link GeoObjectType} to be updated.
    * @return updated {@link GeoObjectType}
    */
-  @Request(RequestType.SESSION)
   public GeoObjectType updateGeoObjectType(String gtJSON)
   {
     GeoObjectType geoObjectType = GeoObjectType.fromJSON(gtJSON, ServiceFactory.getAdapter());
