@@ -240,7 +240,7 @@ public class GeoObjectService implements GeoObjectServiceIF
     JsonObject jsonObject = go.toJSON(serializer);
     joResp.put("geoObject", new JSONObject(jsonObject.toString()));
 
-    JsonArray hierarchies = ServiceFactory.getHierarchyService().getHierarchiesForType(sessionId, go.getType().getCode(), true);
+    JsonArray hierarchies = this.hierarchyService.getHierarchiesForType(go.getType().getCode(), true);
 
     joResp.put("hierarchies", new JSONArray(hierarchies.toString()));
 

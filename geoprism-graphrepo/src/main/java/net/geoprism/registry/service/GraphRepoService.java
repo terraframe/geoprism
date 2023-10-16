@@ -1,6 +1,8 @@
 package net.geoprism.registry.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import com.runwaysdk.dataaccess.metadata.MdClassDAO;
@@ -20,7 +22,7 @@ import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
 
 @Service
-public class GraphRepoService implements GraphRepoServiceIF
+public class GraphRepoService implements GraphRepoServiceIF, ApplicationListener<ContextRefreshedEvent>
 {
   @Autowired
   private HierarchyTypeBusinessServiceIF hierarchyService;
@@ -118,5 +120,11 @@ public class GraphRepoService implements GraphRepoServiceIF
     {
       // skip for now
     }
+  }
+
+  @Override
+  public void onApplicationEvent(ContextRefreshedEvent event)
+  {
+    this.initialize();
   }
 }

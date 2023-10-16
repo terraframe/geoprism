@@ -62,4 +62,6 @@ public interface HierarchyTypeBusinessServiceIF
   void filterHierarchiesFromPermissions(ServerGeoObjectType type, ServerParentTreeNodeOverTime pot);
 
   JsonArray getHierarchiesForGeoObjectOverTime(String code, String typeCode);
+
+  JsonArray getHierarchiesForType(String code, Boolean includeTypes);
 }

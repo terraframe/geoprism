@@ -20,9 +20,6 @@ package net.geoprism.registry.service;
 
 import org.commongeoregistry.adapter.RegistryAdapter;
 import org.commongeoregistry.adapter.RegistryAdapterServer;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import net.geoprism.graphrepo.permission.GeoObjectPermissionServiceIF;
@@ -31,24 +28,19 @@ import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectTypeRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
-import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.cache.ServerMetadataCache;
 import net.geoprism.spring.ApplicationContextHolder;
 
 @Service
-public class ServiceFactory implements ApplicationContextAware
+public class ServiceFactory
 {
-  private static ServiceFactory instance;
+  private RegistryIdService   idService;
 
-  private RegistryIdService     idService;
+  private RegistryAdapter     adapter;
 
-  private RegistryAdapter       adapter;
+  private ServerMetadataCache metadataCache;
 
-  private HierarchyTypeService  hierarchyService;
-
-  private ServerMetadataCache   metadataCache;
-
-  private void initialize()
+  public ServiceFactory()
   {
     this.idService = new RegistryIdService();
 
@@ -56,24 +48,6 @@ public class ServiceFactory implements ApplicationContextAware
 
     this.metadataCache = new ServerMetadataCache(this.adapter);
     this.metadataCache.rebuild();
-
-  }
-
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
-  {
-    applicationContext.getBean(GraphRepoServiceIF.class).initialize();
-  }
-
-  public static synchronized ServiceFactory getInstance()
-  {
-    return instance;
-  }
-
-  public ServiceFactory()
-  {
-    instance = this;
-    initialize();
   }
 
   public static <T> T getBean(Class<T> clazz)
@@ -81,29 +55,24 @@ public class ServiceFactory implements ApplicationContextAware
     return ApplicationContextHolder.getBean(clazz);
   }
 
+  private static ServiceFactory getInstance()
+  {
+    return getBean(ServiceFactory.class);
+  }
+
   public static RegistryAdapter getAdapter()
   {
     return ServiceFactory.getInstance().adapter;
   }
 
+  public static RegistryIdService getIdService()
+  {
+    return getInstance().idService;
+  }
+
   public static GraphRepoServiceIF getGraphRepoService()
   {
     return getBean(GraphRepoServiceIF.class);
-  }
-
-  public static HierarchyTypeService getHierarchyService()
-  {
-    return ServiceFactory.getInstance().hierarchyService;
-  }
-
-  public static GeoObjectBusinessServiceIF getGeoObjectService()
-  {
-    return getBean(GeoObjectBusinessServiceIF.class);
-  }
-
-  public static RegistryIdService getIdService()
-  {
-    return instance.idService;
   }
 
   public static GeoObjectPermissionServiceIF getGeoObjectPermissionService()

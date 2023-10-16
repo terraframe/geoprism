@@ -62,71 +62,7 @@ public class HierarchyTypeService implements HierarchyTypeServiceIF
   @Request(RequestType.SESSION)
   public JsonArray getHierarchiesForType(String sessionId, String code, Boolean includeTypes)
   {
-    ServerGeoObjectType geoObjectType = ServerGeoObjectType.get(code);
-
-    List<ServerHierarchyType> hierarchyTypes = ServerHierarchyType.getAll();
-
-    JsonArray hierarchies = new JsonArray();
-
-    HierarchyTypePermissionServiceIF htpService = ServiceFactory.getHierarchyPermissionService();
-    GeoObjectRelationshipPermissionServiceIF grpService = ServiceFactory.getGeoObjectRelationshipPermissionService();
-
-    for (ServerHierarchyType sHT : hierarchyTypes)
-    {
-      if (htpService.canRead(sHT.getOrganizationCode()))
-      {
-        List<ServerGeoObjectType> parents = gotServ.getTypeAncestors(geoObjectType, sHT, true);
-
-        if (parents.size() > 0 || gotServ.isRoot(geoObjectType, sHT))
-        {
-          JsonObject object = new JsonObject();
-          object.addProperty("code", sHT.getCode());
-          object.addProperty("label", sHT.getDisplayLabel().getValue());
-
-          if (includeTypes)
-          {
-            JsonArray pArray = new JsonArray();
-
-            for (ServerGeoObjectType pType : parents)
-            {
-              if (!pType.getCode().equals(geoObjectType.getCode()) && grpService.canViewChild(sHT.getOrganizationCode(), null, pType))
-              {
-                JsonObject pObject = new JsonObject();
-                pObject.addProperty("code", pType.getCode());
-                pObject.addProperty("label", pType.getLabel().getValue());
-
-                pArray.add(pObject);
-              }
-            }
-
-            object.add("parents", pArray);
-          }
-
-          hierarchies.add(object);
-        }
-      }
-    }
-
-    if (hierarchies.size() == 0)
-    {
-      for (ServerHierarchyType sHT : hierarchyTypes)
-      {
-        if (htpService.canWrite(sHT.getOrganizationCode()))
-        {
-          if (gotServ.isRoot(geoObjectType, sHT))
-          {
-            JsonObject object = new JsonObject();
-            object.addProperty("code", sHT.getCode());
-            object.addProperty("label", sHT.getDisplayLabel().getValue());
-            object.add("parents", new JsonArray());
-
-            hierarchies.add(object);
-          }
-        }
-      }
-    }
-
-    return hierarchies;
+    return this.service.getHierarchiesForType(code, includeTypes);
   }
 
   @Request(RequestType.SESSION)

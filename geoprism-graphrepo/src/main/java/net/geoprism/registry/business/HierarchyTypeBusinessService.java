@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.runwaysdk.ComponentIF;
 import com.runwaysdk.business.Business;
 import com.runwaysdk.business.BusinessFacade;
@@ -51,6 +52,7 @@ import com.runwaysdk.system.metadata.RelationshipCache;
 
 import net.geoprism.graphrepo.permission.GeoObjectRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
+import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.ontology.GeoEntityUtil;
 import net.geoprism.rbac.RoleConstants;
 import net.geoprism.registry.AbstractParentException;
@@ -91,7 +93,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
   {
     sht.setHierarchicalRelationshipType(HierarchicalRelationshipType.getByCode(sht.getHierarchicalRelationshipType().getCode()));
 
-    ServiceFactory.getMetadataCache().addHierarchyType(sht);
+    ServiceFactory.getMetadataCache().addHierarchyType(sht, this.toHierarchyType(sht));
   }
 
   public void update(ServerHierarchyType sht, HierarchyType hierarchyType)
@@ -272,7 +274,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
 
   public List<ServerGeoObjectType> getChildren(ServerHierarchyType sht, ServerGeoObjectType parent)
   {
-    return this.getChildren(sht, parent);
+    return sht.getHierarchicalRelationshipType().getChildren(parent);
   }
 
   protected HierarchyNode buildHierarchy(ServerHierarchyType sht, HierarchyNode parentNode, ServerGeoObjectType parent)
@@ -421,7 +423,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     ServerHierarchyType sht = createHierarchyTypeInTrans(hierarchyType);
 
     // The transaction did not error out, so it is safe to put into the cache.
-    ServiceFactory.getMetadataCache().addHierarchyType(sht);
+    ServiceFactory.getMetadataCache().addHierarchyType(sht, this.toHierarchyType(sht));
 
     ( (Session) Session.getCurrentSession() ).reloadPermissions();
 
@@ -854,7 +856,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     }
   }
 
-  @Override  
+  @Override
   public JsonArray getHierarchiesForGeoObjectOverTime(String code, String typeCode)
   {
     ServerGeoObjectIF geoObject = this.objectService.getGeoObjectByCode(code, typeCode);
@@ -865,7 +867,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     return pot.toJSON();
   }
 
-  @Override  
+  @Override
   public void filterHierarchiesFromPermissions(ServerGeoObjectType type, ServerParentTreeNodeOverTime pot)
   {
     Collection<ServerHierarchyType> hierarchies = pot.getHierarchies();
@@ -886,5 +888,76 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
       }
     }
   }
+  
+  @Override
+  public JsonArray getHierarchiesForType(String code, Boolean includeTypes)
+  {
+    ServerGeoObjectType geoObjectType = ServerGeoObjectType.get(code);
+
+    List<ServerHierarchyType> hierarchyTypes = ServerHierarchyType.getAll();
+
+    JsonArray hierarchies = new JsonArray();
+
+    HierarchyTypePermissionServiceIF htpService = ServiceFactory.getHierarchyPermissionService();
+    GeoObjectRelationshipPermissionServiceIF grpService = ServiceFactory.getGeoObjectRelationshipPermissionService();
+
+    for (ServerHierarchyType sHT : hierarchyTypes)
+    {
+      if (htpService.canRead(sHT.getOrganizationCode()))
+      {
+        List<ServerGeoObjectType> parents = this.typeService.getTypeAncestors(geoObjectType, sHT, true);
+
+        if (parents.size() > 0 || this.typeService.isRoot(geoObjectType, sHT))
+        {
+          JsonObject object = new JsonObject();
+          object.addProperty("code", sHT.getCode());
+          object.addProperty("label", sHT.getDisplayLabel().getValue());
+
+          if (includeTypes)
+          {
+            JsonArray pArray = new JsonArray();
+
+            for (ServerGeoObjectType pType : parents)
+            {
+              if (!pType.getCode().equals(geoObjectType.getCode()) && grpService.canViewChild(sHT.getOrganizationCode(), null, pType))
+              {
+                JsonObject pObject = new JsonObject();
+                pObject.addProperty("code", pType.getCode());
+                pObject.addProperty("label", pType.getLabel().getValue());
+
+                pArray.add(pObject);
+              }
+            }
+
+            object.add("parents", pArray);
+          }
+
+          hierarchies.add(object);
+        }
+      }
+    }
+
+    if (hierarchies.size() == 0)
+    {
+      for (ServerHierarchyType sHT : hierarchyTypes)
+      {
+        if (htpService.canWrite(sHT.getOrganizationCode()))
+        {
+          if (this.typeService.isRoot(geoObjectType, sHT))
+          {
+            JsonObject object = new JsonObject();
+            object.addProperty("code", sHT.getCode());
+            object.addProperty("label", sHT.getDisplayLabel().getValue());
+            object.add("parents", new JsonArray());
+
+            hierarchies.add(object);
+          }
+        }
+      }
+    }
+
+    return hierarchies;
+  }
+
 
 }
