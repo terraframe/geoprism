@@ -28,6 +28,8 @@ import net.geoprism.graphrepo.permission.GeoObjectTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.GeoObjectTypeRelationshipPermissionServiceIF;
 import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.graphrepo.permission.OrganizationPermissionServiceIF;
+import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
 import net.geoprism.registry.cache.ServerMetadataCache;
 import net.geoprism.spring.ApplicationContextHolder;
 
@@ -98,6 +100,16 @@ public class ServiceFactory
   public static HierarchyTypePermissionServiceIF getHierarchyPermissionService()
   {
     return getBean(HierarchyTypePermissionServiceIF.class);
+  }
+  
+  public static HierarchyTypeBusinessServiceIF getHierarchyService()
+  {
+    return getBean(HierarchyTypeBusinessServiceIF.class);
+  }
+  
+  public static GeoObjectBusinessServiceIF getGeoObjectService()
+  {
+    return getBean(GeoObjectBusinessServiceIF.class);
   }
 
   public static GeoObjectTypePermissionServiceIF getGeoObjectTypePermissionService()
