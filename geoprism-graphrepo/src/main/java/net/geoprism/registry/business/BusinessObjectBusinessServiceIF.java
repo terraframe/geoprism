@@ -16,38 +16,38 @@ import net.geoprism.registry.model.graph.VertexServerGeoObject;
 public interface BusinessObjectBusinessServiceIF
 {
 
-  JsonObject toJSON(BusinessObject object);
+  public JsonObject toJSON(BusinessObject object);
 
-  void apply(BusinessObject object);
+  public void apply(BusinessObject object);
 
-  void delete(BusinessObject object);
+  public void delete(BusinessObject object);
 
-  boolean exists(BusinessObject object, ServerGeoObjectIF geoObject);
+  public boolean exists(BusinessObject object, ServerGeoObjectIF geoObject);
 
-  void addGeoObject(BusinessObject object, ServerGeoObjectIF geoObject);
+  public void addGeoObject(BusinessObject object, ServerGeoObjectIF geoObject);
 
-  void removeGeoObject(BusinessObject object, ServerGeoObjectIF geoObject);
+  public void removeGeoObject(BusinessObject object, ServerGeoObjectIF geoObject);
 
-  List<VertexServerGeoObject> getGeoObjects(BusinessObject object);
+  public List<VertexServerGeoObject> getGeoObjects(BusinessObject object);
 
-  boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child);
+  public boolean exists(BusinessEdgeType type, BusinessObject parent, BusinessObject child);
 
-  void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
+  public void addParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
 
-  void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
+  public void removeParent(BusinessObject object, BusinessEdgeType type, BusinessObject parent);
 
-  List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type);
+  public List<BusinessObject> getParents(BusinessObject object, BusinessEdgeType type);
 
-  void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
+  public void addChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
 
-  void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
+  public void removeChild(BusinessObject object, BusinessEdgeType type, BusinessObject child);
 
-  List<BusinessObject> getChildren(BusinessObject object, BusinessEdgeType type);
+  public List<BusinessObject> getChildren(BusinessObject object, BusinessEdgeType type);
 
-  BusinessObject newInstance(BusinessType type);
+  public BusinessObject newInstance(BusinessType type);
 
-  BusinessObject get(BusinessType type, String attributeName, Object value);
+  public BusinessObject get(BusinessType type, String attributeName, Object value);
 
-  BusinessObject getByCode(BusinessType type, Object value);
+  public BusinessObject getByCode(BusinessType type, Object value);
 
 }

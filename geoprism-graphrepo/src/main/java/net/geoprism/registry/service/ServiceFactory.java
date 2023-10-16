@@ -101,16 +101,6 @@ public class ServiceFactory
   {
     return getBean(HierarchyTypePermissionServiceIF.class);
   }
-  
-  public static HierarchyTypeBusinessServiceIF getHierarchyService()
-  {
-    return getBean(HierarchyTypeBusinessServiceIF.class);
-  }
-  
-  public static GeoObjectBusinessServiceIF getGeoObjectService()
-  {
-    return getBean(GeoObjectBusinessServiceIF.class);
-  }
 
   public static GeoObjectTypePermissionServiceIF getGeoObjectTypePermissionService()
   {
