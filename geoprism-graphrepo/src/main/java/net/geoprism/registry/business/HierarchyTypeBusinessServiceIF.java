@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.runwaysdk.ComponentIF;
+import com.runwaysdk.business.rbac.RoleDAO;
 
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.model.ServerGeoObjectType;
@@ -57,11 +58,15 @@ public interface HierarchyTypeBusinessServiceIF
 
   public void validateUniversalRelationship(ServerHierarchyType sht, ServerGeoObjectType childType, ServerGeoObjectType parentType);
 
-  void grantWritePermissionsOnMdTermRel(ComponentIF mdTermRelationship);
-
   void filterHierarchiesFromPermissions(ServerGeoObjectType type, ServerParentTreeNodeOverTime pot);
 
   JsonArray getHierarchiesForGeoObjectOverTime(String code, String typeCode);
 
   JsonArray getHierarchiesForType(String code, Boolean includeTypes);
+
+  void grantWritePermissionsOnMdTermRel(ComponentIF mdTermRelationship);
+  
+  void grantWritePermissionsOnMdTermRel(RoleDAO role, ComponentIF mdTermRelationship);
+
+  void grantReadPermissionsOnMdTermRel(RoleDAO role, ComponentIF mdTermRelationship);
 }

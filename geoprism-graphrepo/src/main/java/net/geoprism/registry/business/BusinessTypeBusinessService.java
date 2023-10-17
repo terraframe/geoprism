@@ -285,8 +285,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
       throw ex;
     }
 
-    // assignSRAPermissions(mdVertex, mdBusiness);
-    // assignAll_RA_Permissions(mdVertex, mdBusiness, organizationCode);
 
     LocalizedValue localizedValue = LocalizedValue.fromJSON(object.get(BusinessType.DISPLAYLABEL).getAsJsonObject());
 
@@ -343,24 +341,6 @@ public class BusinessTypeBusinessService implements BusinessTypeBusinessServiceI
 
       businessType.setMdVertexId(mdVertex.getOid());
       businessType.setMdEdgeId(mdEdge.getOid());
-
-      // Assign permissions
-      // Roles role =
-      // Roles.findRoleByName(RegistryConstants.REGISTRY_SUPER_ADMIN_ROLE);
-      //
-      // RoleDAO roleDAO = (RoleDAO) BusinessFacade.getEntityDAO(role);
-      // roleDAO.grantPermission(Operation.CREATE, mdVertex.getOid());
-      // roleDAO.grantPermission(Operation.DELETE, mdVertex.getOid());
-      // roleDAO.grantPermission(Operation.WRITE, mdVertex.getOid());
-      // roleDAO.grantPermission(Operation.WRITE_ALL, mdVertex.getOid());
-      //
-      // // Assign edge permissions
-      // roleDAO.grantPermission(Operation.CREATE, mdEdge.getOid());
-      // roleDAO.grantPermission(Operation.DELETE, mdEdge.getOid());
-      // roleDAO.grantPermission(Operation.WRITE, mdEdge.getOid());
-      // roleDAO.grantPermission(Operation.WRITE_ALL, mdEdge.getOid());
-      // roleDAO.grantPermission(Operation.ADD_CHILD, mdEdge.getOid());
-      // roleDAO.grantPermission(Operation.ADD_PARENT, mdEdge.getOid());
     }
 
     if (object.has(BusinessType.LABELATTRIBUTE) && !object.get(BusinessType.LABELATTRIBUTE).isJsonNull())
