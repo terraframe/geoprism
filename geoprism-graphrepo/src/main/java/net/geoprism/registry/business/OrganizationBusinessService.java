@@ -78,7 +78,7 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
       }
     }
 
-    deleteRoles(sorg);
+    this.deleteRoles(sorg);
 
     sorg.delete();
   }
