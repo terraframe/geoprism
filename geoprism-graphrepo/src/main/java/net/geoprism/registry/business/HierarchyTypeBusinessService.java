@@ -659,6 +659,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     grantWritePermissionsOnMdTermRel(adminRole, mdTermRelationship);
   }
 
+  @Override
   public void grantWritePermissionsOnMdTermRel(RoleDAO role, ComponentIF mdTermRelationship)
   {
     role.grantPermission(Operation.ADD_PARENT, mdTermRelationship.getOid());
@@ -675,6 +676,7 @@ public class HierarchyTypeBusinessService implements HierarchyTypeBusinessServic
     role.grantPermission(Operation.DELETE, mdTermRelationship.getOid());
   }
 
+  @Override
   public void grantReadPermissionsOnMdTermRel(RoleDAO role, ComponentIF mdTermRelationship)
   {
     role.grantPermission(Operation.READ, mdTermRelationship.getOid());
