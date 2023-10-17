@@ -61,7 +61,11 @@ public class TermBusinessService implements TermBusinessServiceIF
   @Override
   public void deleteTerm(Term parent, String termCode)
   {
-    String classifierKey = Classifier.buildKey(parent.getCode(), termCode);
+    String parentClassifierKey = TermConverter.buildClassifierKeyFromTermCode(parent.getCode());
+
+    Classifier parentClassifier = Classifier.getByKey(parentClassifierKey);
+
+    String classifierKey = Classifier.buildKey(parentClassifier.getKey(), termCode);
 
     Classifier classifier = Classifier.getByKey(classifierKey);
 
