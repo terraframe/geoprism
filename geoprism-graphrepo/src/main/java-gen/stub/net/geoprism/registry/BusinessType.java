@@ -88,7 +88,7 @@ public class BusinessType extends BusinessTypeBase implements ServerElement
     MdVertexDAOIF mdVertex = this.getMdVertexDAO();
     MdAttributeConcreteDAOIF mdAttribute = (MdAttributeConcreteDAOIF) mdVertex.definesAttribute(name);
 
-    this.setLabelAttribute(mdAttribute.getOid());
+    this.setLabelAttributeId(mdAttribute.getOid());
   }
 
 }

@@ -72,7 +72,7 @@ public class TransitionEventBusinessService implements TransitionEventBusinessSe
   @Transaction
   public void delete(TransitionEvent tran)
   {
-    this.getTransitions(tran).forEach(t -> t.delete());
+    this.getTransitions(tran).forEach(t -> tranServ.delete(t));
 
     tran.delete();
   }

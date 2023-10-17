@@ -12,11 +12,20 @@ import com.runwaysdk.session.Request;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.gis.geo.UniversalQuery;
 
+import net.geoprism.registry.BusinessEdgeType;
+import net.geoprism.registry.BusinessType;
+import net.geoprism.registry.DirectedAcyclicGraphType;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.OrganizationQuery;
+import net.geoprism.registry.UndirectedGraphType;
+import net.geoprism.registry.business.BusinessEdgeTypeBusinessServiceIF;
+import net.geoprism.registry.business.BusinessTypeBusinessServiceIF;
+import net.geoprism.registry.business.DirectedAcyclicGraphTypeBusinessServiceIF;
 import net.geoprism.registry.business.GeoObjectTypeBusinessServiceIF;
 import net.geoprism.registry.business.HierarchyTypeBusinessServiceIF;
+import net.geoprism.registry.business.UndirectedGraphTypeBusinessServiceIF;
+import net.geoprism.registry.model.ServerElement;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
@@ -29,6 +38,18 @@ public class GraphRepoService implements GraphRepoServiceIF, ApplicationListener
 
   @Autowired
   private GeoObjectTypeBusinessServiceIF typeService;
+  
+  @Autowired
+  private BusinessEdgeTypeBusinessServiceIF bizEdgeTypeService;
+  
+  @Autowired
+  private BusinessTypeBusinessServiceIF bizTypeService;
+  
+  @Autowired
+  private DirectedAcyclicGraphTypeBusinessServiceIF dagTypeService;
+  
+  @Autowired
+  private UndirectedGraphTypeBusinessServiceIF ugtTypeService;
 
   @Request
   @Override
@@ -126,5 +147,38 @@ public class GraphRepoService implements GraphRepoServiceIF, ApplicationListener
   public void onApplicationEvent(ContextRefreshedEvent event)
   {
     this.initialize();
+  }
+  
+  @Override
+  public void deleteObject(ServerElement obj)
+  {
+    if (obj instanceof ServerGeoObjectType)
+    {
+      typeService.deleteGeoObjectType(obj.getCode());
+    }
+    else if (obj instanceof BusinessEdgeType)
+    {
+      bizEdgeTypeService.delete((BusinessEdgeType) obj);
+    }
+    else if (obj instanceof BusinessType)
+    {
+      bizTypeService.delete((BusinessType) obj);
+    }
+    else if (obj instanceof DirectedAcyclicGraphType)
+    {
+      dagTypeService.delete((DirectedAcyclicGraphType) obj);
+    }
+    else if (obj instanceof ServerHierarchyType)
+    {
+      hierarchyService.delete((ServerHierarchyType) obj);
+    }
+    else if (obj instanceof UndirectedGraphType)
+    {
+      ugtTypeService.delete((UndirectedGraphType) obj);
+    }
+    else
+    {
+      throw new UnsupportedOperationException(obj.getClass().getName());
+    }
   }
 }
