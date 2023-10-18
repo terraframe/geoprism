@@ -25,8 +25,8 @@ import org.commongeoregistry.adapter.dataaccess.TreeNode;
 import com.google.gson.JsonObject;
 
 import net.geoprism.registry.DateFormatter;
-import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public abstract class ServerGraphNode
 {

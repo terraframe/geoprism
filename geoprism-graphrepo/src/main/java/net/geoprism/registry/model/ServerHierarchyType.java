@@ -36,7 +36,6 @@ import com.runwaysdk.system.gis.geo.LocatedIn;
 import com.runwaysdk.system.gis.geo.Universal;
 import com.runwaysdk.system.metadata.MdTermRelationship;
 
-import net.geoprism.graphrepo.permission.HierarchyTypePermissionServiceIF;
 import net.geoprism.registry.HierarchicalRelationshipType;
 import net.geoprism.registry.HierarchyMetadata;
 import net.geoprism.registry.Organization;
@@ -44,7 +43,8 @@ import net.geoprism.registry.RegistryConstants;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.graph.GraphStrategy;
 import net.geoprism.registry.model.graph.ServerHierarchyStrategy;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.permission.HierarchyTypePermissionServiceIF;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class ServerHierarchyType implements ServerElement, GraphType
 {

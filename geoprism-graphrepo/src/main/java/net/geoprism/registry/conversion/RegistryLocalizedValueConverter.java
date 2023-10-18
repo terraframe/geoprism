@@ -31,7 +31,7 @@ import com.runwaysdk.system.gis.geo.Universal;
 
 import net.geoprism.registry.Organization;
 import net.geoprism.registry.model.LocalizedValueContainer;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class RegistryLocalizedValueConverter extends LocalizedValueConverter
 {

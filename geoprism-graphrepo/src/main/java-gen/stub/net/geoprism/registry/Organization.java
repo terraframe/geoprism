@@ -49,7 +49,7 @@ import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.model.ServerOrganization;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class Organization extends OrganizationBase
 {

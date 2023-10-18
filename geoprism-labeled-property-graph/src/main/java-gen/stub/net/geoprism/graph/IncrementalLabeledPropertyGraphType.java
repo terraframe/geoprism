@@ -28,8 +28,8 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.runwaysdk.Pair;
 
-import net.geoprism.graph.lpg.LabeledVersion;
 import net.geoprism.registry.DateUtil;
+import net.geoprism.registry.lpg.LabeledVersion;
 
 public class IncrementalLabeledPropertyGraphType extends IncrementalLabeledPropertyGraphTypeBase
 {

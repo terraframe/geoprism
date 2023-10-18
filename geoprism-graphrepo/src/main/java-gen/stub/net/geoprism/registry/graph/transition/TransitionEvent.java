@@ -20,8 +20,8 @@ package net.geoprism.registry.graph.transition;
 
 import com.google.gson.JsonObject;
 
-import net.geoprism.registry.business.TransitionEventBusinessServiceIF;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.business.TransitionEventBusinessServiceIF;
+import net.geoprism.registry.service.request.ServiceFactory;
 import net.geoprism.registry.view.JsonSerializable;
 
 public class TransitionEvent extends TransitionEventBase implements JsonSerializable

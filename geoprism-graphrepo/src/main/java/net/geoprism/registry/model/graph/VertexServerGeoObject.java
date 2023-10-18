@@ -98,7 +98,6 @@ import net.geoprism.registry.DateFormatter;
 import net.geoprism.registry.GeometrySizeException;
 import net.geoprism.registry.GeometryTypeException;
 import net.geoprism.registry.RegistryConstants;
-import net.geoprism.registry.business.GeoObjectBusinessServiceIF;
 import net.geoprism.registry.conversion.RegistryLocalizedValueConverter;
 import net.geoprism.registry.geoobject.ValueOutOfRangeException;
 import net.geoprism.registry.graph.GeoVertex;
@@ -113,7 +112,8 @@ import net.geoprism.registry.model.ServerGeoObjectType;
 import net.geoprism.registry.model.ServerGraphNode;
 import net.geoprism.registry.model.ServerHierarchyType;
 import net.geoprism.registry.query.graph.AbstractVertexRestriction;
-import net.geoprism.registry.service.ServiceFactory;
+import net.geoprism.registry.service.business.GeoObjectBusinessServiceIF;
+import net.geoprism.registry.service.request.ServiceFactory;
 
 public class VertexServerGeoObject extends AbstractServerGeoObject implements ServerGeoObjectIF, LocationInfo, VertexComponent
 {

@@ -22,10 +22,10 @@ import java.util.Date;
 
 import com.runwaysdk.business.rbac.Authenticate;
 
-import net.geoprism.graph.lpg.business.LabeledPropertyGraphSynchronizationBusinessServiceIF;
-import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeBusinessServiceIF;
-import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeEntryBusinessServiceIF;
-import net.geoprism.graph.lpg.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
+import net.geoprism.registry.service.business.LabeledPropertyGraphSynchronizationBusinessServiceIF;
+import net.geoprism.registry.service.business.LabeledPropertyGraphTypeBusinessServiceIF;
+import net.geoprism.registry.service.business.LabeledPropertyGraphTypeEntryBusinessServiceIF;
+import net.geoprism.registry.service.business.LabeledPropertyGraphTypeVersionBusinessServiceIF;
 
 public class LabeledPropertyGraphUtil extends LabeledPropertyGraphUtilBase
 {
