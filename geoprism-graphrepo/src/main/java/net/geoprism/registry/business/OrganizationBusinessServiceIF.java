@@ -29,4 +29,6 @@ public interface OrganizationBusinessServiceIF
 
   void addChild(ServerOrganization parent, ServerOrganization child);
 
+  void apply(ServerOrganization organization, ServerOrganization parent);
+
 }

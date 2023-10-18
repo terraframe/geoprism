@@ -23,6 +23,18 @@ public class OrganizationBusinessService implements OrganizationBusinessServiceI
 {
   @Autowired
   private OrganizationPermissionServiceIF permissionService;
+  
+  @Override
+  @Transaction
+  public void apply(ServerOrganization organization, ServerOrganization parent)
+  {
+    organization.apply();
+
+    if (parent != null)
+    {
+      parent.addChild(organization);
+    }
+  }
 
   @Override
   @Transaction

@@ -149,16 +149,7 @@ public class ServerOrganization implements JsonSerializable
     this.graphOrganization.apply();
   }
 
-  @Transaction
-  public void apply(ServerOrganization parent)
-  {
-    this.apply();
 
-    if (parent != null)
-    {
-      parent.addChild(this);
-    }
-  }
 
   /**
    * Removes the {@link RoleDAO}s for this {@link Organization} and Registry
