@@ -390,11 +390,7 @@ public class VertexServerGeoObject extends AbstractServerGeoObject implements Se
                                                                            // Geometry
                                                                            // attribute.
 
-    if (ServiceFactory.getBean(GeoObjectBusinessServiceIF.class).trySetValue(this, attributeName, value))
-    {
-      return;
-    }
-    else if (at instanceof AttributeLocalType)
+    if (at instanceof AttributeLocalType)
     {
       RegistryLocalizedValueConverter.populate(this.vertex, attributeName, (LocalizedValue) value, this.date, null);
     }
